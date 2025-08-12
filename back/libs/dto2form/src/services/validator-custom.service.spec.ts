@@ -1,15 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { hasSameHost } from '@fc/common';
 import { ConfigService } from '@fc/config';
 
 import { getConfigMock } from '@mocks/config';
 
 import { ValidatorCustomService } from './validator-custom.service';
-
-jest.mock('@fc/common', () => ({
-  hasSameHost: jest.fn(),
-}));
 
 describe('ValidatorCustomService', () => {
   let service: ValidatorCustomService;
@@ -228,17 +223,15 @@ describe('ValidatorCustomService', () => {
   });
 
   describe('isValidRedirectURLList', () => {
-    const hasSameHostMock = jest.mocked(hasSameHost);
     const value = 'not used in this validator';
 
     it('should return true if all urls have the same host', () => {
       // Given
       const context = {
         target: {
-          redirect_uris: [],
+          redirect_uris: ['http://test.fr/a', 'http://test.fr/b'],
         },
       };
-      hasSameHostMock.mockReturnValue(true);
 
       // When
       const result = service.isValidRedirectURLList(value, context);
@@ -251,10 +244,24 @@ describe('ValidatorCustomService', () => {
       // Given
       const context = {
         target: {
-          redirect_uris: [],
+          redirect_uris: ['http://test.fr/a', 'http://test.com/b'],
         },
       };
-      hasSameHostMock.mockReturnValue(false);
+
+      // When
+      const result = service.isValidRedirectURLList(value, context);
+
+      // Then
+      expect(result).toBe(false);
+    });
+
+    it('should return false if urls mix localhost and standard domains', () => {
+      // Given
+      const context = {
+        target: {
+          redirect_uris: ['http://localhost:4200', 'http://example.com'],
+        },
+      };
 
       // When
       const result = service.isValidRedirectURLList(value, context);
@@ -267,11 +274,10 @@ describe('ValidatorCustomService', () => {
       // Given
       const context = {
         target: {
-          redirect_uris: [],
+          redirect_uris: ['http://test.fr/a', 'http://test.com/b'],
           sector_identifier_uri: 'https://example.com',
         },
       };
-      hasSameHostMock.mockReturnValue(false);
 
       // When
       const result = service.isValidRedirectURLList(value, context);
@@ -285,10 +291,8 @@ describe('ValidatorCustomService', () => {
       const context = {
         target: {
           redirect_uris: ['http://foo.bar/1', 'fooo', 'https://foo.bar/2', ''],
-          sector_identifier_uri: 'https://example.com',
         },
       };
-      hasSameHostMock.mockReturnValue(true);
 
       // When
       const result = service.isValidRedirectURLList(value, context);

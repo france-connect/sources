@@ -4,12 +4,15 @@ import {
   IsBoolean,
   IsNotEmpty,
   IsNumber,
+  IsObject,
   IsOptional,
   IsString,
   ValidateNested,
 } from 'class-validator';
 
 import { Optional } from '@nestjs/common';
+
+import { FieldMessage } from './field-message.dto';
 
 export class ValidateIfDto {
   @IsString()
@@ -26,9 +29,10 @@ export class ValidatorDto {
   @IsNotEmpty()
   readonly name: string;
 
-  @IsString()
-  @IsNotEmpty()
-  readonly errorMessage: string;
+  @IsObject()
+  @ValidateNested()
+  @Type(() => FieldMessage)
+  readonly errorMessage: FieldMessage;
 
   @IsOptional()
   @IsArray()

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`TextWithRemoveInput should match snapshot 1`] = `
+exports[`TextWithRemoveInput should match snapshot, with config messages 1`] = `
 <div>
   <div
     data-mockid="GroupElement"
@@ -16,8 +16,49 @@ exports[`TextWithRemoveInput should match snapshot 1`] = `
       />
     </div>
     <div
-      data-mockid="MessageElement"
+      data-mockid="MessagesElement"
     />
+  </div>
+</div>
+`;
+
+exports[`TextWithRemoveInput should match snapshot, with error messages 1`] = `
+<div>
+  <div
+    data-mockid="GroupElement"
+  >
+    <div
+      class="flex-columns"
+    >
+      <div
+        data-mockid="InputComponent"
+      />
+      <div
+        data-mockid="ArrayRemoveButton"
+      />
+    </div>
+    <div
+      data-mockid="MessagesElement"
+    />
+  </div>
+</div>
+`;
+
+exports[`TextWithRemoveInput should match snapshot, without messages 1`] = `
+<div>
+  <div
+    data-mockid="GroupElement"
+  >
+    <div
+      class="flex-columns"
+    >
+      <div
+        data-mockid="InputComponent"
+      />
+      <div
+        data-mockid="ArrayRemoveButton"
+      />
+    </div>
   </div>
 </div>
 `;

@@ -4,7 +4,7 @@ import { PublicationStatusEnum } from '@entities/typeorm';
 
 import {
   ActionTypes,
-  ConfigCreateMessageDtoPayload,
+  ConfigCreateViaMessageDtoPayload,
 } from '@fc/csmr-config-client';
 import { PartnersServiceProviderInstanceVersionService } from '@fc/partners-service-provider-instance-version';
 
@@ -50,7 +50,7 @@ describe('PartnerPublicationService', () => {
       const versionId = 'versionId';
       const payload = {
         key: 'value',
-      } as unknown as ConfigCreateMessageDtoPayload;
+      } as unknown as ConfigCreateViaMessageDtoPayload;
       const type = ActionTypes.CONFIG_CREATE;
 
       // When
@@ -74,7 +74,7 @@ describe('PartnerPublicationService', () => {
       const versionId = 'versionId';
       const payload = {
         key: 'value',
-      } as unknown as ConfigCreateMessageDtoPayload;
+      } as unknown as ConfigCreateViaMessageDtoPayload;
       const type = ActionTypes.CONFIG_CREATE;
       csmrConfigClientMock.publish.mockRejectedValue(new Error('error'));
 

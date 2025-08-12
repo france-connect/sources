@@ -2,10 +2,19 @@ import { Type } from 'class-transformer';
 import { IsObject, IsOptional, ValidateNested } from 'class-validator';
 
 import { CsrfSession } from '@fc/csrf';
+import { FraudCaseSessionDto } from '@fc/fraud-identity-theft';
 import { I18nSession } from '@fc/i18n';
 import { OidcClientSession } from '@fc/oidc-client';
 
+import { AppSession } from './app-session.dto';
+
 export class UserDashboardSession {
+  @IsObject()
+  @ValidateNested()
+  @Type(() => AppSession)
+  @IsOptional()
+  readonly App?: AppSession;
+
   @IsObject()
   @ValidateNested()
   @Type(() => OidcClientSession)
@@ -22,4 +31,10 @@ export class UserDashboardSession {
   @ValidateNested()
   @Type(() => I18nSession)
   readonly I18n: I18nSession;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => FraudCaseSessionDto)
+  @IsOptional()
+  readonly FraudCase?: FraudCaseSessionDto;
 }

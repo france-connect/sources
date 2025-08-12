@@ -3,20 +3,24 @@
 exports[`DTO2FormComponent should match the snapshot 1`] = `
 <div>
   <div
-    data-mockid="FormComponent"
+    data-mockid="FormConfigContextProvider"
   >
     <div
-      data-mockid="DTO2InputComponent"
-    />
-    <div
-      data-mockid="DTO2InputComponent"
-    />
-    <div
-      data-mockid="DTO2SectionComponent"
-    />
-    <div
-      data-mockid="DTO2InputComponent"
-    />
+      data-mockid="FormComponent"
+    >
+      <div
+        data-mockid="DTO2InputComponent"
+      />
+      <div
+        data-mockid="DTO2InputComponent"
+      />
+      <div
+        data-mockid="DTO2SectionComponent"
+      />
+      <div
+        data-mockid="DTO2InputComponent"
+      />
+    </div>
   </div>
 </div>
 `;

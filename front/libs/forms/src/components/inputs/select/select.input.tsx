@@ -3,16 +3,19 @@ import React, { useMemo } from 'react';
 import { t } from '@fc/i18n';
 
 import { ComponentTypes } from '../../../enums';
-import { useFieldMeta } from '../../../hooks';
+import { useFieldMessages, useFieldMeta } from '../../../hooks';
 import type { PropsWithInputChoicesType } from '../../../types';
-import { GroupElement, LabelElement, MessageElement } from '../../elements';
+import { GroupElement, LabelElement, MessagesElement } from '../../elements';
 
 export const SelectInput = React.memo(
   ({ choices, config, input, meta }: PropsWithInputChoicesType) => {
-    const { hint, label, required } = config;
+    const { hint, label, messages, required, seeAlso } = config;
     const { className, disabled, name } = input;
 
-    const { errorMessage, hasError, isValid } = useFieldMeta(meta);
+    const { errorsList, hasError, isValid } = useFieldMeta(meta);
+
+    const fieldMessages = useFieldMessages({ errorsList, isValid, messages });
+    const hasMessages = fieldMessages && fieldMessages.length > 0;
 
     const childs = useMemo(
       () =>
@@ -31,7 +34,7 @@ export const SelectInput = React.memo(
         hasError={hasError}
         isValid={isValid}
         type={ComponentTypes.SELECT}>
-        <LabelElement hint={hint} label={label} name={name} required={required} />
+        <LabelElement hint={hint} label={label} name={name} required={required} seeAlso={seeAlso} />
         {/* @NOTE input is coming from react-final-form */}
         {/* eslint-disable-next-line react/jsx-props-no-spreading */}
         <select {...input} className="fr-select fr-select--valid">
@@ -40,7 +43,9 @@ export const SelectInput = React.memo(
           </option>
           {childs}
         </select>
-        <MessageElement error={errorMessage} id={name} isValid={isValid} />
+        {hasMessages && (
+          <MessagesElement dataTestId={`${name}-messages`} id={name} messages={fieldMessages} />
+        )}
       </GroupElement>
     );
   },

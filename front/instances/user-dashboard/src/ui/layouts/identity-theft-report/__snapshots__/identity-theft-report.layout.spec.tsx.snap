@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`IdentityTheftReportLayout should match snapshot 1`] = `
+<div>
+  <div
+    class="fr-container fr-mt-5w fr-mt-md-8w"
+  >
+    <div
+      class="fr-grid-row fr-grid-row--center"
+    >
+      <div
+        class="fr-col-12 fr-col-md-10 fr-col-lg-8"
+      >
+        <h1
+          class="text-left text-center--md"
+        >
+          Formulaire de signalement
+          <br />
+          Usurpation d’identité
+        </h1>
+        <div>
+          ReactRouterDom Outlet Component
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

@@ -23,17 +23,17 @@ describe('DtoValidation', () => {
 
   describe('getTransformed', () => {
     it('should call "plainToInstance" from "class-transformer" with the given arguments', () => {
-      // setup
+      // Given
       jest.spyOn(ClassTransformer, 'plainToInstance');
 
       class TestClass {}
       const plain = { foo: 'bar' };
       const resultValidationOptions = undefined;
 
-      // action
+      // When
       getTransformed(plain, TestClass);
 
-      // expect
+      // Then
       expect(ClassTransformer.plainToInstance).toHaveBeenCalledTimes(1);
       expect(ClassTransformer.plainToInstance).toHaveBeenCalledWith(
         TestClass,
@@ -45,7 +45,7 @@ describe('DtoValidation', () => {
 
   describe('validateDto', () => {
     it('should call "plainToInstance" from "class-transformer" through "getTransformed" call', async () => {
-      // setup
+      // Given
       jest.spyOn(ClassTransformer, 'plainToInstance');
       // Original function is async, so is the mock (not a call here)
       // eslint-disable-next-line require-await
@@ -56,10 +56,10 @@ describe('DtoValidation', () => {
       const validationOptions = { whitelist: false };
       const resultValidationOptions = undefined;
 
-      // action
+      // When
       await validateDto(plain, TestClass, validationOptions);
 
-      // expect
+      // Then
       expect(ClassTransformer.plainToInstance).toHaveBeenCalledTimes(1);
       expect(ClassTransformer.plainToInstance).toHaveBeenCalledWith(
         TestClass,
@@ -69,7 +69,7 @@ describe('DtoValidation', () => {
     });
 
     it('should call "plainToInstance" from "class-transformer" through "getTransformed" call with full options', async () => {
-      // setup
+      // Given
       jest.spyOn(ClassTransformer, 'plainToInstance');
       // Original function is async, so is the mock (not a call here)
       // eslint-disable-next-line require-await
@@ -80,10 +80,10 @@ describe('DtoValidation', () => {
       const validationOptions = { whitelist: false };
       const transformOptions = { groups: ['hello'] };
 
-      // action
+      // When
       await validateDto(plain, TestClass, validationOptions, transformOptions);
 
-      // expect
+      // Then
       expect(ClassTransformer.plainToInstance).toHaveBeenCalledTimes(1);
       expect(ClassTransformer.plainToInstance).toHaveBeenCalledWith(
         TestClass,
@@ -93,17 +93,17 @@ describe('DtoValidation', () => {
     });
 
     it('should call "validate" from "class-validator" with given Dto', async () => {
-      // setup
+      // Given
       jest.spyOn(ClassValidator, 'validate');
 
       class TestClass {}
       const plain = { foo: 'bar' };
       const validationOptions = { whitelist: false };
 
-      // action
+      // When
       await validateDto(plain, TestClass, validationOptions);
 
-      // expect
+      // Then
       expect(ClassValidator.validate).toHaveBeenCalledTimes(1);
       expect(ClassValidator.validate).toHaveBeenCalledWith(
         plain,
@@ -112,7 +112,7 @@ describe('DtoValidation', () => {
     });
 
     it('should return an empty array if no error is found', async () => {
-      // setup
+      // Given
       jest.spyOn(ClassTransformer, 'plainToInstance');
       jest.spyOn(ClassValidator, 'validate').mockResolvedValue([]);
 
@@ -120,16 +120,16 @@ describe('DtoValidation', () => {
       const plain = { foo: 'bar' };
       const validationOptions = { whitelist: false };
 
-      // action
+      // When
       const errors = await validateDto(plain, TestClass, validationOptions);
 
-      // expect
+      // Then
       expect(errors).toBeInstanceOf(Array);
       expect(errors.length).toStrictEqual(0);
     });
 
     it('should return the "validate" call result', async () => {
-      // setup
+      // Given
       const validateResult = [
         {
           property: 'foo',
@@ -148,10 +148,10 @@ describe('DtoValidation', () => {
       const plain = { foo: 'bar' };
       const validationOptions = { whitelist: false };
 
-      // action
+      // When
       const errors = await validateDto(plain, TestClass, validationOptions);
 
-      // expect
+      // Then
       expect(errors).toBeInstanceOf(Array);
       expect(errors.length).toStrictEqual(1);
       expect(errors).toMatchObject(validateResult);
@@ -160,7 +160,7 @@ describe('DtoValidation', () => {
 
   describe('getValidDto', () => {
     it('should call "plainToInstance" from "class-transformer" through "getTransformed" call', async () => {
-      // setup
+      // Given
       jest.spyOn(ClassTransformer, 'plainToInstance');
       // Original function is async, so is the mock (not a call here)
       // eslint-disable-next-line require-await
@@ -171,10 +171,10 @@ describe('DtoValidation', () => {
       const validationOptions = { whitelist: false };
       const resultValidationOptions = undefined;
 
-      // action
+      // When
       await getValidDto(plain, TestClass, validationOptions);
 
-      // expect
+      // Then
       expect(ClassTransformer.plainToInstance).toHaveBeenCalledTimes(1);
       expect(ClassTransformer.plainToInstance).toHaveBeenCalledWith(
         TestClass,
@@ -184,7 +184,7 @@ describe('DtoValidation', () => {
     });
 
     it('should call "plainToInstance" from "class-transformer" through "getTransformed" call with full options', async () => {
-      // setup
+      // Given
       jest.spyOn(ClassTransformer, 'plainToInstance');
       // Original function is async, so is the mock (not a call here)
       // eslint-disable-next-line require-await
@@ -195,10 +195,10 @@ describe('DtoValidation', () => {
       const validationOptions = { whitelist: false };
       const transformOptions = { groups: ['hello'] };
 
-      // action
+      // When
       await getValidDto(plain, TestClass, validationOptions, transformOptions);
 
-      // expect
+      // Then
       expect(ClassTransformer.plainToInstance).toHaveBeenCalledTimes(1);
       expect(ClassTransformer.plainToInstance).toHaveBeenCalledWith(
         TestClass,
@@ -208,7 +208,7 @@ describe('DtoValidation', () => {
     });
 
     it('should call "validate" from "class-validator" with given Dto', async () => {
-      // setup
+      // Given
       jest.spyOn(ClassValidator, 'validate').mockResolvedValueOnce([]);
 
       class TestClass {}
@@ -218,10 +218,10 @@ describe('DtoValidation', () => {
         forbidNonWhitelisted: false,
       };
 
-      // action
+      // When
       await getValidDto(plain, TestClass, validationOptions);
 
-      // expect
+      // Then
       expect(ClassValidator.validate).toHaveBeenCalledTimes(1);
       expect(ClassValidator.validate).toHaveBeenCalledWith(
         plain,
@@ -230,7 +230,7 @@ describe('DtoValidation', () => {
     });
 
     it('should throw a CommonDtoValidationException if errors are found', async () => {
-      // setup
+      // Given
       jest
         .spyOn(ClassValidator, 'validate')
         .mockResolvedValueOnce([
@@ -244,14 +244,14 @@ describe('DtoValidation', () => {
         forbidNonWhitelisted: false,
       };
 
-      // action / expect
+      // When / Then
       await expect(
         getValidDto(plain, TestClass, validationOptions),
       ).rejects.toThrow(CommonDtoValidationException);
     });
 
     it('should return transformed object if no errors are found', async () => {
-      // setup
+      // Given
       const transformed = Symbol('transformed');
       jest
         .spyOn(ClassTransformer, 'plainToInstance')
@@ -262,17 +262,17 @@ describe('DtoValidation', () => {
       const plain = { foo: 'bar' };
       const validationOptions = { whitelist: false };
 
-      // action
+      // When
       const errors = await getValidDto(plain, TestClass, validationOptions);
 
-      // expect
+      // Then
       expect(errors).toBe(transformed);
     });
   });
 
   describe('validateDtoSync', () => {
     it('should call "plainToInstance" from "class-transformer" through "getTransformed" call', () => {
-      // setup
+      // Given
       jest.spyOn(ClassTransformer, 'plainToInstance');
       jest.spyOn(ClassValidator, 'validateSync').mockReturnValue([]);
 
@@ -281,10 +281,10 @@ describe('DtoValidation', () => {
       const validationOptions = { whitelist: false };
       const resultValidationOptions = undefined;
 
-      // action
+      // When
       validateDtoSync(plain, TestClass, validationOptions);
 
-      // expect
+      // Then
       expect(ClassTransformer.plainToInstance).toHaveBeenCalledTimes(1);
       expect(ClassTransformer.plainToInstance).toHaveBeenCalledWith(
         TestClass,
@@ -294,7 +294,7 @@ describe('DtoValidation', () => {
     });
 
     it('should call "plainToInstance" from "class-transformer" through "getTransformed" call with full options', () => {
-      // setup
+      // Given
       jest.spyOn(ClassTransformer, 'plainToInstance');
       jest.spyOn(ClassValidator, 'validateSync').mockReturnValue([]);
 
@@ -303,10 +303,10 @@ describe('DtoValidation', () => {
       const validationOptions = { whitelist: false };
       const transformOptions = { groups: ['hello'] };
 
-      // action
+      // When
       validateDtoSync(plain, TestClass, validationOptions, transformOptions);
 
-      // expect
+      // Then
       expect(ClassTransformer.plainToInstance).toHaveBeenCalledTimes(1);
       expect(ClassTransformer.plainToInstance).toHaveBeenCalledWith(
         TestClass,
@@ -316,17 +316,17 @@ describe('DtoValidation', () => {
     });
 
     it('should call "validateSync" from "class-validator" with given Dto', () => {
-      // setup
+      // Given
       jest.spyOn(ClassValidator, 'validateSync');
 
       class TestClass {}
       const plain = { foo: 'bar' };
       const validationOptions = { whitelist: false };
 
-      // action
+      // When
       validateDtoSync(plain, TestClass, validationOptions);
 
-      // expect
+      // Then
       expect(ClassValidator.validateSync).toHaveBeenCalledTimes(1);
       expect(ClassValidator.validateSync).toHaveBeenCalledWith(
         plain,
@@ -335,7 +335,7 @@ describe('DtoValidation', () => {
     });
 
     it('should return an empty array if no error is found', () => {
-      // setup
+      // Given
       jest.spyOn(ClassTransformer, 'plainToInstance');
       jest.spyOn(ClassValidator, 'validateSync').mockReturnValue([]);
 
@@ -343,16 +343,16 @@ describe('DtoValidation', () => {
       const plain = { foo: 'bar' };
       const validationOptions = { whitelist: false };
 
-      // action
+      // When
       const errors = validateDtoSync(plain, TestClass, validationOptions);
 
-      // expect
+      // Then
       expect(errors).toBeInstanceOf(Array);
       expect(errors.length).toStrictEqual(0);
     });
 
     it('should return the "validateSync" call result', () => {
-      // setup
+      // Given
       const validateResult = [
         {
           property: 'foo',
@@ -373,10 +373,10 @@ describe('DtoValidation', () => {
       const plain = { foo: 'bar' };
       const validationOptions = { whitelist: false };
 
-      // action
+      // When
       const errors = validateDtoSync(plain, TestClass, validationOptions);
 
-      // expect
+      // Then
       expect(errors).toBeInstanceOf(Array);
       expect(errors.length).toStrictEqual(1);
       expect(errors).toMatchObject(validateResult);
@@ -385,7 +385,7 @@ describe('DtoValidation', () => {
 
   describe('filteredByDto', () => {
     it('should call "plainToInstance" and "instanceToPlain" from "class-transformer"', async () => {
-      // setup
+      // Given
       class TestClass {}
       const plain = { foo: 'bar' };
       const validationOptions = { whitelist: false };
@@ -400,10 +400,10 @@ describe('DtoValidation', () => {
         .spyOn(ClassTransformer, 'instanceToPlain')
         .mockReturnValueOnce(plain as any);
 
-      // action
+      // When
       const result = await filteredByDto(plain, TestClass, validationOptions);
 
-      // expect
+      // Then
       expect(result).toEqual({ errors: [], result: plain });
       expect(ClassTransformer.plainToInstance).toHaveBeenCalledTimes(1);
       expect(ClassTransformer.plainToInstance).toHaveBeenCalledWith(
@@ -416,7 +416,7 @@ describe('DtoValidation', () => {
     });
 
     it('should call "plainToInstance" and "instanceToPlain" from "class-transformer" with full options', async () => {
-      // setup
+      // Given
       class TestClass {}
       const plain = { foo: 'bar' };
       const validationOptions = { whitelist: false };
@@ -429,7 +429,7 @@ describe('DtoValidation', () => {
         .spyOn(ClassTransformer, 'instanceToPlain')
         .mockReturnValueOnce(plain as any);
 
-      // action
+      // When
       const result = await filteredByDto(
         plain,
         TestClass,
@@ -437,7 +437,7 @@ describe('DtoValidation', () => {
         transformOptions,
       );
 
-      // expect
+      // Then
       expect(result).toEqual({ errors: [], result: plain });
       expect(ClassTransformer.plainToInstance).toHaveBeenCalledTimes(1);
       expect(ClassTransformer.plainToInstance).toHaveBeenCalledWith(
@@ -450,17 +450,17 @@ describe('DtoValidation', () => {
     });
 
     it('should call "validate" from "class-validator" with given Dto', async () => {
-      // setup
+      // Given
       jest.spyOn(ClassValidator, 'validate');
 
       class TestClass {}
       const plain = { foo: 'bar' };
       const validationOptions = { whitelist: false };
 
-      // action
+      // When
       await filteredByDto(plain, TestClass, validationOptions);
 
-      // expect
+      // Then
       expect(ClassValidator.validate).toHaveBeenCalledTimes(1);
       expect(ClassValidator.validate).toHaveBeenCalledWith(
         plain,
@@ -469,7 +469,7 @@ describe('DtoValidation', () => {
     });
 
     it('should return data if no error is found', async () => {
-      // setup
+      // Given
 
       class TestClass {}
       const plain = { foo: 'bar' };
@@ -482,21 +482,21 @@ describe('DtoValidation', () => {
         .spyOn(ClassTransformer, 'instanceToPlain')
         .mockReturnValueOnce(plain as any);
 
-      // action
+      // When
       const { errors, result } = await filteredByDto(
         plain,
         TestClass,
         validationOptions,
       );
 
-      // expect
+      // Then
       expect(errors).toBeInstanceOf(Array);
       expect(errors.length).toStrictEqual(0);
       expect(result).toEqual(plain);
     });
 
     it('should return the "validate" call result', async () => {
-      // setup
+      // Given
       const validateResult = [
         {
           children: [],
@@ -519,14 +519,14 @@ describe('DtoValidation', () => {
         .spyOn(ClassTransformer, 'instanceToPlain')
         .mockReturnValueOnce(plain as any);
 
-      // action
+      // When
       const { errors, result } = await filteredByDto(
         plain,
         TestClass,
         validationOptions,
       );
 
-      // expect
+      // Then
       expect(errors).toBeInstanceOf(Array);
       expect(errors.length).toStrictEqual(1);
       expect(errors).toMatchObject(validateResult);
@@ -536,18 +536,18 @@ describe('DtoValidation', () => {
   });
   describe('getAllPropertiesErrors', () => {
     it('should return "null" if no error is found', () => {
-      // setup
+      // Given
       const validationErrors = [];
 
-      // action
+      // When
       const errors = getDtoErrors(validationErrors);
 
-      // expect
+      // Then
       expect(errors).toStrictEqual(null);
     });
 
     it('should return an error if a constraint fails', () => {
-      // setup
+      // Given
       const validationErrors = [
         {
           property: 'foo',
@@ -558,15 +558,15 @@ describe('DtoValidation', () => {
         },
       ];
 
-      // action
+      // When
       const error = getDtoErrors(validationErrors);
 
-      // expect
+      // Then
       expect(error).toBeInstanceOf(Error);
     });
 
     it('should return an error with "message" containing all failed constraints formatted "<property>: <failed-constraint>" and "\n" separated', () => {
-      // setup
+      // Given
       const validationErrors = [
         {
           property: 'foo',
@@ -593,16 +593,16 @@ describe('DtoValidation', () => {
       ];
       const expectedErrorMessage = failedConstraints.join('\n');
 
-      // action
+      // When
       const error = getDtoErrors(validationErrors);
 
-      // expect
+      // Then
       expect(error).toBeInstanceOf(Error);
       expect(error.message).toStrictEqual(expectedErrorMessage);
     });
 
     it('should work with nested validation and format failed contraints "<lvl1-property>.<...>.<levelN-property>: <failed-constraint>"', () => {
-      // setup
+      // Given
       const validationErrors = [
         {
           property: 'foo',
@@ -647,26 +647,26 @@ describe('DtoValidation', () => {
       ];
       const expectedErrorMessage = failedConstraints.join('\n');
 
-      // action
+      // When
       const error = getDtoErrors(validationErrors);
 
-      // expect
+      // Then
       expect(error).toBeInstanceOf(Error);
       expect(error.message).toStrictEqual(expectedErrorMessage);
     });
 
     it('should work with no nested validation and field without contraints', () => {
-      // setup
+      // Given
       const validationErrors = [
         {
           property: 'foo',
         },
       ];
 
-      // action
+      // When
       const error = getDtoErrors(validationErrors as any);
 
-      // expect
+      // Then
       expect(error).toBe(null);
     });
   });

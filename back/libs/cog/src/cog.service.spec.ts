@@ -63,19 +63,19 @@ describe('CogService', () => {
     });
 
     it('should retrieve the database source from the config', async () => {
-      // action
+      // When
       await service['onModuleInit']();
 
-      // expect
+      // Then
       expect(configServiceMock.get).toHaveBeenCalledTimes(1);
       expect(configServiceMock.get).toHaveBeenCalledWith('Cog');
     });
 
     it('should initialize the database with parsing file', async () => {
-      // action
+      // When
       await service['onModuleInit']();
 
-      // expect
+      // Then
       expect(cityRepositoryMock.parse).toHaveBeenCalledTimes(1);
       expect(cityRepositoryMock.parse).toHaveBeenCalledWith(
         configMock[COG_CITY],
@@ -87,16 +87,16 @@ describe('CogService', () => {
     });
 
     it('should fail to init database if parsing failed', async () => {
-      // setup
+      // Given
       const errorMock = new Error('Unknown Error');
       cityRepositoryMock.parse.mockReset().mockImplementationOnce(() => {
         throw errorMock;
       });
 
-      // action
+      // When
       await expect(
         service['onModuleInit'](),
-        // expect
+        // Then
       ).rejects.toThrow(errorMock);
     });
   });

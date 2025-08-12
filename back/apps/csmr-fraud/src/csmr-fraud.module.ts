@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
 
+import { AppModule } from '@fc/app';
 import { AsyncLocalStorageModule } from '@fc/async-local-storage';
 import { CsmrAccountClientModule } from '@fc/csmr-account-client';
 import { ExceptionsModule, FcRmqExceptionFilter } from '@fc/exceptions';
@@ -19,6 +20,7 @@ import { CsmrFraudDataService, CsmrFraudSupportService } from './services';
 
 @Module({
   imports: [
+    AppModule,
     MicroservicesRmqModule.forSubscriber(),
     MailerModule,
     AsyncLocalStorageModule,

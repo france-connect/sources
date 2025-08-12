@@ -264,7 +264,7 @@ describe('IdentityProviderAdapterMongoService', () => {
 
   describe('legacyToOpenIdPropertyName', () => {
     it('should return identity provider with change legacy property name by openid property name', () => {
-      // setup
+      // Given
       service['decryptClientSecret'] = jest
         .fn()
         .mockReturnValueOnce(legacyIdentityProviderMock.client_secret);
@@ -273,24 +273,24 @@ describe('IdentityProviderAdapterMongoService', () => {
         fqdn: 'core-fcp-high.docker.dev-franceconnect.fr',
       });
 
-      // action
+      // When
       const result = service['legacyToOpenIdPropertyName'](
         legacyIdentityProviderMock as unknown as IdentityProvider,
       );
 
-      // expect
+      // Then
       expect(result).toEqual(validIdentityProviderMock);
     });
   });
 
   describe('toPanvaFormat', () => {
     it('should return an object with data for FC and properties issuer and client for panva', () => {
-      // action
+      // When
       const result = service['toPanvaFormat'](
         legacyToOpenIdPropertyNameOutputMock as unknown,
       );
 
-      // expect
+      // Then
       expect(result).toEqual(validIdentityProviderMock);
     });
   });
@@ -305,37 +305,37 @@ describe('IdentityProviderAdapterMongoService', () => {
     });
 
     it('should resolve', async () => {
-      // arrange
+      // Given
       validateDtoMock.mockResolvedValueOnce([]);
 
-      // action
+      // When
       const result = service['findAllIdentityProvider']();
 
-      // expect
+      // Then
       expect(result).toBeInstanceOf(Promise);
 
       await result;
     });
 
     it('should have called find once', async () => {
-      // arrange
+      // Given
       validateDtoMock.mockResolvedValueOnce([]);
 
-      // action
+      // When
       await service['findAllIdentityProvider']();
 
-      // expect
+      // Then
       expect(repositoryMock.find).toHaveBeenCalledTimes(1);
     });
 
     it('should get the configuration', async () => {
-      // setup
+      // Given
       validateDtoMock.mockResolvedValueOnce([]);
 
-      // action
+      // When
       await service['findAllIdentityProvider']();
 
-      // expect
+      // Then
       expect(configMock.get).toHaveBeenCalledTimes(1);
       expect(configMock.get).toHaveBeenCalledWith(
         'IdentityProviderAdapterMongo',
@@ -343,32 +343,32 @@ describe('IdentityProviderAdapterMongoService', () => {
     });
 
     it('should return result of type list', async () => {
-      // setup
+      // Given
       validateDtoMock.mockResolvedValueOnce([]);
 
-      // action
+      // When
       const result = await service['findAllIdentityProvider']();
 
-      // expect
+      // Then
       expect(result).toEqual([legacyIdentityProviderMock]);
     });
 
     it('should not call validateDto if the config "disableIdpValidationOnLegacy" is set to "true"', async () => {
-      // setup
+      // Given
       validateDtoMock.mockResolvedValueOnce(['there is an error']);
       configMock.get
         .mockReset()
         .mockReturnValueOnce({ disableIdpValidationOnLegacy: true });
 
-      // action
+      // When
       await service['findAllIdentityProvider']();
 
-      // expect
+      // Then
       expect(validateDtoMock).toHaveBeenCalledTimes(0);
     });
 
     it('should log an alert if an entry is excluded by the DTO', async () => {
-      // setup
+      // Given
       const invalidIdentityProviderListMock = [
         legacyIdentityProviderMock,
         invalidIdentityProviderMock,
@@ -381,10 +381,10 @@ describe('IdentityProviderAdapterMongoService', () => {
         .fn()
         .mockResolvedValueOnce(invalidIdentityProviderListMock);
 
-      // action
+      // When
       await service['findAllIdentityProvider']();
 
-      // expect
+      // Then
       expect(loggerMock.alert).toHaveBeenCalledTimes(1);
       expect(loggerMock.alert).toHaveBeenCalledWith(
         `Identity provider "${invalidIdentityProviderMock.name}" (${invalidIdentityProviderMock.uid}) was excluded at DTO validation`,
@@ -392,7 +392,7 @@ describe('IdentityProviderAdapterMongoService', () => {
     });
 
     it('should filter out any entry exluded by the DTO', async () => {
-      // setup
+      // Given
       const invalidIdentityProviderListMock = [
         legacyIdentityProviderMock,
         invalidIdentityProviderMock,
@@ -405,10 +405,10 @@ describe('IdentityProviderAdapterMongoService', () => {
         .fn()
         .mockResolvedValueOnce(invalidIdentityProviderListMock);
 
-      // action
+      // When
       const result = await service['findAllIdentityProvider']();
 
-      // expect
+      // Then
       expect(result).toEqual(identityProviderListMock);
     });
   });
@@ -421,24 +421,24 @@ describe('IdentityProviderAdapterMongoService', () => {
     });
 
     it('should resolve', async () => {
-      // setup
+      // Given
       const legacyToOpenIdMock = jest.spyOn<
         IdentityProviderAdapterMongoService,
         any
       >(service, 'legacyToOpenIdPropertyName');
       legacyToOpenIdMock.mockImplementationOnce((data) => data);
 
-      // action
+      // When
       const result = service.getList();
 
-      // expect
+      // Then
       expect(result).toBeInstanceOf(Promise);
 
       await result;
     });
 
     it('should return a list of valides identity providers', async () => {
-      // setup
+      // Given
       // change client_id and client_secret in validIdentityProviderMock
       const expected = [
         Object.assign(validIdentityProviderMock, {
@@ -460,10 +460,10 @@ describe('IdentityProviderAdapterMongoService', () => {
         fqdn: 'core-fcp-high.docker.dev-franceconnect.fr',
       });
 
-      // action
+      // When
       const result = await service.getList();
 
-      // expect
+      // Then
       expect(result).toEqual(expected);
     });
 

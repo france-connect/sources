@@ -37,6 +37,8 @@ export function getSecurityTicketData(
 
   const ticketTracks = buildTicketTracks(payload, accountIds);
 
+  const { id: fraudCaseId, ...fraudCaseWithoutId } = fraudCase;
+
   const ticketData: SecurityTicketDataInterface = {
     givenName,
     familyName,
@@ -48,7 +50,8 @@ export function getSecurityTicketData(
     tracks: ticketTracks,
     comment: '',
     phoneNumber: '',
-    ...fraudCase,
+    fraudCaseId,
+    ...fraudCaseWithoutId,
   };
 
   return ticketData;

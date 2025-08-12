@@ -277,6 +277,52 @@ Fonctionnalité: Instance - Champs multiples
       | site[0] |
       | site[2] |
 
+  Scénario: Champs multiples - Erreur entre trois valeurs valides avec un localhost et sans sector_identifier_uri
+    Etant donné que je me connecte à l'espace partenaires
+    Et que je suis sur la page liste des instances
+    Et que je clique sur le lien d'ajout d'une instance
+    Et que je suis redirigé vers la page création d'instance
+    Et que j'entre "https://test.com/site0" dans le champ "redirect_uris[0]" du formulaire de création d'instance
+    Et que j'ajoute un champ "redirect_uris" dans le formulaire de création d'instance
+    Et que j'ajoute un champ "redirect_uris" dans le formulaire de création d'instance
+    Et que j'entre "https://test.fr/redirect_uris2" dans le champ "redirect_uris[1]" du formulaire de création d'instance
+    Et que j'entre "https://localhost:3000" dans le champ "redirect_uris[2]" du formulaire de création d'instance
+    Quand je valide le formulaire de création d'instance
+    Alors l'erreur du champ "redirect_uris[0]" contient "Veuillez renseigner un seul nom de domaine et de sous domaine" dans le formulaire de création d'instance
+    Et l'erreur du champ "redirect_uris[1]" contient "Veuillez renseigner un seul nom de domaine et de sous domaine" dans le formulaire de création d'instance
+    Et l'erreur du champ "redirect_uris[2]" contient "Veuillez renseigner un seul nom de domaine et de sous domaine" dans le formulaire de création d'instance
+
+  Scénario: Champs multiples - Erreur entre 2 valeurs valides dont un localhost et une valeur invalide et sans sector_identifier_uri
+    Etant donné que je me connecte à l'espace partenaires
+    Et que je suis sur la page liste des instances
+    Et que je clique sur le lien d'ajout d'une instance
+    Et que je suis redirigé vers la page création d'instance
+    Et que j'entre "https://test.com/site0" dans le champ "redirect_uris[0]" du formulaire de création d'instance
+    Et que j'ajoute un champ "redirect_uris" dans le formulaire de création d'instance
+    Et que j'ajoute un champ "redirect_uris" dans le formulaire de création d'instance
+    Et que j'entre "ftp://test.fr/redirect_uris2" dans le champ "redirect_uris[1]" du formulaire de création d'instance
+    Et que j'entre "https://localhost:3000" dans le champ "redirect_uris[2]" du formulaire de création d'instance
+    Quand je valide le formulaire de création d'instance
+    Alors l'erreur du champ "redirect_uris[0]" contient "Veuillez renseigner un seul nom de domaine et de sous domaine" dans le formulaire de création d'instance
+    Et l'erreur du champ "redirect_uris[1]" contient "Veuillez saisir une url valide" dans le formulaire de création d'instance
+    Et l'erreur du champ "redirect_uris[1]" contient "Veuillez renseigner un seul nom de domaine et de sous domaine" dans le formulaire de création d'instance
+    Et l'erreur du champ "redirect_uris[2]" contient "Veuillez renseigner un seul nom de domaine et de sous domaine" dans le formulaire de création d'instance
+
+  Scénario: Champs multiples - Erreur entre une valeur valide et une valeur invalide et sans sector_identifier_uri
+    Etant donné que je me connecte à l'espace partenaires
+    Et que je suis sur la page liste des instances
+    Et que je clique sur le lien d'ajout d'une instance
+    Et que je suis redirigé vers la page création d'instance
+    Et que j'entre "https://test.com/site0" dans le champ "redirect_uris[0]" du formulaire de création d'instance
+    Et que j'ajoute un champ "redirect_uris" dans le formulaire de création d'instance
+    Et que j'entre "ftp://test.com/site0" dans le champ "redirect_uris[1]" du formulaire de création d'instance
+    Quand je valide le formulaire de création d'instance
+    Alors l'erreur du champ "redirect_uris[1]" contient "Veuillez saisir une url valide" dans le formulaire de création d'instance
+    Et les champs suivants ne sont pas en erreur dans le formulaire de création d'instance
+      | name             |
+      | redirect_uris[0] |
+
+
   Scénario: Champs multiples - Suppression d'un champ en erreur
     Etant donné que je me connecte à l'espace partenaires
     Et que je suis sur la page liste des instances

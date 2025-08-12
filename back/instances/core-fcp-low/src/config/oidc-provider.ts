@@ -10,6 +10,7 @@ import {
   cnam,
   cnous,
   dgfip,
+  dsnj,
   dss,
   fcpLow,
   ft,
@@ -92,6 +93,7 @@ export default {
       ...ft.scopes,
       ...cnafMsa.scopes,
       ...dss.scopes,
+      ...dsnj.scopes,
     },
     clientAuthMethods: ['client_secret_post', 'private_key_jwt'],
     clientDefaults: {

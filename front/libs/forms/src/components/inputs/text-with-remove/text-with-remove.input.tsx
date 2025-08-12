@@ -3,22 +3,34 @@ import React, { useCallback } from 'react';
 import { useField } from 'react-final-form';
 
 import { ComponentTypes } from '../../../enums';
-import { useFieldMeta } from '../../../hooks';
-import { ArrayRemoveButton, GroupElement, MessageElement } from '../../elements';
+import { useFieldMessages, useFieldMeta } from '../../../hooks';
+import type { FieldMessage } from '../../../interfaces';
+import { ArrayRemoveButton, GroupElement, MessagesElement } from '../../elements';
 import { InputComponent } from '../input';
 
 interface TextWithRemoveInputProps {
   index: number;
   fieldName: string;
   isRemovable?: boolean;
+  messages?: FieldMessage[];
   onRemove: (index: number) => void;
   validate: FieldValidator<string> | undefined;
 }
 
 export const TextWithRemoveInput = React.memo(
-  ({ fieldName, index, isRemovable = false, onRemove, validate }: TextWithRemoveInputProps) => {
+  ({
+    fieldName,
+    index,
+    isRemovable = false,
+    messages,
+    onRemove,
+    validate,
+  }: TextWithRemoveInputProps) => {
     const { input, meta } = useField(fieldName, { validate });
-    const { errorMessage, hasError, inputClassname, isValid } = useFieldMeta(meta);
+    const { errorsList, hasError, inputClassname, isValid } = useFieldMeta(meta);
+
+    const fieldMessages = useFieldMessages({ errorsList, isValid, messages });
+    const hasMessages = fieldMessages && fieldMessages.length > 0;
 
     const removeHandler = useCallback(() => {
       onRemove(index);
@@ -41,12 +53,9 @@ export const TextWithRemoveInput = React.memo(
             onClick={removeHandler}
           />
         </div>
-        <MessageElement
-          dataTestId={`${name}-messages`}
-          error={errorMessage}
-          id={id}
-          isValid={isValid}
-        />
+        {hasMessages && (
+          <MessagesElement dataTestId={`${name}-messages`} id={id} messages={fieldMessages} />
+        )}
       </GroupElement>
     );
   },

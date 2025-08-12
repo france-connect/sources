@@ -15,12 +15,12 @@ Fonctionnalité: Instance - Création avec erreurs
     Et les champs suivants sont en erreur dans le formulaire de création d'instance
       | name                         | errorMessage                                             |
       | name                         | Veuillez saisir le nom de votre instance                 |
-      | site[0]                      | Veuillez saisir votre url de site                        |
       | redirect_uris[0]             | Veuillez saisir votre url de connexion (url de callback) |
       | post_logout_redirect_uris[0] | Veuillez saisir votre url de déconnexion (url de logout) |
       | id_token_signed_response_alg | Ce champ est obligatoire                                 |
     Et les champs suivants ne sont pas en erreur dans le formulaire de création d'instance
-      | name                          |
+      | name |
+      | site[0]
       | platform                      |
       | signupId                      |
       | IPServerAddressesAndRanges[0] |

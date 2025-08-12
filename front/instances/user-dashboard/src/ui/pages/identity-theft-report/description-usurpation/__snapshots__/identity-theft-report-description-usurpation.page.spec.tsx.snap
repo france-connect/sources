@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`IdentityTheftReportDescriptionUsurpationPage should match the snapshot 1`] = `
+<div>
+  <h2>
+    Description de l’usurpation
+  </h2>
+  <div
+    data-mockid="AlertComponent"
+  >
+    <div>
+      AlertComponent
+    </div>
+    <div>
+      <p>
+        Vous trouverez dans l’email les informations nécessaires à nous transmettre.
+      </p>
+    </div>
+  </div>
+  <div
+    class="fr-border-default--grey fr-mt-3w fr-p-3w"
+  >
+    <div
+      data-mockid="DTO2FormComponent"
+    />
+  </div>
+</div>
+`;

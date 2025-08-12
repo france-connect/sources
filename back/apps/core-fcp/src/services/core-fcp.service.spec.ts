@@ -183,10 +183,10 @@ describe('CoreFcpService', () => {
         sentNotificationsForSp: [],
       });
 
-      // action
+      // When
       const result = service.sendNotificationMail(deviceInfo);
       await result;
-      // expect
+      // Then
       expect(result).toBeInstanceOf(Promise);
     });
 

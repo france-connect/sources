@@ -1,5 +1,6 @@
 import { getMetadataStorage } from 'class-validator';
 
+import { MessageLevelEnum, MessagePriorityEnum } from '../enums';
 import { convertRegExpToStrings } from '../helpers';
 import {
   ChoiceAttributes,
@@ -29,7 +30,11 @@ export class FormDecoratorHelper {
     return validators.map((validator: FieldValidatorBase) => {
       const finalValidator = validator as FieldValidator;
 
-      finalValidator.errorMessage = `${validator.name}_error`;
+      finalValidator.errorMessage = {
+        content: `${validator.name}_error`,
+        level: MessageLevelEnum.ERROR,
+        priority: MessagePriorityEnum.ERROR,
+      };
       finalValidator.validationArgs = convertRegExpToStrings(
         validator.validationArgs,
       );
@@ -120,7 +125,11 @@ export class FormDecoratorHelper {
     if (attributes.required) {
       const requiredFieldValidator = {
         name: 'isFilled',
-        errorMessage: `isFilled_error`,
+        errorMessage: {
+          content: `isFilled_error`,
+          level: MessageLevelEnum.ERROR,
+          priority: MessagePriorityEnum.ERROR,
+        },
         validationArgs: [],
       };
       attributes.validators.unshift(requiredFieldValidator);

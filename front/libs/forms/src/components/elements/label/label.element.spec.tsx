@@ -4,6 +4,7 @@ import { useFieldLabel } from '../../../hooks';
 import { LabelElement } from './label.element';
 
 jest.mock('../../../hooks/field-label/field-label.hook');
+jest.mock('../see-also');
 
 describe('LabelElement', () => {
   beforeEach(() => {
@@ -12,6 +13,7 @@ describe('LabelElement', () => {
       hint: 'hook-hint-mock',
       label: 'hook-label-mock',
       required: expect.any(Boolean),
+      seeAlso: undefined,
     });
   });
 
@@ -35,12 +37,51 @@ describe('LabelElement', () => {
     });
   });
 
+  it('should render the span even if only seeAlso is provided', () => {
+    // Given
+    const hintMock = undefined;
+    const seeAlsoMock = 'http://foo.bar/test';
+    jest.mocked(useFieldLabel).mockReturnValue({
+      hint: undefined,
+      label: 'hook-label-mock',
+      required: expect.any(Boolean),
+      seeAlso: 'see-also-valid',
+    });
+
+    // When
+    const { getByTestId } = render(
+      <LabelElement hint={hintMock} label="any-label" name="name-mock" seeAlso={seeAlsoMock} />,
+    );
+    const seeAlsoElt = getByTestId('SeeAlsoElement');
+
+    // Then
+    expect(seeAlsoElt).toBeDefined();
+  });
+
+  it('should render the span even if only hint is provided', () => {
+    // Given
+    const hintMock = 'test hint';
+    const seeAlsoMock = undefined;
+
+    // When
+    const { getByTestId, getByText } = render(
+      <LabelElement hint={hintMock} label="any-label" name="name-mock" seeAlso={seeAlsoMock} />,
+    );
+    const hintElt = getByText('hook-hint-mock');
+    const seeAlsoElt = getByTestId('SeeAlsoElement');
+
+    // Then
+    expect(hintElt).toHaveClass('fr-hint-text');
+    expect(seeAlsoElt).toBeDefined();
+  });
+
   it('should match the snapshot', () => {
     // Given
     jest.mocked(useFieldLabel).mockReturnValueOnce({
       hint: 'hook-hint-mock',
       label: 'hook-label-mock',
       required: true,
+      seeAlso: 'http://foo.bar/test',
     });
 
     // When
@@ -49,6 +90,7 @@ describe('LabelElement', () => {
         className="any-classname-mock"
         label={expect.any(String)}
         name="any-name-mock"
+        seeAlso="http://foo.bar/test"
       />,
     );
     const hintElt = getByText('hook-hint-mock');

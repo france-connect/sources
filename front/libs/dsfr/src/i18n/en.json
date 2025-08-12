@@ -1,6 +1,8 @@
 {
   "DSFR.stepper.location": "Step {current} of {total}",
   "DSFR.stepper.nextStep": "Next step",
+  "DSFR.stepper.nextStepButton": "Next",
+  "DSFR.stepper.previousStepButton": "Previous",
   "DSFR.breadcrumbs.show": "Show breadcrumbs",
   "DSFR.breadcrumbs.location": "You are here :",
   "DSFR.button.loginConnect.whatIs": "What is {connectType}?",

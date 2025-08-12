@@ -13,9 +13,10 @@ config example in instance:
 
 ```typescript
 import { ConfigParser } from '@fc/config';
-import { RabbitmqConfig } from '@fc/rabbitmq';
+import { Versions } from '@fc/csmr-hsm-client/protocol';
+import { MicroservicesRmqConfig } from '@fc/microservices-rmq';
 
-const env = new ConfigParser(process.env, 'MicroserviceCsmrHsmClient');
+const env = new ConfigParser(process.env, 'CryptographyBroker');
 
 export default {
   payloadEncoding: 'base64',
@@ -24,13 +25,14 @@ export default {
   queueOptions: { durable: false },
   // Global request timeout used for any outgoing app requests.
   requestTimeout: parseInt(process.env.REQUEST_TIMEOUT, 10),
-} as RabbitmqConfig;
+  protocolVersion: Versions.V2,
+} as MicroservicesRmqConfig;
 ```
 
 The following environment variables must be defined:
 
-- MicroserviceCsmrHsmClient_QUEUE
-- MicroserviceCsmrHsmClient_URLS
+- CryptographyBroker_URLS
+- CryptographyBroker_QUEUE
 - REQUEST_TIMEOUT
 
 ## Usage
@@ -48,7 +50,7 @@ class Foo {
 
   async someMethod(payload: any) {
     const message = {
-      type: ActionTypes.CRYPTO_SIGN,
+      type: ActionTypes.SIGN,
       payload: {
         data: dataBuffer.toString(payloadEncoding),
         digest,

@@ -1,13 +1,18 @@
 import { Strings } from '@fc/common';
 
-import type { PropsWithHintType } from '../../types';
+import type { PropsWithHintType, PropsWithSeeAlsoType } from '../../types';
 
-interface FieldLabelProps extends PropsWithHintType {
+interface FieldLabelProps extends PropsWithHintType, PropsWithSeeAlsoType {
   required?: boolean;
   label: string;
 }
 
-export const useFieldLabel = ({ hint = undefined, label, required = false }: FieldLabelProps) => {
+export const useFieldLabel = ({
+  hint = undefined,
+  label,
+  required = false,
+  seeAlso = undefined,
+}: FieldLabelProps) => {
   const nextHint = typeof hint === 'function' ? hint(required) : hint;
 
   const labelPrefix = !required
@@ -18,6 +23,7 @@ export const useFieldLabel = ({ hint = undefined, label, required = false }: Fie
     hint: nextHint,
     label: `${label}${labelPrefix}`,
     required,
+    seeAlso,
   };
 
   return result;

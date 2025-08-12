@@ -385,7 +385,7 @@ describe('ApacheIgniteService', () => {
     });
 
     it('should set the keep alive of the socket', async () => {
-      // setup
+      // Given
       service['setSocketKeepAlive'] = jest.fn();
 
       // when
@@ -456,7 +456,7 @@ describe('ApacheIgniteService', () => {
     });
 
     it('should not log anything if the state is not CONNECTED or DISCONNECTED', () => {
-      // setup
+      // Given
       const STATE_UNKNOWWN_MOCK = 42;
 
       // when
@@ -553,7 +553,7 @@ describe('ApacheIgniteService', () => {
 
   describe('setSocketKeepAlive', () => {
     it('should set the keep alive of the low level NodeJs socket instance', () => {
-      // setup
+      // Given
       const socketKeepAliveConfig = {
         enable: true,
         initialDelay: 150000,
@@ -578,7 +578,7 @@ describe('ApacheIgniteService', () => {
     });
 
     it('should throw an ApacheIgniteInvalidSocketException id there is no socket', () => {
-      // setup
+      // Given
       service['igniteClient'] = { _socket: undefined };
       const socketKeepAliveConfig = {
         enable: true,

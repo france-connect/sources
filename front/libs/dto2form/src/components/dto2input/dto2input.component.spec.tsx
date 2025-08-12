@@ -1,6 +1,7 @@
 import { render } from '@testing-library/react';
 
-import { ConfigService } from '@fc/config';
+import { useSafeContext } from '@fc/common';
+import type { FormConfigInterface } from '@fc/forms';
 import { ArrayField, ChoicesField, FieldTypes, InputField, SelectField } from '@fc/forms';
 
 import { useFieldValidate } from '../../hooks';
@@ -36,10 +37,14 @@ describe('DTO2InputComponent', () => {
   };
   const validateMock = jest.fn();
 
+  const configMock = {
+    validateOnFieldChange: true,
+  } as FormConfigInterface;
+
   beforeEach(() => {
     // Given
     jest.mocked(useFieldValidate).mockReturnValue(validateMock);
-    jest.mocked(ConfigService.get).mockReturnValue({ validateOnFieldChange: true });
+    jest.mocked(useSafeContext).mockReturnValue(configMock);
   });
 
   it('should call useFieldValidate hook', () => {
@@ -241,15 +246,15 @@ describe('DTO2InputComponent', () => {
 
   it('should call InputField without the validate function when DTO2Form.validateOnFieldChange is false', () => {
     // Given
-    jest.mocked(ConfigService.get).mockReturnValueOnce({ validateOnFieldChange: false });
+    jest
+      .mocked(useSafeContext)
+      .mockReturnValue({ validateOnFieldChange: false } as FormConfigInterface);
 
     // When
     render(<DTO2InputComponent field={{ ...fieldMock, type: FieldTypes.TEXT }} />);
 
     // Then
     expect(useFieldValidate).toHaveBeenCalledOnce();
-    expect(ConfigService.get).toHaveBeenCalledOnce();
-    expect(ConfigService.get).toHaveBeenCalledWith('DTO2Form');
     expect(InputField).toHaveBeenCalledOnce();
     expect(InputField).toHaveBeenCalledWith(
       {

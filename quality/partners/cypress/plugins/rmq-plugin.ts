@@ -94,7 +94,11 @@ export async function rmqInitQueue(queue: string): Promise<boolean> {
     // Retrieve existing channel
     channel = await connection.createChannel();
 
-    await channel.assertQueue(queue, { durable: false });
+    await channel.assertQueue(queue, {
+      // You need to change this when updating the tiemout on application side !!!
+      arguments: { 'x-message-ttl': 5000 },
+      durable: true,
+    });
     result = await channel.purgeQueue(queue);
   } catch (error) {
     // Display the error in the cypress console

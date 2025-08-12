@@ -13,12 +13,14 @@ import { ViewTemplateService } from '@fc/view-templates';
 import { getConfigMock } from '@mocks/config';
 import { getLoggerMock } from '@mocks/logger';
 
+import { FieldMessage } from '../dto';
+import { MessageLevelEnum, MessagePriorityEnum } from '../enums';
 import {
   FieldValidator,
   MetadataDtoTranslationInterface,
   ValidatorType,
 } from '../interfaces';
-import { PartnersI18nService } from '../services';
+import { Dto2FormI18nService } from '../services';
 import { FormValidationExceptionFilter } from './form-validation-exception.filter';
 
 jest.mock('@fc/exceptions/helpers', () => ({
@@ -78,6 +80,24 @@ describe('FormValidationExceptionFilter', () => {
     },
   };
 
+  const isRequiredErrorMessageMock: FieldMessage = {
+    content: 'This field is required',
+    level: MessageLevelEnum.ERROR,
+    priority: MessagePriorityEnum.ERROR,
+  };
+
+  const isLengthErrorMessageMock: FieldMessage = {
+    content: 'Must be between 3 and 10 characters',
+    level: MessageLevelEnum.ERROR,
+    priority: MessagePriorityEnum.ERROR,
+  };
+
+  const isEmailErrorMessageMock: FieldMessage = {
+    content: 'Must be a valid email',
+    level: MessageLevelEnum.ERROR,
+    priority: MessagePriorityEnum.ERROR,
+  };
+
   beforeEach(async () => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
@@ -89,7 +109,7 @@ describe('FormValidationExceptionFilter', () => {
         LoggerService,
         EventBus,
         ViewTemplateService,
-        PartnersI18nService,
+        Dto2FormI18nService,
       ],
     })
       .overrideProvider(LoggerService)
@@ -100,7 +120,7 @@ describe('FormValidationExceptionFilter', () => {
       .useValue(eventBusMock)
       .overrideProvider(ViewTemplateService)
       .useValue(viewTemplateServiceMock)
-      .overrideProvider(PartnersI18nService)
+      .overrideProvider(Dto2FormI18nService)
       .useValue(partnersServiceMock)
       .compile();
 
@@ -223,12 +243,12 @@ describe('FormValidationExceptionFilter', () => {
           validators: [
             {
               name: 'isRequired',
-              errorMessage: 'This field is required',
+              errorMessage: isRequiredErrorMessageMock,
               validationArgs: [],
             },
             {
               name: 'isLength',
-              errorMessage: 'Must be between 3 and 10 characters',
+              errorMessage: isLengthErrorMessageMock,
               validationArgs: [],
             },
           ],
@@ -239,7 +259,7 @@ describe('FormValidationExceptionFilter', () => {
           validators: [
             {
               name: 'isEmail',
-              errorMessage: 'Must be a valid email',
+              errorMessage: isEmailErrorMessageMock,
               validationArgs: [],
             },
           ],
@@ -270,22 +290,19 @@ describe('FormValidationExceptionFilter', () => {
           validators: [
             {
               name: 'isRequired',
-              errorMessage: 'This field is required',
+              errorMessage: isRequiredErrorMessageMock,
               validationArgs: [],
             },
             {
               name: 'isLength',
-              errorMessage: 'Must be between 3 and 10 characters',
+              errorMessage: isLengthErrorMessageMock,
               validationArgs: [],
             },
           ],
         },
       ];
 
-      const expected = [
-        'This field is required',
-        'Must be between 3 and 10 characters',
-      ];
+      const expected = [isRequiredErrorMessageMock, isLengthErrorMessageMock];
       filter['getErrorMessages'] = jest.fn().mockReturnValue(expected);
 
       // When
@@ -337,18 +354,18 @@ describe('FormValidationExceptionFilter', () => {
       const nestedValidatorsMock: ValidatorType[] = [
         {
           name: 'isRequired',
-          errorMessage: 'This field is required',
+          errorMessage: isRequiredErrorMessageMock,
           validationArgs: [],
         },
         [
           {
             name: 'isLength',
-            errorMessage: 'Must be between 3 and 10 characters',
+            errorMessage: isLengthErrorMessageMock,
             validationArgs: [],
           },
           {
             name: 'isEmail',
-            errorMessage: 'Must be a valid email',
+            errorMessage: isEmailErrorMessageMock,
             validationArgs: [],
           },
         ],
@@ -387,12 +404,12 @@ describe('FormValidationExceptionFilter', () => {
       const validatorMock: FieldValidator[] = [
         {
           name: 'isRequired',
-          errorMessage: 'This field is required',
+          errorMessage: isRequiredErrorMessageMock,
           validationArgs: [],
         },
         {
           name: 'isLength',
-          errorMessage: 'Must be between 3 and 10 characters',
+          errorMessage: isLengthErrorMessageMock,
           validationArgs: [],
         },
       ];
@@ -402,8 +419,8 @@ describe('FormValidationExceptionFilter', () => {
 
       // Then
       expect(result).toEqual([
-        'This field is required',
-        'Must be between 3 and 10 characters',
+        isRequiredErrorMessageMock,
+        isLengthErrorMessageMock,
       ]);
     });
 
@@ -425,7 +442,7 @@ describe('FormValidationExceptionFilter', () => {
       // Given
       const validatorMock: FieldValidator = {
         name: 'isRequired',
-        errorMessage: 'This field is required',
+        errorMessage: isRequiredErrorMessageMock,
         validationArgs: [],
       };
 
@@ -433,7 +450,7 @@ describe('FormValidationExceptionFilter', () => {
       const result = filter['extractErrorMessage'](validatorMock);
 
       // Then
-      expect(result).toEqual('This field is required');
+      expect(result).toEqual(isRequiredErrorMessageMock);
     });
 
     it('should extract error labels for an array of validators', () => {
@@ -441,12 +458,12 @@ describe('FormValidationExceptionFilter', () => {
       const validatorMock: FieldValidator[] = [
         {
           name: 'isRequired',
-          errorMessage: 'This field is required',
+          errorMessage: isRequiredErrorMessageMock,
           validationArgs: [],
         },
         {
           name: 'isLength',
-          errorMessage: 'Must be between 3 and 10 characters',
+          errorMessage: isLengthErrorMessageMock,
           validationArgs: [],
         },
       ];
@@ -456,8 +473,8 @@ describe('FormValidationExceptionFilter', () => {
 
       // Then
       expect(result).toEqual([
-        'This field is required',
-        'Must be between 3 and 10 characters',
+        isRequiredErrorMessageMock,
+        isLengthErrorMessageMock,
       ]);
     });
 

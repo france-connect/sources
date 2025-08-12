@@ -3,7 +3,7 @@ import { renderHook } from '@testing-library/react';
 import { useFieldMeta } from './field-meta.hook';
 
 describe('useFieldMeta', () => {
-  it('should return hasError as true and correct errorMessage when meta has error and is touched', () => {
+  it('should return hasError as true and correct errorsList when meta has error and is touched', () => {
     // Given
     const meta = {
       error: 'any-error-message-mock',
@@ -19,14 +19,14 @@ describe('useFieldMeta', () => {
 
     // Then
     expect(result.current).toStrictEqual({
-      errorMessage: 'any-error-message-mock',
+      errorsList: ['any-error-message-mock'],
       hasError: true,
       inputClassname: 'fr-input fr-input--error',
       isValid: false,
     });
   });
 
-  it('should return hasError as true and correct errorMessage when meta has submitError and is touched', () => {
+  it('should return hasError as true and correct errorsList when meta has submitError and is touched', () => {
     // Given
     const meta = {
       error: null,
@@ -42,7 +42,7 @@ describe('useFieldMeta', () => {
 
     // Then
     expect(result.current).toStrictEqual({
-      errorMessage: 'any-error-message-mock',
+      errorsList: ['any-error-message-mock'],
       hasError: true,
       inputClassname: 'fr-input fr-input--error',
       isValid: false,
@@ -65,7 +65,7 @@ describe('useFieldMeta', () => {
 
     // Then
     expect(result.current).toStrictEqual({
-      errorMessage: 'any-error-message-mock',
+      errorsList: ['any-error-message-mock'],
       hasError: true,
       inputClassname: 'fr-input fr-input--error',
       isValid: false,
@@ -88,7 +88,7 @@ describe('useFieldMeta', () => {
 
     // Then
     expect(result.current).toStrictEqual({
-      errorMessage: undefined,
+      errorsList: [],
       hasError: false,
       inputClassname: 'fr-input fr-input--valid',
       isValid: true,
@@ -111,7 +111,7 @@ describe('useFieldMeta', () => {
 
     // Then
     expect(result.current).toStrictEqual({
-      errorMessage: undefined,
+      errorsList: [],
       hasError: false,
       inputClassname: 'fr-input',
       isValid: false,
@@ -134,7 +134,7 @@ describe('useFieldMeta', () => {
 
     // Then
     expect(result.current).toStrictEqual({
-      errorMessage: undefined,
+      errorsList: [],
       hasError: false,
       inputClassname: 'fr-input',
       isValid: false,

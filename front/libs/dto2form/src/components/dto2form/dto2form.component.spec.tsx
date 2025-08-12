@@ -3,9 +3,10 @@ import React from 'react';
 
 import { sortByKey } from '@fc/common';
 import { ConfigService } from '@fc/config';
-import { FieldTypes, FormComponent } from '@fc/forms';
+import type { FormConfigInterface } from '@fc/forms';
+import { FieldTypes, FormComponent, FormConfigContext } from '@fc/forms';
 
-import { useFormPreSubmit } from '../../hooks';
+import { useFormSubmit } from '../../hooks';
 import type { SchemaFieldType } from '../../types';
 import { DTO2InputComponent } from '../dto2input';
 import { DTO2SectionComponent } from '../dto2section';
@@ -14,13 +15,15 @@ import { DTO2FormComponent } from './dto2form.component';
 // Given
 jest.mock('../dto2input/dto2input.component');
 jest.mock('../dto2section/dto2section.component');
-jest.mock('../../hooks/form-pre-submit/form-pre-submit.hook');
+jest.mock('../../hooks', () => ({
+  ...jest.requireActual('../../hooks'),
+  useFormSubmit: jest.fn(),
+}));
 
 describe('DTO2FormComponent', () => {
   // Given
   const initialValuesMock = {};
-  const onSubmitMock = jest.fn();
-  const preSubmitMock = jest.fn();
+  const submitHandlerMock = jest.fn();
   const onValidateMock = jest.fn();
   const schemaMock = [
     { name: 'any-name-1-mock', order: 1, type: FieldTypes.TEXT } as unknown as SchemaFieldType,
@@ -30,16 +33,27 @@ describe('DTO2FormComponent', () => {
   ];
   const configMock = {
     id: expect.any(String),
-  };
+    validateOnSubmit: true,
+  } as FormConfigInterface;
   const submitLabelMock = 'any-submit-label-mock';
+
+  const onSubmitMock = jest.fn();
+  const onPostSubmitMock = jest.fn();
+  const onPreSubmitMock = jest.fn();
 
   beforeEach(() => {
     // Given
-    jest.mocked(useFormPreSubmit).mockReturnValue(preSubmitMock);
+    jest.mocked(useFormSubmit).mockReturnValue(submitHandlerMock);
     jest.mocked(ConfigService.get).mockReturnValue({ validateOnSubmit: true });
     jest
       .mocked(FormComponent)
       .mockImplementation(({ children }) => <div data-mockid="FormComponent">{children}</div>);
+
+    jest
+      .mocked(FormConfigContext.Provider)
+      .mockImplementation(({ children }) => (
+        <div data-mockid="FormConfigContextProvider">{children}</div>
+      ));
   });
 
   it('should match the snapshot', () => {
@@ -57,15 +71,29 @@ describe('DTO2FormComponent', () => {
 
     // Then
     expect(container).toMatchSnapshot();
-    expect(useFormPreSubmit).toHaveBeenCalledOnce();
-    expect(useFormPreSubmit).toHaveBeenCalledWith(onSubmitMock);
+  });
+
+  it('should call FormComponent', () => {
+    // When
+    render(
+      <DTO2FormComponent
+        config={configMock}
+        initialValues={initialValuesMock}
+        schema={schemaMock}
+        submitLabel={submitLabelMock}
+        onSubmit={onSubmitMock}
+        onValidate={onValidateMock}
+      />,
+    );
+
+    // Then
     expect(FormComponent).toHaveBeenCalledOnce();
     expect(FormComponent).toHaveBeenCalledWith(
       {
         children: expect.any(Object),
         config: configMock,
         initialValues: initialValuesMock,
-        onSubmit: preSubmitMock,
+        onSubmit: submitHandlerMock,
         onValidate: onValidateMock,
         submitLabel: 'any-submit-label-mock',
       },
@@ -90,24 +118,26 @@ describe('DTO2FormComponent', () => {
 
     // Then
     expect(useMemoSpy).toHaveBeenCalledOnce();
-    expect(useMemoSpy).toHaveBeenCalledWith(expect.any(Function), [schemaMock, configMock.id]);
+    expect(useMemoSpy).toHaveBeenCalledWith(expect.any(Function), [schemaMock, configMock]);
   });
 
-  it('should call and use the useFormPreSubmit hook with param', () => {
+  it('should call and use the useFormSubmit hook with on[X]Submit params', () => {
     // When
     render(
       <DTO2FormComponent
         config={configMock}
         initialValues={initialValuesMock}
         schema={schemaMock}
+        onPostSubmit={onPostSubmitMock}
+        onPreSubmit={onPreSubmitMock}
         onSubmit={onSubmitMock}
         onValidate={onValidateMock}
       />,
     );
 
     // Then
-    expect(useFormPreSubmit).toHaveBeenCalledOnce();
-    expect(useFormPreSubmit).toHaveBeenCalledWith(onSubmitMock);
+    expect(useFormSubmit).toHaveBeenCalledOnce();
+    expect(useFormSubmit).toHaveBeenCalledWith(onSubmitMock, onPreSubmitMock, onPostSubmitMock);
   });
 
   it('should sort the rendered children', () => {
@@ -142,12 +172,14 @@ describe('DTO2FormComponent', () => {
 
   it('should call FormComponent without the validate function when DTO2Form.validateOnSubmit is false', () => {
     // Given
-    jest.mocked(ConfigService.get).mockReturnValueOnce({ validateOnSubmit: false });
-
+    const configWithoutValidateMock = {
+      ...configMock,
+      validateOnSubmit: false,
+    };
     // When
     render(
       <DTO2FormComponent
-        config={configMock}
+        config={configWithoutValidateMock}
         initialValues={initialValuesMock}
         schema={schemaMock}
         onSubmit={onSubmitMock}
@@ -156,15 +188,13 @@ describe('DTO2FormComponent', () => {
     );
 
     // Then
-    expect(ConfigService.get).toHaveBeenCalledOnce();
-    expect(ConfigService.get).toHaveBeenCalledWith('DTO2Form');
     expect(FormComponent).toHaveBeenCalledOnce();
     expect(FormComponent).toHaveBeenCalledWith(
       {
         children: expect.any(Object),
-        config: configMock,
+        config: configWithoutValidateMock,
         initialValues: initialValuesMock,
-        onSubmit: preSubmitMock,
+        onSubmit: submitHandlerMock,
         onValidate: undefined,
       },
       undefined,

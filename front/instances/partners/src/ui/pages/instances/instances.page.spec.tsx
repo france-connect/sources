@@ -39,6 +39,7 @@ describe('InstancesPage', () => {
     jest
       .mocked(t)
       .mockReturnValueOnce('any-sandbox_title')
+      .mockReturnValueOnce('any-baseline')
       .mockReturnValueOnce('any-create_tile_desc')
       .mockReturnValueOnce('any-create_tile_title');
 
@@ -48,10 +49,6 @@ describe('InstancesPage', () => {
 
     // Then
     expect(container).toMatchSnapshot();
-    expect(t).toHaveBeenCalledTimes(3);
-    expect(t).toHaveBeenNthCalledWith(1, 'Partners.homepage.sandboxTitle');
-    expect(t).toHaveBeenNthCalledWith(2, 'Partners.homepage.createTileDescription');
-    expect(t).toHaveBeenNthCalledWith(3, 'Partners.homepage.createTileTitle');
     expect(titleElt).toBeInTheDocument();
     expect(titleElt).toHaveAttribute('data-testid', 'instances-page-title');
     expect(TileComponent).toHaveBeenCalledOnce();
@@ -85,8 +82,6 @@ describe('InstancesPage', () => {
 
     // Then
     expect(container).toMatchSnapshot();
-    expect(t).toHaveBeenCalledOnce();
-    expect(t).toHaveBeenNthCalledWith(1, 'Partners.homepage.sandboxTitle');
     expect(titleElt).toBeInTheDocument();
     expect(CreateInstanceButton).toHaveBeenCalledOnce();
     expect(CreateInstanceButton).toHaveBeenCalledWith({}, undefined);
@@ -101,7 +96,11 @@ describe('InstancesPage', () => {
       message: 'any-submit-i18n-message-mock' as SubmitTypesMessage,
       type: 'any-submit-type-mock' as EventTypes.ERROR,
     };
-    jest.mocked(t).mockReturnValueOnce('any').mockReturnValueOnce('any-submit-message-mock');
+    jest
+      .mocked(t)
+      .mockReturnValueOnce('any')
+      .mockReturnValueOnce('any-baseline-mock')
+      .mockReturnValueOnce('any-submit-message-mock');
     jest.mocked(useInstances).mockReturnValueOnce({
       closeAlertHandler: closeAlertHandlerMock,
       hasItems: true,
@@ -113,7 +112,6 @@ describe('InstancesPage', () => {
     const { container } = render(<InstancesPage />);
 
     // Then
-    expect(t).toHaveBeenNthCalledWith(2, 'any-submit-i18n-message-mock');
     expect(container).toMatchSnapshot();
     expect(AlertComponent).toHaveBeenCalledOnce();
     expect(AlertComponent).toHaveBeenCalledWith(

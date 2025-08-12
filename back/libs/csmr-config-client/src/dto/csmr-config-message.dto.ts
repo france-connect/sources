@@ -130,6 +130,14 @@ export class ConfigCreateMessageDtoPayload
   readonly eidas?: number;
 }
 
+export class ConfigCreateViaMessageDtoPayload extends ConfigCreateMessageDtoPayload {
+  @IsString()
+  createdBy: string;
+
+  @IsString()
+  createdVia: string;
+}
+
 export class ConfigMessageDtoMeta implements FSAMeta {
   [key: string]: unknown;
 
@@ -148,9 +156,9 @@ export class ConfigMessageDto implements FSA<ConfigMessageDtoMeta> {
   readonly type: ActionTypes;
 
   @IsObject()
-  @Type(() => ConfigCreateMessageDtoPayload)
+  @Type(() => ConfigCreateViaMessageDtoPayload)
   @ValidateNested()
-  readonly payload: ConfigCreateMessageDtoPayload;
+  readonly payload: ConfigCreateViaMessageDtoPayload;
 
   @IsOptional()
   @IsObject()

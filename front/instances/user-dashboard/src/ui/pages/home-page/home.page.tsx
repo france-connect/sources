@@ -1,3 +1,4 @@
+import { Helmet } from '@dr.pogodin/react-helmet';
 import classnames from 'classnames';
 import React from 'react';
 import { useLocation } from 'react-router';
@@ -23,40 +24,48 @@ export const HomePage = React.memo(() => {
   const { pathname } = location.state?.from ?? {};
 
   return (
-    <div
-      className={classnames('large-container fr-m-auto fr-px-2w', {
-        // Class CSS
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        'fr-mt-5w': !gtDesktop,
-        // Class CSS
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        'fr-mt-8w': gtDesktop,
-        // Class CSS
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        'text-center': gtMobile,
-        // Class CSS
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        'text-left': !gtMobile,
-      })}
-      id="page-container">
-      {expired && (
-        <AlertComponent className="text-left fr-my-3w" size={Sizes.SMALL} type={EventTypes.WARNING}>
-          <p>Votre session a expiré, veuillez vous reconnecter</p>
-        </AlertComponent>
-      )}
-      <h1 className={classnames(styles.title, 'fr-mb-5w')}>
-        Pour accéder à votre tableau de bord FranceConnect, veuillez vous connecter
-      </h1>
-      <LoginFormComponent
-        className="flex-rows items-center"
-        connectType={ConnectTypes.FRANCE_CONNECT}
-        redirectUrl={pathname}
-      />
-      <p className={classnames(styles.paragraph, 'fr-m-auto fr-mt-7v')} data-testid="paragraph">
-        Une fois connecté, vous pourrez consulter l’historique de vos connexions et configurer vos
-        accès FranceConnect.
-      </p>
-    </div>
+    <React.Fragment>
+      <Helmet>
+        <title>Mon tableau de bord - Accueil</title>
+      </Helmet>
+      <div
+        className={classnames('large-container fr-m-auto fr-px-2w', {
+          // Class CSS
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          'fr-mt-5w': !gtDesktop,
+          // Class CSS
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          'fr-mt-8w': gtDesktop,
+          // Class CSS
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          'text-center': gtMobile,
+          // Class CSS
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          'text-left': !gtMobile,
+        })}
+        id="page-container">
+        {expired && (
+          <AlertComponent
+            className="text-left fr-my-3w"
+            size={Sizes.SMALL}
+            type={EventTypes.WARNING}>
+            <p>Votre session a expiré, veuillez vous reconnecter</p>
+          </AlertComponent>
+        )}
+        <h1 className="fr-text-title--blue-france fr-mb-5w">
+          Pour accéder à votre tableau de bord FranceConnect, veuillez vous connecter
+        </h1>
+        <LoginFormComponent
+          className="flex-rows items-center"
+          connectType={ConnectTypes.FRANCE_CONNECT}
+          redirectUrl={pathname}
+        />
+        <p className={classnames(styles.paragraph, 'fr-m-auto fr-mt-7v')} data-testid="paragraph">
+          Une fois connecté, vous pourrez consulter l’historique de vos connexions et configurer vos
+          accès FranceConnect.
+        </p>
+      </div>
+    </React.Fragment>
   );
 });
 

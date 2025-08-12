@@ -51,13 +51,13 @@ describe('CoreFcpEidasIdentityCheckHandler', () => {
   });
 
   it('should log when check identity', async () => {
-    // arrange
+    // Given
     validationDtoMock.mockResolvedValueOnce([]);
 
-    // action
+    // When
     await service.handle(identityMock);
 
-    // expect
+    // Then
     expect(loggerServiceMock.debug).toHaveBeenCalledTimes(1);
     expect(loggerServiceMock.debug).toHaveBeenCalledWith(
       'Identity Check: ##### core-fcp-eidas-identity-check',
@@ -65,24 +65,24 @@ describe('CoreFcpEidasIdentityCheckHandler', () => {
   });
 
   it('should successfully check identity', async () => {
-    // arrange
+    // Given
     validationDtoMock.mockResolvedValueOnce([]);
 
-    // action
+    // When
     const results = await service.handle(identityMock);
 
-    // expect
+    // Then
     expect(results).toStrictEqual([]);
   });
 
   it('should successfully check identity with DTO', async () => {
-    // arrange
+    // Given
     validationDtoMock.mockResolvedValueOnce([]);
 
-    // action
+    // When
     await service.handle(identityMock);
 
-    // expect
+    // Then
     expect(validationDtoMock).toHaveBeenCalledTimes(1);
     expect(validationDtoMock).toHaveBeenCalledWith(
       identityMock,
@@ -99,14 +99,14 @@ describe('CoreFcpEidasIdentityCheckHandler', () => {
   });
 
   it('should failed check identity with DTO', async () => {
-    // arrange
+    // Given
     const errorMock = new Error('Unknown Error');
     validationDtoMock.mockResolvedValueOnce([errorMock]);
 
-    // action
+    // When
     const results = await service.handle(identityMock);
 
-    // expect
+    // Then
     expect(results).toStrictEqual([errorMock]);
   });
 });

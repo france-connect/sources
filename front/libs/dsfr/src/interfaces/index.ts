@@ -9,4 +9,5 @@ export * from './get-navigation-numbers.interface';
 export * from './get-pages-count.interface';
 export * from './media.interface';
 export * from './pagination.interface';
-export * from './use-pagination-hook.interface';
+export * from './stepper';
+export * from './table';

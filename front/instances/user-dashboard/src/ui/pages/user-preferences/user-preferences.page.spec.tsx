@@ -1,13 +1,11 @@
 import { render } from '@testing-library/react';
 import type { PropsWithChildren } from 'react';
 
+import { UserPreferencesIntroductionComponent } from '@fc/core-user-dashboard';
 import { StylesProvider, useStylesQuery, useStylesVariables } from '@fc/styles';
 import { UserPreferencesComponent } from '@fc/user-preferences';
 
-import { UserPreferencesIntroductionComponent } from '../../components';
 import { UserPreferencesPage } from './user-preferences.page';
-
-jest.mock('../../components/user-preferences-introduction/user-preferences-introduction.component');
 
 describe('UserPreferencesPage', () => {
   // Given

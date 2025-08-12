@@ -51,7 +51,7 @@ describe('MongooseService', () => {
       );
       // Then
       expect(eventBusMock.publish).toHaveBeenCalledTimes(1);
-      expect(connectionMock.on).toHaveBeenCalledTimes(3);
+      expect(connectionMock.on).toHaveBeenCalledTimes(4);
       expect(connectionMock.on).toHaveBeenNthCalledWith(
         1,
         'connected',
@@ -67,6 +67,30 @@ describe('MongooseService', () => {
         'reconnected',
         expect.any(Function),
       );
+      expect(connectionMock.on).toHaveBeenNthCalledWith(
+        4,
+        'error',
+        expect.any(Function),
+      );
+    });
+
+    it('should log events', () => {
+      // Given
+      const error = { message: 'error message' };
+      connectionMock.on = jest.fn().mockImplementation((event, callback) => {
+        callback(error);
+      });
+      const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+
+      // When
+      MongooseProvider['connectionFactory'](
+        loggerMock,
+        eventBusMock,
+        connectionMock,
+      );
+
+      // Then
+      expect(consoleSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should add catch handler to Mongoose connection', () => {

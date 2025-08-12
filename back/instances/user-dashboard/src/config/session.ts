@@ -1,4 +1,5 @@
 import { ConfigParser } from '@fc/config';
+import { FraudIdentityTheftRoutes } from '@fc/fraud-identity-theft';
 import { OidcClientRoutes } from '@fc/oidc-client';
 import { SessionConfig, SessionCookieOptionsInterface } from '@fc/session';
 import {
@@ -39,7 +40,12 @@ export default {
     // Business
     UserDashboardBackRoutes.ERROR,
     UserDashboardBackRoutes.USER_PREFERENCES,
-    UserDashboardBackRoutes.FRAUD_FORM,
+    FraudIdentityTheftRoutes.FRAUD_FORM,
+    FraudIdentityTheftRoutes.FRAUD_NO_AUTH_DESCRIPTION,
+    FraudIdentityTheftRoutes.FRAUD_NO_AUTH_CONNECTION,
+    FraudIdentityTheftRoutes.FRAUD_NO_AUTH_IDENTITY,
+    FraudIdentityTheftRoutes.FRAUD_NO_AUTH_CONTACT,
+    FraudIdentityTheftRoutes.FRAUD_NO_AUTH_SUMMARY,
     UserDashboardBackRoutes.TRACKS,
     UserDashboardBackRoutes.USER_INFOS,
     UserDashboardBackRoutes.VERIFY,

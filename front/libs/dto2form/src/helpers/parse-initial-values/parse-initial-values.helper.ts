@@ -1,13 +1,10 @@
-import has from 'lodash.has';
+import { has } from 'lodash';
 
 import type { SchemaFieldType } from '../../types';
 
-export const parseInitialValues = <T = string | string[]>(
-  schema: SchemaFieldType[] | undefined,
-  values: Record<string, T>,
-): Record<string, T> => {
+export const parseInitialValues = <T>(schema: SchemaFieldType[] | undefined, values: T): T => {
   if (!schema) {
-    return {};
+    return {} as T;
   }
 
   const initialValues = schema.reduce((acc, schemaField) => {
@@ -21,5 +18,5 @@ export const parseInitialValues = <T = string | string[]>(
     return { ...acc, [name]: value };
   }, {});
 
-  return initialValues;
+  return initialValues as T;
 };

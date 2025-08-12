@@ -7,6 +7,7 @@ import { ArrayAsyncHelper } from '@fc/common';
 import { LoggerService } from '@fc/logger';
 
 import { FormDtoBase } from '../dto';
+import { MessageLevelEnum, MessagePriorityEnum } from '../enums';
 import {
   Dto2FormInvalidFormException,
   Dto2FormValidateIfRuleNotFoundException,
@@ -103,7 +104,11 @@ export class FormValidationPipe implements PipeTransform {
     if (!fieldMetadata) {
       fieldErrors.validators.push({
         name,
-        errorMessage: `${name}_invalidKey_error`,
+        errorMessage: {
+          content: `${name}_invalidKey_error`,
+          level: MessageLevelEnum.ERROR,
+          priority: MessagePriorityEnum.ERROR,
+        },
         validationArgs: [],
       });
       return fieldErrors;
@@ -304,7 +309,11 @@ export class FormValidationPipe implements PipeTransform {
         validators: [
           {
             name: 'isFilled',
-            errorMessage: `isFilled_error`,
+            errorMessage: {
+              content: `isFilled_error`,
+              level: MessageLevelEnum.ERROR,
+              priority: MessagePriorityEnum.ERROR,
+            },
             validationArgs: [],
           },
         ],

@@ -2,11 +2,31 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { Form, Input } from '../decorators';
 import { $IsNotEmpty, $IsString } from '../descriptors';
+import { FieldMessage } from '../dto';
+import { MessageLevelEnum, MessagePriorityEnum } from '../enums';
 import { Dto2FormInvalidMetadataException } from '../exceptions';
 import { MetadataFormService } from './metadata-form.service';
 
 describe('MetadataFormService', () => {
   let service: MetadataFormService;
+
+  const isStringErrorMessageMock: FieldMessage = {
+    content: 'isString_error',
+    level: MessageLevelEnum.ERROR,
+    priority: MessagePriorityEnum.ERROR,
+  };
+
+  const isNotEmptyErrorMessageMock: FieldMessage = {
+    content: 'isNotEmpty_error',
+    level: MessageLevelEnum.ERROR,
+    priority: MessagePriorityEnum.ERROR,
+  };
+
+  const isFilledErrorMessageMock: FieldMessage = {
+    content: 'isFilled_error',
+    level: MessageLevelEnum.ERROR,
+    priority: MessagePriorityEnum.ERROR,
+  };
 
   beforeEach(async () => {
     jest.clearAllMocks();
@@ -46,12 +66,12 @@ describe('MetadataFormService', () => {
           validators: [
             {
               name: 'isString',
-              errorMessage: 'isString_error',
+              errorMessage: isStringErrorMessageMock,
               validationArgs: [],
             },
             {
               name: 'isNotEmpty',
-              errorMessage: 'isNotEmpty_error',
+              errorMessage: isNotEmptyErrorMessageMock,
               validationArgs: [],
             },
           ],
@@ -90,17 +110,17 @@ describe('MetadataFormService', () => {
           validators: [
             {
               name: 'isFilled',
-              errorMessage: 'isFilled_error',
+              errorMessage: isFilledErrorMessageMock,
               validationArgs: [],
             },
             {
               name: 'isString',
-              errorMessage: 'isString_error',
+              errorMessage: isStringErrorMessageMock,
               validationArgs: [],
             },
             {
               name: 'isNotEmpty',
-              errorMessage: 'isNotEmpty_error',
+              errorMessage: isNotEmptyErrorMessageMock,
               validationArgs: [],
             },
           ],
@@ -139,7 +159,7 @@ describe('MetadataFormService', () => {
           validators: [
             {
               name: 'isString',
-              errorMessage: 'isString_error',
+              errorMessage: isStringErrorMessageMock,
               validationArgs: [],
             },
           ],

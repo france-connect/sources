@@ -1,4 +1,4 @@
-import get from 'lodash.get';
+import { get } from 'lodash';
 
 import { SortOrder } from '../../../enums';
 

@@ -9,7 +9,7 @@ import { LabelElement } from '../../elements';
 export const ChoiceInput = React.memo(({ choice, config, input }: PropsWithInputChoiceType) => {
   const { name, type } = input;
   const { disabled, hint, label, value } = choice;
-  const { inline, size = Sizes.MEDIUM } = config;
+  const { inline, seeAlso, size = Sizes.MEDIUM } = config;
 
   const id = `${name}-${value}`;
   return (
@@ -23,7 +23,7 @@ export const ChoiceInput = React.memo(({ choice, config, input }: PropsWithInput
           [`fr-${type}-group--${size}`]: !!size,
         })}>
         <input {...input} data-testid={`${id}--testid`} disabled={disabled} id={id} />
-        <LabelElement hint={hint} label={label} name={id} />
+        <LabelElement hint={hint} label={label} name={id} seeAlso={seeAlso} />
       </div>
     </div>
   );

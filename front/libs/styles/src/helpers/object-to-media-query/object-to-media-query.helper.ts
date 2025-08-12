@@ -1,4 +1,4 @@
-import toKebabCase from 'lodash.kebabcase';
+import { kebabCase } from 'lodash';
 
 import { Strings } from '@fc/common';
 
@@ -18,7 +18,7 @@ export function objectToMediaQuery(obj?: MediaQueryInterface) {
     const isString = typeof value === 'string';
     const cssValue = isString ? value : `${value}${CSSUnits.PIXEL}`;
 
-    const cssProperty = toKebabCase(key);
+    const cssProperty = kebabCase(key);
     return `(${cssProperty}:${cssValue})`;
   });
 

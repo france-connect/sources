@@ -1,12 +1,12 @@
 import React from 'react';
 
-import { ConfigService } from '@fc/config';
+import { useSafeContext } from '@fc/common';
 import { Sizes } from '@fc/dsfr';
-import { ArrayField } from '@fc/forms';
+import { ArrayField, FormConfigContext } from '@fc/forms';
 
-import { FieldsCommponentMap, Options } from '../../enums';
+import { FieldsCommponentMap } from '../../enums';
 import { useFieldValidate } from '../../hooks';
-import type { DTO2FormConfig, FieldAttributes } from '../../interfaces';
+import type { FieldAttributes } from '../../interfaces';
 
 interface DTO2InputComponentProps {
   field: FieldAttributes;
@@ -16,7 +16,7 @@ export const DTO2InputComponent = React.memo(({ field }: DTO2InputComponentProps
   // @NOTE Should we use the flag into the useFieldValidate hook ?
   // Or into fields subscription
   // @SEE https://final-form.org/docs/react-final-form/types/FieldProps#subscription
-  const { validateOnFieldChange } = ConfigService.get<DTO2FormConfig>(Options.CONFIG_NAME);
+  const { validateOnFieldChange } = useSafeContext(FormConfigContext);
 
   const {
     array,
@@ -25,10 +25,12 @@ export const DTO2InputComponent = React.memo(({ field }: DTO2InputComponentProps
     inline,
     label,
     maxChars,
+    messages,
     name,
     options,
     readonly,
     required,
+    seeAlso,
     type,
     validators,
     value,
@@ -51,9 +53,11 @@ export const DTO2InputComponent = React.memo(({ field }: DTO2InputComponentProps
     inline,
     label,
     maxChars,
+    messages,
     name,
     readonly,
     required,
+    seeAlso,
     size: Sizes.MEDIUM,
     type,
     validate: validateFunc,

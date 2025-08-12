@@ -3,6 +3,15 @@
 exports[`HomePage should match snapshot when session is expired 1`] = `
 <div>
   <div
+    data-mockid="Helmet"
+  >
+    <span
+      data-htmltag="title"
+    >
+      Mon tableau de bord - Accueil
+    </span>
+  </div>
+  <div
     class="large-container fr-m-auto fr-px-2w fr-mt-8w text-center"
     id="page-container"
   >
@@ -19,7 +28,7 @@ exports[`HomePage should match snapshot when session is expired 1`] = `
       </div>
     </div>
     <h1
-      class="title fr-mb-5w"
+      class="fr-text-title--blue-france fr-mb-5w"
     >
       Pour accéder à votre tableau de bord FranceConnect, veuillez vous connecter
     </h1>
@@ -39,11 +48,20 @@ exports[`HomePage should match snapshot when session is expired 1`] = `
 exports[`HomePage should match the snapshot on desktop layout 1`] = `
 <div>
   <div
+    data-mockid="Helmet"
+  >
+    <span
+      data-htmltag="title"
+    >
+      Mon tableau de bord - Accueil
+    </span>
+  </div>
+  <div
     class="large-container fr-m-auto fr-px-2w fr-mt-8w text-left"
     id="page-container"
   >
     <h1
-      class="title fr-mb-5w"
+      class="fr-text-title--blue-france fr-mb-5w"
     >
       Pour accéder à votre tableau de bord FranceConnect, veuillez vous connecter
     </h1>
@@ -63,11 +81,20 @@ exports[`HomePage should match the snapshot on desktop layout 1`] = `
 exports[`HomePage should match the snapshot on mobile layout 1`] = `
 <div>
   <div
+    data-mockid="Helmet"
+  >
+    <span
+      data-htmltag="title"
+    >
+      Mon tableau de bord - Accueil
+    </span>
+  </div>
+  <div
     class="large-container fr-m-auto fr-px-2w fr-mt-5w text-left"
     id="page-container"
   >
     <h1
-      class="title fr-mb-5w"
+      class="fr-text-title--blue-france fr-mb-5w"
     >
       Pour accéder à votre tableau de bord FranceConnect, veuillez vous connecter
     </h1>
@@ -87,11 +114,20 @@ exports[`HomePage should match the snapshot on mobile layout 1`] = `
 exports[`HomePage should match the snapshot on tablet layout 1`] = `
 <div>
   <div
+    data-mockid="Helmet"
+  >
+    <span
+      data-htmltag="title"
+    >
+      Mon tableau de bord - Accueil
+    </span>
+  </div>
+  <div
     class="large-container fr-m-auto fr-px-2w fr-mt-5w text-center"
     id="page-container"
   >
     <h1
-      class="title fr-mb-5w"
+      class="fr-text-title--blue-france fr-mb-5w"
     >
       Pour accéder à votre tableau de bord FranceConnect, veuillez vous connecter
     </h1>
@@ -111,11 +147,20 @@ exports[`HomePage should match the snapshot on tablet layout 1`] = `
 exports[`HomePage should match the snapshot when session is not expired 1`] = `
 <div>
   <div
+    data-mockid="Helmet"
+  >
+    <span
+      data-htmltag="title"
+    >
+      Mon tableau de bord - Accueil
+    </span>
+  </div>
+  <div
     class="large-container fr-m-auto fr-px-2w fr-mt-8w text-center"
     id="page-container"
   >
     <h1
-      class="title fr-mb-5w"
+      class="fr-text-title--blue-france fr-mb-5w"
     >
       Pour accéder à votre tableau de bord FranceConnect, veuillez vous connecter
     </h1>
@@ -135,6 +180,15 @@ exports[`HomePage should match the snapshot when session is not expired 1`] = `
 exports[`HomePage should render AlertComponent with specific props if session has expired 1`] = `
 <div>
   <div
+    data-mockid="Helmet"
+  >
+    <span
+      data-htmltag="title"
+    >
+      Mon tableau de bord - Accueil
+    </span>
+  </div>
+  <div
     class="large-container fr-m-auto fr-px-2w fr-mt-8w text-center"
     id="page-container"
   >
@@ -146,7 +200,7 @@ exports[`HomePage should render AlertComponent with specific props if session ha
       </p>
     </div>
     <h1
-      class="title fr-mb-5w"
+      class="fr-text-title--blue-france fr-mb-5w"
     >
       Pour accéder à votre tableau de bord FranceConnect, veuillez vous connecter
     </h1>

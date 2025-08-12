@@ -459,14 +459,14 @@ describe('OidcClient Controller', () => {
     });
 
     it('should set session with identity result and interaction ID', async () => {
-      // setup
+      // Given
       const clonedIdentityMock = Symbol();
       jest.mocked(cloneDeep).mockReturnValueOnce(clonedIdentityMock);
 
-      // action
+      // When
       await controller.getOidcCallback(req, res, sessionServiceMock, queryMock);
 
-      // assert
+      // Then
       expect(sessionServiceMock.set).toHaveBeenCalledTimes(1);
       expect(sessionServiceMock.set).toHaveBeenCalledWith(clonedIdentityMock);
     });

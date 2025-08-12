@@ -6,7 +6,9 @@ export const useFieldMeta = (meta: FieldMetaState<string>) => {
 
   const hasError = !!(touched && invalid);
   const isValid = !!(touched && valid && !pristine);
-  const errorMessage = hasError ? error || submitError : undefined;
+  const rawError = hasError ? error || submitError : [];
+
+  const errorsList = !Array.isArray(rawError) ? [rawError] : rawError;
 
   const inputClassname = classnames('fr-input', {
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -16,7 +18,7 @@ export const useFieldMeta = (meta: FieldMetaState<string>) => {
   });
 
   return {
-    errorMessage,
+    errorsList,
     hasError,
     inputClassname,
     isValid,

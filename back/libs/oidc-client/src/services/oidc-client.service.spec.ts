@@ -134,14 +134,14 @@ describe('OidcClientService', () => {
     });
 
     it('should call getTokenSet with token params', async () => {
-      // action
+      // When
       await service.getTokenFromProvider(
         idpIdMock,
         tokenParamsMock,
         contextMock,
         extraParamsMock,
       );
-      // assert
+      // Then
       expect(oidcClientUtilsServiceMock.getTokenSet).toHaveBeenCalledTimes(1);
       expect(oidcClientUtilsServiceMock.getTokenSet).toHaveBeenCalledWith(
         contextMock,
@@ -152,7 +152,7 @@ describe('OidcClientService', () => {
     });
 
     it('should get the the tokenSet from the provider', async () => {
-      // arrange
+      // Given
       const resultMock = {
         accessToken: accessTokenMock,
         idToken: idTokenMock,
@@ -161,13 +161,13 @@ describe('OidcClientService', () => {
         amr: amrMock,
         idpRepresentativeScope: repScopeMock,
       };
-      // action
+      // When
       const result = await service.getTokenFromProvider(
         idpIdMock,
         tokenParamsMock,
         contextMock,
       );
-      // assert
+      // Then
       expect(result).toStrictEqual(resultMock);
     });
 
@@ -176,13 +176,13 @@ describe('OidcClientService', () => {
      * - voir commit original : 440d0a1734e0e1206b7e21781cbb0f186a93dd82
      */
     it.skip('should failed if the params for token are wrong', async () => {
-      // arrange
+      // Given
       validateDtoMock.mockReset().mockReturnValueOnce([errorMock]);
-      // action
+      // When
       await expect(
         () =>
           service.getTokenFromProvider(idpIdMock, tokenParamsMock, contextMock),
-        // assert
+        // Then
       ).rejects.toThrow(
         '"{"providerUid":"providerUidMockValue","idpState":"idpStateMockValue","idpNonce":"idpNonceMockValue"}" input was wrong from the result at DTO validation: [{}]',
       );
@@ -191,14 +191,14 @@ describe('OidcClientService', () => {
     });
 
     it('should failed if the token is wrong and DTO blocked', async () => {
-      // arrange
+      // Given
       validateDtoMock.mockReset().mockReturnValueOnce([errorMock]);
 
-      // action
+      // When
       await expect(
         () =>
           service.getTokenFromProvider(idpIdMock, tokenParamsMock, contextMock),
-        // assert
+        // Then
       ).rejects.toThrow(OidcClientTokenResultFailedException);
       expect(oidcClientUtilsServiceMock.getTokenSet).toHaveBeenCalledTimes(1);
       expect(loggerServiceMock.debug).toHaveBeenCalledTimes(1);
@@ -206,28 +206,28 @@ describe('OidcClientService', () => {
     });
 
     it('should get claims from token', async () => {
-      // action
+      // When
       const { acr } = await service.getTokenFromProvider(
         idpIdMock,
         tokenParamsMock,
         contextMock,
       );
 
-      // assert
+      // Then
       expect(claimsMock).toHaveBeenCalledTimes(1);
       expect(acr).toStrictEqual(acrMock);
     });
 
     it('should get an empty array as amr if amr claims is empty', async () => {
-      // arrange
+      // Given
       claimsMock.mockReset().mockReturnValueOnce({});
-      // action
+      // When
       const { amr } = await service.getTokenFromProvider(
         idpIdMock,
         tokenParamsMock,
         contextMock,
       );
-      // assert
+      // Then
       expect(claimsMock).toHaveBeenCalledTimes(1);
       expect(amr).toStrictEqual([]);
     });
@@ -244,19 +244,19 @@ describe('OidcClientService', () => {
         .mockResolvedValueOnce([]); // no errors
     });
     it('should get the user infos', async () => {
-      // action
+      // When
       const result = await service.getUserInfosFromProvider(
         userInfosParamsMock,
         contextMock,
       );
-      // assert
+      // Then
       expect(result).toStrictEqual(identityMock);
     });
 
     it('should get the user infos with access token params', async () => {
-      // action
+      // When
       await service.getUserInfosFromProvider(userInfosParamsMock, contextMock);
-      // assert
+      // Then
       expect(oidcClientUtilsServiceMock.getUserInfo).toHaveBeenCalledTimes(1);
       expect(oidcClientUtilsServiceMock.getUserInfo).toHaveBeenCalledWith(
         accessTokenMock,
@@ -265,30 +265,30 @@ describe('OidcClientService', () => {
     });
 
     it('should failed if userinfos failed', async () => {
-      // arrange
+      // Given
       const errorMock = new Error('Unknown Error');
       oidcClientUtilsServiceMock.getUserInfo
         .mockReset()
         .mockRejectedValueOnce(errorMock);
-      // action
+      // When
       await expect(
         () =>
           service.getUserInfosFromProvider(userInfosParamsMock, contextMock),
-        // assert
+        // Then
       ).rejects.toThrow(OidcClientUserinfosFailedException);
 
       expect(oidcClientUtilsServiceMock.getUserInfo).toHaveBeenCalledTimes(1);
     });
 
     it('should failed if the token is wrong and DTO blocked', async () => {
-      // arrange
+      // Given
       validateDtoMock.mockReset().mockReturnValueOnce([errorMock]);
 
-      // action
+      // When
       await expect(
         () =>
           service.getUserInfosFromProvider(userInfosParamsMock, contextMock),
-        // assert
+        // Then
       ).rejects.toThrow(OidcClientMissingIdentitySubException);
       expect(oidcClientUtilsServiceMock.getUserInfo).toHaveBeenCalledTimes(1);
       expect(loggerServiceMock.debug).toHaveBeenCalledTimes(1);
@@ -298,7 +298,7 @@ describe('OidcClientService', () => {
 
   describe('getEndSessionUrlFromProvider', () => {
     it('should call oidcClientUtilsServiceMock.getEndSessionUrl() with given parameters', async () => {
-      // action
+      // When
       await service.getEndSessionUrlFromProvider(
         idpIdMock,
         idpStateMock,
@@ -306,7 +306,7 @@ describe('OidcClientService', () => {
         postLogoutRedirectUriMock,
       );
 
-      // assert
+      // Then
       expect(oidcClientUtilsServiceMock.getEndSessionUrl).toHaveBeenCalledTimes(
         1,
       );
@@ -321,10 +321,10 @@ describe('OidcClientService', () => {
 
   describe('hasEndSessionUrlFromProvider()', () => {
     it('should call oidcClientUtilsServiceMock.hasEndSessionUrl() with given parameters', async () => {
-      // action
+      // When
       await service.hasEndSessionUrlFromProvider(idpIdMock);
 
-      // assert
+      // Then
       expect(oidcClientUtilsServiceMock.hasEndSessionUrl).toHaveBeenCalledTimes(
         1,
       );

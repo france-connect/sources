@@ -589,10 +589,13 @@ services:
       # -- RabbitMQ credentials
       - 'TracksBroker_URLS=["amqp://broker:5672"]'
       - "TracksBroker_QUEUE=tracks"
+      - "TracksBroker_MESSAGE_TTL=5000"
       - 'AccountHighBroker_URLS=["amqp://broker:5672"]'
       - "AccountHighBroker_QUEUE=account-high"
+      - "AccountHighBroker_MESSAGE_TTL=5000"
       - 'AccountLegacyBroker_URLS=["amqp://broker:5672"]'
       - "AccountLegacyBroker_QUEUE=account-legacy"
+      - "AccountLegacyBroker_MESSAGE_TTL=5000"
       - "FC_DB_TYPE=mongodb"
       - "FC_DB_SYNCHRONIZE=false"
       - "FC_DB_CONNECT_OPTIONS="
@@ -636,6 +639,7 @@ services:
       # -- RabbitMQ credentials
       - 'AccountBroker_URLS=["amqp://broker:5672"]'
       - "AccountBroker_QUEUE=account-legacy"
+      - "AccountBroker_MESSAGE_TTL=5000"
     networks:
       - data
     init: true
@@ -670,6 +674,7 @@ services:
       # -- RabbitMQ credentials
       - 'AccountBroker_URLS=["amqp://broker:5672"]'
       - "AccountBroker_QUEUE=account-high"
+      - "AccountBroker_MESSAGE_TTL=5000"
     networks:
       - data
     init: true

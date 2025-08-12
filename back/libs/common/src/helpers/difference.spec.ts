@@ -2,24 +2,24 @@ import { difference } from './difference';
 
 describe('difference', () => {
   it('should return the difference between two array', () => {
-    // setup
+    // Given
     const array1 = ['foo', 'bar', 'toto'];
     const array2 = ['toto', 'titi'];
     const resultExpected = ['foo', 'bar'];
-    // action
+    // When
     const result = difference(array1, array2);
-    // expect
+    // Then
     expect(result).toEqual(resultExpected);
   });
 
   it('should return the difference between array and string', () => {
-    // setup
+    // Given
     const array = ['foo', 'bar', 'toto'];
     const string = 'toto';
     const resultExpected = ['foo', 'bar'];
-    // action
+    // When
     const result = difference(array, string);
-    // expect
+    // Then
     expect(result).toEqual(resultExpected);
   });
 });

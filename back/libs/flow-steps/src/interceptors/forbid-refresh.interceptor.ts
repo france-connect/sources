@@ -11,7 +11,7 @@ import { Reflector } from '@nestjs/core';
 import { AppConfig } from '@fc/app';
 import { ConfigService } from '@fc/config';
 import { OidcSession } from '@fc/oidc';
-import { SessionService } from '@fc/session';
+import { SessionNotFoundException, SessionService } from '@fc/session';
 
 import { ForbidRefresh } from '../decorators';
 import {
@@ -37,12 +37,20 @@ export class ForbidRefreshInterceptor implements NestInterceptor {
     return next.handle();
   }
 
+  // Allow us to goup all checks in one place
+  // eslint-disable-next-line complexity
   private checkRefresh(context: ExecutionContext) {
     const req = context.switchToHttp().getRequest();
-    const { stepRoute } = this.session.get<OidcSession>('OidcClient') || {};
+
+    const oidcClient = this.session.get<OidcSession>('OidcClient');
+    const { stepRoute } = oidcClient || {};
     const { urlPrefix } = this.config.get<AppConfig>('App');
 
     const currentRoute = req.route.path.replace(urlPrefix, '');
+
+    if (!oidcClient) {
+      throw new SessionNotFoundException();
+    }
 
     if (!stepRoute) {
       throw new UndefinedStepRouteException();

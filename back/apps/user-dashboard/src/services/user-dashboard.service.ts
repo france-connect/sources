@@ -8,6 +8,7 @@ import { ConfigService, validationOptions } from '@fc/config';
 import {
   IdpConfigUpdateEmailParameters,
   MailerConfig,
+  MailerHelper,
   MailerNotificationConnectException,
   MailerService,
   MailFrom,
@@ -35,11 +36,17 @@ export class UserDashboardService {
       throw new NoEmailException();
     }
 
-    const { email, givenName, familyName } = userInfo;
+    const { email, givenNameArray, familyName, preferredUsername } = userInfo;
+
+    const person = MailerHelper.getPerson({
+      givenNameArray,
+      familyName,
+      preferredUsername,
+    });
 
     const mailTo: MailTo = {
       email,
-      name: `${givenName} ${familyName}`,
+      name: person,
     };
 
     const to: MailTo[] = [mailTo];
@@ -99,7 +106,7 @@ export class UserDashboardService {
     userInfo,
     idpConfiguration,
   ): Promise<string> {
-    const { email } = userInfo;
+    const { email, givenNameArray, familyName, preferredUsername } = userInfo;
     const {
       updatedIdpSettingsList,
       hasAllowFutureIdpChanged,
@@ -107,8 +114,15 @@ export class UserDashboardService {
       updatedAt,
     } = idpConfiguration;
 
+    const person = MailerHelper.getPerson({
+      givenNameArray,
+      familyName,
+      preferredUsername,
+    });
+
     const formattedUpdateDate = this.formatDateForEmail(updatedAt);
     const idpConfigUpdateEmail = {
+      person,
       email,
       updatedIdpSettingsList,
       allowFutureIdp,

@@ -4,7 +4,7 @@ exports[`IntroductionComponent should match the snapshot 1`] = `
 <div>
   <div>
     <h1
-      class="fr-h3 is-blue-france fr-mb-1w"
+      class="fr-h3 fr-text-title--blue-france fr-mb-1w"
     >
       Mon historique de connexion
     </h1>

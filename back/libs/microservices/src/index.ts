@@ -1,3 +1,10 @@
+export const CryptoProtocol = {
+  Commands: {
+    SIGN: 'CRYPTO_SIGN',
+    RANDOM: 'CRYPTO_RANDOM',
+  },
+};
+
 export const TracksProtocol = {
   Commands: {
     GET: 'TRACKS_GET',
@@ -20,11 +27,5 @@ export const UserPreferencesProtocol = {
 export const AccountProtocol = {
   Commands: {
     GET_ACCOUNT_ID: 'GET_ACCOUNT_ID',
-  },
-};
-
-export const FraudProtocol = {
-  Commands: {
-    PROCESS_FRAUD_CASE: 'PROCESS_FRAUD_CASE',
   },
 };

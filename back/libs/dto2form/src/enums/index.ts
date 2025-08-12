@@ -3,6 +3,8 @@ export * from './fields.enum';
 export * from './fields-choice.enum';
 export * from './iban-code.enum';
 export * from './license-plate-locale.enum';
+export * from './message-level.enum';
+export * from './message-priority.enum';
 export * from './passport-number-country-code.enum';
 export * from './tax-id-locale.enum';
 export * from './validate-if-rule.enum';

@@ -140,9 +140,9 @@ describe('NotificationsService', () => {
         .fn()
         .mockResolvedValueOnce(notificationMock);
       const expected = notificationMock;
-      // action
+      // When
       const result = await service.getList();
-      // expect
+      // Then
       expect(result).toStrictEqual(expected);
     });
 
@@ -151,9 +151,9 @@ describe('NotificationsService', () => {
         .fn()
         .mockResolvedValueOnce(notificationMock);
       const refreshCache = true;
-      // action
+      // When
       await service.getList(refreshCache);
-      // expect
+      // Then
       expect(service['findActiveNotifications']).toHaveBeenCalledTimes(1);
     });
 
@@ -164,9 +164,9 @@ describe('NotificationsService', () => {
       service['listCache'] = Symbol(
         'list cache',
       ) as unknown as NotificationInterface[];
-      // action
+      // When
       await service.getList();
-      // expect
+      // Then
       expect(service['findActiveNotifications']).not.toHaveBeenCalled();
     });
 
@@ -177,9 +177,9 @@ describe('NotificationsService', () => {
       service['listCache'] = Symbol(
         'list cache',
       ) as unknown as NotificationInterface[];
-      // action
+      // When
       const result = await service.getList();
-      // expect
+      // Then
       expect(result).toBe(service['listCache']);
     });
   });
@@ -191,9 +191,9 @@ describe('NotificationsService', () => {
       repositoryMock.lean = jest
         .fn()
         .mockResolvedValueOnce(validNotificationMock);
-      // action
+      // When
       const result = await service['findActiveNotifications']();
-      // expect
+      // Then
       expect(repositoryMock.find).toHaveBeenCalledTimes(1);
       expect(result).toStrictEqual(notificationMock);
     });
@@ -202,18 +202,18 @@ describe('NotificationsService', () => {
       repositoryMock.lean = jest
         .fn()
         .mockResolvedValueOnce(notValidNotificationMock);
-      // action
+      // When
       const result = await service['findActiveNotifications']();
-      // expect
+      // Then
       expect(repositoryMock.find).toHaveBeenCalledTimes(1);
       expect(result).not.toStrictEqual(notificationMock);
     });
 
     it('should return emptyNotification', async () => {
       repositoryMock.lean = jest.fn().mockResolvedValueOnce([]);
-      // action
+      // When
       const result = await service['findActiveNotifications']();
-      // expect
+      // Then
       expect(repositoryMock.find).toHaveBeenCalledTimes(1);
       expect(result).toStrictEqual([]);
     });

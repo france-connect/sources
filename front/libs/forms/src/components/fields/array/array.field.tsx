@@ -12,7 +12,7 @@ interface ArrayFieldProps {
 }
 
 export const ArrayField = React.memo(({ config }: ArrayFieldProps) => {
-  const { hint, label, name, required, validate } = config;
+  const { hint, label, messages, name, required, seeAlso, validate } = config;
 
   const { fields } = useFieldArray(name);
 
@@ -35,6 +35,7 @@ export const ArrayField = React.memo(({ config }: ArrayFieldProps) => {
         label={label}
         name={name}
         required={required}
+        seeAlso={seeAlso}
       />
       <div>
         {fields.map((fieldName, index) => {
@@ -45,6 +46,7 @@ export const ArrayField = React.memo(({ config }: ArrayFieldProps) => {
               fieldName={fieldName}
               index={index}
               isRemovable={isRemovable}
+              messages={messages}
               validate={validate}
               onRemove={removeHandler}
             />

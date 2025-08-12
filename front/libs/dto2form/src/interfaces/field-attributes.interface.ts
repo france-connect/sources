@@ -1,4 +1,10 @@
-import type { ChoiceInterface, FieldTypes, PropsWithHintType } from '@fc/forms';
+import type {
+  ChoiceInterface,
+  FieldMessage,
+  FieldTypes,
+  PropsWithHintType,
+  PropsWithSeeAlsoType,
+} from '@fc/forms';
 
 import type { FieldValidateIfRule, FieldValidatorInterface } from './field-validator.interface';
 
@@ -9,7 +15,7 @@ export interface BaseAttributes {
   order: number;
 }
 
-export interface FieldAttributes extends BaseAttributes, PropsWithHintType {
+export interface FieldAttributes extends BaseAttributes, PropsWithHintType, PropsWithSeeAlsoType {
   // @TODO this should be refactored
   type: FieldTypes;
   required: boolean;
@@ -22,6 +28,7 @@ export interface FieldAttributes extends BaseAttributes, PropsWithHintType {
   initialValue?: string | string[];
   validateIf?: FieldValidateIfRule[];
   options?: ChoiceInterface[];
+  messages?: FieldMessage[];
 
   /*
    ** Use ArrayField component

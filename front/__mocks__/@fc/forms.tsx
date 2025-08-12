@@ -12,6 +12,8 @@ export const InputTextElement = jest.fn(() => <div data-mockid="InputTextElement
 
 export const LabelElement = jest.fn(() => <div data-mockid="LabelElement" />);
 
+export const SeeAlsoElement = jest.fn(() => <div data-mockid="SeeAlsoElement" />);
+
 export const MessageElement = jest.fn(() => <div data-mockid="MessageElement" />);
 
 export const FormComponent = jest.fn(() => <div data-mockid="FormComponent" />);
@@ -22,9 +24,15 @@ export const useFieldLabel = jest.fn();
 
 export const useArrayFieldMeta = jest.fn();
 
+export const FormConfigContext = {
+  Provider: jest.fn(),
+};
+
 export const ArrayField = jest.fn(() => <div data-mockid="ArrayField" />);
 
 export const InputField = jest.fn(() => <div data-mockid="InputField" />);
+
+export const ConsentField = jest.fn(() => <div data-mockid="ConsentField" />);
 
 export const ChoicesField = jest.fn(() => <div data-mockid="ChoicesField" />);
 

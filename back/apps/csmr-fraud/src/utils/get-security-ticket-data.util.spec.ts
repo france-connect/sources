@@ -12,7 +12,7 @@ import { getReadableDateFromTime, getSecurityTicketData } from '../utils';
 jest.mock('../utils/get-readable-date-from-time.util.ts');
 
 const fraudCaseMock: FraudCaseDto = {
-  fraudCaseId: 'fraudCaseIdMock',
+  id: 'fraudCaseIdMock',
   contactEmail: 'email@mock.fr',
   idpEmail: 'email@fi.fr',
   authenticationEventId: 'authenticationEventIdMock',

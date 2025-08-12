@@ -20,7 +20,7 @@ import {
   MetadataDtoTranslationInterface,
   ValidatorType,
 } from '../interfaces';
-import { PartnersI18nService } from '../services';
+import { Dto2FormI18nService } from '../services';
 
 @Catch(Dto2FormValidationErrorException)
 @Injectable()
@@ -32,7 +32,7 @@ export class FormValidationExceptionFilter
     protected readonly config: ConfigService,
     protected readonly logger: LoggerService,
     protected readonly eventBus: EventBus,
-    private readonly partners: PartnersI18nService,
+    private readonly partners: Dto2FormI18nService,
   ) {
     super(config, logger, eventBus);
   }

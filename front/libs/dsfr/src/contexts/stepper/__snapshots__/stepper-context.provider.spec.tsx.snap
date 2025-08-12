@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`StepperContextProvider should match the snapshot, when currentStep is defined 1`] = `
+<div>
+  <div
+    data-mockid="StepperComponent"
+  />
+  <button
+    data-testid="StepperContext.Consumer.button"
+  >
+    Next Step
+  </button>
+</div>
+`;
+
+exports[`StepperContextProvider should match the snapshot, when currentStep is undefined 1`] = `<div />`;

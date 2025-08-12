@@ -13,6 +13,14 @@ Fonctionnalité: Connexion User Dashboard
     Et le nom de l'usager du tableau de bord usager est affiché
     Et le lien de déconnexion du tableau de bord usager est affiché
     Et je me déconnecte du tableau de bord usager
+  
+  Scénario: User Dashboard - Abandon de connexion
+    Etant donné que je navigue sur la page d'accueil du tableau de bord usager
+    Et que je clique sur le bouton FranceConnect du tableau de bord usager
+    Et que je suis redirigé vers la page sélection du fournisseur d'identité
+    Quand je clique sur le lien retour vers le FS sous la mire
+    Alors je suis redirigé vers la page d'accueil du tableau de bord usager
+    Et le message d'alerte "session expirée" n'est pas affiché sur la page d'accueil
 
   Scénario: User Dashboard - Connexion vers la page historique
     Etant donné que j'utilise un compte usager "pour le test de préférences FI"
@@ -128,12 +136,9 @@ Fonctionnalité: Connexion User Dashboard
     Et le message d'alerte "session expirée" n'est pas affiché sur la page d'accueil
     Et je ne suis plus connecté au tableau de bord usager avec FranceConnect
 
-  # Scénario à implémenter dans FC-1072
-  @ignore
-  Scénario: User Dashboard - Connexion après expiration de session
+  Scénario: User Dashboard - Connexion possible après expiration de session
     Etant donné que j'utilise un compte usager "pour le test de préférences FI"
     Et que je navigue sur la page d'accueil du tableau de bord usager
     Et que je supprime tous les cookies
-    Quand je clique sur le bouton FranceConnect du tableau de bord usager
-    Alors je suis redirigé vers la page d'accueil du tableau de bord usager
-    Et le message d'alerte "session expirée" n'est pas affiché sur la page d'accueil
+    Quand je me connecte au tableau de bord usager
+    Alors je suis redirigé vers la page historique du tableau de bord usager

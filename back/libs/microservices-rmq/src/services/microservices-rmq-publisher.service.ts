@@ -34,11 +34,14 @@ export class MicroservicesRmqPublisherService {
     const { requestTimeout } =
       this.config.get<MicroservicesRmqConfig>(serviceName);
 
-    this.logger.debug(`Ms:Broadcast:${command}`);
+    const versionedCommand = this.getVersionedCommand(command);
+    this.logger.debug(`Ms:Broadcast:${versionedCommand}`);
 
     try {
       await lastValueFrom(
-        this.broker.emit(command, payload).pipe(timeout(requestTimeout)),
+        this.broker
+          .emit(versionedCommand, payload)
+          .pipe(timeout(requestTimeout)),
       );
     } catch (error) {
       throw new MicroservicesRmqCommunicationException(error);
@@ -57,11 +60,13 @@ export class MicroservicesRmqPublisherService {
       this.config.get<MicroservicesRmqConfig>(serviceName);
 
     let result: Result | MicroservicesRmqErrorInterface;
-    this.logger.debug(`Ms:Publish:${command}`);
+
+    const versionedCommand = this.getVersionedCommand(command);
+    this.logger.debug(`Ms:Publish:${versionedCommand}`);
 
     try {
       const message = this.broker
-        .send<Result, Message>(command, payload)
+        .send<Result, Message>(versionedCommand, payload)
         .pipe(timeout(requestTimeout));
 
       result = await lastValueFrom<Result | MicroservicesRmqErrorInterface>(
@@ -112,5 +117,18 @@ export class MicroservicesRmqPublisherService {
     }
 
     return result as Result;
+  }
+
+  private getVersionedCommand(command: string): string {
+    const serviceName = getServiceToken(this.serviceName);
+
+    const { protocolVersion } =
+      this.config.get<MicroservicesRmqConfig>(serviceName);
+
+    if (protocolVersion) {
+      return `${command}@${protocolVersion}`;
+    }
+
+    return command;
   }
 }

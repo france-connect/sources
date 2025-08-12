@@ -4,6 +4,7 @@ Fonctionnalité: API - instance création
 
   Scénario: API instance création - création succès
     Etant donné que je me connecte à l'espace partenaires
+    Et que je suis sur la page liste des instances
     Et que je prépare une requête "instance-creation"
     Quand je lance la requête avec le csrf-token
     Alors le statut de la réponse est 201
@@ -14,6 +15,7 @@ Fonctionnalité: API - instance création
 
   Scénario: API instance création - erreur csrf-token manquant
     Etant donné que je me connecte à l'espace partenaires
+    Et que je suis sur la page liste des instances
     Et que je prépare une requête "instance-creation"
     Et je retire "x-csrf-token" de l'entête de la requête
     Quand je lance la requête
@@ -26,6 +28,7 @@ Fonctionnalité: API - instance création
 
   Scénario: API instance création - erreur csrf-token non valide
     Etant donné que je me connecte à l'espace partenaires
+    Et que je suis sur la page liste des instances
     Et que je prépare une requête "instance-creation"
     Quand je lance la requête
     Alors le statut de la réponse est 401
@@ -37,6 +40,7 @@ Fonctionnalité: API - instance création
 
   Scénario: API instance création - erreur champ obligatoire manquant
     Etant donné que je me connecte à l'espace partenaires
+    Et que je suis sur la page liste des instances
     Et que je prépare une requête "instance-creation"
     Et je retire "name" du corps de la requête
     Quand je lance la requête avec le csrf-token
@@ -48,10 +52,15 @@ Fonctionnalité: API - instance création
     Et le corps de la réponse a une propriété "message" égale à "Dto2form.exceptions.dto2formValidationError"
     Et le corps de la réponse a une propriété "payload" avec 1 attribut
     Et le corps de la réponse a une propriété "payload.name" avec 1 élément
-    Et le corps de la réponse a une propriété "payload.name[0]" égale à "Veuillez saisir le nom de votre instance"
+    Et le corps de la réponse a une propriété "payload.name[0]" avec 3 attributs
+    Et le corps de la réponse a une propriété "payload.name[0].content" égale à "Veuillez saisir le nom de votre instance"
+    Et le corps de la réponse a une propriété "payload.name[0].level" égale à "error"
+    Et le corps de la réponse a une propriété "payload.name[0].priority" égale à 50
+
 
   Scénario: API instance création - erreur champ non valide
     Etant donné que je me connecte à l'espace partenaires
+    Et que je suis sur la page liste des instances
     Et que je prépare une requête "instance-creation"
     Et je mets "abcdef" dans la propriété "signupId" du corps de la requête
     Quand je lance la requête avec le csrf-token
@@ -63,10 +72,14 @@ Fonctionnalité: API - instance création
     Et le corps de la réponse a une propriété "message" égale à "Dto2form.exceptions.dto2formValidationError"
     Et le corps de la réponse a une propriété "payload" avec 1 attribut
     Et le corps de la réponse a une propriété "payload.signupId" avec 1 élément
-    Et le corps de la réponse a une propriété "payload.signupId[0]" égale à "Veuillez saisir un numéro valide"
+    Et le corps de la réponse a une propriété "payload.signupId[0]" avec 3 attributs
+    Et le corps de la réponse a une propriété "payload.signupId[0].content" égale à "Veuillez saisir un numéro valide"
+    Et le corps de la réponse a une propriété "payload.signupId[0].level" égale à "error"
+    Et le corps de la réponse a une propriété "payload.signupId[0].priority" égale à 50
 
   Scénario: API instance création - plusieurs erreurs sur différentes propriétés
     Etant donné que je me connecte à l'espace partenaires
+    Et que je suis sur la page liste des instances
     Et que je prépare une requête "instance-creation"
     Et je retire "name" du corps de la requête
     Et je mets "abcdef" dans la propriété "signupId" du corps de la requête
@@ -80,15 +93,19 @@ Fonctionnalité: API - instance création
     Et le corps de la réponse a une propriété "message" égale à "Dto2form.exceptions.dto2formValidationError"
     Et le corps de la réponse a une propriété "payload" avec 3 attributs
     Et le corps de la réponse a une propriété "payload.name" avec 1 élément
-    Et le corps de la réponse a une propriété "payload.name[0]" égale à "Veuillez saisir le nom de votre instance"
+    Et le corps de la réponse a une propriété "payload.name[0]" avec 3 attributs
+    Et le corps de la réponse a une propriété "payload.name[0].content" égale à "Veuillez saisir le nom de votre instance"
     Et le corps de la réponse a une propriété "payload.signupId" avec 1 élément
-    Et le corps de la réponse a une propriété "payload.signupId[0]" égale à "Veuillez saisir un numéro valide"
+    Et le corps de la réponse a une propriété "payload.signupId[0]" avec 3 attributs
+    Et le corps de la réponse a une propriété "payload.signupId[0].content" égale à "Veuillez saisir un numéro valide"
     Et le corps de la réponse a une propriété "payload.site" avec 1 élément
     Et le corps de la réponse a une propriété "payload.site[0]" avec 1 élément
-    Et le corps de la réponse a une propriété "payload.site[0][0]" égale à "Veuillez saisir une url valide"
+    Et le corps de la réponse a une propriété "payload.site[0][0]" avec 3 attributs
+    Et le corps de la réponse a une propriété "payload.site[0][0].content" égale à "Veuillez saisir une url valide"
 
   Scénario: API instance création - plusieurs erreurs sur une propriété
     Etant donné que je me connecte à l'espace partenaires
+    Et que je suis sur la page liste des instances
     Et que je prépare une requête "instance-creation"
     Et je mets "abcdefghij" dans la propriété "signupId" du corps de la requête
     Quand je lance la requête avec le csrf-token
@@ -100,5 +117,7 @@ Fonctionnalité: API - instance création
     Et le corps de la réponse a une propriété "message" égale à "Dto2form.exceptions.dto2formValidationError"
     Et le corps de la réponse a une propriété "payload" avec 1 attribut
     Et le corps de la réponse a une propriété "payload.signupId" avec 2 éléments
-    Et le corps de la réponse a une propriété "payload.signupId[0]" égale à "Le numéro de la demande datapass doit être de 7 caractères maximum"
-    Et le corps de la réponse a une propriété "payload.signupId[1]" égale à "Veuillez saisir un numéro valide"
+    Et le corps de la réponse a une propriété "payload.signupId[0]" avec 3 attributs
+    Et le corps de la réponse a une propriété "payload.signupId[0].content" égale à "Le numéro de la demande datapass doit être de 7 caractères maximum"
+    Et le corps de la réponse a une propriété "payload.signupId[1]" avec 3 attributs
+    Et le corps de la réponse a une propriété "payload.signupId[1].content" égale à "Veuillez saisir un numéro valide"

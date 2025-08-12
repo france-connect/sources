@@ -2,101 +2,101 @@ import { validateRnippBirthdate } from './is-rnipp-birthdate.validator';
 
 describe('IsRnippBirthdate', () => {
   it('should return "false" if the argument is not a string', () => {
-    // setup
+    // Given
     const notAString = 42;
 
-    // action
+    // When
     const valid = validateRnippBirthdate(notAString);
 
-    // assert
+    // Then
     expect(valid).toStrictEqual(false);
   });
 
   it('should validate a date with YYYY-MM-DD format', () => {
-    // setup
+    // Given
     const date = '1992-04-23';
 
-    // action
+    // When
     const valid = validateRnippBirthdate(date);
 
-    // assert
+    // Then
     expect(valid).toStrictEqual(true);
   });
 
   it('should validate a date with YYYY-MM format', () => {
-    // setup
+    // Given
     const date = '1992-04';
 
-    // action
+    // When
     const valid = validateRnippBirthdate(date);
 
-    // assert
+    // Then
     expect(valid).toStrictEqual(true);
   });
 
   it('should validate a date with YYYY format', () => {
-    // setup
+    // Given
     const date = '1992';
 
-    // action
+    // When
     const valid = validateRnippBirthdate(date);
 
-    // assert
+    // Then
     expect(valid).toStrictEqual(true);
   });
 
   it('should not validate a date with YYYY-00-DD format', () => {
-    // setup
+    // Given
     const date = '1992-00-23';
 
-    // action
+    // When
     const valid = validateRnippBirthdate(date);
 
-    // assert
+    // Then
     expect(valid).toStrictEqual(false);
   });
 
   it('should not validate a badly formatted date', () => {
-    // setup
+    // Given
     const date = '1992-04-23-00';
 
-    // action
+    // When
     const valid = validateRnippBirthdate(date);
 
-    // assert
+    // Then
     expect(valid).toStrictEqual(false);
   });
 
   it('should not validate a random string', () => {
-    // setup
+    // Given
     const date = '0MmF-4o/ZkE$1';
 
-    // action
+    // When
     const valid = validateRnippBirthdate(date);
 
-    // assert
+    // Then
     expect(valid).toStrictEqual(false);
   });
 
   it('should not validate an invalid date (month)', () => {
-    // setup
+    // Given
     const date = '1992-99-23';
 
-    // action
+    // When
     const valid = validateRnippBirthdate(date);
 
-    // assert
+    // Then
     expect(valid).toStrictEqual(false);
   });
 
   it('should not validate an invalid date (day)', () => {
-    // setup
+    // Given
     const date = '1992-04-99';
 
-    // action
+    // When
     const valid = validateRnippBirthdate(date);
 
-    // assert
+    // Then
     expect(valid).toStrictEqual(false);
   });
 });

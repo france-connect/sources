@@ -1,32 +1,24 @@
+import classnames from 'classnames';
 import React from 'react';
 
-import { ConfigService } from '@fc/config';
-import type { DTO2FormConfig } from '@fc/dto2form';
-
-import { MessageErrorElement } from './message-error.element';
-import { MessageValidElement } from './message-valid.element';
+import classes from './message.module.scss';
 
 interface MessageElementProps {
-  error?: string | string[];
+  content: string;
   id: string;
+  level: string;
   dataTestId?: string;
-  isValid?: boolean;
 }
 
 export const MessageElement = React.memo(
-  ({ dataTestId = undefined, error = undefined, id, isValid = false }: MessageElementProps) => {
-    const { showFieldValidationMessage } = ConfigService.get<DTO2FormConfig>('DTO2Form');
-
-    const showErrorMessage = !!error;
-    const showValidationMessage = showFieldValidationMessage && isValid;
-
-    return (
-      <div aria-live="assertive" className="fr-messages-group" id={id}>
-        {showValidationMessage && <MessageValidElement dataTestId={dataTestId} id={id} />}
-        {showErrorMessage && <MessageErrorElement dataTestId={dataTestId} error={error} id={id} />}
-      </div>
-    );
-  },
+  ({ content, dataTestId, id, level }: MessageElementProps) => (
+    <p
+      className={classnames(classes.message, `fr-message fr-message--${level}`)}
+      data-testid={dataTestId}
+      id={`${id}-messages`}>
+      {content}
+    </p>
+  ),
 );
 
 MessageElement.displayName = 'MessageElement';

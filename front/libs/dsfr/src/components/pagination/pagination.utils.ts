@@ -2,7 +2,7 @@
  * @TODO renommer en services/static plutot qu'un utils ?
  * pro/cons
  */
-import lodashRange from 'lodash.range';
+import { range } from 'lodash';
 
 import type {
   DesktopDisplayParamsInterface,
@@ -57,7 +57,7 @@ export const getNavigationNumbers = ({
     startRange = endRange - removable;
   }
 
-  const navigationNumbers = lodashRange(startRange, endRange);
+  const navigationNumbers = range(startRange, endRange);
   return navigationNumbers;
 };
 

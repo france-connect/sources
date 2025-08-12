@@ -1,11 +1,13 @@
 import React from 'react';
 import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router';
 
+import { ConfigService } from '@fc/config';
+import { type Dto2FormConfigInterface, loadSchema } from '@fc/dto2form';
 import { ApplicationLayout } from '@fc/layout';
 import { AuthedRoute, RouterErrorBoundaryComponent, UnauthedRoute } from '@fc/routing';
 
-import { RouteLoaderDataIds } from '../enums';
-import { InstancesService, VersionsService } from '../services';
+import { loadVersion } from '../helpers';
+import { InstancesService } from '../services';
 import { PageLayout } from './layouts';
 import {
   HomePage,
@@ -18,6 +20,8 @@ import {
 } from './pages';
 
 export const ApplicationRoutes = React.memo(() => {
+  const forms = ConfigService.get<Dto2FormConfigInterface>('Dto2Form');
+
   const routes = createRoutesFromElements(
     <Route element={<ApplicationLayout />} errorElement={<RouterErrorBoundaryComponent />} path="/">
       <Route element={<UnauthedRoute fallback="/instances" />}>
@@ -26,13 +30,14 @@ export const ApplicationRoutes = React.memo(() => {
       <Route element={<AuthedRoute fallback="/login" />}>
         <Route element={<PageLayout />}>
           <Route
-            id={RouteLoaderDataIds.VERSION_SCHEMA}
-            loader={VersionsService.loadSchema}
+            id={forms.InstancesCreate.endpoints.schema.path}
+            loader={loadSchema(forms.InstancesCreate.endpoints.schema.path)}
             path="instances">
             <Route element={<InstanceCreatePage />} path="create" />
             <Route
               element={<InstanceUpdatePage />}
-              loader={InstancesService.read}
+              id={forms.InstancesUpdate.endpoints.load?.path}
+              loader={loadVersion(forms.InstancesUpdate.endpoints.load?.path as string)}
               path=":instanceId"
             />
             <Route index element={<InstancesPage />} loader={InstancesService.loadAll} />

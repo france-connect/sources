@@ -60,15 +60,15 @@ describe('LightProtocolCommonsService', () => {
     });
 
     it('should call luxon with the date argument and the expected format if date is present present', () => {
-      // setup
+      // Given
       const expectedDate = new Date('2012-06-04');
       const fromJSDateSpy = jest.spyOn(luxon.DateTime, 'fromJSDate');
       const toFormatSpy = jest.spyOn(luxon.DateTime.prototype, 'toFormat');
 
-      // action
+      // When
       service.generateToken(id, issuer, secretMock, expectedDate);
 
-      // expect
+      // Then
       expect(fromJSDateSpy).toHaveBeenCalledTimes(1);
       expect(fromJSDateSpy).toHaveBeenCalledWith(expectedDate);
       expect(toFormatSpy).toHaveBeenCalledTimes(1);
@@ -76,14 +76,14 @@ describe('LightProtocolCommonsService', () => {
     });
 
     it('should call luxon with a new date and the expected format if date argument is not present', () => {
-      // setup
+      // Given
       const fromJSDateSpy = jest.spyOn(luxon.DateTime, 'fromJSDate');
       const toFormatSpy = jest.spyOn(luxon.DateTime.prototype, 'toFormat');
 
-      // action
+      // When
       service.generateToken(id, issuer, secretMock);
 
-      // expect
+      // Then
       expect(fromJSDateSpy).toHaveBeenCalledTimes(1);
       expect(fromJSDateSpy.mock.calls[0][0]).toBeInstanceOf(Date);
       expect(toFormatSpy).toHaveBeenCalledTimes(1);
@@ -91,13 +91,13 @@ describe('LightProtocolCommonsService', () => {
     });
 
     it('should generate the token digest with the id, the issuer and the date extracted from the token and the secret', () => {
-      //setup
+      // Given
       jest.spyOn(luxon.DateTime.prototype, 'toFormat').mockReturnValue(date);
 
-      // action
+      // When
       service.generateToken(id, issuer, secretMock);
 
-      // expect
+      // Then
       expect(service['generateTokenDigest']).toHaveBeenCalledTimes(1);
       expect(service['generateTokenDigest']).toHaveBeenCalledWith(
         id,
@@ -108,13 +108,13 @@ describe('LightProtocolCommonsService', () => {
     });
 
     it('should create a base64 encoded light request with the issuer, id, date, and the signature', () => {
-      // setup
+      // Given
       jest.spyOn(luxon.DateTime.prototype, 'toFormat').mockReturnValue(date);
 
-      // action
+      // When
       const result = service.generateToken(id, issuer, secretMock);
 
-      // expect
+      // Then
       expect(result).toStrictEqual(encodedTokenMock);
     });
   });
@@ -142,19 +142,19 @@ describe('LightProtocolCommonsService', () => {
     });
 
     it('sould retrieve the maxTokenSize from the config', () => {
-      // action
+      // When
       service.parseToken(encodedTokenMock, secretMock);
 
-      // expect
+      // Then
       expect(mockConfigService.get).toHaveBeenCalledTimes(1);
       expect(mockConfigService.get).toHaveBeenCalledWith('EidasLightProtocol');
     });
 
     it('should decode the base64 to utf8', () => {
-      // action
+      // When
       service.parseToken(encodedTokenMock, secretMock);
 
-      // expect
+      // Then
       expect(Buffer.from).toHaveBeenCalledTimes(1);
       expect(Buffer.from).toHaveBeenCalledWith(encodedTokenMock, 'base64');
 
@@ -163,10 +163,10 @@ describe('LightProtocolCommonsService', () => {
     });
 
     it('should generate the token digest with the id, the issuer and the date extracted from the token and the secret', () => {
-      // action
+      // When
       service.parseToken(encodedTokenMock, secretMock);
 
-      // expect
+      // Then
       expect(service['generateTokenDigest']).toHaveBeenCalledTimes(1);
       expect(service['generateTokenDigest']).toHaveBeenCalledWith(
         id,
@@ -177,12 +177,12 @@ describe('LightProtocolCommonsService', () => {
     });
 
     it('should throw if decodedDigest is different from computedDigest', () => {
-      // setup
+      // Given
       service['generateTokenDigest'] = jest
         .fn()
         .mockReturnValueOnce('tokenDigestMock');
 
-      //expect
+      // Then
       expect(
         // When
         () => service.parseToken(encodedTokenMock, secretMock),
@@ -191,14 +191,14 @@ describe('LightProtocolCommonsService', () => {
     });
 
     it('should create a native date object from the string formatted "YYYY-MM-DD HH:mm:ss SSS"', () => {
-      // setup
+      // Given
       const FromFormatSpy = jest.spyOn(luxon.DateTime, 'fromFormat');
       const ToJSDateSpy = jest.spyOn(luxon.DateTime.prototype, 'toJSDate');
 
-      // action
+      // When
       service.parseToken(encodedTokenMock, secretMock);
 
-      // expect
+      // Then
       expect(FromFormatSpy).toHaveBeenCalledTimes(1);
       expect(FromFormatSpy).toHaveBeenCalledWith(
         date,
@@ -210,7 +210,7 @@ describe('LightProtocolCommonsService', () => {
     });
 
     it('should return the payload elements parsed but not the digest', () => {
-      // setup
+      // Given
       const newDateMock = luxon.DateTime.fromFormat(
         date,
         'yyyy-MM-dd:HH:mm:ss.SSS',
@@ -219,10 +219,10 @@ describe('LightProtocolCommonsService', () => {
         .spyOn(luxon.DateTime.prototype, 'toJSDate')
         .mockReturnValue(newDateMock);
 
-      // action
+      // When
       const result = service.parseToken(encodedTokenMock, secretMock);
 
-      // expect
+      // Then
       expect(result).toStrictEqual({
         issuer,
         id,
@@ -231,24 +231,24 @@ describe('LightProtocolCommonsService', () => {
     });
 
     it('should throw an EidasOversizedTokenException if the token size is over the config maxTokenSize', () => {
-      // setup
+      // Given
       mockConfigService.get
         .mockReset()
         .mockReturnValueOnce({ maxTokenSize: 0 });
 
-      // action / expect
+      // When / Then
       expect(() =>
         service.parseToken(encodedTokenMock, secretMock),
       ).toThrowError(EidasOversizedTokenException);
     });
 
     it('should throw an EidasInvalidTokenChecksumException if the calculated digest does not equal the light token digest', () => {
-      // setup
+      // Given
       service['generateTokenDigest'] = jest
         .fn()
         .mockReturnValueOnce('Not the expected digest');
 
-      // action / expect
+      // When / Then
       expect(() =>
         service.parseToken(encodedTokenMock, secretMock),
       ).toThrowError(EidasInvalidTokenChecksumException);
@@ -257,7 +257,7 @@ describe('LightProtocolCommonsService', () => {
 
   describe('generateTokenDigest', () => {
     it('should create a base64 digested sha256 signature hash with id, issuer, mockSecret, date and lightRequestSecret in this order', () => {
-      // setup
+      // Given
       const expectedHash = 'sha256';
       const expectedData = `${id}|${issuer}|${date}|${secretMock}`;
       const expectedDigest = 'base64';
@@ -268,10 +268,10 @@ describe('LightProtocolCommonsService', () => {
         digest: mockDigest,
       } as unknown as crypto.Hash);
 
-      // action
+      // When
       service['generateTokenDigest'](id, issuer, secretMock, date);
 
-      // expect
+      // Then
       expect(crypto.createHash).toHaveBeenCalledTimes(1);
       expect(crypto.createHash).toHaveBeenCalledWith(expectedHash);
 
@@ -283,7 +283,7 @@ describe('LightProtocolCommonsService', () => {
     });
 
     it('should return the digest', () => {
-      // action
+      // When
       const result = service['generateTokenDigest'](
         id,
         issuer,
@@ -291,32 +291,32 @@ describe('LightProtocolCommonsService', () => {
         date,
       );
 
-      // expect
+      // Then
       expect(result).toStrictEqual(tokenDigestMock);
     });
   });
 
   describe('getLastElementInUrlOrUrn', () => {
     it('should return all the string after the last slash', () => {
-      // setup
+      // Given
       const url =
         'http://eidas.europa.eu/attributes/naturalperson/personIdentifier';
 
-      // action
+      // When
       const result = service['getLastElementInUrlOrUrn'](url);
 
-      // expect
+      // Then
       expect(result).toEqual('personIdentifier');
     });
 
     it('should return all the string after the last semicolon', () => {
-      // setup
+      // Given
       const urn = 'urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified';
 
-      // action
+      // When
       const result = service['getLastElementInUrlOrUrn'](urn);
 
-      // expect
+      // Then
       expect(result).toEqual('unspecified');
     });
   });

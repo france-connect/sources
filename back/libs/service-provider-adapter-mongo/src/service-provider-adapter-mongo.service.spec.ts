@@ -167,7 +167,7 @@ describe('ServiceProviderAdapterMongoService', () => {
 
   describe('legacyToOpenIdPropertyName', () => {
     it('should return service provider with change legacy property name by openid property name', () => {
-      // setup
+      // Given
       const expected = {
         ...validServiceProviderMock,
         client_id: validServiceProviderMock.key,
@@ -180,12 +180,12 @@ describe('ServiceProviderAdapterMongoService', () => {
         .fn()
         .mockReturnValueOnce(expected.client_secret);
 
-      // action
+      // When
       const result = service['legacyToOpenIdPropertyName'](
         validServiceProviderMock as unknown as ServiceProvider,
       );
 
-      // expect
+      // Then
       expect(result).toStrictEqual(expected);
     });
   });
@@ -232,10 +232,10 @@ describe('ServiceProviderAdapterMongoService', () => {
     });
 
     it('should retrieve platform from config', async () => {
-      // action
+      // When
       await service['findAllServiceProvider']();
 
-      // expect
+      // Then
       expect(configMock.get).toHaveBeenCalledTimes(1);
       expect(configMock.get).toHaveBeenCalledWith(
         'ServiceProviderAdapterMongo',
@@ -243,23 +243,23 @@ describe('ServiceProviderAdapterMongoService', () => {
     });
 
     it('should have called find once', async () => {
-      // action
+      // When
       await service['findAllServiceProvider']();
 
-      // expect
+      // Then
       expect(repositoryMock.find).toHaveBeenCalledTimes(1);
     });
 
     it('should have called find with a filter argument containing active true and platform being CORE_FCP', async () => {
-      // setup
+      // Given
       const expectedRequestFilter = {
         active: true,
         platform: platformMock,
       };
-      // action
+      // When
       await service['findAllServiceProvider']();
 
-      // expect
+      // Then
       expect(repositoryMock.find).toHaveBeenCalledWith(
         expectedRequestFilter,
         expectedRetreivedFields,
@@ -267,15 +267,15 @@ describe('ServiceProviderAdapterMongoService', () => {
     });
 
     it('should have called find with a filter argument containing active true and without platform argument', async () => {
-      // setup
+      // Given
       configMock.get.mockReset().mockReturnValue({ platform: undefined });
       const expectedRequestFilter = {
         active: true,
       };
-      // action
+      // When
       await service['findAllServiceProvider']();
 
-      // expect
+      // Then
       expect(repositoryMock.find).toHaveBeenCalledWith(
         expectedRequestFilter,
         expectedRetreivedFields,
@@ -283,15 +283,15 @@ describe('ServiceProviderAdapterMongoService', () => {
     });
 
     it('should return result of type list', async () => {
-      // action
+      // When
       const result = await service['findAllServiceProvider']();
 
-      // expect
+      // Then
       expect(result).toStrictEqual(serviceProviderListMock);
     });
 
     it('should log a warning if an entry is excluded by the DTO', async () => {
-      // setup
+      // Given
       validateDtoMock.mockResolvedValueOnce([
         new Error('Unknown Error') as unknown as ValidationError,
       ]);
@@ -305,15 +305,15 @@ describe('ServiceProviderAdapterMongoService', () => {
         .fn()
         .mockResolvedValueOnce(invalidServiceProviderListMock);
 
-      // action
+      // When
       await service['findAllServiceProvider']();
 
-      // expect
+      // Then
       expect(loggerMock.alert).toHaveBeenCalledTimes(1);
     });
 
     it('should filter out any entry excluded by the DTO', async () => {
-      // setup
+      // Given
       validateDtoMock.mockResolvedValueOnce([
         new Error('Unknown Error') as unknown as ValidationError,
       ]);
@@ -327,10 +327,10 @@ describe('ServiceProviderAdapterMongoService', () => {
         .fn()
         .mockResolvedValueOnce(invalidServiceProviderListMock);
 
-      // action
+      // When
       const result = await service['findAllServiceProvider']();
 
-      // expect
+      // Then
       expect(result).toEqual(serviceProviderListMock);
     });
   });
@@ -343,17 +343,17 @@ describe('ServiceProviderAdapterMongoService', () => {
     });
 
     it('should resolve', async () => {
-      // setup
+      // Given
       const legacyToOpenIdMock = jest.spyOn<
         ServiceProviderAdapterMongoService,
         any
       >(service, 'legacyToOpenIdPropertyName');
       legacyToOpenIdMock.mockImplementationOnce((data) => data);
 
-      // action
+      // When
       const result = service.getList(true);
 
-      // expect
+      // Then
       expect(result).toBeInstanceOf(Promise);
 
       await result;
@@ -374,16 +374,16 @@ describe('ServiceProviderAdapterMongoService', () => {
         .fn()
         .mockReturnValueOnce(expected[0].client_secret);
 
-      // action
+      // When
       const result = await service.getList(true);
 
-      // expect
+      // Then
       expect(service['findAllServiceProvider']).toHaveBeenCalledTimes(1);
       expect(result).toStrictEqual(expected);
     });
 
     it('should return service provider list if serviceProviderListCache is not defined', async () => {
-      // setup
+      // Given
       service['listCache'] = [
         {
           client_id: 'foo',
@@ -394,10 +394,10 @@ describe('ServiceProviderAdapterMongoService', () => {
       ] as unknown as ServiceProviderMetadata[];
       service['findAllServiceProvider'] = jest.fn();
 
-      // action
+      // When
       const result = await service.getList();
 
-      // expect
+      // Then
       expect(result).toBe(service['listCache']);
       expect(service['findAllServiceProvider']).toHaveBeenCalledTimes(0);
     });
@@ -417,10 +417,10 @@ describe('ServiceProviderAdapterMongoService', () => {
         .fn()
         .mockReturnValueOnce(expected[0].client_secret);
 
-      // action
+      // When
       const result = await service.getList(true);
 
-      // expect
+      // Then
       expect(service['findAllServiceProvider']).toHaveBeenCalledTimes(1);
       expect(result).toStrictEqual(expected);
     });
@@ -494,42 +494,42 @@ describe('ServiceProviderAdapterMongoService', () => {
     ];
 
     it('should return true because idp1 is blacklisted', async () => {
-      // setup
+      // Given
       service.getById = jest.fn().mockReturnValueOnce(spListMock[0]);
 
-      // action
+      // When
       const result = await service.shouldExcludeIdp('wizz', 'idp1');
 
-      // expect
+      // Then
       expect(result).toBeTruthy();
     });
 
     it('should return false because idp1 is whitelist', async () => {
-      // setup
+      // Given
       service.getById = jest.fn().mockReturnValueOnce(spListMock[1]);
 
-      // action
+      // When
       const result = await service.shouldExcludeIdp('foo', 'idp1');
 
-      // expect
+      // Then
       expect(result).toBeFalsy();
     });
 
     it('should return false because idp1 is not blacklisted', async () => {
-      // setup
+      // Given
       service.getById = jest.fn().mockReturnValueOnce(spListMock[2]);
 
-      //action
+      //When
       const result = await service.shouldExcludeIdp('bar', 'idp1');
 
-      // expect
+      // Then
       expect(result).toBeFalsy();
     });
   });
 
   describe('legacyToOpenIdPropertyName', () => {
     it('should return service provider with change legacy property name by openid property name', () => {
-      // setup
+      // Given
       const expected = {
         ...validServiceProviderMock,
         client_id: '987654321987654321987654321987654',
@@ -542,12 +542,12 @@ describe('ServiceProviderAdapterMongoService', () => {
         .fn()
         .mockReturnValueOnce('client_secret');
 
-      // action
+      // When
       const result = service['legacyToOpenIdPropertyName'](
         validServiceProviderMock as unknown as ServiceProvider,
       );
 
-      // expect
+      // Then
       expect(result).toStrictEqual(expected);
     });
   });

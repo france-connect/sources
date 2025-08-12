@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { splitInTwoParts, validateDto } from '@fc/common';
 import { ConfigService } from '@fc/config';
+import { CreatedVia } from '@fc/csmr-config-client';
 import { CsmrImportCoreServiceProviderDto } from '@fc/csmr-import-core-client';
 import { LoggerService } from '@fc/logger';
 import { ScopesService } from '@fc/scopes';
@@ -47,6 +48,7 @@ describe('CsmrImportCoreService', () => {
   const payloadMock = Symbol('payload');
   const payloadEncodingMock = Symbol('utf8');
 
+  const userMock = 'userMock';
   const serviceProviderMock = [
     {
       name: 'nameMock 1',
@@ -143,8 +145,10 @@ describe('CsmrImportCoreService', () => {
       const expected = [reportMock];
 
       // When
-      const result =
-        await service.validateAndCreateServiceProvider(serviceProviderMock);
+      const result = await service.validateAndCreateServiceProvider(
+        serviceProviderMock,
+        userMock,
+      );
 
       // Then
       expect(result).toStrictEqual(expected);
@@ -170,8 +174,10 @@ describe('CsmrImportCoreService', () => {
       const expected = [reportMock];
 
       // When
-      const result =
-        await service.validateAndCreateServiceProvider(serviceProviderMock);
+      const result = await service.validateAndCreateServiceProvider(
+        serviceProviderMock,
+        userMock,
+      );
 
       // Then
       expect(result).toStrictEqual(expected);
@@ -197,8 +203,10 @@ describe('CsmrImportCoreService', () => {
       const expected = [reportMock];
 
       // When
-      const result =
-        await service.validateAndCreateServiceProvider(serviceProviderMock);
+      const result = await service.validateAndCreateServiceProvider(
+        serviceProviderMock,
+        userMock,
+      );
 
       // Then
       expect(loggerServiceMock.info).toHaveBeenCalledTimes(0);
@@ -211,8 +219,10 @@ describe('CsmrImportCoreService', () => {
       const expected = [reporSuccesstMock];
 
       // When
-      const result =
-        await service.validateAndCreateServiceProvider(serviceProviderMock);
+      const result = await service.validateAndCreateServiceProvider(
+        serviceProviderMock,
+        userMock,
+      );
 
       // Then
       expect(result).toStrictEqual(expected);
@@ -220,7 +230,10 @@ describe('CsmrImportCoreService', () => {
 
     it('should call private method getCredentials', async () => {
       // When
-      await service.validateAndCreateServiceProvider(serviceProviderMock);
+      await service.validateAndCreateServiceProvider(
+        serviceProviderMock,
+        userMock,
+      );
 
       // Then
       expect(service['getCredentials']).toHaveBeenCalledTimes(1);
@@ -228,7 +241,10 @@ describe('CsmrImportCoreService', () => {
 
     it('should call private method buildServiceProviderPayload to build service provider', async () => {
       // When
-      await service.validateAndCreateServiceProvider(serviceProviderMock);
+      await service.validateAndCreateServiceProvider(
+        serviceProviderMock,
+        userMock,
+      );
 
       // Then
       expect(service['buildServiceProviderPayload']).toHaveBeenCalledTimes(1);
@@ -236,12 +252,16 @@ describe('CsmrImportCoreService', () => {
         serviceProviderMock[0],
         'client_id',
         'client_secret',
+        'userMock',
       );
     });
 
     it('should call configDatabaseAdapter.create to save service provider', async () => {
       // When
-      await service.validateAndCreateServiceProvider(serviceProviderMock);
+      await service.validateAndCreateServiceProvider(
+        serviceProviderMock,
+        userMock,
+      );
 
       // Then
       expect(configDatabaseMock.create).toHaveBeenCalledExactlyOnceWith({
@@ -268,8 +288,10 @@ describe('CsmrImportCoreService', () => {
       const expected = [reportMock];
 
       // When
-      const result =
-        await service.validateAndCreateServiceProvider(serviceProviderMock);
+      const result = await service.validateAndCreateServiceProvider(
+        serviceProviderMock,
+        userMock,
+      );
 
       // Then
       expect(loggerServiceMock.warning).toHaveBeenCalledExactlyOnceWith(
@@ -450,7 +472,7 @@ describe('CsmrImportCoreService', () => {
     it('should call consumer hsm random method', async () => {
       // Given
       const expected = {
-        type: 'CRYPTO_RANDOM_MICROSERVICE',
+        type: 'CRYPTO_RANDOM',
         payload: {
           length: 64,
           encoding: payloadEncodingMock,
@@ -523,10 +545,10 @@ describe('CsmrImportCoreService', () => {
         redirect_uris: ['https://example.com/callback'],
         post_logout_redirect_uris: ['https://example.com/logout'],
         scopes: ['openid', 'profile'],
-        userinfo_signed_response_alg: SignatureAlgorithmEnum.RS256,
+        signedResponseAlg: SignatureAlgorithmEnum.RS256,
         phone: '123456789',
         site: ['https://example.com'],
-        adressesIp: [],
+        IPServerAddressesAndRanges: [],
         entityId: '',
       };
       const expected = {
@@ -536,14 +558,12 @@ describe('CsmrImportCoreService', () => {
         type: serviceProvider.type,
         emails: serviceProvider.email,
         signupId: serviceProvider.datapassId,
-        IPServerAddressesAndRanges: serviceProvider.adressesIp,
+        IPServerAddressesAndRanges: serviceProvider.IPServerAddressesAndRanges,
         redirect_uris: serviceProvider.redirect_uris,
         post_logout_redirect_uris: serviceProvider.post_logout_redirect_uris,
         scope: ['openid', 'profile'],
-        id_token_signed_response_alg:
-          serviceProvider.userinfo_signed_response_alg,
-        userinfo_signed_response_alg:
-          serviceProvider.userinfo_signed_response_alg,
+        id_token_signed_response_alg: serviceProvider.signedResponseAlg,
+        userinfo_signed_response_alg: serviceProvider.signedResponseAlg,
         site: serviceProvider.site,
 
         entityId: client_id,
@@ -559,6 +579,9 @@ describe('CsmrImportCoreService', () => {
         userinfo_encrypted_response_enc: '',
         platform: 'CORE_FCP',
         eidas: 1,
+
+        createdBy: userMock,
+        createdVia: CreatedVia.EXPLOITATION_BULK_FORM,
       };
 
       // When
@@ -566,6 +589,7 @@ describe('CsmrImportCoreService', () => {
         serviceProvider,
         client_id,
         client_secret,
+        userMock,
       );
 
       // Then
@@ -582,10 +606,10 @@ describe('CsmrImportCoreService', () => {
         redirect_uris: ['https://example.com/callback'],
         post_logout_redirect_uris: ['https://example.com/logout'],
         scopes: ['openid', 'profile'],
-        userinfo_signed_response_alg: SignatureAlgorithmEnum.RS256,
+        signedResponseAlg: SignatureAlgorithmEnum.RS256,
         phone: '123456789',
         site: ['https://example.com'],
-        adressesIp: [],
+        IPServerAddressesAndRanges: [],
         entityId: '',
       };
       const expected = {
@@ -595,14 +619,12 @@ describe('CsmrImportCoreService', () => {
         type: serviceProvider.type,
         emails: serviceProvider.email,
         signupId: serviceProvider.datapassId,
-        IPServerAddressesAndRanges: serviceProvider.adressesIp,
+        IPServerAddressesAndRanges: serviceProvider.IPServerAddressesAndRanges,
         redirect_uris: serviceProvider.redirect_uris,
         post_logout_redirect_uris: serviceProvider.post_logout_redirect_uris,
         scope: ['openid', 'profile'],
-        id_token_signed_response_alg:
-          serviceProvider.userinfo_signed_response_alg,
-        userinfo_signed_response_alg:
-          serviceProvider.userinfo_signed_response_alg,
+        id_token_signed_response_alg: serviceProvider.signedResponseAlg,
+        userinfo_signed_response_alg: serviceProvider.signedResponseAlg,
         site: serviceProvider.site,
 
         entityId: client_id,
@@ -618,6 +640,9 @@ describe('CsmrImportCoreService', () => {
         userinfo_encrypted_response_enc: '',
         platform: 'CORE_FCP',
         eidas: 1,
+
+        createdBy: userMock,
+        createdVia: CreatedVia.EXPLOITATION_BULK_FORM,
       };
 
       // When
@@ -625,6 +650,7 @@ describe('CsmrImportCoreService', () => {
         serviceProvider,
         client_id,
         client_secret,
+        userMock,
       );
 
       // Then
@@ -641,11 +667,11 @@ describe('CsmrImportCoreService', () => {
         redirect_uris: ['https://example.com/callback'],
         post_logout_redirect_uris: ['https://example.com/logout'],
         scopes: ['openid', 'profile'],
-        userinfo_signed_response_alg: SignatureAlgorithmEnum.RS256,
+        signedResponseAlg: SignatureAlgorithmEnum.RS256,
         phone: '123456789',
         entityId: 'client_id_v1',
         site: ['https://example.com'],
-        adressesIp: [],
+        IPServerAddressesAndRanges: [],
       };
       const expected = {
         client_id,
@@ -654,14 +680,12 @@ describe('CsmrImportCoreService', () => {
         type: serviceProvider.type,
         emails: serviceProvider.email,
         signupId: serviceProvider.datapassId,
-        IPServerAddressesAndRanges: serviceProvider.adressesIp,
+        IPServerAddressesAndRanges: serviceProvider.IPServerAddressesAndRanges,
         redirect_uris: serviceProvider.redirect_uris,
         post_logout_redirect_uris: serviceProvider.post_logout_redirect_uris,
         scope: ['openid', 'profile'],
-        id_token_signed_response_alg:
-          serviceProvider.userinfo_signed_response_alg,
-        userinfo_signed_response_alg:
-          serviceProvider.userinfo_signed_response_alg,
+        id_token_signed_response_alg: serviceProvider.signedResponseAlg,
+        userinfo_signed_response_alg: serviceProvider.signedResponseAlg,
         site: serviceProvider.site,
 
         entityId: serviceProvider.entityId,
@@ -677,6 +701,9 @@ describe('CsmrImportCoreService', () => {
         userinfo_encrypted_response_enc: '',
         platform: 'CORE_FCP',
         eidas: 1,
+
+        createdBy: userMock,
+        createdVia: CreatedVia.EXPLOITATION_BULK_FORM,
       };
 
       // When
@@ -684,6 +711,7 @@ describe('CsmrImportCoreService', () => {
         serviceProvider,
         client_id,
         client_secret,
+        userMock,
       );
 
       // Then
@@ -700,11 +728,11 @@ describe('CsmrImportCoreService', () => {
         redirect_uris: ['https://example.com/callback'],
         post_logout_redirect_uris: ['https://example.com/logout'],
         scopes: ['profile'],
-        userinfo_signed_response_alg: SignatureAlgorithmEnum.RS256,
+        signedResponseAlg: SignatureAlgorithmEnum.RS256,
         phone: '123456789',
         entityId: 'client_id_v1',
         site: ['https://example.com'],
-        adressesIp: [],
+        IPServerAddressesAndRanges: [],
       };
       const expected = {
         client_id,
@@ -713,14 +741,12 @@ describe('CsmrImportCoreService', () => {
         type: serviceProvider.type,
         emails: serviceProvider.email,
         signupId: serviceProvider.datapassId,
-        IPServerAddressesAndRanges: serviceProvider.adressesIp,
+        IPServerAddressesAndRanges: serviceProvider.IPServerAddressesAndRanges,
         redirect_uris: serviceProvider.redirect_uris,
         post_logout_redirect_uris: serviceProvider.post_logout_redirect_uris,
         scope: ['openid', 'profile'],
-        id_token_signed_response_alg:
-          serviceProvider.userinfo_signed_response_alg,
-        userinfo_signed_response_alg:
-          serviceProvider.userinfo_signed_response_alg,
+        id_token_signed_response_alg: serviceProvider.signedResponseAlg,
+        userinfo_signed_response_alg: serviceProvider.signedResponseAlg,
         site: serviceProvider.site,
 
         entityId: serviceProvider.entityId,
@@ -736,6 +762,9 @@ describe('CsmrImportCoreService', () => {
         userinfo_encrypted_response_enc: '',
         platform: 'CORE_FCP',
         eidas: 1,
+
+        createdBy: userMock,
+        createdVia: CreatedVia.EXPLOITATION_BULK_FORM,
       };
 
       // When
@@ -743,6 +772,7 @@ describe('CsmrImportCoreService', () => {
         serviceProvider,
         client_id,
         client_secret,
+        userMock,
       );
 
       // Then

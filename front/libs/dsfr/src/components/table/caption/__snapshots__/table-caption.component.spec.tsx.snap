@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TableCaptionComponent should match the snapshot 1`] = `
+<table>
+  <caption>
+    This is a table caption
+  </caption>
+</table>
+`;

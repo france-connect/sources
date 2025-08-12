@@ -1,8 +1,9 @@
 import type { Sizes } from '@fc/dsfr';
 
-import type { PropsWithHintType } from '../types';
+import type { PropsWithHintType, PropsWithSeeAlsoType } from '../types';
+import type { FieldMessage } from './field-message.interface';
 
-export interface InputConfigInterface extends PropsWithHintType {
+export interface InputConfigInterface extends PropsWithHintType, PropsWithSeeAlsoType {
   label: string;
   size?: Sizes;
   inline?: boolean;
@@ -10,4 +11,5 @@ export interface InputConfigInterface extends PropsWithHintType {
   disabled?: boolean;
   required?: boolean;
   readonly?: boolean;
+  messages?: FieldMessage[];
 }

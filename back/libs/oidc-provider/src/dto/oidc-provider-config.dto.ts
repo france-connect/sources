@@ -476,8 +476,6 @@ class AllClientMetadataValidator implements AllClientMetadata {
 
   @IsString()
   @IsOptional()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly sector_identifier_uri?: string;
 
   @IsOptional()

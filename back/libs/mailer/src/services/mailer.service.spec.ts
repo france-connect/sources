@@ -84,55 +84,55 @@ describe('MailerService', () => {
 
   describe('onModuleInit', () => {
     it('should get the mailer mode from the config', () => {
-      // setup
+      // Given
       const configName = 'Mailer';
       const configMock = { transport: 'logs' };
       configServiceMock.get.mockReturnValueOnce(configMock);
 
-      // action
+      // When
       service.onModuleInit();
 
-      // expect
+      // Then
       expect(configServiceMock.get).toBeCalledTimes(1);
       expect(configServiceMock.get).toBeCalledWith(configName);
     });
 
     it('should create instance of the StdoutTransport with the logger instance if mailer is "logs"', () => {
-      // setup
+      // Given
       const configMock = { transport: 'logs' };
       configServiceMock.get.mockReturnValueOnce(configMock);
 
-      // action
+      // When
       service.onModuleInit();
 
-      // expect
+      // Then
       expect(StdoutTransportMock).toBeCalledTimes(1);
       expect(StdoutTransportMock).toBeCalledWith(loggerServiceMock);
     });
 
     it('should set the transport to SMPT if MailerConfig equal "smtp"', () => {
-      // setup
+      // Given
       const configMock = { transport: 'smtp' };
       configServiceMock.get.mockReturnValueOnce(configMock);
 
-      // action
+      // When
       service.onModuleInit();
 
-      // expect
+      // Then
       expect(service['transport']).toBe(smtpServiceMock);
     });
 
     it('should throw an error if mailer is unknown', () => {
-      // setup
+      // Given
       const configMock = { transport: 'pouet' };
       const error = new Error('Invalid mailer "pouet"');
       configServiceMock.get.mockReturnValueOnce(configMock);
 
-      // action
+      // When
       try {
         service.onModuleInit();
       } catch (e) {
-        // expect
+        // Then
         expect(StdoutTransportMock).toBeCalledTimes(0);
 
         expect(e).toBeInstanceOf(Error);
@@ -150,25 +150,25 @@ describe('MailerService', () => {
     });
 
     it('should call the transport "send" function with the mail parameters', async () => {
-      // action
+      // When
       await service.send(emailParamsMock);
 
-      // expect
+      // Then
       expect(service['transport'].send).toHaveBeenCalledTimes(1);
       expect(service['transport'].send).toHaveBeenCalledWith(emailParamsMock);
     });
 
     it('should log an error if the transport throws', async () => {
-      // setup
+      // Given
       const error = Error('oops');
       transportSendMock.mockImplementation(() => {
         throw error;
       });
 
-      // action
+      // When
       await service.send(emailParamsMock);
 
-      // expect
+      // Then
       expect(loggerServiceMock.err).toHaveBeenCalledTimes(1);
     });
   });

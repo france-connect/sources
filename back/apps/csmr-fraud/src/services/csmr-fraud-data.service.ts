@@ -4,7 +4,7 @@ import {
   AccountIdsResultsInterface,
   CsmrAccountClientService,
 } from '@fc/csmr-account-client';
-import { FraudCaseDto, TrackingDataDto } from '@fc/csmr-fraud-client';
+import { FraudCaseDto } from '@fc/csmr-fraud-client';
 import { LoggerService } from '@fc/logger';
 import { PivotIdentityDto } from '@fc/oidc';
 import {
@@ -13,7 +13,7 @@ import {
 } from '@fc/tracks-adapter-elasticsearch';
 
 import {
-  SecurityTicketDataInterface,
+  SecurityTicketContextInterface,
   TracksFormatterOutputInterface,
 } from '../interfaces';
 import { getSecurityTicketData, getTrackingData } from '../utils';
@@ -29,10 +29,7 @@ export class CsmrFraudDataService {
   async enrichFraudData(
     identity: PivotIdentityDto,
     fraudCase: FraudCaseDto,
-  ): Promise<{
-    ticketData: SecurityTicketDataInterface;
-    trackingData: TrackingDataDto;
-  }> {
+  ): Promise<SecurityTicketContextInterface> {
     let accountIds: AccountIdsResultsInterface;
     try {
       accountIds = await this.account.getAccountIdsFromIdentity(identity);
@@ -41,6 +38,40 @@ export class CsmrFraudDataService {
       accountIds = {};
     }
 
+    const { accountIdLow, accountIdHigh } = accountIds;
+    const groupIds = [accountIdLow, accountIdHigh].filter(Boolean);
+
+    const securityTicketContext = await this.buildSecurityTicketContext(
+      identity,
+      fraudCase,
+      accountIds,
+      groupIds,
+    );
+
+    return securityTicketContext;
+  }
+
+  async enrichUnverifiedIdentityFraudData(
+    identity: PivotIdentityDto,
+    fraudCase: FraudCaseDto,
+  ): Promise<SecurityTicketContextInterface> {
+    const accountId = {};
+    const groupIds = [];
+    const securityTicketContext = await this.buildSecurityTicketContext(
+      identity,
+      fraudCase,
+      accountId,
+      groupIds,
+    );
+    return securityTicketContext;
+  }
+
+  private async buildSecurityTicketContext(
+    identity: PivotIdentityDto,
+    fraudCase: FraudCaseDto,
+    accountIds: AccountIdsResultsInterface,
+    groupIds: string[],
+  ): Promise<SecurityTicketContextInterface> {
     let tracks: TracksAdapterResultsInterface<TracksFormatterOutputInterface>;
     try {
       tracks = await this.tracks.getTracksForAuthenticationEventId(
@@ -50,8 +81,6 @@ export class CsmrFraudDataService {
       this.logger.err(error);
       tracks = { total: 0, payload: [] };
     }
-    const { accountIdLow, accountIdHigh } = accountIds;
-    const groupIds = [accountIdLow, accountIdHigh].filter(Boolean);
 
     const ticketData = getSecurityTicketData(
       identity,

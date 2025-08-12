@@ -34,7 +34,10 @@ export class AppInterceptor implements NestInterceptor {
 
   private interceptRpc(context: ExecutionContext): void {
     const message = context.switchToRpc().getData();
+    const {
+      args: [, , pattern],
+    } = context.switchToRpc().getContext();
 
-    this.logger.debug({ msg: `Ms:ReceiveMessage:${message.type}`, message });
+    this.logger.debug({ msg: `Ms:ReceiveMessage:${pattern}`, message });
   }
 }

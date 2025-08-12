@@ -1,38 +1,52 @@
 import { render } from '@testing-library/react';
+import { useLoaderData } from 'react-router';
 
-import { type AnyObjectInterface, HeadingTag } from '@fc/common';
+import { type AnyObjectInterface } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { AlertComponent, LinkComponent } from '@fc/dsfr';
 import type { SchemaFieldType } from '@fc/dto2form';
-import { DTO2FormComponent } from '@fc/dto2form';
+import { DTO2FormComponent, removeEmptyValues, useDto2Form } from '@fc/dto2form';
 import { t } from '@fc/i18n';
 
-import { useInstanceUpdate } from '../../../hooks';
 import { InstanceUpdatePage } from './instance-update.page';
-
-jest.mock('../../../hooks/instance-update/instance-update.hook');
 
 describe('InstanceUpdatePage', () => {
   const submitHandlerMock = jest.fn();
   const initialValuesMock = Symbol('any-initial-values-mock') as unknown as AnyObjectInterface;
   const schemaMock = Symbol('any-schema-mock') as unknown as SchemaFieldType[];
-  const configMock = {
+
+  const configExternalUrlsMock = {
     spConfigurationDocUrl: Symbol('any-spConfigurationDocUrl-mock') as unknown as string,
   };
 
+  const configFormMock = {
+    InstancesUpdate: {
+      id: 'InstancesUpdate:id',
+    },
+  };
+
+  const versionData = {
+    name: 'any-instance-name-mock',
+  };
+
   beforeEach(() => {
-    jest.mocked(useInstanceUpdate).mockReturnValueOnce({
+    jest.mocked(useDto2Form).mockReturnValue({
       initialValues: initialValuesMock,
       schema: schemaMock,
       submitHandler: submitHandlerMock,
-      title: 'any-instance-name-mock',
     });
-    jest.mocked(ConfigService.get).mockReturnValueOnce(configMock);
+    jest
+      .mocked(ConfigService.get)
+      .mockReturnValue(configFormMock)
+      .mockReturnValueOnce(configFormMock)
+      .mockReturnValueOnce(configExternalUrlsMock);
     jest
       .mocked(t)
       .mockReturnValueOnce('Partners-form-updateTitle-mock')
+      .mockReturnValueOnce('Partners.instance.updateIntro-mock')
       .mockReturnValueOnce('Partners.instance.noticeTitle-mock')
       .mockReturnValueOnce('Form.submit.label-mock');
+    jest.mocked(useLoaderData).mockReturnValue(versionData);
   });
 
   it('should match the snapshot', () => {
@@ -43,21 +57,23 @@ describe('InstanceUpdatePage', () => {
     // Then
     expect(container).toMatchSnapshot();
     expect(titleElt).toBeInTheDocument();
-    expect(t).toHaveBeenCalledTimes(3);
+    expect(t).toHaveBeenCalledTimes(4);
     expect(t).toHaveBeenNthCalledWith(1, 'Partners.updatepage.title');
-    expect(t).toHaveBeenNthCalledWith(2, 'Partners.instance.noticeTitle');
-    expect(t).toHaveBeenNthCalledWith(3, 'Form.submit.label');
-    expect(useInstanceUpdate).toHaveBeenCalledOnce();
-    expect(useInstanceUpdate).toHaveBeenCalledWith();
+    expect(t).toHaveBeenNthCalledWith(2, 'Partners.instance.updateIntro');
+    expect(t).toHaveBeenNthCalledWith(3, 'Partners.instance.noticeTitle');
+    expect(t).toHaveBeenNthCalledWith(4, 'Form.submit.label');
+    expect(useDto2Form).toHaveBeenCalledOnce();
+    expect(useDto2Form).toHaveBeenCalledWith(configFormMock.InstancesUpdate);
     expect(DTO2FormComponent).toHaveBeenCalledOnce();
     expect(DTO2FormComponent).toHaveBeenCalledWith(
       {
         config: {
-          id: 'DTO2Form-instance-update',
+          id: configFormMock.InstancesUpdate.id,
           title: 'any-instance-name-mock',
-          titleHeading: HeadingTag.H2,
         },
         initialValues: initialValuesMock,
+        onPostSubmit: expect.any(Function),
+        onPreSubmit: removeEmptyValues,
         onSubmit: submitHandlerMock,
         schema: schemaMock,
         submitLabel: 'Form.submit.label-mock',
@@ -78,7 +94,6 @@ describe('InstanceUpdatePage', () => {
         children: expect.any(Object),
         className: 'fr-col-12 fr-col-md-8 fr-mb-4w',
         size: 'md',
-        title: 'Partners.instance.noticeTitle-mock',
         type: 'info',
       },
       undefined,
@@ -95,11 +110,30 @@ describe('InstanceUpdatePage', () => {
     expect(LinkComponent).toHaveBeenCalledWith(
       {
         dataTestId: 'documentation-partners-link',
-        href: configMock.spConfigurationDocUrl,
+        external: true,
+        href: configExternalUrlsMock.spConfigurationDocUrl,
         label: 'documentation partenaires',
-        rel: 'noopener noreferrer external',
-        target: '_blank',
       },
+      undefined,
+    );
+  });
+
+  it('should default data to empty object if no data', () => {
+    // Given
+    const emptyVersionData = undefined;
+    jest.mocked(useLoaderData).mockReturnValueOnce(emptyVersionData);
+
+    // When
+    render(<InstanceUpdatePage />);
+
+    // Then
+    expect(DTO2FormComponent).toHaveBeenCalledWith(
+      expect.objectContaining({
+        config: {
+          id: configFormMock.InstancesUpdate.id,
+          title: undefined,
+        },
+      }),
       undefined,
     );
   });

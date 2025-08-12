@@ -1,0 +1,50 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TableRowComponent should match the snapshot 1`] = `
+<tbody>
+  <tr
+    data-row-key="0"
+  >
+    <td
+      class=""
+    >
+      value1
+    </td>
+    <td
+      class="fr-cell--multiline"
+    >
+      value2
+    </td>
+    <td
+      class=""
+    >
+      value3
+    </td>
+  </tr>
+</tbody>
+`;
+
+exports[`TableRowComponent should set the row id 1`] = `
+<tbody>
+  <tr
+    data-row-key="0"
+    id="any-table-id-mock--row-0"
+  >
+    <td
+      class=""
+    >
+      value1
+    </td>
+    <td
+      class="fr-cell--multiline"
+    >
+      value2
+    </td>
+    <td
+      class=""
+    >
+      value3
+    </td>
+  </tr>
+</tbody>
+`;

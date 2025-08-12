@@ -1,4 +1,4 @@
-import has from 'lodash.has';
+import { has } from 'lodash';
 
 import { Validators } from '../../enums';
 import { buildValidator, composeValidators } from '../../helpers';

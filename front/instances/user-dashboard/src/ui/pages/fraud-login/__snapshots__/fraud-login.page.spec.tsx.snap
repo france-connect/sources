@@ -19,7 +19,7 @@ exports[`FraudLoginPage should match snapshot when session is expired 1`] = `
       </div>
     </div>
     <h1
-      class="title fr-mb-5w"
+      class="fr-text-title--blue-france fr-mb-5w"
     >
       Pour signaler un cas d’usurpation d’identité, veuillez vous connecter
     </h1>
@@ -27,7 +27,7 @@ exports[`FraudLoginPage should match snapshot when session is expired 1`] = `
       data-mockid="LoginFormComponent"
     />
     <p
-      class="paragraph fr-m-auto fr-mt-7v fr-mb-3w"
+      class="paragraph fr-mx-auto fr-mt-7v fr-mb-3w"
       data-testid="paragraph"
     >
       Une fois connecté, vous pourrez contacter le support FranceConnect en remplissant un formulaire.
@@ -48,7 +48,7 @@ exports[`FraudLoginPage should match the snapshot on desktop layout 1`] = `
     id="page-container"
   >
     <h1
-      class="title fr-mb-5w"
+      class="fr-text-title--blue-france fr-mb-5w"
     >
       Pour signaler un cas d’usurpation d’identité, veuillez vous connecter
     </h1>
@@ -56,7 +56,7 @@ exports[`FraudLoginPage should match the snapshot on desktop layout 1`] = `
       data-mockid="LoginFormComponent"
     />
     <p
-      class="paragraph fr-m-auto fr-mt-7v fr-mb-3w"
+      class="paragraph fr-mx-auto fr-mt-7v fr-mb-3w"
       data-testid="paragraph"
     >
       Une fois connecté, vous pourrez contacter le support FranceConnect en remplissant un formulaire.
@@ -77,7 +77,7 @@ exports[`FraudLoginPage should match the snapshot on mobile layout 1`] = `
     id="page-container"
   >
     <h1
-      class="title fr-mb-5w"
+      class="fr-text-title--blue-france fr-mb-5w"
     >
       Pour signaler un cas d’usurpation d’identité, veuillez vous connecter
     </h1>
@@ -85,7 +85,7 @@ exports[`FraudLoginPage should match the snapshot on mobile layout 1`] = `
       data-mockid="LoginFormComponent"
     />
     <p
-      class="paragraph fr-m-auto fr-mt-7v fr-mb-3w"
+      class="paragraph fr-mx-auto fr-mt-7v fr-mb-3w"
       data-testid="paragraph"
     >
       Une fois connecté, vous pourrez contacter le support FranceConnect en remplissant un formulaire.
@@ -106,7 +106,7 @@ exports[`FraudLoginPage should match the snapshot on tablet layout 1`] = `
     id="page-container"
   >
     <h1
-      class="title fr-mb-5w"
+      class="fr-text-title--blue-france fr-mb-5w"
     >
       Pour signaler un cas d’usurpation d’identité, veuillez vous connecter
     </h1>
@@ -114,7 +114,7 @@ exports[`FraudLoginPage should match the snapshot on tablet layout 1`] = `
       data-mockid="LoginFormComponent"
     />
     <p
-      class="paragraph fr-m-auto fr-mt-7v fr-mb-3w"
+      class="paragraph fr-mx-auto fr-mt-7v fr-mb-3w"
       data-testid="paragraph"
     >
       Une fois connecté, vous pourrez contacter le support FranceConnect en remplissant un formulaire.
@@ -135,7 +135,7 @@ exports[`FraudLoginPage should match the snapshot when session is not expired 1`
     id="page-container"
   >
     <h1
-      class="title fr-mb-5w"
+      class="fr-text-title--blue-france fr-mb-5w"
     >
       Pour signaler un cas d’usurpation d’identité, veuillez vous connecter
     </h1>
@@ -143,7 +143,7 @@ exports[`FraudLoginPage should match the snapshot when session is not expired 1`
       data-mockid="LoginFormComponent"
     />
     <p
-      class="paragraph fr-m-auto fr-mt-7v fr-mb-3w"
+      class="paragraph fr-mx-auto fr-mt-7v fr-mb-3w"
       data-testid="paragraph"
     >
       Une fois connecté, vous pourrez contacter le support FranceConnect en remplissant un formulaire.
@@ -171,7 +171,7 @@ exports[`FraudLoginPage should render AlertComponent with specific props if sess
       </p>
     </div>
     <h1
-      class="title fr-mb-5w"
+      class="fr-text-title--blue-france fr-mb-5w"
     >
       Pour signaler un cas d’usurpation d’identité, veuillez vous connecter
     </h1>
@@ -179,7 +179,7 @@ exports[`FraudLoginPage should render AlertComponent with specific props if sess
       data-mockid="LoginFormComponent"
     />
     <p
-      class="paragraph fr-m-auto fr-mt-7v fr-mb-3w"
+      class="paragraph fr-mx-auto fr-mt-7v fr-mb-3w"
       data-testid="paragraph"
     >
       Une fois connecté, vous pourrez contacter le support FranceConnect en remplissant un formulaire.

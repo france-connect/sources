@@ -12,8 +12,7 @@ export class MongooseConnectionConnectedHandler
   ) {}
 
   // Needed to match interface
-  // eslint-disable-next-line require-await
   public async handle(): Promise<void> {
-    this.mongooseHelper.connectAllWatchers();
+    await this.mongooseHelper.connectAllWatchers();
   }
 }

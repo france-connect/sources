@@ -9,5 +9,6 @@
   "Form.select.placeholder": "Sélectionner une option",
   "Form.textarea.maxlength": " / {maxLength} caractères",
   "Form.multiple.add": "Ajouter une valeur",
-  "Form.multiple.remove": "Supprimer cette valeur"
+  "Form.multiple.remove": "Supprimer cette valeur",
+  "Form.label.seeAlso": "Plus d’informations"
 }

@@ -44,26 +44,26 @@ describe('StdoutTransport', () => {
 
   describe('send', () => {
     it('should return a promise', () => {
-      // action
+      // When
       const result = service.send(emailParamsMock);
 
-      // expect
+      // Then
       expect(result).toBeInstanceOf(Promise);
     });
 
     it('should resolves to "true"', async () => {
-      // action
+      // When
       const result = await service.send(emailParamsMock);
 
-      // expect
+      // Then
       expect(result).toStrictEqual(true);
     });
 
     it('should call the logger with the mails params', async () => {
-      // action
+      // When
       await service.send(emailParamsMock);
 
-      // expect
+      // Then
       expect(loggerServiceMock.info).toHaveBeenCalledTimes(1);
       expect(loggerServiceMock.info).toHaveBeenCalledWith(
         emailParamsMock,

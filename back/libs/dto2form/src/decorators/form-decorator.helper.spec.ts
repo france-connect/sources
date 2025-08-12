@@ -1,6 +1,6 @@
 import * as ClassValidator from 'class-validator';
 
-import { Fields } from '../enums';
+import { Fields, MessageLevelEnum, MessagePriorityEnum } from '../enums';
 import { convertRegExpToStrings } from '../helpers';
 import {
   ChoiceAttributes,
@@ -22,20 +22,39 @@ describe('FormDecoratorHelper', () => {
     { name: 'minLength' },
     { name: 'maxLength' },
   ];
+
+  const requiredErrorMessage = {
+    content: 'required_error',
+    level: MessageLevelEnum.ERROR,
+    priority: MessagePriorityEnum.ERROR,
+  };
+
+  const minLengthErrorMessage = {
+    content: 'minLength_error',
+    level: MessageLevelEnum.ERROR,
+    priority: MessagePriorityEnum.ERROR,
+  };
+
+  const maxLengthErrorMessage = {
+    content: 'maxLength_error',
+    level: MessageLevelEnum.ERROR,
+    priority: MessagePriorityEnum.ERROR,
+  };
+
   const expectedFinalValidators = [
     {
       name: 'required',
-      errorMessage: 'required_error',
+      errorMessage: requiredErrorMessage,
       validationArgs: [],
     },
     {
       name: 'minLength',
-      errorMessage: 'minLength_error',
+      errorMessage: minLengthErrorMessage,
       validationArgs: [],
     },
     {
       name: 'maxLength',
-      errorMessage: 'maxLength_error',
+      errorMessage: maxLengthErrorMessage,
       validationArgs: [],
     },
   ] as [FieldValidator, ...FieldValidator[]];
@@ -189,20 +208,27 @@ describe('FormDecoratorHelper', () => {
         { name: 'minLength', validationArgs: [5] },
         { name: 'maxLength', validationArgs: [{ foo: 'bar' }] },
       ];
+
+      const anyValidatorErrorMessage = {
+        content: 'any_validator_error',
+        level: MessageLevelEnum.ERROR,
+        priority: MessagePriorityEnum.ERROR,
+      };
+
       const expectedFinalValidators = [
         {
           name: 'any_validator',
-          errorMessage: 'any_validator_error',
+          errorMessage: anyValidatorErrorMessage,
           validationArgs: ['Hello', 42],
         },
         {
           name: 'minLength',
-          errorMessage: 'minLength_error',
+          errorMessage: minLengthErrorMessage,
           validationArgs: [5],
         },
         {
           name: 'maxLength',
-          errorMessage: 'maxLength_error',
+          errorMessage: maxLengthErrorMessage,
           validationArgs: [{ foo: 'bar' }],
         },
       ] as [FieldValidator, ...FieldValidator[]];
@@ -511,12 +537,18 @@ describe('FormDecoratorHelper', () => {
         validators,
       } as FieldAttributes;
 
+      const isFilledErrorMessage = {
+        content: 'isFilled_error',
+        level: MessageLevelEnum.ERROR,
+        priority: MessagePriorityEnum.ERROR,
+      };
+
       const expected = {
         required: true,
         validators: [
           {
             name: 'isFilled',
-            errorMessage: `isFilled_error`,
+            errorMessage: isFilledErrorMessage,
             validationArgs: [],
           },
           ...expectedFinalValidators,

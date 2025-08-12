@@ -38,6 +38,12 @@ export class MongooseProvider {
       eventBus.publish(new MongooseConnectionReconnectedEvent()),
     );
 
+    connection.on('error', (error) => {
+      console.error(
+        `Mongoose connection error: ${error.message}, stack: ${error.stack}`,
+      );
+    });
+
     connection.$initialConnection = connection.$initialConnection.catch(
       (error) => {
         logger.emerg(error, 'Invalid Mongodb Connection, exiting app');

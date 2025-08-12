@@ -1,6 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { FraudMessageDto, TrackingDataDto } from '@fc/csmr-fraud-client';
+import {
+  FraudMessageDto,
+  TrackingDataDto,
+} from '@fc/csmr-fraud-client/protocol';
 import { MicroservicesRmqSubscriberService } from '@fc/microservices-rmq';
 
 import { getSubscriberMock } from '@mocks/microservices-rmq';
@@ -45,6 +48,7 @@ describe('CsmrFraudController', () => {
 
   const dataServiceMock = {
     enrichFraudData: jest.fn(),
+    enrichUnverifiedIdentityFraudData: jest.fn(),
   };
 
   const subscriberMock = getSubscriberMock();
@@ -84,6 +88,11 @@ describe('CsmrFraudController', () => {
       trackingData: trackingDataMock,
     });
 
+    dataServiceMock.enrichUnverifiedIdentityFraudData.mockReturnValue({
+      ticketData: ticketDataMock,
+      trackingData: trackingDataMock,
+    });
+
     subscriberMock.response.mockReturnValue(responseMock);
   });
 
@@ -97,8 +106,7 @@ describe('CsmrFraudController', () => {
       await controller.processFraudCase(messageMock);
 
       // Then
-      expect(dataServiceMock.enrichFraudData).toHaveBeenCalledOnce();
-      expect(dataServiceMock.enrichFraudData).toHaveBeenCalledWith(
+      expect(dataServiceMock.enrichFraudData).toHaveBeenCalledExactlyOnceWith(
         identityMock,
         fraudCaseMock,
       );
@@ -108,23 +116,61 @@ describe('CsmrFraudController', () => {
       // When
       await controller.processFraudCase(messageMock);
       // Then
-      expect(supportServiceMock.createSecurityTicket).toHaveBeenCalledOnce();
-      expect(supportServiceMock.createSecurityTicket).toHaveBeenCalledWith(
-        ticketDataMock,
-      );
+      expect(
+        supportServiceMock.createSecurityTicket,
+      ).toHaveBeenCalledExactlyOnceWith(ticketDataMock);
     });
 
     it('should call subscriber.response with trackingData', async () => {
       // When
       await controller.processFraudCase(messageMock);
       // Then
-      expect(subscriberMock.response).toHaveBeenCalledOnce();
-      expect(subscriberMock.response).toHaveBeenCalledWith(trackingDataMock);
+      expect(subscriberMock.response).toHaveBeenCalledExactlyOnceWith(
+        trackingDataMock,
+      );
     });
 
     it('should return result of subscriber.response()', async () => {
       // When
       const result = await controller.processFraudCase(messageMock);
+
+      // Then
+      expect(result).toBe(responseMock);
+    });
+  });
+
+  describe('processUnverifiedFraudCase', () => {
+    it('should call data.enrichUnverifiedIdentityFraudData with correct parameters', async () => {
+      // When
+      await controller.processUnverifiedFraudCase(messageMock);
+
+      // Then
+      expect(
+        dataServiceMock.enrichUnverifiedIdentityFraudData,
+      ).toHaveBeenCalledExactlyOnceWith(identityMock, fraudCaseMock);
+    });
+
+    it('should call support.createSecurityTicket with ticketData', async () => {
+      // When
+      await controller.processUnverifiedFraudCase(messageMock);
+      // Then
+      expect(
+        supportServiceMock.createSecurityTicket,
+      ).toHaveBeenCalledExactlyOnceWith(ticketDataMock);
+    });
+
+    it('should call subscriber.response with trackingData', async () => {
+      // When
+      await controller.processUnverifiedFraudCase(messageMock);
+      // Then
+      expect(subscriberMock.response).toHaveBeenCalledExactlyOnceWith(
+        trackingDataMock,
+      );
+    });
+
+    it('should return result of subscriber.response()', async () => {
+      // When
+      const result = await controller.processUnverifiedFraudCase(messageMock);
 
       // Then
       expect(result).toBe(responseMock);

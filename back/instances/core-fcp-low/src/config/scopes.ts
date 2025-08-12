@@ -3,6 +3,7 @@ import {
   cnam,
   cnous,
   dgfip,
+  dsnj,
   dss,
   fcpLow,
   ft,
@@ -12,7 +13,7 @@ import {
 } from '@fc/scopes';
 
 const config: ScopesConfig = {
-  mapping: [cnam, cnous, dgfip, fcpLow, mesri, mi, ft, cnafMsa, dss],
+  mapping: [cnam, cnous, dgfip, fcpLow, mesri, mi, ft, cnafMsa, dss, dsnj],
 };
 
 export default config;

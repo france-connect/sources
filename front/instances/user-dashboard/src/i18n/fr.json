@@ -1,1 +1,4 @@
-{}
+{
+  "Fraud.IdentityTheftReport.sendReportButton": "Envoyer le signalement",
+  "Fraud.IdentityTheftReport.summaryNoPhone": "Non renseigné"
+}

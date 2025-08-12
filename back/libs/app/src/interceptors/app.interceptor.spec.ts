@@ -16,12 +16,16 @@ describe('AppInterceptor', () => {
 
   const rpcContextMock = {
     getData: jest.fn(),
+    getContext: jest.fn(),
   };
+
+  const patternMock = 'patternMockValue';
 
   const contextMock = {
     getType: jest.fn(),
     switchToHttp: () => httpContextMock,
     switchToRpc: () => rpcContextMock,
+    args: [undefined, undefined, patternMock],
   };
 
   const reqMock = {
@@ -58,6 +62,7 @@ describe('AppInterceptor', () => {
     nextMock.handle.mockReturnThis();
     httpContextMock.getRequest.mockReturnValue(reqMock);
     rpcContextMock.getData.mockReturnValue(messageMock);
+    rpcContextMock.getContext.mockReturnValue(contextMock);
     contextMock.getType.mockReturnValue('http');
   });
 
@@ -131,7 +136,7 @@ describe('AppInterceptor', () => {
 
       // Then
       expect(loggerMock.debug).toHaveBeenCalledExactlyOnceWith({
-        msg: `Ms:ReceiveMessage:${messageMock.type}`,
+        msg: `Ms:ReceiveMessage:${patternMock}`,
         message: messageMock,
       });
     });

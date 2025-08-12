@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { CryptographyService } from '@fc/cryptography';
-import { SessionService } from '@fc/session';
+import { SessionNotFoundException, SessionService } from '@fc/session';
 
 import { getSessionServiceMock } from '@mocks/session';
 
@@ -136,12 +136,12 @@ describe('CsrfService', () => {
       expect(() => service.check('')).toThrow(CsrfMissingTokenException);
     });
 
-    it('should throw CsrfNoSessionException if the session does not exist', () => {
+    it('should throw SessionNotFoundException if the session does not exist', () => {
       // Given
       sessionServiceMock.get.mockReturnValue(null);
 
       // When / Then
-      expect(() => service.check('input')).toThrow(CsrfNoSessionException);
+      expect(() => service.check('input')).toThrow(SessionNotFoundException);
     });
 
     it('should throw CsrfNoSessionException if the session does not have a token', () => {

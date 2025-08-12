@@ -7,9 +7,9 @@ import {
   RequirePermission,
 } from '@fc/access-control';
 import {
+  Dto2FormI18nService,
   MetadataDtoTranslationInterface,
   MetadataFormService,
-  PartnersI18nService,
 } from '@fc/dto2form';
 import { ServiceProviderInstanceVersionDto } from '@fc/partners-service-provider-instance-version';
 
@@ -20,7 +20,7 @@ import { PartnersBackRoutes } from '../enums';
 export class VersionController {
   constructor(
     private readonly metadataFormService: MetadataFormService,
-    private readonly partnersi18n: PartnersI18nService,
+    private readonly partnersi18n: Dto2FormI18nService,
   ) {}
 
   @Get(PartnersBackRoutes.SP_VERSION_FORM_METADATA)

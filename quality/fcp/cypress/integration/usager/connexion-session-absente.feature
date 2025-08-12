@@ -62,10 +62,8 @@ Fonctionnalité: Connexion Usager - session absente
     Et que je supprime les cookies FranceConnect
     Quand je m'authentifie avec succès
     Alors je suis redirigé vers la page erreur technique FranceConnect
-    # @todo #1481 Déclencher erreur "Y190001" (SessionNotFoundException au lieu de UndefinedStepRouteException)
-    # @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1481
-    Et le code d'erreur FranceConnect est "Y420002"
-    Et le message d'erreur FranceConnect est "Nous vous invitons à fermer tous les onglets de votre navigateur et à vous authentifier de nouveau en suivant les étapes de connexion."
+    Et le code d'erreur FranceConnect est "Y190001"
+    Et le message d'erreur FranceConnect est "Votre session a expiré ou est invalide, fermez l’onglet de votre navigateur et reconnectez-vous."
 
   @exceptions
   Scénario: Connexion erreur - session absente sur page de consentement
@@ -94,7 +92,7 @@ Fonctionnalité: Connexion Usager - session absente
     Quand je supprime les cookies FranceConnect
     Et je continue sur le fournisseur de service
     Alors je suis redirigé vers la page erreur technique FranceConnect
-    Et le code d'erreur FranceConnect est "Y470003"
+    Et le code d'erreur FranceConnect est "Y190001"
     Et le message d'erreur FranceConnect est "Votre session a expiré ou est invalide, fermez l’onglet de votre navigateur et reconnectez-vous."
 
   @exceptions

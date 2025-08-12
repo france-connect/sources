@@ -479,6 +479,12 @@ const scopeList = [
     fd: "DSS",
     label: "Statut bénéficiaire C2S (Sécurité sociale)",
   },
+  {
+    scope: "dsnj_statut_service_national",
+    fd: "DSNJ",
+    label:
+      "Statut Service National (Direction du Service National et de la Jeunesse)",
+  },
 ];
 
 print("Insert scopes");

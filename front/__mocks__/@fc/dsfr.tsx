@@ -1,3 +1,9 @@
+export const StepperContext = jest.fn();
+
+export const useStepperNavigation = jest.fn();
+
+export const StepperContextProvider = jest.fn(() => <div>StepperContextProvider</div>);
+
 export const LinkButton = jest.fn(() => <div>LinkButton</div>);
 
 export const SimpleButton = jest.fn(() => <div>SimpleButton</div>);
@@ -15,6 +21,8 @@ export const CardComponent = jest.fn(({ children }) => (
 ));
 
 export const TileComponent = jest.fn(() => <div>TileComponent</div>);
+
+export const TableComponent = jest.fn(() => <div>TableComponent</div>);
 
 export const NoticeComponent = jest.fn(() => <div>NoticeComponent</div>);
 
@@ -66,6 +74,10 @@ export const LoginConnectComponent = jest.fn(({ type }) => (
     <div>LoginConnectComponent</div>
   </div>
 ));
+
+export const Options = {
+  CONFIG_NAME_STEPPER: 'Stepper',
+};
 
 export const ConnectTypes = {
   FRANCE_CONNECT: 'FranceConnect',

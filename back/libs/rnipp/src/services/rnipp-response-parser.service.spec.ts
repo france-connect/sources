@@ -61,10 +61,10 @@ describe('RnippResponseParserService', () => {
     });
 
     it('should call "parseStringPromise" with the given XML', async () => {
-      // action
+      // When
       await service.parseRnippData(rnippCorectResponseXml);
 
-      // expect
+      // Then
       expect(xmlParser.parseStringPromise).toHaveBeenCalledTimes(1);
       expect(xmlParser.parseStringPromise).toHaveBeenCalledWith(
         rnippCorectResponseXml,
@@ -73,10 +73,10 @@ describe('RnippResponseParserService', () => {
     });
 
     it('should call "extractXmlAttributes" with the result of "parseStringPromise"', async () => {
-      // action
+      // When
       await service.parseRnippData(rnippCorectResponseXml);
 
-      // expect
+      // Then
       expect(service['extractXmlAttributes']).toHaveBeenCalledTimes(1);
       expect(service['extractXmlAttributes']).toHaveBeenCalledWith(
         rnippCorrectResponseParsed,
@@ -84,26 +84,26 @@ describe('RnippResponseParserService', () => {
     });
 
     it('should return the result of "extractXmlAttributes"', async () => {
-      // action
+      // When
       const result = await service.parseRnippData(rnippCorectResponseXml);
 
-      // expect
+      // Then
       expect(result).toStrictEqual(rnippIdentityMock);
     });
 
     it('should throw a "RnippHttpStatusException" with the error thrown by "parseStringPromise"', async () => {
-      // setup
+      // Given
       jest.spyOn(xmlParser, 'parseStringPromise').mockRestore();
       jest
         .spyOn(xmlParser, 'parseStringPromise')
         .mockRejectedValueOnce(new Error());
 
-      // action
+      // When
       await expect(
         service.parseRnippData(rnippCorectResponseXml),
       ).rejects.toThrow(RnippHttpStatusException);
 
-      // expect
+      // Then
       expect.hasAssertions();
     });
   });
@@ -134,12 +134,12 @@ describe('RnippResponseParserService', () => {
     });
 
     it('should extract the "rnippCode" attribute from the parsed XML by calling "getXmlAttribute"', () => {
-      // action
+      // When
       service['extractXmlAttributes'](
         rnippCorrectResponseParsed as unknown as JSON,
       );
 
-      // expect
+      // Then
       expect(service['getXmlAttribute']).toHaveBeenCalledTimes(2);
       expect(service['getXmlAttribute']).toHaveBeenNthCalledWith(
         1,
@@ -149,12 +149,12 @@ describe('RnippResponseParserService', () => {
     });
 
     it('should extract the "deceased" attribute from the parsed XML by calling "getDeceasedStateAttribute"', () => {
-      // action
+      // When
       service['extractXmlAttributes'](
         rnippCorrectResponseParsed as unknown as JSON,
       );
 
-      // expect
+      // Then
       expect(service['getDeceasedStateAttribute']).toHaveBeenCalledTimes(1);
       expect(service['getDeceasedStateAttribute']).toHaveBeenCalledWith(
         rnippCorrectResponseParsed,
@@ -163,12 +163,12 @@ describe('RnippResponseParserService', () => {
     });
 
     it('should extract the "gender" attribute from the parsed XML by calling "getGenderFromParsedXml"', () => {
-      // action
+      // When
       service['extractXmlAttributes'](
         rnippCorrectResponseParsed as unknown as JSON,
       );
 
-      // expect
+      // Then
       expect(service['getGenderFromParsedXml']).toHaveBeenCalledTimes(1);
       expect(service['getGenderFromParsedXml']).toHaveBeenCalledWith(
         rnippCorrectResponseParsed,
@@ -177,12 +177,12 @@ describe('RnippResponseParserService', () => {
     });
 
     it('should extract the "family_name" attribute from the parsed XML by calling "getXmlAttribute"', () => {
-      // action
+      // When
       service['extractXmlAttributes'](
         rnippCorrectResponseParsed as unknown as JSON,
       );
 
-      // expect
+      // Then
       expect(service['getXmlAttribute']).toHaveBeenCalledTimes(2);
       expect(service['getXmlAttribute']).toHaveBeenNthCalledWith(
         2,
@@ -192,12 +192,12 @@ describe('RnippResponseParserService', () => {
     });
 
     it('should extract the "given_name" attribute from the parsed XML by calling "getGivenNamesAttribute"', () => {
-      // action
+      // When
       service['extractXmlAttributes'](
         rnippCorrectResponseParsed as unknown as JSON,
       );
 
-      // expect
+      // Then
       expect(service['getGivenNamesAttribute']).toHaveBeenCalledTimes(1);
       expect(service['getGivenNamesAttribute']).toHaveBeenCalledWith(
         rnippCorrectResponseParsed,
@@ -206,12 +206,12 @@ describe('RnippResponseParserService', () => {
     });
 
     it('should extract the "birthdate" attribute from the parsed XML by calling "getBirthdateAttribute"', () => {
-      // action
+      // When
       service['extractXmlAttributes'](
         rnippCorrectResponseParsed as unknown as JSON,
       );
 
-      // expect
+      // Then
       expect(service['getBirthdateAttribute']).toHaveBeenCalledTimes(1);
       expect(service['getBirthdateAttribute']).toHaveBeenCalledWith(
         rnippCorrectResponseParsed,
@@ -220,12 +220,12 @@ describe('RnippResponseParserService', () => {
     });
 
     it('should extract the "birthplace" attribute from the parsed XML by calling "getBirthplaceAttribute"', () => {
-      // action
+      // When
       service['extractXmlAttributes'](
         rnippCorrectResponseParsed as unknown as JSON,
       );
 
-      // expect
+      // Then
       expect(service['getBirthplaceAttribute']).toHaveBeenCalledTimes(1);
       expect(service['getBirthplaceAttribute']).toHaveBeenCalledWith(
         rnippCorrectResponseParsed,
@@ -235,12 +235,12 @@ describe('RnippResponseParserService', () => {
     });
 
     it('should extract the "birthcountry" attribute from the parsed XML by calling "getBirthcountryAttribute"', () => {
-      // action
+      // When
       service['extractXmlAttributes'](
         rnippCorrectResponseParsed as unknown as JSON,
       );
 
-      // expect
+      // Then
       expect(service['getBirthcountryAttribute']).toHaveBeenCalledTimes(1);
       expect(service['getBirthcountryAttribute']).toHaveBeenCalledWith(
         rnippCorrectResponseParsed,
@@ -250,12 +250,12 @@ describe('RnippResponseParserService', () => {
     });
 
     it('should return the status of the citizen', () => {
-      // action
+      // When
       const result = service['extractXmlAttributes'](
         rnippCorrectResponseParsed as unknown as JSON,
       );
 
-      // expect
+      // Then
       expect(result).toEqual({
         rnippCode: RnippResponseCodes.FOUND_NOT_RECTIFIED,
         identity: rnippIdentityMock,
@@ -264,17 +264,17 @@ describe('RnippResponseParserService', () => {
     });
 
     it('should return only the rnippCode if its value is neither "RnippResponseCodes.FOUND_NOT_RECTIFIED" or "RnippResponseCodes.FOUND_RECTIFIED"', () => {
-      // setup
+      // Given
       service['getXmlAttribute'] = jest
         .fn()
         .mockReturnValueOnce(RnippResponseCodes.NOT_FOUND_NO_ECHO);
 
-      // action
+      // When
       const result = service['extractXmlAttributes'](
         rnippNotFoundResponseParsed as unknown as JSON,
       );
 
-      // expect
+      // Then
       expect(result).toEqual({
         rnippCode: RnippResponseCodes.NOT_FOUND_NO_ECHO,
       });
@@ -285,13 +285,13 @@ describe('RnippResponseParserService', () => {
     it('should call "getXmlAttribute" with the "rnippCorrectResponseParsed" and "RnippXmlSelectors.GENDER"', () => {
       service['getXmlAttribute'] = jest.fn();
 
-      // action
+      // When
       service['getGenderFromParsedXml'](
         rnippCorrectResponseParsed as unknown as JSON,
         RnippXmlSelectors.GENDER,
       );
 
-      // expect
+      // Then
       expect(service['getXmlAttribute']).toHaveBeenCalledTimes(1);
       expect(service['getXmlAttribute']).toHaveBeenCalledWith(
         rnippCorrectResponseParsed,
@@ -302,52 +302,52 @@ describe('RnippResponseParserService', () => {
     it('should return "female" if "getXmlAttribute" returns "F"', () => {
       service['getXmlAttribute'] = jest.fn().mockReturnValueOnce('F');
 
-      // action
+      // When
       const result = service['getGenderFromParsedXml'](
         rnippCorrectResponseParsed as unknown as JSON,
         RnippXmlSelectors.GENDER,
       );
 
-      // expect
+      // Then
       expect(result).toStrictEqual(Genders.FEMALE);
     });
 
     it('should return "male" if "getXmlAttribute" returns "M"', () => {
       service['getXmlAttribute'] = jest.fn().mockReturnValueOnce('M');
 
-      // action
+      // When
       const result = service['getGenderFromParsedXml'](
         rnippCorrectResponseParsed as unknown as JSON,
         RnippXmlSelectors.GENDER,
       );
 
-      // expect
+      // Then
       expect(result).toStrictEqual(Genders.MALE);
     });
 
     it('should return "unspecified" if "getXmlAttribute" returns "I"', () => {
       service['getXmlAttribute'] = jest.fn().mockReturnValueOnce('I');
 
-      // action
+      // When
       const result = service['getGenderFromParsedXml'](
         rnippCorrectResponseParsed as unknown as JSON,
         RnippXmlSelectors.GENDER,
       );
 
-      // expect
+      // Then
       expect(result).toStrictEqual(Genders.UNSPECIFIED);
     });
 
     it('should return "" by default if "getXmlAttribute" returns any other', () => {
       service['getXmlAttribute'] = jest.fn().mockReturnValueOnce('H');
 
-      // action
+      // When
       const result = service['getGenderFromParsedXml'](
         rnippCorrectResponseParsed as unknown as JSON,
         RnippXmlSelectors.GENDER,
       );
 
-      // expect
+      // Then
       expect(result).toStrictEqual('');
     });
   });
@@ -358,13 +358,13 @@ describe('RnippResponseParserService', () => {
     });
 
     it('should call "_.get" with the parsed XML, the path to follow in the parsed XML and the default "defaultValue"', () => {
-      // action
+      // When
       service['getXmlAttribute'](
         rnippCorrectResponseParsed as unknown as JSON,
         RnippXmlSelectors.RNIPP_CODE,
       );
 
-      // expect
+      // Then
       expect(_.get).toHaveBeenCalledTimes(1);
       expect(_.get).toHaveBeenCalledWith(
         rnippCorrectResponseParsed,
@@ -374,17 +374,17 @@ describe('RnippResponseParserService', () => {
     });
 
     it('should call "_.get" with the parsed XML, the path to follow in the parsed XML and the provided "defaultValue"', () => {
-      // setup
+      // Given
       const defaultValue = 42;
 
-      // action
+      // When
       service['getXmlAttribute'](
         rnippCorrectResponseParsed as unknown as JSON,
         RnippXmlSelectors.RNIPP_CODE,
         defaultValue,
       );
 
-      // expect
+      // Then
       expect(_.get).toHaveBeenCalledTimes(1);
       expect(_.get).toHaveBeenCalledWith(
         rnippCorrectResponseParsed,
@@ -394,20 +394,20 @@ describe('RnippResponseParserService', () => {
     });
 
     it('should return the result of "_.get" call', () => {
-      // action
+      // When
       const result = service['getXmlAttribute'](
         rnippCorrectResponseParsed as unknown as JSON,
         RnippXmlSelectors.RNIPP_CODE,
       );
 
-      // expect
+      // Then
       expect(result).toStrictEqual(valueMock);
     });
   });
 
   describe('getGivenNamesAttribute', () => {
     it('should call "getXmlAttribute" with the parsed XML, the path to follow in the parsed XML and "[]" as default value', () => {
-      // action
+      // When
       service['getXmlAttribute'] = jest
         .fn()
         .mockReturnValueOnce([rnippIdentityMock.given_name]);
@@ -416,7 +416,7 @@ describe('RnippResponseParserService', () => {
         RnippXmlSelectors.GIVEN_NAME,
       );
 
-      // expect
+      // Then
       expect(service['getXmlAttribute']).toHaveBeenCalledTimes(1);
       expect(service['getXmlAttribute']).toHaveBeenCalledWith(
         rnippCorrectResponseParsed,
@@ -426,12 +426,12 @@ describe('RnippResponseParserService', () => {
     });
 
     it('should return the "joined" result of "getXmlAttribute"', () => {
-      // action
+      // When
       const result = service['getGivenNamesAttribute'](
         rnippCorrectResponseParsed as unknown as JSON,
         RnippXmlSelectors.GIVEN_NAME,
       );
-      // expect
+      // Then
       expect(result).toStrictEqual({
         givenName: rnippIdentityMock.given_name,
         givenNameArray: rnippIdentityMock.given_name_array,
@@ -445,13 +445,13 @@ describe('RnippResponseParserService', () => {
     });
 
     it('should call "getXmlAttribute" with the parsed XML, the path to follow in the parsed XML and "false" as default value', () => {
-      // action
+      // When
       service['getDeceasedStateAttribute'](
         rnippCorrectResponseParsed as unknown as JSON,
         RnippXmlSelectors.DECEASED,
       );
 
-      // expect
+      // Then
       expect(service['getXmlAttribute']).toHaveBeenCalledTimes(1);
       expect(service['getXmlAttribute']).toHaveBeenCalledWith(
         rnippCorrectResponseParsed,
@@ -461,30 +461,30 @@ describe('RnippResponseParserService', () => {
     });
 
     it('should return false if the "deceased" attribute is not found in the XML', () => {
-      // setup
+      // Given
       service['getXmlAttribute'] = jest.fn().mockReturnValueOnce(false);
 
-      // action
+      // When
       const result = service['getDeceasedStateAttribute'](
         rnippCorrectResponseParsed as unknown as JSON,
         RnippXmlSelectors.DECEASED,
       );
 
-      // expect
+      // Then
       expect(result).toStrictEqual(false);
     });
 
     it('should return true if the "deceased" attribute is found in the XML', () => {
-      // setup
+      // Given
       service['getXmlAttribute'] = jest.fn().mockReturnValueOnce('deceased');
 
-      // action
+      // When
       const result = service['getDeceasedStateAttribute'](
         rnippCorrectResponseParsed as unknown as JSON,
         RnippXmlSelectors.DECEASED,
       );
 
-      // expect
+      // Then
       expect(result).toStrictEqual(true);
     });
   });
@@ -625,14 +625,14 @@ describe('RnippResponseParserService', () => {
     });
 
     it('should call "getXmlAttribute" with the parsed XML, first the "birthplace" path, second with the "birthcountry"', () => {
-      // action
+      // When
       service['getBirthcountryAttribute'](
         rnippCorrectResponseParsed as unknown as JSON,
         RnippXmlSelectors.BIRTH_PLACE,
         RnippXmlSelectors.BIRTH_COUNTRY,
       );
 
-      // expect
+      // Then
       expect(service['getXmlAttribute']).toHaveBeenCalledTimes(2);
       expect(service['getXmlAttribute']).toHaveBeenNthCalledWith(
         1,
@@ -647,14 +647,14 @@ describe('RnippResponseParserService', () => {
     });
 
     it('should return the "birthcountry" cog if found', () => {
-      // action
+      // When
       const result = service['getBirthcountryAttribute'](
         rnippCorrectResponseParsed as unknown as JSON,
         RnippXmlSelectors.BIRTH_PLACE,
         RnippXmlSelectors.BIRTH_COUNTRY,
       );
 
-      // expect
+      // Then
       expect(result).toStrictEqual(rnippIdentityMock.birthcountry);
     });
 
@@ -664,14 +664,14 @@ describe('RnippResponseParserService', () => {
         .mockReturnValueOnce(rnippIdentityMock.birthplace)
         .mockReturnValueOnce('');
 
-      // action
+      // When
       const result = service['getBirthcountryAttribute'](
         rnippCorrectResponseParsed as unknown as JSON,
         RnippXmlSelectors.BIRTH_PLACE,
         RnippXmlSelectors.BIRTH_COUNTRY,
       );
 
-      // expect
+      // Then
       expect(result).toStrictEqual('99100');
     });
 
@@ -681,14 +681,14 @@ describe('RnippResponseParserService', () => {
         .mockReturnValueOnce('')
         .mockReturnValueOnce('');
 
-      // action
+      // When
       const result = service['getBirthcountryAttribute'](
         rnippCorrectResponseParsed as unknown as JSON,
         RnippXmlSelectors.BIRTH_PLACE,
         RnippXmlSelectors.BIRTH_COUNTRY,
       );
 
-      // expect
+      // Then
       expect(result).toStrictEqual('');
     });
   });

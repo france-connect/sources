@@ -11,6 +11,11 @@ exports[`FieldsetLegendElement should match the snapshot 1`] = `
       class="fr-hint-text"
     >
       hook-hint-mock
+       
+      <div
+        data-mockid="SeeAlsoElement"
+        data-testid="SeeAlsoElement"
+      />
     </span>
   </legend>
 </div>

@@ -1,0 +1,56 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MessagesElement should match the snapshot, with one message 1`] = `
+<div>
+  <div
+    aria-live="assertive"
+    class="fr-messages-group"
+    id="id-mock"
+  >
+    <div
+      data-mockid="MessageElement"
+    />
+  </div>
+</div>
+`;
+
+exports[`MessagesElement should match the snapshot, with only the highest priority messages 1`] = `
+<div>
+  <div
+    aria-live="assertive"
+    class="fr-messages-group"
+    id="id-mock"
+  >
+    <div
+      data-mockid="MessageElement"
+    />
+  </div>
+</div>
+`;
+
+exports[`MessagesElement should match the snapshot, with two messages of same priority 1`] = `
+<div>
+  <div
+    aria-live="assertive"
+    class="fr-messages-group"
+    id="id-mock"
+  >
+    <div
+      data-mockid="MessageElement"
+    />
+    <div
+      data-mockid="MessageElement"
+    />
+  </div>
+</div>
+`;
+
+exports[`MessagesElement should match the snapshot, without message 1`] = `
+<div>
+  <div
+    aria-live="assertive"
+    class="fr-messages-group"
+    id="id-mock"
+  />
+</div>
+`;

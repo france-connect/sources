@@ -1,3 +1,4 @@
+import { Helmet } from '@dr.pogodin/react-helmet';
 import classnames from 'classnames';
 import React from 'react';
 
@@ -8,18 +9,23 @@ export const NotFoundPage = React.memo(() => {
   const gtDesktop = useStylesQuery({ minWidth: breakpointLg });
 
   return (
-    <div
-      className={classnames('fr-m-auto fr-px-2w text-center', {
-        // Class CSS
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        'fr-mt-5w': !gtDesktop,
-        // Class CSS
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        'fr-mt-8w': gtDesktop,
-      })}
-      id="page-container">
-      <h1 className="text-center">404 - Not Found</h1>
-    </div>
+    <React.Fragment>
+      <Helmet>
+        <title>Mon tableau de bord - Accueil</title>
+      </Helmet>
+      <div
+        className={classnames('fr-m-auto fr-px-2w text-center', {
+          // Class CSS
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          'fr-mt-5w': !gtDesktop,
+          // Class CSS
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          'fr-mt-8w': gtDesktop,
+        })}
+        id="page-container">
+        <h1 className="text-center">404 - Not Found</h1>
+      </div>
+    </React.Fragment>
   );
 });
 

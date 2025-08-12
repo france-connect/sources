@@ -73,10 +73,10 @@ describe('CryptographyFcpService', () => {
       const alg = 'sha256';
       const ouputDigest = 'base64';
       cryptographyServiceMock.hash.mockReturnValueOnce('totoIsHashed');
-      // action
+      // When
       const result = service.computeIdentityHash(pivotIdentityMock);
 
-      // expect
+      // Then
       expect(cryptographyServiceMock.hash).toHaveBeenCalledTimes(1);
       expect(cryptographyServiceMock.hash).toHaveBeenCalledWith(
         serial,
@@ -120,10 +120,10 @@ describe('CryptographyFcpService', () => {
 
     it('should crypto service hash function with joined parameters', () => {
       cryptographyServiceMock.hash.mockReturnValueOnce('totoHasASub');
-      // action
+      // When
       const result = service.computeSubV1(providerRefMock, identityHashMock);
 
-      // expect
+      // Then
       expect(cryptographyServiceMock.hash).toHaveBeenCalledTimes(1);
       expect(cryptographyServiceMock.hash).toHaveBeenCalledWith(
         'providerRefMockValue' + 'identityHashValue' + 'Méfaits accomplis...',

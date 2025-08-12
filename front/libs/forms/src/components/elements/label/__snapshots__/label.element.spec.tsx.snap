@@ -8,9 +8,14 @@ exports[`LabelElement should match the snapshot 1`] = `
   >
     hook-label-mock
     <span
-      class="fr-hint-text"
+      class="labelHint fr-hint-text"
     >
       hook-hint-mock
+       
+      <div
+        data-mockid="SeeAlsoElement"
+        data-testid="SeeAlsoElement"
+      />
     </span>
   </label>
 </div>

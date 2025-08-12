@@ -24,7 +24,11 @@ export interface OidcClientLegacyInterface {
    * Should they be present in this interface?
    */
   createdAt: Date;
+  createdBy: string;
+  createdVia: string;
   secretCreatedAt: Date;
+  secretUpdatedAt: Date;
+  secretUpdatedBy: string;
   updatedAt: Date;
   updatedBy: string;
 

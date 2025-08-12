@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
 import {
+  MailerHelper,
   MailerNotificationConnectException,
   MailerService,
   MailFrom,
@@ -20,14 +21,16 @@ describe('UserDashboardService', () => {
   };
 
   const mailerServiceMock = {
-    send: jest.fn(),
+    getPerson: jest.fn(),
     mailToSend: jest.fn(),
+    send: jest.fn(),
   } as unknown as MailerService;
 
   const userInfo = {
     email: 'user@test.com',
-    givenName: 'firstname',
+    givenNameArray: ['givenname'],
     familyName: 'lastname',
+    preferredUsername: 'preferredUsername',
   };
 
   const formattedUserIdpSettingsListMock = [
@@ -105,22 +108,41 @@ describe('UserDashboardService', () => {
   });
 
   describe('getIdpConfigUpdateEmailBodyContent', () => {
+    const personMock = 'person-mock';
+
     beforeEach(() => {
       service['formatDateForEmail'] = jest
         .fn()
         .mockReturnValue(formattedDateMock);
+      jest.spyOn(MailerHelper, 'getPerson').mockReturnValueOnce(personMock);
     });
 
-    it('should throw if any parameters is not valid', async () => {
+    it('should call MailerHelper.getPerson', async () => {
+      // When
+      await service['getIdpConfigUpdateEmailBodyContent'](
+        userInfo,
+        idpConfiguration,
+      );
+
+      // Then
+      expect(MailerHelper.getPerson).toHaveBeenCalledExactlyOnceWith({
+        givenNameArray: userInfo.givenNameArray,
+        familyName: userInfo.familyName,
+        preferredUsername: userInfo.preferredUsername,
+      });
+    });
+
+    it('should throw MailerNotificationConnectException if any parameters is not valid', async () => {
       // Given
       const badUserInfo = {
         email: 'bademail',
-        givenName: 'firstName',
+        givenNameArray: ['givenname'],
         familyName: 'lastname',
+        preferredUsername: 'preferredUsername',
       };
+      const errorMock = new MailerNotificationConnectException();
 
       // When / Then
-      const errorMock = new MailerNotificationConnectException();
       await expect(
         service['getIdpConfigUpdateEmailBodyContent'](
           badUserInfo,
@@ -142,6 +164,7 @@ describe('UserDashboardService', () => {
         EmailsTemplates.IDP_CONFIG_UPDATES_EMAIL,
         {
           email: userInfo.email,
+          person: personMock,
           formattedUpdateDate: formattedDateMock,
           updatedIdpSettingsList: idpConfiguration.updatedIdpSettingsList,
           hasAllowFutureIdpChanged: idpConfiguration.hasAllowFutureIdpChanged,
@@ -171,6 +194,7 @@ describe('UserDashboardService', () => {
         EmailsTemplates.IDP_CONFIG_UPDATES_EMAIL,
         {
           email: userInfo.email,
+          person: personMock,
           updatedIdpSettingsList: otherIdpConfiguration.updatedIdpSettingsList,
           hasAllowFutureIdpChanged:
             otherIdpConfiguration.hasAllowFutureIdpChanged,
@@ -199,6 +223,7 @@ describe('UserDashboardService', () => {
 
   describe('sendMail', () => {
     const fromMock: MailFrom = { email: 'address@fqdn.ext', name: 'Address' };
+    const personMock = 'person-mock';
 
     beforeEach(() => {
       jest.resetAllMocks();
@@ -207,9 +232,11 @@ describe('UserDashboardService', () => {
       service['getIdpConfigUpdateEmailBodyContent'] = jest
         .fn()
         .mockResolvedValueOnce(getIdpConfigUpdateEmailBodyContentMock);
+
+      jest.spyOn(MailerHelper, 'getPerson').mockReturnValueOnce(personMock);
     });
 
-    it('should throw an `Error` if the FROM email is not valid', async () => {
+    it('should throw NoEmailException if the FROM email is not valid', async () => {
       // Given
       const configMailerWithoutEmail = {
         email: 'fake_email',
@@ -223,17 +250,32 @@ describe('UserDashboardService', () => {
       ).rejects.toThrow(errorMock);
     });
 
-    it('should throw an Error if the TO email is not valid', async () => {
+    it('should call MailerHelper.getPerson', async () => {
+      // Given
+      configMock.get.mockReturnValueOnce({ from: fromMock });
+
+      // When
+      await service.sendMail(userInfo, idpConfiguration);
+
+      // Then
+      expect(MailerHelper.getPerson).toHaveBeenCalledExactlyOnceWith({
+        givenNameArray: userInfo.givenNameArray,
+        familyName: userInfo.familyName,
+        preferredUsername: userInfo.preferredUsername,
+      });
+    });
+
+    it('should throw NoEmailException if the TO email is not valid', async () => {
       // Given
       const badUserInfoData = {
         email: 'not_an_email',
-        givenName: 'firstname',
+        givenNameArray: ['givenname'],
         familyName: 'lastname',
       };
       configMock.get.mockReturnValueOnce({ from: fromMock });
+      const errorMock = new NoEmailException();
 
       // When / Then
-      const errorMock = new NoEmailException();
       await expect(
         service.sendMail(badUserInfoData, idpConfiguration),
       ).rejects.toThrow(errorMock);
@@ -269,7 +311,7 @@ describe('UserDashboardService', () => {
         to: [
           {
             email: userInfo.email,
-            name: `${userInfo.givenName} ${userInfo.familyName}`,
+            name: personMock,
           },
         ],
         subject: `Modification de vos accès dans FranceConnect`,

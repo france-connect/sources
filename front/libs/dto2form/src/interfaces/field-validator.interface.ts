@@ -1,3 +1,5 @@
+import type { FieldMessage } from '@fc/forms';
+
 export interface FieldValidateIfRule {
   name: string;
   ruleArgs?: unknown[];
@@ -6,5 +8,5 @@ export interface FieldValidateIfRule {
 export interface FieldValidatorInterface {
   name: string;
   validationArgs?: unknown[];
-  errorMessage: string;
+  errorMessage: FieldMessage;
 }

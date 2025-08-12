@@ -1,4 +1,4 @@
-name,redirect_uris,post_logout_redirect_uris,adressesIp,datapassId,scopes,type,userinfo_signed_response_alg,email,phone,clientIdV1,site
+name,redirect_uris,post_logout_redirect_uris,adresses_ip,datapass_id,scopes,type,signature_response_alg,email,phone,client_id_v1,site
 bdd-sp-created-existing-datapass-v1,https://fsp1-low.docker.dev-franceconnect.fr/oidc-callback,https://fsp1-low.docker.dev-franceconnect.fr/client/logout-callback,,9991001,openid,public,RS256,test@test.fr,0612345681,,https://test.fr
 bdd-sp-created-existing-entity-id-v1,https://fsp1-low.docker.dev-franceconnect.fr/oidc-callback,https://fsp1-low.docker.dev-franceconnect.fr/client/logout-callback,,9982001,openid,public,RS256,test@test.fr,0612345681,6925fb8143c76eded44d32b40c0cb1006065f7f003de52712b78985704f30000,https://test.fr
 bdd-sp-rejected-existing-datapass-v2,https://fsp1-low.docker.dev-franceconnect.fr/oidc-callback,https://fsp1-low.docker.dev-franceconnect.fr/client/logout-callback,,9992001,openid,public,RS256,test@test.fr,0612345681,,https://test.fr

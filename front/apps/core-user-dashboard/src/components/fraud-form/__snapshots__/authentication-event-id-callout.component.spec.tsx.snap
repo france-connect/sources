@@ -1,0 +1,59 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`authenticationEventIdCallout should match the snapshot 1`] = `
+<div>
+  <div
+    data-mockid="CalloutComponent"
+  >
+    <div>
+      CalloutComponent
+    </div>
+    <div>
+      <p
+        class="fr-callout__text"
+      >
+        Le code se trouve dans :
+      </p>
+      <ul>
+        <li
+          class="fr-mb-1w fr-mt-2w"
+        >
+          <p
+            class="fr-callout__text"
+          >
+            l’alerte de connexion que vous avez reçue par mail :
+          </p>
+        </li>
+        <img
+          alt="Code d'identification dans l'alerte de connexion"
+          class="fr-responsive-img"
+          data-testid="authentication-event-id-mail-img"
+          src="/images/fraud/authentication-event-id-mail.svg"
+        />
+        <li
+          class="fr-mb-2w fr-mt-2w"
+        >
+          <p
+            class="fr-callout__text"
+          >
+            votre
+             
+            <span
+              data-mockid="LinkComponent"
+            >
+              historique de connexion
+            </span>
+          </p>
+        </li>
+        <img
+          alt="Code d'identification dans l'historique de connexion"
+          class="fr-responsive-img"
+          data-testid="authentication-event-id-history-img"
+          src="/images/fraud/authentication-event-id-history.svg"
+          style="transform: scale(1.025);"
+        />
+      </ul>
+    </div>
+  </div>
+</div>
+`;

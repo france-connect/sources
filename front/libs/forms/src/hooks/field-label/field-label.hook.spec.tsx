@@ -16,6 +16,7 @@ describe('useFieldLabel', () => {
       hint: undefined,
       label: 'label-mock',
       required: false,
+      seeAlso: undefined,
     });
   });
 
@@ -33,6 +34,7 @@ describe('useFieldLabel', () => {
       hint: undefined,
       label: 'label-mock *',
       required: true,
+      seeAlso: undefined,
     });
   });
 
@@ -43,6 +45,7 @@ describe('useFieldLabel', () => {
         hint: 'hint-mock',
         label: 'label-mock',
         required: true,
+        seeAlso: 'http://some-site.fr',
       }),
     );
 
@@ -51,6 +54,7 @@ describe('useFieldLabel', () => {
       hint: 'hint-mock',
       label: 'label-mock *',
       required: true,
+      seeAlso: 'http://some-site.fr',
     });
   });
 
@@ -69,6 +73,7 @@ describe('useFieldLabel', () => {
       hint: 'hint-mock',
       label: 'label-mock *',
       required: true,
+      seeAlso: undefined,
     });
   });
 
@@ -88,6 +93,7 @@ describe('useFieldLabel', () => {
       hint: HintMock,
       label: 'label-mock',
       required: false,
+      seeAlso: undefined,
     });
   });
 });

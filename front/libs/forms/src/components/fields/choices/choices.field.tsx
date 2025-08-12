@@ -1,9 +1,9 @@
 import React from 'react';
 import { Field, useField } from 'react-final-form';
 
-import { useFieldMeta } from '../../../hooks';
+import { useFieldMessages, useFieldMeta } from '../../../hooks';
 import type { ChoiceInterface, FieldConfigInterface } from '../../../interfaces';
-import { FieldsetElement, FieldsetLegendElement, MessageElement } from '../../elements';
+import { FieldsetElement, FieldsetLegendElement, MessagesElement } from '../../elements';
 import { ChoiceInput } from '../../inputs';
 
 interface ChoicesFieldProps {
@@ -12,15 +12,24 @@ interface ChoicesFieldProps {
 }
 
 export const ChoicesField = React.memo(({ choices, config }: ChoicesFieldProps) => {
-  const { hint, label, name, required, type, validate } = config;
+  const { hint, label, messages, name, required, seeAlso, type, validate } = config;
 
   const { meta } = useField(name);
 
-  const { errorMessage, hasError, isValid } = useFieldMeta(meta);
+  const { errorsList, hasError, isValid } = useFieldMeta(meta);
+
+  const fieldMessages = useFieldMessages({ errorsList, isValid, messages });
+  const hasMessages = fieldMessages && fieldMessages.length > 0;
 
   return (
     <FieldsetElement hasError={hasError} isValid={isValid} name={name}>
-      <FieldsetLegendElement hint={hint} label={label} name={name} required={required} />
+      <FieldsetLegendElement
+        hint={hint}
+        label={label}
+        name={name}
+        required={required}
+        seeAlso={seeAlso}
+      />
       {choices.map((choice) => (
         <Field
           key={`choices::${name}::choice::${choice.value}`}
@@ -33,12 +42,9 @@ export const ChoicesField = React.memo(({ choices, config }: ChoicesFieldProps) 
           value={choice.value}
         />
       ))}
-      <MessageElement
-        dataTestId={`${name}-messages`}
-        error={errorMessage}
-        id={name}
-        isValid={isValid}
-      />
+      {hasMessages && (
+        <MessagesElement dataTestId={`${name}-messages`} id={name} messages={fieldMessages} />
+      )}
     </FieldsetElement>
   );
 });

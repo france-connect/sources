@@ -45,7 +45,7 @@ describe('CsmrFraudDataService', () => {
   ) as unknown as string;
 
   const fraudCaseMock = {
-    fraudCaseId: 'fraudCaseIdMock',
+    id: 'fraudCaseIdMock',
     contactEmail: 'email@mock.fr',
     idpEmail: 'email@fi.fr',
     authenticationEventId: authenticationEventIdMock,
@@ -109,11 +109,7 @@ describe('CsmrFraudDataService', () => {
       accountServiceMock.getAccountIdsFromIdentity.mockResolvedValue(
         accountIdsMock,
       );
-      tracksServiceMock.getTracksForAuthenticationEventId.mockResolvedValue(
-        tracksMock,
-      );
-      jest.mocked(getSecurityTicketData).mockReturnValue(ticketDataMock);
-      jest.mocked(getTrackingData).mockReturnValue(trackingDataMock);
+      service['buildSecurityTicketContext'] = jest.fn();
     });
 
     it('should call accountMock.getAccountIdsFromIdentity() with identity', async () => {
@@ -129,9 +125,73 @@ describe('CsmrFraudDataService', () => {
       );
     });
 
-    it('should call tracksMock.getTracks() with authenticationEventId', async () => {
+    it('should call logger.err with errorMock if getAccountIdsFromIdentity failed', async () => {
+      // Given
+      accountServiceMock.getAccountIdsFromIdentity.mockImplementationOnce(
+        () => {
+          throw errorMock;
+        },
+      );
+
       // When
       await service.enrichFraudData(identityMock, fraudCaseMock);
+
+      // Then
+      expect(loggerMock.err).toHaveBeenCalledOnce();
+      expect(loggerMock.err).toHaveBeenCalledWith(errorMock);
+    });
+
+    it('should call buildSecurityTicketContext with identity, fraudCase, accountIds and groupIds', async () => {
+      // When
+      await service.enrichFraudData(identityMock, fraudCaseMock);
+
+      // Then
+      expect(
+        service['buildSecurityTicketContext'],
+      ).toHaveBeenCalledExactlyOnceWith(
+        identityMock,
+        fraudCaseMock,
+        accountIdsMock,
+        groupIdsMock,
+      );
+    });
+  });
+
+  describe('enrichUnverifiedIdentityFraudData', () => {
+    it('should call buildSecurityTicketContext with identity, fraudCase, empty accountIds and groupIds', async () => {
+      // Given
+      service['buildSecurityTicketContext'] = jest.fn();
+
+      // When
+      await service.enrichUnverifiedIdentityFraudData(
+        identityMock,
+        fraudCaseMock,
+      );
+
+      // Then
+      expect(
+        service['buildSecurityTicketContext'],
+      ).toHaveBeenCalledExactlyOnceWith(identityMock, fraudCaseMock, {}, []);
+    });
+  });
+
+  describe('buildSecurityTicketContext', () => {
+    beforeEach(() => {
+      tracksServiceMock.getTracksForAuthenticationEventId.mockResolvedValue(
+        tracksMock,
+      );
+      jest.mocked(getSecurityTicketData).mockReturnValue(ticketDataMock);
+      jest.mocked(getTrackingData).mockReturnValue(trackingDataMock);
+    });
+
+    it('should call tracksMock.getTracksForAuthenticationEventId() with authenticationEventId', async () => {
+      // When
+      await service['buildSecurityTicketContext'](
+        identityMock,
+        fraudCaseMock,
+        accountIdsMock,
+        groupIdsMock,
+      );
 
       // Then
       expect(
@@ -142,9 +202,14 @@ describe('CsmrFraudDataService', () => {
       ).toHaveBeenCalledWith(authenticationEventIdMock);
     });
 
-    it('should call securityTicketServiceMock.getSecurityTicketData() with identityMock, fraudCaseMock, groupIdsMock and tracksMock,', async () => {
+    it('should call securityTicketServiceMock.getSecurityTicketData() with identityMock, fraudCaseMock and tracksMock,', async () => {
       // When
-      await service.enrichFraudData(identityMock, fraudCaseMock);
+      await service['buildSecurityTicketContext'](
+        identityMock,
+        fraudCaseMock,
+        accountIdsMock,
+        groupIdsMock,
+      );
 
       // Then
       expect(getSecurityTicketData).toHaveBeenCalledTimes(1);
@@ -165,32 +230,21 @@ describe('CsmrFraudDataService', () => {
       );
 
       // When
-      await service.enrichFraudData(identityMock, fraudCaseMock);
+      await service['buildSecurityTicketContext'](
+        identityMock,
+        fraudCaseMock,
+        accountIdsMock,
+        groupIdsMock,
+      );
 
       // Then
       expect(getSecurityTicketData).toHaveBeenCalledTimes(1);
       expect(getSecurityTicketData).toHaveBeenCalledWith(
         identityMock,
         fraudCaseMock,
-        [],
+        groupIdsMock,
         tracksMock,
       );
-    });
-
-    it('should call logger.err with errorMock if getAccountIdsFromIdentity failed', async () => {
-      // Given
-      accountServiceMock.getAccountIdsFromIdentity.mockImplementationOnce(
-        () => {
-          throw errorMock;
-        },
-      );
-
-      // When
-      await service.enrichFraudData(identityMock, fraudCaseMock);
-
-      // Then
-      expect(loggerMock.err).toHaveBeenCalledOnce();
-      expect(loggerMock.err).toHaveBeenCalledWith(errorMock);
     });
 
     it('should call securityTicketServiceMock.getSecurityTicketData() with empty tracks object if getTracksForAuthenticationEventId failed', async () => {
@@ -202,7 +256,12 @@ describe('CsmrFraudDataService', () => {
       );
 
       // When
-      await service.enrichFraudData(identityMock, fraudCaseMock);
+      await service['buildSecurityTicketContext'](
+        identityMock,
+        fraudCaseMock,
+        accountIdsMock,
+        groupIdsMock,
+      );
 
       // Then
       expect(getSecurityTicketData).toHaveBeenCalledTimes(1);
@@ -226,16 +285,26 @@ describe('CsmrFraudDataService', () => {
       );
 
       // When
-      await service.enrichFraudData(identityMock, fraudCaseMock);
+      await service['buildSecurityTicketContext'](
+        identityMock,
+        fraudCaseMock,
+        accountIdsMock,
+        groupIdsMock,
+      );
 
       // Then
       expect(loggerMock.err).toHaveBeenCalledOnce();
       expect(loggerMock.err).toHaveBeenCalledWith(errorMock);
     });
 
-    it('should call securityTicketServiceMock.getTrackingData() with fraudCaseMock, accountIdsMock and tracksMock,', async () => {
+    it('should call securityTicketServiceMock.getTrackingData() with fraudCaseMock and tracksMock', async () => {
       // When
-      await service.enrichFraudData(identityMock, fraudCaseMock);
+      await service['buildSecurityTicketContext'](
+        identityMock,
+        fraudCaseMock,
+        accountIdsMock,
+        groupIdsMock,
+      );
 
       // Then
       expect(getTrackingData).toHaveBeenCalledTimes(1);
@@ -248,7 +317,12 @@ describe('CsmrFraudDataService', () => {
 
     it('should return ticket and tracking data', async () => {
       // When
-      const result = await service.enrichFraudData(identityMock, fraudCaseMock);
+      const result = await service['buildSecurityTicketContext'](
+        identityMock,
+        fraudCaseMock,
+        accountIdsMock,
+        groupIdsMock,
+      );
 
       // Then
       expect(result).toEqual({

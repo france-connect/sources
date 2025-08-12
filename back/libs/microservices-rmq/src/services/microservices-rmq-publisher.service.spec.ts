@@ -45,6 +45,8 @@ describe('MicroservicesRmqPublisherService', () => {
   };
 
   const commandMock = 'CommandMock';
+  const patternMock = 'commandMock.v1';
+
   class MessageMock {}
   class ResponseDtoMock implements FSA {
     type: ResponseStatus;
@@ -82,13 +84,17 @@ describe('MicroservicesRmqPublisherService', () => {
   });
 
   describe('broadcast', () => {
+    beforeEach(() => {
+      service['getVersionedCommand'] = jest.fn().mockReturnValue(patternMock);
+    });
+
     it('should send a message with command and payload', async () => {
       // When
       await service.broadcast<MessageMock>(commandMock, payloadMock);
 
       // Then
       expect(brokerMock.emit).toHaveBeenCalledExactlyOnceWith(
-        commandMock,
+        patternMock,
         payloadMock,
       );
     });
@@ -120,6 +126,7 @@ describe('MicroservicesRmqPublisherService', () => {
     beforeEach(() => {
       service['getSuccess'] = jest.fn();
       service['getValidatedResponse'] = jest.fn();
+      service['getVersionedCommand'] = jest.fn().mockReturnValue(patternMock);
     });
 
     it('should send a message with command and payload', async () => {
@@ -133,7 +140,7 @@ describe('MicroservicesRmqPublisherService', () => {
 
       // Then
       expect(brokerMock.send).toHaveBeenCalledExactlyOnceWith(
-        commandMock,
+        patternMock,
         payloadMock,
       );
     });
@@ -285,6 +292,39 @@ describe('MicroservicesRmqPublisherService', () => {
       expect(() => service['getSuccess'](noPayloadMock)).toThrow(
         MicroservicesRmqResponseNoPayloadException,
       );
+    });
+  });
+
+  describe('getVersionedCommand', () => {
+    // Given
+    const commandMock = 'command';
+    beforeEach(() => {
+      getServiceTokenMock.mockReturnValue(serviceNameMock);
+      configMock.get.mockReturnValue({
+        protocolVersion: '1.0.0',
+      });
+    });
+
+    it('should return the command with the version', () => {
+      // When
+      const result = service['getVersionedCommand'](commandMock);
+
+      // Then
+      expect(result).toBe('command@1.0.0');
+    });
+
+    it('should return the command without the version', () => {
+      // Given
+      getServiceTokenMock.mockReturnValue(commandMock);
+      configMock.get.mockReturnValueOnce({
+        protocolVersion: undefined,
+      });
+
+      // When
+      const result = service['getVersionedCommand'](commandMock);
+
+      // Then
+      expect(result).toBe('command');
     });
   });
 });

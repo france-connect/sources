@@ -4,7 +4,7 @@
  *
  */
 import type { AxiosRequestConfig } from 'axios';
-import lodashOmit from 'lodash.omit';
+import { omit } from 'lodash';
 
 import { ConfigService } from '@fc/config';
 
@@ -53,7 +53,7 @@ export const getRequestOptions = (
   // @NOTE baseURL/timeout should not be used into final axios request options
   // because we create it with slashifyPath from  axiosOptions > serviceConfig
   const omitted = ['baseURL', 'timeout'];
-  const axiosOptions = lodashOmit(requestOptions, omitted);
+  const axiosOptions = omit(requestOptions, omitted);
 
   const merged = { ...targetRequest, ...axiosOptions, timeout, url };
   return merged;

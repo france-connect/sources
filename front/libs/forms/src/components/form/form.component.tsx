@@ -3,10 +3,12 @@ import type { PropsWithChildren } from 'react';
 import type { FormRenderProps } from 'react-final-form';
 import { Form } from 'react-final-form';
 
+import type { HttpClientDataInterface } from '@fc/http-client';
+
 import type { FormInterface } from '../../interfaces';
 import { FormWrapperComponent } from './form-wrapper/form-wrapper.component';
 
-export function FormComponent<T = unknown>({
+export function FormComponent<T extends HttpClientDataInterface>({
   children,
   config,
   decorators,

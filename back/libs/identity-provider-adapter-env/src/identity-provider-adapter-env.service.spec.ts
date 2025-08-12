@@ -152,33 +152,33 @@ describe('IdentityProviderAdapterEnvService', () => {
 
   describe('legacyToOpenIdPropertyName', () => {
     it('should return identity provider with change legacy property name by openid property name', () => {
-      // setup
+      // Given
       service['decryptClientSecret'] = jest
         .fn()
         .mockReturnValueOnce(toPanvaFormatMock.client.client_secret);
 
-      // action
+      // When
       const result = service['legacyToOpenIdPropertyName'](idpConfiguration);
 
-      // expect
+      // Then
       expect(result).toEqual(toPanvaFormatMock);
     });
   });
 
   describe('findAllIdentityProvider', () => {
     it('should return result of type list', async () => {
-      // setup
+      // Given
       configMock.get.mockReturnValueOnce(env);
 
-      // action
+      // When
       const result = await service['findAllIdentityProvider']();
 
-      // expect
+      // Then
       expect(result).toEqual([idpConfiguration]);
     });
 
     it('should log a warning if an entry is not validated by the DTO', async () => {
-      // setup
+      // Given
       const invalidEnvMock = {
         list: [
           {
@@ -189,15 +189,15 @@ describe('IdentityProviderAdapterEnvService', () => {
       };
       configMock.get.mockReturnValueOnce(invalidEnvMock);
 
-      // action
+      // When
       await service['findAllIdentityProvider']();
 
-      // expect
+      // Then
       expect(loggerMock.warning).toHaveBeenCalledTimes(1);
     });
 
     it('should log a warning if an entry is exluded by the DTO', async () => {
-      // setup
+      // Given
       const invalidEnvMock = {
         list: [
           {
@@ -209,17 +209,17 @@ describe('IdentityProviderAdapterEnvService', () => {
       };
       configMock.get.mockReturnValueOnce(invalidEnvMock);
 
-      // action
+      // When
       await service['findAllIdentityProvider']();
 
-      // expect
+      // Then
       expect(loggerMock.warning).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('getList', () => {
     it('should return a list of valids identity providers', async () => {
-      // setup
+      // Given
       configMock.get.mockReturnValueOnce(env);
       const expected = toPanvaFormatMock;
 
@@ -227,10 +227,10 @@ describe('IdentityProviderAdapterEnvService', () => {
         .fn()
         .mockReturnValueOnce(expected.client.client_secret);
 
-      // action
+      // When
       const result = await service.getList();
 
-      // expect
+      // Then
       expect(result).toEqual([expected]);
     });
 
@@ -307,43 +307,43 @@ describe('IdentityProviderAdapterEnvService', () => {
     });
 
     it('should return a list of mapped whitelisted active identity providers', async () => {
-      // setup
+      // Given
       const expected = [
         {
           ...validIdentityProviderMock,
         },
       ];
 
-      // action
+      // When
       const result = await service.getFilteredList(
         [idpConfiguration.uid],
         false,
       );
 
-      // expect
+      // Then
       expect(result).toEqual(expected);
     });
 
     it('should return identity providers with active idp for a given active whitelisted idp', async () => {
-      // setup
+      // Given
       const expected = [
         {
           ...validIdentityProviderMock,
         },
       ];
 
-      // action
+      // When
       const result = await service.getFilteredList(
         [idpConfiguration.uid],
         false,
       );
 
-      // expect
+      // Then
       expect(result).toEqual(expected);
     });
 
     it('should return identity providers with inactive idp for a given inactive whitelisted idp', async () => {
-      // setup
+      // Given
       const inactiveValidIdentityProviderMock = cloneDeep(
         validIdentityProviderMock,
       );
@@ -362,18 +362,18 @@ describe('IdentityProviderAdapterEnvService', () => {
         },
       ];
 
-      // action
+      // When
       const result = await service.getFilteredList(
         [idpConfiguration.uid],
         false,
       );
 
-      // expect
+      // Then
       expect(result).toEqual(expected);
     });
 
     it('should return identity providers with inactive idp for a given active not whitelisted idp', async () => {
-      // setup
+      // Given
       const inactiveValidIdentityProviderMock = cloneDeep(
         validIdentityProviderMock,
       );
@@ -389,15 +389,15 @@ describe('IdentityProviderAdapterEnvService', () => {
         .fn()
         .mockResolvedValueOnce(identityProviderListMock);
 
-      // action
+      // When
       const result = await service.getFilteredList(['false_uid'], false);
 
-      // expect
+      // Then
       expect(result).toEqual(expected);
     });
 
     it('should return identity providers with inactive idp for a given inactive not whitelisted idp', async () => {
-      // setup
+      // Given
       const inactiveValidIdentityProviderMock = cloneDeep(
         validIdentityProviderMock,
       );
@@ -416,15 +416,15 @@ describe('IdentityProviderAdapterEnvService', () => {
         },
       ];
 
-      // action
+      // When
       const result = await service.getFilteredList(['false_uid'], false);
 
-      // expect
+      // Then
       expect(result).toEqual(expected);
     });
 
     it('should return identity providers with inactive idp for a given active blacklisted idp', async () => {
-      // setup
+      // Given
       const inactiveValidIdentityProviderMock = cloneDeep(
         validIdentityProviderMock,
       );
@@ -445,12 +445,12 @@ describe('IdentityProviderAdapterEnvService', () => {
         true,
       );
 
-      // expect
+      // Then
       expect(result).toEqual(expected);
     });
 
     it('should return identity providers with inactive idp for a given inactive blacklisted idp', async () => {
-      // setup
+      // Given
       const inactiveValidIdentityProviderMock = cloneDeep(
         validIdentityProviderMock,
       );
@@ -474,27 +474,27 @@ describe('IdentityProviderAdapterEnvService', () => {
         true,
       );
 
-      // expect
+      // Then
       expect(result).toEqual(expected);
     });
 
     it('should return identity providers with active idp for a given active not blacklisted idp', async () => {
-      // setup
+      // Given
       const expected = [
         {
           ...validIdentityProviderMock,
         },
       ];
 
-      // action
+      // When
       const result = await service.getFilteredList(['false_uid'], true);
 
-      // expect
+      // Then
       expect(result).toEqual(expected);
     });
 
     it('should return identity providers with inactive idp for a given inactive not blacklisted idp', async () => {
-      // setup
+      // Given
       const inactiveValidIdentityProviderMock = cloneDeep(
         validIdentityProviderMock,
       );
@@ -513,10 +513,10 @@ describe('IdentityProviderAdapterEnvService', () => {
         },
       ];
 
-      // action
+      // When
       const result = await service.getFilteredList(['false_uid'], true);
 
-      // expect
+      // Then
       expect(result).toEqual(expected);
     });
   });

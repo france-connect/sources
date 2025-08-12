@@ -1,0 +1,51 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TableHeaderComponent should match the snapshot 1`] = `
+<table>
+  <thead
+    class="any-classname-mock"
+  >
+    <tr>
+      <th
+        scope="col"
+      >
+        column-mock-1
+      </th>
+      <th
+        scope="col"
+      >
+        column-mock-2
+      </th>
+      <th
+        scope="col"
+      >
+        column-mock-3
+      </th>
+    </tr>
+  </thead>
+</table>
+`;
+
+exports[`TableHeaderComponent should match the snapshot without classnames 1`] = `
+<table>
+  <thead>
+    <tr>
+      <th
+        scope="col"
+      >
+        column-mock-1
+      </th>
+      <th
+        scope="col"
+      >
+        column-mock-2
+      </th>
+      <th
+        scope="col"
+      >
+        column-mock-3
+      </th>
+    </tr>
+  </thead>
+</table>
+`;

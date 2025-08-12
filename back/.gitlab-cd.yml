@@ -1,0 +1,45 @@
+build-back-staging:
+  stage: 'Build Staging'
+  rules:
+    - if: '$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME == "staging" || $CI_COMMIT_BRANCH == "staging"'
+  image:  docker:28-cli
+  services:
+    - name: docker:28-dind
+  tags:
+    - build-fc
+  environment:
+    name: staging
+  variables:
+    INTERNET_PROXY: ${PROXY_EXPLOITATION}
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ''
+    RELEASE_VERSION: ${CI_COMMIT_REF_NAME}
+    APP_VERSION: staging
+  before_script:
+    - echo $FC_DOCKER_REGISTRY_PASS | docker login -u $FC_DOCKER_REGISTRY_USER --password-stdin $FC_DOCKER_REGISTRY
+  script:
+    - ./docker/builds/cd/buildx-bake.sh prod-generic csmr-hsm-high
+  interruptible: true
+  needs:
+    # Security jobs
+    - job: gemnasium-dependency_scanning
+      artifacts: false
+    - job: semgrep-sast
+      artifacts: false
+    # Back tests jobs
+    - job: back
+      artifacts: false
+    # Front tests jobs
+    - job: front
+      artifacts: false
+    # E2E jobs
+    - job: fcp-high
+      artifacts: false
+    - job: fcp-low
+      artifacts: false
+    - job: user-dashboard
+      artifacts: false
+    - job: partners
+      artifacts: false
+    - job: eidas-bridge
+      artifacts: false

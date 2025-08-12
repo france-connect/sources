@@ -14,18 +14,15 @@ exports[`TextAreaInput should match the snapshot when a max length is defined 1`
       data-testid="form-input-textarea-testid-any-name-mock"
       maxlength="256"
       name="any-name-mock"
-      required=""
+      rows="4"
     >
       any-value-mock
     </textarea>
-    <div
-      data-mockid="MessageElement"
-    />
   </div>
 </div>
 `;
 
-exports[`TextAreaInput should match the snapshot when input value is invalid 1`] = `
+exports[`TextAreaInput should match the snapshot, with config messages 1`] = `
 <div>
   <div
     data-mockid="GroupElement"
@@ -38,18 +35,18 @@ exports[`TextAreaInput should match the snapshot when input value is invalid 1`]
       class="any-input-classname-mock"
       data-testid="form-input-textarea-testid-any-name-mock"
       name="any-name-mock"
-      required=""
+      rows="4"
     >
       any-value-mock
     </textarea>
     <div
-      data-mockid="MessageElement"
+      data-mockid="MessagesElement"
     />
   </div>
 </div>
 `;
 
-exports[`TextAreaInput should match the snapshot when value is valid 1`] = `
+exports[`TextAreaInput should match the snapshot, with error messages 1`] = `
 <div>
   <div
     data-mockid="GroupElement"
@@ -62,13 +59,34 @@ exports[`TextAreaInput should match the snapshot when value is valid 1`] = `
       class="any-input-classname-mock"
       data-testid="form-input-textarea-testid-any-name-mock"
       name="any-name-mock"
-      required=""
+      rows="4"
     >
       any-value-mock
     </textarea>
     <div
-      data-mockid="MessageElement"
+      data-mockid="MessagesElement"
     />
+  </div>
+</div>
+`;
+
+exports[`TextAreaInput should match the snapshot, without messages 1`] = `
+<div>
+  <div
+    data-mockid="GroupElement"
+  >
+    <div
+      data-mockid="LabelElement"
+    />
+    <textarea
+      aria-describedby="any-name-mock-messages"
+      class="any-input-classname-mock"
+      data-testid="form-input-textarea-testid-any-name-mock"
+      name="any-name-mock"
+      rows="4"
+    >
+      any-value-mock
+    </textarea>
   </div>
 </div>
 `;

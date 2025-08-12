@@ -12,6 +12,7 @@ import {
   FcWebJsonExceptionFilter,
   UnknownJsonExceptionFilter,
 } from '@fc/exceptions';
+import { FraudIdentityTheftModule } from '@fc/fraud-identity-theft';
 import { HttpProxyModule } from '@fc/http-proxy';
 import { I18nModule } from '@fc/i18n';
 import {
@@ -38,6 +39,8 @@ const oidcClientModule = OidcClientModule.register(
   ServiceProviderAdapterEnvModule,
 );
 
+const trackingModule = TrackingModule.forRoot(UserDashboardTrackingService);
+
 @Module({
   controllers: [UserDashboardController, OidcClientController],
   imports: [
@@ -49,13 +52,14 @@ const oidcClientModule = OidcClientModule.register(
     HttpProxyModule,
     IdentityProviderAdapterEnvModule,
     oidcClientModule,
-    TrackingModule.forRoot(UserDashboardTrackingService),
+    trackingModule,
     TracksModule,
     CsmrFraudClientModule,
     UserPreferencesModule,
     MailerModule,
     CsrfModule,
     I18nModule,
+    FraudIdentityTheftModule.register(trackingModule),
   ],
   providers: [
     UserDashboardService,

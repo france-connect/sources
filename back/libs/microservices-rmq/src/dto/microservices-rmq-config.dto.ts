@@ -25,4 +25,8 @@ export class MicroservicesRmqConfig {
 
   @IsNumber()
   readonly requestTimeout: number;
+
+  @IsString()
+  @IsOptional()
+  readonly protocolVersion?: string;
 }

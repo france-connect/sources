@@ -80,8 +80,22 @@ describe('MongooseCollectionOperationWatcherHelper', () => {
       // When
       service['watch'](modelMock as unknown as Model<Document>, callbackMock);
       // Then
-      expect(streamMock.on).toHaveBeenCalledTimes(1);
-      expect(streamMock.on).toHaveBeenCalledWith('change', bindReturnValue);
+      expect(streamMock.on).toHaveBeenCalledTimes(3);
+      expect(streamMock.on).toHaveBeenNthCalledWith(
+        1,
+        'error',
+        expect.any(Function),
+      );
+      expect(streamMock.on).toHaveBeenNthCalledWith(
+        2,
+        'close',
+        expect.any(Function),
+      );
+      expect(streamMock.on).toHaveBeenNthCalledWith(
+        3,
+        'change',
+        bindReturnValue,
+      );
     });
 
     it('should call operationTypeWatcher.bind with good params', () => {
@@ -118,23 +132,71 @@ describe('MongooseCollectionOperationWatcherHelper', () => {
       // Then
       expect(loggerServiceMock.notice).toHaveBeenCalledTimes(1);
       expect(loggerServiceMock.notice).toHaveBeenCalledWith(
-        `Database OperationType watcher initialization for "${modelMock.modelName}".`,
+        `Opened change stream for "${modelMock.modelName}".`,
       );
     });
   });
-  describe('connectAllWatchers', () => {
-    it('should call watch function', () => {
+
+  describe('logError', () => {
+    it('should log an error when logError is called', () => {
       // Given
-      const listenersMock = [
-        { model: Symbol(), callback: Symbol() },
-        { model: Symbol(), callback: Symbol() },
-      ];
-      MongooseCollectionOperationWatcherHelper['listeners'] = listenersMock;
-      const streamMock = { on: jest.fn() };
-      modelMock.watch.mockReturnValueOnce(streamMock);
-      service['watch'] = jest.fn();
+      const errorMock = new Error('mocked error');
+      const modelMocked = { modelName: 'mockedModelName' } as Model<Document>;
+
       // When
-      service.connectAllWatchers();
+      service['logError'](modelMocked, errorMock);
+
+      // Then
+      expect(loggerServiceMock.err).toHaveBeenCalledTimes(1);
+      expect(loggerServiceMock.err).toHaveBeenCalledWith(
+        `Error while watching "${modelMocked.modelName}" collection: ${errorMock.message}`,
+      );
+    });
+  });
+
+  describe('logClose', () => {
+    it('should log a notice when logClose is called', () => {
+      // Given
+      const modelMocked = { modelName: 'mockedModelName' } as Model<Document>;
+
+      // When
+      service['logClose'](modelMocked);
+
+      // Then
+      expect(loggerServiceMock.notice).toHaveBeenCalledTimes(1);
+      expect(loggerServiceMock.notice).toHaveBeenCalledWith(
+        `Watch on "${modelMocked.modelName}" collection closed, reconnecting...`,
+      );
+    });
+  });
+
+  describe('connectAllWatchers', () => {
+    const listenersMock = [
+      { model: Symbol(), callback: Symbol() },
+      { model: Symbol(), callback: Symbol() },
+    ];
+    beforeEach(() => {
+      const streamMock = { on: jest.fn() };
+
+      service['listeners'] = listenersMock;
+      service['watch'] = jest.fn();
+      modelMock.watch.mockReturnValue(streamMock);
+
+      service['closeAllWatchers'] = jest.fn();
+    });
+
+    it('should closes all watchers', async () => {
+      // When
+      await service.connectAllWatchers();
+
+      // Then
+      expect(service['closeAllWatchers']).toHaveBeenCalledOnce();
+    });
+
+    it('should call watch to reconnect all watchers', async () => {
+      // When
+      await service.connectAllWatchers();
+
       // Then
       expect(service['watch']).toHaveBeenNthCalledWith(
         1,
@@ -200,6 +262,43 @@ describe('MongooseCollectionOperationWatcherHelper', () => {
       service['operationTypeWatcher'](modelNameMock, callbackMock, streamMock);
       // Then
       expect(loggerServiceMock.notice).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('closeAllWatchers', () => {
+    // Given
+    const closeMock1 = jest.fn();
+    const closeMock2 = jest.fn();
+    const model1 = { modelName: 'model1' };
+    const model2 = { modelName: 'model2' };
+
+    beforeEach(() => {
+      service['listeners'] = [
+        { stream: { close: closeMock1 }, model: model1 },
+        { stream: { close: closeMock2 }, model: model2 },
+      ];
+    });
+
+    it('should close all streams', async () => {
+      // When
+      await service['closeAllWatchers']();
+
+      // Then
+      expect(closeMock1).toHaveBeenCalledTimes(1);
+      expect(closeMock2).toHaveBeenCalledTimes(1);
+    });
+
+    it('should create a log for each closed watcher', async () => {
+      // When
+      await service['closeAllWatchers']();
+
+      // Then
+      expect(loggerServiceMock.notice).toHaveBeenCalledWith(
+        'Closed change stream for "model1".',
+      );
+      expect(loggerServiceMock.notice).toHaveBeenCalledWith(
+        'Closed change stream for "model2".',
+      );
     });
   });
 });

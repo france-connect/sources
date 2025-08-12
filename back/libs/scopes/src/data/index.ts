@@ -2,6 +2,7 @@ export * from './cnaf-msa';
 export * from './cnam';
 export * from './cnous';
 export * from './dgfip';
+export * from './dsnj';
 export * from './dss';
 export * from './fcp-high';
 export * from './fcp-low';

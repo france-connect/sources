@@ -7,12 +7,12 @@ export interface CsmrImportCoreServiceProviderInterface {
   type: ClientTypeEnum;
   redirect_uris: string[];
   post_logout_redirect_uris: string[];
-  userinfo_signed_response_alg:
+  signedResponseAlg:
     | SignatureAlgorithmEnum.ES256
     | SignatureAlgorithmEnum.RS256;
   email: string[];
   phone: string;
   site: string[];
-  adressesIp: string[];
+  IPServerAddressesAndRanges: string[];
   entityId: string;
 }

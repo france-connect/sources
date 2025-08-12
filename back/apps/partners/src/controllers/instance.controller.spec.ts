@@ -8,6 +8,7 @@ import {
   EntityType,
   PermissionsType,
 } from '@fc/access-control';
+import { CreatedVia } from '@fc/csmr-config-client';
 import { CsrfTokenGuard } from '@fc/csrf';
 import { FormValidationPipe } from '@fc/dto2form';
 import { PartnersServiceProviderInstanceService } from '@fc/partners-service-provider-instance';
@@ -239,12 +240,50 @@ describe('InstanceController', () => {
         permissionType: PermissionsType.VIEW,
       });
     });
+
+    it('should call publish method with instanceId, VersionId, data and action type to create config', async () => {
+      // Given
+      const dataWithCreatedInfo = {
+        ...body,
+        createdBy: userInfoMock.email,
+        createdVia: CreatedVia.PARTNERS_MANUAL,
+      };
+
+      // When
+      await controller.createInstance(body, sessionPartnersAccountMock);
+
+      // Then
+      expect(publicationMock.publish).toHaveBeenCalledExactlyOnceWith(
+        instanceIdMock,
+        versionIdMock,
+        dataWithCreatedInfo,
+        'CONFIG_CREATE',
+      );
+    });
   });
 
   describe('updateInstance', () => {
+    it('should call fromFormValues with body and instance id', async () => {
+      // When
+      await controller.updateInstance(
+        body,
+        instanceIdMock,
+        sessionPartnersAccountMock,
+      );
+
+      // Then
+      expect(
+        partnersServiceMock.fromFormValues,
+      ).toHaveBeenCalledExactlyOnceWith(body, instanceIdMock);
+    });
+
     it('should call version.create with body and instance id', async () => {
       // When
-      await controller.updateInstance(body, instanceIdMock);
+      await controller.updateInstance(
+        body,
+        instanceIdMock,
+        sessionPartnersAccountMock,
+      );
 
       // Then
       expect(versionMock.create).toHaveBeenCalledTimes(1);
@@ -252,6 +291,30 @@ describe('InstanceController', () => {
         body,
         instanceIdMock,
         pendingPublicationStatus,
+      );
+    });
+
+    it('should call publish method with instanceId, VersionId, data and action type to update config', async () => {
+      // Given
+      const dataWithCreatedInfo = {
+        ...body,
+        createdBy: userInfoMock.email,
+        createdVia: CreatedVia.PARTNERS_MANUAL,
+      };
+
+      // When
+      await controller.updateInstance(
+        body,
+        instanceIdMock,
+        sessionPartnersAccountMock,
+      );
+
+      // Then
+      expect(publicationMock.publish).toHaveBeenCalledExactlyOnceWith(
+        instanceIdMock,
+        versionIdMock,
+        dataWithCreatedInfo,
+        'CONFIG_UPDATE',
       );
     });
   });

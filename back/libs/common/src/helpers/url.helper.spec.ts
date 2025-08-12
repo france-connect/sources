@@ -12,17 +12,6 @@ describe('hasSameHost', () => {
     expect(result).toBe(true);
   });
 
-  it('should return false for an array with invalid URLs', () => {
-    // Given
-    const urlList = ['https://example.com', 'invalid-url'];
-
-    // When
-    const result = hasSameHost(urlList);
-
-    // Then
-    expect(result).toBe(false);
-  });
-
   it('should return true for an array with consistent domains', () => {
     // Given
     const urlList = [
@@ -60,6 +49,42 @@ describe('hasSameHost', () => {
       'https://example.com:9090/path2',
       'https://example.com:8080/path3',
     ];
+
+    // When
+    const result = hasSameHost(urlList);
+
+    // Then
+    expect(result).toBe(false);
+  });
+
+  it('should return false when host are mixed with localhost with a port', () => {
+    // Given
+    const urlList = [
+      'https://example.com/path1',
+      'http://localhost:8080/path2',
+    ];
+
+    // When
+    const result = hasSameHost(urlList);
+
+    // Then
+    expect(result).toBe(false);
+  });
+
+  it('should return false when host are mixed with localhost', () => {
+    // Given
+    const urlList = ['https://example.com/path1', 'http://localhost/path2'];
+
+    // When
+    const result = hasSameHost(urlList);
+
+    // Then
+    expect(result).toBe(false);
+  });
+
+  it('should return false when hosts are localhost with different ports', () => {
+    // Given
+    const urlList = ['http://localhost:4200', 'http://localhost:8000'];
 
     // When
     const result = hasSameHost(urlList);

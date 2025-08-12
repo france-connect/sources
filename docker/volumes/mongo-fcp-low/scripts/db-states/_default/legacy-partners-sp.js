@@ -1,9 +1,7 @@
 // == FS
 const fspLegacyPartners = {
   MarieDeHem: {
-    site: [
-      "https://fsp1.com",
-    ],
+    site: ["https://fsp1.com"],
     redirect_uris: [
       "https://fsp1.docker.dev-franceconnect.fr/login-callback",
       "https://fsp1.docker.dev-franceconnect.fr/data-callback",
@@ -11,7 +9,6 @@ const fspLegacyPartners = {
     post_logout_redirect_uris: [
       "https://fsp1.docker.dev-franceconnect.fr/logout-callback",
     ],
-    updatedAt: new Date("2019-05-22T14:36:12.516Z"),
     key: "28e9ed103d6b075d371303a8bc5a66446f0cd4c0ce7ec237773276c247d28a95",
     client_secret:
       "4eQRa1ab1h8jIKVs53cW8FBUGIa5KQLlXQpdP/lGe3EJifIwUMHR0w6HKxu3ccGzR0y6+aS2wLAifrmhsT76TtVCvnNQAF5rONzLejQ7Hqy1LBF8TAUpx+8yFak=",
@@ -23,7 +20,11 @@ const fspLegacyPartners = {
     active: true,
     type: "public",
     secretCreatedAt: "2019-05-22T14:36:12.494Z",
+    secretUpdatedAt: "2019-05-22T14:36:12.494Z",
+    secretUpdatedBy: "admin",
     createdAt: new Date("2019-05-22T14:36:12.493Z"),
+    createdBy: "admin",
+    createdVia: "EXPLOITATION_SINGLE_FORM",
     credentialsFlow: false,
     scopes: [
       "openid",
@@ -49,9 +50,7 @@ const fspLegacyPartners = {
 
   fsStats: {
     name: "FsStats",
-    site: [
-      "https://site.com",
-    ],
+    site: ["https://site.com"],
     redirect_uris: [
       "https://fsp2.docker.dev-franceconnect.fr/login-callback",
       "https://fsp2.docker.dev-franceconnect.fr/data-callback",
@@ -69,9 +68,12 @@ const fspLegacyPartners = {
     active: true,
     type: "private",
     __v: 4,
-    updatedAt: new Date("2019-04-24 17:09:17"),
+    secretCreatedAt: new Date("2019-04-24 17:09:17"),
+    secretUpdatedAt: new Date("2019-04-24 17:09:17"),
+    secretUpdatedBy: "admin",
     createdAt: new Date("2019-04-24 17:09:17"),
-    updatedBy: "admin",
+    createdBy: "admin",
+    createdVia: "EXPLOITATION_SINGLE_FORM",
     blacklistByIdentityProviderActivated: true,
     blacklistByIdentityProvider: {
       fip1_blacklisted_by_fsp2: true,

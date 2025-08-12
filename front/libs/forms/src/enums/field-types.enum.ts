@@ -9,6 +9,9 @@ export enum FieldTypes {
   TEXTAREA = 'textarea',
   CHECKBOX = 'checkbox',
 
+  /* custom types */
+  CONSENT = 'consent',
+
   /* not yet implemented */
   // TEL = 'tel',
   // URL = 'url',

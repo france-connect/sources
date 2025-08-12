@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FraudFormIntroductionComponent should match the snapshot 1`] = `
+<div>
+  <div>
+    <h1
+      class="fr-h3 fr-text-title--blue-france fr-mb-1w"
+    >
+      <b>
+        Je signale une usurpation
+      </b>
+    </h1>
+    <p>
+      En remplissant ce formulaire, le support FranceConnect sera informé de votre demande. Nous vous recontacterons sous peu.
+    </p>
+  </div>
+</div>
+`;

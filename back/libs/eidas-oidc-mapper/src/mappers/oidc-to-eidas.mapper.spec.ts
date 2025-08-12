@@ -26,14 +26,14 @@ describe('OidcToEidasMapper', () => {
       });
 
       it('should return the sub within claims in an array', () => {
-        // setup
+        // Given
         const expected = [claims.sub];
 
-        // action
+        // When
         const result =
           ClaimsToAttributesMap[EidasAttributes.PERSON_IDENTIFIER](claims);
 
-        // expect
+        // Then
         expect(result).toStrictEqual(expected);
       });
     });
@@ -46,14 +46,14 @@ describe('OidcToEidasMapper', () => {
       });
 
       it('should return the given_name within claims splited by space', () => {
-        // setup
+        // Given
         const expected = [claims.given_name];
 
-        // action
+        // When
         const result =
           ClaimsToAttributesMap[EidasAttributes.CURRENT_GIVEN_NAME](claims);
 
-        // expect
+        // Then
         expect(result).toStrictEqual(expected);
       });
     });
@@ -66,31 +66,31 @@ describe('OidcToEidasMapper', () => {
       });
 
       it('should return the preferred_username within claims as an Array if present', () => {
-        // setup
+        // Given
         const expected = [claims.preferred_username];
 
-        // action
+        // When
         const result =
           ClaimsToAttributesMap[EidasAttributes.CURRENT_FAMILY_NAME](claims);
 
-        // expect
+        // Then
         expect(result).toStrictEqual(expected);
       });
 
       it('should return the family_name within claims as an Array if preferred_username is not present', () => {
-        // setup
+        // Given
         const claimsWithoutPreferredUsername = {
           ...claims,
           preferred_username: undefined,
         };
         const expected = [claims.family_name];
 
-        // action
+        // When
         const result = ClaimsToAttributesMap[
           EidasAttributes.CURRENT_FAMILY_NAME
         ](claimsWithoutPreferredUsername);
 
-        // expect
+        // Then
         expect(result).toStrictEqual(expected);
       });
     });
@@ -103,19 +103,19 @@ describe('OidcToEidasMapper', () => {
       });
 
       it('should return the birthdate within claims as an Array', () => {
-        // setup
+        // Given
         const expected = [claims.birthdate];
 
-        // action
+        // When
         const result =
           ClaimsToAttributesMap[EidasAttributes.DATE_OF_BIRTH](claims);
 
-        // expect
+        // Then
         expect(result).toStrictEqual(expected);
       });
 
       it('should return the birthdate within claims as an Array replacing the "-00" for presumed born day by "-01"', () => {
-        // setup
+        // Given
         const claimsPresumedBornDay = {
           sub: '57770c28716497d912e64399024b0d70acd9f7e325198f04df29ce0d0572d50fv2',
           gender: 'female',
@@ -129,18 +129,18 @@ describe('OidcToEidasMapper', () => {
         };
         const expected = ['1962-08-01'];
 
-        // action
+        // When
         const result = ClaimsToAttributesMap[EidasAttributes.DATE_OF_BIRTH](
           claimsPresumedBornDay,
         );
 
-        // expect
+        // Then
         expect(result).toStrictEqual(expected);
       });
 
       it('should return the birthdate within claims as an Array replacing the "-00" for presumed born day and month by "-01"', () => {
-        // setup
-        // setup
+        // Given
+        // Given
         const claimsPresumedBornDayMonth = {
           sub: '57770c28716497d912e64399024b0d70acd9f7e325198f04df29ce0d0572d50fv2',
           gender: 'female',
@@ -154,18 +154,18 @@ describe('OidcToEidasMapper', () => {
         };
         const expected = ['1962-01-01'];
 
-        // action
+        // When
         const result = ClaimsToAttributesMap[EidasAttributes.DATE_OF_BIRTH](
           claimsPresumedBornDayMonth,
         );
 
-        // expect
+        // Then
         expect(result).toStrictEqual(expected);
       });
 
       it('should return undefined as an Array if there is no birthdate within the claims', () => {
-        // setup
-        // setup
+        // Given
+        // Given
         const claimsPresumedBornDayMonth = {
           sub: '57770c28716497d912e64399024b0d70acd9f7e325198f04df29ce0d0572d50fv2',
           gender: 'female',
@@ -178,12 +178,12 @@ describe('OidcToEidasMapper', () => {
         };
         const expected = [undefined];
 
-        // action
+        // When
         const result = ClaimsToAttributesMap[EidasAttributes.DATE_OF_BIRTH](
           claimsPresumedBornDayMonth,
         );
 
-        // expect
+        // Then
         expect(result).toStrictEqual(expected);
       });
     });
@@ -196,19 +196,19 @@ describe('OidcToEidasMapper', () => {
       });
 
       it('should return the birthplace within claims as an Array', () => {
-        // setup
+        // Given
         const expected = [claims.birthplace];
 
-        // action
+        // When
         const result =
           ClaimsToAttributesMap[EidasAttributes.PLACE_OF_BIRTH](claims);
 
-        // expect
+        // Then
         expect(result).toStrictEqual(expected);
       });
 
       it('should return the birthcopuntry within claims as an Array if there is no birthplace within claims ', () => {
-        // setup
+        // Given
         const claimsWithoutBirthplace = {
           sub: '57770c28716497d912e64399024b0d70acd9f7e325198f04df29ce0d0572d50fv2',
           gender: 'female',
@@ -221,12 +221,12 @@ describe('OidcToEidasMapper', () => {
         };
         const expected = [claimsWithoutBirthplace.birthcountry];
 
-        // action
+        // When
         const result = ClaimsToAttributesMap[EidasAttributes.PLACE_OF_BIRTH](
           claimsWithoutBirthplace,
         );
 
-        // expect
+        // Then
         expect(result).toStrictEqual(expected);
       });
     });
@@ -239,13 +239,13 @@ describe('OidcToEidasMapper', () => {
       });
 
       it('should return the gender within claims with first letter uppercase as an Array', () => {
-        // setup
+        // Given
         const expected = [_.upperFirst(claims.gender)];
 
-        // action
+        // When
         const result = ClaimsToAttributesMap[EidasAttributes.GENDER](claims);
 
-        // expect
+        // Then
         expect(result).toStrictEqual(expected);
       });
     });

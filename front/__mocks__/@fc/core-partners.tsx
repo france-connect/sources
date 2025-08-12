@@ -4,11 +4,6 @@ export const InstanceComponent = jest.fn(() => <div data-mockid="InstanceCompone
 
 export const InstancesListComponent = jest.fn(() => <div data-mockid="InstancesListComponent" />);
 
-export const PartnersService = {
-  commit: jest.fn(),
-  get: jest.fn(),
-};
-
 export enum Environment {
   SANDBOX = 'SANDBOX',
   PRODUCTION = 'PRODUCTION',
@@ -16,6 +11,7 @@ export enum Environment {
 
 export enum Options {
   CONFIG_NAME = 'Partners',
+  CONFIG_EXTERNAL_URLS = 'ExternalUrls',
 }
 
 export enum PublicationStatus {

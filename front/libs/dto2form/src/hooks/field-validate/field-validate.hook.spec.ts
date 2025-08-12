@@ -1,23 +1,33 @@
 import { renderHook } from '@testing-library/react';
 import type { FieldValidator } from 'final-form';
-import has from 'lodash.has';
+import { has } from 'lodash';
+
+import type { FieldMessage } from '@fc/forms';
 
 import { Validators } from '../../enums';
 import { buildValidator, composeValidators } from '../../helpers';
 import { useFieldValidate } from './field-validate.hook';
 
 // Given
-jest.mock('lodash.has', () => jest.fn());
+jest.mock('lodash', () => ({
+  ...jest.requireActual('lodash'),
+  has: jest.fn(),
+}));
+
 jest.mock('../../enums/validators.enum');
 jest.mock('../../helpers/build-validator/build-validator.helper');
 jest.mock('../../helpers/compose-validators/compose-validators.helper');
 
 describe('useFieldValidate', () => {
+  const errorMessageMock1 = Symbol('errorMessageMock1') as unknown as FieldMessage;
+  const errorMessageMock2 = Symbol('errorMessageMock2') as unknown as FieldMessage;
+  const errorMessageMock3 = Symbol('errorMessageMock3') as unknown as FieldMessage;
+
   // Given
   const validatorsMock = [
-    { errorMessage: 'any-error-label-mock-1', name: 'mock1' },
-    { errorMessage: 'any-error-label-mock-2', name: 'mock2' },
-    { errorMessage: 'any-error-label-mock-3', name: 'mock3' },
+    { errorMessage: errorMessageMock1, name: 'mock1' },
+    { errorMessage: errorMessageMock2, name: 'mock2' },
+    { errorMessage: errorMessageMock3, name: 'mock3' },
   ];
 
   it('should call lodash.has for each validator', () => {
@@ -48,12 +58,12 @@ describe('useFieldValidate', () => {
     expect(buildValidator).toHaveBeenCalledTimes(2);
     expect(buildValidator).toHaveBeenNthCalledWith(
       1,
-      { errorMessage: 'any-error-label-mock-1', name: 'mock1' },
+      { errorMessage: errorMessageMock1, name: 'mock1' },
       true,
     );
     expect(buildValidator).toHaveBeenNthCalledWith(
       2,
-      { errorMessage: 'any-error-label-mock-3', name: 'mock3' },
+      { errorMessage: errorMessageMock3, name: 'mock3' },
       true,
     );
   });

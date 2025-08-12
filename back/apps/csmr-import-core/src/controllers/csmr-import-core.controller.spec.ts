@@ -18,9 +18,11 @@ describe('CsmrImportCoreController', () => {
   };
 
   const payloadMock = Symbol('payloadMock');
+  const userMock = 'userMock';
 
   const messageMock = {
     payload: payloadMock,
+    user: userMock,
   } as unknown as CsmrImportCoreMessageDto;
 
   beforeEach(async () => {
@@ -55,7 +57,7 @@ describe('CsmrImportCoreController', () => {
       // Then
       expect(
         importCoreServiceMock.validateAndCreateServiceProvider,
-      ).toHaveBeenCalledExactlyOnceWith(messageMock.payload);
+      ).toHaveBeenCalledExactlyOnceWith(messageMock.payload, messageMock.user);
     });
 
     it('should return object from validateAndCreateServiceProvider method', async () => {

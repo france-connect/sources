@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ChoicesField should match snapshot 1`] = `
+exports[`ChoicesField should match snapshot, with config messages 1`] = `
 <div>
   <div
     data-mockid="FieldsetElement"
@@ -9,7 +9,34 @@ exports[`ChoicesField should match snapshot 1`] = `
       data-mockid="FieldsetLegendElement"
     />
     <div
-      data-mockid="MessageElement"
+      data-mockid="MessagesElement"
+    />
+  </div>
+</div>
+`;
+
+exports[`ChoicesField should match snapshot, with error messages 1`] = `
+<div>
+  <div
+    data-mockid="FieldsetElement"
+  >
+    <div
+      data-mockid="FieldsetLegendElement"
+    />
+    <div
+      data-mockid="MessagesElement"
+    />
+  </div>
+</div>
+`;
+
+exports[`ChoicesField should match snapshot, without messages 1`] = `
+<div>
+  <div
+    data-mockid="FieldsetElement"
+  >
+    <div
+      data-mockid="FieldsetLegendElement"
     />
   </div>
 </div>

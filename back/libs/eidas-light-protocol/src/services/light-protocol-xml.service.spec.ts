@@ -33,15 +33,15 @@ describe('LightProtocolXmlService', () => {
 
   describe('xmlToJson', () => {
     it('should call xml2json function from xml2js library', () => {
-      // setup
+      // Given
       jest
         .spyOn(converter, 'xml2json')
         .mockReturnValueOnce(JSON.stringify(lightResponseSuccessFullJsonMock));
 
-      // action
+      // When
       service.xmlToJson(lightResponseSuccessFullXmlMock);
 
-      // assertion
+      // Then
       expect(converter.xml2json).toHaveBeenCalledTimes(1);
       expect(converter.xml2json).toHaveBeenCalledWith(
         lightResponseSuccessFullXmlMock,
@@ -53,20 +53,20 @@ describe('LightProtocolXmlService', () => {
     });
 
     it('should return the JSON returned by xml2json', () => {
-      // setup
+      // Given
       jest
         .spyOn(converter, 'xml2json')
         .mockReturnValueOnce(JSON.stringify(lightResponseSuccessFullJsonMock));
 
-      // action
+      // When
       const result = service.xmlToJson(lightResponseSuccessFullXmlMock);
 
-      // assertion
+      // Then
       expect(result).toStrictEqual(lightResponseSuccessFullJsonMock);
     });
 
     it('should throw an error if the library receive something else than a string', () => {
-      // setup
+      // Given
       const lightResponseSuccessFullXmlMock = 'tryAgainBuddyYoureMistaken';
       const xmlConversionErrorMessage = `Error message`;
 
@@ -74,11 +74,11 @@ describe('LightProtocolXmlService', () => {
         throw new Error(xmlConversionErrorMessage);
       });
 
-      // action
+      // When
       try {
         service.xmlToJson(lightResponseSuccessFullXmlMock);
       } catch (e) {
-        // assertion
+        // Then
         expect(e).toBeInstanceOf(EidasXmlToJsonException);
       }
 
@@ -88,14 +88,14 @@ describe('LightProtocolXmlService', () => {
 
   describe('jsonToXml', () => {
     it('should call json2xml function from xml2js library', () => {
-      // setup
+      // Given
       jest
         .spyOn(converter, 'json2xml')
         .mockReturnValueOnce(lightResponseSuccessFullXmlMock);
-      // action
+      // When
       service.jsonToXml(lightResponseSuccessFullJsonMock);
 
-      // assertion
+      // Then
       expect(converter.json2xml).toHaveBeenCalledTimes(1);
       expect(converter.json2xml).toHaveBeenCalledWith(
         JSON.stringify(lightResponseSuccessFullJsonMock),
@@ -108,30 +108,30 @@ describe('LightProtocolXmlService', () => {
     });
 
     it('should return the XML document returned by json2xml', () => {
-      // setup
+      // Given
       jest
         .spyOn(converter, 'json2xml')
         .mockReturnValueOnce(lightResponseSuccessFullXmlMock);
 
-      // action
+      // When
       const result = service.jsonToXml(lightResponseSuccessFullJsonMock);
 
-      // assertion
+      // Then
       expect(result).toEqual(lightResponseSuccessFullXmlMock);
     });
 
     it('should throw an error if the library receive something else than a JSON object', () => {
-      // setup
+      // Given
       const jsonConversionErrorMessage = 'jsonConversion error';
 
       jest.spyOn(converter, 'json2xml').mockImplementation(() => {
         throw new Error(jsonConversionErrorMessage);
       });
-      // action
+      // When
       try {
         service.jsonToXml(lightResponseSuccessFullJsonMock);
       } catch (e) {
-        // assertion
+        // Then
         expect(e).toBeInstanceOf(EidasJsonToXmlException);
       }
 
@@ -141,7 +141,7 @@ describe('LightProtocolXmlService', () => {
 
   describe('jsonToPathsObject', () => {
     it('should set the last path with the parent in the tree if the parent is a string', () => {
-      // setup
+      // Given
       const parent = 'Whisper';
       const lastPath = 'Hitori.Botchi.Osorezuni.Ikiyou.To.Yume.Miteta';
       const tree = {};
@@ -150,24 +150,24 @@ describe('LightProtocolXmlService', () => {
         'Hitori.Botchi.Osorezuni.Ikiyou.To.Yume.Miteta': 'Whisper',
       };
 
-      // action
+      // When
       service.jsonToPathsObject(parent, lastPath, tree);
 
-      // expect
+      // Then
       expect(tree).toStrictEqual(expectedTree);
     });
 
     it('should call recurseOnChildBasedOnType with the parent and the callback if the parent is not a string', () => {
-      // setup
+      // Given
       service.recurseOnChildBasedOnType = jest.fn();
       const parent = { Samishisa: 'Of' };
       const lastPath = 'Hitori.Botchi.Osorezuni.Ikiyou.To.Yume.Miteta';
       const tree = {};
 
-      // action
+      // When
       service.jsonToPathsObject(parent, lastPath, tree);
 
-      // expect
+      // Then
       expect(service.recurseOnChildBasedOnType).toHaveBeenCalledTimes(1);
       expect(service.recurseOnChildBasedOnType).toHaveBeenCalledWith(
         'Of',
@@ -177,7 +177,7 @@ describe('LightProtocolXmlService', () => {
     });
 
     it('should return the tree when no other processing is required', () => {
-      // setup
+      // Given
       const parent = { Samishisa: 'Of' };
       const lastPath = 'Hitori.Botchi.Osorezuni.Ikiyou.To.Yume.Miteta';
       const tree = {};
@@ -186,15 +186,15 @@ describe('LightProtocolXmlService', () => {
         'Hitori.Botchi.Osorezuni.Ikiyou.To.Yume.Miteta.Samishisa': 'Of',
       };
 
-      // action
+      // When
       const result = service.jsonToPathsObject(parent, lastPath, tree);
 
-      // expect
+      // Then
       expect(result).toStrictEqual(expectedTree);
     });
 
     it('should create the path object if it not exists', () => {
-      // setup
+      // Given
       const parent = { Samishisa: 'Of' };
       const lastPath = undefined;
       const tree = {};
@@ -203,60 +203,60 @@ describe('LightProtocolXmlService', () => {
         Samishisa: 'Of',
       };
 
-      // action
+      // When
       const result = service.jsonToPathsObject(parent, lastPath, tree);
 
-      // expect
+      // Then
       expect(result).toStrictEqual(expectedTree);
     });
 
     it('should work the same with all default values', () => {
-      // setup
+      // Given
       const parent = { Samishisa: 'Of' };
 
       const expectedTree = {
         Samishisa: 'Of',
       };
 
-      // action
+      // When
       const result = service.jsonToPathsObject(parent);
 
-      // expect
+      // Then
       expect(result).toStrictEqual(expectedTree);
     });
 
     it('should return the last tree if the parent is other than a string, an array or an object', () => {
-      // setup
+      // Given
       const parent = 3;
       const lastPath = 'Hitori.Botchi.Osorezuni.Ikiyou.To.Yume.Miteta';
       const tree = { last: '1' };
 
       const expectedTree = { last: '1' };
 
-      // action
+      // When
       const result = service.jsonToPathsObject(parent, lastPath, tree);
 
-      // expect
+      // Then
       expect(result).toStrictEqual(expectedTree);
     });
 
     it('should return the last tree if the child is a null value', () => {
-      // setup
+      // Given
       const parent = { new: null };
       const lastPath = 'Hitori.Botchi.Osorezuni.Ikiyou.To.Yume.Miteta';
       const tree = { last: '1' };
 
       const expectedTree = { last: '1' };
 
-      // action
+      // When
       const result = service.jsonToPathsObject(parent, lastPath, tree);
 
-      // expect
+      // Then
       expect(result).toStrictEqual(expectedTree);
     });
 
     it('should return the tree when no other processing is required but with a more complexe structure', () => {
-      // setup
+      // Given
       const parent = { Samishisa: { Oshi: 'The' } };
       const lastPath = 'Hitori.Botchi.Osorezuni.Ikiyou.To.Yume.Miteta';
       const tree = {};
@@ -265,15 +265,15 @@ describe('LightProtocolXmlService', () => {
         'Hitori.Botchi.Osorezuni.Ikiyou.To.Yume.Miteta.Samishisa.Oshi': 'The',
       };
 
-      // action
+      // When
       const result = service.jsonToPathsObject(parent, lastPath, tree);
 
-      // expect
+      // Then
       expect(result).toStrictEqual(expectedTree);
     });
 
     it('should return the tree when no other processing is required but with an even more complexe structure', () => {
-      // setup
+      // Given
       const parent = {
         Hitori: {
           Botchi: 'Whipser',
@@ -294,17 +294,17 @@ describe('LightProtocolXmlService', () => {
         'Hitori.Botchi.Osorezuni.Ikiyou.To.Yume.Miteta.To.1.Miteta': 'Heart',
       };
 
-      // action
+      // When
       const result = service.jsonToPathsObject(parent, lastPath, tree);
 
-      // expect
+      // Then
       expect(result).toStrictEqual(expectedTree);
     });
   });
 
   describe('recurseOnChildBasedOnType', () => {
     it('should set the last path with the child in the tree if the child is a string', () => {
-      // setup
+      // Given
       const child = 'Whisper';
       const lastPath = 'Hitori.Botchi.Osorezuni.Ikiyou.To.Yume';
       const tree = {};
@@ -313,15 +313,15 @@ describe('LightProtocolXmlService', () => {
         'Hitori.Botchi.Osorezuni.Ikiyou.To.Yume': 'Whisper',
       };
 
-      // action
+      // When
       service['recurseOnChildBasedOnType'](child, lastPath, tree);
 
-      // expect
+      // Then
       expect(tree).toStrictEqual(expectedTree);
     });
 
     it('should set the last path with the child in the tree if the child is an object', () => {
-      // setup
+      // Given
       const child = { Miteta: 'Whisper' };
       const lastPath = 'Hitori.Botchi.Osorezuni.Ikiyou.To.Yume';
       const tree = {};
@@ -330,15 +330,15 @@ describe('LightProtocolXmlService', () => {
         'Hitori.Botchi.Osorezuni.Ikiyou.To.Yume.Miteta': 'Whisper',
       };
 
-      // action
+      // When
       service['recurseOnChildBasedOnType'](child, lastPath, tree);
 
-      // expect
+      // Then
       expect(tree).toStrictEqual(expectedTree);
     });
 
     it('should set the last path with the child in the tree if the child is an array', () => {
-      // setup
+      // Given
       const child = { Miteta: ['foo', 'bar'] };
       const lastPath = 'Hitori.Botchi.Osorezuni.Ikiyou.To.Yume';
       const tree = {};
@@ -348,10 +348,10 @@ describe('LightProtocolXmlService', () => {
         'Hitori.Botchi.Osorezuni.Ikiyou.To.Yume.Miteta.1': 'bar',
       };
 
-      // action
+      // When
       service['recurseOnChildBasedOnType'](child, lastPath, tree);
 
-      // expect
+      // Then
       expect(tree).toStrictEqual(expectedTree);
     });
   });
@@ -363,13 +363,13 @@ describe('LightProtocolXmlService', () => {
     };
 
     it('should call forEachPath to iter over paths', () => {
-      // setup
+      // Given
       service.forEachPath = jest.fn();
 
-      // action
+      // When
       service.removeDeclarationFields(pathsObject);
 
-      // expect
+      // Then
       expect(service.forEachPath).toHaveBeenCalledTimes(1);
       expect(service.forEachPath).toHaveBeenCalledWith(
         pathsObject,
@@ -378,13 +378,13 @@ describe('LightProtocolXmlService', () => {
     });
 
     it('should return the paths object without the XML declaration feilds', () => {
-      // setup
+      // Given
       const expected = { pouet: 'pouet' };
 
-      // action
+      // When
       const result = service.removeDeclarationFields(pathsObject);
 
-      // expect
+      // Then
       expect(result).toStrictEqual(expected);
     });
 
@@ -394,10 +394,10 @@ describe('LightProtocolXmlService', () => {
         pouet: 'pouet',
       };
 
-      // action
+      // When
       service.removeDeclarationFields(pathsObject);
 
-      // expect
+      // Then
       expect(pathsObject).toStrictEqual(originalPathsObject);
     });
   });
@@ -408,10 +408,10 @@ describe('LightProtocolXmlService', () => {
     };
 
     it('should add the declaration fields to the path object', () => {
-      // action
+      // When
       const result = service.addDeclarationFields(pathsObject);
 
-      // expect
+      // Then
       expect(result).toStrictEqual({
         '_declaration._attributes.encoding': 'UTF-8',
         '_declaration._attributes.standalone': 'yes',
@@ -425,10 +425,10 @@ describe('LightProtocolXmlService', () => {
         pouet: 'pouet',
       };
 
-      // action
+      // When
       service.addDeclarationFields(pathsObject);
 
-      // expect
+      // Then
       expect(pathsObject).toStrictEqual(originalPathsObject);
     });
   });
@@ -439,10 +439,10 @@ describe('LightProtocolXmlService', () => {
     };
 
     it('should add the given node and value in the path object', () => {
-      // action
+      // When
       const result = service.upsertNodeToPathObject(pathsObject, 'foo', 'bar');
 
-      // expect
+      // Then
       expect(result).toStrictEqual({
         foo: 'bar',
         pouet: 'pouet',
@@ -450,14 +450,14 @@ describe('LightProtocolXmlService', () => {
     });
 
     it('should override the paths object', () => {
-      // action
+      // When
       const result = service.upsertNodeToPathObject(
         pathsObject,
         'pouet',
         'pas pouet',
       );
 
-      // expect
+      // Then
       expect(result).toStrictEqual({
         pouet: 'pas pouet',
       });
@@ -472,13 +472,13 @@ describe('LightProtocolXmlService', () => {
     };
 
     it('should call forEachPath to iter over paths', () => {
-      // setup
+      // Given
       service.forEachPath = jest.fn();
 
-      // action
+      // When
       service.stripUrlAndUrnForProps(pathsObject, ['pouet', 'toto']);
 
-      // expect
+      // Then
       expect(service.forEachPath).toHaveBeenCalledTimes(1);
       expect(service.forEachPath).toHaveBeenCalledWith(
         pathsObject,
@@ -493,13 +493,13 @@ describe('LightProtocolXmlService', () => {
         'Ceci.est.un.test.toto.c': '42',
       };
 
-      // action
+      // When
       const result = service.stripUrlAndUrnForProps(pathsObject, [
         'pouet',
         'toto',
       ]);
 
-      // expect
+      // Then
       expect(result).toStrictEqual(expectedPathsObject);
     });
 
@@ -510,10 +510,10 @@ describe('LightProtocolXmlService', () => {
         'Ceci.est.un.test.toto.c': 'urn:name:42',
       };
 
-      // action
+      // When
       service.stripUrlAndUrnForProps(pathsObject, ['pouet', 'toto']);
 
-      // expect
+      // Then
       expect(pathsObject).toStrictEqual(originalPathsObject);
     });
   });
@@ -526,13 +526,13 @@ describe('LightProtocolXmlService', () => {
     };
 
     it('should call forEachPath to iter over paths', () => {
-      // setup
+      // Given
       service.forEachPath = jest.fn();
 
-      // action
+      // When
       service.prefixProps(pathsObject, ['toto'], 'urn:name:');
 
-      // expect
+      // Then
       expect(service.forEachPath).toHaveBeenCalledTimes(1);
       expect(service.forEachPath).toHaveBeenCalledWith(
         pathsObject,
@@ -541,17 +541,17 @@ describe('LightProtocolXmlService', () => {
     });
 
     it('should prefix values for paths that match the given props', () => {
-      // setup
+      // Given
       const expectedPathsObject = {
         'Ceci.est.un.test.Miyazaki.b': '89',
         'Ceci.est.un.test.pouet.0.a': 'tutu',
         'Ceci.est.un.test.toto.c': 'urn:name:42',
       };
 
-      // action
+      // When
       const result = service.prefixProps(pathsObject, ['toto'], 'urn:name:');
 
-      // expect
+      // Then
       expect(result).toStrictEqual(expectedPathsObject);
     });
 
@@ -562,10 +562,10 @@ describe('LightProtocolXmlService', () => {
         'Ceci.est.un.test.toto.c': '42',
       };
 
-      // action
+      // When
       service.prefixProps(pathsObject, ['pouet', 'toto'], 'urn:name:');
 
-      // expect
+      // Then
       expect(pathsObject).toStrictEqual(originalPathsObject);
     });
   });
@@ -578,13 +578,13 @@ describe('LightProtocolXmlService', () => {
     };
 
     it('should call forEachPath to iter over paths', () => {
-      // setup
+      // Given
       service.forEachPath = jest.fn();
 
-      // action
+      // When
       service.lowerCaseFirstCharForProps(pathsObject, ['toto']);
 
-      // expect
+      // Then
       expect(service.forEachPath).toHaveBeenCalledTimes(1);
       expect(service.forEachPath).toHaveBeenCalledWith(
         pathsObject,
@@ -593,17 +593,17 @@ describe('LightProtocolXmlService', () => {
     });
 
     it('should prefix values for paths that match the given props', () => {
-      // setup
+      // Given
       const expectedPathsObject = {
         'Ceci.est.un.test.Miyazaki.b': '89',
         'Ceci.est.un.test.pouet.0.a': 'tutu',
         'Ceci.est.un.test.toto.c': 'lesLapinsCretins',
       };
 
-      // action
+      // When
       const result = service.lowerCaseFirstCharForProps(pathsObject, ['toto']);
 
-      // expect
+      // Then
       expect(result).toStrictEqual(expectedPathsObject);
     });
 
@@ -614,10 +614,10 @@ describe('LightProtocolXmlService', () => {
         'Ceci.est.un.test.toto.c': 'LesLapinsCretins',
       };
 
-      // action
+      // When
       service.lowerCaseFirstCharForProps(pathsObject, ['toto']);
 
-      // expect
+      // Then
       expect(pathsObject).toStrictEqual(originalPathsObject);
     });
   });
@@ -630,13 +630,13 @@ describe('LightProtocolXmlService', () => {
     };
 
     it('should call forEachPath to iter over paths', () => {
-      // setup
+      // Given
       service.forEachPath = jest.fn();
 
-      // action
+      // When
       service.upperCaseFirstCharForProps(pathsObject, ['toto']);
 
-      // expect
+      // Then
       expect(service.forEachPath).toHaveBeenCalledTimes(1);
       expect(service.forEachPath).toHaveBeenCalledWith(
         pathsObject,
@@ -645,17 +645,17 @@ describe('LightProtocolXmlService', () => {
     });
 
     it('should prefix values for paths that match the given props', () => {
-      // setup
+      // Given
       const expectedPathsObject = {
         'Ceci.est.un.test.Miyazaki.b': '89',
         'Ceci.est.un.test.pouet.0.a': 'tutu',
         'Ceci.est.un.test.toto.c': 'LesLapinsCretins',
       };
 
-      // action
+      // When
       const result = service.upperCaseFirstCharForProps(pathsObject, ['toto']);
 
-      // expect
+      // Then
       expect(result).toStrictEqual(expectedPathsObject);
     });
 
@@ -666,10 +666,10 @@ describe('LightProtocolXmlService', () => {
         'Ceci.est.un.test.toto.c': 'lesLapinsCretins',
       };
 
-      // action
+      // When
       service.upperCaseFirstCharForProps(pathsObject, ['toto']);
 
-      // expect
+      // Then
       expect(pathsObject).toStrictEqual(originalPathsObject);
     });
   });
@@ -683,12 +683,12 @@ describe('LightProtocolXmlService', () => {
     };
 
     it('it should call forEachPath with the paths object and a callback', () => {
-      // setup
+      // Given
       service.forEachPath = jest.fn();
-      // action
+      // When
       service.pathsObjectToJson(pathsObject);
 
-      // expect
+      // Then
       expect(service.forEachPath).toHaveBeenCalledTimes(1);
       expect(service.forEachPath).toHaveBeenCalledWith(
         pathsObject,
@@ -697,7 +697,7 @@ describe('LightProtocolXmlService', () => {
     });
 
     it('it should build a complex object from the pathsObject', () => {
-      // setup
+      // Given
       const expectedJson = {
         Hitori: {
           Botchi: {
@@ -718,10 +718,10 @@ describe('LightProtocolXmlService', () => {
         },
       };
 
-      // action
+      // When
       const result = service.pathsObjectToJson(pathsObject);
 
-      // expect
+      // Then
       expect(result).toStrictEqual(expectedJson);
     });
 
@@ -734,16 +734,16 @@ describe('LightProtocolXmlService', () => {
         'Hitori.Botchi.Osorezuni.Ikiyou.To.Yume.Miteta.To.1.Miteta': 'Heart',
       };
 
-      // action
+      // When
       service.upperCaseFirstCharForProps(pathsObject, ['toto']);
 
-      // expect
+      // Then
       expect(pathsObject).toStrictEqual(originalPathsObject);
     });
   });
 
   describe('replaceInPaths', () => {
-    // setup
+    // Given
     const pathsObject = {
       'Hitori.Botchi.Osorezuni.Ikiyou.To.Yume.Miteta.Hitori.Botchi': 'Whipser',
       'Hitori.Botchi.Osorezuni.Ikiyou.To.Yume.Miteta.Osorezuni.Ikiyou': 'Of',
@@ -752,13 +752,13 @@ describe('LightProtocolXmlService', () => {
     };
 
     it('it should call forEachPath with the paths object and a callback', () => {
-      // setup
+      // Given
       service.forEachPath = jest.fn();
 
-      // action
+      // When
       service.replaceInPaths(pathsObject);
 
-      // expect
+      // Then
       expect(service.forEachPath).toHaveBeenCalledTimes(1);
       expect(service.forEachPath).toHaveBeenCalledWith(
         pathsObject,
@@ -767,7 +767,7 @@ describe('LightProtocolXmlService', () => {
     });
 
     it('it should replace "Miteta" by "Tartempion"', () => {
-      // setup
+      // Given
       const expectedJson = {
         'Hitori.Botchi.Osorezuni.Ikiyou.To.Yume.Tartempion.Hitori.Botchi':
           'Whipser',
@@ -778,19 +778,19 @@ describe('LightProtocolXmlService', () => {
           'Heart',
       };
 
-      // action
+      // When
       const result = service.replaceInPaths(
         pathsObject,
         'Miteta',
         'Tartempion',
       );
 
-      // expect
+      // Then
       expect(result).toStrictEqual(expectedJson);
     });
 
     it('it should replace anything that match "/Miteta\\.(.*?)\\./" by "$1.Tartempion."', () => {
-      // setup
+      // Given
       const expectedJson = {
         'Hitori.Botchi.Osorezuni.Ikiyou.To.Yume.Hitori.Tartempion.Botchi':
           'Whipser',
@@ -801,14 +801,14 @@ describe('LightProtocolXmlService', () => {
           'Heart',
       };
 
-      // action
+      // When
       const result = service.replaceInPaths(
         pathsObject,
         /Miteta\.(.*?)\./,
         '$1.Tartempion.',
       );
 
-      // expect
+      // Then
       expect(result).toStrictEqual(expectedJson);
     });
 
@@ -821,10 +821,10 @@ describe('LightProtocolXmlService', () => {
         'Hitori.Botchi.Osorezuni.Ikiyou.To.Yume.Miteta.To.1.Miteta': 'Heart',
       };
 
-      // action
+      // When
       service.upperCaseFirstCharForProps(pathsObject, ['toto']);
 
-      // expect
+      // Then
       expect(pathsObject).toStrictEqual(originalPathsObject);
     });
   });
@@ -838,7 +838,7 @@ describe('LightProtocolXmlService', () => {
     };
 
     it('it should call the callback function with each path and values from the paths object', () => {
-      // setup
+      // Given
       const cb = jest.fn();
       const expectedKeys = [
         'Hitori.Botchi.Osorezuni.Ikiyou.To.Yume.Miteta.Hitori.Botchi',
@@ -848,10 +848,10 @@ describe('LightProtocolXmlService', () => {
       ];
       const expectedValues = ['Whipser', 'Of', 'The', 'Heart'];
 
-      // action
+      // When
       service.forEachPath(pathsObject, cb);
 
-      // expect
+      // Then
       expect(cb).toHaveBeenCalledTimes(4);
       expect(cb).toHaveBeenNthCalledWith(1, expectedKeys[0], expectedValues[0]);
       expect(cb).toHaveBeenNthCalledWith(2, expectedKeys[1], expectedValues[1]);
@@ -860,29 +860,29 @@ describe('LightProtocolXmlService', () => {
     });
 
     it('should return an empty object if the callback returns undefined', () => {
-      // setup
+      // Given
       const cb = () => undefined;
 
-      // action
+      // When
       const result = service.forEachPath(pathsObject, cb);
 
-      // expect
+      // Then
       expect(result).toStrictEqual({});
     });
 
     it('should return an empty object if the callback returns an empty array', () => {
-      // setup
+      // Given
       const cb = () => [];
 
-      // action
+      // When
       const result = service.forEachPath(pathsObject, cb);
 
-      // expect
+      // Then
       expect(result).toStrictEqual({});
     });
 
     it('should return as key/value whatever the callback returns as array of arrays', () => {
-      // setup
+      // Given
       const cb = (key, value) => [
         [`Miyazaki.${key}`, `Miyazaki.${value}`],
         [`NotDisney.${key}`, `NotDisney.${value}`],
@@ -906,26 +906,26 @@ describe('LightProtocolXmlService', () => {
           'NotDisney.Heart',
       };
 
-      // action
+      // When
       const result = service.forEachPath(pathsObject, cb);
 
-      // expect
+      // Then
       expect(result).toStrictEqual(expectedPathsObject);
     });
 
     it('should return an empty object if the callback returns an array containing another one but with no newKeyPath and no newValue', () => {
-      // setup
+      // Given
       const cb = () => [[]];
 
-      // action
+      // When
       const result = service.forEachPath(pathsObject, cb);
 
-      // expect
+      // Then
       expect(result).toStrictEqual({});
     });
 
     it('should not iter on non enumerable properties to prevent prototype pollution', () => {
-      // setup
+      // Given
       function TryInjection() {
         this.okToIter = 42;
         return;
@@ -936,10 +936,10 @@ describe('LightProtocolXmlService', () => {
 
       const cb = jest.fn();
 
-      // action
+      // When
       service.forEachPath(pathsObjectWithPrototype, cb);
 
-      // expect
+      // Then
       expect(cb).toHaveBeenCalledTimes(1);
       expect(cb).toHaveBeenCalledWith('okToIter', 42);
       expect(cb).not.toHaveBeenCalledWith('notOkToIter', 21);

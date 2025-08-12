@@ -78,24 +78,24 @@ describe('CsvService', () => {
     });
 
     it('should log if filtered data by DTO is successfull', async () => {
-      // Arrange
+      // Given
       filteredByDtoMock.mockResolvedValueOnce(filteredSuccessMock);
 
-      // Action
+      // When
       await service['pickData']([inputMock]);
 
-      // Assert
+      // Then
     });
     it('should successfully filtered data by DTO', async () => {
-      // Arrange
+      // Given
       filteredByDtoMock.mockResolvedValueOnce(filteredSuccessMock);
 
       const resultMock = [filteredSuccessMock.result];
 
-      // Action
+      // When
       const result = await service['pickData']([inputMock]);
 
-      // Assert
+      // Then
       expect(result).toEqual(resultMock);
       expect(filteredByDtoMock).toHaveBeenCalledTimes(1);
       expect(filteredByDtoMock).toHaveBeenCalledWith(
@@ -105,12 +105,12 @@ describe('CsvService', () => {
       );
     });
     it('should fail to validate data by DTO', async () => {
-      // Arrange
+      // Given
       filteredByDtoMock.mockResolvedValueOnce(filteredFailedMock);
-      // Action
+      // When
       const result = await service['pickData']([inputMock]);
 
-      // Assert
+      // Then
       expect(result).toStrictEqual([]);
       expect(filteredByDtoMock).toHaveBeenCalledTimes(1);
       expect(filteredByDtoMock).toHaveBeenCalledWith(
@@ -124,13 +124,13 @@ describe('CsvService', () => {
       );
     });
     it('should fail when dto crashed', async () => {
-      // Arrange
+      // Given
       const errorMock = new Error('Unknown Error');
       filteredByDtoMock.mockRejectedValueOnce(errorMock);
-      // Action
+      // When
       await expect(
         service['pickData']([inputMock]),
-        // Assert
+        // Then
       ).rejects.toThrow(errorMock);
       expect(loggerServiceMock.warning).toHaveBeenCalledTimes(0);
     });
@@ -138,26 +138,26 @@ describe('CsvService', () => {
 
   describe('headersFilter()', () => {
     it('should lowercase the headers of the csv', () => {
-      // Arrange
+      // Given
       const headers = ['A', 'B', 'C1'];
       const resultMock = ['a', 'b', 'c1'];
-      // Action
+      // When
       const fn = service['headersFilter']();
       const result = fn(headers);
-      // Assert
+      // Then
       expect(result).toEqual(resultMock);
     });
 
     it('should fail if headers contains void header', () => {
-      // Arrange
+      // Given
       const headers = ['A', undefined, 'C1'];
-      // Action
+      // When
       expect(
         () => {
           const fn = service['headersFilter']();
           fn(headers);
         },
-        // Assert
+        // Then
       ).toThrow();
     });
   });
@@ -188,38 +188,38 @@ describe('CsvService', () => {
     });
 
     it('should parse the data from CSV', async () => {
-      // Arrange
+      // Given
       const csvOptionsMock = {
         headers: expect.any(Function),
         ignoreEmpty: true,
         trim: true,
       };
 
-      // Action
+      // When
       await service.parse(fileMock);
 
-      // Assert
+      // Then
       expect(parseCsvMock).toHaveBeenCalledTimes(1);
       expect(parseCsvMock).toHaveBeenCalledWith(fileMock, csvOptionsMock);
       expect(service['collection']).toEqual(csvMock);
     });
 
     it('should filter and validate data from CSV', async () => {
-      // Action
+      // When
       await service.parse(fileMock);
 
-      // Assert
+      // Then
       expect(pickDataMock).toHaveBeenCalledTimes(1);
       expect(pickDataMock).toHaveBeenCalledWith(csvMock);
       expect(service['collection']).toEqual(csvMock);
     });
 
     it('should trace the data extracted from CSV', async () => {
-      // Arrange
-      // Action
+      // Given
+      // When
       await service.parse(fileMock);
 
-      // Assert
+      // Then
       expect(loggerServiceMock.debug).toHaveBeenCalledTimes(1);
       expect(loggerServiceMock.debug).toHaveBeenCalledWith(
         `Loading collection...`,
@@ -227,63 +227,63 @@ describe('CsvService', () => {
     });
 
     it('should fail to validate data from csv', async () => {
-      // Arrange
+      // Given
       const errorMock = new Error('Unknown Error');
       pickDataMock.mockReset().mockRejectedValueOnce([errorMock]);
 
-      // Action
+      // When
       await expect(service.parse(fileMock)).rejects.toThrow(
         CsvParsingException,
       );
 
-      // Assert
+      // Then
       expect(pickDataMock).toHaveBeenCalledTimes(1);
       expect(pickDataMock).toHaveBeenCalledWith(csvMock);
     });
 
     it('should fail if parsing csv crashed', async () => {
-      // Arrange
+      // Given
       const errorMock = new Error('Unknown Error');
       parseCsvMock.mockReset().mockRejectedValueOnce(errorMock);
 
-      // Action
+      // When
       await expect(service.parse(fileMock)).rejects.toThrow(
         CsvParsingException,
       );
 
-      // Assert
+      // Then
       expect(pickDataMock).toHaveBeenCalledTimes(0);
     });
   });
 
   describe('find()', () => {
     it('should find in database with criteria', async () => {
-      // Arrange
+      // Given
       const correctMock = [{ dummy: 'hello' }];
       const wrongMock = [{ hello: 'world' }, { dummy: 'world' }];
       const inputs = [...correctMock, wrongMock] as unknown as MockInterface[];
 
       service['collection'] = inputs;
 
-      // Action
+      // When
       const result = await service.find({ dummy: 'hello' });
 
-      // Assert
+      // Then
       expect(result).toEqual(correctMock[0]);
     });
 
     it('should find in database with criteria', async () => {
-      // Arrange
+      // Given
       const correctMock = [{ dummy: 'hello' }];
       const wrongMock = [{ hello: 'world' }, { dummy: 'world' }];
       const inputs = [...correctMock, wrongMock] as unknown as MockInterface[];
 
       service['collection'] = inputs;
 
-      // Action
+      // When
       const result = await service.find({ dummy: 'noValue' });
 
-      // Assert
+      // Then
       expect(result).toEqual(null);
     });
   });

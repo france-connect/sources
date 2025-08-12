@@ -655,7 +655,7 @@ describe('MockIdentityProviderService', () => {
 
   describe('toOidcFormat', () => {
     it('should replace the "login" property by "sub" and return the OidcClaims', () => {
-      // setup
+      // Given
       const csvObject = {
         login: '42',
         key: 'value',
@@ -666,15 +666,15 @@ describe('MockIdentityProviderService', () => {
         key: 'value',
       };
 
-      // action
+      // When
       const result = service['toOidcFormat'](csvObject);
 
-      //expect
+      // Then
       expect(result).toStrictEqual(expected);
     });
 
     it('should call oidcAddressFieldPresent with the current Csv', () => {
-      // setup
+      // Given
       const csvObject = {
         login: '42',
         key: 'value',
@@ -686,31 +686,31 @@ describe('MockIdentityProviderService', () => {
       };
       service['oidcAddressFieldPresent'] = jest.fn();
 
-      // action
+      // When
       service['toOidcFormat'](csvObject);
 
-      //expect
+      // Then
       expect(service['oidcAddressFieldPresent']).toHaveBeenCalledTimes(1);
       expect(service['oidcAddressFieldPresent']).toHaveBeenCalledWith(expected);
     });
 
     it('should not call "formatOidcAddress" if there is no address', () => {
-      // setup
+      // Given
       const csvObject = {
         login: '42',
         key: 'value',
       };
       service['formatOidcAddress'] = jest.fn();
 
-      // action
+      // When
       service['toOidcFormat'](csvObject);
 
-      //expect
+      // Then
       expect(service['formatOidcAddress']).toHaveBeenCalledTimes(0);
     });
 
     it('should call "formatOidcAddress" with the Csv containing the sub if there is an address', () => {
-      // setup
+      // Given
       const csvObject = {
         login: '42',
         key: 'value',
@@ -730,16 +730,16 @@ describe('MockIdentityProviderService', () => {
       };
       service['formatOidcAddress'] = jest.fn();
 
-      // action
+      // When
       service['toOidcFormat'](csvObject);
 
-      //expect
+      // Then
       expect(service['formatOidcAddress']).toHaveBeenCalledTimes(1);
       expect(service['formatOidcAddress']).toHaveBeenCalledWith(expected);
     });
 
     it('should return the OidcClaims object with the formatted address', () => {
-      // setup
+      // Given
       const csvObject = {
         login: '42',
         key: 'value',
@@ -761,15 +761,15 @@ describe('MockIdentityProviderService', () => {
         },
       };
 
-      // action
+      // When
       const result = service['toOidcFormat'](csvObject);
 
-      //expect
+      // Then
       expect(result).toStrictEqual(expected);
     });
 
     it('should not alter the parameter', () => {
-      // setup
+      // Given
       const csvObject = {
         login: '42',
         key: 'value',
@@ -779,72 +779,72 @@ describe('MockIdentityProviderService', () => {
         key: 'value',
       };
 
-      // action
+      // When
       service['toOidcFormat'](csvObject);
 
-      //expect
+      // Then
       expect(csvObject).toStrictEqual(expected);
     });
   });
 
   describe('oidcAddressFieldPresent', () => {
     it('should return true if the "country" field is present', () => {
-      // setup
+      // Given
       const csvObject = {
         sub: '42',
         key: 'value',
         country: 'North Korea',
       };
 
-      // action
+      // When
       const result = service['oidcAddressFieldPresent'](csvObject);
 
-      // expect
+      // Then
       expect(result).toBe(true);
     });
 
     it('should return true if the "postal_code" field is present', () => {
-      // setup
+      // Given
       const csvObject = {
         sub: '42',
         key: 'value',
         postal_code: '99999',
       };
 
-      // action
+      // When
       const result = service['oidcAddressFieldPresent'](csvObject);
 
-      // expect
+      // Then
       expect(result).toBe(true);
     });
 
     it('should return true if the "locality" field is present', () => {
-      // setup
+      // Given
       const csvObject = {
         sub: '42',
         key: 'value',
         locality: 'Pyongyang',
       };
 
-      // action
+      // When
       const result = service['oidcAddressFieldPresent'](csvObject);
 
-      // expect
+      // Then
       expect(result).toBe(true);
     });
 
     it('should return true if the "street_address" field is present', () => {
-      // setup
+      // Given
       const csvObject = {
         sub: '42',
         key: 'value',
         street_address: '1 st street',
       };
 
-      // action
+      // When
       const result = service['oidcAddressFieldPresent'](csvObject);
 
-      // expect
+      // Then
       expect(result).toBe(true);
     });
   });

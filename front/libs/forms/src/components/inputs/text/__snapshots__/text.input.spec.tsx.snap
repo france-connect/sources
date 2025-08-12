@@ -1,24 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`TextInput should match snapshot 1`] = `
-<div>
-  <div
-    data-mockid="GroupElement"
-  >
-    <div
-      data-mockid="LabelElement"
-    />
-    <div
-      data-mockid="InputWithClipboard"
-    />
-    <div
-      data-mockid="MessageElement"
-    />
-  </div>
-</div>
-`;
-
-exports[`TextInput should match snapshot, when readonly is false 1`] = `
+exports[`TextInput should match snapshot, without messages and when readonly is false 1`] = `
 <div>
   <div
     data-mockid="GroupElement"
@@ -29,14 +11,26 @@ exports[`TextInput should match snapshot, when readonly is false 1`] = `
     <div
       data-mockid="InputComponent"
     />
+  </div>
+</div>
+`;
+
+exports[`TextInput should match snapshot, without messages and when readonly is true 1`] = `
+<div>
+  <div
+    data-mockid="GroupElement"
+  >
     <div
-      data-mockid="MessageElement"
+      data-mockid="LabelElement"
+    />
+    <div
+      data-mockid="InputWithClipboard"
     />
   </div>
 </div>
 `;
 
-exports[`TextInput should match snapshot, when readonly is true 1`] = `
+exports[`TextInput should match snapshot, with config messages 1`] = `
 <div>
   <div
     data-mockid="GroupElement"
@@ -48,7 +42,25 @@ exports[`TextInput should match snapshot, when readonly is true 1`] = `
       data-mockid="InputWithClipboard"
     />
     <div
-      data-mockid="MessageElement"
+      data-mockid="MessagesElement"
+    />
+  </div>
+</div>
+`;
+
+exports[`TextInput should match snapshot, with error messages 1`] = `
+<div>
+  <div
+    data-mockid="GroupElement"
+  >
+    <div
+      data-mockid="LabelElement"
+    />
+    <div
+      data-mockid="InputWithClipboard"
+    />
+    <div
+      data-mockid="MessagesElement"
     />
   </div>
 </div>

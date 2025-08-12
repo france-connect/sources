@@ -26,7 +26,11 @@ import {
   RequirePermission,
 } from '@fc/access-control';
 import { FSA, FSAMeta } from '@fc/common';
-import { ActionTypes } from '@fc/csmr-config-client/enums';
+import {
+  ActionTypes,
+  ConfigCreateViaMessageDtoPayload,
+  CreatedVia,
+} from '@fc/csmr-config-client';
 import { CsrfTokenGuard } from '@fc/csrf';
 import { FormValidationPipe } from '@fc/dto2form';
 import { PartnersAccountSession } from '@fc/partners-account';
@@ -106,7 +110,7 @@ export class InstanceController {
     sessionPartnersAccount: ISessionService<PartnersAccountSession>,
   ): Promise<FSA<FSAMeta, unknown>> {
     const {
-      identity: { id: accountId },
+      identity: { id: accountId, email },
     } = sessionPartnersAccount.get();
     /**
      * @TODO #2149 passer par une transaction
@@ -132,10 +136,16 @@ export class InstanceController {
       entityId: instanceId,
     });
 
+    const dataWithCreatedInfo: ConfigCreateViaMessageDtoPayload = {
+      ...data,
+      createdBy: email,
+      createdVia: CreatedVia.PARTNERS_MANUAL,
+    };
+
     await this.publication.publish(
       instanceId,
       versionId,
-      data,
+      dataWithCreatedInfo,
       ActionTypes.CONFIG_CREATE,
     );
 
@@ -157,6 +167,8 @@ export class InstanceController {
   async updateInstance(
     @Body() data: ServiceProviderInstanceVersionDto,
     @Param('instanceId') instanceId: string,
+    @Session('PartnersAccount', PartnersAccountSession)
+    sessionPartnersAccount: ISessionService<PartnersAccountSession>,
   ): Promise<FSA<FSAMeta, unknown>> {
     const fullData = await this.form.fromFormValues(data, instanceId);
 
@@ -168,10 +180,20 @@ export class InstanceController {
       status,
     );
 
+    const {
+      identity: { email },
+    } = sessionPartnersAccount.get();
+
+    const fullDataWithCreatedInfo: ConfigCreateViaMessageDtoPayload = {
+      ...fullData,
+      createdBy: email,
+      createdVia: CreatedVia.PARTNERS_MANUAL,
+    };
+
     await this.publication.publish(
       instanceId,
       versionId,
-      fullData,
+      fullDataWithCreatedInfo,
       ActionTypes.CONFIG_UPDATE,
     );
 

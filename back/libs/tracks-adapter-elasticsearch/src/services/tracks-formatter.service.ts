@@ -1,4 +1,4 @@
-import { SearchHit } from '@elastic/elasticsearch/lib/api/typesWithBodyKey';
+import { SearchHit } from '@elastic/elasticsearch/lib/api/types';
 
 import { Inject, Injectable } from '@nestjs/common';
 

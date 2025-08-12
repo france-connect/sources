@@ -20,6 +20,52 @@ Alignments
   text-align: justify;
 }
 
+/* stylelint-disable-next-line media-feature-range-notation */
+@media (min-width: 36em) {
+  /* stylelint-disable-next-line selector-class-pattern */
+  .text-left--sm {
+    text-align: left !important;
+  }
+
+  /* stylelint-disable-next-line selector-class-pattern */
+  .text-right--sm {
+    text-align: right !important;
+  }
+
+  /* stylelint-disable-next-line selector-class-pattern */
+  .text-center--sm {
+    text-align: center !important;
+  }
+
+  /* stylelint-disable-next-line selector-class-pattern */
+  .text-justify--sm {
+    text-align: justify !important;
+  }
+}
+
+/* stylelint-disable-next-line media-feature-range-notation */
+@media (min-width: 48em) {
+  /* stylelint-disable-next-line selector-class-pattern */
+  .text-left--md {
+    text-align: left !important;
+  }
+
+  /* stylelint-disable-next-line selector-class-pattern */
+  .text-right--md {
+    text-align: right !important;
+  }
+
+  /* stylelint-disable-next-line selector-class-pattern */
+  .text-center--md {
+    text-align: center !important;
+  }
+
+  /* stylelint-disable-next-line selector-class-pattern */
+  .text-justify--md {
+    text-align: justify !important;
+  }
+}
+
 .text-overflow,
 .text-ellipsis {
   /* @TODO read sass documentation about placeholder and find a fix :shrug:

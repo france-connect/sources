@@ -2,12 +2,12 @@ import { unique } from './unique';
 
 describe('unique', () => {
   it('should return an array with unique value', () => {
-    // setup
+    // Given
     const array = ['foo', 'bar', 'toto', 'toto', 'titi', 'foo'];
     const resultExpected = ['foo', 'bar', 'toto', 'titi'];
-    // action
+    // When
     const result = unique(array);
-    // expect
+    // Then
     expect(result).toEqual(resultExpected);
   });
 });

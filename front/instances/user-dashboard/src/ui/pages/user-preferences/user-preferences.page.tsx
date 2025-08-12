@@ -2,10 +2,9 @@ import { Helmet } from '@dr.pogodin/react-helmet';
 import classnames from 'classnames';
 import React from 'react';
 
+import { UserPreferencesIntroductionComponent } from '@fc/core-user-dashboard';
 import { useStylesQuery, useStylesVariables } from '@fc/styles';
 import { UserPreferencesComponent } from '@fc/user-preferences';
-
-import { UserPreferencesIntroductionComponent } from '../../components';
 
 export const UserPreferencesPage = React.memo(() => {
   const [breakpointLg] = useStylesVariables(['breakpoint-lg']);

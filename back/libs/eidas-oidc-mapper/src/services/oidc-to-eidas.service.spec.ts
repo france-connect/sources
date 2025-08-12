@@ -99,10 +99,10 @@ describe('OidcToEidasService', () => {
     });
 
     it('should call map the splitted oidc scopes to eidas attributes', () => {
-      // action
+      // When
       service.mapPartialRequest(requestedScopesMock, acrMock);
 
-      // expect
+      // Then
       expect(mapScopesToRequestedAttributesMock).toHaveBeenCalledTimes(1);
       expect(mapScopesToRequestedAttributesMock).toHaveBeenCalledWith(
         splittedScopes,
@@ -110,10 +110,10 @@ describe('OidcToEidasService', () => {
     });
 
     it('should return the eidas requested attributes and the level of assurance', () => {
-      // action
+      // When
       const result = service.mapPartialRequest(requestedScopesMock, acrMock);
 
-      // expect
+      // Then
       expect(result).toStrictEqual({
         levelOfAssurance: EidasLevelOfAssurances.SUBSTANTIAL,
         requestedAttributes: requestedAttributesMock,
@@ -135,14 +135,14 @@ describe('OidcToEidasService', () => {
     });
 
     it('should map the attributes with the claims and the requestedAttributes', async () => {
-      // action
+      // When
       await service.mapPartialResponseSuccess(
         claimsMock,
         acrMock,
         requestedAttributesMock,
       );
 
-      // expect
+      // Then
       expect(mapRequestedAttributesFromClaimsMock).toHaveBeenCalledTimes(1);
       expect(mapRequestedAttributesFromClaimsMock).toHaveBeenCalledWith(
         claimsMock,
@@ -151,20 +151,20 @@ describe('OidcToEidasService', () => {
     });
 
     it('should return the partial response', async () => {
-      // action
+      // When
       const result = await service.mapPartialResponseSuccess(
         claimsMock,
         acrMock,
         requestedAttributesMock,
       );
 
-      // expect
+      // Then
       expect(result).toStrictEqual(partialSuccessResponseMock);
       expect(eidasCogServiceMock.injectLabelsForCogs).toHaveBeenCalledTimes(0);
     });
 
     it('should return the partial response with cogs updated', async () => {
-      // setup
+      // Given
       const placeOfBirth = ['75011'];
 
       const { attributes } = partialSuccessResponseMock;
@@ -176,14 +176,14 @@ describe('OidcToEidasService', () => {
       const cogTransformed = {
         [EidasAttributes.PLACE_OF_BIRTH]: [cogMock],
       };
-      // action
+      // When
       const result = await service.mapPartialResponseSuccess(
         claimsMock,
         acrMock,
         requestedAttributesMock,
       );
 
-      // expect
+      // Then
       expect(eidasCogServiceMock.injectLabelsForCogs).toHaveBeenCalledTimes(1);
       expect(eidasCogServiceMock.injectLabelsForCogs).toHaveBeenCalledWith(
         placeOfBirth,
@@ -195,13 +195,13 @@ describe('OidcToEidasService', () => {
 
   describe('mapPartialResponseFailure', () => {
     it('should log the error as an error if error is an instance of Error', () => {
-      // setup
+      // Given
       const error = new Error('This is an error');
 
-      // action
+      // When
       service.mapPartialResponseFailure(error);
 
-      // expect
+      // Then
       expect(loggerServiceMock.err).toHaveBeenCalledTimes(1);
       expect(loggerServiceMock.err).toHaveBeenCalledWith({
         error: 'internal_error',
@@ -211,7 +211,7 @@ describe('OidcToEidasService', () => {
     });
 
     it('should return a partial response with an "internal_error" with code Y000000 if error is an instance of Error', () => {
-      // setup
+      // Given
       const error = new Error('This is an error');
       const partialFailureResponse = {
         status: {
@@ -223,15 +223,15 @@ describe('OidcToEidasService', () => {
         },
       };
 
-      // action
+      // When
       const result = service.mapPartialResponseFailure(error);
 
-      // expect
+      // Then
       expect(result).toStrictEqual(partialFailureResponse);
     });
 
     it('should return a partial response with an oidc error if error is an oidc error', () => {
-      // setup
+      // Given
       const error: OidcError = {
         error: 'invalid_scope',
         error_description: 'Access denied for the scope "given_name"',
@@ -246,10 +246,10 @@ describe('OidcToEidasService', () => {
         },
       };
 
-      // action
+      // When
       const result = service.mapPartialResponseFailure(error);
 
-      // expect
+      // Then
       expect(result).toStrictEqual(partialFailureResponse);
     });
   });
@@ -269,13 +269,13 @@ describe('OidcToEidasService', () => {
     });
 
     it('should get the reducer bound with the given claims', () => {
-      // action
+      // When
       service['mapRequestedAttributesFromClaims'](
         claimsMock,
         requestedAttributesMock,
       );
 
-      // expect
+      // Then
       expect(getClaimsBoundClaimsToAttributesReducerMock).toHaveBeenCalledTimes(
         1,
       );
@@ -285,27 +285,27 @@ describe('OidcToEidasService', () => {
     });
 
     it('should return the reduce result', () => {
-      // action
+      // When
       const result = service['mapRequestedAttributesFromClaims'](
         claimsMock,
         requestedAttributesMock,
       );
 
-      // expect
+      // Then
       expect(result).toStrictEqual(mockReduceResult);
     });
   });
 
   describe('getClaimsBoundClaimsToAttributesReducer', () => {
     it('should bind the OidcToEidasService and the claims to the claimsToAttributesReducer function', () => {
-      // setup
+      // Given
       service['claimsToAttributesReducer'] = jest.fn();
       service['claimsToAttributesReducer'].bind = jest.fn();
 
-      // action
+      // When
       service['getClaimsBoundClaimsToAttributesReducer'](claimsMock);
 
-      // expect
+      // Then
       expect(service['claimsToAttributesReducer'].bind).toHaveBeenCalledTimes(
         1,
       );
@@ -316,11 +316,11 @@ describe('OidcToEidasService', () => {
     });
 
     it('should return the claimsToAttributesReducer bound function', () => {
-      // action
+      // When
       const result =
         service['getClaimsBoundClaimsToAttributesReducer'](claimsMock);
 
-      // expect
+      // Then
       expect(result).toBeInstanceOf(Function);
     });
   });
@@ -328,18 +328,18 @@ describe('OidcToEidasService', () => {
   describe('claimsToAttributesReducer', () => {
     describe('requestedAttribute is mappable', () => {
       it('should return the mapped response attribute within the given the claims and the requested attribute', () => {
-        // setup
+        // Given
         const accumulator = {};
         const expected = { dateOfBirth: ['1962-08-24'] };
 
-        // action
+        // When
         const result = service['claimsToAttributesReducer'](
           claimsMock,
           accumulator,
           EidasAttributes.DATE_OF_BIRTH,
         );
 
-        // expect
+        // Then
         expect(accumulator).toStrictEqual(expected);
         expect(result).toStrictEqual(expected);
       });
@@ -347,18 +347,18 @@ describe('OidcToEidasService', () => {
 
     describe('requestedAttribute is not mappable', () => {
       it('should return the empty accumulatormulator object', () => {
-        // setup
+        // Given
         const accumulator = {};
         const expected = {};
 
-        // action
+        // When
         const result = service['claimsToAttributesReducer'](
           claimsMock,
           accumulator,
           EidasAttributes.CURRENT_ADDRESS,
         );
 
-        // expect
+        // Then
         expect(accumulator).toStrictEqual(expected);
         expect(result).toStrictEqual(expected);
       });
@@ -374,10 +374,10 @@ describe('OidcToEidasService', () => {
     });
 
     it('should reduce the oidcScopes using scopesToRequestedAttributesReducer and a set', () => {
-      // action
+      // When
       service['mapScopesToRequestedAttributes'](oidcScopesMock);
 
-      // expect
+      // Then
       expect(reduceMock).toHaveBeenCalledTimes(1);
       expect(reduceMock).toHaveBeenCalledWith(
         service['scopesToRequestedAttributesReducer'],
@@ -386,7 +386,7 @@ describe('OidcToEidasService', () => {
     });
 
     it('should return the reduced attributes set', () => {
-      // setup
+      // Given
       const expected = [
         EidasAttributes.PERSON_IDENTIFIER,
         EidasAttributes.CURRENT_GIVEN_NAME,
@@ -395,15 +395,15 @@ describe('OidcToEidasService', () => {
       ];
       reduceMock.mockReturnValueOnce(expected);
 
-      // action
+      // When
       const result = service['mapScopesToRequestedAttributes'](oidcScopesMock);
 
-      // expect
+      // Then
       expect(result).toStrictEqual(expected);
     });
 
     it('should return the minimum attributes set', () => {
-      // setup
+      // Given
       const emptyOidcScopesMock = [];
       emptyOidcScopesMock.reduce = reduceMock;
 
@@ -415,44 +415,44 @@ describe('OidcToEidasService', () => {
       ];
       reduceMock.mockReturnValueOnce(expected);
 
-      // action
+      // When
       const result =
         service['mapScopesToRequestedAttributes'](emptyOidcScopesMock);
 
-      // expect
+      // Then
       expect(result).toStrictEqual(expected);
     });
   });
 
   describe('scopesToRequestedAttributesReducer', () => {
     it('should add to the set requested attribute equivalent to the given oidc scope and return the set', () => {
-      // setup
+      // Given
       const attributesSetMock = new Set<EidasAttributes>();
       const expectedSet = new Set<EidasAttributes>([
         EidasAttributes.PERSON_IDENTIFIER,
       ]);
 
-      // action
+      // When
       const result = service['scopesToRequestedAttributesReducer'](
         attributesSetMock,
         'openid',
       );
 
-      // expect
+      // Then
       expect(result).toStrictEqual(expectedSet);
     });
 
     it('should not add anything to the set if there is no equivalent to the given scope', () => {
-      // setup
+      // Given
       const attributesSetMock = new Set<EidasAttributes>();
 
-      // action
+      // When
       const result = service['scopesToRequestedAttributesReducer'](
         attributesSetMock,
         'What is love ?',
       );
 
-      // expect
+      // Then
       expect(result).toStrictEqual(attributesSetMock);
     });
   });

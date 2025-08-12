@@ -99,6 +99,8 @@ const config: Config = {
     '^@fc/notifications(|/.*)$': '<rootDir>/libs/notifications/src$1',
     '^@fc/scopes(|/.*)$': '<rootDir>/libs/scopes/src$1',
     '^@fc/feature-handler(|/.*)$': '<rootDir>/libs/feature-handler/src$1',
+    '^@fc/fraud-identity-theft(|/.*)$':
+      '<rootDir>/libs/fraud-identity-theft/src/$1',
     '^@fc/elasticsearch(|/.*)$': '<rootDir>/libs/elasticsearch/src$1',
     '^@fc/csv(|/.*)$': '<rootDir>/libs/csv/src/$1',
     '^@fc/csmr-user-preferences(|/.*)$':
@@ -142,6 +144,7 @@ const config: Config = {
     '^@fc/i18n(|/.*)$': '<rootDir>/libs/i18n/src/$1',
     '^@mocks/i18n(|/.*)$': '<rootDir>/libs/i18n/.mocks$1',
     '^@fc/partners(|/.*)$': '<rootDir>/apps/partners/src/$1',
+    '^@fc/command-runner(|/.*)$': '<rootDir>/apps/command-runner/src/$1',
     '^@fc/device(|/.*)$': '<rootDir>/libs/device/src/$1',
     '^@fc/dto2form(|/.*)$': '<rootDir>/libs/dto2form/src/$1',
     '^@mocks/dto2form(|/.*)$': '<rootDir>/libs/dto2form/.mocks/$1',
@@ -180,6 +183,7 @@ const config: Config = {
     '^@fc/service-provider(|/.*)$': '<rootDir>/libs/service-provider/src/$1',
     '^@fc/override-code(|/.*)$': '<rootDir>/libs/override-code/src/$1',
     '^@fc/csmr-proxy-client(|/.*)$': '<rootDir>/libs/csmr-proxy-client/src/$1',
+    '^@fc/webhooks(|/.*)$': '<rootDir>/libs/webhooks/src/$1',
     '^oidc-provider(|/.*)$': '<rootDir>/libs/oidc-provider/mocks/lib/$1',
   },
   preset: 'ts-jest',

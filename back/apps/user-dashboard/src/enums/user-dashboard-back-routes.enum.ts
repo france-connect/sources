@@ -12,5 +12,4 @@ export enum UserDashboardBackRoutes {
   WELL_KNOWN_KEYS = '/.well-known/keys',
   CSRF_TOKEN = '/csrf-token',
   OIDC_CLIENT_GET_END_SESSION_URL = '/oidc-client/get-end-session-url',
-  FRAUD_FORM = '/fraud-form',
 }

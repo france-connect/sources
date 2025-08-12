@@ -135,10 +135,10 @@ describe('HsmService', () => {
       service['openSessionWithTheHsm'] = jest.fn();
       service['authenticateWithTheHsm'] = jest.fn();
 
-      // action
+      // When
       service.onModuleInit();
 
-      // expect
+      // Then
       expect(service['instanciatePkcs11js']).toHaveBeenCalledTimes(1);
       expect(service['instanciatePkcs11js']).toHaveBeenCalledWith(
         mockLibHsmPath,
@@ -152,10 +152,10 @@ describe('HsmService', () => {
       service['openSessionWithTheHsm'] = jest.fn();
       service['authenticateWithTheHsm'] = jest.fn();
 
-      // action
+      // When
       service.onModuleInit();
 
-      // expect
+      // Then
       expect(service['pkcs11Instance']).toBe(mockPkcs11Instance);
 
       // restore
@@ -166,25 +166,25 @@ describe('HsmService', () => {
       service['openSessionWithTheHsm'] = jest.fn();
       service['authenticateWithTheHsm'] = jest.fn();
 
-      // action
+      // When
       service.onModuleInit();
 
-      // expect
+      // Then
       expect(service['openSessionWithTheHsm']).toHaveBeenCalledTimes(1);
     });
 
     it('should store the PKCS#11 session it in a private attribute', () => {
-      // setup
+      // Given
       service['instanciatePkcs11js'] = jest.fn();
       service['openSessionWithTheHsm'] = jest
         .fn()
         .mockReturnValueOnce(mockHsmSession);
       service['authenticateWithTheHsm'] = jest.fn();
 
-      // action
+      // When
       service.onModuleInit();
 
-      // expect
+      // Then
       expect(service['pkcs11Session']).toStrictEqual(mockHsmSession);
     });
 
@@ -193,10 +193,10 @@ describe('HsmService', () => {
       service['openSessionWithTheHsm'] = jest.fn();
       service['authenticateWithTheHsm'] = jest.fn();
 
-      // action
+      // When
       service.onModuleInit();
 
-      // expect
+      // Then
       expect(service['authenticateWithTheHsm']).toHaveBeenCalledTimes(1);
     });
 
@@ -208,10 +208,10 @@ describe('HsmService', () => {
       service['openSessionWithTheHsm'] = jest.fn();
       service['authenticateWithTheHsm'] = jest.fn();
 
-      // action
+      // When
       service.onModuleInit();
 
-      // expect
+      // Then
       expect(service['handleError']).toHaveBeenCalledTimes(1);
       expect(service['handleError']).toHaveBeenCalledWith(mockError);
     });
@@ -226,10 +226,10 @@ describe('HsmService', () => {
         });
       service['authenticateWithTheHsm'] = jest.fn();
 
-      // action
+      // When
       service.onModuleInit();
 
-      // expect
+      // Then
       expect(service['handleError']).toHaveBeenCalledTimes(1);
       expect(service['handleError']).toHaveBeenCalledWith(mockError);
     });
@@ -244,10 +244,10 @@ describe('HsmService', () => {
           throw mockError;
         });
 
-      // action
+      // When
       service.onModuleInit();
 
-      // expect
+      // Then
       expect(service['handleError']).toHaveBeenCalledTimes(1);
       expect(service['handleError']).toHaveBeenCalledWith(mockError);
     });
@@ -255,13 +255,13 @@ describe('HsmService', () => {
 
   describe('onModuleClose', () => {
     it('should call closeCurrentSessionWithTheHsm without argument', () => {
-      // setup
+      // Given
       service['closeCurrentSessionWithTheHsm'] = jest.fn();
 
-      // action
+      // When
       service.onModuleDestroy();
 
-      // expect
+      // Then
       expect(service['closeCurrentSessionWithTheHsm']).toHaveBeenCalledTimes(1);
       expect(service['closeCurrentSessionWithTheHsm']).toHaveBeenCalledWith();
     });
@@ -269,13 +269,13 @@ describe('HsmService', () => {
 
   describe('sign', () => {
     it('should hash the data with the given digest algo prior to sign', () => {
-      // setup
+      // Given
       mockPkcs11Instance.C_Sign.mockReturnValueOnce(mockRawSignature);
 
-      // action
+      // When
       service['sign'](mockData);
 
-      // expect
+      // Then
       expect(crypto.createHash).toHaveBeenCalledTimes(1);
       expect(crypto.createHash).toHaveBeenCalledWith(SignatureDigest.SHA256);
       expect(crypto.Hash.prototype.update).toHaveBeenCalledTimes(1);
@@ -284,16 +284,16 @@ describe('HsmService', () => {
     });
 
     it('should call getPrivateKeySlotByLabel with the given CKA_LABEL', () => {
-      // setup
+      // Given
       mockPkcs11Instance.C_Sign.mockReturnValueOnce(mockRawSignature);
       const originalGetPrivateKeySlotByLabel =
         service['getPrivateKeySlotByLabel'];
       service['getPrivateKeySlotByLabel'] = jest.fn();
 
-      // action
+      // When
       service['sign'](mockData);
 
-      // expect
+      // Then
       expect(service['getPrivateKeySlotByLabel']).toHaveBeenCalledTimes(1);
       expect(service['getPrivateKeySlotByLabel']).toHaveBeenCalledWith(
         sigKeyCkaLabel,
@@ -304,7 +304,7 @@ describe('HsmService', () => {
     });
 
     it('should call C_SignInit with the PKCS#11 session, the CKM_ECDSA mekanism and the key slot returned by getPrivateKeySlotByLabel', () => {
-      // setup
+      // Given
       mockPkcs11Instance.C_Sign.mockReturnValueOnce(mockRawSignature);
       const originalGetPrivateKeySlotByLabel =
         service['getPrivateKeySlotByLabel'];
@@ -312,10 +312,10 @@ describe('HsmService', () => {
         .fn()
         .mockReturnValueOnce(mockKeySlot);
 
-      // action
+      // When
       service['sign'](mockData);
 
-      // expect
+      // Then
       expect(mockPkcs11Instance.C_SignInit).toHaveBeenCalledTimes(1);
       expect(mockPkcs11Instance.C_SignInit).toHaveBeenCalledWith(
         service['pkcs11Session'],
@@ -330,13 +330,13 @@ describe('HsmService', () => {
     });
 
     it('should call C_Sign with the PKCS#11 session, the dataDigest, and a Buffer sizeof MAX_SIG_OUTPUT_SIZE', () => {
-      // setup
+      // Given
       mockPkcs11Instance.C_Sign.mockReturnValueOnce(mockRawSignature);
 
-      // action
+      // When
       service['sign'](mockData);
 
-      // expect
+      // Then
       expect(mockPkcs11Instance.C_Sign).toHaveBeenCalledTimes(1);
       expect(mockPkcs11Instance.C_Sign).toHaveBeenCalledWith(
         service['pkcs11Session'],
@@ -346,38 +346,38 @@ describe('HsmService', () => {
     });
 
     it('should returnthe signature to RAW (r, s) format', () => {
-      // setup
+      // Given
       mockPkcs11Instance.C_Sign.mockReturnValueOnce(mockRawSignature);
-      // action
+      // When
       const result = service['sign'](mockData);
 
-      // expect
+      // Then
       expect(result).toStrictEqual(mockRawSignature);
     });
 
     it('should call "handleError" with a "E_SIG_NOT_FOUND" error if C_Sign does not return a Buffer', () => {
-      // setup
+      // Given
       const expectedError = new Error('E_SIG_NOT_FOUND');
       mockPkcs11Instance.C_Sign.mockReturnValueOnce(undefined);
       service['handleError'] = jest.fn();
 
-      // action
+      // When
       service['sign'](mockData);
       expect(service['handleError']).toHaveBeenCalledTimes(1);
       expect(service['handleError']).toHaveBeenCalledWith(expectedError);
 
-      // expect
+      // Then
       expect.hasAssertions();
     });
 
     it('should not catch the error if "handleError" throws', () => {
-      // setup
+      // Given
       mockPkcs11Instance.C_Sign.mockReturnValueOnce(undefined);
       service['handleError'] = jest.fn().mockImplementationOnce(() => {
         throw new Error('E_SIG');
       });
 
-      // action
+      // When
       try {
         service['sign'](mockData);
       } catch (e) {
@@ -385,7 +385,7 @@ describe('HsmService', () => {
         expect(e.message).toStrictEqual('E_SIG');
       }
 
-      // expect
+      // Then
       expect.hasAssertions();
     });
 
@@ -394,12 +394,12 @@ describe('HsmService', () => {
       mockPkcs11Instance.C_Sign.mockReturnValueOnce(Buffer.alloc(0));
       service['handleError'] = jest.fn();
 
-      // action
+      // When
       service['sign'](mockData);
       expect(service['handleError']).toHaveBeenCalledTimes(1);
       expect(service['handleError']).toHaveBeenCalledWith(expectedError);
 
-      // expect
+      // Then
       expect.hasAssertions();
     });
   });
@@ -423,36 +423,36 @@ describe('HsmService', () => {
 
   describe('instanciatePkcs11js', () => {
     it('should create a PKCS#11 Instance', () => {
-      // action
+      // When
       service['instanciatePkcs11js'](mockLibHsmPath);
 
-      // expect
+      // Then
       expect(pkcs11js.PKCS11).toHaveBeenCalledTimes(1);
       expect(pkcs11js.PKCS11).toHaveBeenCalledWith();
     });
 
     it('should load the nethsm library', () => {
-      // action
+      // When
       service['instanciatePkcs11js'](mockLibHsmPath);
 
-      // expect
+      // Then
       expect(mockPkcs11Instance.load).toHaveBeenCalledTimes(1);
       expect(mockPkcs11Instance.load).toHaveBeenCalledWith(mockLibHsmPath);
     });
 
     it('should initialize the PKCS#11 instance', () => {
-      // action
+      // When
       service['instanciatePkcs11js'](mockLibHsmPath);
 
-      // expect
+      // Then
       expect(mockPkcs11Instance.C_Initialize).toHaveBeenCalledTimes(1);
     });
 
     it('should return the PKCS#11 Instance', () => {
-      // action
+      // When
       const result = service['instanciatePkcs11js'](mockLibHsmPath);
 
-      // expect
+      // Then
       expect(result).toBe(mockPkcs11Instance);
     });
   });
@@ -461,10 +461,10 @@ describe('HsmService', () => {
     it('should retrieve the virtualHsmSlot from config', () => {
       const configName = 'Hsm';
 
-      // action
+      // When
       service['openSessionWithTheHsm']();
 
-      // expect
+      // Then
       expect(configServiceMock.get).toHaveBeenCalledTimes(1);
       expect(configServiceMock.get).toHaveBeenCalledWith(configName);
     });
@@ -472,10 +472,10 @@ describe('HsmService', () => {
     it('should retrieve only the slots with tokens from the PKCS#11 instance', () => {
       const tokenPresent = true;
 
-      // action
+      // When
       service['openSessionWithTheHsm']();
 
-      // expect
+      // Then
       expect(mockPkcs11Instance.C_GetSlotList).toHaveBeenCalledTimes(1);
       expect(mockPkcs11Instance.C_GetSlotList).toHaveBeenCalledWith(
         tokenPresent,
@@ -483,10 +483,10 @@ describe('HsmService', () => {
     });
 
     it('should open a read-only session with the virtualHsmSlot retrieved from config', () => {
-      // action
+      // When
       service['openSessionWithTheHsm']();
 
-      // expect
+      // Then
       expect(mockPkcs11Instance.C_OpenSession).toHaveBeenCalledTimes(1);
       expect(mockPkcs11Instance.C_OpenSession).toHaveBeenCalledWith(
         mockSlotList[virtualHsmSlot],
@@ -495,49 +495,49 @@ describe('HsmService', () => {
     });
 
     it('should return the PKCS#11 session', () => {
-      // setup
+      // Given
       mockPkcs11Instance.C_OpenSession.mockReturnValueOnce(mockHsmSession);
 
-      // action
+      // When
       const result = service['openSessionWithTheHsm']();
 
-      // expect
+      // Then
       expect(result).toStrictEqual(mockHsmSession);
     });
   });
 
   describe('closeCurrentSessionWithTheHsm', () => {
     it('should call C_Logout to logout from the hsm', () => {
-      // action
+      // When
       service['closeCurrentSessionWithTheHsm']();
 
-      // expect
+      // Then
       expect(mockPkcs11Instance.C_Logout).toHaveBeenCalledTimes(1);
     });
 
     it('should call C_CloseSession to close the current session', () => {
-      // action
+      // When
       service['closeCurrentSessionWithTheHsm']();
 
-      // expect
+      // Then
       expect(mockPkcs11Instance.C_CloseSession).toHaveBeenCalledTimes(1);
     });
 
     it('should call C_Finalize to destroy the instance', () => {
-      // action
+      // When
       service['closeCurrentSessionWithTheHsm']();
 
-      // expect
+      // Then
       expect(mockPkcs11Instance.C_Finalize).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('authenticateWithTheHsm', () => {
     it('should call C_Login with the HSM session, the user type "CKU_USER" and the mockPin', () => {
-      // action
+      // When
       service['authenticateWithTheHsm']();
 
-      // expect
+      // Then
       expect(mockPkcs11Instance.C_Login).toHaveBeenCalledTimes(1);
       expect(mockPkcs11Instance.C_Login).toHaveBeenCalledWith(
         service['pkcs11Session'],
@@ -549,18 +549,18 @@ describe('HsmService', () => {
 
   describe('getPrivateKeySlotByLabel', () => {
     it('should return the first matching slot', () => {
-      // setup
+      // Given
       mockPkcs11Instance.C_FindObjects.mockReturnValueOnce(mockKeySlot);
 
-      // action
+      // When
       const result = service['getPrivateKeySlotByLabel'](sigKeyCkaLabel);
 
-      // expect
+      // Then
       expect(result).toBe(mockKeySlot);
     });
 
     it('C_FindObjectsInit shall have been called with the PKCS#11 session, the key type "private" and the key label', () => {
-      // setup
+      // Given
       const expectedTemplate = [
         {
           type: pkcs11js.CKA_KEY_TYPE,
@@ -573,10 +573,10 @@ describe('HsmService', () => {
         { type: pkcs11js.CKA_SIGN, value: true },
       ];
 
-      // action
+      // When
       service['getPrivateKeySlotByLabel'](sigKeyCkaLabel);
 
-      // expect
+      // Then
       expect(mockPkcs11Instance.C_FindObjectsInit).toHaveBeenCalledTimes(1);
       expect(mockPkcs11Instance.C_FindObjectsInit).toHaveBeenCalledWith(
         service['pkcs11Session'],
@@ -585,10 +585,10 @@ describe('HsmService', () => {
     });
 
     it('C_FindObjects shall have been called with the PKCS#11 session', () => {
-      // action
+      // When
       service['getPrivateKeySlotByLabel'](sigKeyCkaLabel);
 
-      // expect
+      // Then
       expect(mockPkcs11Instance.C_FindObjects).toHaveBeenCalledTimes(1);
       expect(mockPkcs11Instance.C_FindObjects).toHaveBeenCalledWith(
         service['pkcs11Session'],
@@ -596,10 +596,10 @@ describe('HsmService', () => {
     });
 
     it('C_FindObjectsFinal shall have been called with the PKCS#11 session', () => {
-      // action
+      // When
       service['getPrivateKeySlotByLabel'](sigKeyCkaLabel);
 
-      // expect
+      // Then
       expect(mockPkcs11Instance.C_FindObjectsFinal).toHaveBeenCalledTimes(1);
       expect(mockPkcs11Instance.C_FindObjectsFinal).toHaveBeenCalledWith(
         service['pkcs11Session'],
@@ -607,76 +607,76 @@ describe('HsmService', () => {
     });
 
     it('C_FindObjectsFinal shall have been called with the PKCS#11 session even if C_FindObjects throws', () => {
-      // setup
+      // Given
       mockPkcs11Instance.C_FindObjects.mockImplementationOnce(() => {
         throw new Error('C_FindObjects throw');
       });
 
-      // action
+      // When
       try {
         service['getPrivateKeySlotByLabel'](sigKeyCkaLabel);
         // You can't remove the catch argument, it's mandatory
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (e) {
-        // expect
+        // Then
         expect(mockPkcs11Instance.C_FindObjectsFinal).toHaveBeenCalledTimes(1);
         expect(mockPkcs11Instance.C_FindObjectsFinal).toHaveBeenCalledWith(
           service['pkcs11Session'],
         );
       }
 
-      // expect
+      // Then
       expect.hasAssertions();
     });
 
     it('should throw C_FindObjects error if C_FindObjects throws', () => {
-      // setup
+      // Given
       mockPkcs11Instance.C_FindObjects.mockImplementationOnce(() => {
         throw new Error('C_FindObjects throw');
       });
 
-      // action
+      // When
       try {
         service['getPrivateKeySlotByLabel'](sigKeyCkaLabel);
       } catch (e) {
-        // expect
+        // Then
         expect(e).toBeInstanceOf(Error);
         expect(e.message).toBe('C_FindObjects throw');
       }
 
-      // expect
+      // Then
       expect.hasAssertions();
     });
   });
 
   describe('handleError', () => {
     it('should call "shutdownConsumer" without argument if the error that is a CKR_DEVICE_ERROR', () => {
-      // setup
+      // Given
       const error = new Error('CKR_DEVICE_ERROR:48');
 
-      // action
+      // When
       service['handleError'](error);
       expect(service.shutdownConsumer).toHaveBeenCalledTimes(1);
       expect(service.shutdownConsumer).toHaveBeenCalledWith();
 
-      // expect
+      // Then
       expect.hasAssertions();
     });
 
     it('should throw any error that is not a CKR_DEVICE_ERROR', () => {
-      // setup
+      // Given
       const error = new Error('???');
 
-      // action
+      // When
       try {
         service['handleError'](error);
       } catch (e) {
-        // expect
+        // Then
         expect(e).toBeInstanceOf(Error);
         expect(e.message).toEqual(error.message);
       }
 
-      // expect
+      // Then
       expect.hasAssertions();
     });
   });

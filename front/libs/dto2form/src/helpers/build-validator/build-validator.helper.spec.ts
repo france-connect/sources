@@ -1,16 +1,22 @@
-import get from 'lodash.get';
+import { get } from 'lodash';
+
+import type { FieldMessage } from '@fc/forms';
 
 import { Validators } from '../../enums';
 import { buildValidator } from './build-validator.helper';
 
-// Given
-jest.mock('lodash.get', () => jest.fn());
+jest.mock('lodash', () => ({
+  ...jest.requireActual('lodash'),
+  get: jest.fn(),
+}));
 
 describe('buildValidator', () => {
   it('should return a validate function', () => {
     // When
+    const errorMessageMock = Symbol('errorMessageMock') as unknown as FieldMessage;
+
     const result = buildValidator({
-      errorMessage: 'errorMessageMock',
+      errorMessage: errorMessageMock,
       name: 'any-validator-name',
       validationArgs: ['validationArgsMock'],
     });
@@ -135,7 +141,7 @@ describe('buildValidator', () => {
       const validValueMock = false;
       const valueMock = 'any-value-mock';
       const anyValidatorMock = jest.fn(() => validValueMock);
-      const errorMessageMock = Symbol('errorMessageMock') as unknown as string;
+      const errorMessageMock = Symbol('errorMessageMock') as unknown as FieldMessage;
 
       jest.mocked(get).mockReturnValueOnce(anyValidatorMock);
 

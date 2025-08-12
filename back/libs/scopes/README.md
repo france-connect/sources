@@ -89,6 +89,7 @@ The table below provides a clear view of the technical keys used by the library 
 | FT       | ft                        | France Travail                                                            |
 | MESRI    | mesri                     | Ministère de l’Enseignement supérieur, de la Recherche et de l’Innovation |
 | MI       | mi                        | Ministère de l’Intérieur                                                  |
+| DSNJ     | dsnj                      | Direction du Service National et de la Jeunesse                           |
 
 ### `claimIndex`
 

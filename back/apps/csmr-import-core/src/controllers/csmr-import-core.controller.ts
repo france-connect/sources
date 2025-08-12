@@ -26,11 +26,14 @@ export class CsmrImportCoreController {
     }),
   )
   async importServiceProvider(
-    @Payload() { payload }: CsmrImportCoreMessageDto,
+    @Payload() { payload, user }: CsmrImportCoreMessageDto,
   ): Promise<CsmrImportCoreExecutionReportInterface[] | 'ERROR'> {
     try {
       const response =
-        await this.importService.validateAndCreateServiceProvider(payload);
+        await this.importService.validateAndCreateServiceProvider(
+          payload,
+          user,
+        );
 
       this.logger.debug({ response });
 

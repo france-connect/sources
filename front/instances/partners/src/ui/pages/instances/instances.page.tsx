@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { useScrollTo } from '@fc/common';
 import { CreateInstanceButton, InstancesListComponent } from '@fc/core-partners';
 import { AlertComponent, Sizes, TileComponent } from '@fc/dsfr';
+import { SeeAlsoElement } from '@fc/forms';
 import { t } from '@fc/i18n';
 
 import { useInstances } from '../../../hooks';
@@ -19,6 +20,13 @@ export const InstancesPage = React.memo(() => {
     <div className="fr-col-12 fr-col-md-6">
       <div className="fr-col-12">
         <h1 data-testid="instances-page-title">{t('Partners.homepage.sandboxTitle')}</h1>
+        <p>
+          {t('Partners.homepage.baseline')}{' '}
+          <SeeAlsoElement
+            id="doc-sandbox"
+            url="https://docs.partenaires.franceconnect.gouv.fr/fs/devenir-fs/projet-bac-a-sable/"
+          />
+        </p>
       </div>
       {submitState && (
         <AlertComponent

@@ -131,6 +131,6 @@ if (!arg) {
   throw new Error('❌ Missing argument');
 } else {
   // Start reading i18n files for 'fr' and 'en'
-  readI18nFiles(arg, 'fr');
-  readI18nFiles(arg, 'en');
+  await readI18nFiles(arg, 'fr');
+  await readI18nFiles(arg, 'en');
 }

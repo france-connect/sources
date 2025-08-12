@@ -1,7 +1,15 @@
-import { ChoicesField, FieldTypes, InputField, SelectField, TextAreaField } from '@fc/forms';
+import {
+  ChoicesField,
+  ConsentField,
+  FieldTypes,
+  InputField,
+  SelectField,
+  TextAreaField,
+} from '@fc/forms';
 
 export const FieldsCommponentMap = {
   [FieldTypes.CHECKBOX]: ChoicesField,
+  [FieldTypes.CONSENT]: ConsentField,
   [FieldTypes.DATE]: InputField,
   [FieldTypes.EMAIL]: InputField,
   [FieldTypes.HIDDEN]: InputField,

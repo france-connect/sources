@@ -16,7 +16,7 @@ describe('ErrorPage', () => {
     // When
     const { container } = render(<ErrorPage />);
 
-    // expect
+    // Then
     expect(container).toMatchSnapshot();
   });
 
@@ -27,7 +27,7 @@ describe('ErrorPage', () => {
     // When
     const { container } = render(<ErrorPage />);
 
-    // expect
+    // Then
     expect(container).toMatchSnapshot();
   });
 
@@ -35,7 +35,7 @@ describe('ErrorPage', () => {
     // When
     render(<ErrorPage />);
 
-    // expect
+    // Then
     expect(Outlet).toHaveBeenCalledOnce();
   });
 
@@ -44,7 +44,7 @@ describe('ErrorPage', () => {
     const { getByText } = render(<ErrorPage />);
     const element = getByText('Revenir à l’accueil');
 
-    // expect
+    // Then
     expect(Link).toHaveBeenCalledOnce();
     expect(Link).toHaveBeenCalledWith(
       expect.objectContaining({ className: 'fr-btn fr-btn--secondary', to: '/' }),

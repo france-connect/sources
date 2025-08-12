@@ -196,9 +196,9 @@ describe('EuIdentityToFrController', () => {
     });
 
     it('should return an object with data from session and oidcProvider interaction', async () => {
-      // setup
+      // Given
 
-      // action
+      // When
       const result = await euIdentityToFrController.getInteraction(
         req,
         res,
@@ -206,7 +206,7 @@ describe('EuIdentityToFrController', () => {
         sessionServiceOidcMock,
       );
 
-      // expect
+      // Then
       expect(result).toStrictEqual({
         uid: interactionMock.uid,
         countryList: countryListMock,
@@ -296,7 +296,7 @@ describe('EuIdentityToFrController', () => {
     });
 
     it('should get the eidas response from the session', async () => {
-      // setup
+      // Given
       sessionServiceEidasMock.get.mockReturnValueOnce({
         eidasResponse: successEidasMandatoryJsonMock,
       });
@@ -304,7 +304,7 @@ describe('EuIdentityToFrController', () => {
         successOidcJson,
       );
 
-      // action
+      // When
       await euIdentityToFrController.finishInteraction(
         req,
         res,
@@ -312,7 +312,7 @@ describe('EuIdentityToFrController', () => {
         sessionServiceEidasMock,
       );
 
-      // expect
+      // Then
       expect(sessionServiceEidasMock.get).toHaveBeenCalledTimes(1);
       expect(sessionServiceEidasMock.get).toHaveBeenCalledWith();
     });
@@ -328,7 +328,7 @@ describe('EuIdentityToFrController', () => {
       });
 
       it('should not call getInteraction from oidcProvider', async () => {
-        // action
+        // When
         await euIdentityToFrController.finishInteraction(
           req,
           res,
@@ -336,12 +336,12 @@ describe('EuIdentityToFrController', () => {
           sessionServiceEidasMock,
         );
 
-        // expect
+        // Then
         expect(oidcProviderServiceMock.getInteraction).not.toHaveBeenCalled();
       });
 
       it('should not call mapPartialResponseFailure from eidasToOidc', async () => {
-        // action
+        // When
         await euIdentityToFrController.finishInteraction(
           req,
           res,
@@ -349,14 +349,14 @@ describe('EuIdentityToFrController', () => {
           sessionServiceEidasMock,
         );
 
-        // expect
+        // Then
         expect(
           eidasToOidcServiceMock.mapPartialResponseFailure,
         ).not.toHaveBeenCalled();
       });
 
       it('should not call mapPartialResponseFailure from eidasToOidc', async () => {
-        // action
+        // When
         await euIdentityToFrController.finishInteraction(
           req,
           res,
@@ -364,14 +364,14 @@ describe('EuIdentityToFrController', () => {
           sessionServiceEidasMock,
         );
 
-        // expect
+        // Then
         expect(
           eidasToOidcServiceMock.mapPartialResponseFailure,
         ).not.toHaveBeenCalled();
       });
 
       it('should not call mapPartialResponseFailure from eidasToOidc', async () => {
-        // action
+        // When
         await euIdentityToFrController.finishInteraction(
           req,
           res,
@@ -379,12 +379,12 @@ describe('EuIdentityToFrController', () => {
           sessionServiceEidasMock,
         );
 
-        // expect
+        // Then
         expect(buildRedirectUriErrorUrlMock).not.toHaveBeenCalled();
       });
 
       it('should call mapPartialResponseSuccess with the eidas response to get the partial oidc response', async () => {
-        // action
+        // When
         await euIdentityToFrController.finishInteraction(
           req,
           res,
@@ -392,7 +392,7 @@ describe('EuIdentityToFrController', () => {
           sessionServiceEidasMock,
         );
 
-        // expect
+        // Then
         expect(
           eidasToOidcServiceMock.mapPartialResponseSuccess,
         ).toHaveBeenCalledTimes(1);
@@ -402,11 +402,11 @@ describe('EuIdentityToFrController', () => {
       });
 
       it('should failed if userinfos are wrong and validate identity failed', async () => {
-        // setup
+        // Given
         const errorMock = new Error('Unknown Error');
         validateIdentityMock.mockReset().mockRejectedValueOnce(errorMock);
 
-        // action
+        // When
         await expect(
           () =>
             euIdentityToFrController.finishInteraction(
@@ -415,7 +415,7 @@ describe('EuIdentityToFrController', () => {
               sessionServiceOidcMock,
               sessionServiceEidasMock,
             ),
-          // expect
+          // Then
         ).rejects.toThrow('Unknown Error');
 
         expect(
@@ -425,7 +425,7 @@ describe('EuIdentityToFrController', () => {
       });
 
       it('should `set` to update the oidc session with the identity to send to the SP', async () => {
-        // setup
+        // Given
         const expectedUpdatedSession = {
           idpIdentity: { sub: 'BE/FR/12345' },
           spAcr: successOidcJson.acr,
@@ -440,7 +440,7 @@ describe('EuIdentityToFrController', () => {
           },
         };
 
-        // action
+        // When
         await euIdentityToFrController.finishInteraction(
           req,
           res,
@@ -448,7 +448,7 @@ describe('EuIdentityToFrController', () => {
           sessionServiceEidasMock,
         );
 
-        // expect
+        // Then
         expect(sessionServiceOidcMock.set).toHaveBeenCalledTimes(1);
         expect(sessionServiceOidcMock.set).toHaveBeenCalledWith(
           expectedUpdatedSession,
@@ -456,7 +456,7 @@ describe('EuIdentityToFrController', () => {
       });
 
       it('should finish the oidc provider interaction passing req and res', async () => {
-        // action
+        // When
         await euIdentityToFrController.finishInteraction(
           req,
           res,
@@ -464,7 +464,7 @@ describe('EuIdentityToFrController', () => {
           sessionServiceEidasMock,
         );
 
-        // expect
+        // Then
         expect(oidcProviderServiceMock.finishInteraction).toHaveBeenCalledTimes(
           1,
         );
@@ -493,7 +493,7 @@ describe('EuIdentityToFrController', () => {
       });
 
       it('should retrieves the interaction using req and res', async () => {
-        // action
+        // When
         await euIdentityToFrController.finishInteraction(
           req,
           res,
@@ -501,7 +501,7 @@ describe('EuIdentityToFrController', () => {
           sessionServiceEidasMock,
         );
 
-        // expect
+        // Then
         expect(oidcProviderServiceMock.getInteraction).toHaveBeenCalledTimes(1);
         expect(oidcProviderServiceMock.getInteraction).toHaveBeenCalledWith(
           req,
@@ -510,7 +510,7 @@ describe('EuIdentityToFrController', () => {
       });
 
       it('should call mapPartialResponseFailure with the eidas response to get the partial oidc response', async () => {
-        // action
+        // When
         await euIdentityToFrController.finishInteraction(
           req,
           res,
@@ -518,7 +518,7 @@ describe('EuIdentityToFrController', () => {
           sessionServiceEidasMock,
         );
 
-        // expect
+        // Then
         expect(
           eidasToOidcServiceMock.mapPartialResponseFailure,
         ).toHaveBeenCalledTimes(1);
@@ -528,12 +528,12 @@ describe('EuIdentityToFrController', () => {
       });
 
       it('should call buildRedirectUriErrorUrl with with the params from the interaction and the oidcError returned by the mapper', async () => {
-        // setup
+        // Given
         eidasToOidcServiceMock.mapPartialResponseFailure.mockReturnValueOnce(
           failureOidcJson,
         );
 
-        // action
+        // When
         await euIdentityToFrController.finishInteraction(
           req,
           res,
@@ -541,7 +541,7 @@ describe('EuIdentityToFrController', () => {
           sessionServiceEidasMock,
         );
 
-        // expect
+        // Then
         expect(buildRedirectUriErrorUrlMock).toHaveBeenCalledTimes(1);
         expect(buildRedirectUriErrorUrlMock).toHaveBeenCalledWith(
           interactionMock.params,
@@ -550,7 +550,7 @@ describe('EuIdentityToFrController', () => {
       });
 
       it('should redirect the user to the SP callback with the oidc error', async () => {
-        // setup
+        // Given
         eidasToOidcServiceMock.mapPartialResponseFailure.mockReturnValueOnce(
           failureOidcJson,
         );
@@ -558,7 +558,7 @@ describe('EuIdentityToFrController', () => {
           redirectUriErrorUrlMock,
         );
 
-        // action
+        // When
         await euIdentityToFrController.finishInteraction(
           req,
           res,
@@ -566,20 +566,20 @@ describe('EuIdentityToFrController', () => {
           sessionServiceEidasMock,
         );
 
-        // expect
+        // Then
         expect(res.redirect).toHaveBeenCalledTimes(1);
         expect(res.redirect).toHaveBeenCalledWith(redirectUriErrorUrlMock);
       });
 
       it('should return the promise from the res.redirect', async () => {
-        // setup
+        // Given
         eidasToOidcServiceMock.mapPartialResponseFailure.mockReturnValueOnce(
           failureOidcJson,
         );
         const expectedRedirect = Symbol('expectedRedirect');
         res.redirect.mockResolvedValueOnce(expectedRedirect);
 
-        // action
+        // When
         const result = await euIdentityToFrController.finishInteraction(
           req,
           res,
@@ -587,12 +587,12 @@ describe('EuIdentityToFrController', () => {
           sessionServiceEidasMock,
         );
 
-        // expect
+        // Then
         expect(result).toStrictEqual(expectedRedirect);
       });
 
       it('should not call mapPartialResponseSuccess', async () => {
-        // action
+        // When
         await euIdentityToFrController.finishInteraction(
           req,
           res,
@@ -600,14 +600,14 @@ describe('EuIdentityToFrController', () => {
           sessionServiceEidasMock,
         );
 
-        // expect
+        // Then
         expect(
           eidasToOidcServiceMock.mapPartialResponseSuccess,
         ).not.toHaveBeenCalled();
       });
 
       it('should not call `sessionOidc.set()`', async () => {
-        // action
+        // When
         await euIdentityToFrController.finishInteraction(
           req,
           res,
@@ -615,12 +615,12 @@ describe('EuIdentityToFrController', () => {
           sessionServiceEidasMock,
         );
 
-        // expect
+        // Then
         expect(sessionServiceOidcMock.set).not.toHaveBeenCalled();
       });
 
       it('should not call finishInteraction', async () => {
-        // action
+        // When
         await euIdentityToFrController.finishInteraction(
           req,
           res,
@@ -628,7 +628,7 @@ describe('EuIdentityToFrController', () => {
           sessionServiceEidasMock,
         );
 
-        // expect
+        // Then
         expect(
           oidcProviderServiceMock.finishInteraction,
         ).not.toHaveBeenCalled();
@@ -648,13 +648,13 @@ describe('EuIdentityToFrController', () => {
     });
 
     it('should succeed to validate identity', async () => {
-      // arrange
+      // Given
       validateDtoMock.mockResolvedValueOnce([]);
 
-      // action
+      // When
       await euIdentityToFrController['validateIdentity'](identityMock);
 
-      // assert
+      // Then
       expect(validateDtoMock).toHaveBeenCalledTimes(1);
       expect(validateDtoMock).toHaveBeenCalledWith(
         identityMock,
@@ -669,20 +669,20 @@ describe('EuIdentityToFrController', () => {
     });
 
     it('should failed to validate identity', async () => {
-      // arrange
+      // Given
       validateDtoMock.mockResolvedValueOnce(['Unknown Error']);
 
       await expect(
-        // action
+        // When
         euIdentityToFrController['validateIdentity'](identityMock),
-        // assert
+        // Then
       ).rejects.toThrow(EidasBridgeInvalidEUIdentityException);
     });
   });
 
   describe('buildRedirectUriErrorUrl', () => {
     it('should build a redirect uri with oidc params error', () => {
-      // setup
+      // Given
       const oidcErrorMock = {
         error: 'error',
         error_description: 'error_description',
@@ -694,13 +694,13 @@ describe('EuIdentityToFrController', () => {
       const expectedUrl =
         'https://redirect.url?error=error&error_description=error_description&state=texas';
 
-      // action
+      // When
       const result = euIdentityToFrController['buildRedirectUriErrorUrl'](
         paramsMock,
         oidcErrorMock,
       );
 
-      // expect
+      // Then
       expect(result).toStrictEqual(expectedUrl);
     });
   });

@@ -17,197 +17,197 @@ describe('EidasToOidcMapper', () => {
 
     describe('getSub', () => {
       it('should call getSub with the eidas attributes and return the sub', () => {
-        // setup
+        // Given
         const expected = {
           sub: '57770c28716497d912e64399024b0d70acd9f7e325198f04df29ce0d0572d50fv2',
         };
 
-        // action
+        // When
         const result =
           AttributesToClaimsMap[EidasAttributes.PERSON_IDENTIFIER](
             attributesMock,
           );
 
-        // expect
+        // Then
         expect(result).toStrictEqual(expected);
       });
 
       it('should call getSub with the eidas attributes and return an undefined sub if not present', () => {
-        // setup
+        // Given
         const emptyAttributesMock = {};
         const expected = {
           sub: undefined,
         };
 
-        // action
+        // When
         const result =
           AttributesToClaimsMap[EidasAttributes.PERSON_IDENTIFIER](
             emptyAttributesMock,
           );
 
-        // expect
+        // Then
         expect(result).toStrictEqual(expected);
       });
     });
 
     describe('getGender', () => {
       it('should call getGender with the eidas attributes and return the gender', () => {
-        // setup
+        // Given
         const expected = { gender: 'female' };
 
-        // action
+        // When
         const result =
           AttributesToClaimsMap[EidasAttributes.GENDER](attributesMock);
 
-        // expect
+        // Then
         expect(result).toStrictEqual(expected);
       });
 
       it('should call getGender with the eidas attributes and return an undefined gender if not present', () => {
-        // setup
+        // Given
         const emptyAttributesMock = {};
         const expected = {
           gender: undefined,
         };
 
-        // action
+        // When
         const result =
           AttributesToClaimsMap[EidasAttributes.GENDER](emptyAttributesMock);
 
-        // expect
+        // Then
         expect(result).toStrictEqual(expected);
       });
     });
 
     describe('getBirthdate', () => {
       it('should call getBirthdate with the eidas attributes and return the birthdate', () => {
-        // setup
+        // Given
         const expected = { birthdate: '1962-08-24' };
 
-        // action
+        // When
         const result =
           AttributesToClaimsMap[EidasAttributes.DATE_OF_BIRTH](attributesMock);
 
-        // expect
+        // Then
         expect(result).toStrictEqual(expected);
       });
 
       it('should call getBirthdate with the eidas attributes and return an undefined birthdate if not present', () => {
-        // setup
+        // Given
         const emptyAttributesMock = {};
         const expected = {
           birthdate: undefined,
         };
 
-        // action
+        // When
         const result =
           AttributesToClaimsMap[EidasAttributes.DATE_OF_BIRTH](
             emptyAttributesMock,
           );
 
-        // expect
+        // Then
         expect(result).toStrictEqual(expected);
       });
     });
 
     describe('getBirthplace', () => {
       it('should call getBirthplace with the eidas attributes and return the birthplace', () => {
-        // setup
+        // Given
         const expected = { birthplace: 'Tokyo' };
 
-        // action
+        // When
         const result =
           AttributesToClaimsMap[EidasAttributes.PLACE_OF_BIRTH](attributesMock);
 
-        // expect
+        // Then
         expect(result).toStrictEqual(expected);
       });
 
       it('should call getBirthplace with the eidas attributes and return an undefined birthplace if not present', () => {
-        // setup
+        // Given
         const emptyAttributesMock = {};
         const expected = {
           birthplace: undefined,
         };
 
-        // action
+        // When
         const result =
           AttributesToClaimsMap[EidasAttributes.PLACE_OF_BIRTH](
             emptyAttributesMock,
           );
 
-        // expect
+        // Then
         expect(result).toStrictEqual(expected);
       });
     });
 
     describe('getGivenNames', () => {
       it('should call getGivenNames with the eidas attributes and return the given names', () => {
-        // setup
+        // Given
         const expected = { given_name: 'Angela Claire Louise' };
 
-        // action
+        // When
         const result =
           AttributesToClaimsMap[EidasAttributes.CURRENT_GIVEN_NAME](
             attributesMock,
           );
 
-        // expect
+        // Then
         expect(result).toStrictEqual(expected);
       });
 
       it('should call getGivenNames with the eidas attributes and return an undefined given_name if not present', () => {
-        // setup
+        // Given
         const emptyAttributesMock = {};
         const expected = {
           given_name: undefined,
         };
 
-        // action
+        // When
         const result =
           AttributesToClaimsMap[EidasAttributes.CURRENT_GIVEN_NAME](
             emptyAttributesMock,
           );
 
-        // expect
+        // Then
         expect(result).toStrictEqual(expected);
       });
     });
 
     describe('getFamilyName', () => {
       it('should call with the eidas attributes and return the family name and the preferred_username', () => {
-        // setup
+        // Given
         const expected = {
           family_name: 'DUBOIS',
           preferred_username: 'DUBOIS',
         };
 
-        // action
+        // When
         const result =
           AttributesToClaimsMap[EidasAttributes.CURRENT_FAMILY_NAME](
             attributesMock,
           );
 
-        // expect
+        // Then
         expect(result).toStrictEqual(expected);
       });
     });
 
     it('should call getFamilyName with the eidas attributes and return undefined family_name and preferred_username if not present', () => {
-      // setup
+      // Given
       const emptyAttributesMock = {};
       const expected = {
         family_name: undefined,
         preferred_username: undefined,
       };
 
-      // action
+      // When
       const result =
         AttributesToClaimsMap[EidasAttributes.CURRENT_FAMILY_NAME](
           emptyAttributesMock,
         );
 
-      // expect
+      // Then
       expect(result).toStrictEqual(expected);
     });
   });

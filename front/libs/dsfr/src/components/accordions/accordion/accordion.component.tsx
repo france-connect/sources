@@ -1,10 +1,10 @@
 import classnames from 'classnames';
-import type * as CSS from 'csstype';
 import type { PropsWithChildren } from 'react';
 import React, { useCallback, useId } from 'react';
 
-import { HeadingTag, useContentHeight } from '@fc/common';
+import { HeadingTag } from '@fc/common';
 
+import { useAccordion } from '../../../hooks/accordion';
 import type { AccordionGroupItemInterface } from '../../../interfaces';
 
 interface AccordionComponentProps
@@ -29,24 +29,14 @@ export const AccordionComponent = React.memo(
     title,
     titleClassname,
   }: AccordionComponentProps) => {
+    const { contentRef, contentStyle } = useAccordion(opened);
+
     const localId = useId();
 
     const uniqId = id || localId;
     const dataTestIdPrefix = `AccordionComponent`;
     const dataTestId = `${dataTestIdPrefix}-${uniqId}`;
     const ariaControlId = `accordion-aria-control-${uniqId}`;
-
-    // @SEE https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1147
-    const { contentHeight, contentRef } = useContentHeight();
-
-    const contentStyle: CSS.DSFRCustomProperties = {
-      // DSFR classname
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      '--collapse': `-${contentHeight}px`,
-      // DSFR classname
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      '--collapse-max-height': 'none',
-    };
 
     const Heading = HeadingElement || HeadingTag.H3;
 

@@ -8,21 +8,34 @@ exports[`InstanceUpdatePage should call AlertComponent with info params 1`] = `
     Partners-form-updateTitle-mock
   </h1>
   <div
+    class="fr-col-12 fr-col-md-8"
+  >
+    <p>
+      Partners.instance.updateIntro-mock
+       
+      <span
+        data-mockid="LinkComponent"
+      >
+        documentation partenaires
+      </span>
+    </p>
+  </div>
+  <div
     data-mockid="AlertComponent"
   >
     <div>
       AlertComponent
     </div>
     <div>
-      <p>
-        Consulter notre
+      <h3
+        class="fr-alert__title"
+      >
+        Partners.instance.noticeTitle-mock
          
-        <span
-          data-mockid="LinkComponent"
-        >
-          documentation partenaires
-        </span>
-      </p>
+        <div
+          data-mockid="SeeAlsoElement"
+        />
+      </h3>
     </div>
   </div>
   <div
@@ -47,21 +60,34 @@ exports[`InstanceUpdatePage should call LinkComponent with params 1`] = `
     Partners-form-updateTitle-mock
   </h1>
   <div
+    class="fr-col-12 fr-col-md-8"
+  >
+    <p>
+      Partners.instance.updateIntro-mock
+       
+      <span
+        data-mockid="LinkComponent"
+      >
+        documentation partenaires
+      </span>
+    </p>
+  </div>
+  <div
     data-mockid="AlertComponent"
   >
     <div>
       AlertComponent
     </div>
     <div>
-      <p>
-        Consulter notre
+      <h3
+        class="fr-alert__title"
+      >
+        Partners.instance.noticeTitle-mock
          
-        <span
-          data-mockid="LinkComponent"
-        >
-          documentation partenaires
-        </span>
-      </p>
+        <div
+          data-mockid="SeeAlsoElement"
+        />
+      </h3>
     </div>
   </div>
   <div
@@ -86,21 +112,34 @@ exports[`InstanceUpdatePage should match the snapshot 1`] = `
     Partners-form-updateTitle-mock
   </h1>
   <div
+    class="fr-col-12 fr-col-md-8"
+  >
+    <p>
+      Partners.instance.updateIntro-mock
+       
+      <span
+        data-mockid="LinkComponent"
+      >
+        documentation partenaires
+      </span>
+    </p>
+  </div>
+  <div
     data-mockid="AlertComponent"
   >
     <div>
       AlertComponent
     </div>
     <div>
-      <p>
-        Consulter notre
+      <h3
+        class="fr-alert__title"
+      >
+        Partners.instance.noticeTitle-mock
          
-        <span
-          data-mockid="LinkComponent"
-        >
-          documentation partenaires
-        </span>
-      </p>
+        <div
+          data-mockid="SeeAlsoElement"
+        />
+      </h3>
     </div>
   </div>
   <div

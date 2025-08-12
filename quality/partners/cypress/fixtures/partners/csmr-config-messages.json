@@ -44,7 +44,9 @@
       "id_token_encrypted_response_enc": "",
       "userinfo_signed_response_alg": "ES256",
       "userinfo_encrypted_response_alg": "",
-      "userinfo_encrypted_response_enc": ""
+      "userinfo_encrypted_response_enc": "",
+      "createdBy": "cypress",
+      "createdVia": "les tests de qualité"
     },
     "meta": {
       "instanceId": "997abfe2-a19a-49c9-a2c2-138798dde859",
@@ -96,7 +98,9 @@
       "id_token_encrypted_response_enc": "",
       "userinfo_signed_response_alg": "ES256",
       "userinfo_encrypted_response_alg": "",
-      "userinfo_encrypted_response_enc": ""
+      "userinfo_encrypted_response_enc": "",
+      "createdBy": "cypress",
+      "createdVia": "les tests de qualité"
     },
     "meta": {
       "instanceId": "997abfe2-a19a-49c9-a2c2-138798dde859",

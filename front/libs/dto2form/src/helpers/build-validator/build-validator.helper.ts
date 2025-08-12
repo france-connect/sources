@@ -1,4 +1,6 @@
-import get from 'lodash.get';
+import { get } from 'lodash';
+
+import type { FieldMessage } from '@fc/forms';
 
 import { Validators } from '../../enums';
 import type { FieldValidatorInterface } from '../../interfaces';
@@ -11,7 +13,7 @@ export const buildValidator = (
 
   const validator = get(Validators, name);
 
-  return (msg: string) => (fieldValue: string) => {
+  return (msg: FieldMessage) => (fieldValue: string) => {
     const cleanValue = fieldValue && fieldValue.trim();
 
     const isOptionalFieldWithoutValue = allowEmptyValue && !cleanValue;

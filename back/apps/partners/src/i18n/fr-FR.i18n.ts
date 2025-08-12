@@ -33,9 +33,10 @@ export const frFR: I18nTranslationsMapType = {
   'Form.label.platform': 'Choix de l’environnement',
   'Form.label.signupId': 'Numéro de la demande datapass',
   'Form.label.site': 'URL du site',
-  'Form.label.redirect_uris': 'URL de connexion',
-  'Form.label.post_logout_redirect_uris': 'URL de déconnexion',
-  'Form.label.sector_identifier_uri': 'Sector identifier',
+  'Form.label.redirect_uris': 'URL(s) de redirection de connexion',
+  'Form.label.post_logout_redirect_uris':
+    'URL(s) de redirection de déconnexion',
+  'Form.label.sector_identifier_uri': 'URL d’identifiant de secteur',
   'Form.label.IPServerAddressesAndRanges': 'Adresse IP',
   'Form.label.id_token_signed_response_alg': 'Algorithme de signature',
   'Form.label.entityId': 'Client ID à réutiliser pour générer les subs',
@@ -48,19 +49,19 @@ export const frFR: I18nTranslationsMapType = {
   'Form.hint.signupId':
     'Renseignez ici le numéro de la demande Datapass qui a été validée',
   'Form.hint.site':
-    'Renseignez ici votre url de site\r\nExemple : https://www.paris.fr/',
+    'Renseignez ici l’URL de la page affichant le bouton FranceConnect',
   'Form.hint.redirect_uris':
-    'Renseignez ici vos urls de callback\r\nExemple : https://www.paris.fr/callback',
+    'Renseignez ici vos urls de callback. Si vous souhaitez utiliser des urls sur plusieurs domaines et sous domaines, vous devez déclarer une url d’identifiant de secteur.',
   'Form.hint.post_logout_redirect_uris':
     'Renseignez ici vos urls de logout\r\nExemple : https://www.paris.fr/logout',
   'Form.hint.sector_identifier_uri':
-    'Renseignez ici votre url de sector identifier',
+    'Renseignez ici votre url d’identifiant de secteur si vous souhaitez utiliser des urls de connexion ayant plusieurs domaines et sous domaines.',
   'Form.hint.IPServerAddressesAndRanges':
     'Renseignez ici les adresses IP utilisées par votre Fournisseur de Service',
   'Form.hint.id_token_signed_response_alg':
-    'Renseignez ici l’algorithme de signature que vous souhaitez utiliser pour la signature des jetons transmis par FranceConnect',
+    'Renseignez ici votre algorithme de signature que vous souhaitez utiliser pour la signature des jetons transmis par FranceConnect.',
   'Form.hint.entityId':
-    'Veuillez saisir le client id de votre fournisseur de service FranceConnect v1',
+    'Veuillez saisir le client id de votre fournisseur de service FranceConnect v1.',
 
   // common error field
   // name

@@ -3,9 +3,7 @@ import { render } from '@testing-library/react';
 import { AccountContext } from '@fc/account';
 import { EventTypes, useSafeContext } from '@fc/common';
 import { ConfigService } from '@fc/config';
-import { AlertComponent, Sizes } from '@fc/dsfr';
-import { useStylesQuery, useStylesVariables } from '@fc/styles';
-import type { FraudConfigInterface } from '@fc/user-dashboard';
+import type { FraudConfigInterface } from '@fc/core-user-dashboard';
 import {
   AuthenticationEventIdCallout,
   FraudFormComponent,
@@ -13,7 +11,9 @@ import {
   FraudSurveyIntroductionComponent,
   useFraudFormApi,
   useGetFraudSurveyOrigin,
-} from '@fc/user-dashboard';
+} from '@fc/core-user-dashboard';
+import { AlertComponent, Sizes } from '@fc/dsfr';
+import { useStylesQuery, useStylesVariables } from '@fc/styles';
 
 import { FraudFormPage } from './fraud-form.page';
 

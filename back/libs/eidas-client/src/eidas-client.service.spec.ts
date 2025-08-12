@@ -106,19 +106,19 @@ describe('EidasClientService', () => {
     });
 
     it('should get the connectorRequestCache and the connectorResponseCache from the config', () => {
-      // action
+      // When
       service.onModuleInit();
 
-      // expect
+      // Then
       expect(configServiceMock.get).toHaveBeenCalledTimes(1);
       expect(configServiceMock.get).toHaveBeenCalledWith('EidasClient');
     });
 
     it('should get the call the apacheIgnite service to retrieve the connector request cache', () => {
-      // action
+      // When
       service.onModuleInit();
 
-      // expect
+      // Then
       expect(apacheIgniteServiceMock.getCache).toHaveBeenCalledTimes(2);
       expect(apacheIgniteServiceMock.getCache).toHaveBeenNthCalledWith(
         1,
@@ -127,7 +127,7 @@ describe('EidasClientService', () => {
     });
 
     it('should store the connector response cache in the private service.connectorRequestCache', () => {
-      // setup
+      // Given
       const connectorRequestCacheMock = {
         foo: jest.fn(),
       };
@@ -139,17 +139,17 @@ describe('EidasClientService', () => {
         .mockReturnValueOnce(connectorRequestCacheMock)
         .mockReturnValueOnce(connectorResponseCacheMock);
 
-      // action
+      // When
       service.onModuleInit();
 
-      // expect
+      // Then
       expect(service['connectorRequestCache']).toStrictEqual(
         connectorRequestCacheMock,
       );
     });
 
     it('should store the connector response cache in the private service.connectorRequestCache', () => {
-      // setup
+      // Given
       const connectorRequestCacheMock = {
         foo: jest.fn(),
       };
@@ -161,20 +161,20 @@ describe('EidasClientService', () => {
         .mockReturnValueOnce(connectorRequestCacheMock)
         .mockReturnValueOnce(connectorResponseCacheMock);
 
-      // action
+      // When
       service.onModuleInit();
 
-      // expect
+      // Then
       expect(service['connectorResponseCache']).toStrictEqual(
         connectorResponseCacheMock,
       );
     });
 
     it('should get the call the apacheIgnite service to retrieve the connector response cache', () => {
-      // action
+      // When
       service.onModuleInit();
 
-      // expect
+      // Then
       expect(apacheIgniteServiceMock.getCache).toHaveBeenCalledTimes(2);
       expect(apacheIgniteServiceMock.getCache).toHaveBeenNthCalledWith(
         2,
@@ -183,7 +183,7 @@ describe('EidasClientService', () => {
     });
 
     it('should store the connector response cache in the private service.connectorRequestCache', () => {
-      // setup
+      // Given
       const connectorRequestCacheMock = {
         foo: jest.fn(),
       };
@@ -195,10 +195,10 @@ describe('EidasClientService', () => {
         .mockReturnValueOnce(connectorRequestCacheMock)
         .mockReturnValueOnce(connectorResponseCacheMock);
 
-      // action
+      // When
       service.onModuleInit();
 
-      // expect
+      // Then
       expect(service['connectorResponseCache']).toStrictEqual(
         connectorResponseCacheMock,
       );
@@ -233,10 +233,10 @@ describe('EidasClientService', () => {
     const countryMock = EidasCountries.BELGIUM;
 
     it('should generate a 64 bytes random for the request id', () => {
-      // action
+      // When
       service.completeEidasRequest(partialRequestJson, countryMock);
 
-      // expect
+      // Then
       expect(cryptographyServiceMock.genRandomString).toHaveBeenCalledTimes(2);
       expect(cryptographyServiceMock.genRandomString).toHaveBeenNthCalledWith(
         1,
@@ -245,10 +245,10 @@ describe('EidasClientService', () => {
     });
 
     it('should generate a 32 bytes random for the request relay state', () => {
-      // action
+      // When
       service.completeEidasRequest(partialRequestJson, countryMock);
 
-      // expect
+      // Then
       expect(cryptographyServiceMock.genRandomString).toHaveBeenCalledTimes(2);
       expect(cryptographyServiceMock.genRandomString).toHaveBeenNthCalledWith(
         2,
@@ -257,18 +257,18 @@ describe('EidasClientService', () => {
     });
 
     it('should return the complete eidas request', () => {
-      // setup
+      // Given
       cryptographyServiceMock.genRandomString
         .mockReturnValueOnce(requestJson.id)
         .mockReturnValueOnce(requestJson.relayState);
 
-      // action
+      // When
       const result = service.completeEidasRequest(
         partialRequestJson,
         countryMock,
       );
 
-      // expect
+      // Then
       expect(result).toStrictEqual(requestJson);
     });
   });
@@ -287,19 +287,19 @@ describe('EidasClientService', () => {
     });
 
     it('should get the connectorRequestIssuer from the config', () => {
-      // action
+      // When
       service.prepareLightRequest(requestMock);
 
-      // expect
+      // Then
       expect(configServiceMock.get).toHaveBeenCalledTimes(1);
       expect(configServiceMock.get).toHaveBeenCalledWith('EidasClient');
     });
 
     it('should generate a token with the id in the request and the connectorRequestIssuer using the light request service', () => {
-      // action
+      // When
       service.prepareLightRequest(requestMock);
 
-      // expect
+      // Then
       expect(lightRequestServiceMock.generateToken).toHaveBeenCalledTimes(1);
       expect(lightRequestServiceMock.generateToken).toHaveBeenCalledWith(
         requestMock.id,
@@ -308,10 +308,10 @@ describe('EidasClientService', () => {
     });
 
     it('should generate build a light request XML with the light request service "formatRequest" function', () => {
-      // action
+      // When
       service.prepareLightRequest(requestMock);
 
-      // expect
+      // Then
       expect(lightRequestServiceMock.formatRequest).toHaveBeenCalledTimes(1);
       expect(lightRequestServiceMock.formatRequest).toHaveBeenCalledWith(
         requestMock,
@@ -324,10 +324,10 @@ describe('EidasClientService', () => {
     const lightRequest = 'lightRequest';
 
     it('should put write the given light request in cache with the given id calling the connectorRequestCache put method', async () => {
-      // action
+      // When
       await service.writeLightRequestInCache(id, lightRequest);
 
-      // expect
+      // Then
       expect(connectorRequestCacheMock.put).toHaveBeenCalledTimes(1);
       expect(connectorRequestCacheMock.put).toHaveBeenCalledWith(
         id,
@@ -336,10 +336,10 @@ describe('EidasClientService', () => {
     });
 
     it('should throw a WriteLightRequestInCacheException if something went wrong when writing the light request in the cache', async () => {
-      // setup
+      // Given
       connectorRequestCacheMock.put.mockRejectedValueOnce(new Error('any'));
 
-      // action / expect
+      // When / Then
       await expect(
         service.writeLightRequestInCache(id, lightRequest),
       ).rejects.toThrowError(WriteLightRequestInCacheException);
@@ -356,19 +356,19 @@ describe('EidasClientService', () => {
     });
 
     it('should parse the given token with parseToken from light response service', async () => {
-      // action
+      // When
       await service.readLightResponseFromCache(token);
 
-      // expect
+      // Then
       expect(lightResponseServiceMock.parseToken).toHaveBeenCalledTimes(1);
       expect(lightResponseServiceMock.parseToken).toHaveBeenCalledWith(token);
     });
 
     it('should put write the given light request in cache with the given id calling the connectorRequestCache put method', async () => {
-      // action
+      // When
       await service.readLightResponseFromCache(token);
 
-      // expect
+      // Then
       expect(connectorResponseCacheMock.get).toHaveBeenCalledTimes(1);
       expect(connectorResponseCacheMock.get).toHaveBeenCalledWith(
         tokenParsed.id,
@@ -376,24 +376,24 @@ describe('EidasClientService', () => {
     });
 
     it('should return the light response from the cache', async () => {
-      // setup
+      // Given
       const expectedLightResponse = "Look at me, I'm the LightResponse now !";
       connectorResponseCacheMock.get.mockResolvedValueOnce(
         expectedLightResponse,
       );
 
-      // action
+      // When
       const result = await service.readLightResponseFromCache(token);
 
-      // expect
+      // Then
       expect(result).toStrictEqual(expectedLightResponse);
     });
 
     it('should throw a ReadLightResponseFromCacheException if something went wrong when writing the light request in the cache', async () => {
-      // setup
+      // Given
       connectorResponseCacheMock.get.mockRejectedValueOnce(new Error('any'));
 
-      // action / expect
+      // When / Then
       await expect(
         service.readLightResponseFromCache(token),
       ).rejects.toThrowError(ReadLightResponseFromCacheException);
@@ -404,10 +404,10 @@ describe('EidasClientService', () => {
     const lightResponse = 'Tchoo ! tchoo ! Response is comming !';
 
     it('should parse the light response using the parseResponse method from the light request service', () => {
-      // action
+      // When
       service.parseLightResponse(lightResponse);
 
-      // expect
+      // Then
       expect(lightResponseServiceMock.parseResponse).toHaveBeenCalledTimes(1);
       expect(lightResponseServiceMock.parseResponse).toHaveBeenCalledWith(
         lightResponse,
@@ -415,16 +415,16 @@ describe('EidasClientService', () => {
     });
 
     it('should return the response parsed as json', () => {
-      // setup
+      // Given
       const response = {
         id: 'id',
       };
       lightResponseServiceMock.parseResponse.mockReturnValueOnce(response);
 
-      // action
+      // When
       const result = service.parseLightResponse(lightResponse);
 
-      // expect
+      // Then
       expect(result).toStrictEqual(response);
     });
   });

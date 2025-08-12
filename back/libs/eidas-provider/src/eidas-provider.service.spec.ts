@@ -117,19 +117,19 @@ describe('EidasProviderService', () => {
     });
 
     it('should get the proxyServiceRequestCache and the proxyServiceResponseCache from the config', () => {
-      // action
+      // When
       service.onModuleInit();
 
-      // expect
+      // Then
       expect(configServiceMock.get).toHaveBeenCalledTimes(1);
       expect(configServiceMock.get).toHaveBeenCalledWith('EidasProvider');
     });
 
     it('should get the call the apacheIgnite service to retrieve the proxyService request cache', () => {
-      // action
+      // When
       service.onModuleInit();
 
-      // expect
+      // Then
       expect(apacheIgniteServiceMock.getCache).toHaveBeenCalledTimes(2);
       expect(apacheIgniteServiceMock.getCache).toHaveBeenNthCalledWith(
         1,
@@ -138,7 +138,7 @@ describe('EidasProviderService', () => {
     });
 
     it('should store the proxyService response cache in the private service.proxyServiceRequestCache', () => {
-      // setup
+      // Given
       const proxyServiceRequestCacheMock = {
         foo: jest.fn(),
       };
@@ -150,17 +150,17 @@ describe('EidasProviderService', () => {
         .mockReturnValueOnce(proxyServiceRequestCacheMock)
         .mockReturnValueOnce(proxyServiceResponseCacheMock);
 
-      // action
+      // When
       service.onModuleInit();
 
-      // expect
+      // Then
       expect(service['proxyServiceRequestCache']).toStrictEqual(
         proxyServiceRequestCacheMock,
       );
     });
 
     it('should store the proxyService response cache in the private service.proxyServiceRequestCache', () => {
-      // setup
+      // Given
       const proxyServiceRequestCacheMock = {
         foo: jest.fn(),
       };
@@ -172,20 +172,20 @@ describe('EidasProviderService', () => {
         .mockReturnValueOnce(proxyServiceRequestCacheMock)
         .mockReturnValueOnce(proxyServiceResponseCacheMock);
 
-      // action
+      // When
       service.onModuleInit();
 
-      // expect
+      // Then
       expect(service['proxyServiceResponseCache']).toStrictEqual(
         proxyServiceResponseCacheMock,
       );
     });
 
     it('should get the call the apacheIgnite service to retrieve the proxyService response cache', () => {
-      // action
+      // When
       service.onModuleInit();
 
-      // expect
+      // Then
       expect(apacheIgniteServiceMock.getCache).toHaveBeenCalledTimes(2);
       expect(apacheIgniteServiceMock.getCache).toHaveBeenNthCalledWith(
         2,
@@ -194,7 +194,7 @@ describe('EidasProviderService', () => {
     });
 
     it('should store the proxyService response cache in the private service.proxyServiceRequestCache', () => {
-      // setup
+      // Given
       const proxyServiceRequestCacheMock = {
         foo: jest.fn(),
       };
@@ -206,10 +206,10 @@ describe('EidasProviderService', () => {
         .mockReturnValueOnce(proxyServiceRequestCacheMock)
         .mockReturnValueOnce(proxyServiceResponseCacheMock);
 
-      // action
+      // When
       service.onModuleInit();
 
-      // expect
+      // Then
       expect(service['proxyServiceResponseCache']).toStrictEqual(
         proxyServiceResponseCacheMock,
       );
@@ -226,19 +226,19 @@ describe('EidasProviderService', () => {
     });
 
     it('should parse the given token with parseToken from light request service', async () => {
-      // action
+      // When
       await service.readLightRequestFromCache(token);
 
-      // expect
+      // Then
       expect(lightRequestServiceMock.parseToken).toHaveBeenCalledTimes(1);
       expect(lightRequestServiceMock.parseToken).toHaveBeenCalledWith(token);
     });
 
     it('should read the light request in cache with the given id calling the proxyServiceRequestCache get method', async () => {
-      // action
+      // When
       await service.readLightRequestFromCache(token);
 
-      // expect
+      // Then
       expect(proxyServiceRequestCacheMock.get).toHaveBeenCalledTimes(1);
       expect(proxyServiceRequestCacheMock.get).toHaveBeenCalledWith(
         tokenParsed.id,
@@ -246,24 +246,24 @@ describe('EidasProviderService', () => {
     });
 
     it('should return the light request from the cache', async () => {
-      // setup
+      // Given
       const expectedLightRequest = "Look at me, I'm the LightRequest now !";
       proxyServiceRequestCacheMock.get.mockResolvedValueOnce(
         expectedLightRequest,
       );
 
-      // action
+      // When
       const result = await service.readLightRequestFromCache(token);
 
-      // expect
+      // Then
       expect(result).toStrictEqual(expectedLightRequest);
     });
 
     it('should throw a ReadLightRequestFromCacheException if something went wrong when writing the light request in the cache', async () => {
-      // setup
+      // Given
       proxyServiceRequestCacheMock.get.mockRejectedValueOnce(new Error('any'));
 
-      // action / expect
+      // When / Then
       await expect(
         service.readLightRequestFromCache(token),
       ).rejects.toThrowError(ReadLightRequestFromCacheException);
@@ -274,10 +274,10 @@ describe('EidasProviderService', () => {
     const lightRequest = 'Tchoo ! tchoo ! Request is comming !';
 
     it('should parse the light request using the toJson method from the light request service', () => {
-      // action
+      // When
       service.parseLightRequest(lightRequest);
 
-      // expect
+      // Then
       expect(lightRequestServiceMock.parseRequest).toHaveBeenCalledTimes(1);
       expect(lightRequestServiceMock.parseRequest).toHaveBeenCalledWith(
         lightRequest,
@@ -285,16 +285,16 @@ describe('EidasProviderService', () => {
     });
 
     it('should return the request parsed as json', () => {
-      // setup
+      // Given
       const request = {
         id: 'id',
       };
       lightRequestServiceMock.parseRequest.mockReturnValueOnce(request);
 
-      // action
+      // When
       const result = service.parseLightRequest(lightRequest);
 
-      // expect
+      // Then
       expect(result).toStrictEqual(request);
     });
   });
@@ -317,19 +317,19 @@ describe('EidasProviderService', () => {
     });
 
     it('should generate a 64 characters random string', () => {
-      // action
+      // When
       service.completeFcSuccessResponse(
         partialEidasResponseMock,
         eidasRequestMock,
       );
 
-      // expect
+      // Then
       expect(cryptographyServiceMock.genRandomString).toHaveBeenCalledTimes(1);
       expect(cryptographyServiceMock.genRandomString).toHaveBeenCalledWith(64);
     });
 
     it('should return a complete eidas response', () => {
-      // setup
+      // Given
       const expected: EidasResponse = {
         attributes: partialEidasResponseMock.attributes,
         id: randomMock,
@@ -342,13 +342,13 @@ describe('EidasProviderService', () => {
         subjectNameIdFormat: EidasNameIdFormats.PERSISTENT,
       };
 
-      // action
+      // When
       const result = service.completeFcSuccessResponse(
         partialEidasResponseMock,
         eidasRequestMock,
       );
 
-      // expect
+      // Then
       expect(result).toStrictEqual(expected);
     });
   });
@@ -366,19 +366,19 @@ describe('EidasProviderService', () => {
     });
 
     it('should generate a 64 characters random string', () => {
-      // action
+      // When
       service.completeFcFailureResponse(
         partialEidasResponseMock,
         eidasRequestMock,
       );
 
-      // expect
+      // Then
       expect(cryptographyServiceMock.genRandomString).toHaveBeenCalledTimes(1);
       expect(cryptographyServiceMock.genRandomString).toHaveBeenCalledWith(64);
     });
 
     it('should return a complete eidas response', () => {
-      // setup
+      // Given
       const expected: EidasResponse = {
         id: randomMock,
         inResponseToId: eidasRequestMock.id,
@@ -387,13 +387,13 @@ describe('EidasProviderService', () => {
         status: partialEidasResponseMock.status,
       };
 
-      // action
+      // When
       const result = service.completeFcFailureResponse(
         partialEidasResponseMock,
         eidasRequestMock,
       );
 
-      // expect
+      // Then
       expect(result).toStrictEqual(expected);
     });
   });
@@ -412,19 +412,19 @@ describe('EidasProviderService', () => {
     });
 
     it('should get the proxyServiceResponseIssuer from the config', () => {
-      // action
+      // When
       service.prepareLightResponse(responseMock);
 
-      // expect
+      // Then
       expect(configServiceMock.get).toHaveBeenCalledTimes(1);
       expect(configServiceMock.get).toHaveBeenCalledWith('EidasProvider');
     });
 
     it('should generate a token with the id in the response and the proxyServiceResponseIssuer using the light response service', () => {
-      // action
+      // When
       service.prepareLightResponse(responseMock);
 
-      // expect
+      // Then
       expect(lightResponseServiceMock.generateToken).toHaveBeenCalledTimes(1);
       expect(lightResponseServiceMock.generateToken).toHaveBeenCalledWith(
         responseMock.id,
@@ -433,10 +433,10 @@ describe('EidasProviderService', () => {
     });
 
     it('should generate build a light response XML with the light response service "formatResponse" function', () => {
-      // action
+      // When
       service.prepareLightResponse(responseMock);
 
-      // expect
+      // Then
       expect(lightResponseServiceMock.formatResponse).toHaveBeenCalledTimes(1);
       expect(lightResponseServiceMock.formatResponse).toHaveBeenCalledWith(
         responseMock,
@@ -449,10 +449,10 @@ describe('EidasProviderService', () => {
     const lightRequest = 'lightRequest';
 
     it('should put write the given light request in cache with the given id calling the connectorRequestCache put method', async () => {
-      // action
+      // When
       await service.writeLightResponseInCache(id, lightRequest);
 
-      // expect
+      // Then
       expect(proxyServiceResponseCacheMock.put).toHaveBeenCalledTimes(1);
       expect(proxyServiceResponseCacheMock.put).toHaveBeenCalledWith(
         id,
@@ -461,10 +461,10 @@ describe('EidasProviderService', () => {
     });
 
     it('should throw a WriteLightResponseInCacheException if something went wrong when writing the light request in the cache', async () => {
-      // setup
+      // Given
       proxyServiceResponseCacheMock.put.mockRejectedValueOnce(new Error('any'));
 
-      // action / expect
+      // When / Then
       await expect(
         service.writeLightResponseInCache(id, lightRequest),
       ).rejects.toThrowError(WriteLightResponseInCacheException);

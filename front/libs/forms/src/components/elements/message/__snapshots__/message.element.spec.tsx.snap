@@ -2,27 +2,11 @@
 
 exports[`MessageElement should match the snapshot 1`] = `
 <div>
-  <div
-    aria-live="assertive"
-    class="fr-messages-group"
-    id="id-mock"
+  <p
+    class="message fr-message fr-message--any-level"
+    id="id-mock-messages"
   >
-    <div
-      data-mockid="MessageValidElement"
-    />
-    <div
-      data-mockid="MessageErrorElement"
-    />
-  </div>
-</div>
-`;
-
-exports[`MessageElement should match the snapshot, when valid and error are not defined 1`] = `
-<div>
-  <div
-    aria-live="assertive"
-    class="fr-messages-group"
-    id="id-mock"
-  />
+    any-content
+  </p>
 </div>
 `;

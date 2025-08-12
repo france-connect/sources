@@ -94,6 +94,12 @@ export class ServiceProvider extends Document {
   @Prop({ type: Date, default: Date.now })
   createdAt: Date;
 
+  @Prop({ type: String })
+  createdBy: string;
+
+  @Prop({ type: String })
+  createdVia: string;
+
   @Prop({ type: Date, default: Date.now })
   updatedAt: Date;
 
@@ -102,6 +108,9 @@ export class ServiceProvider extends Document {
 
   @Prop({ type: Date, default: Date.now })
   secretUpdatedAt: Date;
+
+  @Prop({ type: String })
+  secretUpdatedBy: string;
 }
 
 export const ServiceProviderSchema =

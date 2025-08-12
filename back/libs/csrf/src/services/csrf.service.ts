@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { CryptographyService } from '@fc/cryptography';
-import { SessionService } from '@fc/session';
+import { SessionNotFoundException, SessionService } from '@fc/session';
 
 import { CsrfSession } from '../dto';
 import {
@@ -46,7 +46,11 @@ export class CsrfService {
       throw new CsrfMissingTokenException();
     }
 
-    if (!session?.csrfToken) {
+    if (!session) {
+      throw new SessionNotFoundException();
+    }
+
+    if (!session.csrfToken) {
       throw new CsrfNoSessionException();
     }
 

@@ -14,8 +14,8 @@ import {
 } from '@mocks/dto2form';
 import { getLoggerMock } from '@mocks/logger';
 
-import { FormDtoBase } from '../dto';
-import { ValidatorJs } from '../enums';
+import { FieldMessage, FormDtoBase } from '../dto';
+import { MessageLevelEnum, MessagePriorityEnum, ValidatorJs } from '../enums';
 import {
   Dto2FormInvalidFormException,
   Dto2FormValidateIfRuleNotFoundException,
@@ -204,11 +204,14 @@ describe('FormValidationPipe', () => {
         type: 'query',
         metatype: metadatypeMock,
       } as ArgumentMetadata;
+
+      const errorMessage = Symbol('errorMessage') as unknown as FieldMessage;
+
       jest.mocked(service['validate']).mockResolvedValueOnce([
         {
           name: 'name',
           validators: [
-            { name: 'name', errorMessage: 'errrors', validationArgs: [] },
+            { name: 'name', errorMessage: errorMessage, validationArgs: [] },
           ],
         },
       ]);
@@ -297,6 +300,11 @@ describe('FormValidationPipe', () => {
         getFieldAttributesMock('name1'),
         getFieldAttributesMock('name2'),
       ];
+      const errorMessageMock = {
+        content: `${invalidKeyMock}_invalidKey_error`,
+        level: MessageLevelEnum.ERROR,
+        priority: MessagePriorityEnum.ERROR,
+      };
 
       // When
       const result = await service['validateField'](
@@ -310,7 +318,7 @@ describe('FormValidationPipe', () => {
         name: invalidKeyMock,
         validators: [
           {
-            errorMessage: `${invalidKeyMock}_invalidKey_error`,
+            errorMessage: errorMessageMock,
             name: invalidKeyMock,
             validationArgs: [],
           },
@@ -603,6 +611,8 @@ describe('FormValidationPipe', () => {
   });
 
   describe('callValidator', () => {
+    const errorMessage = Symbol('errorMessage') as unknown as FieldMessage;
+
     it('should call the validation rule with validator service, value and validation args', async () => {
       // Given
       const valueMock = Symbol('value');
@@ -613,7 +623,7 @@ describe('FormValidationPipe', () => {
         name: ValidatorJs.CONTAINS,
 
         validationArgs: [Symbol('arg1'), Symbol('arg2')],
-        errorMessage: 'error_label',
+        errorMessage,
       };
 
       // When
@@ -637,7 +647,7 @@ describe('FormValidationPipe', () => {
         name: 'validator1',
 
         validationArgs: [Symbol('arg1'), Symbol('arg2')],
-        errorMessage: 'error_label',
+        errorMessage,
       };
 
       // When
@@ -668,7 +678,7 @@ describe('FormValidationPipe', () => {
         name: ValidatorJs.CONTAINS,
 
         validationArgs: [],
-        errorMessage: 'error_label',
+        errorMessage,
       };
 
       // When
@@ -749,6 +759,11 @@ describe('FormValidationPipe', () => {
         { name: 'field1', required: true },
         { name: 'field2', required: true },
       ] as unknown as FieldAttributes[];
+      const errorMessageMock = {
+        content: 'isFilled_error',
+        level: MessageLevelEnum.ERROR,
+        priority: MessagePriorityEnum.ERROR,
+      };
 
       const result = service['validateRequiredField'](target, metadata);
 
@@ -757,7 +772,7 @@ describe('FormValidationPipe', () => {
           name: 'field2',
           validators: [
             {
-              errorMessage: 'isFilled_error',
+              errorMessage: errorMessageMock,
               name: 'isFilled',
               validationArgs: [],
             },
@@ -782,6 +797,7 @@ describe('FormValidationPipe', () => {
   describe('handleArrayValidation', () => {
     const errorsMapAsyncMock: FieldValidator[][] = [[], []];
     const fieldMetadataMock = { validators: [] } as unknown as FieldAttributes;
+    const errorMessage = Symbol('errorMessage') as unknown as FieldMessage;
 
     it('should return a flat array of errors when all items in the array have errors', async () => {
       // Given
@@ -808,7 +824,7 @@ describe('FormValidationPipe', () => {
       // Given
       const errorsMapAsyncMock: FieldValidator[][] = [
         [],
-        [{ name: 'error2', errorMessage: 'Another error', validationArgs: [] }],
+        [{ name: 'error2', errorMessage, validationArgs: [] }],
       ];
 
       jest
@@ -928,6 +944,7 @@ describe('FormValidationPipe', () => {
     const valueMock = Symbol('value') as unknown as string;
     const errorsMock = Symbol('error') as unknown as FieldValidator[];
     const validatorMock = Symbol('validator') as unknown as FieldValidator;
+    const errorMessage = Symbol('errorMessage') as unknown as FieldMessage;
 
     it('should call callValidator', async () => {
       // Given
@@ -955,7 +972,7 @@ describe('FormValidationPipe', () => {
       const errorsMock: FieldValidator[] = [];
       const validatorMock: FieldValidator = {
         name: 'testValidator',
-        errorMessage: 'Invalid value',
+        errorMessage,
         validationArgs: [{ minLength: 3 }],
       };
 
@@ -973,7 +990,7 @@ describe('FormValidationPipe', () => {
       expect(result).toHaveLength(1);
       expect(result[0]).toEqual({
         name: 'testValidator',
-        errorMessage: 'Invalid value',
+        errorMessage: errorMessage,
         validationArgs: [{ minLength: 3 }],
       });
     });
@@ -983,7 +1000,7 @@ describe('FormValidationPipe', () => {
       const errorsMock: FieldValidator[] = [
         {
           name: 'existingValidator',
-          errorMessage: 'Existing error',
+          errorMessage,
           validationArgs: [],
         },
       ];

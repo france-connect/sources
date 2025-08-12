@@ -75,10 +75,10 @@ describe('LightRequestService', () => {
     };
 
     it('should call jsonToPathsObject with the eidas request', () => {
-      // action
+      // When
       service.formatRequest(requestJsonMock);
 
-      // assertion
+      // Then
       expect(lightXmlServiceMock.jsonToPathsObject).toHaveBeenCalledTimes(1);
       expect(lightXmlServiceMock.jsonToPathsObject).toHaveBeenCalledWith(
         requestJsonMock,
@@ -86,13 +86,13 @@ describe('LightRequestService', () => {
     });
 
     it('should call replaceInPaths with the path object returned by jsonToPathsObject to add "lightRequest" key', () => {
-      // setup
+      // Given
       lightXmlServiceMock.jsonToPathsObject.mockReturnValueOnce(pathsObject);
 
-      // action
+      // When
       service.formatRequest(requestJsonMock);
 
-      // assertion
+      // Then
       expect(lightXmlServiceMock.replaceInPaths).toHaveBeenCalledTimes(3);
       expect(lightXmlServiceMock.replaceInPaths).toHaveBeenNthCalledWith(
         1,
@@ -103,13 +103,13 @@ describe('LightRequestService', () => {
     });
 
     it('should call addDeclarationFields with the path object returned by replaceInPaths to add XML declaration fields', () => {
-      // setup
+      // Given
       lightXmlServiceMock.replaceInPaths.mockReturnValueOnce(pathsObject);
 
-      // action
+      // When
       service.formatRequest(requestJsonMock);
 
-      // assertion
+      // Then
       expect(lightXmlServiceMock.addDeclarationFields).toHaveBeenCalledTimes(1);
       expect(lightXmlServiceMock.addDeclarationFields).toHaveBeenCalledWith(
         pathsObject,
@@ -117,13 +117,13 @@ describe('LightRequestService', () => {
     });
 
     it('should call replaceInPaths with the path object returned by addDeclarationFields to add the "lightRequest" key)', () => {
-      // setup
+      // Given
       lightXmlServiceMock.addDeclarationFields.mockReturnValueOnce(pathsObject);
 
-      // action
+      // When
       service.formatRequest(requestJsonMock);
 
-      // assertion
+      // Then
       expect(lightXmlServiceMock.replaceInPaths).toHaveBeenCalledTimes(3);
       expect(lightXmlServiceMock.replaceInPaths).toHaveBeenNthCalledWith(
         2,
@@ -134,15 +134,15 @@ describe('LightRequestService', () => {
     });
 
     it('should call upperCaseFirstCharForProps with the path object returned by the second call of replaceInPaths to uppercase the value of requested attributes', () => {
-      // setup
+      // Given
       lightXmlServiceMock.replaceInPaths
         .mockReturnValueOnce({})
         .mockReturnValueOnce(pathsObject);
 
-      // action
+      // When
       service.formatRequest(requestJsonMock);
 
-      // assertion
+      // Then
       expect(
         lightXmlServiceMock.upperCaseFirstCharForProps,
       ).toHaveBeenCalledTimes(1);
@@ -152,15 +152,15 @@ describe('LightRequestService', () => {
     });
 
     it('should call prefixProps with the path object returned by upperCaseFirstCharForProps to add the namespace on the requested attributes', () => {
-      // setup
+      // Given
       lightXmlServiceMock.upperCaseFirstCharForProps.mockReturnValueOnce(
         pathsObject,
       );
 
-      // action
+      // When
       service.formatRequest(requestJsonMock);
 
-      // assertion
+      // Then
       expect(lightXmlServiceMock.prefixProps).toHaveBeenCalledTimes(3);
       expect(lightXmlServiceMock.prefixProps).toHaveBeenNthCalledWith(
         1,
@@ -171,13 +171,13 @@ describe('LightRequestService', () => {
     });
 
     it('should call prefixProps with the path object returned by the first prefixProps call to add the namespace for nameIdFormat attribute', () => {
-      // setup
+      // Given
       lightXmlServiceMock.prefixProps.mockReturnValueOnce(pathsObject);
 
-      // action
+      // When
       service.formatRequest(requestJsonMock);
 
-      // assertion
+      // Then
       expect(lightXmlServiceMock.prefixProps).toHaveBeenCalledTimes(3);
       expect(lightXmlServiceMock.prefixProps).toHaveBeenNthCalledWith(
         2,
@@ -188,15 +188,15 @@ describe('LightRequestService', () => {
     });
 
     it('should call prefixProps with the path object returned by the second prefixProps call to add the namespace for levelOfAssurance attribute', () => {
-      // setup
+      // Given
       lightXmlServiceMock.prefixProps
         .mockReturnValueOnce({})
         .mockReturnValueOnce(pathsObject);
 
-      // action
+      // When
       service.formatRequest(requestJsonMock);
 
-      // assertion
+      // Then
       expect(lightXmlServiceMock.prefixProps).toHaveBeenCalledTimes(3);
       expect(lightXmlServiceMock.prefixProps).toHaveBeenNthCalledWith(
         3,
@@ -207,16 +207,16 @@ describe('LightRequestService', () => {
     });
 
     it('should call replaceInPaths with the path object returned by the third prefixProps call to suffixe the lightRequest sub elements with "_text"', () => {
-      // setup
+      // Given
       lightXmlServiceMock.prefixProps
         .mockReturnValueOnce({})
         .mockReturnValueOnce({})
         .mockReturnValueOnce(pathsObject);
 
-      // action
+      // When
       service.formatRequest(requestJsonMock);
 
-      // assertion
+      // Then
       expect(lightXmlServiceMock.replaceInPaths).toHaveBeenCalledTimes(3);
       expect(lightXmlServiceMock.replaceInPaths).toHaveBeenNthCalledWith(
         3,
@@ -227,16 +227,16 @@ describe('LightRequestService', () => {
     });
 
     it('should call upsertNodeToPathObject with the path object returned by the replaceInPaths call to convert the paths object back to an inflated JSON', () => {
-      // setup
+      // Given
       lightXmlServiceMock.replaceInPaths
         .mockReturnValueOnce({})
         .mockReturnValueOnce({})
         .mockReturnValueOnce(pathsObject);
 
-      // action
+      // When
       service.formatRequest(requestJsonMock);
 
-      // assertion
+      // Then
       expect(lightXmlServiceMock.upsertNodeToPathObject).toHaveBeenCalledTimes(
         1,
       );
@@ -248,15 +248,15 @@ describe('LightRequestService', () => {
     });
 
     it('should call pathsObjectToJson with the path object returned by upsertNodeToPathObject call to convert the paths object back to an inflated JSON', () => {
-      // setup
+      // Given
       lightXmlServiceMock.upsertNodeToPathObject.mockReturnValueOnce(
         pathsObject,
       );
 
-      // action
+      // When
       service.formatRequest(requestJsonMock);
 
-      // assertion
+      // Then
       expect(lightXmlServiceMock.pathsObjectToJson).toHaveBeenCalledTimes(1);
       expect(lightXmlServiceMock.pathsObjectToJson).toHaveBeenCalledWith(
         pathsObject,
@@ -264,42 +264,42 @@ describe('LightRequestService', () => {
     });
 
     it('should call jsonToXml with the path object returned by the pathsObjectToJson call to convert JSON object to XML document', () => {
-      // setup
+      // Given
       const inflatedJson = { Is: { That: { A: { Block: { Chain: '?' } } } } };
       lightXmlServiceMock.pathsObjectToJson.mockReturnValueOnce(inflatedJson);
 
-      // action
+      // When
       service.formatRequest(requestJsonMock);
 
-      // assertion
+      // Then
       expect(lightXmlServiceMock.jsonToXml).toHaveBeenCalledTimes(1);
       expect(lightXmlServiceMock.jsonToXml).toHaveBeenCalledWith(inflatedJson);
     });
 
     it('should return the result of jsonToXml ', () => {
-      // setup
+      // Given
       lightXmlServiceMock.jsonToXml.mockReturnValueOnce(lightRequestXmlMock);
 
-      // action
+      // When
       const result = service.formatRequest(requestJsonMock);
 
-      // assertion
+      // Then
       expect(result).toEqual(lightRequestXmlMock);
     });
 
     it('should throw a EidasJsonToXmlException error if jsonToXml thow', () => {
-      // setup
+      // Given
       const jsonConversionErrorMessage = 'jsonConversion error';
 
       lightXmlServiceMock.jsonToXml.mockImplementation(() => {
         throw new Error(jsonConversionErrorMessage);
       });
 
-      // action
+      // When
       try {
         service.formatRequest(requestJsonMock);
       } catch (e) {
-        // assertion
+        // Then
         expect(e).toBeInstanceOf(EidasJsonToXmlException);
       }
 
@@ -319,25 +319,25 @@ describe('LightRequestService', () => {
     });
 
     it('should get the lightRequestConnectorSecret from the config', () => {
-      // setup
+      // Given
       const expectedConfigName = 'EidasLightProtocol';
 
-      // action
+      // When
       service.generateToken(id, issuer);
 
-      // expect
+      // Then
       expect(mockConfigService.get).toHaveBeenCalledTimes(1);
       expect(mockConfigService.get).toHaveBeenCalledWith(expectedConfigName);
     });
 
     it('should call LightCommons.generateToken with the id, the issuer and the lightRequestConnectorSecret', () => {
-      // setup
+      // Given
       const expectedDate = undefined;
 
-      // action
+      // When
       service.generateToken(id, issuer);
 
-      // expect
+      // Then
       expect(lightCommonsServiceMock.generateToken).toHaveBeenCalledTimes(1);
       expect(lightCommonsServiceMock.generateToken).toHaveBeenCalledWith(
         id,
@@ -348,13 +348,13 @@ describe('LightRequestService', () => {
     });
 
     it('should call LightCommons.generateToken with a specific date if the date argument is set', () => {
-      // setup
+      // Given
       const expectedDate = new Date(Date.UTC(2012, 6, 4));
 
-      // action
+      // When
       service.generateToken(id, issuer, expectedDate);
 
-      // expect
+      // Then
       expect(lightCommonsServiceMock.generateToken).toHaveBeenCalledTimes(1);
       expect(lightCommonsServiceMock.generateToken).toHaveBeenCalledWith(
         id,
@@ -365,7 +365,7 @@ describe('LightRequestService', () => {
     });
 
     it('should return the result of LightCommons.generateToken call', () => {
-      // setup
+      // Given
       /**
        * This is the expected token for the data described in the beforeEach section
        */
@@ -373,10 +373,10 @@ describe('LightRequestService', () => {
         'eWVsdHNBLWtjaVJ8TkdHWVV8MTk2OS0wNy0yMSAxNzo1NDowMCAwMDB8eFR6aUwyWVZ2U09SYUVEUFBiZFNwOVZvR3k3OEJ4bjNhY3pVcGhnWFozdz0=';
       lightCommonsServiceMock.generateToken.mockReturnValueOnce(expected);
 
-      // action
+      // When
       const result = service.generateToken(id, issuer);
 
-      // expect
+      // Then
       expect(result).toStrictEqual(expected);
     });
   });
@@ -387,10 +387,10 @@ describe('LightRequestService', () => {
     };
 
     it('should call xmlToJson with the XML given as argument', () => {
-      // action
+      // When
       service.parseRequest(lightRequestXmlMock);
 
-      // expect
+      // Then
       expect(lightXmlServiceMock.xmlToJson).toHaveBeenCalledTimes(1);
       expect(lightXmlServiceMock.xmlToJson).toHaveBeenCalledWith(
         lightRequestXmlMock,
@@ -398,14 +398,14 @@ describe('LightRequestService', () => {
     });
 
     it('should call jsonToPathsObject with the JSON returned by xmlToJson', () => {
-      // setup
+      // Given
       const inflatedJson = { Is: { That: { A: { Block: { Chain: '?' } } } } };
       lightXmlServiceMock.xmlToJson.mockReturnValueOnce(inflatedJson);
 
-      // action
+      // When
       service.parseRequest(lightRequestXmlMock);
 
-      // expect
+      // Then
       expect(lightXmlServiceMock.jsonToPathsObject).toHaveBeenCalledTimes(1);
       expect(lightXmlServiceMock.jsonToPathsObject).toHaveBeenCalledWith(
         inflatedJson,
@@ -413,13 +413,13 @@ describe('LightRequestService', () => {
     });
 
     it('should call removeDeclarationFields with the return of jsonToPathsObject to remove the XML declaration header', () => {
-      // setup
+      // Given
       lightXmlServiceMock.jsonToPathsObject.mockReturnValueOnce(pathsObject);
 
-      // action
+      // When
       service.parseRequest(lightRequestXmlMock);
 
-      // expect
+      // Then
       expect(lightXmlServiceMock.removeDeclarationFields).toHaveBeenCalledTimes(
         1,
       );
@@ -429,15 +429,15 @@ describe('LightRequestService', () => {
     });
 
     it('should call replaceInPaths with the return of the removeDeclarationFields call to transform single values to array in paths', () => {
-      // setup
+      // Given
       lightXmlServiceMock.removeDeclarationFields.mockReturnValueOnce(
         pathsObject,
       );
 
-      // action
+      // When
       service.parseRequest(lightRequestXmlMock);
 
-      // expect
+      // Then
       expect(lightXmlServiceMock.replaceInPaths).toHaveBeenCalledTimes(5);
       expect(lightXmlServiceMock.replaceInPaths).toHaveBeenNthCalledWith(
         1,
@@ -448,13 +448,13 @@ describe('LightRequestService', () => {
     });
 
     it('should call replaceInPaths with the return of the first replaceInPaths call to strip unecessary properties in paths', () => {
-      // setup
+      // Given
       lightXmlServiceMock.replaceInPaths.mockReturnValueOnce(pathsObject);
 
-      // action
+      // When
       service.parseRequest(lightRequestXmlMock);
 
-      // expect
+      // Then
       expect(lightXmlServiceMock.replaceInPaths).toHaveBeenCalledTimes(5);
       expect(lightXmlServiceMock.replaceInPaths).toHaveBeenNthCalledWith(
         2,
@@ -465,15 +465,15 @@ describe('LightRequestService', () => {
     });
 
     it('should call replaceInPaths with the return of the second replaceInPaths call to strip unecessary properties in paths', () => {
-      // setup
+      // Given
       lightXmlServiceMock.replaceInPaths
         .mockReturnValueOnce({})
         .mockReturnValueOnce(pathsObject);
 
-      // action
+      // When
       service.parseRequest(lightRequestXmlMock);
 
-      // expect
+      // Then
       expect(lightXmlServiceMock.replaceInPaths).toHaveBeenCalledTimes(5);
       expect(lightXmlServiceMock.replaceInPaths).toHaveBeenNthCalledWith(
         3,
@@ -484,16 +484,16 @@ describe('LightRequestService', () => {
     });
 
     it('should call replaceInPaths with the return of the third replaceInPaths call to strip unecessary properties in paths', () => {
-      // setup
+      // Given
       lightXmlServiceMock.replaceInPaths
         .mockReturnValueOnce({})
         .mockReturnValueOnce({})
         .mockReturnValueOnce(pathsObject);
 
-      // action
+      // When
       service.parseRequest(lightRequestXmlMock);
 
-      // expect
+      // Then
       expect(lightXmlServiceMock.replaceInPaths).toHaveBeenCalledTimes(5);
       expect(lightXmlServiceMock.replaceInPaths).toHaveBeenNthCalledWith(
         4,
@@ -504,17 +504,17 @@ describe('LightRequestService', () => {
     });
 
     it('should call replaceInPaths with the return of the fourth replaceInPaths call to strip unecessary properties in paths', () => {
-      // setup
+      // Given
       lightXmlServiceMock.replaceInPaths
         .mockReturnValueOnce({})
         .mockReturnValueOnce({})
         .mockReturnValueOnce({})
         .mockReturnValueOnce(pathsObject);
 
-      // action
+      // When
       service.parseRequest(lightRequestXmlMock);
 
-      // expect
+      // Then
       expect(lightXmlServiceMock.replaceInPaths).toHaveBeenCalledTimes(5);
       expect(lightXmlServiceMock.replaceInPaths).toHaveBeenNthCalledWith(
         5,
@@ -525,7 +525,7 @@ describe('LightRequestService', () => {
     });
 
     it('should call stripUrlAndUrnForProps with the return of the fifth replaceInPaths call to strip unnecessary url or urn elements in some props values', () => {
-      // setup
+      // Given
       lightXmlServiceMock.replaceInPaths
         .mockReturnValueOnce({})
         .mockReturnValueOnce({})
@@ -533,10 +533,10 @@ describe('LightRequestService', () => {
         .mockReturnValueOnce({})
         .mockReturnValueOnce(pathsObject);
 
-      // action
+      // When
       service.parseRequest(lightRequestXmlMock);
 
-      // expect
+      // Then
       expect(lightXmlServiceMock.stripUrlAndUrnForProps).toHaveBeenCalledTimes(
         1,
       );
@@ -547,15 +547,15 @@ describe('LightRequestService', () => {
     });
 
     it('should call lowerCaseFirstCharForProps with the return of the stripUrlAndUrnForProps call to lowercase the first character of requested attributes', () => {
-      // setup
+      // Given
       lightXmlServiceMock.stripUrlAndUrnForProps.mockReturnValueOnce(
         pathsObject,
       );
 
-      // action
+      // When
       service.parseRequest(lightRequestXmlMock);
 
-      // expect
+      // Then
       expect(
         lightXmlServiceMock.lowerCaseFirstCharForProps,
       ).toHaveBeenCalledTimes(1);
@@ -565,15 +565,15 @@ describe('LightRequestService', () => {
     });
 
     it('should call pathsObjectToJson with the return of the lowerCaseFirstCharForProps call to convert the paths object back to an inflated JSON', () => {
-      // setup
+      // Given
       lightXmlServiceMock.lowerCaseFirstCharForProps.mockReturnValueOnce(
         pathsObject,
       );
 
-      // action
+      // When
       service.parseRequest(lightRequestXmlMock);
 
-      // expect
+      // Then
       expect(lightXmlServiceMock.pathsObjectToJson).toHaveBeenCalledTimes(1);
       expect(lightXmlServiceMock.pathsObjectToJson).toHaveBeenCalledWith(
         pathsObject,
@@ -581,14 +581,14 @@ describe('LightRequestService', () => {
     });
 
     it('should return the result of the pathsObjectToJson call', () => {
-      // setup
+      // Given
       const inflatedJson = { Is: { That: { A: { Block: { Chain: '?' } } } } };
       lightXmlServiceMock.pathsObjectToJson.mockReturnValueOnce(inflatedJson);
 
-      // action
+      // When
       const result = service.parseRequest(lightRequestXmlMock);
 
-      // expect
+      // Then
       expect(result).toStrictEqual(inflatedJson);
     });
   });
@@ -604,22 +604,22 @@ describe('LightRequestService', () => {
     });
 
     it('should get the lightRequestProxyServiceSecret from the config', () => {
-      // setup
+      // Given
       const expectedConfigName = 'EidasLightProtocol';
 
-      // action
+      // When
       service.parseToken(token);
 
-      // expect
+      // Then
       expect(mockConfigService.get).toHaveBeenCalledTimes(1);
       expect(mockConfigService.get).toHaveBeenCalledWith(expectedConfigName);
     });
 
     it('should call parseToken from the light commons service with the token and the lightRequestProxyServiceSecret', () => {
-      // action
+      // When
       service.parseToken(token);
 
-      // expect
+      // Then
       expect(lightCommonsServiceMock.parseToken).toHaveBeenCalledTimes(1);
       expect(lightCommonsServiceMock.parseToken).toHaveBeenCalledWith(
         token,
@@ -628,7 +628,7 @@ describe('LightRequestService', () => {
     });
 
     it('should return the parsed token', () => {
-      // setup
+      // Given
       const parsedToken = {
         id: 'id',
         issuer: 'issuer',
@@ -636,10 +636,10 @@ describe('LightRequestService', () => {
       };
       lightCommonsServiceMock.parseToken.mockReturnValueOnce(parsedToken);
 
-      // action
+      // When
       const result = service.parseToken(token);
 
-      // expect
+      // Then
       expect(result).toStrictEqual(parsedToken);
     });
   });

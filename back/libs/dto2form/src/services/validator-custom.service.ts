@@ -1,4 +1,3 @@
-import { isURL } from 'class-validator';
 import validatorjs from 'validator';
 
 import { Injectable } from '@nestjs/common';
@@ -7,6 +6,16 @@ import { hasSameHost } from '@fc/common';
 import { ConfigService } from '@fc/config';
 
 import { CustomValidationOptionsBase } from '../interfaces';
+
+const URL_VALIDATION_OPTIONS = {
+  // validatorjs naming
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  require_protocol: true,
+  protocols: ['http', 'https'],
+  // validatorjs naming
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  require_tld: false,
+};
 
 @Injectable()
 export class ValidatorCustomService {
@@ -67,15 +76,7 @@ export class ValidatorCustomService {
   }
 
   isRedirectURL(value: string): boolean {
-    return validatorjs.isURL(value, {
-      // validatorjs naming
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      require_protocol: true,
-      protocols: ['http', 'https'],
-      // validatorjs naming
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      require_tld: false,
-    });
+    return validatorjs.isURL(value, URL_VALIDATION_OPTIONS);
   }
 
   /**
@@ -92,7 +93,7 @@ export class ValidatorCustomService {
      * on affected fields
      */
     const filledFields = (context.target[fieldName] as string[]).filter(
-      (value) => isURL(value),
+      (value) => this.isRedirectURL(value),
     );
 
     const sameHost = hasSameHost(filledFields);

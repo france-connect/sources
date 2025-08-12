@@ -13,7 +13,7 @@ export default class InstancesListPage {
   getCreateInstanceTile(): ChainableElement {
     return cy.contains(
       '[data-testid="instances-page-create-tile-title"] a',
-      'Créer une instance de test',
+      'Ajouter un bac à sable',
     );
   }
 
@@ -33,7 +33,7 @@ export default class InstancesListPage {
   checkIsVisible(): void {
     cy.contains(
       '[data-testid="instances-page-title"]',
-      'Mon instance de test',
+      'Accès au bac à sable',
     ).should('be.visible');
   }
 

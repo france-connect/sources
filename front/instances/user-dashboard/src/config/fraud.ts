@@ -1,4 +1,4 @@
-import type { FraudConfigInterface } from '@fc/user-dashboard';
+import type { FraudConfigInterface } from '@fc/core-user-dashboard';
 
 export const Fraud: FraudConfigInterface = {
   apiRouteFraudForm: `/api/fraud-form`,

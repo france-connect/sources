@@ -1,3 +1,5 @@
+import { FieldMessage } from '../dto';
+
 export interface FieldValidatorBase {
   name: string;
 
@@ -5,5 +7,5 @@ export interface FieldValidatorBase {
 }
 
 export interface FieldValidator extends FieldValidatorBase {
-  errorMessage: string;
+  errorMessage: FieldMessage;
 }

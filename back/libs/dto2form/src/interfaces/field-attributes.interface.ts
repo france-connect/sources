@@ -1,3 +1,4 @@
+import { FieldMessage } from '../dto';
 import { OptionsAttributesInterface } from './choice-attributes.interface';
 import { FieldValidateIfRule } from './field-validate-if-rule.interface';
 import {
@@ -18,6 +19,8 @@ export interface FieldAttributesArguments {
   options?: [OptionsAttributesInterface, ...OptionsAttributesInterface[]];
   inline?: boolean;
   order?: number;
+  messages?: FieldMessage[];
+  seeAlso?: string;
 
   validateIf?: FieldValidateIfRule[];
   /*

@@ -3,6 +3,7 @@ import {
   createCipheriv,
   createDecipheriv,
   createHash,
+  createHmac,
   Encoding,
   pbkdf2,
   randomBytes,
@@ -57,12 +58,28 @@ export class CryptographyService {
     inputEncoding: Encoding = 'utf8',
     alg = 'sha256',
     outputDigest: BinaryToTextEncoding = 'hex',
-  ) {
+  ): string {
     const hash = createHash(alg);
 
     hash.update(data, inputEncoding);
 
     return hash.digest(outputDigest);
+  }
+
+  // We need all these parameters since this methods intents to be a generic HMAC generator.
+  // eslint-disable-next-line max-params
+  hmac(
+    data: string,
+    key: string,
+    inputEncoding: Encoding = 'utf8',
+    alg = 'sha256',
+    outputDigest: BinaryToTextEncoding = 'hex',
+  ): string {
+    const hmac = createHmac(alg, key);
+
+    hmac.update(data, inputEncoding);
+
+    return hmac.digest(outputDigest);
   }
 
   /**

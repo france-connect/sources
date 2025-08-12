@@ -2,10 +2,10 @@ import { Type } from 'class-transformer';
 import { IsEnum, IsObject, IsOptional, ValidateNested } from 'class-validator';
 
 import { FSA, FSAMeta } from '@fc/common';
-import { FraudCaseDto } from '@fc/csmr-fraud-client';
 import { PivotIdentityDto } from '@fc/oidc';
 
 import { ActionTypes } from '../enums';
+import { FraudCaseDto } from './fraud-case.dto';
 
 export class FraudMessageDtoPayload {
   @IsObject()

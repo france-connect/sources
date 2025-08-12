@@ -71,6 +71,7 @@ export enum EventTypes {
   INFO = 'info',
   SUCCESS = 'success',
   WARNING = 'warning',
+  VALID = 'valid',
 }
 
 export enum SortOrder {

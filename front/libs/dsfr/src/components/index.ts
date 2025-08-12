@@ -14,4 +14,5 @@ export * from './notice';
 export * from './pagination';
 export * from './searchbar';
 export * from './stepper';
+export * from './table';
 export * from './tile';

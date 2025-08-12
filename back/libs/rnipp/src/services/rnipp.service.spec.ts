@@ -88,7 +88,7 @@ describe('RnippService', () => {
 
   describe('check', () => {
     it('should resolve to "indentityMock" if rnippCode is 2 (FOUND_NOT_RECTIFIED), the citizen is alive and there was no error', async () => {
-      // setup
+      // Given
       service['buildRequestUrl'] = jest
         .fn()
         .mockReturnValueOnce(requestUrlMock);
@@ -110,15 +110,15 @@ describe('RnippService', () => {
       service['checkCitizenStatusError'] = jest.fn();
       service['checkRnippRectificationError'] = jest.fn();
 
-      // action
+      // When
       const result = await service.check(identityMock);
 
-      // expect
+      // Then
       expect(result).toMatchObject(identityMock);
     });
 
     it('should resolve to "indentityMock" if rnippCode is 3 (FOUND_RECTIFIED), the citizen is alive and there was no error', async () => {
-      // setup
+      // Given
       service['buildRequestUrl'] = jest
         .fn()
         .mockReturnValueOnce(requestUrlMock);
@@ -136,15 +136,15 @@ describe('RnippService', () => {
       service['checkCitizenStatusError'] = jest.fn();
       service['checkRnippRectificationError'] = jest.fn();
 
-      // action
+      // When
       const result = await service.check(identityMock);
 
-      // expect
+      // Then
       expect(result).toMatchObject(identityMock);
     });
 
     it('should not catch the exception thrown by "parseRnippData"', async () => {
-      // setup
+      // Given
       service['buildRequestUrl'] = jest
         .fn()
         .mockReturnValueOnce(requestUrlMock);
@@ -155,21 +155,21 @@ describe('RnippService', () => {
         new FcException('parseRnippData'),
       );
 
-      // action
+      // When
       try {
         await service.check(identityMock);
       } catch (e) {
-        // expect
+        // Then
         expect(e).toBeInstanceOf(FcException);
         expect(e.message).toStrictEqual('parseRnippData');
       }
 
-      // expect
+      // Then
       expect.hasAssertions();
     });
 
     it('should not catch the "FcException" thrown by "checkCitizenStatusError"', async () => {
-      // setup
+      // Given
       service['buildRequestUrl'] = jest
         .fn()
         .mockReturnValueOnce(requestUrlMock);
@@ -191,21 +191,21 @@ describe('RnippService', () => {
           throw new FcException('checkCitizenStatusError');
         });
 
-      // action
+      // When
       try {
         await service.check(identityMock);
       } catch (e) {
-        // expect
+        // Then
         expect(e).toBeInstanceOf(FcException);
         expect(e.message).toStrictEqual('checkCitizenStatusError');
       }
 
-      // expect
+      // Then
       expect.hasAssertions();
     });
 
     it('should not catch the "FcException" thrown by "checkRnippRectificationError"', async () => {
-      // setup
+      // Given
       service['buildRequestUrl'] = jest
         .fn()
         .mockReturnValueOnce(requestUrlMock);
@@ -228,105 +228,105 @@ describe('RnippService', () => {
           throw new FcException('checkRnippRectificationError');
         });
 
-      // action
+      // When
       try {
         await service.check(identityMock);
       } catch (e) {
-        // expect
+        // Then
         expect(e).toBeInstanceOf(FcException);
         expect(e.message).toStrictEqual('checkRnippRectificationError');
       }
 
-      // expect
+      // Then
       expect.hasAssertions();
     });
   });
 
   describe('buildRequestUrl', () => {
     it('should construct the rnipp request url using the givent identity and the configuration', () => {
-      // setup
+      // Given
       configServiceMock.get.mockReturnValueOnce({
         protocol: 'https',
         hostname: 'rnipp.fr',
         baseUrl: '/Brpp2IdentificationComplet/individus',
       });
 
-      // action
+      // When
       const result = service['buildRequestUrl'](identityMock);
 
-      // expect
+      // Then
       expect(result).toStrictEqual(requestUrlMock);
     });
   });
 
   describe('formatDateNaissance', () => {
     it('should return the given birthdate without any "-"', () => {
-      // action
+      // When
       const result = service['formatDateNaissance']('1992-04-23');
 
-      // expect
+      // Then
       expect(result).toStrictEqual('19920423');
     });
   });
 
   describe('formatCodeLieuNaissance', () => {
     it('should return the birthplace cog if provided', () => {
-      // setup
+      // Given
       const birthplace = '95277';
       const birthcountry = '99100';
 
-      // action
+      // When
       const result = service['formatCodeLieuNaissance'](
         birthplace,
         birthcountry,
       );
 
-      // expect
+      // Then
       expect(result).toStrictEqual(birthplace);
     });
 
     it('should return the birthcountry cog if the birthplace cog is not provided', () => {
-      // setup
+      // Given
       const birthplace = undefined;
       const birthcountry = '99100';
 
-      // action
+      // When
       const result = service['formatCodeLieuNaissance'](
         birthplace,
         birthcountry,
       );
 
-      // expect
+      // Then
       expect(result).toStrictEqual(birthcountry);
     });
 
     it('should return the birthcountry cog if the birthplace is nan empty string', () => {
-      // setup
+      // Given
       const birthplace = '';
       const birthcountry = '99100';
 
-      // action
+      // When
       const result = service['formatCodeLieuNaissance'](
         birthplace,
         birthcountry,
       );
 
-      // expect
+      // Then
       expect(result).toStrictEqual(birthcountry);
     });
 
     it('should return the birthcountry cog if the birthplace is not a valid cog', () => {
-      // setup
+      // Given
       const birthplace = 'not-a-cog';
       const birthcountry = '99100';
 
-      // action
+      // When
       const result = service['formatCodeLieuNaissance'](
         birthplace,
         birthcountry,
       );
 
-      // expect
+      // Then
       expect(result).toStrictEqual(birthcountry);
     });
   });
@@ -337,10 +337,10 @@ describe('RnippService', () => {
     });
 
     it('should call the "Http.get" function and with the given url', async () => {
-      // setup
+      // Given
       httpServiceMock.get.mockReturnValue(axiosResponseMock);
 
-      // action
+      // When
       await service['callRnipp'](requestUrlMock);
 
       expect(httpServiceMock.get).toHaveBeenCalledTimes(1);
@@ -351,12 +351,12 @@ describe('RnippService', () => {
     });
 
     it('should transform the "Observable" of "Http.get" result to a "Promise"', async () => {
-      // setup
+      // Given
       const lastValueMock = jest.mocked(lastValueFrom);
       lastValueMock.mockResolvedValueOnce(axiosResponseResolvedMock);
       httpServiceMock.get.mockReturnValue(axiosResponseMock);
 
-      // action
+      // When
       const result = service['callRnipp'](requestUrlMock);
 
       await result;
@@ -366,29 +366,29 @@ describe('RnippService', () => {
     });
 
     it('should resolve to the axiosResponseMock', async () => {
-      // setup
+      // Given
       const lastValueMock = jest.mocked(lastValueFrom);
       lastValueMock.mockResolvedValueOnce(axiosResponseResolvedMock);
       httpServiceMock.get.mockReturnValue(axiosResponseMock);
 
-      // action
+      // When
       const result = await service['callRnipp'](requestUrlMock);
 
       expect(result).toStrictEqual(axiosResponseResolvedMock);
     });
 
     it('should catch the exception thrown by "lastValueMock" and call "checkRnippHttpError" with the error', async () => {
-      // setup
+      // Given
       const lastValueMock = jest.mocked(lastValueFrom);
       const axiosErrorMock = new Error('Nani ?');
       lastValueMock.mockRejectedValueOnce(axiosErrorMock);
       httpServiceMock.get.mockReturnValue(axiosResponseMock);
       service['checkRnippHttpError'] = jest.fn();
 
-      // action
+      // When
       await service['callRnipp'](requestUrlMock);
 
-      // expect
+      // Then
       expect(service['checkRnippHttpError']).toHaveBeenCalledTimes(1);
       expect(service['checkRnippHttpError']).toHaveBeenCalledWith(
         axiosErrorMock,
@@ -396,7 +396,7 @@ describe('RnippService', () => {
     });
 
     it('should not catch the exception thrown by "checkRnippHttpError"', async () => {
-      // setup
+      // Given
       const lastValueMock = jest.mocked(lastValueFrom);
       const axiosErrorMock = new Error('Nani ?');
       lastValueMock.mockRejectedValueOnce(axiosErrorMock);
@@ -406,7 +406,7 @@ describe('RnippService', () => {
         throw checkRnippErrorMock;
       });
 
-      // action
+      // When
       try {
         await service['callRnipp'](requestUrlMock);
       } catch (e) {
@@ -414,232 +414,232 @@ describe('RnippService', () => {
         expect(e.message).toStrictEqual(checkRnippErrorMock.message);
       }
 
-      // expect
+      // Then
       expect.hasAssertions();
     });
   });
 
   describe('checkRnippRectificationError', () => {
     it('should throw a "RnippNotFoundSingleEchoException" error if the given "rnippCode" is 4 (NOT_FOUND_SINGLE_ECHO)', () => {
-      // setup
+      // Given
       const rnippCode = RnippResponseCodes.NOT_FOUND_SINGLE_ECHO;
       const deceased = false;
 
-      // action
+      // When
       try {
         service['checkRnippRectificationError'](rnippCode, deceased);
       } catch (e) {
-        // expect
+        // Then
         expect(e).toBeInstanceOf(RnippNotFoundSingleEchoException);
       }
 
-      // expect
+      // Then
       expect.hasAssertions();
     });
 
     it('should throw a "RnippNotFoundMultipleEchoException" error if the given "rnippCode" is 6 (NOT_FOUND_MULTIPLE_ECHO)', () => {
-      // setup
+      // Given
       const rnippCode = RnippResponseCodes.NOT_FOUND_MULTIPLE_ECHO;
       const deceased = false;
 
-      // action
+      // When
       try {
         service['checkRnippRectificationError'](rnippCode, deceased);
       } catch (e) {
-        // expect
+        // Then
         expect(e).toBeInstanceOf(RnippNotFoundMultipleEchoException);
       }
 
-      // expect
+      // Then
       expect.hasAssertions();
     });
 
     it('should throw a "RnippFoundOnlyWithMaritalNameException" error if the given "rnippCode" is 7 (FOUND_ONLY_WITH_MARITAL_NAME)', () => {
-      // setup
+      // Given
       const rnippCode = RnippResponseCodes.FOUND_ONLY_WITH_MARITAL_NAME;
       const deceased = false;
 
-      // action
+      // When
       try {
         service['checkRnippRectificationError'](rnippCode, deceased);
       } catch (e) {
-        // expect
+        // Then
         expect(e).toBeInstanceOf(RnippFoundOnlyWithMaritalNameException);
       }
 
-      // expect
+      // Then
       expect.hasAssertions();
     });
 
     it('should throw a "RnippNotFoundNoEchoException" error if the given "rnippCode" is 8 (NOT_FOUND_NO_ECHO)', () => {
-      // setup
+      // Given
       const rnippCode = RnippResponseCodes.NOT_FOUND_NO_ECHO;
       const deceased = false;
 
-      // action
+      // When
       try {
         service['checkRnippRectificationError'](rnippCode, deceased);
       } catch (e) {
-        // expect
+        // Then
         expect(e).toBeInstanceOf(RnippNotFoundNoEchoException);
       }
 
-      // expect
+      // Then
       expect.hasAssertions();
     });
 
     it('should throw a "RnippRejectedBadRequestException" error if the given "rnippCode" is 9 (REJECTED_BAD_REQUEST)', () => {
-      // setup
+      // Given
       const rnippCode = RnippResponseCodes.REJECTED_BAD_REQUEST;
       const deceased = false;
 
-      // action
+      // When
       try {
         service['checkRnippRectificationError'](rnippCode, deceased);
       } catch (e) {
-        // expect
+        // Then
         expect(e).toBeInstanceOf(RnippRejectedBadRequestException);
       }
 
-      // expect
+      // Then
       expect.hasAssertions();
     });
 
     it('should throw a "RnippDeceasedException" if "deceased" argument equals "true" and the given "rnippCode" is not recognized as an error', () => {
-      // setup
+      // Given
       const rnippCode = '42';
       const deceased = true;
 
-      // action
+      // When
       try {
         service['checkRnippRectificationError'](rnippCode, deceased);
       } catch (e) {
-        // expect
+        // Then
         expect(e).toBeInstanceOf(RnippDeceasedException);
       }
 
-      // expect
+      // Then
       expect.hasAssertions();
     });
 
     it('should not throw a "RnippDeceasedException" if "deceased" argument equals "true" and the given "rnippCode" is "9" (REJECTED_BAD_REQUEST)', () => {
-      // setup
+      // Given
       const rnippCode = RnippResponseCodes.REJECTED_BAD_REQUEST;
       const deceased = true;
 
-      // action
+      // When
       try {
         service['checkRnippRectificationError'](rnippCode, deceased);
       } catch (e) {
-        // expect
+        // Then
         expect(e).toBeInstanceOf(RnippRejectedBadRequestException);
       }
 
-      // expect
+      // Then
       expect.hasAssertions();
     });
 
     it('should not throw a "RnippDeceasedException" if "deceased" argument equals "false" and there is no other error', () => {
-      // setup
+      // Given
       const rnippCode = RnippResponseCodes.FOUND_NOT_RECTIFIED;
       const deceased = false;
 
-      // action
+      // When
       const result = service['checkRnippRectificationError'](
         rnippCode,
         deceased,
       );
 
-      // expect
+      // Then
       expect(result).toBeUndefined();
     });
   });
 
   describe('checkRnippHttpError', () => {
     it('should throw a "RnippTimeoutException" error if the AxiosError code equals "ETIMEDOUT"', () => {
-      // setup
+      // Given
       const axiosErrorMock = {
         code: 'ETIMEDOUT',
       } as unknown as AxiosError;
 
-      // action
+      // When
       try {
         service['checkRnippHttpError'](axiosErrorMock);
       } catch (e) {
-        // expect
+        // Then
         expect(e).toBeInstanceOf(RnippTimeoutException);
       }
 
-      // expect
+      // Then
       expect.hasAssertions();
     });
 
     it('should throw a "RnippTimeoutException" error if the AxiosError code equals "ECONNABORTED"', () => {
-      // setup
+      // Given
       const axiosErrorMock = {
         code: 'ECONNABORTED',
       } as unknown as AxiosError;
 
-      // action
+      // When
       try {
         service['checkRnippHttpError'](axiosErrorMock);
       } catch (e) {
-        // expect
+        // Then
         expect(e).toBeInstanceOf(RnippTimeoutException);
       }
 
-      // expect
+      // Then
       expect.hasAssertions();
     });
 
     it('should throw a "RnippTimeoutException" error if the AxiosError code equals "ECONNRESET"', () => {
-      // setup
+      // Given
       const axiosErrorMock = {
         code: 'ECONNRESET',
       } as unknown as AxiosError;
 
-      // action
+      // When
       try {
         service['checkRnippHttpError'](axiosErrorMock);
       } catch (e) {
-        // expect
+        // Then
         expect(e).toBeInstanceOf(RnippTimeoutException);
       }
 
-      // expect
+      // Then
       expect.hasAssertions();
     });
 
     it('should throw a "RnippHttpStatusException" error if the AxiosError code is not a "timeout"', () => {
-      // setup
+      // Given
       const axiosErrorMock = {
         code: 'ETOTO',
       } as unknown as AxiosError;
 
-      // action
+      // When
       try {
         service['checkRnippHttpError'](axiosErrorMock);
       } catch (e) {
-        // expect
+        // Then
         expect(e).toBeInstanceOf(RnippHttpStatusException);
       }
 
-      // expect
+      // Then
       expect.hasAssertions();
     });
   });
 
   describe('checkCitizenStatusError', () => {
     it('should not throw if there is no error in the dto "validate" return', () => {
-      // action
+      // When
       const result = service['checkCitizenStatusError']([]);
 
-      // expect
+      // Then
       expect(result).toBeUndefined();
     });
 
     it('should throw a "RnippCitizenStatusFormatException" if there is an error in the dto "validate" return', () => {
-      // setup
+      // Given
       const dtoValidateReturn = [
         {
           property: 'foo',
@@ -651,15 +651,15 @@ describe('RnippService', () => {
         },
       ];
 
-      // action
+      // When
       try {
         service['checkCitizenStatusError'](dtoValidateReturn);
       } catch (e) {
-        // expect
+        // Then
         expect(e).toBeInstanceOf(RnippCitizenStatusFormatException);
       }
 
-      // expect
+      // Then
       expect.hasAssertions();
     });
   });

@@ -13,6 +13,13 @@ exports[`InstancesPage should match snapshot, when items are empties 1`] = `
       >
         any-sandbox_title
       </h1>
+      <p>
+        any-baseline
+         
+        <div
+          data-mockid="SeeAlsoElement"
+        />
+      </p>
     </div>
     <div
       class="fr-col-12"
@@ -38,6 +45,13 @@ exports[`InstancesPage should match snapshot, when items are not empties 1`] = `
       >
         any-sandbox_title
       </h1>
+      <p>
+        any
+         
+        <div
+          data-mockid="SeeAlsoElement"
+        />
+      </p>
     </div>
     <div
       class="fr-col-12 fr-mb-3w"
@@ -70,6 +84,13 @@ exports[`InstancesPage should match snapshot, when the alert component is displa
       >
         any
       </h1>
+      <p>
+        any-baseline-mock
+         
+        <div
+          data-mockid="SeeAlsoElement"
+        />
+      </p>
     </div>
     <div
       data-mockid="AlertComponent"

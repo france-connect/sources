@@ -1,5 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { CreatedVia } from '@fc/csmr-config-client';
+
 import {
   ClientTypeEnum,
   EncryptionAlgorithmEnum,
@@ -7,11 +9,16 @@ import {
   PlatformTechnicalKeyEnum,
   SignatureAlgorithmEnum,
 } from '../enums';
-import { OidcClientInterface, OidcClientLegacyInterface } from '../interfaces';
+import {
+  OidcClientLegacyInterface,
+  ServiceProviderClientInterface,
+} from '../interfaces';
 import { ServiceProviderService } from './service-provider.service';
 
 describe('ServiceProviderService', () => {
   let service: ServiceProviderService;
+
+  const userMock = 'userMock';
 
   const legacyClient: Partial<OidcClientLegacyInterface> = {
     name: 'name',
@@ -42,9 +49,12 @@ describe('ServiceProviderService', () => {
     id_token_encrypted_response_alg: 'ECDH-ES',
     id_token_signed_response_alg: 'ES256',
     entityId: 'entityId',
+    createdBy: userMock,
+    createdVia: CreatedVia.EXPLOITATION_BULK_FORM,
+    secretUpdatedBy: userMock,
   };
 
-  const v2Client: Partial<OidcClientInterface> = {
+  const v2Client: Partial<ServiceProviderClientInterface> = {
     name: 'name',
     title: 'title',
     claims: ['claims'],
@@ -73,6 +83,8 @@ describe('ServiceProviderService', () => {
     id_token_encrypted_response_alg: EncryptionAlgorithmEnum.ECDH_ES,
     id_token_signed_response_alg: SignatureAlgorithmEnum.ES256,
     entityId: 'entityId',
+    createdBy: userMock,
+    createdVia: CreatedVia.EXPLOITATION_BULK_FORM,
   };
 
   beforeEach(async () => {
@@ -89,11 +101,18 @@ describe('ServiceProviderService', () => {
 
   describe('fromLegacy', () => {
     it('should convert a legacy oidc client to a v2 one', () => {
+      // Given
+      const {
+        createdBy: _createdBy,
+        createdVia: _createdVia,
+        ...expected
+      } = v2Client;
+
       // When
       const client = service.fromLegacy(legacyClient);
 
       // Then
-      expect(client).toStrictEqual(v2Client);
+      expect(client).toStrictEqual(expected);
     });
   });
 

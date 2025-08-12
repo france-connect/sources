@@ -1,2 +1,2 @@
-name,redirect_uris,post_logout_redirect_uris,adressesIp,datapassId,scopes,userinfo_signed_response_alg,phone,clientIdV1,site
+name,redirect_uris,post_logout_redirect_uris,adresses_ip,datapass_id,scopes,signature_response_alg,phone,client_id_v1,site
 bdd-sp-missing-column,https://fsp1-low.docker.dev-franceconnect.fr/oidc-callback,https://fsp1-low.docker.dev-franceconnect.fr/client/logout-callback,,9981001,"openid,family_name,birthdate",ES256,0612345679,,https://test.fr

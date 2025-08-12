@@ -5,7 +5,7 @@ import React from 'react';
 import type { AccountContextState } from '@fc/account';
 import { AccountContext } from '@fc/account';
 import { useSafeContext } from '@fc/common';
-import type { DashboardUserInfosInterface } from '@fc/user-dashboard';
+import type { DashboardUserInfosInterface } from '@fc/core-user-dashboard';
 
 import type { ServiceInterface } from '../interfaces';
 import { ServiceComponent } from './service.component';

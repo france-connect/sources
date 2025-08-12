@@ -3,18 +3,18 @@
 exports[`LegalNoticesPage should match the snapshot, display into a desktop viewport 1`] = `
 <div>
   <div
+    data-mockid="Helmet"
+  >
+    <span
+      data-htmltag="title"
+    >
+      Mon tableau de bord - Mentions légales
+    </span>
+  </div>
+  <div
     class="fr-container fr-py-8v fr-mt-8w"
     id="page-container"
   >
-    <div
-      data-mockid="Helmet"
-    >
-      <span
-        data-htmltag="title"
-      >
-        Mon tableau de bord - Mentions légales
-      </span>
-    </div>
     <h1>
       Mentions légales
     </h1>
@@ -64,18 +64,18 @@ exports[`LegalNoticesPage should match the snapshot, display into a desktop view
 exports[`LegalNoticesPage should match the snapshot, display into a mobile viewport 1`] = `
 <div>
   <div
+    data-mockid="Helmet"
+  >
+    <span
+      data-htmltag="title"
+    >
+      Mon tableau de bord - Mentions légales
+    </span>
+  </div>
+  <div
     class="fr-container fr-py-8v fr-mt-5w"
     id="page-container"
   >
-    <div
-      data-mockid="Helmet"
-    >
-      <span
-        data-htmltag="title"
-      >
-        Mon tableau de bord - Mentions légales
-      </span>
-    </div>
     <h1>
       Mentions légales
     </h1>

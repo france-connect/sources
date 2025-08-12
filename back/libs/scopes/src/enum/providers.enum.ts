@@ -10,4 +10,5 @@ export const enum Providers {
   FT = 'FT',
   DESK = 'DESK',
   CNAF_MSA = 'CNAF_MSA',
+  DSNJ = 'DSNJ',
 }

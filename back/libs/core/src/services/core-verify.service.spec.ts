@@ -117,10 +117,10 @@ describe('CoreVerifyService', () => {
 
   describe('verify()', () => {
     it('should return a promise', async () => {
-      // action
+      // When
       const result = service.verify(sessionServiceMock, reqMock);
       await result;
-      // expect
+      // Then
       expect(result).toBeInstanceOf(Promise);
     });
 

@@ -27,78 +27,78 @@ describe('IsValidPromptConstraint', () => {
 
   describe('getAllowedList', () => {
     it('should the list from config', () => {
-      // arrange
-      // action
+      // Given
+      // When
       const valid = constraint.getAllowedList({});
 
-      // assert
+      // Then
       expect(valid).toStrictEqual(resultsMock);
     });
   });
 
   describe('validate', () => {
     it('should return "true" if the array include one of the values allowed', () => {
-      // setup
+      // Given
       const value = ['clothes'];
 
-      // action
+      // When
       const valid = constraint.validate(value, argumentsMock);
 
-      // assert
+      // Then
       expect(valid).toStrictEqual(true);
     });
 
     it('should return "true" if the value include two of the values allowed', () => {
-      // setup
+      // Given
       const value = ['boots', 'motorcycle'];
 
-      // action
+      // When
       const valid = constraint.validate(value, argumentsMock);
 
-      // assert
+      // Then
       expect(valid).toStrictEqual(true);
     });
 
     it('should return "true" if the value include all the values allowed', () => {
-      // setup
+      // Given
       const value = ['boots', 'clothes', 'motorcycle'];
 
-      // action
+      // When
       const valid = constraint.validate(value, argumentsMock);
 
-      // assert
+      // Then
       expect(valid).toStrictEqual(true);
     });
 
     it('should return "true" if the value include one of the values allowed plus another unknown', () => {
-      // setup
+      // Given
       const value = ['clothes', 'SarahConnor'];
-      // action
+      // When
       const valid = constraint.validate(value, argumentsMock);
 
-      // assert
+      // Then
       expect(valid).toStrictEqual(true);
     });
 
     it('should return "false" if the value none of the values allowed', () => {
-      // setup
+      // Given
       const value = ['I will be back 👍'];
 
-      // action
+      // When
       const valid = constraint.validate(value, argumentsMock);
 
-      // assert
+      // Then
       expect(valid).toStrictEqual(false);
     });
 
     it('should return "false" the value is not an array', () => {
-      // setup
+      // Given
       const value = 'Not an array';
 
-      // action
+      // When
       const valid = constraint.validate(value, argumentsMock);
 
-      // assert
+      // Then
       expect(valid).toStrictEqual(false);
     });
   });
@@ -111,50 +111,50 @@ describe('IsValidPromptConstraint', () => {
     });
 
     it('should return a formatted error message', () => {
-      // setup
+      // Given
       const validationArguments = {
         value: ['I', 'will', 'be', 'back 👍'],
         property: 'Terminator',
         constraints: [['boots', 'clothes', 'motorcycle']],
       };
 
-      // action
+      // When
       const message = constraint.defaultMessage(validationArguments);
 
-      // assert
+      // Then
       expect(message).toStrictEqual(
         'Terminator allows only theses values: "boots, clothes, motorcycle", got: "I, will, be, back 👍"',
       );
     });
     it('should return a formatted error message with no-array value', () => {
-      // setup
+      // Given
       const validationArguments = {
         value: 'I will be back 👍',
         property: 'Terminator',
         constraints: [],
       };
 
-      // action
+      // When
       const message = constraint.defaultMessage(validationArguments);
 
-      // assert
+      // Then
       expect(message).toStrictEqual(
         'Terminator allows only theses values: "boots, clothes, motorcycle", got: "I will be back 👍"',
       );
     });
 
     it('should return a formatted error message with an undefined value', () => {
-      // setup
+      // Given
       const validationArguments = {
         value: undefined,
         property: 'Terminator',
         constraints: [['boots', 'clothes', 'motorcycle']],
       };
 
-      // action
+      // When
       const message = constraint.defaultMessage(validationArguments);
 
-      // assert
+      // Then
       expect(message).toStrictEqual(
         'Terminator allows only theses values: "boots, clothes, motorcycle", got: "undefined"',
       );

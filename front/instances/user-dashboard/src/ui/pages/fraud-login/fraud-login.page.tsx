@@ -5,10 +5,10 @@ import { useLocation } from 'react-router';
 import type { AccountContextState } from '@fc/account';
 import { AccountContext } from '@fc/account';
 import { EventTypes, useSafeContext } from '@fc/common';
+import { getFraudSupportFormUrl, Routes } from '@fc/core-user-dashboard';
 import { AlertComponent, ConnectTypes, LinkComponent, Sizes } from '@fc/dsfr';
 import { LoginFormComponent } from '@fc/login-form';
 import { useStylesQuery, useStylesVariables } from '@fc/styles';
-import { getFraudSupportFormUrl, Routes } from '@fc/user-dashboard';
 
 import styles from './fraud-login.module.scss';
 
@@ -47,7 +47,7 @@ export const FraudLoginPage = React.memo(() => {
           <p>Votre session a expiré, veuillez vous reconnecter</p>
         </AlertComponent>
       )}
-      <h1 className={classnames(styles.title, 'fr-mb-5w')}>
+      <h1 className="fr-text-title--blue-france fr-mb-5w">
         Pour signaler un cas d’usurpation d’identité, veuillez vous connecter
       </h1>
       <LoginFormComponent
@@ -56,7 +56,7 @@ export const FraudLoginPage = React.memo(() => {
         redirectUrl={`${Routes.FRAUD_FORM}${search}`}
       />
       <p
-        className={classnames(styles.paragraph, 'fr-m-auto fr-mt-7v fr-mb-3w')}
+        className={classnames(styles.paragraph, 'fr-mx-auto fr-mt-7v fr-mb-3w')}
         data-testid="paragraph">
         Une fois connecté, vous pourrez contacter le support FranceConnect en remplissant un
         formulaire.

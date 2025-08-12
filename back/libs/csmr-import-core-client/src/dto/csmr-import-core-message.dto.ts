@@ -59,7 +59,7 @@ export class CsmrImportCoreServiceProviderDto {
   readonly post_logout_redirect_uris: string[];
 
   @IsEnum([SignatureAlgorithmEnum.ES256, SignatureAlgorithmEnum.RS256])
-  readonly userinfo_signed_response_alg:
+  readonly signedResponseAlg:
     | SignatureAlgorithmEnum.ES256
     | SignatureAlgorithmEnum.RS256;
 
@@ -86,7 +86,7 @@ export class CsmrImportCoreServiceProviderDto {
 
   @IsString({ each: true })
   @IsArray()
-  readonly adressesIp: string[];
+  readonly IPServerAddressesAndRanges: string[];
 
   @Matches(/^$|^[A-Za-z0-9-]{32,64}$/)
   readonly entityId: string;
@@ -95,4 +95,7 @@ export class CsmrImportCoreServiceProviderDto {
 export class CsmrImportCoreMessageDto {
   @IsArray()
   readonly payload: CsmrImportCoreServiceProviderDto[];
+
+  @IsString()
+  readonly user: string;
 }

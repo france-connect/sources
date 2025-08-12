@@ -5,7 +5,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { getTransformed, IPaginationResult } from '@fc/common';
 import { ConfigService } from '@fc/config';
-import { ActionTypes, TrackingDataDto } from '@fc/csmr-fraud-client';
 import {
   CsmrTracksClientService,
   TrackDto,
@@ -62,9 +61,11 @@ describe('UserDashboardController', () => {
   const identityMock = {
     email: 'email@email.fr',
     given_name: 'givenName',
+    given_name_array: ['givenName'],
     family_name: 'familyName',
     sub: 'identityMock.sub value',
     idp_id: '8dfc4080-c90d-4234-969b-f6c961de3e90',
+    preferred_username: 'preferred_username',
   };
 
   const { idp_id: _idpId, ...identityWithoutIdpIdMock } = identityMock;
@@ -102,26 +103,6 @@ describe('UserDashboardController', () => {
     idpList: ['8dfc4080-c90d-4234-969b-f6c961de3e90'],
     csrfToken: 'csrfTokenMockValue',
     allowFutureIdp: false,
-  };
-
-  const processFraudFormBodyMock = {
-    contactEmail: 'email@mock.fr',
-    idpEmail: 'email@idp.fr',
-    authenticationEventId: '1a344d7d-fb1f-432f-99df-01b374c93687',
-    fraudSurveyOrigin: 'fraudSurveyOriginMock',
-    comment: 'commentMock',
-    phoneNumber: '0678912345',
-  };
-
-  const fraudMessageMock = {
-    type: ActionTypes.PROCESS_FRAUD_CASE,
-    payload: {
-      identity: identityWithoutIdpIdMock,
-      fraudCase: {
-        fraudCaseId: uuidMockedValue,
-        ...processFraudFormBodyMock,
-      },
-    },
   };
 
   const userDashboardServiceMock = {
@@ -688,6 +669,67 @@ describe('UserDashboardController', () => {
         identityMock,
       );
     });
+
+    it('should not call userDashboard.sendMail if the user has no email', async () => {
+      // Given
+      userPreferencesMock.setUserPreferencesList.mockResolvedValueOnce(
+        resolvedUserPreferencesMock,
+      );
+      const identityWithoutEmailMock = {
+        ...identityMock,
+        email: undefined,
+      };
+      sessionServiceMock.get.mockReturnValue(identityWithoutEmailMock);
+      // When
+      await controller.updateUserPreferences(
+        reqMock,
+        resMock,
+        updatePreferencesBodyMock,
+        sessionServiceMock,
+      );
+      // Then
+      expect(controller['userDashboard'].sendMail).toHaveBeenCalledTimes(0);
+    });
+
+    it('should call userDashboard.sendMail if the user has an email', async () => {
+      // Given
+      userPreferencesMock.setUserPreferencesList.mockResolvedValueOnce(
+        resolvedUserPreferencesMock,
+      );
+      const userInfo = {
+        email: identityMock.email,
+        givenNameArray: identityMock.given_name_array,
+        familyName: identityMock.family_name,
+        preferredUsername: identityMock.preferred_username,
+      };
+      const {
+        idpList: formattedIdpSettingsList,
+        allowFutureIdp,
+        updatedIdpSettingsList,
+        hasAllowFutureIdpChanged,
+        updatedAt,
+      } = resolvedUserPreferencesMock;
+      const idpConfiguration = {
+        formattedIdpSettingsList,
+        updatedIdpSettingsList,
+        hasAllowFutureIdpChanged,
+        allowFutureIdp,
+        updatedAt,
+      };
+      // When
+      await controller.updateUserPreferences(
+        reqMock,
+        resMock,
+        updatePreferencesBodyMock,
+        sessionServiceMock,
+      );
+      // Then
+      expect(controller['userDashboard'].sendMail).toHaveBeenCalledTimes(1);
+      expect(controller['userDashboard'].sendMail).toHaveBeenCalledWith(
+        userInfo,
+        idpConfiguration,
+      );
+    });
   });
 
   describe('trackUserPreferenceChange', () => {
@@ -837,106 +879,6 @@ describe('UserDashboardController', () => {
           userPreferencesContext: secondUserPreferencesContextMock,
         },
       );
-    });
-  });
-
-  describe('processFraudForm', () => {
-    const fraudCaseTrackingDataMock = Symbol(
-      'fraudCaseTrackingDataMock',
-    ) as unknown as TrackingDataDto;
-
-    beforeEach(() => {
-      csmrFraudClientMock.publish.mockResolvedValue({
-        payload: fraudCaseTrackingDataMock,
-      });
-    });
-
-    it('should fetch session', async () => {
-      // When
-      await controller.processFraudForm(
-        resMock,
-        reqMock,
-        processFraudFormBodyMock,
-        sessionServiceMock,
-      );
-      // Then
-      expect(sessionServiceMock.get).toHaveBeenCalledTimes(1);
-      expect(sessionServiceMock.get).toHaveBeenCalledWith('idpIdentity');
-    });
-
-    it('should return a 401 if no session', async () => {
-      // Given
-      sessionServiceMock.get.mockReturnValueOnce(undefined);
-
-      // When
-      await controller.processFraudForm(
-        resMock,
-        reqMock,
-        processFraudFormBodyMock,
-        sessionServiceMock,
-      );
-      // Then
-      expect(resMock.status).toHaveBeenCalledTimes(1);
-      expect(resMock.status).toHaveBeenCalledWith(401);
-      expect(resMock.send).toHaveBeenCalledTimes(1);
-      expect(resMock.send).toHaveBeenCalledWith({ code: 'INVALID_SESSION' });
-    });
-
-    it('should call csmrFraudClient.publish', async () => {
-      // When
-      await controller.processFraudForm(
-        resMock,
-        reqMock,
-        processFraudFormBodyMock,
-        sessionServiceMock,
-      );
-
-      // Then
-      expect(csmrFraudClientMock.publish).toHaveBeenCalledTimes(1);
-      expect(csmrFraudClientMock.publish).toHaveBeenCalledWith(
-        fraudMessageMock,
-      );
-    });
-
-    it('should call tracking.track() with right parameters', async () => {
-      //Given
-      const fraudCaseContextMock = {
-        isAuthenticated: true,
-        ...fraudCaseTrackingDataMock,
-      };
-
-      // When
-      await controller.processFraudForm(
-        resMock,
-        reqMock,
-        processFraudFormBodyMock,
-        sessionServiceMock,
-      );
-
-      // Then
-      expect(controller['tracking'].track).toHaveBeenCalledTimes(1);
-      expect(controller['tracking'].track).toHaveBeenCalledWith(
-        trackingService.TrackedEventsMap.FRAUD_CASE_OPENED,
-        {
-          req: reqMock,
-          identity: identityMock,
-          fraudCaseContext: fraudCaseContextMock,
-        },
-      );
-    });
-
-    it('should return a 200', async () => {
-      // When
-      await controller.processFraudForm(
-        resMock,
-        reqMock,
-        processFraudFormBodyMock,
-        sessionServiceMock,
-      );
-
-      // Then
-      expect(resMock.status).toHaveBeenCalledWith(200);
-      expect(resMock.send).toHaveBeenCalledTimes(1);
     });
   });
 });

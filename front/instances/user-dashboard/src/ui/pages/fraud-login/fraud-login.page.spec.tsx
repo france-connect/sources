@@ -3,10 +3,10 @@ import { useLocation } from 'react-router';
 
 import { AccountContext } from '@fc/account';
 import { useSafeContext } from '@fc/common';
+import { getFraudSupportFormUrl } from '@fc/core-user-dashboard';
 import { AlertComponent, LinkComponent } from '@fc/dsfr';
 import { LoginFormComponent } from '@fc/login-form';
 import { useStylesQuery, useStylesVariables } from '@fc/styles';
-import { getFraudSupportFormUrl } from '@fc/user-dashboard';
 
 import { FraudLoginPage } from './fraud-login.page';
 

@@ -4,7 +4,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { AppConfig } from '@fc/app';
 import { ConfigService } from '@fc/config';
-import { SessionService } from '@fc/session';
+import { SessionNotFoundException, SessionService } from '@fc/session';
 
 import { getSessionServiceMock } from '@mocks/session';
 
@@ -166,16 +166,25 @@ describe('ForbidRefreshInterceptor', () => {
       expect(() => interceptor['checkRefresh'](contextMock)).not.toThrow();
     });
 
-    it('should throw if it is a refresh', () => {
+    it('should throw UnexpectedNavigationException if it is a refresh', () => {
       // When / Then
       expect(() => interceptor['checkRefresh'](contextMock)).toThrow(
         UnexpectedNavigationException,
       );
     });
 
-    it('should throw if no stepRoute found', () => {
+    it('should throw SessionNotFoundException if no session found', () => {
       // Given
-      sessionServiceMock.get.mockReturnValueOnce(null);
+      sessionServiceMock.get.mockReturnValueOnce(undefined);
+      // When / Then
+      expect(() => interceptor['checkRefresh'](contextMock)).toThrow(
+        SessionNotFoundException,
+      );
+    });
+
+    it('should throw UndefinedStepRouteException if no stepRoute found', () => {
+      // Given
+      sessionServiceMock.get.mockReturnValueOnce({});
       // When / Then
       expect(() => interceptor['checkRefresh'](contextMock)).toThrow(
         UndefinedStepRouteException,

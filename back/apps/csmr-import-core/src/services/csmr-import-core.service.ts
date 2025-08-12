@@ -8,6 +8,8 @@ import { ConfigMongoAdapterService } from '@fc/config-mongo-adapter';
 import {
   ActionTypes as ActionTypesConfig,
   ConfigCreateMessageDtoPayload,
+  ConfigCreateViaMessageDtoPayload,
+  CreatedVia,
 } from '@fc/csmr-config-client';
 import {
   ActionTypes as ActionTypesHsm,
@@ -43,6 +45,7 @@ export class CsmrImportCoreService {
 
   async validateAndCreateServiceProvider(
     serviceProviders: CsmrImportCoreServiceProviderDto[],
+    user: string,
   ): Promise<CsmrImportCoreExecutionReportInterface[]> {
     const datapassIdCount = countOccurrences(serviceProviders, 'datapassId');
     const entityIdCount = countOccurrences(serviceProviders, 'entityId');
@@ -104,6 +107,7 @@ export class CsmrImportCoreService {
               sp,
               client_id,
               client_secret,
+              user,
             );
 
             await this.configDatabaseAdapter.create({
@@ -217,7 +221,7 @@ export class CsmrImportCoreService {
     );
 
     const message = {
-      type: ActionTypesHsm.RANDOM_MICROSERVICE,
+      type: ActionTypesHsm.RANDOM,
       payload: {
         length: RANDOM_LENGTH,
         encoding: payloadEncoding,
@@ -252,7 +256,8 @@ export class CsmrImportCoreService {
     serviceProvider: CsmrImportCoreServiceProviderInterface,
     client_id: string,
     client_secret: string,
-  ): ConfigCreateMessageDtoPayload {
+    user: string,
+  ): ConfigCreateViaMessageDtoPayload {
     const {
       rep_scope,
       idpFilterExclude,
@@ -279,14 +284,12 @@ export class CsmrImportCoreService {
       type: serviceProvider.type,
       emails: serviceProvider.email,
       signupId: serviceProvider.datapassId,
-      IPServerAddressesAndRanges: serviceProvider.adressesIp,
+      IPServerAddressesAndRanges: serviceProvider.IPServerAddressesAndRanges,
       redirect_uris: serviceProvider.redirect_uris,
       post_logout_redirect_uris: serviceProvider.post_logout_redirect_uris,
       scope,
-      id_token_signed_response_alg:
-        serviceProvider.userinfo_signed_response_alg,
-      userinfo_signed_response_alg:
-        serviceProvider.userinfo_signed_response_alg,
+      id_token_signed_response_alg: serviceProvider.signedResponseAlg,
+      userinfo_signed_response_alg: serviceProvider.signedResponseAlg,
       site: serviceProvider.site,
 
       entityId: serviceProvider.entityId || client_id,
@@ -303,6 +306,9 @@ export class CsmrImportCoreService {
       userinfo_encrypted_response_enc,
       platform,
       eidas,
+
+      createdBy: user,
+      createdVia: CreatedVia.EXPLOITATION_BULK_FORM,
     };
   }
 

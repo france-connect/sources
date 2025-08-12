@@ -114,3 +114,8 @@ export interface OidcClientInterface {
   userinfo_encrypted_response_enc: EncryptionEncodingEnum;
   jwks_uri?: string;
 }
+
+export interface ServiceProviderClientInterface extends OidcClientInterface {
+  createdBy?: string;
+  createdVia?: string;
+}

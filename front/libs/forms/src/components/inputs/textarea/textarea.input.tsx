@@ -1,16 +1,19 @@
 import React from 'react';
 
 import { ComponentTypes } from '../../../enums';
-import { useFieldMeta } from '../../../hooks';
+import { useFieldMessages, useFieldMeta } from '../../../hooks';
 import type { PropsWithInputConfigType } from '../../../types';
-import { GroupElement, LabelElement, MessageElement } from '../../elements';
+import { GroupElement, LabelElement, MessagesElement } from '../../elements';
 import { TextAreaMaxlengthComponent } from './textarea.maxlength';
 
 export const TextAreaInput = React.memo(({ config, input, meta }: PropsWithInputConfigType) => {
-  const { hint, label, maxChars } = config;
-  const { className, disabled, name, required } = input;
+  const { hint, label, maxChars, messages, required, seeAlso } = config;
+  const { className, disabled, name } = input;
 
-  const { errorMessage, hasError, inputClassname, isValid } = useFieldMeta(meta);
+  const { errorsList, hasError, inputClassname, isValid } = useFieldMeta(meta);
+
+  const fieldMessages = useFieldMessages({ errorsList, isValid, messages });
+  const hasMessages = fieldMessages && fieldMessages.length > 0;
 
   const count = input.value.length;
   const maxLength = maxChars ? Number(maxChars) + 1 : undefined;
@@ -22,7 +25,7 @@ export const TextAreaInput = React.memo(({ config, input, meta }: PropsWithInput
       hasError={hasError}
       isValid={isValid}
       type={ComponentTypes.INPUT}>
-      <LabelElement hint={hint} label={label} name={name} required={required} />
+      <LabelElement hint={hint} label={label} name={name} required={required} seeAlso={seeAlso} />
       <textarea
         {...input}
         aria-describedby={`${name}-messages`}
@@ -31,14 +34,12 @@ export const TextAreaInput = React.memo(({ config, input, meta }: PropsWithInput
         disabled={disabled}
         maxLength={maxLength}
         name={name}
-      />
-      <MessageElement
-        dataTestId={`${name}-messages`}
-        error={errorMessage}
-        id={name}
-        isValid={isValid}
+        rows={4}
       />
       {maxLength && <TextAreaMaxlengthComponent count={count} maxLength={maxLength} />}
+      {hasMessages && (
+        <MessagesElement dataTestId={`${name}-messages`} id={name} messages={fieldMessages} />
+      )}
     </GroupElement>
   );
 });

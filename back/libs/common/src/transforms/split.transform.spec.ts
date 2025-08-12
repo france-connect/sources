@@ -9,63 +9,63 @@ describe('Split transform', () => {
 
   describe('doSplit', () => {
     it('should return a array from string', () => {
-      // setup
+      // Given
       const separator = '-';
       const value = 'I-will-be-back';
       const output = ['I', 'will', 'be', 'back'];
       const doSplitFn = doSplit(separator, options);
 
-      // action
+      // When
       const result = doSplitFn({ value });
 
-      // assert
+      // Then
       expect(result).toStrictEqual(output);
     });
 
     it('should return a array from string even without seperator', () => {
-      // setup
+      // Given
       const separator = undefined;
       const value = 'I will be back';
       const output = ['I', 'will', 'be', 'back'];
       const doSplitFn = doSplit(separator, options);
 
-      // action
+      // When
       const result = doSplitFn({ value });
 
-      // assert
+      // Then
       expect(result).toStrictEqual(output);
     });
 
     it('should return [] if the input value is undefined', () => {
-      // setup
+      // Given
       const separator = undefined;
       const value = undefined;
       const output = [];
       const doSplitFn = doSplit(separator, options);
 
-      // action
+      // When
       const result = doSplitFn({ value });
 
-      // assert
+      // Then
       expect(result).toStrictEqual(output);
     });
 
     it('should return [] if the value is not a string', () => {
-      //setup
+      // Given
       const separator = ' ';
       const value = 42;
       const output = [];
       const doSplitFn = doSplit(separator, options);
 
-      // action
+      // When
       const result = doSplitFn({ value });
 
-      // assert
+      // Then
       expect(result).toStrictEqual(output);
     });
 
     it('should return [] if maxLength option is provided and the value length exceeds it', () => {
-      // setup
+      // Given
       const separator = ' ';
       const value = 'I will be back';
       const output = [];
@@ -74,15 +74,15 @@ describe('Split transform', () => {
       };
       const doSplitFn = doSplit(separator, optionsMock);
 
-      // action
+      // When
       const result = doSplitFn({ value });
 
-      // assert
+      // Then
       expect(result).toStrictEqual(output);
     });
 
     it('should not call split() if maxLength option is provided and the value length exceeds it', () => {
-      // setup
+      // Given
       const separator = undefined;
       const value = 'I will be back';
       const optionsMock = {
@@ -92,15 +92,15 @@ describe('Split transform', () => {
 
       const doSplitFn = doSplit(separator, optionsMock);
 
-      // action
+      // When
       doSplitFn({ value });
 
-      // assert
+      // Then
       expect(splitSpy).not.toHaveBeenCalled();
     });
 
     it('should return an array from input string if the value length is smaller than the maxLength option', () => {
-      // setup
+      // Given
       const separator = ' ';
       const value = 'I will be back';
       const output = ['I', 'will', 'be', 'back'];
@@ -110,10 +110,10 @@ describe('Split transform', () => {
       const splitSpy = jest.spyOn(String.prototype, 'split');
       const doSplitFn = doSplit(separator, optionsMock);
 
-      // action
+      // When
       const result = doSplitFn({ value });
 
-      // assert
+      // Then
 
       expect(splitSpy).toHaveBeenCalledWith(separator);
       expect(splitSpy).toHaveBeenCalledTimes(1);

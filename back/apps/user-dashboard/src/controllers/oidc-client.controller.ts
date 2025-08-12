@@ -16,7 +16,7 @@ import {
 
 import { ConfigService } from '@fc/config';
 import { IdentityProviderAdapterEnvService } from '@fc/identity-provider-adapter-env';
-import { OidcSession } from '@fc/oidc';
+import { OidcCallbackInterface, OidcSession } from '@fc/oidc';
 import { OidcAcrConfig } from '@fc/oidc-acr';
 import {
   OidcClientConfig,
@@ -204,6 +204,8 @@ export class OidcClientController {
    * @TODO #308 ETQ DEV je veux éviter que deux appels Http soient réalisés au lieu d'un à la discovery Url dans le cadre d'oidc client
    * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/308
    */
+  // Extra parameters needed for this route
+  // eslint-disable-next-line max-params
   @Get(OidcClientRoutes.OIDC_CALLBACK)
   @UsePipes(new ValidationPipe({ whitelist: true }))
   async getOidcCallback(
@@ -217,6 +219,8 @@ export class OidcClientController {
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
     @Session('App') sessionApp: ISessionService<AppSession>,
+    @Query()
+    { error, state }: OidcCallbackInterface,
   ) {
     const session: OidcSession = sessionOidc.get();
 
@@ -224,11 +228,23 @@ export class OidcClientController {
       throw new SessionNotFoundException('OidcClient');
     }
 
-    const { idpId, idpNonce: nonce, idpState: state } = session;
+    const { idpId, idpNonce, idpState } = session;
+
+    if (error) {
+      this.oidcClient.utils.checkState({ state }, idpState);
+      /**
+       *  @todo
+       *    author: Nicolas
+       *    date: 04/06/2025
+       *
+       *    action: Redirect to home page with an error if different than "user auth aborted"
+       */
+      return res.redirect(UserDashboardFrontRoutes.INDEX);
+    }
 
     const tokenParams = {
-      nonce,
-      state,
+      nonce: idpNonce,
+      state: idpState,
     };
     const { accessToken, acr, idToken } =
       await this.oidcClient.getTokenFromProvider(idpId, tokenParams, req);

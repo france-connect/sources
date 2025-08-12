@@ -7,7 +7,10 @@ export default {
   urls: env.json('URLS'),
   queue: env.string('QUEUE'),
   queueOptions: {
-    durable: false,
+    durable: true,
+    arguments: {
+      'x-message-ttl': env.number('MESSAGE_TTL'),
+    },
   },
   payloadEncoding: 'base64',
 

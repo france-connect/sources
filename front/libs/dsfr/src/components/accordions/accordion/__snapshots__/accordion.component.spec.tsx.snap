@@ -23,7 +23,7 @@ exports[`AccordionComponent should match the snapshot when Accordion is opened 1
       class="fr-collapse fr-px-2w fr-collapse--expanded"
       data-testid="AccordionComponent-content"
       id="accordion-aria-control-any-localeid-mock"
-      style="--collapse: -Anypx; --collapse-max-height: none;"
+      style="--collapse: -99999px; --collapse-max-height: 0;"
     >
       Children
     </div>
@@ -54,7 +54,7 @@ exports[`AccordionComponent should match the snapshot when element is passed in 
       class="fr-collapse fr-px-2w"
       data-testid="AccordionComponent-content"
       id="accordion-aria-control-any-localeid-mock"
-      style="--collapse: -Anypx; --collapse-max-height: none;"
+      style="--collapse: -99999px; --collapse-max-height: 0;"
     >
       <div>
         ELEMENT PROPS
@@ -87,7 +87,7 @@ exports[`AccordionComponent should match the snapshot when element or children a
       class="fr-collapse fr-px-2w"
       data-testid="AccordionComponent-content"
       id="accordion-aria-control-any-localeid-mock"
-      style="--collapse: -Anypx; --collapse-max-height: none;"
+      style="--collapse: -99999px; --collapse-max-height: 0;"
     />
   </section>
 </div>
@@ -116,7 +116,7 @@ exports[`AccordionComponent should match the snapshot when heading level is defi
       class="fr-collapse fr-px-2w"
       data-testid="AccordionComponent-content"
       id="accordion-aria-control-any-localeid-mock"
-      style="--collapse: -Anypx; --collapse-max-height: none;"
+      style="--collapse: -99999px; --collapse-max-height: 0;"
     >
       Children
     </div>
@@ -147,7 +147,7 @@ exports[`AccordionComponent should match the snapshot with default props 1`] = `
       class="fr-collapse fr-px-2w"
       data-testid="AccordionComponent-content"
       id="accordion-aria-control-any-localeid-mock"
-      style="--collapse: -Anypx; --collapse-max-height: none;"
+      style="--collapse: -99999px; --collapse-max-height: 0;"
     >
       Children
     </div>

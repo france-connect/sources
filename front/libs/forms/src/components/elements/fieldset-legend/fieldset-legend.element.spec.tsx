@@ -4,6 +4,7 @@ import { useFieldLabel } from '../../../hooks';
 import { FieldsetLegendElement } from './fieldset-legend.element';
 
 jest.mock('../../../hooks/field-label/field-label.hook');
+jest.mock('../see-also');
 
 describe('FieldsetLegendElement', () => {
   beforeEach(() => {
@@ -12,6 +13,7 @@ describe('FieldsetLegendElement', () => {
       hint: 'hook-hint-mock',
       label: 'hook-label-mock',
       required: expect.any(Boolean),
+      seeAlso: undefined,
     });
   });
 
@@ -40,12 +42,41 @@ describe('FieldsetLegendElement', () => {
     });
   });
 
+  it('should render the span even if only seeAlso is provided', () => {
+    // Given
+    const hintMock = undefined;
+    const labelMock = Symbol('any-label-mock') as unknown as string;
+    const requiredMock = Symbol('any-required-mock') as unknown as boolean;
+
+    jest.mocked(useFieldLabel).mockReturnValue({
+      hint: undefined,
+      label: 'hook-label-mock',
+      required: expect.any(Boolean),
+      seeAlso: 'see-also-valid',
+    });
+
+    // When
+    const { getByTestId } = render(
+      <FieldsetLegendElement
+        hint={hintMock}
+        label={labelMock}
+        name="name-mock"
+        required={requiredMock}
+      />,
+    );
+    const seeAlsoElt = getByTestId('SeeAlsoElement');
+
+    // Then
+    expect(seeAlsoElt).toBeDefined();
+  });
+
   it('should match the snapshot', () => {
     // Given
     jest.mocked(useFieldLabel).mockReturnValueOnce({
       hint: 'hook-hint-mock',
       label: 'hook-label-mock',
       required: true,
+      seeAlso: 'https://foo.bar/test',
     });
 
     // When
@@ -54,6 +85,7 @@ describe('FieldsetLegendElement', () => {
         className="any-classname-mock"
         label={expect.any(String)}
         name="any-name-mock"
+        seeAlso="https://foo.bar/test"
       />,
     );
     const hintElt = getByText('hook-hint-mock');

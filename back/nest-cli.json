@@ -8,54 +8,121 @@
     "tsConfigPath": "instances/core-fcp-high/tsconfig.app.json"
   },
   "projects": {
-    "eidas-bridge-instance": {
-      "type": "application",
-      "root": "instances/eidas-bridge",
-      "entryFile": "main",
-      "sourceRoot": "instances/eidas-bridge/src",
+    "access-control": {
+      "type": "library",
+      "root": "libs/access-control",
+      "entryFile": "index",
+      "sourceRoot": "libs/access-control/src",
       "compilerOptions": {
-        "tsConfigPath": "instances/eidas-bridge/tsconfig.app.json",
-        "assets": [
-          "../../../apps/eidas-bridge/**/*.ejs",
-          "../../../apps/eidas-bridge/**/*.css",
-          "../../../apps/eidas-bridge/**/*.js",
-          "../../../apps/eidas-bridge/**/*.svg",
-          "../../../apps/eidas-bridge/**/*.png",
-          "../../../apps/eidas-bridge/**/*.ico",
-          "../../../apps/eidas-bridge/**/*.woff2",
-          "../../../apps/eidas-bridge/**/*.webmanifest",
-          "../../../apps/eidas-bridge/**/robots.txt",
-          "../../../libs/eidas-country/src/public/**/*.svg"
-        ]
+        "tsConfigPath": "libs/access-control/tsconfig.lib.json"
       }
     },
-    "core-fcp-low": {
-      "type": "application",
-      "root": "instances/core-fcp-low",
-      "entryFile": "main",
-      "sourceRoot": "instances/core-fcp-low/src",
+    "account": {
+      "type": "library",
+      "root": "libs/account",
+      "entryFile": "index",
+      "sourceRoot": "libs/account/src",
       "compilerOptions": {
-        "tsConfigPath": "instances/core-fcp-low/tsconfig.app.json",
-        "assets": [
-          "../../../apps/core-fcp/**/*.ejs",
-          "../../../apps/core-fcp/**/*.css",
-          "../../../apps/core-fcp/**/*.js",
-          "../../../apps/core-fcp/**/*.svg",
-          "../../../apps/core-fcp/**/*.png",
-          "../../../apps/core-fcp/**/*.ico",
-          "../../../apps/core-fcp/**/*.woff2",
-          "../../../apps/core-fcp/**/*.webmanifest",
-          "../../../apps/core-fcp/**/robots.txt",
-          "../../../instances/core-fcp-low/src/**/*.js",
-          "../../../instances/core-fcp-low/src/**/*.css",
-          "../../../instances/core-fcp-low/src/**/*.ejs",
-          "../../../instances/core-fcp-low/src/**/*.ico",
-          "../../../instances/core-fcp-low/src/**/*.svg",
-          "../../../instances/core-fcp-low/src/**/*.png",
-          "../../../instances/core-fcp-low/src/**/*.woff2",
-          "../../../instances/core-fcp-low/src/**/*.webmanifest",
-          "../../../instances/core-fcp-low/src/**/robots.txt"
-        ]
+        "tsConfigPath": "libs/account/tsconfig.lib.json"
+      }
+    },
+    "apache-ignite": {
+      "type": "library",
+      "root": "libs/apache-ignite",
+      "entryFile": "index",
+      "sourceRoot": "libs/apache-ignite/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/apache-ignite/tsconfig.lib.json"
+      }
+    },
+    "app": {
+      "type": "library",
+      "root": "libs/app",
+      "entryFile": "index",
+      "sourceRoot": "libs/app/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/app/tsconfig.lib.json"
+      }
+    },
+    "async-local-storage": {
+      "type": "library",
+      "root": "libs/async-local-storage",
+      "entryFile": "index",
+      "sourceRoot": "libs/async-local-storage/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/async-local-storage/tsconfig.lib.json"
+      }
+    },
+    "cog": {
+      "type": "library",
+      "root": "libs/cog",
+      "entryFile": "index",
+      "sourceRoot": "libs/cog/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/cog/tsconfig.lib.json"
+      }
+    },
+    "common": {
+      "type": "library",
+      "root": "libs/common",
+      "entryFile": "index",
+      "sourceRoot": "libs/common/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/common/tsconfig.lib.json"
+      }
+    },
+    "config": {
+      "type": "library",
+      "root": "libs/config",
+      "entryFile": "index",
+      "sourceRoot": "libs/config/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/config/tsconfig.lib.json"
+      }
+    },
+    "config-abstract-adapter": {
+      "type": "library",
+      "root": "libs/config-abstract-adapter",
+      "entryFile": "index",
+      "sourceRoot": "libs/config-abstract-adapter/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/config-abstract-adapter/tsconfig.lib.json"
+      }
+    },
+    "config-mongo-adapter": {
+      "type": "library",
+      "root": "libs/config-mongo-adapter",
+      "entryFile": "index",
+      "sourceRoot": "libs/config-mongo-adapter/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/config-mongo-adapter/tsconfig.lib.json"
+      }
+    },
+    "config-postgres-adapter": {
+      "type": "library",
+      "root": "libs/config-postgres-adapter",
+      "entryFile": "index",
+      "sourceRoot": "libs/config-postgres-adapter/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/config-postgres-adapter/tsconfig.lib.json"
+      }
+    },
+    "core": {
+      "type": "library",
+      "root": "libs/core",
+      "entryFile": "index",
+      "sourceRoot": "libs/core/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/core/tsconfig.lib.json"
+      }
+    },
+    "core-fcp": {
+      "type": "library",
+      "root": "apps/core-fcp",
+      "entryFile": "index",
+      "sourceRoot": "apps/core-fcp/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/core-fcp/tsconfig.lib.json"
       }
     },
     "core-fcp-high": {
@@ -87,22 +154,187 @@
         ]
       }
     },
-    "partners-instance": {
-      "type": "application",
-      "root": "instances/partners",
-      "entryFile": "main",
-      "sourceRoot": "instances/partners/src",
+    "core-fcp-logger": {
+      "type": "library",
+      "root": "libs/core-fcp-logger",
+      "entryFile": "index",
+      "sourceRoot": "libs/core-fcp-logger/src",
       "compilerOptions": {
-        "tsConfigPath": "instances/partners/tsconfig.app.json"
+        "tsConfigPath": "libs/core-fcp-logger/tsconfig.lib.json"
       }
     },
-    "partners": {
-      "type": "library",
-      "root": "apps/partners",
-      "entryFile": "index",
-      "sourceRoot": "apps/partners/src",
+    "core-fcp-low": {
+      "type": "application",
+      "root": "instances/core-fcp-low",
+      "entryFile": "main",
+      "sourceRoot": "instances/core-fcp-low/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/partners/tsconfig.lib.json"
+        "tsConfigPath": "instances/core-fcp-low/tsconfig.app.json",
+        "assets": [
+          "../../../apps/core-fcp/**/*.ejs",
+          "../../../apps/core-fcp/**/*.css",
+          "../../../apps/core-fcp/**/*.js",
+          "../../../apps/core-fcp/**/*.svg",
+          "../../../apps/core-fcp/**/*.png",
+          "../../../apps/core-fcp/**/*.ico",
+          "../../../apps/core-fcp/**/*.woff2",
+          "../../../apps/core-fcp/**/*.webmanifest",
+          "../../../apps/core-fcp/**/robots.txt",
+          "../../../instances/core-fcp-low/src/**/*.js",
+          "../../../instances/core-fcp-low/src/**/*.css",
+          "../../../instances/core-fcp-low/src/**/*.ejs",
+          "../../../instances/core-fcp-low/src/**/*.ico",
+          "../../../instances/core-fcp-low/src/**/*.svg",
+          "../../../instances/core-fcp-low/src/**/*.png",
+          "../../../instances/core-fcp-low/src/**/*.woff2",
+          "../../../instances/core-fcp-low/src/**/*.webmanifest",
+          "../../../instances/core-fcp-low/src/**/robots.txt"
+        ]
+      }
+    },
+    "cryptography": {
+      "type": "library",
+      "root": "libs/cryptography",
+      "entryFile": "index",
+      "sourceRoot": "libs/cryptography/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/cryptography/tsconfig.lib.json"
+      }
+    },
+    "cryptography-eidas": {
+      "type": "library",
+      "root": "libs/cryptography-eidas",
+      "entryFile": "index",
+      "sourceRoot": "libs/cryptography-eidas/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/cryptography-eidas/tsconfig.lib.json"
+      }
+    },
+    "cryptography-fcp": {
+      "type": "library",
+      "root": "libs/cryptography-fcp",
+      "entryFile": "index",
+      "sourceRoot": "libs/cryptography-fcp/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/cryptography-fcp/tsconfig.lib.json"
+      }
+    },
+    "csmr-account": {
+      "type": "library",
+      "root": "apps/csmr-account",
+      "entryFile": "index",
+      "sourceRoot": "apps/csmr-account/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/csmr-account/tsconfig.lib.json"
+      }
+    },
+    "csmr-account-instance": {
+      "type": "application",
+      "root": "instances/csmr-account-instance",
+      "entryFile": "main",
+      "sourceRoot": "instances/csmr-account-instance/src",
+      "compilerOptions": {
+        "tsConfigPath": "instances/csmr-account-instance/tsconfig.app.json"
+      }
+    },
+    "csmr-config": {
+      "type": "library",
+      "root": "apps/csmr-config",
+      "entryFile": "index",
+      "sourceRoot": "apps/csmr-config/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/csmr-config/tsconfig.lib.json"
+      }
+    },
+    "csmr-config-client": {
+      "type": "library",
+      "root": "libs/csmr-config-client",
+      "entryFile": "index",
+      "sourceRoot": "libs/csmr-config-client/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/csmr-config-client/tsconfig.lib.json"
+      }
+    },
+    "csmr-config-partners": {
+      "type": "application",
+      "root": "instances/csmr-config-partners",
+      "entryFile": "main",
+      "sourceRoot": "instances/csmr-config-partners/src",
+      "compilerOptions": {
+        "tsConfigPath": "instances/csmr-config-partners/tsconfig.app.json"
+      }
+    },
+    "csmr-config-sandbox-low": {
+      "type": "application",
+      "root": "instances/csmr-config-sandbox-low",
+      "entryFile": "main",
+      "sourceRoot": "instances/csmr-config-sandbox-low/src",
+      "compilerOptions": {
+        "tsConfigPath": "instances/csmr-config-sandbox-low/tsconfig.app.json"
+      }
+    },
+    "csmr-fraud": {
+      "type": "library",
+      "root": "apps/csmr-fraud",
+      "entryFile": "index",
+      "sourceRoot": "apps/csmr-fraud/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/csmr-fraud/tsconfig.lib.json"
+      }
+    },
+    "csmr-fraud-client": {
+      "type": "library",
+      "root": "libs/csmr-fraud-client",
+      "entryFile": "index",
+      "sourceRoot": "libs/csmr-fraud-client/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/csmr-fraud-client/tsconfig.lib.json"
+      }
+    },
+    "csmr-fraud-instance": {
+      "type": "application",
+      "root": "instances/csmr-fraud-instance",
+      "entryFile": "main",
+      "sourceRoot": "instances/csmr-fraud-instance/src",
+      "compilerOptions": {
+        "tsConfigPath": "instances/csmr-fraud-instance/tsconfig.app.json",
+        "assets": ["../../../instances/csmr-fraud-instance/**/*.ejs"]
+      }
+    },
+    "csmr-hsm": {
+      "type": "library",
+      "root": "apps/csmr-hsm",
+      "entryFile": "index",
+      "sourceRoot": "apps/csmr-hsm/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/csmr-hsm/tsconfig.lib.json"
+      }
+    },
+    "csmr-hsm-client": {
+      "type": "library",
+      "root": "libs/csmr-hsm-client",
+      "entryFile": "index",
+      "sourceRoot": "libs/csmr-hsm-client/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/csmr-hsm-client/tsconfig.lib.json"
+      }
+    },
+    "command-runner-instance": {
+      "type": "application",
+      "root": "instances/command-runner-instance",
+      "entryFile": "main",
+      "sourceRoot": "instances/command-runner-instance/src",
+      "compilerOptions": {
+        "tsConfigPath": "instances/command-runner-instance/tsconfig.app.json"
+      }
+    },
+    "command-runner": {
+      "type": "library",
+      "root": "apps/command-runner",
+      "entryFile": "index",
+      "sourceRoot": "apps/command-runner/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/command-runner/tsconfig.lib.json"
       }
     },
     "csmr-hsm-high": {
@@ -114,88 +346,413 @@
         "tsConfigPath": "instances/csmr-hsm-high/tsconfig.app.json"
       }
     },
-    "mock-service-provider-fcp-high": {
-      "type": "application",
-      "root": "instances/mock-service-provider-fcp-high",
-      "entryFile": "main",
-      "sourceRoot": "instances/mock-service-provider-fcp-high/src",
+    "csmr-import-core": {
+      "type": "library",
+      "root": "apps/csmr-import-core",
+      "entryFile": "index",
+      "sourceRoot": "apps/csmr-import-core/src",
       "compilerOptions": {
-        "tsConfigPath": "instances/mock-service-provider-fcp-high/tsconfig.app.json",
+        "tsConfigPath": "apps/csmr-import-core/tsconfig.lib.json"
+      }
+    },
+    "csmr-import-core-client": {
+      "type": "library",
+      "root": "libs/csmr-import-core-client",
+      "entryFile": "index",
+      "sourceRoot": "libs/csmr-import-core-client/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/csmr-import-core-client/tsconfig.lib.json"
+      }
+    },
+    "csmr-import-core-instance": {
+      "type": "application",
+      "root": "instances/csmr-import-core-instance",
+      "entryFile": "main",
+      "sourceRoot": "instances/csmr-import-core-instance/src",
+      "compilerOptions": {
+        "tsConfigPath": "instances/csmr-import-core-instance/tsconfig.app.json"
+      }
+    },
+    "csmr-proxy-client": {
+      "type": "library",
+      "root": "libs/csmr-proxy-client",
+      "entryFile": "index",
+      "sourceRoot": "libs/csmr-proxy-client/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/csmr-proxy-client/tsconfig.lib.json"
+      }
+    },
+    "csmr-tracks": {
+      "type": "library",
+      "root": "apps/csmr-tracks",
+      "entryFile": "index",
+      "sourceRoot": "apps/csmr-tracks/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/csmr-tracks/tsconfig.lib.json"
+      }
+    },
+    "csmr-tracks-client": {
+      "type": "library",
+      "root": "libs/csmr-tracks-client",
+      "entryFile": "index",
+      "sourceRoot": "libs/csmr-tracks-client/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/csmr-tracks-client/tsconfig.lib.json"
+      }
+    },
+    "csmr-tracks-instance": {
+      "type": "application",
+      "root": "instances/csmr-tracks-instance",
+      "entryFile": "main",
+      "sourceRoot": "instances/csmr-tracks-instance/src",
+      "compilerOptions": {
+        "tsConfigPath": "instances/csmr-tracks-instance/tsconfig.app.json"
+      }
+    },
+    "csmr-user-preferences-high": {
+      "type": "application",
+      "root": "instances/csmr-user-preferences-high",
+      "entryFile": "main",
+      "sourceRoot": "instances/csmr-user-preferences-high/src",
+      "compilerOptions": {
+        "tsConfigPath": "instances/csmr-user-preferences-high/tsconfig.app.json",
+        "assets": ["../../../instances/csmr-user-preferences-high/**/*.ejs"]
+      }
+    },
+    "csrf": {
+      "type": "library",
+      "root": "libs/csrf",
+      "entryFile": "index",
+      "sourceRoot": "libs/csrf/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/csrf/tsconfig.lib.json"
+      }
+    },
+    "csv": {
+      "type": "library",
+      "root": "libs/csv",
+      "entryFile": "index",
+      "sourceRoot": "libs/csv/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/csv/tsconfig.lib.json"
+      }
+    },
+    "data-provider-adapter-core": {
+      "type": "library",
+      "root": "libs/data-provider-adapter-core",
+      "entryFile": "index",
+      "sourceRoot": "libs/data-provider-adapter-core/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/data-provider-adapter-core/tsconfig.lib.json"
+      }
+    },
+    "data-provider-adapter-mongo": {
+      "type": "library",
+      "root": "libs/data-provider-adapter-mongo",
+      "entryFile": "index",
+      "sourceRoot": "libs/data-provider-adapter-mongo/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/data-provider-adapter-mongo/tsconfig.lib.json"
+      }
+    },
+    "data-provider-core-auth": {
+      "type": "library",
+      "root": "libs/data-provider-core-auth",
+      "entryFile": "index",
+      "sourceRoot": "libs/data-provider-core-auth/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/data-provider-core-auth/tsconfig.lib.json"
+      }
+    },
+    "device": {
+      "type": "library",
+      "root": "libs/device",
+      "entryFile": "index",
+      "sourceRoot": "libs/device/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/device/tsconfig.lib.json"
+      }
+    },
+    "dto2form": {
+      "type": "library",
+      "root": "libs/dto2form",
+      "entryFile": "index",
+      "sourceRoot": "libs/dto2form/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/dto2form/tsconfig.lib.json"
+      }
+    },
+    "eidas": {
+      "type": "library",
+      "root": "libs/eidas",
+      "entryFile": "index",
+      "sourceRoot": "libs/eidas/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/eidas/tsconfig.lib.json"
+      }
+    },
+    "eidas-bridge": {
+      "type": "library",
+      "root": "apps/eidas-bridge",
+      "entryFile": "index",
+      "sourceRoot": "apps/eidas-bridge/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/eidas-bridge/tsconfig.lib.json"
+      }
+    },
+    "eidas-bridge-instance": {
+      "type": "application",
+      "root": "instances/eidas-bridge",
+      "entryFile": "main",
+      "sourceRoot": "instances/eidas-bridge/src",
+      "compilerOptions": {
+        "tsConfigPath": "instances/eidas-bridge/tsconfig.app.json",
         "assets": [
-          "../../../apps/mock-service-provider/**/*.js",
-          "../../../apps/mock-service-provider/**/*.ejs",
-          "../../../apps/mock-service-provider/**/*.css",
-          "../../../apps/mock-service-provider/**/*.svg",
-          "../../../apps/mock-service-provider/**/*.png",
-          "../../../instances/mock-service-provider-fcp-high/**/*.js",
-          "../../../instances/mock-service-provider-fcp-high/**/*.ejs",
-          "../../../instances/mock-service-provider-fcp-high/**/*.css",
-          "../../../instances/mock-service-provider-fcp-high/**/*.svg",
-          "../../../instances/mock-service-provider-fcp-high/**/*.png"
+          "../../../apps/eidas-bridge/**/*.ejs",
+          "../../../apps/eidas-bridge/**/*.css",
+          "../../../apps/eidas-bridge/**/*.js",
+          "../../../apps/eidas-bridge/**/*.svg",
+          "../../../apps/eidas-bridge/**/*.png",
+          "../../../apps/eidas-bridge/**/*.ico",
+          "../../../apps/eidas-bridge/**/*.woff2",
+          "../../../apps/eidas-bridge/**/*.webmanifest",
+          "../../../apps/eidas-bridge/**/robots.txt",
+          "../../../libs/eidas-country/src/public/**/*.svg"
         ]
       }
     },
-    "mock-service-provider-fcp-low": {
-      "type": "application",
-      "root": "instances/mock-service-provider-fcp-low",
-      "entryFile": "main",
-      "sourceRoot": "instances/mock-service-provider-fcp-low/src",
+    "eidas-client": {
+      "type": "library",
+      "root": "libs/eidas-client",
+      "entryFile": "index",
+      "sourceRoot": "libs/eidas-client/src",
       "compilerOptions": {
-        "tsConfigPath": "instances/mock-service-provider-fcp-low/tsconfig.app.json",
-        "assets": [
-          "../../../apps/mock-service-provider/**/*.js",
-          "../../../apps/mock-service-provider/**/*.ejs",
-          "../../../apps/mock-service-provider/**/*.css",
-          "../../../apps/mock-service-provider/**/*.svg",
-          "../../../apps/mock-service-provider/**/*.png",
-          "../../../instances/mock-service-provider-fcp-low/**/*.js",
-          "../../../instances/mock-service-provider-fcp-low/**/*.ejs",
-          "../../../instances/mock-service-provider-fcp-low/**/*.css",
-          "../../../instances/mock-service-provider-fcp-low/**/*.svg",
-          "../../../instances/mock-service-provider-fcp-low/**/*.png"
-        ]
+        "tsConfigPath": "libs/eidas-client/tsconfig.lib.json"
       }
     },
-    "mock-service-provider-fcp-legacy": {
-      "type": "application",
-      "root": "instances/mock-service-provider-fcp-legacy",
-      "entryFile": "main",
-      "sourceRoot": "instances/mock-service-provider-fcp-legacy/src",
+    "eidas-country": {
+      "type": "library",
+      "root": "libs/eidas-country",
+      "entryFile": "index",
+      "sourceRoot": "libs/eidas-country/src",
       "compilerOptions": {
-        "tsConfigPath": "instances/mock-service-provider-fcp-legacy/tsconfig.app.json",
-        "assets": [
-          "../../../apps/mock-service-provider/**/*.js",
-          "../../../apps/mock-service-provider/**/*.ejs",
-          "../../../apps/mock-service-provider/**/*.css",
-          "../../../apps/mock-service-provider/**/*.svg",
-          "../../../apps/mock-service-provider/**/*.png",
-          "../../../instances/mock-service-provider-fcp-legacy/**/*.js",
-          "../../../instances/mock-service-provider-fcp-legacy/**/*.ejs",
-          "../../../instances/mock-service-provider-fcp-legacy/**/*.css",
-          "../../../instances/mock-service-provider-fcp-legacy/**/*.svg",
-          "../../../instances/mock-service-provider-fcp-legacy/**/*.png"
-        ]
+        "tsConfigPath": "libs/eidas-country/tsconfig.lib.json"
       }
     },
-    "mock-proconnect": {
-      "type": "application",
-      "root": "instances/mock-proconnect",
-      "entryFile": "main",
-      "sourceRoot": "instances/mock-proconnect/src",
+    "eidas-light-protocol": {
+      "type": "library",
+      "root": "libs/eidas-light-protocol",
+      "entryFile": "index",
+      "sourceRoot": "libs/eidas-light-protocol/src",
       "compilerOptions": {
-        "tsConfigPath": "instances/mock-proconnect/tsconfig.app.json",
-        "assets": [
-          "../../../apps/mock-identity-provider/**/*.ejs",
-          "../../../apps/mock-identity-provider/**/*.css",
-          "../../../apps/mock-identity-provider/**/*.svg",
-          "../../../apps/mock-identity-provider/**/*.png",
-          "../../../apps/mock-identity-provider/**/*.csv",
-          "../../../instances/mock-proconnect/**/*.ejs",
-          "../../../instances/mock-proconnect/**/*.css",
-          "../../../instances/mock-proconnect/**/*.svg",
-          "../../../instances/mock-proconnect/**/*.csv",
-          "../../../instances/mock-proconnect/**/*.png"
-        ]
+        "tsConfigPath": "libs/eidas-light-protocol/tsconfig.lib.json"
+      }
+    },
+    "eidas-oidc-mapper": {
+      "type": "library",
+      "root": "libs/eidas-oidc-mapper",
+      "entryFile": "index",
+      "sourceRoot": "libs/eidas-oidc-mapper/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/eidas-oidc-mapper/tsconfig.lib.json"
+      }
+    },
+    "eidas-provider": {
+      "type": "library",
+      "root": "libs/eidas-provider",
+      "entryFile": "index",
+      "sourceRoot": "libs/eidas-provider/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/eidas-provider/tsconfig.lib.json"
+      }
+    },
+    "elasticsearch": {
+      "type": "library",
+      "root": "libs/elasticsearch",
+      "entryFile": "index",
+      "sourceRoot": "libs/elasticsearch/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/elasticsearch/tsconfig.lib.json"
+      }
+    },
+    "exceptions": {
+      "type": "library",
+      "root": "libs/exceptions",
+      "entryFile": "index",
+      "sourceRoot": "libs/exceptions/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/exceptions/tsconfig.lib.json"
+      }
+    },
+    "exceptions-fcp": {
+      "type": "library",
+      "root": "libs/exceptions-fcp",
+      "entryFile": "index",
+      "sourceRoot": "libs/exceptions-fcp/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/exceptions-fcp/tsconfig.lib.json"
+      }
+    },
+    "feature-handler": {
+      "type": "library",
+      "root": "libs/feature-handler",
+      "entryFile": "index",
+      "sourceRoot": "libs/feature-handler/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/feature-handler/tsconfig.lib.json"
+      }
+    },
+    "flow-steps": {
+      "type": "library",
+      "root": "libs/flow-steps",
+      "entryFile": "index",
+      "sourceRoot": "libs/flow-steps/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/flow-steps/tsconfig.lib.json"
+      }
+    },
+    "fraud-identity-theft": {
+      "type": "library",
+      "root": "libs/fraud-identity-theft",
+      "entryFile": "index",
+      "sourceRoot": "libs/fraud-identity-theft/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/fraud-identity-theft/tsconfig.lib.json"
+      }
+    },
+    "hsm": {
+      "type": "library",
+      "root": "libs/hsm",
+      "entryFile": "index",
+      "sourceRoot": "libs/hsm/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/hsm/tsconfig.lib.json"
+      }
+    },
+    "http-proxy": {
+      "type": "library",
+      "root": "libs/http-proxy",
+      "entryFile": "index",
+      "sourceRoot": "libs/http-proxy/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/http-proxy/tsconfig.lib.json"
+      }
+    },
+    "i18n": {
+      "type": "library",
+      "root": "libs/i18n",
+      "entryFile": "index",
+      "sourceRoot": "libs/i18n/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/i18n/tsconfig.lib.json"
+      }
+    },
+    "identity": {
+      "type": "library",
+      "root": "libs/identity",
+      "entryFile": "index",
+      "sourceRoot": "libs/identity/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/identity/tsconfig.lib.json"
+      }
+    },
+    "identity-provider-adapter-env": {
+      "type": "library",
+      "root": "libs/identity-provider-adapter-env",
+      "entryFile": "index",
+      "sourceRoot": "libs/identity-provider-adapter-env/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/identity-provider-adapter-env/tsconfig.lib.json"
+      }
+    },
+    "identity-provider-adapter-mongo": {
+      "type": "library",
+      "root": "libs/identity-provider-adapter-mongo",
+      "entryFile": "index",
+      "sourceRoot": "libs/identity-provider-adapter-mongo/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/identity-provider-adapter-mongo/tsconfig.lib.json"
+      }
+    },
+    "jwt": {
+      "type": "library",
+      "root": "libs/jwt",
+      "entryFile": "index",
+      "sourceRoot": "libs/jwt/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/jwt/tsconfig.lib.json"
+      }
+    },
+    "logger": {
+      "type": "library",
+      "root": "libs/logger",
+      "entryFile": "index",
+      "sourceRoot": "libs/logger/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/logger/tsconfig.lib.json"
+      }
+    },
+    "logger-legacy": {
+      "type": "library",
+      "root": "libs/logger-legacy",
+      "entryFile": "index",
+      "sourceRoot": "libs/logger-legacy/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/logger-legacy/tsconfig.lib.json"
+      }
+    },
+    "logger-plugins": {
+      "type": "library",
+      "root": "libs/logger-plugins",
+      "entryFile": "index",
+      "sourceRoot": "libs/logger-plugins/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/logger-plugins/tsconfig.lib.json"
+      }
+    },
+    "mailer": {
+      "type": "library",
+      "root": "libs/mailer",
+      "entryFile": "index",
+      "sourceRoot": "libs/mailer/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/mailer/tsconfig.lib.json"
+      }
+    },
+    "microservices": {
+      "type": "library",
+      "root": "libs/microservices",
+      "entryFile": "index",
+      "sourceRoot": "libs/microservices/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/microservices/tsconfig.lib.json"
+      }
+    },
+    "microservices-rmq": {
+      "type": "library",
+      "root": "libs/microservices-rmq",
+      "entryFile": "index",
+      "sourceRoot": "libs/microservices-rmq/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/microservices-rmq/tsconfig.lib.json"
+      }
+    },
+    "mock-data-provider": {
+      "type": "application",
+      "root": "instances/mock-data-provider",
+      "entryFile": "main",
+      "sourceRoot": "instances/mock-data-provider/src",
+      "compilerOptions": {
+        "tsConfigPath": "instances/mock-data-provider/tsconfig.app.json"
+      }
+    },
+    "mock-identity-provider": {
+      "type": "library",
+      "root": "apps/mock-identity-provider",
+      "entryFile": "index",
+      "sourceRoot": "apps/mock-identity-provider/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/mock-identity-provider/tsconfig.lib.json"
       }
     },
     "mock-identity-provider-fcp-high": {
@@ -240,634 +797,25 @@
         ]
       }
     },
-    "user-dashboard-instance": {
+    "mock-proconnect": {
       "type": "application",
-      "root": "instances/user-dashboard",
+      "root": "instances/mock-proconnect",
       "entryFile": "main",
-      "sourceRoot": "instances/user-dashboard/src",
+      "sourceRoot": "instances/mock-proconnect/src",
       "compilerOptions": {
-        "tsConfigPath": "instances/user-dashboard/tsconfig.app.json",
+        "tsConfigPath": "instances/mock-proconnect/tsconfig.app.json",
         "assets": [
-          "../../../apps/user-dashboard/**/*.ejs",
-          "../../../apps/user-dashboard/**/*.css",
-          "../../../apps/user-dashboard/**/*.svg",
-          "../../../apps/user-dashboard/**/*.png",
-          "../../../instances/user-dashboard/**/*.ejs"
+          "../../../apps/mock-identity-provider/**/*.ejs",
+          "../../../apps/mock-identity-provider/**/*.css",
+          "../../../apps/mock-identity-provider/**/*.svg",
+          "../../../apps/mock-identity-provider/**/*.png",
+          "../../../apps/mock-identity-provider/**/*.csv",
+          "../../../instances/mock-proconnect/**/*.ejs",
+          "../../../instances/mock-proconnect/**/*.css",
+          "../../../instances/mock-proconnect/**/*.svg",
+          "../../../instances/mock-proconnect/**/*.csv",
+          "../../../instances/mock-proconnect/**/*.png"
         ]
-      }
-    },
-    "csmr-user-preferences-high": {
-      "type": "application",
-      "root": "instances/csmr-user-preferences-high",
-      "entryFile": "main",
-      "sourceRoot": "instances/csmr-user-preferences-high/src",
-      "compilerOptions": {
-        "tsConfigPath": "instances/csmr-user-preferences-high/tsconfig.app.json",
-        "assets": ["../../../instances/csmr-user-preferences-high/**/*.ejs"]
-      }
-    },
-    "csmr-account-instance": {
-      "type": "application",
-      "root": "instances/csmr-account-instance",
-      "entryFile": "main",
-      "sourceRoot": "instances/csmr-account-instance/src",
-      "compilerOptions": {
-        "tsConfigPath": "instances/csmr-account-instance/tsconfig.app.json"
-      }
-    },
-    "csmr-fraud-instance": {
-      "type": "application",
-      "root": "instances/csmr-fraud-instance",
-      "entryFile": "main",
-      "sourceRoot": "instances/csmr-fraud-instance/src",
-      "compilerOptions": {
-        "tsConfigPath": "instances/csmr-fraud-instance/tsconfig.app.json",
-        "assets": ["../../../instances/csmr-fraud-instance/**/*.ejs"]
-      }
-    },
-    "csmr-import-core-instance": {
-      "type": "application",
-      "root": "instances/csmr-import-core-instance",
-      "entryFile": "main",
-      "sourceRoot": "instances/csmr-import-core-instance/src",
-      "compilerOptions": {
-        "tsConfigPath": "instances/csmr-import-core-instance/tsconfig.app.json"
-      }
-    },
-    "rnipp": {
-      "type": "library",
-      "root": "libs/rnipp",
-      "entryFile": "index",
-      "sourceRoot": "libs/rnipp/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/rnipp/tsconfig.lib.json"
-      }
-    },
-    "identity": {
-      "type": "library",
-      "root": "libs/identity",
-      "entryFile": "index",
-      "sourceRoot": "libs/identity/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/identity/tsconfig.lib.json"
-      }
-    },
-    "identity-provider-adapter-mongo": {
-      "type": "library",
-      "root": "libs/identity-provider-adapter-mongo",
-      "entryFile": "index",
-      "sourceRoot": "libs/identity-provider-adapter-mongo/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/identity-provider-adapter-mongo/tsconfig.lib.json"
-      }
-    },
-    "data-provider-adapter-mongo": {
-      "type": "library",
-      "root": "libs/data-provider-adapter-mongo",
-      "entryFile": "index",
-      "sourceRoot": "libs/data-provider-adapter-mongo/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/data-provider-adapter-mongo/tsconfig.lib.json"
-      }
-    },
-    "service-provider-adapter-mongo": {
-      "type": "library",
-      "root": "libs/service-provider-adapter-mongo",
-      "entryFile": "index",
-      "sourceRoot": "libs/service-provider-adapter-mongo/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/service-provider-adapter-mongo/tsconfig.lib.json"
-      }
-    },
-    "logger-legacy": {
-      "type": "library",
-      "root": "libs/logger-legacy",
-      "entryFile": "index",
-      "sourceRoot": "libs/logger-legacy/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/logger-legacy/tsconfig.lib.json"
-      }
-    },
-    "logger": {
-      "type": "library",
-      "root": "libs/logger",
-      "entryFile": "index",
-      "sourceRoot": "libs/logger/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/logger/tsconfig.lib.json"
-      }
-    },
-    "oidc-provider": {
-      "type": "library",
-      "root": "libs/oidc-provider",
-      "entryFile": "index",
-      "sourceRoot": "libs/oidc-provider/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/oidc-provider/tsconfig.lib.json"
-      }
-    },
-    "oidc-client": {
-      "type": "library",
-      "root": "libs/oidc-client",
-      "entryFile": "index",
-      "sourceRoot": "libs/oidc-client/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/oidc-client/tsconfig.lib.json"
-      }
-    },
-    "cryptography-fcp": {
-      "type": "library",
-      "root": "libs/cryptography-fcp",
-      "entryFile": "index",
-      "sourceRoot": "libs/cryptography-fcp/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/cryptography-fcp/tsconfig.lib.json"
-      }
-    },
-    "cryptography": {
-      "type": "library",
-      "root": "libs/cryptography",
-      "entryFile": "index",
-      "sourceRoot": "libs/cryptography/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/cryptography/tsconfig.lib.json"
-      }
-    },
-    "core": {
-      "type": "library",
-      "root": "libs/core",
-      "entryFile": "index",
-      "sourceRoot": "libs/core/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/core/tsconfig.lib.json"
-      }
-    },
-    "core-fcp-logger": {
-      "type": "library",
-      "root": "libs/core-fcp-logger",
-      "entryFile": "index",
-      "sourceRoot": "libs/core-fcp-logger/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/core-fcp-logger/tsconfig.lib.json"
-      }
-    },
-    "eidas-bridge": {
-      "type": "library",
-      "root": "apps/eidas-bridge",
-      "entryFile": "index",
-      "sourceRoot": "apps/eidas-bridge/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/eidas-bridge/tsconfig.lib.json"
-      }
-    },
-    "core-fcp": {
-      "type": "library",
-      "root": "apps/core-fcp",
-      "entryFile": "index",
-      "sourceRoot": "apps/core-fcp/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/core-fcp/tsconfig.lib.json"
-      }
-    },
-    "user-dashboard": {
-      "type": "library",
-      "root": "apps/user-dashboard",
-      "entryFile": "index",
-      "sourceRoot": "apps/user-dashboard/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/user-dashboard/tsconfig.lib.json"
-      }
-    },
-    "csmr-hsm": {
-      "type": "library",
-      "root": "apps/csmr-hsm",
-      "entryFile": "index",
-      "sourceRoot": "apps/csmr-hsm/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/csmr-hsm/tsconfig.lib.json"
-      }
-    },
-    "csmr-hsm-client": {
-      "type": "library",
-      "root": "libs/csmr-hsm-client",
-      "entryFile": "index",
-      "sourceRoot": "libs/csmr-hsm-client/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/csmr-hsm-client/tsconfig.lib.json"
-      }
-    },
-    "csmr-tracks": {
-      "type": "library",
-      "root": "apps/csmr-tracks",
-      "entryFile": "index",
-      "sourceRoot": "apps/csmr-tracks/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/csmr-tracks/tsconfig.lib.json"
-      }
-    },
-    "common": {
-      "type": "library",
-      "root": "libs/common",
-      "entryFile": "index",
-      "sourceRoot": "libs/common/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/common/tsconfig.lib.json"
-      }
-    },
-    "config": {
-      "type": "library",
-      "root": "libs/config",
-      "entryFile": "index",
-      "sourceRoot": "libs/config/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/config/tsconfig.lib.json"
-      }
-    },
-    "exceptions-fcp": {
-      "type": "library",
-      "root": "libs/exceptions-fcp",
-      "entryFile": "index",
-      "sourceRoot": "libs/exceptions-fcp/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/exceptions-fcp/tsconfig.lib.json"
-      }
-    },
-    "mongoose": {
-      "type": "library",
-      "root": "libs/mongoose",
-      "entryFile": "index",
-      "sourceRoot": "libs/mongoose/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/mongoose/tsconfig.lib.json"
-      }
-    },
-    "redis": {
-      "type": "library",
-      "root": "libs/redis",
-      "entryFile": "index",
-      "sourceRoot": "libs/redis/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/redis/tsconfig.lib.json"
-      }
-    },
-    "rabbitmq": {
-      "type": "library",
-      "root": "libs/rabbitmq",
-      "entryFile": "index",
-      "sourceRoot": "libs/rabbitmq/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/rabbitmq/tsconfig.lib.json"
-      }
-    },
-    "hsm": {
-      "type": "library",
-      "root": "libs/hsm",
-      "entryFile": "index",
-      "sourceRoot": "libs/hsm/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/hsm/tsconfig.lib.json"
-      }
-    },
-    "microservices": {
-      "type": "library",
-      "root": "libs/microservices",
-      "entryFile": "index",
-      "sourceRoot": "libs/microservices/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/microservices/tsconfig.lib.json"
-      }
-    },
-    "account": {
-      "type": "library",
-      "root": "libs/account",
-      "entryFile": "index",
-      "sourceRoot": "libs/account/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/account/tsconfig.lib.json"
-      }
-    },
-    "oidc": {
-      "type": "library",
-      "root": "libs/oidc",
-      "entryFile": "index",
-      "sourceRoot": "libs/oidc/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/oidc/tsconfig.lib.json"
-      }
-    },
-    "http-proxy": {
-      "type": "library",
-      "root": "libs/http-proxy",
-      "entryFile": "index",
-      "sourceRoot": "libs/http-proxy/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/http-proxy/tsconfig.lib.json"
-      }
-    },
-    "session": {
-      "type": "library",
-      "root": "libs/session",
-      "entryFile": "index",
-      "sourceRoot": "libs/session/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/session/tsconfig.lib.json"
-      }
-    },
-    "override-oidc-provider": {
-      "type": "library",
-      "root": "libs/override-oidc-provider",
-      "entryFile": "index",
-      "sourceRoot": "libs/override-oidc-provider/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/override-oidc-provider/tsconfig.lib.json"
-      }
-    },
-    "mailer": {
-      "type": "library",
-      "root": "libs/mailer",
-      "entryFile": "index",
-      "sourceRoot": "libs/mailer/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/mailer/tsconfig.lib.json"
-      }
-    },
-    "mock-service-provider": {
-      "type": "library",
-      "root": "apps/mock-service-provider",
-      "entryFile": "index",
-      "sourceRoot": "apps/mock-service-provider/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/mock-service-provider/tsconfig.lib.json"
-      }
-    },
-    "mock-identity-provider": {
-      "type": "library",
-      "root": "apps/mock-identity-provider",
-      "entryFile": "index",
-      "sourceRoot": "apps/mock-identity-provider/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/mock-identity-provider/tsconfig.lib.json"
-      }
-    },
-    "identity-provider-adapter-env": {
-      "type": "library",
-      "root": "libs/identity-provider-adapter-env",
-      "entryFile": "index",
-      "sourceRoot": "libs/identity-provider-adapter-env/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/identity-provider-adapter-env/tsconfig.lib.json"
-      }
-    },
-    "service-provider-adapter-env": {
-      "type": "library",
-      "root": "libs/service-provider-adapter-env",
-      "entryFile": "index",
-      "sourceRoot": "libs/service-provider-adapter-env/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/service-provider-adapter-env/tsconfig.lib.json"
-      }
-    },
-    "tracking": {
-      "type": "library",
-      "root": "libs/tracking",
-      "entryFile": "index",
-      "sourceRoot": "libs/tracking/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/tracking/tsconfig.lib.json"
-      }
-    },
-    "tracking-context": {
-      "type": "library",
-      "root": "libs/tracking-context",
-      "entryFile": "index",
-      "sourceRoot": "libs/tracking-context/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/tracking-context/tsconfig.lib.json"
-      }
-    },
-    "app": {
-      "type": "library",
-      "root": "libs/app",
-      "entryFile": "index",
-      "sourceRoot": "libs/app/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/app/tsconfig.lib.json"
-      }
-    },
-    "eidas-light-protocol": {
-      "type": "library",
-      "root": "libs/eidas-light-protocol",
-      "entryFile": "index",
-      "sourceRoot": "libs/eidas-light-protocol/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/eidas-light-protocol/tsconfig.lib.json"
-      }
-    },
-    "eidas-client": {
-      "type": "library",
-      "root": "libs/eidas-client",
-      "entryFile": "index",
-      "sourceRoot": "libs/eidas-client/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/eidas-client/tsconfig.lib.json"
-      }
-    },
-    "apache-ignite": {
-      "type": "library",
-      "root": "libs/apache-ignite",
-      "entryFile": "index",
-      "sourceRoot": "libs/apache-ignite/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/apache-ignite/tsconfig.lib.json"
-      }
-    },
-    "eidas-provider": {
-      "type": "library",
-      "root": "libs/eidas-provider",
-      "entryFile": "index",
-      "sourceRoot": "libs/eidas-provider/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/eidas-provider/tsconfig.lib.json"
-      }
-    },
-    "eidas-oidc-mapper": {
-      "type": "library",
-      "root": "libs/eidas-oidc-mapper",
-      "entryFile": "index",
-      "sourceRoot": "libs/eidas-oidc-mapper/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/eidas-oidc-mapper/tsconfig.lib.json"
-      }
-    },
-    "eidas": {
-      "type": "library",
-      "root": "libs/eidas",
-      "entryFile": "index",
-      "sourceRoot": "libs/eidas/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/eidas/tsconfig.lib.json"
-      }
-    },
-    "feature-handler": {
-      "type": "library",
-      "root": "libs/feature-handler",
-      "entryFile": "index",
-      "sourceRoot": "libs/feature-handler/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/feature-handler/tsconfig.lib.json"
-      }
-    },
-    "scopes": {
-      "type": "library",
-      "root": "libs/scopes",
-      "entryFile": "index",
-      "sourceRoot": "libs/scopes/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/scopes/tsconfig.lib.json"
-      }
-    },
-    "notifications": {
-      "type": "library",
-      "root": "libs/notifications",
-      "entryFile": "index",
-      "sourceRoot": "libs/notifications/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/notifications/tsconfig.lib.json"
-      }
-    },
-    "cryptography-eidas": {
-      "type": "library",
-      "root": "libs/cryptography-eidas",
-      "entryFile": "index",
-      "sourceRoot": "libs/cryptography-eidas/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/cryptography-eidas/tsconfig.lib.json"
-      }
-    },
-    "cog": {
-      "type": "library",
-      "root": "libs/cog",
-      "entryFile": "index",
-      "sourceRoot": "libs/cog/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/cog/tsconfig.lib.json"
-      }
-    },
-    "eidas-country": {
-      "type": "library",
-      "root": "libs/eidas-country",
-      "entryFile": "index",
-      "sourceRoot": "libs/eidas-country/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/eidas-country/tsconfig.lib.json"
-      }
-    },
-    "elasticsearch": {
-      "type": "library",
-      "root": "libs/elasticsearch",
-      "entryFile": "index",
-      "sourceRoot": "libs/elasticsearch/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/elasticsearch/tsconfig.lib.json"
-      }
-    },
-    "tracks-adapter-elasticsearch": {
-      "type": "library",
-      "root": "libs/tracks-adapter-elasticsearch",
-      "entryFile": "index",
-      "sourceRoot": "libs/tracks-adapter-elasticsearch/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/tracks-adapter-elasticsearch/tsconfig.lib.json"
-      }
-    },
-    "csv": {
-      "type": "library",
-      "root": "libs/csv",
-      "entryFile": "index",
-      "sourceRoot": "libs/csv/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/csv/tsconfig.lib.json"
-      }
-    },
-    "data-provider-core-auth": {
-      "type": "library",
-      "root": "libs/data-provider-core-auth",
-      "entryFile": "index",
-      "sourceRoot": "libs/data-provider-core-auth/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/data-provider-core-auth/tsconfig.lib.json"
-      }
-    },
-    "csmr-tracks-client": {
-      "type": "library",
-      "root": "libs/csmr-tracks-client",
-      "entryFile": "index",
-      "sourceRoot": "libs/csmr-tracks-client/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/csmr-tracks-client/tsconfig.lib.json"
-      }
-    },
-    "csmr-fraud-client": {
-      "type": "library",
-      "root": "libs/csmr-fraud-client",
-      "entryFile": "index",
-      "sourceRoot": "libs/csmr-fraud-client/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/csmr-fraud-client/tsconfig.lib.json"
-      }
-    },
-    "csmr-import-core-client": {
-      "type": "library",
-      "root": "libs/csmr-import-core-client",
-      "entryFile": "index",
-      "sourceRoot": "libs/csmr-import-core-client/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/csmr-import-core-client/tsconfig.lib.json"
-      }
-    },
-    "csmr-tracks-instance": {
-      "type": "application",
-      "root": "instances/csmr-tracks-instance",
-      "entryFile": "main",
-      "sourceRoot": "instances/csmr-tracks-instance/src",
-      "compilerOptions": {
-        "tsConfigPath": "instances/csmr-tracks-instance/tsconfig.app.json"
-      }
-    },
-    "csmr-account": {
-      "type": "library",
-      "root": "apps/csmr-account",
-      "entryFile": "index",
-      "sourceRoot": "apps/csmr-account/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/csmr-account/tsconfig.lib.json"
-      }
-    },
-    "csmr-fraud": {
-      "type": "library",
-      "root": "apps/csmr-fraud",
-      "entryFile": "index",
-      "sourceRoot": "apps/csmr-fraud/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/csmr-fraud/tsconfig.lib.json"
-      }
-    },
-    "csmr-import-core": {
-      "type": "library",
-      "root": "apps/csmr-import-core",
-      "entryFile": "index",
-      "sourceRoot": "apps/csmr-import-core/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/csmr-import-core/tsconfig.lib.json"
-      }
-    },
-    "roles": {
-      "type": "library",
-      "root": "libs/roles",
-      "entryFile": "index",
-      "sourceRoot": "libs/roles/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/roles/tsconfig.lib.json"
       }
     },
     "mock-rnipp": {
@@ -883,6 +831,105 @@
         ]
       }
     },
+    "mock-service-provider": {
+      "type": "library",
+      "root": "apps/mock-service-provider",
+      "entryFile": "index",
+      "sourceRoot": "apps/mock-service-provider/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/mock-service-provider/tsconfig.lib.json"
+      }
+    },
+    "mock-service-provider-fcp-high": {
+      "type": "application",
+      "root": "instances/mock-service-provider-fcp-high",
+      "entryFile": "main",
+      "sourceRoot": "instances/mock-service-provider-fcp-high/src",
+      "compilerOptions": {
+        "tsConfigPath": "instances/mock-service-provider-fcp-high/tsconfig.app.json",
+        "assets": [
+          "../../../apps/mock-service-provider/**/*.js",
+          "../../../apps/mock-service-provider/**/*.ejs",
+          "../../../apps/mock-service-provider/**/*.css",
+          "../../../apps/mock-service-provider/**/*.svg",
+          "../../../apps/mock-service-provider/**/*.png",
+          "../../../instances/mock-service-provider-fcp-high/**/*.js",
+          "../../../instances/mock-service-provider-fcp-high/**/*.ejs",
+          "../../../instances/mock-service-provider-fcp-high/**/*.css",
+          "../../../instances/mock-service-provider-fcp-high/**/*.svg",
+          "../../../instances/mock-service-provider-fcp-high/**/*.png"
+        ]
+      }
+    },
+    "mock-service-provider-fcp-legacy": {
+      "type": "application",
+      "root": "instances/mock-service-provider-fcp-legacy",
+      "entryFile": "main",
+      "sourceRoot": "instances/mock-service-provider-fcp-legacy/src",
+      "compilerOptions": {
+        "tsConfigPath": "instances/mock-service-provider-fcp-legacy/tsconfig.app.json",
+        "assets": [
+          "../../../apps/mock-service-provider/**/*.js",
+          "../../../apps/mock-service-provider/**/*.ejs",
+          "../../../apps/mock-service-provider/**/*.css",
+          "../../../apps/mock-service-provider/**/*.svg",
+          "../../../apps/mock-service-provider/**/*.png",
+          "../../../instances/mock-service-provider-fcp-legacy/**/*.js",
+          "../../../instances/mock-service-provider-fcp-legacy/**/*.ejs",
+          "../../../instances/mock-service-provider-fcp-legacy/**/*.css",
+          "../../../instances/mock-service-provider-fcp-legacy/**/*.svg",
+          "../../../instances/mock-service-provider-fcp-legacy/**/*.png"
+        ]
+      }
+    },
+    "mock-service-provider-fcp-low": {
+      "type": "application",
+      "root": "instances/mock-service-provider-fcp-low",
+      "entryFile": "main",
+      "sourceRoot": "instances/mock-service-provider-fcp-low/src",
+      "compilerOptions": {
+        "tsConfigPath": "instances/mock-service-provider-fcp-low/tsconfig.app.json",
+        "assets": [
+          "../../../apps/mock-service-provider/**/*.js",
+          "../../../apps/mock-service-provider/**/*.ejs",
+          "../../../apps/mock-service-provider/**/*.css",
+          "../../../apps/mock-service-provider/**/*.svg",
+          "../../../apps/mock-service-provider/**/*.png",
+          "../../../instances/mock-service-provider-fcp-low/**/*.js",
+          "../../../instances/mock-service-provider-fcp-low/**/*.ejs",
+          "../../../instances/mock-service-provider-fcp-low/**/*.css",
+          "../../../instances/mock-service-provider-fcp-low/**/*.svg",
+          "../../../instances/mock-service-provider-fcp-low/**/*.png"
+        ]
+      }
+    },
+    "mongoose": {
+      "type": "library",
+      "root": "libs/mongoose",
+      "entryFile": "index",
+      "sourceRoot": "libs/mongoose/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/mongoose/tsconfig.lib.json"
+      }
+    },
+    "notifications": {
+      "type": "library",
+      "root": "libs/notifications",
+      "entryFile": "index",
+      "sourceRoot": "libs/notifications/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/notifications/tsconfig.lib.json"
+      }
+    },
+    "oidc": {
+      "type": "library",
+      "root": "libs/oidc",
+      "entryFile": "index",
+      "sourceRoot": "libs/oidc/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/oidc/tsconfig.lib.json"
+      }
+    },
     "oidc-acr": {
       "type": "library",
       "root": "libs/oidc-acr",
@@ -892,121 +939,49 @@
         "tsConfigPath": "libs/oidc-acr/tsconfig.lib.json"
       }
     },
-    "flow-steps": {
+    "oidc-client": {
       "type": "library",
-      "root": "libs/flow-steps",
+      "root": "libs/oidc-client",
       "entryFile": "index",
-      "sourceRoot": "libs/flow-steps/src",
+      "sourceRoot": "libs/oidc-client/src",
       "compilerOptions": {
-        "tsConfigPath": "libs/flow-steps/tsconfig.lib.json"
+        "tsConfigPath": "libs/oidc-client/tsconfig.lib.json"
       }
     },
-    "mock-data-provider": {
-      "type": "application",
-      "root": "instances/mock-data-provider",
-      "entryFile": "main",
-      "sourceRoot": "instances/mock-data-provider/src",
+    "oidc-provider": {
+      "type": "library",
+      "root": "libs/oidc-provider",
+      "entryFile": "index",
+      "sourceRoot": "libs/oidc-provider/src",
       "compilerOptions": {
-        "tsConfigPath": "instances/mock-data-provider/tsconfig.app.json"
+        "tsConfigPath": "libs/oidc-provider/tsconfig.lib.json"
       }
     },
-    "data-provider-adapter-core": {
+    "override-code": {
       "type": "library",
-      "root": "libs/data-provider-adapter-core",
+      "root": "libs/override-code",
       "entryFile": "index",
-      "sourceRoot": "libs/data-provider-adapter-core/src",
+      "sourceRoot": "libs/override-code/src",
       "compilerOptions": {
-        "tsConfigPath": "libs/data-provider-adapter-core/tsconfig.lib.json"
+        "tsConfigPath": "libs/override-code/tsconfig.lib.json"
       }
     },
-    "jwt": {
+    "override-oidc-provider": {
       "type": "library",
-      "root": "libs/jwt",
+      "root": "libs/override-oidc-provider",
       "entryFile": "index",
-      "sourceRoot": "libs/jwt/src",
+      "sourceRoot": "libs/override-oidc-provider/src",
       "compilerOptions": {
-        "tsConfigPath": "libs/jwt/tsconfig.lib.json"
+        "tsConfigPath": "libs/override-oidc-provider/tsconfig.lib.json"
       }
     },
-    "async-local-storage": {
+    "partners": {
       "type": "library",
-      "root": "libs/async-local-storage",
+      "root": "apps/partners",
       "entryFile": "index",
-      "sourceRoot": "libs/async-local-storage/src",
+      "sourceRoot": "apps/partners/src",
       "compilerOptions": {
-        "tsConfigPath": "libs/async-local-storage/tsconfig.lib.json"
-      }
-    },
-    "view-templates": {
-      "type": "library",
-      "root": "libs/view-templates",
-      "entryFile": "index",
-      "sourceRoot": "libs/view-templates/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/view-templates/tsconfig.lib.json"
-      }
-    },
-    "csrf": {
-      "type": "library",
-      "root": "libs/csrf",
-      "entryFile": "index",
-      "sourceRoot": "libs/csrf/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/csrf/tsconfig.lib.json"
-      }
-    },
-    "i18n": {
-      "type": "library",
-      "root": "libs/i18n",
-      "entryFile": "index",
-      "sourceRoot": "libs/i18n/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/i18n/tsconfig.lib.json"
-      }
-    },
-    "exceptions": {
-      "type": "library",
-      "root": "libs/exceptions",
-      "entryFile": "index",
-      "sourceRoot": "libs/exceptions/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/exceptions/tsconfig.lib.json"
-      }
-    },
-    "device": {
-      "type": "library",
-      "root": "libs/device",
-      "entryFile": "index",
-      "sourceRoot": "libs/device/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/device/tsconfig.lib.json"
-      }
-    },
-    "dto2form": {
-      "type": "library",
-      "root": "libs/dto2form",
-      "entryFile": "index",
-      "sourceRoot": "libs/dto2form/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/dto2form/tsconfig.lib.json"
-      }
-    },
-    "logger-plugins": {
-      "type": "library",
-      "root": "libs/logger-plugins",
-      "entryFile": "index",
-      "sourceRoot": "libs/logger-plugins/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/logger-plugins/tsconfig.lib.json"
-      }
-    },
-    "postgres": {
-      "type": "library",
-      "root": "libs/postgres",
-      "entryFile": "index",
-      "sourceRoot": "libs/postgres/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/postgres/tsconfig.lib.json"
+        "tsConfigPath": "apps/partners/tsconfig.lib.json"
       }
     },
     "partners-account": {
@@ -1016,6 +991,15 @@
       "sourceRoot": "libs/partners-account/src",
       "compilerOptions": {
         "tsConfigPath": "libs/partners-account/tsconfig.lib.json"
+      }
+    },
+    "partners-instance": {
+      "type": "application",
+      "root": "instances/partners",
+      "entryFile": "main",
+      "sourceRoot": "instances/partners/src",
+      "compilerOptions": {
+        "tsConfigPath": "instances/partners/tsconfig.app.json"
       }
     },
     "partners-organisation": {
@@ -1054,94 +1038,58 @@
         "tsConfigPath": "libs/partners-service-provider-instance-version/tsconfig.lib.json"
       }
     },
-    "access-control": {
+    "postgres": {
       "type": "library",
-      "root": "libs/access-control",
+      "root": "libs/postgres",
       "entryFile": "index",
-      "sourceRoot": "libs/access-control/src",
+      "sourceRoot": "libs/postgres/src",
       "compilerOptions": {
-        "tsConfigPath": "libs/access-control/tsconfig.lib.json"
+        "tsConfigPath": "libs/postgres/tsconfig.lib.json"
       }
     },
-    "microservices-rmq": {
+    "rabbitmq": {
       "type": "library",
-      "root": "libs/microservices-rmq",
+      "root": "libs/rabbitmq",
       "entryFile": "index",
-      "sourceRoot": "libs/microservices-rmq/src",
+      "sourceRoot": "libs/rabbitmq/src",
       "compilerOptions": {
-        "tsConfigPath": "libs/microservices-rmq/tsconfig.lib.json"
+        "tsConfigPath": "libs/rabbitmq/tsconfig.lib.json"
       }
     },
-    "csmr-config-client": {
+    "redis": {
       "type": "library",
-      "root": "libs/csmr-config-client",
+      "root": "libs/redis",
       "entryFile": "index",
-      "sourceRoot": "libs/csmr-config-client/src",
+      "sourceRoot": "libs/redis/src",
       "compilerOptions": {
-        "tsConfigPath": "libs/csmr-config-client/tsconfig.lib.json"
+        "tsConfigPath": "libs/redis/tsconfig.lib.json"
       }
     },
-    "csmr-proxy-client": {
+    "rnipp": {
       "type": "library",
-      "root": "libs/csmr-proxy-client",
+      "root": "libs/rnipp",
       "entryFile": "index",
-      "sourceRoot": "libs/csmr-proxy-client/src",
+      "sourceRoot": "libs/rnipp/src",
       "compilerOptions": {
-        "tsConfigPath": "libs/csmr-proxy-client/tsconfig.lib.json"
+        "tsConfigPath": "libs/rnipp/tsconfig.lib.json"
       }
     },
-    "config-abstract-adapter": {
+    "roles": {
       "type": "library",
-      "root": "libs/config-abstract-adapter",
+      "root": "libs/roles",
       "entryFile": "index",
-      "sourceRoot": "libs/config-abstract-adapter/src",
+      "sourceRoot": "libs/roles/src",
       "compilerOptions": {
-        "tsConfigPath": "libs/config-abstract-adapter/tsconfig.lib.json"
+        "tsConfigPath": "libs/roles/tsconfig.lib.json"
       }
     },
-    "config-mongo-adapter": {
+    "scopes": {
       "type": "library",
-      "root": "libs/config-mongo-adapter",
+      "root": "libs/scopes",
       "entryFile": "index",
-      "sourceRoot": "libs/config-mongo-adapter/src",
+      "sourceRoot": "libs/scopes/src",
       "compilerOptions": {
-        "tsConfigPath": "libs/config-mongo-adapter/tsconfig.lib.json"
-      }
-    },
-    "config-postgres-adapter": {
-      "type": "library",
-      "root": "libs/config-postgres-adapter",
-      "entryFile": "index",
-      "sourceRoot": "libs/config-postgres-adapter/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/config-postgres-adapter/tsconfig.lib.json"
-      }
-    },
-    "csmr-config": {
-      "type": "library",
-      "root": "apps/csmr-config",
-      "entryFile": "index",
-      "sourceRoot": "apps/csmr-config/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/csmr-config/tsconfig.lib.json"
-      }
-    },
-    "csmr-config-sandbox-low": {
-      "type": "application",
-      "root": "instances/csmr-config-sandbox-low",
-      "entryFile": "main",
-      "sourceRoot": "instances/csmr-config-sandbox-low/src",
-      "compilerOptions": {
-        "tsConfigPath": "instances/csmr-config-sandbox-low/tsconfig.app.json"
-      }
-    },
-    "csmr-config-partners": {
-      "type": "application",
-      "root": "instances/csmr-config-partners",
-      "entryFile": "main",
-      "sourceRoot": "instances/csmr-config-partners/src",
-      "compilerOptions": {
-        "tsConfigPath": "instances/csmr-config-partners/tsconfig.app.json"
+        "tsConfigPath": "libs/scopes/tsconfig.lib.json"
       }
     },
     "service-provider": {
@@ -1153,13 +1101,58 @@
         "tsConfigPath": "libs/service-provider/tsconfig.lib.json"
       }
     },
-    "override-code": {
+    "service-provider-adapter-env": {
       "type": "library",
-      "root": "libs/override-code",
+      "root": "libs/service-provider-adapter-env",
       "entryFile": "index",
-      "sourceRoot": "libs/override-code/src",
+      "sourceRoot": "libs/service-provider-adapter-env/src",
       "compilerOptions": {
-        "tsConfigPath": "libs/override-code/tsconfig.lib.json"
+        "tsConfigPath": "libs/service-provider-adapter-env/tsconfig.lib.json"
+      }
+    },
+    "service-provider-adapter-mongo": {
+      "type": "library",
+      "root": "libs/service-provider-adapter-mongo",
+      "entryFile": "index",
+      "sourceRoot": "libs/service-provider-adapter-mongo/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/service-provider-adapter-mongo/tsconfig.lib.json"
+      }
+    },
+    "session": {
+      "type": "library",
+      "root": "libs/session",
+      "entryFile": "index",
+      "sourceRoot": "libs/session/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/session/tsconfig.lib.json"
+      }
+    },
+    "tracking": {
+      "type": "library",
+      "root": "libs/tracking",
+      "entryFile": "index",
+      "sourceRoot": "libs/tracking/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/tracking/tsconfig.lib.json"
+      }
+    },
+    "tracking-context": {
+      "type": "library",
+      "root": "libs/tracking-context",
+      "entryFile": "index",
+      "sourceRoot": "libs/tracking-context/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/tracking-context/tsconfig.lib.json"
+      }
+    },
+    "tracks-adapter-elasticsearch": {
+      "type": "library",
+      "root": "libs/tracks-adapter-elasticsearch",
+      "entryFile": "index",
+      "sourceRoot": "libs/tracks-adapter-elasticsearch/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/tracks-adapter-elasticsearch/tsconfig.lib.json"
       }
     },
     "typeorm": {
@@ -1169,6 +1162,49 @@
       "sourceRoot": "libs/typeorm/src",
       "compilerOptions": {
         "tsConfigPath": "libs/typeorm/tsconfig.lib.json"
+      }
+    },
+    "user-dashboard": {
+      "type": "library",
+      "root": "apps/user-dashboard",
+      "entryFile": "index",
+      "sourceRoot": "apps/user-dashboard/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/user-dashboard/tsconfig.lib.json"
+      }
+    },
+    "user-dashboard-instance": {
+      "type": "application",
+      "root": "instances/user-dashboard",
+      "entryFile": "main",
+      "sourceRoot": "instances/user-dashboard/src",
+      "compilerOptions": {
+        "tsConfigPath": "instances/user-dashboard/tsconfig.app.json",
+        "assets": [
+          "../../../apps/user-dashboard/**/*.ejs",
+          "../../../apps/user-dashboard/**/*.css",
+          "../../../apps/user-dashboard/**/*.svg",
+          "../../../apps/user-dashboard/**/*.png",
+          "../../../instances/user-dashboard/**/*.ejs"
+        ]
+      }
+    },
+    "view-templates": {
+      "type": "library",
+      "root": "libs/view-templates",
+      "entryFile": "index",
+      "sourceRoot": "libs/view-templates/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/view-templates/tsconfig.lib.json"
+      }
+    },
+    "webhooks": {
+      "type": "library",
+      "root": "libs/webhooks",
+      "entryFile": "index",
+      "sourceRoot": "libs/webhooks/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/webhooks/tsconfig.lib.json"
       }
     }
   }

@@ -20,7 +20,11 @@ export function getTrackingData(
 
   const { total: totalEvents, payload } = tracks;
 
-  const { fraudCaseId, fraudSurveyOrigin, authenticationEventId } = fraudCase;
+  const {
+    id: fraudCaseId,
+    fraudSurveyOrigin,
+    authenticationEventId,
+  } = fraudCase;
 
   const authenticationEvents = buildAuthenticationEvents(payload);
 

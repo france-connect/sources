@@ -2,9 +2,7 @@
 const spLegacy = {
   fsp1: {
     name: "Service Provider Example",
-    site: [
-      "https://fsp1.com",
-    ],
+    site: ["https://fsp1.com"],
     redirect_uris: [
       "https://fsp1.docker.dev-franceconnect.fr/login-callback",
       "https://fsp1.docker.dev-franceconnect.fr/data-callback",
@@ -23,9 +21,12 @@ const spLegacy = {
     active: true,
     type: "public",
     __v: 4,
+    secretCreatedAt: new Date("2019-04-24 17:09:17"),
+    secretUpdatedAt: new Date("2019-04-24 17:09:17"),
+    secretUpdatedBy: "admin",
     createdAt: new Date("2019-04-24 17:09:17"),
-    updatedAt: new Date("2019-04-24 17:09:17"),
-    updatedBy: "admin",
+    createdBy: "admin",
+    createdVia: "EXPLOITATION_SINGLE_FORM",
     scopes: [
       "openid",
       "given_name",
@@ -55,9 +56,7 @@ const spLegacy = {
 
   fsp2: {
     name: "Virtual Private Service Provider for Scopes",
-    site: [
-      "https://site.com",
-    ],
+    site: ["https://site.com"],
     redirect_uris: [
       "https://fsp2.docker.dev-franceconnect.fr/login-callback",
       "https://fsp2.docker.dev-franceconnect.fr/data-callback",
@@ -76,9 +75,12 @@ const spLegacy = {
     active: true,
     type: "private",
     __v: 4,
+    secretCreatedAt: new Date("2019-04-24 17:09:17"),
+    secretUpdatedAt: new Date("2019-04-24 17:09:17"),
+    secretUpdatedBy: "admin",
     createdAt: new Date("2019-04-24 17:09:17"),
-    updatedAt: new Date("2019-04-24 17:09:17"),
-    updatedBy: "admin",
+    createdBy: "admin",
+    createdVia: "EXPLOITATION_SINGLE_FORM",
     blacklistByIdentityProviderActivated: true,
     blacklistByIdentityProvider: {
       "fip2-low": true,
@@ -111,9 +113,7 @@ const spLegacy = {
 
   fsp3: {
     name: "Virtual Private Service Provider for Consent",
-    site: [
-      "https://site.com",
-    ],
+    site: ["https://site.com"],
     redirect_uris: [
       "https://fsp3.docker.dev-franceconnect.fr/login-callback",
       "https://fsp3.docker.dev-franceconnect.fr/data-callback",
@@ -132,9 +132,12 @@ const spLegacy = {
     active: true,
     type: "private",
     __v: 4,
+    secretCreatedAt: new Date("2019-04-24 17:09:17"),
+    secretUpdatedAt: new Date("2019-04-24 17:09:17"),
+    secretUpdatedBy: "admin",
     createdAt: new Date("2019-04-24 17:09:17"),
-    updatedAt: new Date("2019-04-24 17:09:17"),
-    updatedBy: "admin",
+    createdBy: "admin",
+    createdVia: "EXPLOITATION_SINGLE_FORM",
     whitelistByServiceProviderActivated: true,
     whitelistByIdentityProvider: {
       "fip1-no-discovery": true,
@@ -170,9 +173,7 @@ const spLegacy = {
   "fsp1-legacy": {
     name: "fsp1-legacy",
     eidas: 1,
-    site: [
-      "https://fsp1-legacy.docker.dev-franceconnect.fr/login",
-    ],
+    site: ["https://fsp1-legacy.docker.dev-franceconnect.fr/login"],
     redirect_uris: [
       "https://fsp1-legacy.docker.dev-franceconnect.fr/oidc-callback",
     ],
@@ -191,9 +192,12 @@ const spLegacy = {
     active: true,
     type: "public",
     __v: 4,
+    secretCreatedAt: new Date("2019-04-24 17:09:17"),
+    secretUpdatedAt: new Date("2019-04-24 17:09:17"),
+    secretUpdatedBy: "admin",
     createdAt: new Date("2019-04-24 17:09:17"),
-    updatedAt: new Date("2019-04-24 17:09:17"),
-    updatedBy: "admin",
+    createdBy: "admin",
+    createdVia: "EXPLOITATION_SINGLE_FORM",
     scopes: [
       "openid",
       "given_name",
@@ -235,9 +239,7 @@ const spLegacy = {
   "fsp2-legacy": {
     name: "fsp2-legacy",
     eidas: 1,
-    site: [
-      "https://fsp2-legacy.docker.dev-franceconnect.fr/login",
-    ],
+    site: ["https://fsp2-legacy.docker.dev-franceconnect.fr/login"],
     redirect_uris: [
       "https://fsp2-legacy.docker.dev-franceconnect.fr/oidc-callback",
     ],
@@ -256,9 +258,12 @@ const spLegacy = {
     active: true,
     type: "private",
     __v: 4,
+    secretCreatedAt: new Date("2019-04-24 17:09:17"),
+    secretUpdatedAt: new Date("2019-04-24 17:09:17"),
+    secretUpdatedBy: "admin",
     createdAt: new Date("2019-04-24 17:09:17"),
-    updatedAt: new Date("2019-04-24 17:09:17"),
-    updatedBy: "admin",
+    createdBy: "admin",
+    createdVia: "EXPLOITATION_SINGLE_FORM",
     scopes: [
       "openid",
       "given_name",
@@ -303,9 +308,7 @@ const spLegacy = {
 
   "FS désactivé": {
     name: "FS désactivé",
-    site: [
-      "https://site.com",
-    ],
+    site: ["https://site.com"],
     redirect_uris: [
       "https://fcp.docker.dev-franceconnect.fr/traces/login-callback",
     ],
@@ -321,9 +324,12 @@ const spLegacy = {
     active: false,
     type: "public",
     __v: 4,
+    secretCreatedAt: new Date("2019-04-24 17:09:17"),
+    secretUpdatedAt: new Date("2019-04-24 17:09:17"),
+    secretUpdatedBy: "admin",
     createdAt: new Date("2019-04-24 17:09:17"),
-    updatedAt: new Date("2019-04-24 17:09:17"),
-    updatedBy: "admin",
+    createdBy: "admin",
+    createdVia: "EXPLOITATION_SINGLE_FORM",
     scopes: [
       "openid",
       "given_name",
@@ -346,9 +352,7 @@ const spLegacy = {
 
   fsStats: {
     name: "FsStats",
-    site: [
-      "https://site.com",
-    ],
+    site: ["https://site.com"],
     redirect_uris: [
       "https://fsp2.docker.dev-franceconnect.fr/login-callback",
       "https://fsp2.docker.dev-franceconnect.fr/data-callback",
@@ -366,9 +370,12 @@ const spLegacy = {
     active: true,
     type: "private",
     __v: 4,
+    secretCreatedAt: new Date("2019-04-24 17:09:17"),
+    secretUpdatedAt: new Date("2019-04-24 17:09:17"),
+    secretUpdatedBy: "admin",
     createdAt: new Date("2019-04-24 17:09:17"),
-    updatedAt: new Date("2019-04-24 17:09:17"),
-    updatedBy: "admin",
+    createdBy: "admin",
+    createdVia: "EXPLOITATION_SINGLE_FORM",
     blacklistByIdentityProviderActivated: true,
     blacklistByIdentityProvider: {
       fip1_blacklisted_by_fsp2: true,
@@ -398,9 +405,7 @@ const spLegacy = {
   },
 
   MarieDeHem: {
-    site: [
-      "https://site.com",
-    ],
+    site: ["https://site.com"],
     redirect_uris: [
       "https://fsp1.docker.dev-franceconnect.fr/login-callback",
       "https://fsp1.docker.dev-franceconnect.fr/data-callback",
@@ -408,8 +413,12 @@ const spLegacy = {
     post_logout_redirect_uris: [
       "https://fsp1.docker.dev-franceconnect.fr/logout-callback",
     ],
+    secretCreatedAt: new Date("2019-05-22T14:36:12.516Z"),
+    secretUpdatedAt: new Date("2019-05-22T14:36:12.516Z"),
+    secretUpdatedBy: "admin",
     createdAt: new Date("2019-05-22T14:36:12.516Z"),
-    updatedAt: new Date("2019-05-22T14:36:12.516Z"),
+    createdBy: "admin",
+    createdVia: "EXPLOITATION_SINGLE_FORM",
     key: "28e9ed103d6b075d371303a8bc5a66446f0cd4c0ce7ec237773276c247d28a95",
     client_secret:
       "4eQRa1ab1h8jIKVs53cW8FBUGIa5KQLlXQpdP/lGe3EJifIwUMHR0w6HKxu3ccGzR0y6+aS2wLAifrmhsT76TtVCvnNQAF5rONzLejQ7Hqy1LBF8TAUpx+8yFak=",
@@ -446,9 +455,7 @@ const spLegacy = {
 
   // new service pour tester les scopes
   Test_update_old_service_provider: {
-    site: [
-      "https://site.com",
-    ],
+    site: ["https://site.com"],
     redirect_uris: [
       "https://fsp1.docker.dev-franceconnect.fr/login-callback",
       "https://fsp1.docker.dev-franceconnect.fr/data-callback",
@@ -456,8 +463,12 @@ const spLegacy = {
     post_logout_redirect_uris: [
       "https://fsp1.docker.dev-franceconnect.fr/logout-callback",
     ],
+    secretCreatedAt: new Date("2019-05-22T14:36:12.516Z"),
+    secretUpdatedAt: new Date("2019-05-22T14:36:12.516Z"),
+    secretUpdatedBy: "admin",
     createdAt: new Date("2019-05-22T14:36:12.516Z"),
-    updatedAt: new Date("2019-05-22T14:36:12.516Z"),
+    createdBy: "admin",
+    createdVia: "EXPLOITATION_SINGLE_FORM",
     key: "64e9ed103d6b075d371303a8bc5a66446f0cd4c0ce7ec237773276c288d28a67",
     client_secret:
       "EKMIJqIjjo0L7TmRJcdJj4QcmxMw5dLYkw20c949ezSI37tM51A2yzopBAJL+EFo5k717uIv/Ayb+hgsGu2P5Bntaa1ch+Z8QwaN5QgagJQfjMpUqqY5OUhXRHE=",

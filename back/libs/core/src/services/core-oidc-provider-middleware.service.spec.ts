@@ -402,7 +402,7 @@ describe('CoreOidcProviderMiddlewareService', () => {
     });
 
     it('should return empty object when method is not POST and query parameters are empty', () => {
-      // Arrange
+      // Given
       const ctxMock: any = {
         method: 'GET',
         req: { body: { param1: 'value1', param2: 'value2' }, query: {} },

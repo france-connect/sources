@@ -6,9 +6,7 @@ import type { AccountContextState } from '@fc/account';
 import { AccountContext } from '@fc/account';
 import { EventTypes, useSafeContext } from '@fc/common';
 import { ConfigService } from '@fc/config';
-import { AlertComponent, Sizes } from '@fc/dsfr';
-import { useStylesQuery, useStylesVariables } from '@fc/styles';
-import type { FraudConfigInterface } from '@fc/user-dashboard';
+import type { FraudConfigInterface } from '@fc/core-user-dashboard';
 import {
   AuthenticationEventIdCallout,
   FraudFormComponent,
@@ -17,7 +15,9 @@ import {
   FraudSurveyIntroductionComponent,
   useFraudFormApi,
   useGetFraudSurveyOrigin,
-} from '@fc/user-dashboard';
+} from '@fc/core-user-dashboard';
+import { AlertComponent, Sizes } from '@fc/dsfr';
+import { useStylesQuery, useStylesVariables } from '@fc/styles';
 
 export const FraudFormPage = React.memo(() => {
   const [breakpointLg] = useStylesVariables(['breakpoint-lg']);
@@ -36,7 +36,7 @@ export const FraudFormPage = React.memo(() => {
   return (
     <React.Fragment>
       <Helmet>
-        <title>Signaler une usurpation</title>
+        <title>Mon tableau de bord - Signaler une usurpation</title>
       </Helmet>
       <div
         className={classnames('fr-m-auto fr-px-2w', {

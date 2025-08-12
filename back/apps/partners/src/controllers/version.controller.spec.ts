@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { AccessControlGuard } from '@fc/access-control';
-import { MetadataFormService, PartnersI18nService } from '@fc/dto2form';
+import { Dto2FormI18nService, MetadataFormService } from '@fc/dto2form';
 import { ServiceProviderInstanceVersionDto } from '@fc/partners-service-provider-instance-version';
 
 import { VersionController } from './version.controller';
@@ -27,11 +27,11 @@ describe('VersionController', () => {
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [VersionController],
-      providers: [MetadataFormService, PartnersI18nService],
+      providers: [MetadataFormService, Dto2FormI18nService],
     })
       .overrideProvider(MetadataFormService)
       .useValue(metadataFormServiceMock)
-      .overrideProvider(PartnersI18nService)
+      .overrideProvider(Dto2FormI18nService)
       .useValue(partnersI18nServiceMock)
       .overrideGuard(AccessControlGuard)
       .useValue(rolesGuardMock)

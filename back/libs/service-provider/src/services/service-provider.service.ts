@@ -7,7 +7,11 @@ import {
   PlatformTechnicalKeyEnum,
   SignatureAlgorithmEnum,
 } from '../enums';
-import { OidcClientInterface, OidcClientLegacyInterface } from '../interfaces';
+import {
+  OidcClientInterface,
+  OidcClientLegacyInterface,
+  ServiceProviderClientInterface,
+} from '../interfaces';
 
 @Injectable()
 export class ServiceProviderService {
@@ -21,7 +25,11 @@ export class ServiceProviderService {
        * This list is here to keep track of existing fields
        *
        * createdAt,
+       * createdBy,
+       * createdVia,
        * secretCreatedAt,
+       * secretUpdatedAt,
+       * secretUpdatedBy,
        * updatedAt,
        * updatedBy,
        * description,
@@ -113,7 +121,7 @@ export class ServiceProviderService {
   }
 
   toLegacy(
-    input: Partial<OidcClientInterface>,
+    input: Partial<ServiceProviderClientInterface>,
   ): Partial<OidcClientLegacyInterface> {
     const {
       /**
@@ -151,6 +159,8 @@ export class ServiceProviderService {
       userinfo_encrypted_response_enc,
       signupId: signup_id,
       entityId,
+      createdBy,
+      createdVia,
     } = input;
 
     return {
@@ -161,6 +171,7 @@ export class ServiceProviderService {
        *
        * createdAt,
        * secretCreatedAt,
+       * secretUpdatedAt,
        * updatedAt,
        * updatedBy,
        * description,
@@ -202,6 +213,9 @@ export class ServiceProviderService {
       id_token_encrypted_response_alg,
       id_token_encrypted_response_enc,
       entityId,
+      createdBy,
+      createdVia,
+      secretUpdatedBy: createdBy,
     };
   }
 }

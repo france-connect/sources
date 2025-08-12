@@ -100,7 +100,6 @@ export class ServiceProviderInstanceVersionDto
   readonly spConfigurationSection: string;
 
   @Input({
-    required: true,
     array: true,
     order: 61,
     validators: [$IsWebsiteURL(), $IsLength({ max: 1024 })],
@@ -117,25 +116,29 @@ export class ServiceProviderInstanceVersionDto
       $IsValidRedirectURLList(),
       $IsLength({ max: 1024 }),
     ],
+    seeAlso:
+      'https://docs.partenaires.franceconnect.gouv.fr/fs/devenir-fs/projet-bac-a-sable/#configuration-de-votre-instance-de-test',
   })
   @Expose()
   readonly redirect_uris: string[];
 
   @Input({
+    order: 63,
+    validators: [$IsWebsiteURL(), $IsLength({ max: 1024 })],
+    seeAlso:
+      'https://docs.partenaires.franceconnect.gouv.fr/fs/fs-technique/fs-technique-sector_identifier/',
+  })
+  @Expose()
+  readonly sector_identifier_uri: string;
+
+  @Input({
     required: true,
     array: true,
-    order: 63,
+    order: 64,
     validators: [$IsRedirectURL(), $IsLength({ max: 1024 })],
   })
   @Expose()
   readonly post_logout_redirect_uris: string[];
-
-  @Input({
-    order: 64,
-    validators: [$IsWebsiteURL(), $IsLength({ max: 1024 })],
-  })
-  @Expose()
-  readonly sector_identifier_uri: string;
 
   @Input({
     array: true,
@@ -160,6 +163,8 @@ export class ServiceProviderInstanceVersionDto
       },
     ],
     validators: [$IsString(), $IsSignedResponseAlg()],
+    seeAlso:
+      'https://docs.partenaires.franceconnect.gouv.fr/fs/fs-technique/fs-technique-oidc-fc-plus/#signature-et-chiffrement-des-jetons-1',
   })
   @Expose()
   readonly id_token_signed_response_alg: SignatureAlgorithmEnum;
@@ -173,6 +178,8 @@ export class ServiceProviderInstanceVersionDto
   @Input({
     order: 81,
     validators: [$IsLength({ max: 64, min: 36 }), $Matches(/^[a-zA-Z0-9-]+$/)],
+    seeAlso:
+      'https://docs.partenaires.franceconnect.gouv.fr/fs/devenir-fs/projet-bac-a-sable/#gestion-des-subs-pour-votre-fournisseur-de-service',
   })
   @Expose()
   readonly entityId: string;

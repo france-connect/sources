@@ -9,7 +9,7 @@ import { TracksFormatterOutputInterface } from '../interfaces';
 import { getTrackingData } from './get-tracking-data.util';
 
 const fraudCaseMock: FraudCaseDto = {
-  fraudCaseId: 'fraudCaseIdMock',
+  id: 'fraudCaseIdMock',
   contactEmail: 'email@mock.fr',
   idpEmail: 'email@fi.fr',
   authenticationEventId: 'authenticationEventIdMock',
@@ -86,6 +86,25 @@ describe('getTrackingData', () => {
 
     // Then
     expect(trackingData).toEqual(trackingDataMock);
+  });
+
+  it('should return trackingData with authenticationEvent even if accountId are undefined', () => {
+    // Given
+    const trackingUnknownDataMock: TrackingDataDto = {
+      fraudCaseId: 'fraudCaseIdMock',
+      userAccountIdLow: undefined,
+      userAccountIdHigh: undefined,
+      authenticationEventId: 'authenticationEventIdMock',
+      fraudSurveyOrigin: 'fraudSurveyOriginMock',
+      totalEvents: 1,
+      authenticationEvents: [authenticationEventMock],
+    };
+
+    // When
+    const trackingData = getTrackingData(fraudCaseMock, {}, tracksMock);
+
+    // Then
+    expect(trackingData).toEqual(trackingUnknownDataMock);
   });
 
   it('should return trackingData without authenticationEvent', () => {

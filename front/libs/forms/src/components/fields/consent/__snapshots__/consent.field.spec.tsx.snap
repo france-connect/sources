@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ConsentField should match snapshot, with messages 1`] = `
+<div>
+  <div
+    data-mockid="FieldsetElement"
+  >
+    <div
+      data-mockid="Field"
+    />
+    <div
+      data-mockid="MessagesElement"
+    />
+  </div>
+</div>
+`;
+
+exports[`ConsentField should match snapshot, without messages 1`] = `
+<div>
+  <div
+    data-mockid="FieldsetElement"
+  >
+    <div
+      data-mockid="Field"
+    />
+  </div>
+</div>
+`;

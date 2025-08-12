@@ -2,14 +2,16 @@ import { render } from '@testing-library/react';
 
 import { t } from '@fc/i18n';
 
-import { useFieldMeta } from '../../../hooks';
-import { GroupElement, LabelElement, MessageElement } from '../../elements';
+import { useFieldMessages, useFieldMeta } from '../../../hooks';
+import type { FieldMessage } from '../../../interfaces';
+import { GroupElement, LabelElement, MessagesElement } from '../../elements';
 import { SelectInput } from './select.input';
 
 jest.mock('../../elements/group/group.element');
 jest.mock('../../elements/label/label.element');
-jest.mock('../../elements/message/message.element');
+jest.mock('../../elements/messages/messages.element');
 jest.mock('../../../hooks/field-meta/field-meta.hook');
+jest.mock('./../../../hooks/field-messages/field-messages.hook');
 
 describe('SelectInput', () => {
   // Given
@@ -24,14 +26,15 @@ describe('SelectInput', () => {
     { label: 'mock-label-2', value: 'mock-value-2' },
   ];
 
-  it('should match the snapshot when is valid', () => {
+  it('should match the snapshot, without messages', () => {
     // Given
     jest.mocked(useFieldMeta).mockReturnValueOnce({
-      errorMessage: undefined,
+      errorsList: [],
       hasError: false,
       inputClassname: 'any-input-classname-mock',
       isValid: true,
     });
+    jest.mocked(useFieldMessages).mockReturnValueOnce([]);
 
     // When
     const { container } = render(
@@ -52,6 +55,12 @@ describe('SelectInput', () => {
     expect(container).toMatchSnapshot();
     expect(useFieldMeta).toHaveBeenCalledOnce();
     expect(useFieldMeta).toHaveBeenCalledWith({ error: undefined, touched: false });
+    expect(useFieldMessages).toHaveBeenCalledOnce();
+    expect(useFieldMessages).toHaveBeenCalledWith({
+      errorsList: [],
+      isValid: true,
+      messages: undefined,
+    });
     expect(GroupElement).toHaveBeenCalledOnce();
     expect(GroupElement).toHaveBeenCalledWith(
       {
@@ -74,27 +83,21 @@ describe('SelectInput', () => {
       },
       undefined,
     );
-    expect(MessageElement).toHaveBeenCalledOnce();
-    expect(MessageElement).toHaveBeenCalledWith(
-      {
-        error: undefined,
-        id: 'any-name-mock',
-        isValid: true,
-      },
-      undefined,
-    );
+    expect(MessagesElement).not.toHaveBeenCalled();
     expect(t).toHaveBeenCalledOnce();
     expect(t).toHaveBeenCalledWith('Form.select.placeholder');
   });
 
-  it('should match the snapshot when has error', () => {
+  it('should match the snapshot, with error messages', () => {
     // Given
     jest.mocked(useFieldMeta).mockReturnValueOnce({
-      errorMessage: 'any-error-message-mock',
+      errorsList: ['any-error-message-mock'],
       hasError: true,
       inputClassname: 'any-input-classname-mock',
       isValid: false,
     });
+    const errorMessageMock = Symbol('errorMessageMock') as unknown as FieldMessage;
+    jest.mocked(useFieldMessages).mockReturnValueOnce([errorMessageMock]);
 
     // When
     const { container } = render(
@@ -115,6 +118,12 @@ describe('SelectInput', () => {
     expect(container).toMatchSnapshot();
     expect(useFieldMeta).toHaveBeenCalledOnce();
     expect(useFieldMeta).toHaveBeenCalledWith({ error: 'any-error-message-mock', touched: false });
+    expect(useFieldMessages).toHaveBeenCalledOnce();
+    expect(useFieldMessages).toHaveBeenCalledWith({
+      errorsList: ['any-error-message-mock'],
+      isValid: false,
+      messages: undefined,
+    });
     expect(GroupElement).toHaveBeenCalledOnce();
     expect(GroupElement).toHaveBeenCalledWith(
       {
@@ -137,26 +146,68 @@ describe('SelectInput', () => {
       },
       undefined,
     );
-    expect(MessageElement).toHaveBeenCalledOnce();
-    expect(MessageElement).toHaveBeenCalledWith(
-      {
-        error: 'any-error-message-mock',
-        id: 'any-name-mock',
-        isValid: false,
-      },
+    expect(MessagesElement).toHaveBeenCalledOnce();
+    expect(MessagesElement).toHaveBeenCalledWith(
+      { dataTestId: 'any-name-mock-messages', id: 'any-name-mock', messages: [errorMessageMock] },
       undefined,
     );
     expect(t).toHaveBeenCalledOnce();
     expect(t).toHaveBeenCalledWith('Form.select.placeholder');
   });
 
+  it('should match the snapshot, with config messages', () => {
+    // Given
+    jest.mocked(useFieldMeta).mockReturnValueOnce({
+      errorsList: [],
+      hasError: false,
+      inputClassname: 'any-input-classname-mock',
+      isValid: true,
+    });
+    const configMessageMock = Symbol('configMessageMock') as unknown as FieldMessage;
+    jest.mocked(useFieldMessages).mockReturnValueOnce([configMessageMock]);
+
+    // When
+    const { container } = render(
+      <SelectInput
+        choices={choices}
+        config={{
+          hint: 'any-hint-mock',
+          label: 'any-label-mock',
+          messages: [configMessageMock],
+          required: true,
+        }}
+        input={{
+          ...inputMock,
+          className: 'any-className-mock',
+          disabled: false,
+          name: 'any-name-mock',
+        }}
+        meta={{ error: 'any-error-message-mock', touched: false }}
+      />,
+    );
+
+    // Then
+    expect(container).toMatchSnapshot();
+    expect(useFieldMessages).toHaveBeenCalledOnce();
+    expect(useFieldMessages).toHaveBeenCalledWith({
+      errorsList: [],
+      isValid: true,
+      messages: [configMessageMock],
+    });
+    expect(MessagesElement).toHaveBeenCalledOnce();
+    expect(MessagesElement).toHaveBeenCalledWith(
+      { dataTestId: 'any-name-mock-messages', id: 'any-name-mock', messages: [configMessageMock] },
+      undefined,
+    );
+  });
+
   it('should render 2 select.option', () => {
     // Given
     jest.mocked(useFieldMeta).mockReturnValueOnce({
-      errorMessage: 'any-error-message-mock',
-      hasError: true,
+      errorsList: [],
+      hasError: false,
       inputClassname: 'any-input-classname-mock',
-      isValid: false,
+      isValid: true,
     });
 
     // When

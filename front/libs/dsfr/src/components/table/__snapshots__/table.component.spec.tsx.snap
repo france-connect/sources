@@ -1,0 +1,123 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TableComponent should match the snapshot with optionnals props 1`] = `
+<div>
+  <div
+    class="fr-table--lg fr-table fr-table--bordered fr-table--no-scroll"
+    id="any-table-id-mock"
+  >
+    <div
+      class="fr-table__wrapper"
+    >
+      <div
+        class="fr-table__container"
+      >
+        <div
+          class="fr-table__content"
+        >
+          <table
+            id="any-table-id-mock--table"
+          >
+            <caption
+              data-mockid="TableCaptionComponent"
+            />
+            <tbody>
+              <tr
+                data-row-key="0"
+                id="any-table-id-mock--row-0"
+              >
+                <td
+                  class=""
+                >
+                  Data 1
+                </td>
+                <td
+                  class=""
+                >
+                  Data 2
+                </td>
+              </tr>
+              <tr
+                data-row-key="1"
+                id="any-table-id-mock--row-1"
+              >
+                <td
+                  class=""
+                >
+                  Data 3
+                </td>
+                <td
+                  class=""
+                >
+                  Data 4
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`TableComponent should match the snapshot with required props 1`] = `
+<div>
+  <div
+    class="fr-table--md fr-table"
+    id="any-table-id-mock"
+  >
+    <div
+      class="fr-table__wrapper"
+    >
+      <div
+        class="fr-table__container"
+      >
+        <div
+          class="fr-table__content"
+        >
+          <table
+            id="any-table-id-mock--table"
+          >
+            <thead
+              data-mockid="TableHeaderComponent"
+            />
+            <tbody>
+              <tr
+                data-row-key="0"
+                id="any-table-id-mock--row-0"
+              >
+                <td
+                  class=""
+                >
+                  Data 1
+                </td>
+                <td
+                  class=""
+                >
+                  Data 2
+                </td>
+              </tr>
+              <tr
+                data-row-key="1"
+                id="any-table-id-mock--row-1"
+              >
+                <td
+                  class=""
+                >
+                  Data 3
+                </td>
+                <td
+                  class=""
+                >
+                  Data 4
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

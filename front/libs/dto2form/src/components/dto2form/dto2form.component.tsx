@@ -1,35 +1,35 @@
 import { useMemo } from 'react';
 
 import { sortByKey } from '@fc/common';
-import { ConfigService } from '@fc/config';
 import type { FormInterface } from '@fc/forms';
-import { FormComponent } from '@fc/forms';
+import { FormComponent, FormConfigContext } from '@fc/forms';
+import type { HttpClientDataInterface } from '@fc/http-client';
 
-import { Options } from '../../enums';
-import { useFormPreSubmit } from '../../hooks';
-import type { BaseAttributes, DTO2FormConfig, FieldAttributes } from '../../interfaces';
+import { useFormSubmit } from '../../hooks';
+import type { BaseAttributes, FieldAttributes } from '../../interfaces';
 import type { SchemaFieldType } from '../../types';
 import { DTO2InputComponent } from '../dto2input/dto2input.component';
 import { DTO2SectionComponent } from '../dto2section';
 
-interface DTO2FormComponentProps<T> extends FormInterface<T> {
+interface DTO2FormComponentProps<T extends HttpClientDataInterface> extends FormInterface<T> {
   // @TODO this should be refactored
   schema: BaseAttributes[];
   submitLabel?: string;
 }
 
-export function DTO2FormComponent<T extends Record<string, unknown>>({
+export const DTO2FormComponent = <T extends HttpClientDataInterface>({
   config,
   initialValues,
+  onPostSubmit,
+  onPreSubmit,
   onSubmit,
   onValidate,
   schema,
   submitLabel = undefined,
-}: DTO2FormComponentProps<T>) {
-  const { validateOnSubmit } = ConfigService.get<DTO2FormConfig>(Options.CONFIG_NAME);
-  const validateFunc = validateOnSubmit ? onValidate : undefined;
+}: DTO2FormComponentProps<T>) => {
+  const validateFunc = config.validateOnSubmit ? onValidate : undefined;
 
-  const preSubmitHandler = useFormPreSubmit(onSubmit);
+  const submitHandler = useFormSubmit(onSubmit, onPreSubmit, onPostSubmit);
 
   const fields = useMemo(() => {
     const sorter = sortByKey<SchemaFieldType>('order');
@@ -45,16 +45,18 @@ export function DTO2FormComponent<T extends Record<string, unknown>>({
       const fieldObject = field as FieldAttributes;
       return <DTO2InputComponent key={key} field={fieldObject} />;
     });
-  }, [schema, config.id]);
+  }, [schema, config]);
 
   return (
-    <FormComponent
-      config={config}
-      initialValues={initialValues}
-      submitLabel={submitLabel}
-      onSubmit={preSubmitHandler}
-      onValidate={validateFunc}>
-      {fields}
-    </FormComponent>
+    <FormConfigContext.Provider value={config}>
+      <FormComponent<T>
+        config={config}
+        initialValues={initialValues}
+        submitLabel={submitLabel}
+        onSubmit={submitHandler}
+        onValidate={validateFunc}>
+        {fields}
+      </FormComponent>
+    </FormConfigContext.Provider>
   );
-}
+};

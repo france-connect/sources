@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SeeAlso should match the snapshot 1`] = `
+<div>
+  <a
+    class="fr-link"
+    href="http://foo.bar/test"
+    id="test-see-also"
+    rel="noopener external noreferrer"
+    target="_blank"
+  >
+    Form.label.seeAlso
+  </a>
+</div>
+`;

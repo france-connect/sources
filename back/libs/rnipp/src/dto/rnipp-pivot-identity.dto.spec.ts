@@ -3,32 +3,32 @@ import { RnippPivotIdentity } from './rnipp-pivot-identity.dto';
 describe('RnippPivotIdentity', () => {
   describe('shouldValidateBirthplace', () => {
     it('should return "true" if the property "birthcountry" of the given object value is "99100" (COG France)', () => {
-      // setup
+      // Given
       const instanceMock = {
         birthcountry: '99100',
       };
 
-      // action
+      // When
       const valid = RnippPivotIdentity.shouldValidateBirthplace(
         instanceMock as unknown as RnippPivotIdentity,
       );
 
-      // assert
+      // Then
       expect(valid).toStrictEqual(true);
     });
 
     it('should return "false" if the property "birthcountry" of the given object value is not "99100" (COG France)', () => {
-      // setup
+      // Given
       const instanceMock = {
         birthcountry: '99142',
       };
 
-      // action
+      // When
       const valid = RnippPivotIdentity.shouldValidateBirthplace(
         instanceMock as unknown as RnippPivotIdentity,
       );
 
-      // assert
+      // Then
       expect(valid).toStrictEqual(false);
     });
   });

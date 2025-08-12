@@ -7,7 +7,6 @@ import {
   Controller,
   Get,
   HttpStatus,
-  Inject,
   Injectable,
   Post,
   Query,
@@ -19,7 +18,6 @@ import {
 } from '@nestjs/common';
 
 import { FSA, getTransformed, PartialExcept } from '@fc/common';
-import { ActionTypes, CsmrFraudClientService } from '@fc/csmr-fraud-client';
 import {
   CsmrTracksClientService,
   TracksOutputInterface,
@@ -37,11 +35,7 @@ import {
   UserPreferencesService,
 } from '@fc/user-preferences';
 
-import {
-  FraudFormValuesDto,
-  GetUserTracesQueryDto,
-  UserPreferencesBodyDto,
-} from '../dto';
+import { GetUserTracesQueryDto, UserPreferencesBodyDto } from '../dto';
 import { UserDashboardBackRoutes } from '../enums';
 import {
   HttpErrorResponse,
@@ -59,8 +53,6 @@ const FILTERED_OPTIONS: ClassTransformOptions = {
 export class UserDashboardController {
   // eslint-disable-next-line max-params
   constructor(
-    @Inject('Fraud')
-    private readonly fraud: CsmrFraudClientService,
     private readonly tracking: TrackingService,
     private readonly tracks: CsmrTracksClientService,
     private readonly userPreferences: UserPreferencesService,
@@ -211,9 +203,10 @@ export class UserDashboardController {
 
     const {
       email,
-      given_name: givenName,
+      given_name_array: givenNameArray,
       family_name: familyName,
       idp_id: lastUsedIdpId,
+      preferred_username: preferredUsername,
     } = idpIdentity;
 
     const containsSelectedIdp = idpList.includes(lastUsedIdpId);
@@ -248,8 +241,9 @@ export class UserDashboardController {
       await this.userDashboard.sendMail(
         {
           email,
-          givenName,
+          givenNameArray,
           familyName,
+          preferredUsername,
         },
         {
           formattedIdpSettingsList,
@@ -262,61 +256,6 @@ export class UserDashboardController {
     }
 
     return res.json(preferences);
-  }
-
-  @Post(UserDashboardBackRoutes.FRAUD_FORM)
-  @UsePipes(new ValidationPipe({ whitelist: true }))
-  @UseGuards(CsrfTokenGuard)
-  async processFraudForm(
-    @Res() res,
-    @Req() req,
-    @Body() body: FraudFormValuesDto,
-    @Session('OidcClient')
-    sessionOidc: ISessionService<OidcClientSession>,
-  ): Promise<FormattedIdpSettingDto | HttpErrorResponse> {
-    const idpIdentity = sessionOidc.get('idpIdentity') as OidcIdentityInterface;
-    if (!idpIdentity) {
-      return res.status(HttpStatus.UNAUTHORIZED).send({
-        code: 'INVALID_SESSION',
-      });
-    }
-
-    const identityFiltered = getTransformed<PivotIdentityDto>(
-      idpIdentity,
-      PivotIdentityDto,
-      FILTERED_OPTIONS,
-    );
-
-    const fraudCaseId = uuid();
-
-    const message = {
-      type: ActionTypes.PROCESS_FRAUD_CASE,
-      payload: {
-        identity: identityFiltered,
-        fraudCase: {
-          fraudCaseId,
-          ...body,
-        },
-      },
-    };
-
-    const { payload: fraudCaseTrackingData } =
-      await this.fraud.publish(message);
-
-    const { FRAUD_CASE_OPENED } = this.tracking.TrackedEventsMap;
-
-    const context: TrackedEventContextInterface = {
-      req,
-      identity: idpIdentity,
-      fraudCaseContext: {
-        isAuthenticated: true,
-        ...fraudCaseTrackingData,
-      },
-    };
-
-    await this.tracking.track(FRAUD_CASE_OPENED, context);
-
-    return res.status(HttpStatus.OK).send();
   }
 
   private async trackUserPreferenceChange(

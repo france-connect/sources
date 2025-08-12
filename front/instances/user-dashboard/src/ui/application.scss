@@ -1,9 +1,9 @@
 #page-container {
-  max-width: 992px;
+  max-width: 768px;
+}
 
-  &:not(.large-container) {
-    max-width: 768px;
-  }
+#page-container.large-container {
+  max-width: 992px;
 }
 
 .is-blue-shadow {

@@ -114,6 +114,9 @@ export const enGB = {
   'claim.cnaf_enfants': 'Identités enfants',
   'claim.cnaf_adresse': 'Adresse du foyer',
 
+  // Direction du Service National et de la Jeunesse
+  'claim.dsnj_statut_service_national': 'Statut Service National',
+
   // FranceConnect OIDC
   'claim.sub': '',
   'claim.gender': 'Gender',

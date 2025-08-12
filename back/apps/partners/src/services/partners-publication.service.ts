@@ -4,7 +4,7 @@ import { PublicationStatusEnum } from '@entities/typeorm';
 
 import {
   ActionTypes,
-  ConfigCreateMessageDtoPayload,
+  ConfigCreateViaMessageDtoPayload,
   ConfigResponseDto,
   CsmrConfigClientService,
 } from '@fc/csmr-config-client';
@@ -20,7 +20,7 @@ export class PartnerPublicationService {
   async publish(
     instanceId: string,
     versionId: string,
-    payload: ConfigCreateMessageDtoPayload,
+    payload: ConfigCreateViaMessageDtoPayload,
     type: ActionTypes,
   ): Promise<ConfigResponseDto> {
     const message = {
