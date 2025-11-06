@@ -1,0 +1,84 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LoginLayout should match the snapshot, when session has expired 1`] = `
+<div>
+  <div
+    class="fr-container fr-mt-5w fr-mt-md-8w"
+  >
+    <div
+      class="fr-grid-row fr-grid-row--gutters fr-grid-row--center"
+    >
+      <div
+        class="text-left text-center--md fr-col-12 fr-col-lg-10"
+      >
+        <div
+          data-mockid="SessionExpiredAlertComponent"
+        />
+        <div>
+          Children Mock
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`LoginLayout should match the snapshot, when session has not expired 1`] = `
+<div>
+  <div
+    class="fr-container fr-mt-5w fr-mt-md-8w"
+  >
+    <div
+      class="fr-grid-row fr-grid-row--gutters fr-grid-row--center"
+    >
+      <div
+        class="text-left text-center--md fr-col-12 fr-col-lg-10"
+      >
+        <div>
+          Children Mock
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`LoginLayout should match the snapshot, when size is medium 1`] = `
+<div>
+  <div
+    class="fr-container fr-mt-5w fr-mt-md-8w"
+  >
+    <div
+      class="fr-grid-row fr-grid-row--gutters fr-grid-row--center"
+    >
+      <div
+        class="text-left text-center--md fr-col-12 fr-col-lg-10"
+      >
+        <div>
+          Children Mock
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`LoginLayout should match the snapshot, when size is small 1`] = `
+<div>
+  <div
+    class="fr-container fr-mt-5w fr-mt-md-8w"
+  >
+    <div
+      class="fr-grid-row fr-grid-row--gutters fr-grid-row--center"
+    >
+      <div
+        class="text-left text-center--md fr-col-12 fr-col-lg-8"
+      >
+        <div>
+          Children Mock
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

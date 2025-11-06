@@ -1,9 +1,16 @@
+import { Module } from '@nestjs/common';
+
 import { LoggerPluginInterface } from '@fc/logger';
 
-import { LoggerPluginsModule } from '../logger-plugins.module';
 import { LoggerDebugService } from '../services';
 
+@Module({
+  providers: [LoggerDebugService],
+  exports: [LoggerDebugService],
+})
+export class LoggerDebugPluginsModule {}
+
 export const LoggerDebugPlugin: LoggerPluginInterface = {
-  imports: [LoggerPluginsModule],
+  imports: [LoggerDebugPluginsModule],
   service: LoggerDebugService,
 };

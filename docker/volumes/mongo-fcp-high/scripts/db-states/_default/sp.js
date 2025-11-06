@@ -74,6 +74,7 @@ const fsp = {
     idpFilterList: [],
     eidas: 2,
     identityConsent: false,
+    signup_id: "9990001",
   },
 
   // -- FSP - FSP2v2 - Activated - no post-logout-redirect-uri
@@ -130,6 +131,7 @@ const fsp = {
     idpFilterList: ["0cbdf732-aaea-4566-a99e-4430f388ff18"],
     eidas: 2,
     identityConsent: false,
+    signup_id: "9990002",
   },
 
   // -- FSP - FSP3v2 - Deactivated
@@ -186,6 +188,7 @@ const fsp = {
     idpFilterExclude: true,
     idpFilterList: [],
     identityConsent: false,
+    signup_id: "9990003",
   },
 
   // -- FSP - FSP4v2 - Only openid and birthdate scopes authorized
@@ -229,6 +232,7 @@ const fsp = {
     idpFilterExclude: true,
     idpFilterList: [],
     identityConsent: false,
+    signup_id: "9990004",
   },
 
   // -- FSP - FSP5-HIGH - private FSP and identity consent required
@@ -310,6 +314,7 @@ const fsp = {
     ],
     identityConsent: true,
     eidas: 2,
+    signup_id: "9990005",
   },
 
   // -- FSP - FSP6v2 - private FSP and identity consent not required
@@ -472,6 +477,78 @@ const fsp = {
       "8aa849db-8402-4f2e-bad9-7471dd21ff94",
     ],
     identityConsent: false,
+  },
+
+  // Imported FS
+  // This FS is a "low" one, in order to use mongo-fcp-high to simulate integ01's database
+  // This should be removed after #2237 is ran on sandbox
+  "IMPORTED-FS": {
+    name: "IMPORTED-FS-LOW",
+    title: "Imported FS",
+    eidas: 1,
+    site: ["https://fsp2-low.docker.dev-franceconnect.fr/login"],
+    redirect_uris: [
+      "https://fsp2-low.docker.dev-franceconnect.fr/oidc-callback",
+    ],
+    post_logout_redirect_uris: [
+      "https://fsp2-low.docker.dev-franceconnect.fr/client/logout-callback",
+    ],
+    client_secret:
+      "+sqGL4XE6aqzIMOp/DKC1jWB8I+8qE1jW6iz2tUv8lt+ZZzxjyoCBQeuAcJTFZxfLywkn6cAICK5JPLxYM0+8pk/q7CGHUfr/gzr3ZYRroWWE+egEEDxqRYDYe0=",
+    key: "7a79e45107f9ccc6a3a5971d501220dc4fd9e87bb5e3fc62ce4104c756e22775",
+    entityId:
+      "a0cd64372db6ecf39c317c0c74ce90f02d8ad7d510ce054883b759d666a996bc",
+    credentialsFlow: false,
+    email: "fsp2@franceconnect.loc",
+    IPServerAddressesAndRanges: ["1.1.1.1"],
+    active: true,
+    type: "public",
+    __v: 4,
+    createdAt: new Date("2019-04-24 17:09:17"),
+    updatedAt: new Date("2019-04-24 17:09:17"),
+    updatedBy: "admin",
+    scopes: [
+      "openid",
+      "given_name",
+      "family_name",
+      "birthdate",
+      "gender",
+      "birthplace",
+      "birthcountry",
+      "email",
+      "preferred_username",
+      "profile",
+      "birth",
+      "identite_pivot",
+      "idp_birthdate",
+      "dgfip_rfr",
+      "dgfip_aft",
+      "dgfip_nbpac",
+      "dgfip_nbpart",
+      "dgfip_sitfam",
+      "dgfip_pac",
+      "dgfip_aft",
+      "droits_assurance_maladie",
+      "cnam_caisse",
+      "cnam_paiements_ij",
+    ],
+    claims: [],
+    id_token_signed_response_alg: "RS256",
+    id_token_encrypted_response_alg: "",
+    id_token_encrypted_response_enc: "",
+    userinfo_signed_response_alg: "RS256",
+    userinfo_encrypted_response_alg: "",
+    userinfo_encrypted_response_enc: "",
+    idpFilterExclude: false,
+    idpFilterList: [
+      "8dfc4080-c90d-4234-969b-f6c961de3e90",
+      "b5e9539a-599a-4ed2-9b4f-8f4bfc5fbb64",
+      "0adf04be-536e-4986-b639-73ea8d38493e",
+    ],
+    identityConsent: false,
+    platform: "CORE_FCP",
+    rep_scope: [],
+    signup_id: "1337",
   },
 };
 

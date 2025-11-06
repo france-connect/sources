@@ -22,6 +22,17 @@ Given(
 );
 
 Given(
+  "je mets la donnée mémorisée {string} dans la propriété {string} de l'entête de la requête",
+  function (dataKey: string, property: string) {
+    cy.get(`@api:${dataKey}`)
+      .should('exist')
+      .then((value) => {
+        this.apiRequest.headers[property] = value;
+      });
+  },
+);
+
+Given(
   'je retire le paramètre {string} de la requête',
   function (property: string) {
     expect(this.apiRequest.qs[property]).to.exist;

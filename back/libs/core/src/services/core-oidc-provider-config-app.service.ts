@@ -41,7 +41,7 @@ export class CoreOidcProviderConfigAppService extends OidcProviderAppConfigLibSe
   async logoutSource(ctx: OidcCtx, form: any): Promise<void> {
     this.sessionService.init(ctx.res);
 
-    const sessionId = await this.getSessionId(ctx);
+    const sessionId = this.getSessionId(ctx);
 
     const session = await this.sessionService.getDataFromBackend<{
       OidcClient: OidcSession;
@@ -101,17 +101,15 @@ export class CoreOidcProviderConfigAppService extends OidcProviderAppConfigLibSe
   /**
    * @todo FC-2184 ⚠️
    */
-  // eslint-disable-next-line complexity
-  private async getSessionId(ctx: OidcCtx): Promise<string> {
-    const { oidc } = ctx;
-    const alias = oidc.entities?.IdTokenHint?.payload?.at_hash;
 
-    // Check on `typeof` since `oidc-provider` types `at_hash` as `unknown`
-    if (typeof alias !== 'string') {
+  private getSessionId(ctx: OidcCtx): string {
+    const { oidc } = ctx;
+
+    const sessionId = oidc.entities?.Session?.accountId;
+
+    if (!sessionId) {
       throw new CoreMissingAtHashException();
     }
-
-    const sessionId = await this.sessionService.getAlias(alias);
 
     return sessionId;
   }

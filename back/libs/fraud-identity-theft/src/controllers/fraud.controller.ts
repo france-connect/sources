@@ -17,15 +17,23 @@ import {
 } from '@nestjs/common';
 
 import { getTransformed } from '@fc/common';
-import { CsmrFraudClientService, FraudMessageDto } from '@fc/csmr-fraud-client';
+import {
+  CsmrFraudClientService,
+  FraudCaseMessageDto,
+  FraudTrackDto,
+  FraudTracksMessageDto,
+} from '@fc/csmr-fraud-client';
 import { ActionTypes } from '@fc/csmr-fraud-client/protocol';
 import { CsrfTokenGuard } from '@fc/csrf';
 import {
   Dto2FormI18nService,
   FormValidationPipe,
+  MessageLevelEnum,
+  MessagePriorityEnum,
   MetadataDtoInterface,
   MetadataFormService,
 } from '@fc/dto2form';
+import { Dto2FormValidationErrorException } from '@fc/dto2form/exceptions';
 import { PivotIdentityDto } from '@fc/oidc';
 import { OidcClientSession } from '@fc/oidc-client';
 import { ISessionService, Session } from '@fc/session';
@@ -44,9 +52,15 @@ import {
   FraudIdentityFormDto,
   FraudSummaryEndpointSessionDto,
   FraudSummaryFormDto,
+  FraudTracksEndpointSessionDto,
 } from '../dto';
 import { FraudIdentityTheftRoutes } from '../enums';
-import { HttpErrorResponse, OidcIdentityInterface } from '../interfaces';
+import {
+  FraudSummaryResponseInterface,
+  FraudTracksResponseInterface,
+  HttpErrorResponse,
+  OidcIdentityInterface,
+} from '../interfaces';
 import { FraudIdentityTheftService } from '../services';
 
 const FILTERED_OPTIONS: ClassTransformOptions = {
@@ -68,7 +82,7 @@ export class FraudController {
   ) {}
 
   @Get(FraudIdentityTheftRoutes.FRAUD_NO_AUTH_DESCRIPTION)
-  getFraudDescription(): MetadataDtoInterface[] {
+  getFraudDescriptionForm(): MetadataDtoInterface[] {
     const payload = this.metadataFormService.getDtoMetadata(
       FraudDescriptionFormDto,
     );
@@ -93,7 +107,7 @@ export class FraudController {
   }
 
   @Get(FraudIdentityTheftRoutes.FRAUD_NO_AUTH_CONNECTION)
-  getFraudConnection(
+  getFraudConnectionForm(
     // We know that this session is unused in the method but
     // we use @Session decorator to ensure the session has the right type.
     @Session('FraudCase', FraudConnectionEndpointSessionDto)
@@ -111,7 +125,7 @@ export class FraudController {
   @Post(FraudIdentityTheftRoutes.FRAUD_NO_AUTH_CONNECTION)
   @UsePipes(FormValidationPipe)
   @UseGuards(CsrfTokenGuard)
-  postFraudConnection(
+  async postFraudConnection(
     @Res() res,
     @Body() body: FraudConnectionFormDto,
     @Session('FraudCase', FraudConnectionEndpointSessionDto)
@@ -119,13 +133,66 @@ export class FraudController {
   ) {
     sessionFraudCase.set({ connection: body });
 
+    const fraudTracks = await this.getTracks(body.code);
+
+    sessionFraudCase.set({ fraudTracks });
+
+    if (fraudTracks.length === 0) {
+      throw new Dto2FormValidationErrorException([
+        {
+          name: 'code',
+          validators: [
+            {
+              name: 'isWrong',
+              errorMessage: {
+                content: 'isWrong_error',
+                level: MessageLevelEnum.ERROR,
+                priority: MessagePriorityEnum.ERROR,
+              },
+              validationArgs: [],
+            },
+          ],
+        },
+      ]);
+    }
+
+    /**
+     * @TODO #2321
+     * We should clean the session when we set a new code (notably fraudConnexions if any)
+     * */
+
     return res.status(HttpStatus.OK).send();
   }
 
+  private async getTracks(code: string): Promise<FraudTrackDto[]> {
+    const message: FraudTracksMessageDto = {
+      type: ActionTypes.GET_FRAUD_TRACKS,
+      payload: {
+        authenticationEventId: code,
+      },
+    };
+
+    const { payload } = await this.fraud.publishFraudTracks(message);
+
+    return payload;
+  }
+
+  @Get(FraudIdentityTheftRoutes.FRAUD_DATA_TRACKS)
+  getFraudTracks(
+    @Session('FraudCase', FraudTracksEndpointSessionDto)
+    sessionFraudCase: ISessionService<FraudCaseSessionDto>,
+  ): FraudTracksResponseInterface {
+    const { code } = sessionFraudCase.get('connection');
+    const fraudTracks = sessionFraudCase.get('fraudTracks');
+
+    const sanitizedTracks =
+      this.fraudIdentityTheft.sanitizeFraudTracks(fraudTracks);
+
+    return { payload: sanitizedTracks, meta: { code } };
+  }
+
   @Get(FraudIdentityTheftRoutes.FRAUD_NO_AUTH_IDENTITY)
-  getFraudIdentity(
-    // We know that this session is unused in the method but
-    // we use @Session decorator to ensure the session has the right type.
+  getFraudIdentityForm(
     @Session('FraudCase', FraudIdentityEndpointSessionDto)
     _sessionFraudCase: ISessionService<FraudCaseSessionDto>,
   ): MetadataDtoInterface[] {
@@ -152,9 +219,7 @@ export class FraudController {
   }
 
   @Get(FraudIdentityTheftRoutes.FRAUD_NO_AUTH_CONTACT)
-  getFraudContact(
-    // We know that this session is unused in the method but
-    // we use @Session decorator to ensure the session has the right type.
+  getFraudContactForm(
     @Session('FraudCase', FraudContactEndpointSessionDto)
     _sessionFraudCase: ISessionService<FraudCaseSessionDto>,
   ): MetadataDtoInterface[] {
@@ -185,10 +250,12 @@ export class FraudController {
     @Session('FraudCase', FraudSummaryEndpointSessionDto)
     sessionFraudCase: ISessionService<FraudCaseSessionDto>,
   ): {
-    summary: FraudCaseSessionDto;
+    summary: FraudSummaryResponseInterface;
     form: MetadataDtoInterface[];
   } {
-    const summary = sessionFraudCase.get();
+    const session = sessionFraudCase.get();
+
+    const summary = this.fraudIdentityTheft.buildFraudSummary(session);
     const form = this.metadataFormService.getDtoMetadata(FraudSummaryFormDto);
 
     const formI18n = this.dto2FormI18n.translation(form);
@@ -220,7 +287,7 @@ export class FraudController {
     );
     const fraudCase = this.fraudIdentityTheft.buildFraudCase(summary);
 
-    const message: FraudMessageDto = {
+    const message: FraudCaseMessageDto = {
       type: ActionTypes.PROCESS_UNVERIFIED_IDENTITY_FRAUD_CASE,
       payload: {
         identity: pivotIdentity,
@@ -229,7 +296,7 @@ export class FraudController {
     };
 
     const { payload: fraudCaseTrackingData } =
-      await this.fraud.publish(message);
+      await this.fraud.publishFraudCase(message);
 
     const { FRAUD_CASE_OPENED } = this.tracking.TrackedEventsMap;
 
@@ -284,7 +351,7 @@ export class FraudController {
     };
 
     const { payload: fraudCaseTrackingData } =
-      await this.fraud.publish(message);
+      await this.fraud.publishFraudCase(message);
 
     const { FRAUD_CASE_OPENED } = this.tracking.TrackedEventsMap;
 

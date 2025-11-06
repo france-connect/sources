@@ -1,11 +1,17 @@
+import { omit } from 'lodash';
 import { v4 as uuid } from 'uuid';
 
 import { Injectable } from '@nestjs/common';
 
-import { FraudCaseDto } from '@fc/csmr-fraud-client';
+import {
+  FraudCaseDto,
+  FraudTrackDto,
+  SanitizedTrackDto,
+} from '@fc/csmr-fraud-client';
 import { PivotIdentityDto } from '@fc/oidc';
 
 import { FraudCaseSessionDto, FraudIdentitySessionDto } from '../dto';
+import { FraudSummaryResponseInterface } from '../interfaces';
 
 @Injectable()
 export class FraudIdentityTheftService {
@@ -32,6 +38,7 @@ export class FraudIdentityTheftService {
     connection,
     contact,
     description,
+    fraudTracks,
   }: FraudCaseSessionDto): FraudCaseDto {
     const id = uuid();
 
@@ -41,6 +48,7 @@ export class FraudIdentityTheftService {
       contactEmail: contact.email,
       phoneNumber: contact.phone,
       comment: description.description,
+      fraudTracks: fraudTracks,
 
       /**
        * @TODO #2299
@@ -53,5 +61,53 @@ export class FraudIdentityTheftService {
        * */
       idpEmail: contact.email,
     };
+  }
+
+  buildFraudSummary({
+    fraudTracks,
+    description,
+    connection,
+    identity,
+    contact,
+  }: FraudCaseSessionDto): FraudSummaryResponseInterface {
+    const sanitizedTracks = this.sanitizeFraudTracks(fraudTracks);
+    return {
+      description,
+      connection,
+      identity,
+      contact,
+      fraudTracks: sanitizedTracks,
+    };
+  }
+
+  sanitizeFraudTracks(fraudTracks: FraudTrackDto[]): SanitizedTrackDto[] {
+    const omitProperties = [
+      'id',
+      'accountId',
+      'date',
+      'spId',
+      'spName',
+      'spSub',
+      'idpId',
+      'idpName',
+      'idpSub',
+      'interactionId',
+      'browsingSessionId',
+      'country',
+      'city',
+      'ipAddress',
+    ];
+
+    const sanitizedTracks: SanitizedTrackDto[] = fraudTracks.map(
+      (entry) =>
+        ({
+          trackId: entry.id,
+          spLabel: entry.spName,
+          authenticationEventId: entry.browsingSessionId,
+          ...omit(entry, omitProperties),
+        }) as SanitizedTrackDto,
+    );
+
+    return sanitizedTracks;
   }
 }

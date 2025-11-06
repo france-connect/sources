@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { MicroservicesRmqPublisherService } from '@fc/microservices-rmq';
 
-import { FraudMessageDto } from '../dto';
+import { FraudCaseMessageDto, FraudTracksMessageDto } from '../dto';
 import { CsmrFraudClientService } from './csmr-fraud-client.service';
 
 describe('CsmrFraudClientService', () => {
@@ -11,8 +11,6 @@ describe('CsmrFraudClientService', () => {
   const rmqServiceMock = {
     publish: jest.fn(),
   };
-
-  const messageMock = {} as FraudMessageDto;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -29,9 +27,11 @@ describe('CsmrFraudClientService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('publish', () => {
+  describe('publishFraudCase', () => {
+    const messageMock = {} as FraudCaseMessageDto;
+
     it('should call rmqService.publish with message', async () => {
-      await service.publish(messageMock);
+      await service.publishFraudCase(messageMock);
 
       expect(rmqServiceMock.publish).toHaveBeenCalledWith(
         messageMock.type,
@@ -43,7 +43,29 @@ describe('CsmrFraudClientService', () => {
       const publishResult = Symbol('result');
       rmqServiceMock.publish.mockResolvedValue(publishResult);
 
-      const result = await service.publish(messageMock);
+      const result = await service.publishFraudCase(messageMock);
+
+      expect(result).toBe(publishResult);
+    });
+  });
+
+  describe('publishFraudTracks', () => {
+    const messageMock = {} as FraudTracksMessageDto;
+
+    it('should call rmqService.publish with message', async () => {
+      await service.publishFraudTracks(messageMock);
+
+      expect(rmqServiceMock.publish).toHaveBeenCalledWith(
+        messageMock.type,
+        messageMock,
+      );
+    });
+
+    it('should return result of rmqService.publish', async () => {
+      const publishResult = Symbol('result');
+      rmqServiceMock.publish.mockResolvedValue(publishResult);
+
+      const result = await service.publishFraudTracks(messageMock);
 
       expect(result).toBe(publishResult);
     });

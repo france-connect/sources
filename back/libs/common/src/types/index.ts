@@ -1,6 +1,7 @@
 export * from './fsa.type';
 export * from './functions.type';
 export * from './instantiable.type';
+export * from './must-end-with.type';
 export * from './pagination-options.type';
 export * from './pagination-result.type';
 export * from './partial-deep.type';

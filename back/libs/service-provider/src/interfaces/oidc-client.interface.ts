@@ -118,4 +118,5 @@ export interface OidcClientInterface {
 export interface ServiceProviderClientInterface extends OidcClientInterface {
   createdBy?: string;
   createdVia?: string;
+  updatedBy?: string;
 }

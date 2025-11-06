@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useSearchParams } from 'react-router';
 import { useLocalStorage } from 'usehooks-ts';
 
+import { Strings } from '@fc/common';
 import type { FraudConfigInterface } from '@fc/core-user-dashboard';
 
 export const useGetFraudSurveyOrigin = (options: FraudConfigInterface) => {
@@ -11,7 +12,7 @@ export const useGetFraudSurveyOrigin = (options: FraudConfigInterface) => {
 
   const [localFraudData, setLocalFraudData, removeLocalFraudData] = useLocalStorage(
     surveyOriginQueryParam,
-    { createdAt: Date.now(), value: '' },
+    { createdAt: Date.now(), value: Strings.EMPTY_STRING as string },
   );
 
   const { createdAt, value: localFraudSurveyOrigin } = localFraudData;

@@ -4,12 +4,19 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
 import { SERVICE_PROVIDER_SERVICE_TOKEN } from '@fc/oidc';
+import { SIGN_ADAPTER_TOKEN } from '@fc/sign-adapter';
+import { SignAdapterNativeService } from '@fc/sign-adapter-native';
 
-import { OidcProviderRedisAdapter } from '../adapters';
+import { OidcProviderRedisAdapter, OidcProviderSignAdapter } from '../adapters';
 import { OidcProviderService } from '../oidc-provider.service';
 import { OIDC_PROVIDER_CONFIG_APP_TOKEN } from '../tokens';
 import { OidcProviderConfigService } from './oidc-provider-config.service';
 import { OidcProviderErrorService } from './oidc-provider-error.service';
+
+jest.mock('../adapters', () => ({
+  ...jest.requireActual('../adapters'),
+  OidcProviderSignAdapter: jest.fn(),
+}));
 
 describe('OidcProviderConfigService', () => {
   let service: OidcProviderConfigService;
@@ -17,6 +24,10 @@ describe('OidcProviderConfigService', () => {
   const configServiceMock = {
     get: jest.fn(),
   };
+
+  const signAdapterItemMock = {
+    key: 'signAdapterItem',
+  } as unknown as OidcProviderSignAdapter;
 
   const errorServiceMock = {
     renderError: jest.fn(),
@@ -33,6 +44,13 @@ describe('OidcProviderConfigService', () => {
     findAccount: jest.fn(),
   };
 
+  const signAdapterServiceMock = {
+    sign: jest.fn(),
+  };
+
+  const oidcProviderSignAdapterMock = jest.mocked(OidcProviderSignAdapter);
+  oidcProviderSignAdapterMock.fromJwk = jest.fn();
+
   const oidcProviderRedisAdapterMock = class AdapterMock {};
 
   const oidcProviderServiceMock = {} as OidcProviderService;
@@ -42,7 +60,7 @@ describe('OidcProviderConfigService', () => {
     issuer: 'http://foo.bar',
     configuration: {
       adapter: oidcProviderRedisAdapterMock,
-      jwks: { keys: [] },
+      jwks: { keys: ['jwk'] },
       features: {
         devInteractions: { enabled: false },
       },
@@ -66,6 +84,10 @@ describe('OidcProviderConfigService', () => {
           provide: OIDC_PROVIDER_CONFIG_APP_TOKEN,
           useValue: oidcProviderConfigAppMock,
         },
+        {
+          provide: SIGN_ADAPTER_TOKEN,
+          useValue: signAdapterServiceMock,
+        },
       ],
     })
       .overrideProvider(ConfigService)
@@ -83,6 +105,72 @@ describe('OidcProviderConfigService', () => {
           return configOidcProviderMock;
       }
     });
+
+    oidcProviderSignAdapterMock.fromJwk.mockReturnValue(signAdapterItemMock);
+  });
+
+  describe('buildSigningKeys()', () => {
+    it('should return the result of the sign adapter if the sign adapter is not the native sign adapter', () => {
+      // When
+      const result = service['buildSigningKeys']();
+
+      // Then
+      expect(result).toEqual([signAdapterItemMock]);
+    });
+
+    it('should return the jwks if the sign adapter is the native sign adapter', () => {
+      // Given
+      Object.defineProperty(service, 'signAdapter', {
+        value: new SignAdapterNativeService(),
+      });
+
+      // When
+      const result = service['buildSigningKeys']();
+
+      // Then
+      expect(result).toEqual(['jwk']);
+    });
+
+    it('should return an adapter with a function to sign the data', async () => {
+      // Given
+      oidcProviderSignAdapterMock.fromJwk.mockImplementationOnce(
+        (_jwk, signFn) =>
+          ({ sign: signFn }) as unknown as OidcProviderSignAdapter,
+      );
+      const [adapter] = service['buildSigningKeys']();
+      const data = new Uint8Array([1, 2, 3]);
+      const alg = 'ES256';
+
+      // When
+      await adapter['sign'](data, alg);
+
+      // Then
+      expect(service['signAdapter'].sign).toHaveBeenCalledExactlyOnceWith(
+        data.toString(),
+        alg,
+      );
+    });
+  });
+
+  describe('buildExternalSigningFeature()', () => {
+    it('should return the external signing feature', () => {
+      // When
+      const result = service['buildExternalSigningFeature']();
+      // Then
+      expect(result).toEqual({ enabled: true, ack: 'experimental-01' });
+    });
+
+    it('should return a plain object if the sign adapter is the native sign adapter', () => {
+      // Given
+      Object.defineProperty(service, 'signAdapter', {
+        value: new SignAdapterNativeService(),
+      });
+
+      // When
+      const result = service['buildExternalSigningFeature']();
+      // Then
+      expect(result).toEqual({ enabled: false, ack: undefined });
+    });
   });
 
   describe('getConfig()', () => {
@@ -91,6 +179,11 @@ describe('OidcProviderConfigService', () => {
       OidcProviderRedisAdapter.getConstructorWithDI = jest
         .fn()
         .mockReturnValue(oidcProviderRedisAdapterMock);
+      service['buildSigningKeys'] = jest.fn().mockReturnValue(['jwk']);
+      service['buildExternalSigningFeature'] = jest.fn().mockReturnValue({
+        enabled: true,
+        ack: undefined,
+      });
 
       // When
       const result = service.getConfig(oidcProviderServiceMock);
@@ -106,8 +199,12 @@ describe('OidcProviderConfigService', () => {
         serviceProviderServiceMock,
       );
 
-      expect(configServiceMock.get).toHaveBeenCalledTimes(1);
-      expect(configServiceMock.get).toHaveBeenCalledWith('OidcProvider');
+      expect(configServiceMock.get).toHaveBeenCalledExactlyOnceWith(
+        'OidcProvider',
+      );
+
+      expect(service['buildSigningKeys']).toHaveBeenCalledTimes(1);
+      expect(service['buildExternalSigningFeature']).toHaveBeenCalledTimes(1);
 
       expect(result).toMatchObject(configOidcProviderMock);
     });

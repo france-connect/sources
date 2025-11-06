@@ -117,6 +117,18 @@ export const frFR = {
   // Direction du Service National et de la Jeunesse
   'claim.dsnj_statut_service_national': 'Statut Service National',
 
+  // Agence Nationale des Titres Sécurisés
+  'claim.ants_extrait_immatriculation_vehicule_identite_particulier':
+    'Identité du particulier',
+  'claim.ants_extrait_immatriculation_vehicule_adresse_particulier':
+    'Adresse du particulier',
+  'claim.ants_extrait_immatriculation_vehicule_statut_rattachement':
+    'Statut de rattachement',
+  'claim.ants_extrait_immatriculation_vehicule_donnees_immatriculation_vehicule':
+    'Données d’immatriculation du véhicule',
+  'claim.ants_extrait_immatriculation_vehicule_caracteristiques_techniques_vehicule':
+    'Caractéristiques techniques du véhicule',
+
   // FranceConnect OIDC
   'claim.sub': '',
   'claim.gender': 'Sexe',

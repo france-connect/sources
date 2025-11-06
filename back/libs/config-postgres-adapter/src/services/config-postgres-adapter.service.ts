@@ -1,3 +1,5 @@
+import { QueryRunner } from 'typeorm';
+
 import { Injectable } from '@nestjs/common';
 
 import {
@@ -12,6 +14,8 @@ import {
 import { ConfigMessageDto } from '@fc/csmr-config-client';
 import { PartnersServiceProviderInstanceService } from '@fc/partners-service-provider-instance';
 import { PartnersServiceProviderInstanceVersionService } from '@fc/partners-service-provider-instance-version';
+import { OidcClientInterface } from '@fc/service-provider';
+import { TypeormService } from '@fc/typeorm';
 
 @Injectable()
 export class ConfigPostgresAdapterService
@@ -20,6 +24,7 @@ export class ConfigPostgresAdapterService
   constructor(
     private readonly instances: PartnersServiceProviderInstanceService,
     private readonly versions: PartnersServiceProviderInstanceVersionService,
+    private readonly typeorm: TypeormService, // Assuming typeorm is a QueryRunner instance
   ) {}
 
   async create(message: ConfigMessageDto): Promise<ConfigSaveResultInterface> {
@@ -30,44 +35,64 @@ export class ConfigPostgresAdapterService
     return await this.save(message);
   }
 
-  async save(message: ConfigMessageDto): Promise<ConfigSaveResultInterface> {
-    const instance = await this.getInstance(message);
-    const version = await this.getVersion(message, instance);
+  private async save(
+    message: ConfigMessageDto,
+  ): Promise<ConfigSaveResultInterface> {
+    const id = await this.typeorm.withTransaction(
+      async (queryRunner: QueryRunner) => {
+        const instance = await this.getInstance(queryRunner, message);
+        const version = await this.getVersion(queryRunner, message, instance);
 
-    if (version.publicationStatus !== message.meta.publicationStatus) {
-      version.publicationStatus = message.meta.publicationStatus;
+        if (version.publicationStatus !== message.meta.publicationStatus) {
+          version.publicationStatus = message.meta.publicationStatus;
+          await this.versions.updateStatusWithQueryRunner(queryRunner, version);
+        }
 
-      await this.versions.updateStatus(version);
-    }
+        return {
+          id: version.id,
+        };
+      },
+    );
 
-    return {
-      id: version.id,
-    };
+    return id;
   }
 
-  private getInstance(
+  private async getInstance(
+    queryRunner: QueryRunner,
     message: ConfigMessageDto,
   ): Promise<PartnersServiceProviderInstance | null> {
-    let instance = this.instances.getById(message.meta.instanceId);
+    let instance = await this.instances.getByIdWithQueryRunner(
+      queryRunner,
+      message.meta.instanceId,
+    );
 
     if (!instance) {
-      instance = this.instances.save(
-        message.payload as Partial<PartnersServiceProviderInstance>,
-      );
+      instance = await this.instances.save(queryRunner, {
+        id: message.meta.instanceId,
+        ...message.payload,
+      } as Partial<PartnersServiceProviderInstance>);
     }
 
     return instance;
   }
 
-  private getVersion(
+  private async getVersion(
+    queryRunner: QueryRunner,
     message: ConfigMessageDto,
     instance: PartnersServiceProviderInstance,
   ): Promise<PartnersServiceProviderInstanceVersion> {
-    let version = this.versions.getById(message.meta.versionId);
+    let version = await this.versions.getByIdWithQueryRunner(
+      queryRunner,
+      message.meta.versionId,
+    );
 
     if (!version) {
-      /** @todo #2036 Fix typing once fields are OK  */
-      version = this.versions.create(message.payload as any, instance.id);
+      version = await this.versions.create(
+        queryRunner,
+        message.payload as OidcClientInterface,
+        instance.id,
+        message.meta.publicationStatus,
+      );
     }
 
     return version;

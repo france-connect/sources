@@ -1,4 +1,4 @@
-import { Global, Module } from '@nestjs/common';
+import { DynamicModule, ModuleMetadata, Type } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 
 import { AccountModule } from '@fc/account';
@@ -29,7 +29,7 @@ import {
 import { JwtModule } from '@fc/jwt';
 import { MailerModule } from '@fc/mailer';
 import { MongooseModule } from '@fc/mongoose';
-import { NotificationsModule } from '@fc/notifications';
+import { NotificationModule } from '@fc/notification';
 import { OidcAcrModule } from '@fc/oidc-acr';
 import { OidcClientModule } from '@fc/oidc-client';
 import { OidcProviderModule } from '@fc/oidc-provider';
@@ -68,94 +68,99 @@ import {
   OidcProviderConfigAppService,
 } from './services';
 
-const oidcProviderModule = OidcProviderModule.register(
-  OidcProviderConfigAppService,
-  ServiceProviderAdapterMongoService,
-  ServiceProviderAdapterMongoModule,
-);
+export class CoreFcpModule {
+  static register(SignAdapterModule: Type<ModuleMetadata>): DynamicModule {
+    const oidcProviderModule = OidcProviderModule.register(
+      OidcProviderConfigAppService,
+      ServiceProviderAdapterMongoService,
+      ServiceProviderAdapterMongoModule,
+      SignAdapterModule,
+    );
 
-const oidcClientModule = OidcClientModule.register(
-  IdentityProviderAdapterMongoService,
-  IdentityProviderAdapterMongoModule,
-  ServiceProviderAdapterMongoService,
-  ServiceProviderAdapterMongoModule,
-);
-@Global()
-@Module({
-  imports: [
-    CqrsModule,
-    AsyncLocalStorageModule,
-    MongooseModule.forRoot(),
-    SessionModule,
-    FlowStepsModule,
-    RnippModule,
-    CryptographyFcpModule,
-    CryptographyEidasModule,
-    AccountModule,
-    ServiceProviderAdapterMongoModule,
-    JwtModule,
-    IdentityProviderAdapterMongoModule,
-    HttpProxyModule,
-    OidcAcrModule,
-    oidcProviderModule,
-    oidcClientModule,
-    ScopesModule,
-    MailerModule,
-    NotificationsModule,
-    FeatureHandlerModule,
-    AppModule,
-    DataProviderAdapterMongoModule,
-    ViewTemplatesModule,
-    CsrfModule,
-    I18nModule,
-    DeviceModule,
-    ExceptionsFcpModule,
-    CoreModule.register(
-      CoreFcpService,
-      oidcProviderModule,
-      oidcClientModule,
+    const oidcClientModule = OidcClientModule.register(
+      IdentityProviderAdapterMongoService,
       IdentityProviderAdapterMongoModule,
-      CoreFcpTrackingService,
-    ),
-  ],
-  controllers: [
-    CoreFcpController,
-    OidcClientController,
-    OidcProviderController,
-    DataProviderController,
-  ],
-  providers: [
-    {
-      provide: CORE_AUTH_SERVICE,
-      useClass: CoreAuthorizationService,
-    },
-    {
-      provide: CORE_VERIFY_SERVICE,
-      useClass: CoreVerifyService,
-    },
-    CoreFcpService,
-    CoreFcpVerifyService,
-    CoreFcpMiddlewareService,
-    DataProviderService,
-    ScopesHelper,
-    OidcProviderConfigAppService,
-    // Verify handlers
-    CoreFcpDefaultVerifyHandler,
-    CoreFcpEidasVerifyHandler,
-    CoreFcpAidantsConnectVerifyHandler,
-    // Send email handler
-    CoreFcpSendEmailHandler,
-    // Identity checks handlers
-    CoreFcpDefaultIdentityCheckHandler,
-    CoreFcpEidasIdentityCheckHandler,
-    // Authorization handlers
-    CoreFcpDefaultAuthorizationHandler,
-    CoreFcpAidantsConnectAuthorizationHandler,
-    {
-      provide: CORE_SERVICE,
-      useClass: CoreFcpService,
-    },
-  ],
-  exports: [CoreFcpService, OidcProviderConfigAppService, CqrsModule],
-})
-export class CoreFcpModule {}
+      ServiceProviderAdapterMongoService,
+      ServiceProviderAdapterMongoModule,
+    );
+    return {
+      module: CoreFcpModule,
+      global: true,
+      imports: [
+        JwtModule.register(SignAdapterModule),
+        CqrsModule,
+        AsyncLocalStorageModule,
+        MongooseModule.forRoot(),
+        SessionModule,
+        FlowStepsModule,
+        RnippModule,
+        CryptographyFcpModule,
+        CryptographyEidasModule,
+        AccountModule,
+        ServiceProviderAdapterMongoModule,
+        IdentityProviderAdapterMongoModule,
+        HttpProxyModule,
+        OidcAcrModule,
+        oidcProviderModule,
+        oidcClientModule,
+        ScopesModule,
+        MailerModule,
+        NotificationModule,
+        FeatureHandlerModule,
+        AppModule,
+        DataProviderAdapterMongoModule,
+        ViewTemplatesModule,
+        CsrfModule,
+        I18nModule,
+        DeviceModule,
+        ExceptionsFcpModule,
+        CoreModule.register(
+          CoreFcpService,
+          oidcProviderModule,
+          oidcClientModule,
+          IdentityProviderAdapterMongoModule,
+          CoreFcpTrackingService,
+        ),
+      ],
+      controllers: [
+        CoreFcpController,
+        OidcClientController,
+        OidcProviderController,
+        DataProviderController,
+      ],
+      providers: [
+        {
+          provide: CORE_AUTH_SERVICE,
+          useClass: CoreAuthorizationService,
+        },
+        {
+          provide: CORE_VERIFY_SERVICE,
+          useClass: CoreVerifyService,
+        },
+        CoreFcpService,
+        CoreFcpVerifyService,
+        CoreFcpMiddlewareService,
+        DataProviderService,
+        ScopesHelper,
+        OidcProviderConfigAppService,
+        // Verify handlers
+        CoreFcpDefaultVerifyHandler,
+        CoreFcpEidasVerifyHandler,
+        CoreFcpAidantsConnectVerifyHandler,
+        // Send email handler
+        CoreFcpSendEmailHandler,
+        // Identity checks handlers
+        CoreFcpDefaultIdentityCheckHandler,
+        CoreFcpEidasIdentityCheckHandler,
+        // Authorization handlers
+        CoreFcpDefaultAuthorizationHandler,
+        CoreFcpAidantsConnectAuthorizationHandler,
+        {
+          provide: CORE_SERVICE,
+          useClass: CoreFcpService,
+        },
+      ],
+      exports: [CoreFcpService, OidcProviderConfigAppService, CqrsModule],
+    };
+  }
+}

@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`InstancePageNoticeComponent should match the snapshot 1`] = `
+<div>
+  <div
+    data-mockid="AlertComponent"
+  >
+    <div>
+      AlertComponent
+    </div>
+    <div>
+      <h3
+        class="fr-alert__title"
+      >
+        CorePartners.instance.noticeTitle
+         
+        <span
+          data-mockid="SeeAlsoElement"
+        />
+      </h3>
+    </div>
+  </div>
+</div>
+`;

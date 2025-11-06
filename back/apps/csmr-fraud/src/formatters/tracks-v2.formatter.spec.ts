@@ -15,6 +15,7 @@ import {
 import { getLoggerMock } from '@mocks/logger';
 
 import { Platform } from '../enums';
+import { getReadableDateFromTime } from '../utils';
 import { TracksV2Formatter } from './tracks-v2.formatter';
 
 jest.mock('../utils');
@@ -35,13 +36,19 @@ describe('TracksV2Formatter', () => {
 
   const ipAddress = ['ipAddress'];
 
+  const timeMock = 1664661600000;
+
+  const readableDateMock = '02/10/2022 00:00:00';
+
   const inputMock = {
+    _id: 'mockId',
     _source: {
       idpName: 'idpNameMock',
       idpId: 'idpIdMock',
+      idpLabel: 'idpLabelMock',
       spName: 'spNameMock',
       spId: 'spIdMock',
-      time: 1664661600000,
+      time: timeMock,
       accountId: 'accountIdMock',
       service: CoreInstance.FCP_LOW,
       idpSub: 'idpSubMock',
@@ -76,6 +83,7 @@ describe('TracksV2Formatter', () => {
 
     jest.mocked(getLocationFromTracks).mockReturnValue(localisationMock);
     jest.mocked(getIpAddressFromTracks).mockReturnValue(ipAddress);
+    jest.mocked(getReadableDateFromTime).mockReturnValue(readableDateMock);
   });
 
   it('should be defined', () => {
@@ -101,9 +109,18 @@ describe('TracksV2Formatter', () => {
       expect(getIpAddressFromTracks).toHaveBeenCalledWith(inputMock._source);
     });
 
+    it('should call getReadableDateFromTime() with time', () => {
+      // When
+      service.formatTrack(inputMock);
+
+      // Then
+      expect(getReadableDateFromTime).toHaveBeenCalledExactlyOnceWith(timeMock);
+    });
+
     it('should use spAcr if interactionAcr is not set', () => {
       // Given
       const inputWithoutInteractionAcrMock = {
+        _id: inputMock._id,
         _source: {
           ...inputMock._source,
           interactionAcr: undefined,
@@ -111,12 +128,15 @@ describe('TracksV2Formatter', () => {
       } as SearchHit<TracksV2FieldsInterface>;
 
       const resultMock = {
+        id: 'mockId',
         country: localisationMock.country,
         city: localisationMock.city,
-        time: 1664661600000,
+        time: timeMock,
+        date: readableDateMock,
         spName: 'spNameMock',
         spId: 'spIdMock',
         idpName: 'idpNameMock',
+        idpLabel: 'idpLabelMock',
         idpId: 'idpIdMock',
         platform: platformMock,
         accountId: 'accountIdMock',
@@ -138,12 +158,15 @@ describe('TracksV2Formatter', () => {
     it('should transform source to track data', () => {
       // Given
       const resultMock = {
+        id: 'mockId',
         country: localisationMock.country,
         city: localisationMock.city,
-        time: 1664661600000,
+        time: timeMock,
+        date: readableDateMock,
         spName: 'spNameMock',
         spId: 'spIdMock',
         idpName: 'idpNameMock',
+        idpLabel: 'idpLabelMock',
         idpId: 'idpIdMock',
         platform: platformMock,
         accountId: 'accountIdMock',

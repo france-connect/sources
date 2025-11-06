@@ -27,12 +27,6 @@ export class MongooseConfigOptions {
   @IsBoolean()
   @IsOptional()
   readonly tlsAllowInvalidHostnames?: boolean;
-
-  @IsBoolean()
-  readonly useNewUrlParser: boolean;
-
-  @IsBoolean()
-  readonly useUnifiedTopology: boolean;
 }
 
 export class MongooseConfig {

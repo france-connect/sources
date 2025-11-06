@@ -155,7 +155,7 @@ export class OidcSession {
   readonly spAcr?: string;
 
   @IsOptional()
-  @IsUrlRequiredTldFromConfig()
+  @IsUrlRequiredTldFromConfig('OidcProvider', 'urlsRequireTld')
   readonly spRedirectUri?: string;
 
   /**

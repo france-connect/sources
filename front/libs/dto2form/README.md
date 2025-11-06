@@ -6,8 +6,11 @@
 const schema = loadSchemaFromApi() as SchemaFieldType[];
 
 return (
-  <DTO2FormComponent<ProviderFormValues>
-    config={{ id: 'dto-form-example' }}
+  <Dto2FormComponent<ProviderFormValues>
+    config={{
+      id: 'dto-form-example',
+      submitLabel: 'envoyer ces informations'
+    }}
     initialValues={{ uid }}
     schema={schema}
     onSubmit={() => {}}

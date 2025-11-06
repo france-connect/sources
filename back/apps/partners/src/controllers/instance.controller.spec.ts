@@ -16,8 +16,11 @@ import {
   PartnersServiceProviderInstanceVersionService,
   ServiceProviderInstanceVersionDto,
 } from '@fc/partners-service-provider-instance-version';
+import { OidcClientInterface } from '@fc/service-provider';
+import { TypeormService } from '@fc/typeorm';
 
 import { getSessionServiceMock } from '@mocks/session';
+import { getQueryRunnerMock, getTypeormServiceMock } from '@mocks/typeorm';
 
 import {
   PartnerPublicationService,
@@ -29,6 +32,8 @@ describe('InstanceController', () => {
   let controller: InstanceController;
 
   const sessionPartnersAccountMock = getSessionServiceMock();
+  const typeormServiceMock = getTypeormServiceMock();
+  const queryRunnerMock = getQueryRunnerMock();
 
   const instanceMock = {
     getAllowedInstances: jest.fn(),
@@ -41,7 +46,7 @@ describe('InstanceController', () => {
   };
 
   const accountPermissionServiceMock = {
-    addPermission: jest.fn(),
+    addPermissionTransactional: jest.fn(),
   };
 
   const partnersServiceMock = {
@@ -103,6 +108,7 @@ describe('InstanceController', () => {
         AccountPermissionService,
         PartnerPublicationService,
         PartnersInstanceVersionFormService,
+        TypeormService,
       ],
     })
       .overrideProvider(PartnersServiceProviderInstanceService)
@@ -121,6 +127,8 @@ describe('InstanceController', () => {
       .useValue(formValidationPipeMock)
       .overrideProvider(PartnerPublicationService)
       .useValue(publicationMock)
+      .overrideProvider(TypeormService)
+      .useValue(typeormServiceMock)
       .compile();
 
     controller = module.get<InstanceController>(InstanceController);
@@ -190,31 +198,15 @@ describe('InstanceController', () => {
   });
 
   describe('createInstance', () => {
-    it('should call service.save with instance value from body', async () => {
-      // Given
-      const expected = {
-        environment: EnvironmentEnum.SANDBOX,
-      };
-
-      // When
-      await controller.createInstance(body, sessionPartnersAccountMock);
-
-      // Then
-      expect(instanceMock.save).toHaveBeenCalledTimes(1);
-      expect(instanceMock.save).toHaveBeenCalledWith(expected);
-    });
-
-    it('should call version.create with body and instance id', async () => {
-      // When
-      await controller.createInstance(body, sessionPartnersAccountMock);
-
-      // Then
-      expect(versionMock.create).toHaveBeenCalledTimes(1);
-      expect(versionMock.create).toHaveBeenCalledWith(
-        body,
-        instanceIdMock,
-        pendingPublicationStatus,
-      );
+    beforeEach(() => {
+      controller['createInstanceInDatabase'] = jest.fn();
+      typeormServiceMock.withTransaction.mockImplementationOnce((callback) => {
+        callback(queryRunnerMock);
+        return {
+          instanceId: instanceIdMock,
+          versionId: versionIdMock,
+        };
+      });
     });
 
     it('should call session partner account to retrieve accountId', async () => {
@@ -225,20 +217,19 @@ describe('InstanceController', () => {
       expect(sessionPartnersAccountMock.get).toHaveBeenCalledTimes(1);
     });
 
-    it('should call addPermission with instanceId, accountId and default params', async () => {
+    it('should createInstanceInDatabase within a transaction', async () => {
       // When
       await controller.createInstance(body, sessionPartnersAccountMock);
 
       // Then
-      expect(accountPermissionServiceMock.addPermission).toHaveBeenCalledTimes(
-        1,
+      expect(typeormServiceMock.withTransaction).toHaveBeenCalledTimes(1);
+      expect(
+        controller['createInstanceInDatabase'],
+      ).toHaveBeenCalledExactlyOnceWith(
+        queryRunnerMock,
+        body,
+        sessionPartnersAccountMock.get().identity.id,
       );
-      expect(accountPermissionServiceMock.addPermission).toHaveBeenCalledWith({
-        accountId: userInfoMock.id,
-        entityId: instanceIdMock,
-        entity: EntityType.SP_INSTANCE,
-        permissionType: PermissionsType.VIEW,
-      });
     });
 
     it('should call publish method with instanceId, VersionId, data and action type to create config', async () => {
@@ -262,7 +253,79 @@ describe('InstanceController', () => {
     });
   });
 
+  describe('createInstanceInDatabase', () => {
+    // Given
+    const data = {} as OidcClientInterface;
+    const accountId = 'accountIdMock';
+
+    it('should call service.save with instance value from body', async () => {
+      // Given
+      const expected = {
+        environment: EnvironmentEnum.SANDBOX,
+      };
+
+      // When
+      await controller['createInstanceInDatabase'](
+        queryRunnerMock,
+        data,
+        accountId,
+      );
+
+      // Then
+      expect(instanceMock.save).toHaveBeenCalledExactlyOnceWith(
+        queryRunnerMock,
+        expected,
+      );
+    });
+
+    it('should call version.create with body and instance id', async () => {
+      // When
+      await controller['createInstanceInDatabase'](
+        queryRunnerMock,
+        data,
+        accountId,
+      );
+
+      // Then
+      expect(versionMock.create).toHaveBeenCalledTimes(1);
+      expect(versionMock.create).toHaveBeenCalledWith(
+        queryRunnerMock,
+        data,
+        instanceIdMock,
+        pendingPublicationStatus,
+      );
+    });
+
+    it('should call addPermissionTransactional with instanceId, accountId and default params', async () => {
+      // When
+      await controller['createInstanceInDatabase'](
+        queryRunnerMock,
+        data,
+        accountId,
+      );
+
+      // Then
+      expect(
+        accountPermissionServiceMock.addPermissionTransactional,
+      ).toHaveBeenCalledExactlyOnceWith(queryRunnerMock, {
+        accountId: accountId,
+        entityId: instanceIdMock,
+        entity: EntityType.SP_INSTANCE,
+        permissionType: PermissionsType.VIEW,
+      });
+    });
+  });
+
   describe('updateInstance', () => {
+    const versionId = 'versionIdMock';
+
+    beforeEach(() => {
+      typeormServiceMock.withQueryRunner.mockImplementationOnce((callback) => {
+        callback(queryRunnerMock);
+        return versionId;
+      });
+    });
+
     it('should call fromFormValues with body and instance id', async () => {
       // When
       await controller.updateInstance(
@@ -277,7 +340,7 @@ describe('InstanceController', () => {
       ).toHaveBeenCalledExactlyOnceWith(body, instanceIdMock);
     });
 
-    it('should call version.create with body and instance id', async () => {
+    it('should call version.create with queryRunner', async () => {
       // When
       await controller.updateInstance(
         body,
@@ -286,8 +349,9 @@ describe('InstanceController', () => {
       );
 
       // Then
-      expect(versionMock.create).toHaveBeenCalledTimes(1);
+      expect(typeormServiceMock.withQueryRunner).toHaveBeenCalledTimes(1);
       expect(versionMock.create).toHaveBeenCalledWith(
+        queryRunnerMock,
         body,
         instanceIdMock,
         pendingPublicationStatus,
@@ -298,8 +362,7 @@ describe('InstanceController', () => {
       // Given
       const dataWithCreatedInfo = {
         ...body,
-        createdBy: userInfoMock.email,
-        createdVia: CreatedVia.PARTNERS_MANUAL,
+        updatedBy: userInfoMock.email,
       };
 
       // When
@@ -310,9 +373,9 @@ describe('InstanceController', () => {
       );
 
       // Then
-      expect(publicationMock.publish).toHaveBeenCalledExactlyOnceWith(
+      expect(publicationMock.publish).toHaveBeenCalledWith(
         instanceIdMock,
-        versionIdMock,
+        versionId,
         dataWithCreatedInfo,
         'CONFIG_UPDATE',
       );

@@ -4,7 +4,7 @@ import { AppConfig } from '@fc/partners';
 const env = new ConfigParser(process.env, 'App');
 
 export default {
-  name: env.string('NAME'),
+  name: 'PARTNERS',
   urlPrefix: '/api',
   httpsOptions: {
     key: env.file('HTTPS_SERVER_KEY', { optional: true }),

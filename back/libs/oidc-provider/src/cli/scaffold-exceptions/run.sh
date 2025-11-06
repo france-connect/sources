@@ -41,21 +41,22 @@ export const enGB = {"
     local source=$(echo "$line" | sed -E 's/(.*):throw new .*/\1/')
 
     # @example: client assertion tokens must only be used once
-    local message=$(echo "$line" |
-      # Extract everything inside the throw new statement
-      sed -E "s/.*throw new [a-zA-Z0-9.]+\((.*)\)/\1/" |
+    local message=$(
+      echo "$line" |
+        # Extract everything inside the throw new statement
+        sed -E "s/.*throw new [a-zA-Z0-9.]+\((.*)\)/\1/" |
 
-      # Tokenize legit escaped single quotes
-      sed -E "s/([^[:space:]])\\\\'([^[:space:]])/\1__LEGIT_ESC_QUOTE__\2/g" |
+        # Tokenize legit escaped single quotes
+        sed -E "s/([^[:space:]])\\\\'([^[:space:]])/\1__LEGIT_ESC_QUOTE__\2/g" |
 
-      # Convert string concatenations to ease readability
-      sed -E "s/\" \\+ ([a-zA-Z0-9_.]+) \\+ \"/\${\1}/g" |
+        # Convert string concatenations to ease readability
+        sed -E "s/\" \\+ ([a-zA-Z0-9_.]+) \\+ \"/\${\1}/g" |
 
-      # Replace quotes with double quotes for consistency
-      sed -E "s/\\\\?['\"\`]/\"/g" |
+        # Replace quotes with double quotes for consistency
+        sed -E "s/\\\\?['\"\`]/\"/g" |
 
-      # Removes only unwanted quotes betweens args, but not inside function calls
-      awk '
+        # Removes only unwanted quotes betweens args, but not inside function calls
+        awk '
         BEGIN {FS = ", "}  # Use ", " as the primary field separator
         {
           parens = 0  # Track parentheses nesting level
@@ -74,18 +75,18 @@ export const enGB = {"
         }
       ' |
 
-      # Remove start/end string delimiters ('"`)
-      sed -E "s/^['\"\`](.*)['\"\`]$/\1/g" |
+        # Remove start/end string delimiters ('"`)
+        sed -E "s/^['\"\`](.*)['\"\`]$/\1/g" |
 
-      # Restore legit escaped single quotes
-      sed -E "s/__LEGIT_ESC_QUOTE__/\\\\'/g" |
+        # Restore legit escaped single quotes
+        sed -E "s/__LEGIT_ESC_QUOTE__/\\\\'/g" |
 
-      # Fix unescaped quote that have been transformed in single quote (TODO: find a more consistent way to prevent this ?)
-      sed -E "s/([a-zA-Z])\"([a-zA-Z])/\1\\\\'\2/g"
+        # Fix unescaped quote that have been transformed in single quote (TODO: find a more consistent way to prevent this ?)
+        sed -E "s/([a-zA-Z])\"([a-zA-Z])/\1\\\\'\2/g"
     )
 
     # @example: CB6B
-    local identifier=$(printf "%x" $(echo -n "${source}" | cksum | cut -d' ' -f 1) | head -c 4 | tr '[:lower:]' '[:upper:]')
+    local identifier=$(printf "%x" $(echo -n "${source}" | cksum | cut -d' ' -f 1) | head -c 5 | tr '[:lower:]' '[:upper:]')
 
     # @example: OidcProvider.exceptions.InvalidClientAuth.CB6B
     local i18nKey="OidcProvider.exceptions.${class}.${identifier}"

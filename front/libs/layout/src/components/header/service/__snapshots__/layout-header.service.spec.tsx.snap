@@ -25,7 +25,7 @@ exports[`LayoutHeaderServiceComponent should render the link and the baseline, w
     <a
       data-testid="layout-header-service-component-name"
       href="/any-href-mock"
-      title="Retour à l’accueil du site - any service baseline mock - any service name mock"
+      title="any-back-to-homepage-mock - any service baseline mock - any service name mock"
     >
       <p
         class="fr-header__service-title"
@@ -52,7 +52,7 @@ exports[`LayoutHeaderServiceComponent should render the link, when service.name 
     <a
       data-testid="layout-header-service-component-name"
       href="/any-href-mock"
-      title="Retour à l’accueil du site - any service name mock"
+      title="any-back-to-homepage-mock - any service name mock"
     >
       <p
         class="fr-header__service-title"

@@ -6,9 +6,10 @@ import { Injectable } from '@nestjs/common';
 
 import { FunctionSafe } from '@fc/common';
 import { ConfigService } from '@fc/config';
+import { SignatureDigest } from '@fc/cryptography';
 
 import { HsmConfig } from './dto';
-import { Pkcs11Error, SignatureDigest } from './enums';
+import { Pkcs11Error } from './enums';
 
 /**
  *  Support EC key prime field up to 521 bits

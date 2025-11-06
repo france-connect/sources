@@ -9,7 +9,7 @@ import { ArrayAsyncHelper, validateDto } from '@fc/common';
 import { ConfigService, validationOptions } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
 import { LoggerService } from '@fc/logger';
-import { MongooseCollectionOperationWatcherHelper } from '@fc/mongoose';
+import { MongooseChangeStreamService } from '@fc/mongoose-change-stream';
 import { IDataProviderAdapter } from '@fc/oidc-client';
 
 import {
@@ -30,16 +30,16 @@ export class DataProviderAdapterMongoService implements IDataProviderAdapter {
   // Dependency injection can require more than 4 parameters
   // eslint-disable-next-line max-params
   constructor(
-    @InjectModel('DataProvider')
+    @InjectModel(DataProvider.name)
     private readonly dataProviderModel: Model<DataProvider>,
     private readonly cryptography: CryptographyService,
     private readonly config: ConfigService,
     private readonly logger: LoggerService,
-    private readonly mongooseWatcher: MongooseCollectionOperationWatcherHelper,
+    private readonly changeStream: MongooseChangeStreamService,
   ) {}
 
   async onModuleInit() {
-    this.mongooseWatcher.watchWith(
+    this.changeStream.registerWatcher<DataProvider>(
       this.dataProviderModel,
       this.refreshCache.bind(this),
     );

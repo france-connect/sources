@@ -1,0 +1,9 @@
+{
+  "UserPreferences.futureIdps.allowed": "autorisés",
+  "UserPreferences.futureIdps.disallowed": "bloqués",
+  "UserPreferences.idp.checked": "Autorisé",
+  "UserPreferences.idp.unchecked": "Bloqué",
+  "UserPreferences.idpConnexion.allowed": "autorisée",
+  "UserPreferences.idpConnexion.blocked": "bloquée",
+  "UserPreferences.labels.idp": "fournisseur d’identité"
+}

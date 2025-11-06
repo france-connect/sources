@@ -8,16 +8,14 @@ import type { HttpClientDataInterface } from '@fc/http-client';
 import { useFormSubmit } from '../../hooks';
 import type { BaseAttributes, FieldAttributes } from '../../interfaces';
 import type { SchemaFieldType } from '../../types';
-import { DTO2InputComponent } from '../dto2input/dto2input.component';
-import { DTO2SectionComponent } from '../dto2section';
+import { Dto2InputComponent } from '../dto2input/dto2input.component';
+import { Dto2SectionComponent } from '../dto2section';
 
-interface DTO2FormComponentProps<T extends HttpClientDataInterface> extends FormInterface<T> {
-  // @TODO this should be refactored
+interface Dto2FormComponentProps<T extends HttpClientDataInterface> extends FormInterface<T> {
   schema: BaseAttributes[];
-  submitLabel?: string;
 }
 
-export const DTO2FormComponent = <T extends HttpClientDataInterface>({
+export const Dto2FormComponent = <T extends HttpClientDataInterface>({
   config,
   initialValues,
   onPostSubmit,
@@ -25,8 +23,7 @@ export const DTO2FormComponent = <T extends HttpClientDataInterface>({
   onSubmit,
   onValidate,
   schema,
-  submitLabel = undefined,
-}: DTO2FormComponentProps<T>) => {
+}: Dto2FormComponentProps<T>) => {
   const validateFunc = config.validateOnSubmit ? onValidate : undefined;
 
   const submitHandler = useFormSubmit(onSubmit, onPreSubmit, onPostSubmit);
@@ -39,11 +36,11 @@ export const DTO2FormComponent = <T extends HttpClientDataInterface>({
       const isSection = field.type === 'section';
       const key = `dto2form::${config.id}::field::${field.type}::${field.name}`;
       if (isSection) {
-        return <DTO2SectionComponent key={key} field={field} />;
+        return <Dto2SectionComponent key={key} field={field} />;
       }
       // @TODO this should be refactored
       const fieldObject = field as FieldAttributes;
-      return <DTO2InputComponent key={key} field={fieldObject} />;
+      return <Dto2InputComponent key={key} field={fieldObject} />;
     });
   }, [schema, config]);
 
@@ -52,7 +49,6 @@ export const DTO2FormComponent = <T extends HttpClientDataInterface>({
       <FormComponent<T>
         config={config}
         initialValues={initialValues}
-        submitLabel={submitLabel}
         onSubmit={submitHandler}
         onValidate={validateFunc}>
         {fields}

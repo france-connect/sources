@@ -1,11 +1,13 @@
 export enum OidcProviderRoutes {
   AUTHORIZATION = '/authorize',
+  AUTHORIZATION_WITH_INTERACTION_ID = '/authorize/:interactionId',
   REDIRECT_TO_SP = '/login',
   CHECK_SESSION = '/session/check',
   CODE_VERIFICATION = '/device',
   DEVICE_AUTHORIZATION = '/device/auth',
   END_SESSION = '/session/end',
   END_SESSION_CONFIRMATION = '/session/end/confirm',
+  END_SESSION_SUCCESS = '/session/end/success',
   INTROSPECTION = '/token/introspection',
   JWKS = '/jwks',
   PUSHED_AUTHORIZATION_REQUEST = '/request',

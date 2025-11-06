@@ -76,6 +76,7 @@ describe('LoginFormComponent', () => {
       expect.objectContaining({
         connectType: 'FranceConnect',
         showHelp: false,
+        showIcon: false,
         type: ButtonTypes.SUBMIT,
       }),
       undefined,
@@ -92,6 +93,7 @@ describe('LoginFormComponent', () => {
       expect.objectContaining({
         connectType: 'ProConnect',
         showHelp: true,
+        showIcon: true,
         type: ButtonTypes.SUBMIT,
       }),
       undefined,
@@ -114,6 +116,7 @@ describe('LoginFormComponent', () => {
         className: 'any-className-mock',
         connectType: 'FranceConnect',
         showHelp: false,
+        showIcon: false,
         type: ButtonTypes.SUBMIT,
       }),
       undefined,

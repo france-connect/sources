@@ -1,14 +1,15 @@
 {
+  "Form.FORM_ERROR": "Veuillez réessayer ultérieurement",
   "Form.button.copy": "Copier",
-  "Form.submit": "Envoyer ces informations",
-  "Form.reset": "Effacer le formulaire",
-  "Form.message.valid": "Texte de validation",
-  "Form.message.required": "Ce champs est obligatoire",
+  "Form.label.seeAlso": "Plus d’informations",
   "Form.message.requestFailed": "Le message n’a pas pu être envoyé",
+  "Form.message.required": "Ce champs est obligatoire",
   "Form.message.requiredFields": "Tous les champs avec un astérisque sont obligatoires.",
-  "Form.select.placeholder": "Sélectionner une option",
-  "Form.textarea.maxlength": " / {maxLength} caractères",
+  "Form.message.valid": "Texte de validation",
   "Form.multiple.add": "Ajouter une valeur",
   "Form.multiple.remove": "Supprimer cette valeur",
-  "Form.label.seeAlso": "Plus d’informations"
+  "Form.reset": "Effacer le formulaire",
+  "Form.select.placeholder": "Sélectionner une option",
+  "Form.submit": "Envoyer ces informations",
+  "Form.textarea.maxlength": " / {maxLength} caractères"
 }

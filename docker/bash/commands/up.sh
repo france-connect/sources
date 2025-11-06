@@ -20,6 +20,9 @@ _up() {
 
   echo " * Automatically run init scripts for started containers"
   _auto_init_containers
+
+  task " * Up rp-all" \
+    "_do_up" "rp-all"
 }
 
 _add_node_app() {
@@ -29,10 +32,15 @@ _add_node_app() {
   _start "${@}"
 }
 
+_run_command() {
+  task " * Run command in containers" \
+    "_do_up" "${@}"
+
+  _do_command "${@}"
+}
+
 _do_up() {
   # Get wanted services
-
-  echo "TEST========>  ${@}"
   local services=$(_get_services "$@")
 
   cd ${WORKING_DIR}
@@ -44,7 +52,7 @@ _check_for_unknown_services() {
   local available=$(_list_services)
 
   for service in $asked; do
-   declare -i match=$(echo "$available" | grep "^$service$" | wc -l)
+    declare -i match=$(echo "$available" | grep "^$service$" | wc -l)
 
     if [ $match -eq 0 ]; then
       echo "Service / Stack Not Found: $service"
@@ -55,7 +63,7 @@ _check_for_unknown_services() {
 
 _get_services() {
   local apps=${@:-none}
-  local services=rp-all
+  local services=""
 
   for app in $apps; do
     services="$services $app"

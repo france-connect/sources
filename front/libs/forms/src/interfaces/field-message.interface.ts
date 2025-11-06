@@ -1,7 +1,7 @@
-import type { EventTypes } from '@fc/common';
+import type { MessageTypes } from '@fc/common';
 
 export interface FieldMessage {
   content: string;
-  level: EventTypes;
+  level: MessageTypes;
   priority: number;
 }

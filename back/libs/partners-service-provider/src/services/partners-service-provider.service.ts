@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { In, QueryRunner, Repository } from 'typeorm';
 
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -11,7 +11,6 @@ import {
   RelatedEntitiesHelper,
 } from '@fc/access-control';
 import { LoggerService } from '@fc/logger';
-import { PostgresOperationFailure } from '@fc/postgres';
 
 @Injectable()
 export class PartnersServiceProviderService {
@@ -21,70 +20,62 @@ export class PartnersServiceProviderService {
     private readonly repository: Repository<PartnersServiceProvider>,
   ) {}
 
-  async getInstancesFromServiceProvider(
-    serviceProviderIds: string,
+  async getAllowedServiceProviders(
     permissions: PermissionInterface[],
-  ): Promise<PartnersServiceProvider> {
+  ): Promise<PartnersServiceProvider[]> {
     const relatedEntitiesOptions = {
-      entityTypes: [EntityType.SP_INSTANCE],
+      entityTypes: [EntityType.SERVICE_PROVIDER],
     };
-    const instanceIds = RelatedEntitiesHelper.get(
+    const serviceProviderIds = RelatedEntitiesHelper.get(
       permissions,
       relatedEntitiesOptions,
     );
 
-    const items = await this.getByIds([serviceProviderIds], instanceIds);
+    const serviceProviders = await this.getByIds(serviceProviderIds);
 
-    return items.pop();
+    return serviceProviders;
   }
 
-  /**
-   * @todo FC-2184 ⚠️
-   */
-  // eslint-disable-next-line complexity
   async getByIds(
     serviceProviderIds: string[],
-    instancesIds: string[] = [],
   ): Promise<PartnersServiceProvider[]> {
-    const query = this.repository
-      .createQueryBuilder('partnersServiceProvider')
-      .leftJoinAndSelect('partnersServiceProvider.instances', 'instances')
-      .leftJoinAndSelect('partnersServiceProvider.organisation', 'organisation')
-      .where('partnersServiceProvider.id IN(:...serviceProviderIds)', {
-        serviceProviderIds,
-      })
-      .select([
-        'partnersServiceProvider',
-        'instances.id',
-        'instances.name',
-        'organisation.id',
-        'organisation.name',
-      ])
-      .orderBy('partnersServiceProvider.name', 'ASC');
-
-    if (instancesIds && instancesIds.length > 0) {
-      query.andWhere('instances.id IN (:...instancesIds)', {
-        instancesIds,
-      });
+    if (serviceProviderIds.length === 0) {
+      return [];
     }
 
-    let items: PartnersServiceProvider[];
+    const serviceProviders = await this.repository.find({
+      where: { id: In(serviceProviderIds) },
+      order: { createdAt: 'DESC' },
+    });
 
-    try {
-      items = await query.getMany();
-    } catch (error) {
-      throw new PostgresOperationFailure(error);
-    }
-
-    return items;
+    return serviceProviders;
   }
 
   async upsert(
+    queryRunner: QueryRunner,
     data: PartnersServiceProvider,
   ): Promise<PartnersServiceProvider> {
-    const result = await this.repository.save(data);
+    const result = await queryRunner.manager
+      .createQueryBuilder()
+      .insert()
+      .into(PartnersServiceProvider)
+      .values(data)
+      .orUpdate(
+        ['name', 'organizationName', 'authorizedScopes'],
+        ['datapassRequestId'],
+      )
+      .returning('*')
+      .execute();
 
-    return result;
+    const savedEntity = result.generatedMaps[0] as PartnersServiceProvider;
+
+    this.logger.debug({
+      message: 'Service Provider upserted successfully',
+      serviceProviderId: savedEntity.id,
+      datapassRequestId: savedEntity.datapassRequestId,
+    });
+
+    return savedEntity;
   }
 
   async delete(id: string): Promise<number> {

@@ -1,9 +1,3 @@
-/**
- * Override external library for crypto
- * This has to be done before any other import in order
- * to wrap references before they are imported
- */
-import '@fc/override-oidc-provider/overrides';
 import '@fc/common/overrides/json.parse.override';
 
 import { join } from 'path';
@@ -81,15 +75,6 @@ async function bootstrap() {
   app.use(
     helmet.contentSecurityPolicy({
       directives: {
-        defaultSrc: ["'self'"],
-        /**
-         * Allow inline CSS and JS
-         * @TODO #168 remove this header once the UI is properly implemented
-         * to forbid the use of inline CSS or JS
-         * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/168
-         */
-        styleSrc: ["'self'", "'unsafe-inline'"],
-        scriptSrc: ["'self'", "'unsafe-inline'"],
         /**
          * We should be able to call to any domain that we need (SPs, IdPs, rnipp), the default "self"
          * is too restricting. We don't have a precise domain to restrain to.

@@ -38,7 +38,7 @@ export class MockIdentityProviderService {
     private readonly config: ConfigService,
   ) {}
 
-  async onModuleInit() {
+  async onApplicationBootstrap() {
     await this.loadDatabases();
 
     this.oidcProvider.registerMiddleware(

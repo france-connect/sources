@@ -1,36 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`HomePage should match snapshot when session is expired 1`] = `
+exports[`HomePage should match the snapshot 1`] = `
 <div>
   <div
-    data-mockid="Helmet"
+    data-mock="LoginLayout"
   >
-    <span
-      data-htmltag="title"
-    >
-      Mon tableau de bord - Accueil
-    </span>
-  </div>
-  <div
-    class="large-container fr-m-auto fr-px-2w fr-mt-8w text-center"
-    id="page-container"
-  >
-    <div
-      data-mockid="AlertComponent"
-    >
-      <div>
-        AlertComponent
-      </div>
-      <div>
-        <p>
-          Votre session a expiré, veuillez vous reconnecter
-        </p>
-      </div>
-    </div>
     <h1
       class="fr-text-title--blue-france fr-mb-5w"
     >
-      Pour accéder à votre tableau de bord FranceConnect, veuillez vous connecter
+      UserDashboard-homepage-title--mock
     </h1>
     <div
       data-mockid="LoginFormComponent"
@@ -39,179 +17,7 @@ exports[`HomePage should match snapshot when session is expired 1`] = `
       class="paragraph fr-m-auto fr-mt-7v"
       data-testid="paragraph"
     >
-      Une fois connecté, vous pourrez consulter l’historique de vos connexions et configurer vos accès FranceConnect.
-    </p>
-  </div>
-</div>
-`;
-
-exports[`HomePage should match the snapshot on desktop layout 1`] = `
-<div>
-  <div
-    data-mockid="Helmet"
-  >
-    <span
-      data-htmltag="title"
-    >
-      Mon tableau de bord - Accueil
-    </span>
-  </div>
-  <div
-    class="large-container fr-m-auto fr-px-2w fr-mt-8w text-left"
-    id="page-container"
-  >
-    <h1
-      class="fr-text-title--blue-france fr-mb-5w"
-    >
-      Pour accéder à votre tableau de bord FranceConnect, veuillez vous connecter
-    </h1>
-    <div
-      data-mockid="LoginFormComponent"
-    />
-    <p
-      class="paragraph fr-m-auto fr-mt-7v"
-      data-testid="paragraph"
-    >
-      Une fois connecté, vous pourrez consulter l’historique de vos connexions et configurer vos accès FranceConnect.
-    </p>
-  </div>
-</div>
-`;
-
-exports[`HomePage should match the snapshot on mobile layout 1`] = `
-<div>
-  <div
-    data-mockid="Helmet"
-  >
-    <span
-      data-htmltag="title"
-    >
-      Mon tableau de bord - Accueil
-    </span>
-  </div>
-  <div
-    class="large-container fr-m-auto fr-px-2w fr-mt-5w text-left"
-    id="page-container"
-  >
-    <h1
-      class="fr-text-title--blue-france fr-mb-5w"
-    >
-      Pour accéder à votre tableau de bord FranceConnect, veuillez vous connecter
-    </h1>
-    <div
-      data-mockid="LoginFormComponent"
-    />
-    <p
-      class="paragraph fr-m-auto fr-mt-7v"
-      data-testid="paragraph"
-    >
-      Une fois connecté, vous pourrez consulter l’historique de vos connexions et configurer vos accès FranceConnect.
-    </p>
-  </div>
-</div>
-`;
-
-exports[`HomePage should match the snapshot on tablet layout 1`] = `
-<div>
-  <div
-    data-mockid="Helmet"
-  >
-    <span
-      data-htmltag="title"
-    >
-      Mon tableau de bord - Accueil
-    </span>
-  </div>
-  <div
-    class="large-container fr-m-auto fr-px-2w fr-mt-5w text-center"
-    id="page-container"
-  >
-    <h1
-      class="fr-text-title--blue-france fr-mb-5w"
-    >
-      Pour accéder à votre tableau de bord FranceConnect, veuillez vous connecter
-    </h1>
-    <div
-      data-mockid="LoginFormComponent"
-    />
-    <p
-      class="paragraph fr-m-auto fr-mt-7v"
-      data-testid="paragraph"
-    >
-      Une fois connecté, vous pourrez consulter l’historique de vos connexions et configurer vos accès FranceConnect.
-    </p>
-  </div>
-</div>
-`;
-
-exports[`HomePage should match the snapshot when session is not expired 1`] = `
-<div>
-  <div
-    data-mockid="Helmet"
-  >
-    <span
-      data-htmltag="title"
-    >
-      Mon tableau de bord - Accueil
-    </span>
-  </div>
-  <div
-    class="large-container fr-m-auto fr-px-2w fr-mt-8w text-center"
-    id="page-container"
-  >
-    <h1
-      class="fr-text-title--blue-france fr-mb-5w"
-    >
-      Pour accéder à votre tableau de bord FranceConnect, veuillez vous connecter
-    </h1>
-    <div
-      data-mockid="LoginFormComponent"
-    />
-    <p
-      class="paragraph fr-m-auto fr-mt-7v"
-      data-testid="paragraph"
-    >
-      Une fois connecté, vous pourrez consulter l’historique de vos connexions et configurer vos accès FranceConnect.
-    </p>
-  </div>
-</div>
-`;
-
-exports[`HomePage should render AlertComponent with specific props if session has expired 1`] = `
-<div>
-  <div
-    data-mockid="Helmet"
-  >
-    <span
-      data-htmltag="title"
-    >
-      Mon tableau de bord - Accueil
-    </span>
-  </div>
-  <div
-    class="large-container fr-m-auto fr-px-2w fr-mt-8w text-center"
-    id="page-container"
-  >
-    <div
-      data-testid="AlertComponent"
-    >
-      <p>
-        Votre session a expiré, veuillez vous reconnecter
-      </p>
-    </div>
-    <h1
-      class="fr-text-title--blue-france fr-mb-5w"
-    >
-      Pour accéder à votre tableau de bord FranceConnect, veuillez vous connecter
-    </h1>
-    <div
-      data-mockid="LoginFormComponent"
-    />
-    <p
-      class="paragraph fr-m-auto fr-mt-7v"
-      data-testid="paragraph"
-    >
-      Une fois connecté, vous pourrez consulter l’historique de vos connexions et configurer vos accès FranceConnect.
+      UserDashboard-homepage-paragraph--mock
     </p>
   </div>
 </div>

@@ -22,11 +22,12 @@ exports[`CardComponent should match the snapshot, with all optionnal values 1`] 
             Card title mock
           </span>
         </h1>
-        <p
+        <div
           class="fr-card__desc"
+          data-testid="CardComponent-description"
         >
           any description text treat as children
-        </p>
+        </div>
         <div
           class="fr-card__end"
         >
@@ -75,11 +76,12 @@ exports[`CardComponent should match the snapshot, with default values 1`] = `
             Card title mock
           </span>
         </h3>
-        <p
+        <div
           class="fr-card__desc"
+          data-testid="CardComponent-description"
         >
           any description text treat as children
-        </p>
+        </div>
         <div
           class="fr-card__start"
         />

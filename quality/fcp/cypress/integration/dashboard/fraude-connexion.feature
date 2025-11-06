@@ -40,11 +40,13 @@ Fonctionnalité: Connexion Formulaire Usurpation
     Et le lien de déconnexion du tableau de bord usager est affiché
     Et je me déconnecte du tableau de bord usager
 
-  Scénario: Formulaire Usurpation - Présence du lien vers le Formulaire Usager sur la page de connexion
+  Scénario: Formulaire Usurpation - Naviguer vers le formulaire usurpation non connecté depuis la page de connexion
     Etant donné que je navigue directement vers la page formulaire usurpation avec le paramètre fraudSurveyOrigin égal à "identite-inconnue"
-    Quand je suis redirigé vers la page de connexion du formulaire usurpation
-    Alors le lien vers l'application Formulaire Usager est affiché sur la page de connexion du formulaire usurpation
-    Et le lien vers l'application Formulaire Usager comporte la valeur "identite-inconnue" pour le paramètre fraudSurveyOrigin
+    Et que je suis redirigé vers la page de connexion du formulaire usurpation
+    Et que je clique pour afficher l'aide au signalement d'usurpation
+    Et que le lien vers la page formulaire usurpation non connecté est affiché dans l'aide au signalement d'usurpation
+    Quand je clique sur le lien vers la page de formulaire usurpation non connecté
+    Alors je suis redirigé vers la page description du formulaire usurpation non connecté
 
   Scénario: Formulaire Usurpation - Déconnexion
     Etant donné que je navigue sur la page de connexion du formulaire usurpation

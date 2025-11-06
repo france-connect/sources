@@ -23,7 +23,7 @@ export class OidcProviderMiddlewareService {
     private readonly session: SessionService,
   ) {}
 
-  onModuleInit() {
+  onApplicationBootstrap() {
     this.registerMiddleware(
       OidcProviderMiddlewareStep.AFTER,
       OidcProviderRoutes.USERINFO,

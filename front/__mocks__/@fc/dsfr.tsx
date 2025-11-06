@@ -1,6 +1,14 @@
 export const StepperContext = jest.fn();
 
-export const useStepperNavigation = jest.fn();
+export const useStepper = jest.fn();
+
+export const useStepperNavigateTo = jest.fn(() => ({
+  gotoNextStep: jest.fn(),
+  gotoPreviousStep: jest.fn(),
+  navigateTo: jest.fn(),
+}));
+
+export const useStepperNavigate = jest.fn();
 
 export const StepperContextProvider = jest.fn(() => <div>StepperContextProvider</div>);
 
@@ -14,6 +22,10 @@ export const ToggleInput = jest.fn(() => <div>ToggleInput</div>);
 
 export const LinkComponent = jest.fn(({ label }) => (
   <span data-mockid="LinkComponent">{label}</span>
+));
+
+export const LinkEmailComponent = jest.fn(({ email }) => (
+  <span data-mockid="LinkComponent">{email}</span>
 ));
 
 export const CardComponent = jest.fn(({ children }) => (
@@ -75,7 +87,7 @@ export const LoginConnectComponent = jest.fn(({ type }) => (
   </div>
 ));
 
-export const Options = {
+export const DsfrOptions = {
   CONFIG_NAME_STEPPER: 'Stepper',
 };
 

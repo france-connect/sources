@@ -1,4 +1,23 @@
 {
-  "Fraud.IdentityTheftReport.sendReportButton": "Envoyer le signalement",
-  "Fraud.IdentityTheftReport.summaryNoPhone": "Non renseigné"
+  "Fraud.formPage.confirmation": "Vous allez recevoir un message de confirmation à l’adresse électronique indiquée dans le formulaire de contact.",
+  "Fraud.formPage.documentTitle": "Mon tableau de bord - Signaler une usurpation",
+  "Fraud.formPage.error": "Le message n’a pas pu être envoyé",
+  "Fraud.formPage.success": "Votre demande a bien été prise en compte",
+  "Fraud.loginPage.accordion.paragraph1": "En vous identifiant avec FranceConnect, vous transmettez de façon automatique les informations nécessaires pour la déclaration d’usurpation. Elle est la solution la plus fiable pour que l’équipe FranceConnect traite votre demande dans le meilleur délai.",
+  "Fraud.loginPage.accordion.paragraph2": "Toutefois, si vous êtes dans l’impossibilité d’utiliser FranceConnect pour fournir votre état civil, vous pouvez le renseigner manuellement dans le",
+  "Fraud.loginPage.accordion.reportForm": "formulaire de signalement.",
+  "Fraud.loginPage.accordion.title": "Pourquoi s’identifier avec FranceConnect pour signaler une usurpation d’identité{NBSP_UNICODE}?",
+  "Fraud.loginPage.alertInfo": "Utilisez FranceConnect pour accélérer le traitement de votre signalement.",
+  "Fraud.loginPage.documentTitle": "Mon tableau de bord - Signalement d’usurpation d’identité",
+  "Fraud.loginPage.subtitle": "Se connecter avec FranceConnect",
+  "Fraud.loginPage.textLead": "FranceConnect est la solution proposée par l’État pour sécuriser et simplifier la connexion à vos services en ligne.",
+  "Fraud.loginPage.title": "Identifiez-vous pour signaler une usurpation d’identité",
+  "IdentityTheftReport.codeIdentificationPage.alertContent": "Veuillez renseigner le code qui correspond à la connexion frauduleuse",
+  "IdentityTheftReport.codeIdentificationPage.alertTitle": "Chaque connexion est associée à un code d’identification différent",
+  "IdentityTheftReport.codeIdentificationPage.title": "Identification de la connexion",
+  "IdentityTheftReport.summaryPage.submit": "Envoyer le signalement",
+  "IdentityTheftReport.summaryPage.tracksTitle": "Information sur la (les) connexion(s) à signaler",
+  "UserDashboard.homepage.documentTitle": "Mon tableau de bord - Accueil",
+  "UserDashboard.homepage.paragraph": "Une fois connecté, vous pourrez consulter l’historique de vos connexions et configurer vos accès FranceConnect.",
+  "UserDashboard.homepage.title": "Pour accéder à votre tableau de bord FranceConnect, veuillez vous connecter"
 }

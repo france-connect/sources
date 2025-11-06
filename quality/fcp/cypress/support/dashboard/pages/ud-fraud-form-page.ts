@@ -1,36 +1,12 @@
 import { ChainableElement } from '../../common/types';
-import { FraudFormValues } from '../../common/types/fraud-form-values';
 
 export default class UdFraudFormPage {
-  udRootUrl: string;
-
-  constructor(udRootUrl: string) {
-    this.udRootUrl = udRootUrl;
-  }
-
-  checkHasFraudSurveyOriginQueryParam(fraudSurveyOrigin: string): void {
-    cy.url().should('include', `?fraudSurveyOrigin=${fraudSurveyOrigin}`);
-  }
-
-  checkIsVisible(): void {
-    const formUrl = `${this.udRootUrl}/fraud/form`;
-    cy.url().should('include', formUrl);
-  }
-
   protected getAllFormInputs(): ChainableElement {
     return cy.get('input:not([type="hidden"]), textarea');
   }
 
   getVisibleInputFromName(name: string): ChainableElement {
     return cy.get(`[name=${name}]:not([type="hidden"])`);
-  }
-
-  getConsentCheckbox(): ChainableElement {
-    return cy.get('[name=acceptTransmitData]');
-  }
-
-  getHistoryLink(): ChainableElement {
-    return cy.get('[data-testid="history-link"]');
   }
 
   getErrorMessageFromName(name: string): ChainableElement {
@@ -52,11 +28,11 @@ export default class UdFraudFormPage {
     });
   }
 
-  fillDefaultValues(fraudFormValues: FraudFormValues): void {
+  fillDefaultValues(values: Record<string, string>): void {
     const elementAlreadySet: string[] = [];
     this.getAllFormInputs().each(($el) => {
       const elementName = $el.attr('name');
-      const value = fraudFormValues[elementName];
+      const value = values[elementName];
       // If the html element has not been set already and a value exists
       if (!elementAlreadySet.includes(elementName) && value) {
         this.fillValue(elementName, value);
@@ -69,14 +45,10 @@ export default class UdFraudFormPage {
     this.getVisibleInputFromName(name).should('have.value', value);
   }
 
-  checkIsSuccessAlertDisplayed(): void {
-    cy.get('[data-testid="success-alert"]').contains(
-      'Votre demande a bien été prise en compte',
+  checkIsErrorMessageDisplayed(name: string, isVisible = true): void {
+    this.getErrorMessageFromName(name).should(
+      isVisible ? 'be.visible' : 'not.exist',
     );
-  }
-
-  checkIsErrorMessageDisplayed(name: string): void {
-    this.getErrorMessageFromName(name).should('be.visible');
   }
 
   checkHasErrorMessage(name: string, errorMessage: string): void {
@@ -85,15 +57,13 @@ export default class UdFraudFormPage {
       .should('contain', errorMessage);
   }
 
-  getValidationButton(): ChainableElement {
-    return cy.get('[data-testid="fraud-form-submit-button"]');
+  getSubmitButton(): ChainableElement {
+    return cy.get('button[type="submit"]');
   }
 
-  getFraudSurveyButton(): ChainableElement {
-    return cy.get('[data-testid="fraud-survey-button"]');
-  }
-
-  validateForm(): void {
-    this.getValidationButton().click();
+  checkIsSuccessAlertDisplayed(): void {
+    cy.get('[data-testid="success-alert"]').contains(
+      'Votre demande a bien été prise en compte',
+    );
   }
 }

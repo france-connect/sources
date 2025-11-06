@@ -1,8 +1,7 @@
-import { DynamicModule, Module } from '@nestjs/common';
+import { DynamicModule, Global, Module } from '@nestjs/common';
 
 import { ConfigModule, ConfigService } from '@fc/config';
 import { CoreFcpModule } from '@fc/core-fcp';
-import { CsmrHsmClientModule } from '@fc/csmr-hsm-client';
 import { LoggerModule } from '@fc/logger';
 import { LoggerModule as LoggerLegacyModule } from '@fc/logger-legacy';
 import {
@@ -10,8 +9,9 @@ import {
   LoggerRequestPlugin,
   LoggerSessionPlugin,
 } from '@fc/logger-plugins';
-import { OverrideOidcProviderModule } from '@fc/override-oidc-provider';
+import { SignAdapterHsmModule } from '@fc/sign-adapter-hsm';
 
+@Global()
 @Module({})
 export class AppModule {
   static forRoot(configService: ConfigService): DynamicModule {
@@ -29,9 +29,7 @@ export class AppModule {
         // 2.1 Load logger legacy module next for business logs
         LoggerLegacyModule,
         // 3. Load other modules
-        CoreFcpModule,
-        OverrideOidcProviderModule,
-        CsmrHsmClientModule,
+        CoreFcpModule.register(SignAdapterHsmModule),
       ],
     };
   }

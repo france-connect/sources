@@ -1,5 +1,7 @@
 import { DateTime } from 'luxon';
 
+import { Platforms } from '@fc/common';
+
 import type { CinematicEvents, EidasToLabel } from '../enums';
 import type { EnhancedTrackInterface, RichClaimInterface, TrackListType } from '../interfaces';
 import {
@@ -40,7 +42,7 @@ const track1: EnhancedTrackInterface = {
   event: 'FC_REQUESTED_IDP_USERINFO' as CinematicEvents,
   idpLabel: 'Ameli',
   interactionAcr: 'eidas1' as keyof typeof EidasToLabel,
-  platform: 'FranceConnect',
+  platform: Platforms.FranceConnect,
   spLabel: 'Acme Service Provider',
   time: dateTrack1,
   trackId: 'trackId-1',
@@ -57,7 +59,7 @@ const track2: EnhancedTrackInterface = {
 
   idpLabel: 'Ameli',
   interactionAcr: 'eidas1' as keyof typeof EidasToLabel,
-  platform: 'FranceConnect+',
+  platform: Platforms.FranceConnectPlus,
   spLabel: 'Acme Service Provider',
   time: dateTrack2,
   trackId: 'trackId-2',
@@ -73,7 +75,7 @@ const track3: EnhancedTrackInterface = {
   event: 'FC_REQUESTED_IDP_USERINFO' as CinematicEvents,
   idpLabel: 'Ameli',
   interactionAcr: 'eidas1' as keyof typeof EidasToLabel,
-  platform: 'FranceConnect',
+  platform: Platforms.FranceConnect,
   spLabel: 'Acme Service Provider',
   time: dateTrack3,
   trackId: 'trackId-3',

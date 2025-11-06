@@ -4,6 +4,7 @@ import { Link } from 'react-router';
 import { getAccessibleTitle, useSafeContext } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { LogoRepubliqueFrancaiseComponent } from '@fc/dsfr';
+import { t } from '@fc/i18n';
 
 import { LayoutContext } from '../../../context';
 import { LayoutHeaderMobileBurgerButton } from '../burger';
@@ -31,9 +32,18 @@ describe('LayoutHeaderBrandComponent', () => {
       .mocked(getAccessibleTitle)
       .mockReturnValue('any-service-baseline-mock - any-service-name-mock')
       .mockReturnValue(
-        'Retour à l’accueil du site - any-service-baseline-mock - any-service-name-mock',
+        'any-back-to-homepage-mock - any-service-baseline-mock - any-service-name-mock',
       );
     jest.mocked(useSafeContext).mockReturnValue({ isUserConnected: false });
+    jest.mocked(t).mockReturnValue('any-back-to-homepage-mock');
+  });
+
+  it('should call t 1 times with params', () => {
+    // When
+    render(<LayoutHeaderBrandComponent />);
+
+    // Then
+    expect(t).toHaveBeenCalledExactlyOnceWith('Layout.documentTitle.backToHomepage');
   });
 
   it('should match the snapshot', () => {
@@ -81,7 +91,7 @@ describe('LayoutHeaderBrandComponent', () => {
     );
     expect(getAccessibleTitle).toHaveBeenNthCalledWith(
       2,
-      'Retour à l’accueil du site',
+      'any-back-to-homepage-mock',
       'any-service-baseline-mock - any-service-name-mock',
     );
   });
@@ -107,7 +117,7 @@ describe('LayoutHeaderBrandComponent', () => {
     expect(Link).toHaveBeenCalledOnce();
     expect(Link).toHaveBeenCalledWith(
       expect.objectContaining({
-        title: 'Retour à l’accueil du site - any-service-baseline-mock - any-service-name-mock',
+        title: 'any-back-to-homepage-mock - any-service-baseline-mock - any-service-name-mock',
         to: '/link-to-homepage-mock',
       }),
       undefined,
@@ -126,7 +136,7 @@ describe('LayoutHeaderBrandComponent', () => {
     // When
     const { getByAltText } = render(<LayoutHeaderBrandComponent />);
     const element = getByAltText(
-      'Retour à l’accueil du site - any-service-baseline-mock - any-service-name-mock',
+      'any-back-to-homepage-mock - any-service-baseline-mock - any-service-name-mock',
     );
 
     // Then

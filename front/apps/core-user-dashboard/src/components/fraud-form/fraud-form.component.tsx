@@ -4,6 +4,7 @@ import { Field, Form } from 'react-final-form';
 
 import { TextAreaInputComponent, TextInputComponent } from '@fc/core-user-dashboard';
 import { ButtonTypes, CheckboxInput, SimpleButton, Sizes } from '@fc/dsfr';
+import { t } from '@fc/i18n';
 import { useStylesQuery, useStylesVariables } from '@fc/styles';
 
 import type { FraudFormValuesInterface } from '../../interfaces';
@@ -25,6 +26,11 @@ export const FraudFormComponent = React.memo(
   ({ commit, fraudSurveyOrigin, idpEmail }: FraudFormComponentProps) => {
     const [breakpointSm] = useStylesVariables(['breakpoint-sm']);
     const gtMobile = useStylesQuery({ minWidth: breakpointSm });
+
+    const title = t('FraudForm.form.title');
+    const mention = t('FraudForm.form.mention');
+    const accept = t('FraudForm.form.accept');
+    const report = t('FraudForm.form.report');
 
     return (
       <div
@@ -48,8 +54,8 @@ export const FraudFormComponent = React.memo(
           onSubmit={commit}>
           {({ handleSubmit, submitting }) => (
             <form data-testid="fraud-form" id="fraud-form-component" onSubmit={handleSubmit}>
-              <h5 className="fr-mb-1w">Formulaire de contact</h5>
-              <p className="fr-text--sm">* champs obligatoires.</p>
+              <h5 className="fr-mb-1w">{title}</h5>
+              <p className="fr-text--sm">{mention}</p>
               <Field component="input" name="fraudSurveyOrigin" type="hidden" />
               <Field component="input" name="idpEmail" type="hidden" />
               {/* eslint-disable-next-line react/jsx-props-no-spreading */}
@@ -60,10 +66,7 @@ export const FraudFormComponent = React.memo(
               <TextInputComponent {...inputPhoneConfig} />
               {/* eslint-disable-next-line react/jsx-props-no-spreading */}
               <TextAreaInputComponent {...inputTextAreaDescriptionConfig} />
-              <CheckboxInput
-                label="Vous acceptez de transmettre ces données à FranceConnect pour traiter votre demande d’aide.*"
-                name="acceptTransmitData"
-              />
+              <CheckboxInput label={accept} name="acceptTransmitData" />
               <div className="text-right">
                 <SimpleButton
                   className="fr-mt-4w"
@@ -71,7 +74,7 @@ export const FraudFormComponent = React.memo(
                   disabled={!!submitting}
                   size={Sizes.MEDIUM}
                   type={ButtonTypes.SUBMIT}>
-                  Signaler
+                  {report}
                 </SimpleButton>
               </div>
             </form>

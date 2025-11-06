@@ -103,7 +103,7 @@ Then(/^la date de création de l'instance est affichée$/, function () {
   currentInstanceCard
     .getCreationDate()
     .invoke('text')
-    .should('contains', 'Créée le :');
+    .should('contains', 'Créée le\u00A0:');
 });
 
 Then(`le "client_id" de l'instance est affiché`, function () {

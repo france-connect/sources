@@ -6,11 +6,7 @@ exports[`IdentityTheftReportContactPage should match the snapshot 1`] = `
     Moyens de contact
   </h2>
   <div
-    class="fr-border-default--grey fr-mt-3w fr-p-3w"
-  >
-    <div
-      data-mockid="DTO2FormComponent"
-    />
-  </div>
+    data-mockid="IdentityTheftReportFormComponent"
+  />
 </div>
 `;

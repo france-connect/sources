@@ -12,7 +12,7 @@ describe('useInstances', () => {
     // Given
     jest.mocked(useNavigate).mockReturnValue(navigateMock);
     jest.mocked(useLocation).mockReturnValue({ state: {} } as Location);
-    jest.mocked(useLoaderData).mockReturnValue({ payload: null });
+    jest.mocked(useLoaderData).mockReturnValue({ payload: [] });
   });
 
   it('should return hasItems as false when payload has no items', () => {
@@ -23,15 +23,39 @@ describe('useInstances', () => {
     expect(result.current).toEqual({
       closeAlertHandler: expect.any(Function),
       hasItems: false,
-      items: null,
+      items: [],
       submitState: undefined,
     });
   });
 
   it('should return hasItems as true when payload has items', () => {
     // Given
+    const instanceMock1 = {
+      createdAt: 'any-createdAt-mock1',
+      id: 'any-id-mock1',
+      updatedAt: 'any-updatedAt-mock1',
+      versions: [
+        {
+          data: {
+            name: 'any-name-mock1',
+          },
+        },
+      ],
+    };
+    const instanceMock2 = {
+      createdAt: 'any-createdAt-mock1',
+      id: 'any-id-mock2',
+      updatedAt: 'any-updatedAt-mock2',
+      versions: [
+        {
+          data: {
+            name: 'any-name-mock2',
+          },
+        },
+      ],
+    };
     jest.mocked(useLoaderData).mockReturnValueOnce({
-      payload: [expect.any(Object), expect.any(Object)],
+      payload: [instanceMock1, instanceMock2],
     });
 
     // When
@@ -41,7 +65,7 @@ describe('useInstances', () => {
     expect(result.current).toEqual({
       closeAlertHandler: expect.any(Function),
       hasItems: true,
-      items: [expect.any(Object), expect.any(Object)],
+      items: [instanceMock1, instanceMock2],
       submitState: undefined,
     });
   });
@@ -52,7 +76,7 @@ describe('useInstances', () => {
       state: {
         submitState: {
           message: 'any-submitstate-message-mock',
-          type: 'any-submitstate-type-mock',
+          type: 'any-message-type-mock',
         },
       },
     } as Location);
@@ -64,10 +88,10 @@ describe('useInstances', () => {
     expect(result.current).toEqual({
       closeAlertHandler: expect.any(Function),
       hasItems: false,
-      items: null,
+      items: [],
       submitState: {
         message: 'any-submitstate-message-mock',
-        type: 'any-submitstate-type-mock',
+        type: 'any-message-type-mock',
       },
     });
   });

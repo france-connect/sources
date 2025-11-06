@@ -3,7 +3,7 @@ import axios from 'axios';
 
 import { ConfigService } from '@fc/config';
 
-import { Options } from '../enums';
+import { HttpClientOptions } from '../enums';
 import { AxiosException } from '../errors';
 import { getRequestOptions } from '../utils';
 import * as HttpClientService from './http-client.service';
@@ -111,7 +111,7 @@ describe('HttpClientService', () => {
 
         // Then
         expect(getConfigMock).toHaveBeenCalledOnce();
-        expect(getConfigMock).toHaveBeenCalledWith(Options.CONFIG_NAME);
+        expect(getConfigMock).toHaveBeenCalledWith(HttpClientOptions.CONFIG_NAME);
       });
 
       it('should call makeRequest with parameters', async () => {

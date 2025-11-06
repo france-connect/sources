@@ -3,6 +3,8 @@ import type { JSX } from 'react';
 import React from 'react';
 import type { FieldInputProps } from 'react-final-form';
 
+import { t } from '@fc/i18n';
+
 import type { CheckableLegendInterface } from '../../../interfaces';
 import styles from './toggle-label.module.scss';
 
@@ -14,17 +16,21 @@ interface ToggleLabelComponentProps {
   legend?: CheckableLegendInterface;
 }
 
-const defaultLegend = { checked: 'Activé', unchecked: 'Désactivé' };
-
 export const ToggleLabelComponent = React.memo(
-  ({ input, label, legend = defaultLegend }: ToggleLabelComponentProps) => {
+  ({ input, label, legend = undefined }: ToggleLabelComponentProps) => {
+    const defaultCheckedLabel = t('DSFR.toggle.checked');
+    const defaultUncheckedLabel = t('DSFR.toggle.unchecked');
+
+    const checkedLabel = legend?.checked || defaultCheckedLabel;
+    const uncheckedLabel = legend?.unchecked || defaultUncheckedLabel;
+
     const isLabelString = typeof label === 'string';
     const isLabelFunction = typeof label === 'function';
     return (
       <label
         className={classnames('fr-toggle__label', styles.label)}
-        data-fr-checked-label={legend.checked}
-        data-fr-unchecked-label={legend.unchecked}
+        data-fr-checked-label={checkedLabel}
+        data-fr-unchecked-label={uncheckedLabel}
         data-testid={`field-toggle-label-${input.name}`}
         htmlFor={input.name}>
         {isLabelString && label}

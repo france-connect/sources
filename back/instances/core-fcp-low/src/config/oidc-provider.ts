@@ -6,6 +6,7 @@ import {
   OidcProviderRoutes,
 } from '@fc/oidc-provider';
 import {
+  ants,
   cnafMsa,
   cnam,
   cnous,
@@ -94,6 +95,7 @@ export default {
       ...cnafMsa.scopes,
       ...dss.scopes,
       ...dsnj.scopes,
+      ...ants.scopes,
     },
     clientAuthMethods: ['client_secret_post', 'private_key_jwt'],
     clientDefaults: {
@@ -135,6 +137,6 @@ export default {
     // Global request timeout used for any outgoing app requests.
     timeout: parseInt(process.env.REQUEST_TIMEOUT, 10),
   },
-  isLocalhostAllowed: env.boolean('IS_LOCALHOST_ALLOWED'),
+  urlsRequireTld: env.boolean('URL_REQUIRE_TLD'),
   errorUriBase: env.string('ERROR_URI_BASE'),
 } as OidcProviderConfig;

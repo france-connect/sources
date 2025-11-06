@@ -15,7 +15,6 @@ import LoggerLegacy from './logger-legacy';
 import OidcAcr from './oidc-acr';
 import OidcClient from './oidc-client';
 import OidcProvider from './oidc-provider';
-import OverrideOidcProvider from './override-oidc-provider';
 import Redis from './redis';
 import ServiceProviderAdapterEnv from './service-provider-adapter-env';
 import Session from './session';
@@ -44,7 +43,6 @@ export default {
   OidcAcr,
   OidcClient,
   OidcProvider,
-  OverrideOidcProvider,
   Redis,
   ServiceProviderAdapterEnv,
   Session,

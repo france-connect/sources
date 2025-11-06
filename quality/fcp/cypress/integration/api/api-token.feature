@@ -82,7 +82,7 @@ Fonctionnalité: API - token
     Et le corps de la réponse contient une erreur
     Et le corps de la réponse a une propriété "error" égale à "invalid_client"
     Et le corps de la réponse a une propriété "error_description" égale à "client authentication failed (invalid secret provided)"
-    Et le corps de la réponse a une propriété "error_uri" contenant "https://docs.partenaires.franceconnect.gouv.fr/fs/fs-technique/fs-technique-erreurs/?code=Y0473E3&id="
+    Et le corps de la réponse a une propriété "error_uri" contenant "https://docs.partenaires.franceconnect.gouv.fr/fs/fs-technique/fs-technique-erreurs/?code=Y0434A7B&id="
 
   @fcpLow @fcpHigh @exceptions
   Scénario: API token - erreur code manquant
@@ -100,7 +100,7 @@ Fonctionnalité: API - token
     Et le corps de la réponse contient une erreur
     Et le corps de la réponse a une propriété "error" égale à "invalid_request"
     Et le corps de la réponse a une propriété "error_description" égale à "missing required parameter 'code' (undefined)"
-    Et le corps de la réponse a une propriété "error_uri" contenant "https://docs.partenaires.franceconnect.gouv.fr/fs/fs-technique/fs-technique-erreurs/?code=Y048017&id="
+    Et le corps de la réponse a une propriété "error_uri" contenant "https://docs.partenaires.franceconnect.gouv.fr/fs/fs-technique/fs-technique-erreurs/?code=Y048017B&id="
 
   @fcpLow @fcpHigh @exceptions
   Scénario: API token - erreur code expiré ou non trouvé
@@ -112,4 +112,4 @@ Fonctionnalité: API - token
     Et le corps de la réponse contient une erreur
     Et le corps de la réponse a une propriété "error" égale à "invalid_grant"
     Et le corps de la réponse a une propriété "error_description" égale à "grant request is invalid (authorization code not found)"
-    Et le corps de la réponse a une propriété "error_uri" contenant "https://docs.partenaires.franceconnect.gouv.fr/fs/fs-technique/fs-technique-erreurs/?code=Y04ECCB&id="
+    Et le corps de la réponse a une propriété "error_uri" contenant "https://docs.partenaires.franceconnect.gouv.fr/fs/fs-technique/fs-technique-erreurs/?code=Y049E20B&id="

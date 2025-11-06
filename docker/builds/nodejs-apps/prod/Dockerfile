@@ -137,7 +137,12 @@ COPY --from=hsm . /etc/hsm
 ########################################
 # Stage 4.3: Command runner app image
 ########################################
-FROM prod-generic AS command-runner
+FROM prod-generic AS command-runner-generic
+
+ARG COMMAND_ARGS
+
+ENV \
+  COMMAND_ARGS=$COMMAND_ARGS
 
 # First remove prod deps
 RUN rm -rf /var/www/app/node_modules

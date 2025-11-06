@@ -3,6 +3,7 @@ import { Field, Form } from 'react-final-form';
 
 import { TextAreaInputComponent, TextInputComponent } from '@fc/core-user-dashboard';
 import { ButtonTypes, CheckboxInput, SimpleButton, Sizes } from '@fc/dsfr';
+import { t } from '@fc/i18n';
 import { useStylesQuery, useStylesVariables } from '@fc/styles';
 
 import { FraudFormComponent } from './fraud-form.component';
@@ -21,6 +22,30 @@ describe('FraudFormComponent', () => {
   beforeEach(() => {
     // Given
     jest.mocked(useStylesVariables).mockReturnValue([expect.any(String)]);
+    jest
+      .mocked(t)
+      .mockReturnValueOnce('any-form-title-mock')
+      .mockReturnValueOnce('any-form-mention-mock')
+      .mockReturnValueOnce('any-form-accept-mock')
+      .mockReturnValueOnce('any-form-report-mock');
+  });
+
+  it('should call t 2 times with correct params', () => {
+    // When
+    render(
+      <FraudFormComponent
+        commit={commitMock}
+        fraudSurveyOrigin={fraudSurveyOrigin}
+        idpEmail={idpEmail}
+      />,
+    );
+
+    // Then
+    expect(t).toHaveBeenCalledTimes(4);
+    expect(t).toHaveBeenNthCalledWith(1, 'FraudForm.form.title');
+    expect(t).toHaveBeenNthCalledWith(2, 'FraudForm.form.mention');
+    expect(t).toHaveBeenNthCalledWith(3, 'FraudForm.form.accept');
+    expect(t).toHaveBeenNthCalledWith(4, 'FraudForm.form.report');
   });
 
   it('should match the snapshot on mobile layout', () => {
@@ -166,8 +191,7 @@ describe('FraudFormComponent', () => {
     expect(CheckboxInput).toHaveBeenCalledOnce();
     expect(CheckboxInput).toHaveBeenCalledWith(
       {
-        label:
-          'Vous acceptez de transmettre ces données à FranceConnect pour traiter votre demande d’aide.*',
+        label: 'any-form-accept-mock',
         name: 'acceptTransmitData',
       },
       undefined,
@@ -188,7 +212,7 @@ describe('FraudFormComponent', () => {
     expect(SimpleButton).toHaveBeenCalledOnce();
     expect(SimpleButton).toHaveBeenCalledWith(
       {
-        children: 'Signaler',
+        children: 'any-form-report-mock',
         className: 'fr-mt-4w',
         dataTestId: 'fraud-form-submit-button',
         disabled: expect.any(Boolean),

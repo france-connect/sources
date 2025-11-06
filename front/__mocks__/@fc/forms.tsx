@@ -12,7 +12,7 @@ export const InputTextElement = jest.fn(() => <div data-mockid="InputTextElement
 
 export const LabelElement = jest.fn(() => <div data-mockid="LabelElement" />);
 
-export const SeeAlsoElement = jest.fn(() => <div data-mockid="SeeAlsoElement" />);
+export const SeeAlsoElement = jest.fn(() => <span data-mockid="SeeAlsoElement" />);
 
 export const MessageElement = jest.fn(() => <div data-mockid="MessageElement" />);
 

@@ -5,7 +5,7 @@ import { useSafeContext } from '@fc/common';
 import { ConfigService } from '@fc/config';
 
 import { LayoutContext } from '../../context';
-import { Options } from '../../enums';
+import { LayoutOptions } from '../../enums';
 import type { LayoutConfig, LayoutContextState } from '../../interfaces';
 import { LayoutHeaderBrandComponent } from './brand';
 import styles from './layout-header.module.scss';
@@ -15,7 +15,7 @@ import { LayoutHeaderToolsComponent } from './tools';
 export const LayoutHeaderComponent = React.memo(() => {
   const { isUserConnected } = useSafeContext<LayoutContextState>(LayoutContext);
 
-  const config = ConfigService.get<LayoutConfig>(Options.CONFIG_NAME);
+  const config = ConfigService.get<LayoutConfig>(LayoutOptions.CONFIG_NAME);
   const { navigation } = config;
 
   return (

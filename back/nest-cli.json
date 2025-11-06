@@ -62,6 +62,33 @@
         "tsConfigPath": "libs/cog/tsconfig.lib.json"
       }
     },
+    "command-import-sp-sandbox": {
+      "type": "application",
+      "root": "instances/command-import-sp-sandbox",
+      "entryFile": "main",
+      "sourceRoot": "instances/command-import-sp-sandbox/src",
+      "compilerOptions": {
+        "tsConfigPath": "instances/command-import-sp-sandbox/tsconfig.app.json"
+      }
+    },
+    "command-runner": {
+      "type": "library",
+      "root": "apps/command-runner",
+      "entryFile": "index",
+      "sourceRoot": "apps/command-runner/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/command-runner/tsconfig.lib.json"
+      }
+    },
+    "command-runner-instance": {
+      "type": "application",
+      "root": "instances/command-runner-instance",
+      "entryFile": "main",
+      "sourceRoot": "instances/command-runner-instance/src",
+      "compilerOptions": {
+        "tsConfigPath": "instances/command-runner-instance/tsconfig.app.json"
+      }
+    },
     "common": {
       "type": "library",
       "root": "libs/common",
@@ -319,24 +346,6 @@
         "tsConfigPath": "libs/csmr-hsm-client/tsconfig.lib.json"
       }
     },
-    "command-runner-instance": {
-      "type": "application",
-      "root": "instances/command-runner-instance",
-      "entryFile": "main",
-      "sourceRoot": "instances/command-runner-instance/src",
-      "compilerOptions": {
-        "tsConfigPath": "instances/command-runner-instance/tsconfig.app.json"
-      }
-    },
-    "command-runner": {
-      "type": "library",
-      "root": "apps/command-runner",
-      "entryFile": "index",
-      "sourceRoot": "apps/command-runner/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/command-runner/tsconfig.lib.json"
-      }
-    },
     "csmr-hsm-high": {
       "type": "application",
       "root": "instances/csmr-hsm-high",
@@ -462,6 +471,15 @@
       "sourceRoot": "libs/data-provider-core-auth/src",
       "compilerOptions": {
         "tsConfigPath": "libs/data-provider-core-auth/tsconfig.lib.json"
+      }
+    },
+    "datapass": {
+      "type": "library",
+      "root": "libs/datapass",
+      "entryFile": "index",
+      "sourceRoot": "libs/datapass/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/datapass/tsconfig.lib.json"
       }
     },
     "device": {
@@ -746,6 +764,44 @@
         "tsConfigPath": "instances/mock-data-provider/tsconfig.app.json"
       }
     },
+    "mock-datapass": {
+      "type": "library",
+      "root": "apps/mock-datapass",
+      "entryFile": "index",
+      "sourceRoot": "apps/mock-datapass/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/mock-datapass/tsconfig.lib.json"
+      }
+    },
+    "mock-datapass-instance": {
+      "type": "application",
+      "root": "instances/mock-datapass-instance",
+      "entryFile": "main",
+      "sourceRoot": "instances/mock-datapass-instance/src",
+      "compilerOptions": {
+        "tsConfigPath": "instances/mock-datapass-instance/tsconfig.app.json",
+        "assets": [
+          "../../../apps/mock-datapass/**/*.ejs",
+          "../../../apps/mock-datapass/**/*.css",
+          "../../../apps/mock-datapass/**/*.js",
+          "../../../apps/mock-datapass/**/*.svg",
+          "../../../apps/mock-datapass/**/*.png",
+          "../../../apps/mock-datapass/**/*.ico",
+          "../../../apps/mock-datapass/**/*.woff2",
+          "../../../apps/mock-datapass/**/*.webmanifest",
+          "../../../apps/mock-datapass/**/robots.txt",
+          "../../../instances/mock-datapass-instance/src/**/*.js",
+          "../../../instances/mock-datapass-instance/src/**/*.css",
+          "../../../instances/mock-datapass-instance/src/**/*.ejs",
+          "../../../instances/mock-datapass-instance/src/**/*.ico",
+          "../../../instances/mock-datapass-instance/src/**/*.svg",
+          "../../../instances/mock-datapass-instance/src/**/*.png",
+          "../../../instances/mock-datapass-instance/src/**/*.woff2",
+          "../../../instances/mock-datapass-instance/src/**/*.webmanifest",
+          "../../../instances/mock-datapass-instance/src/**/robots.txt"
+        ]
+      }
+    },
     "mock-identity-provider": {
       "type": "library",
       "root": "apps/mock-identity-provider",
@@ -768,11 +824,13 @@
           "../../../apps/mock-identity-provider/**/*.svg",
           "../../../apps/mock-identity-provider/**/*.png",
           "../../../apps/mock-identity-provider/**/*.csv",
+          "../../../apps/mock-identity-provider/**/*.js",
           "../../../instances/mock-identity-provider-fcp-high/**/*.ejs",
           "../../../instances/mock-identity-provider-fcp-high/**/*.css",
           "../../../instances/mock-identity-provider-fcp-high/**/*.svg",
           "../../../instances/mock-identity-provider-fcp-high/**/*.csv",
-          "../../../instances/mock-identity-provider-fcp-high/**/*.png"
+          "../../../instances/mock-identity-provider-fcp-high/**/*.png",
+          "../../../instances/mock-identity-provider-fcp-high/**/*.js"
         ]
       }
     },
@@ -789,11 +847,13 @@
           "../../../apps/mock-identity-provider/**/*.svg",
           "../../../apps/mock-identity-provider/**/*.png",
           "../../../apps/mock-identity-provider/**/*.csv",
+          "../../../apps/mock-identity-provider/**/*.js",
           "../../../instances/mock-identity-provider-fcp-low/**/*.ejs",
           "../../../instances/mock-identity-provider-fcp-low/**/*.css",
           "../../../instances/mock-identity-provider-fcp-low/**/*.svg",
           "../../../instances/mock-identity-provider-fcp-low/**/*.csv",
-          "../../../instances/mock-identity-provider-fcp-low/**/*.png"
+          "../../../instances/mock-identity-provider-fcp-low/**/*.png",
+          "../../../instances/mock-identity-provider-fcp-low/**/*.js"
         ]
       }
     },
@@ -810,11 +870,13 @@
           "../../../apps/mock-identity-provider/**/*.svg",
           "../../../apps/mock-identity-provider/**/*.png",
           "../../../apps/mock-identity-provider/**/*.csv",
+          "../../../apps/mock-identity-provider/**/*.js",
           "../../../instances/mock-proconnect/**/*.ejs",
           "../../../instances/mock-proconnect/**/*.css",
           "../../../instances/mock-proconnect/**/*.svg",
           "../../../instances/mock-proconnect/**/*.csv",
-          "../../../instances/mock-proconnect/**/*.png"
+          "../../../instances/mock-proconnect/**/*.png",
+          "../../../instances/mock-proconnect/**/*.js"
         ]
       }
     },
@@ -912,13 +974,22 @@
         "tsConfigPath": "libs/mongoose/tsconfig.lib.json"
       }
     },
-    "notifications": {
+    "mongoose-change-stream": {
       "type": "library",
-      "root": "libs/notifications",
+      "root": "libs/mongoose-change-stream",
       "entryFile": "index",
-      "sourceRoot": "libs/notifications/src",
+      "sourceRoot": "libs/mongoose-change-stream/src",
       "compilerOptions": {
-        "tsConfigPath": "libs/notifications/tsconfig.lib.json"
+        "tsConfigPath": "libs/mongoose-change-stream/tsconfig.lib.json"
+      }
+    },
+    "notification": {
+      "type": "library",
+      "root": "libs/notification",
+      "entryFile": "index",
+      "sourceRoot": "libs/notification/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/notification/tsconfig.lib.json"
       }
     },
     "oidc": {
@@ -964,15 +1035,6 @@
       "sourceRoot": "libs/override-code/src",
       "compilerOptions": {
         "tsConfigPath": "libs/override-code/tsconfig.lib.json"
-      }
-    },
-    "override-oidc-provider": {
-      "type": "library",
-      "root": "libs/override-oidc-provider",
-      "entryFile": "index",
-      "sourceRoot": "libs/override-oidc-provider/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/override-oidc-provider/tsconfig.lib.json"
       }
     },
     "partners": {
@@ -1126,6 +1188,33 @@
       "sourceRoot": "libs/session/src",
       "compilerOptions": {
         "tsConfigPath": "libs/session/tsconfig.lib.json"
+      }
+    },
+    "sign-adapter": {
+      "type": "library",
+      "root": "libs/sign-adapter",
+      "entryFile": "index",
+      "sourceRoot": "libs/sign-adapter/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/sign-adapter/tsconfig.lib.json"
+      }
+    },
+    "sign-adapter-hsm": {
+      "type": "library",
+      "root": "libs/sign-adapter-hsm",
+      "entryFile": "index",
+      "sourceRoot": "libs/sign-adapter-hsm/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/sign-adapter-hsm/tsconfig.lib.json"
+      }
+    },
+    "sign-adapter-native": {
+      "type": "library",
+      "root": "libs/sign-adapter-native",
+      "entryFile": "index",
+      "sourceRoot": "libs/sign-adapter-native/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/sign-adapter-native/tsconfig.lib.json"
       }
     },
     "tracking": {

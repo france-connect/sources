@@ -1,2 +1,3 @@
 export * from './accordion';
-export * from './stepper-navigation';
+export * from './stepper';
+export * from './stepper-navigate-to';

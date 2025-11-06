@@ -43,3 +43,20 @@ Given(
     cy.task('injectTracks', { mockSet: 'low' });
   },
 );
+
+// Flag at module level to run once per feature file
+let initTracks = false;
+Given(
+  'j\'initialise les traces dans elasticsearch pour le test "fraude-usurpation-non-connecte"',
+  function () {
+    if (initTracks) {
+      cy.log('Tracks already initialized.');
+      return;
+    }
+    cy.task('removeAllTracks');
+    cy.task('addTracks', { mockSet: 'high', tracksType: '1 connexion' });
+    cy.task('addTracks', { mockSet: 'legacy', tracksType: '2 connexions' });
+    cy.task('addTracks', { mockSet: 'low', tracksType: '3 connexions' });
+    initTracks = true;
+  },
+);

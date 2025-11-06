@@ -4,7 +4,7 @@ import { AppRmqConfig } from '@fc/csmr-fraud';
 const env = new ConfigParser(process.env, 'App');
 
 export default {
-  name: process.env.APP_NAME,
+  name: 'CSMR-FRAUD',
   environment: env.string('ENVIRONMENT'),
   fraudEmailAddress: env.string('FRAUD_EMAIL_ADDRESS'),
   fraudEmailRecipient: env.string('FRAUD_EMAIL_RECIPIENT'),

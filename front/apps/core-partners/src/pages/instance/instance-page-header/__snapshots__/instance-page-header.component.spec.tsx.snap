@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`InstancePageHeaderComponent should match the snapshot 1`] = `
+<div>
+  <h1
+    class="fr-col-12 fr-col-md-8"
+  >
+    Test Title
+  </h1>
+  <div
+    class="fr-col-12 fr-col-md-8"
+  >
+    <p>
+      Test Intro
+       
+      <span
+        data-mockid="LinkComponent"
+      >
+        CorePartners.documentation.label
+      </span>
+    </p>
+  </div>
+</div>
+`;

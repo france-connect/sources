@@ -5,7 +5,7 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app/fc-workers
     depends_on:
-      - "mongo-fcp-low"
+      - "mongo-fcp-low-replica-single-init"
       - "elasticsearch"
       - "kibana"
     volumes:
@@ -28,7 +28,7 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app/fc-workers
     depends_on:
-      - "mongo-fcp-high"
+      - "mongo-fcp-high-replica-single-init"
       - "elasticsearch"
       - "kibana"
     volumes:

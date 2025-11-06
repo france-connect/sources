@@ -5,6 +5,7 @@ services:
       - "partners-front"
       - "partners-back"
       - "mock-proconnect"
+      - "mock-datapass"
       - "csmr-config-sandbox-low"
       - "csmr-config-partners"
 
@@ -13,3 +14,11 @@ services:
     depends_on:
       # -- PARTNERS
       - "partners"
+
+  import-sandbox:
+    image: alpine
+    depends_on:
+      - "partners"
+      - "mongo-fcp-high"
+      # Initialisation containers
+      - mongo-fcp-high-replica-single-init

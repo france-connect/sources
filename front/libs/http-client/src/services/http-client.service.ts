@@ -9,7 +9,7 @@ import axios, { AxiosError } from 'axios';
 import { ContentType, HttpMethods } from '@fc/common';
 import { ConfigService } from '@fc/config';
 
-import { Options } from '../enums';
+import { HttpClientOptions } from '../enums';
 import { AxiosException } from '../errors';
 import type {
   GetCsrfTokenResponseInterface,
@@ -38,7 +38,7 @@ export const makeRequest = async <T = unknown>(
  */
 export const getCSRF = async (): Promise<GetCsrfTokenResponseInterface> => {
   try {
-    const { apiCsrfURL } = ConfigService.get<HttpClientConfig>(Options.CONFIG_NAME);
+    const { apiCsrfURL } = ConfigService.get<HttpClientConfig>(HttpClientOptions.CONFIG_NAME);
 
     const method = HttpMethods.GET;
     const endpoint = apiCsrfURL;

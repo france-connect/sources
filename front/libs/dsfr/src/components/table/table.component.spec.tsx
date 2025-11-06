@@ -64,7 +64,7 @@ describe('TableComponent', () => {
         caption="Table Caption"
         columns={columnsMock}
         id="any-table-id-mock"
-        scrollable={false}
+        noScroll={false}
         size={Sizes.LARGE}
         sources={[
           { column1: 'Data 1', column2: 'Data 2', label: 'column-mock-1' },
@@ -77,7 +77,7 @@ describe('TableComponent', () => {
     // Then
     expect(container).toMatchSnapshot();
     expect(container.firstChild).toHaveClass('fr-table--bordered');
-    expect(container.firstChild).toHaveClass('fr-table--no-scroll');
+    expect(container.firstChild).toHaveClass('fr-table--lg fr-table fr-table--bordered');
     expect(TableCaptionComponent).toHaveBeenCalledExactlyOnceWith(
       {
         caption: 'Table Caption',

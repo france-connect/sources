@@ -1,15 +1,24 @@
+import { KeyLike } from 'crypto';
+
+import { JWK } from 'jose';
 import { ClientMetadata, KoaContextWithOIDC } from 'oidc-provider';
 
 import { Inject, Injectable } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
+import { JwksDto } from '@fc/jwt';
 import {
   IServiceProviderAdapter,
   SERVICE_PROVIDER_SERVICE_TOKEN,
 } from '@fc/oidc';
-import { OidcProviderConfig } from '@fc/oidc-provider';
+import {
+  SIGN_ADAPTER_TOKEN,
+  SignAdapterServiceInterface,
+} from '@fc/sign-adapter';
+import { SignAdapterNativeService } from '@fc/sign-adapter-native';
 
-import { OidcProviderRedisAdapter } from '../adapters';
+import { OidcProviderRedisAdapter, OidcProviderSignAdapter } from '../adapters';
+import { ExperimentalFeatureSetting, OidcProviderConfig } from '../dto';
 import { IOidcProviderConfigAppService } from '../interfaces';
 import { OidcProviderService } from '../oidc-provider.service';
 import { OIDC_PROVIDER_CONFIG_APP_TOKEN } from '../tokens';
@@ -17,6 +26,8 @@ import { OidcProviderErrorService } from './oidc-provider-error.service';
 
 @Injectable()
 export class OidcProviderConfigService {
+  // More than 4 parameters allowed for DI
+  // eslint-disable-next-line max-params
   constructor(
     private readonly config: ConfigService,
     @Inject(OIDC_PROVIDER_CONFIG_APP_TOKEN)
@@ -24,7 +35,40 @@ export class OidcProviderConfigService {
     private readonly errorService: OidcProviderErrorService,
     @Inject(SERVICE_PROVIDER_SERVICE_TOKEN)
     private readonly serviceProvider: IServiceProviderAdapter,
+    @Inject(SIGN_ADAPTER_TOKEN)
+    private readonly signAdapter: SignAdapterServiceInterface,
   ) {}
+
+  private buildSigningKeys(): Array<OidcProviderSignAdapter | JwksDto> {
+    const {
+      configuration: { jwks },
+    } = this.config.get<OidcProviderConfig>('OidcProvider');
+
+    if (this.signAdapter instanceof SignAdapterNativeService) {
+      return jwks.keys;
+    }
+
+    const signFn = (data: Uint8Array, alg: string, key?: KeyLike) =>
+      this.signAdapter.sign(data.toString(), alg, key);
+
+    return jwks.keys.map((jwk) =>
+      OidcProviderSignAdapter.fromJwk(jwk as JWK, signFn),
+    );
+  }
+
+  private buildExternalSigningFeature(): ExperimentalFeatureSetting {
+    if (this.signAdapter instanceof SignAdapterNativeService) {
+      return {
+        enabled: false,
+        ack: undefined,
+      };
+    }
+
+    return {
+      enabled: true,
+      ack: 'experimental-01',
+    };
+  }
 
   /**
    * Compose full config by merging static parameters from:
@@ -101,6 +145,9 @@ export class OidcProviderConfigService {
       issuer,
       configuration: {
         ...configuration,
+        jwks: {
+          keys: this.buildSigningKeys(),
+        },
         features: {
           ...configuration.features,
           rpInitiatedLogout: {
@@ -108,6 +155,7 @@ export class OidcProviderConfigService {
             logoutSource,
             postLogoutSuccessSource,
           },
+          externalSigningSupport: this.buildExternalSigningFeature(),
         },
         adapter,
         findAccount,

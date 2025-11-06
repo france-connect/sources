@@ -1,5 +1,7 @@
 import { render } from '@testing-library/react';
 
+import { t } from '@fc/i18n';
+
 import { ServiceImageComponent } from './service-image.component';
 
 describe('ServiceImageComponent', () => {
@@ -12,6 +14,19 @@ describe('ServiceImageComponent', () => {
     title: 'title-mock',
     uid: 'uid-mock',
   };
+
+  beforeEach(() => {
+    // Given
+    jest.mocked(t).mockReturnValue('any-labels-idp-mock');
+  });
+
+  it('should call t 1 time with correct params', () => {
+    // When
+    render(<ServiceImageComponent service={serviceMock} />);
+
+    // Then
+    expect(t).toHaveBeenCalledExactlyOnceWith('UserPreferences.labels.idp');
+  });
 
   it('should match the snapshot', () => {
     // When
@@ -40,7 +55,7 @@ describe('ServiceImageComponent', () => {
     const { container, getByAltText } = render(
       <ServiceImageComponent service={servicesMockWithImage} />,
     );
-    const element = getByAltText(`fournisseur d'identité title-mock`);
+    const element = getByAltText(`any-labels-idp-mock title-mock`);
 
     // Then
     expect(container).toMatchSnapshot();

@@ -6,7 +6,7 @@ import type { AxiosErrorCatcherInterface } from '@fc/axios-error-catcher/src/inf
 import { useSafeContext } from '@fc/common';
 import { ConfigService } from '@fc/config';
 
-import { Options } from '../enums';
+import { AccountOptions } from '../enums';
 import type {
   AccountConfig,
   AccountContextState,
@@ -24,7 +24,7 @@ interface AccountProviderProps extends Required<PropsWithChildren> {
  * Optimiser le nombre de mise à jour du state
  */
 export const AccountProvider = ({ children, validator }: AccountProviderProps) => {
-  const { endpoints } = ConfigService.get<AccountConfig>(Options.CONFIG_NAME);
+  const { endpoints } = ConfigService.get<AccountConfig>(AccountOptions.CONFIG_NAME);
 
   const { codeError, hasError } =
     useSafeContext<AxiosErrorCatcherInterface>(AxiosErrorCatcherContext);

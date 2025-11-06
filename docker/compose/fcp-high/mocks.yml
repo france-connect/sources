@@ -11,10 +11,14 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
-      - "csmr-hsm"
-      - "redis-pwd"
-      - "broker"
-      - "squid"
+      csmr-hsm:
+        condition: service_started
+      redis-pwd:
+        condition: service_healthy
+      broker:
+        condition: service_started
+      squid:
+        condition: service_started
     volumes:
       - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
       - "${VOLUMES_DIR}/app:/opt/scripts"
@@ -38,10 +42,14 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
-      - "csmr-hsm"
-      - "redis-pwd"
-      - "broker"
-      - "squid"
+      csmr-hsm:
+        condition: service_started
+      redis-pwd:
+        condition: service_healthy
+      broker:
+        condition: service_started
+      squid:
+        condition: service_started
     volumes:
       - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
       - "${VOLUMES_DIR}/app:/opt/scripts"
@@ -64,10 +72,14 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
-      - "csmr-hsm"
-      - "redis-pwd"
-      - "broker"
-      - "squid"
+      csmr-hsm:
+        condition: service_started
+      redis-pwd:
+        condition: service_healthy
+      broker:
+        condition: service_started
+      squid:
+        condition: service_started
     volumes:
       - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
       - "${VOLUMES_DIR}/app:/opt/scripts"
@@ -90,10 +102,14 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
-      - "csmr-hsm"
-      - "redis-pwd"
-      - "broker"
-      - "squid"
+      csmr-hsm:
+        condition: service_started
+      redis-pwd:
+        condition: service_healthy
+      broker:
+        condition: service_started
+      squid:
+        condition: service_started
     volumes:
       - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
       - "${VOLUMES_DIR}/app:/opt/scripts"
@@ -116,10 +132,14 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
-      - "csmr-hsm"
-      - "redis-pwd"
-      - "broker"
-      - "squid"
+      csmr-hsm:
+        condition: service_started
+      redis-pwd:
+        condition: service_healthy
+      broker:
+        condition: service_started
+      squid:
+        condition: service_started
     volumes:
       - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
       - "${VOLUMES_DIR}/app:/opt/scripts"
@@ -142,7 +162,8 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
-      - "redis-pwd"
+      redis-pwd:
+        condition: service_healthy
     volumes:
       - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
       - "${VOLUMES_DIR}/fcp-high/mocks/idp/databases:/var/databases"
@@ -166,7 +187,8 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
-      - "redis-pwd"
+      redis-pwd:
+        condition: service_healthy
     volumes:
       - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
       - "${VOLUMES_DIR}/fcp-high/mocks/idp/databases:/var/databases"
@@ -190,7 +212,8 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
-      - "redis-pwd"
+      redis-pwd:
+        condition: service_healthy
     volumes:
       - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
       - "${VOLUMES_DIR}/fcp-high/mocks/idp/databases:/var/databases"
@@ -214,7 +237,8 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
-      - "redis-pwd"
+      redis-pwd:
+        condition: service_healthy
     volumes:
       - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
       - "${VOLUMES_DIR}/fcp-high/mocks/idp/databases:/var/databases"
@@ -238,7 +262,8 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
-      - "redis-pwd"
+      redis-pwd:
+        condition: service_healthy
     volumes:
       - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
       - "${VOLUMES_DIR}/fcp-high/mocks/idp/databases:/var/databases"
@@ -262,7 +287,8 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
-      - "redis-pwd"
+      redis-pwd:
+        condition: service_healthy
     volumes:
       - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
       - "${VOLUMES_DIR}/fcp-high/mocks/idp/databases:/var/databases"
@@ -286,7 +312,8 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
-      - "redis-pwd"
+      redis-pwd:
+        condition: service_healthy
     volumes:
       - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
       - "${VOLUMES_DIR}/fcp-high/mocks/idp/databases:/var/databases"
@@ -310,7 +337,8 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
-      - "redis-pwd"
+      redis-pwd:
+        condition: service_healthy
     volumes:
       - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
       - "${VOLUMES_DIR}/fcp-high/mocks/idp/databases:/var/databases"
@@ -334,7 +362,8 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
-      - "redis-pwd"
+      redis-pwd:
+        condition: service_healthy
     volumes:
       - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
       - "${VOLUMES_DIR}/fcp-high/mocks/idp/databases:/var/databases"
@@ -358,7 +387,8 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
-      - "redis-pwd"
+      redis-pwd:
+        condition: service_healthy
     volumes:
       - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
       - "${VOLUMES_DIR}/fcp-high/mocks/idp/databases:/var/databases"
@@ -382,7 +412,8 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
-      - "redis-pwd"
+      redis-pwd:
+        condition: service_healthy
     volumes:
       - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
       - "${VOLUMES_DIR}/fcp-high/mocks/idp/databases:/var/databases"

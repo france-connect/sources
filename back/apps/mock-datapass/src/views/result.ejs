@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="fr-FR" data-fr-scheme="light">
+  <%- include("includes/head") %>
+  <body>
+    <div class="fc-sticky-wrapper">
+      <div class="fc-sticky-body">
+        <%- include('includes/header.ejs') %>
+        <main>
+          <div class="fr-container fr-container-main fr-mt-4v">
+            <h2>Résultat de l'appel webhook</h2>
+
+            <div>
+              <strong>Code HTTP :</strong>
+              <div class="fr-highlight" id="response-status-code">
+                <%= status %>
+              </div>
+            </div>
+
+            <div>
+              <strong>Corp de la réponse :</strong>
+              <div class="fr-highlight">
+                <pre><code id="response-body"><%= JSON.stringify(data, null, 2) %></code></pre>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+    <%- include("includes/footer") %>
+  </body>
+</html>

@@ -4,6 +4,8 @@ export const errors = {
   OIDCProviderError,
 };
 
+export class ExternalSigningKey {}
+
 export class Provider {
   callback() {}
 }

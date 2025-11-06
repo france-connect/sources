@@ -1,0 +1,75 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FraudLoginPage should match the snapshot 1`] = `
+<div>
+  <div
+    data-mock="LoginLayout"
+  >
+    <h1
+      class="fr-mb-5w"
+    >
+      Fraud.loginPage.title
+    </h1>
+    <div
+      data-mockid="AlertComponent"
+    >
+      <div>
+        AlertComponent
+      </div>
+      <div>
+        <p
+          class="text-left"
+        >
+          <b>
+            Fraud.loginPage.alertInfo
+          </b>
+        </p>
+      </div>
+    </div>
+    <div
+      class="fr-py-6w fr-px-6w fr-mb-6w fr-mt-4w fr-background-alt--grey"
+    >
+      <h2>
+        Fraud.loginPage.subtitle
+      </h2>
+      <p
+        class="fr-text--lead"
+      >
+        Fraud.loginPage.textLead
+      </p>
+      <div
+        data-mockid="LoginFormComponent"
+      />
+    </div>
+    <div
+      data-mockid="AccordionComponent"
+    >
+      <h3>
+        AccordionComponent
+      </h3>
+      <div>
+        <div
+          class="text-left fr-p-2w fr-background-alt--grey"
+        >
+          <p>
+            <b>
+              Fraud.loginPage.accordion.paragraph1
+            </b>
+          </p>
+          <p>
+            <b>
+              Fraud.loginPage.accordion.paragraph2
+               
+              <span
+                data-mockid="LinkComponent"
+              >
+                Fraud.loginPage.accordion.reportForm
+              </span>
+            </b>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

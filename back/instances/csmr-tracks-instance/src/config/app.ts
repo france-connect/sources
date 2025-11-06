@@ -4,6 +4,6 @@ import { ConfigParser } from '@fc/config';
 const env = new ConfigParser(process.env, 'App');
 
 export default {
-  name: process.env.APP_NAME,
+  name: 'CSMR-TRACKS',
   environment: env.string('ENVIRONMENT'),
 } as AppRmqConfig;

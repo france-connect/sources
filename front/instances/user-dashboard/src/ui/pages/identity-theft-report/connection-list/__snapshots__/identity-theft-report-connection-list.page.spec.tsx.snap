@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`IdentityTheftReportConnectionListPage should match the snapshot when tracks is not empty 1`] = `
+<div>
+  <h2>
+    Identification de la connexion
+  </h2>
+  <div
+    class="fr-mt-3w fr-p-3w fr-border-default--grey"
+    data-testid="IdentityTheftReportConnectionListPage-container"
+  >
+    <div
+      data-mockid="IdentityTheftReportTracksComponent"
+    />
+    <div
+      data-mockid="IdentityTheftReportConnectionListActionsComponent"
+    />
+  </div>
+  <div
+    data-mockid="IdentityTheftReportHelpEventIdAccordionComponent"
+  />
+</div>
+`;

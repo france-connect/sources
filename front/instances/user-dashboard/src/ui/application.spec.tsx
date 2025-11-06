@@ -5,6 +5,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { AccountProvider, ConnectValidator } from '@fc/account';
 import { AxiosErrorCatcherProvider } from '@fc/axios-error-catcher';
 import { ConfigService } from '@fc/config';
+import { Dto2FormServiceProvider } from '@fc/dto2form-service';
 import { AppBoundaryComponent } from '@fc/exceptions';
 import { I18nService } from '@fc/i18n';
 import { StylesProvider } from '@fc/styles';
@@ -92,6 +93,14 @@ describe('Application', () => {
 
     // Then
     expect(StylesProvider).toHaveBeenCalledOnce();
+  });
+
+  it('should call Dto2FormServiceProvider', () => {
+    // When
+    render(<Application />);
+
+    // Then
+    expect(Dto2FormServiceProvider).toHaveBeenCalledOnce();
   });
 
   it('should call ApplicationRoutes', () => {

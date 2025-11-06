@@ -1,10 +1,11 @@
 import { DateTime } from 'luxon';
 
+import type { TrackInterface } from '@fc/core-user-dashboard';
+
 import type {
   EnhancedTrackInterface,
   IGroupedClaims,
   RichClaimInterface,
-  TrackInterface,
   TrackListType,
 } from '../interfaces';
 

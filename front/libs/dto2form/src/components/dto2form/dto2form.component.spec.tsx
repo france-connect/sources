@@ -8,19 +8,16 @@ import { FieldTypes, FormComponent, FormConfigContext } from '@fc/forms';
 
 import { useFormSubmit } from '../../hooks';
 import type { SchemaFieldType } from '../../types';
-import { DTO2InputComponent } from '../dto2input';
-import { DTO2SectionComponent } from '../dto2section';
-import { DTO2FormComponent } from './dto2form.component';
+import { Dto2InputComponent } from '../dto2input';
+import { Dto2SectionComponent } from '../dto2section';
+import { Dto2FormComponent } from './dto2form.component';
 
 // Given
 jest.mock('../dto2input/dto2input.component');
 jest.mock('../dto2section/dto2section.component');
-jest.mock('../../hooks', () => ({
-  ...jest.requireActual('../../hooks'),
-  useFormSubmit: jest.fn(),
-}));
+jest.mock('../../hooks/form-submit/form-submit.hook');
 
-describe('DTO2FormComponent', () => {
+describe('Dto2FormComponent', () => {
   // Given
   const initialValuesMock = {};
   const submitHandlerMock = jest.fn();
@@ -31,11 +28,12 @@ describe('DTO2FormComponent', () => {
     { name: 'any-section-mock', order: 2, type: 'section' } as unknown as SchemaFieldType,
     { name: 'any-name-3-mock', order: 4, type: FieldTypes.TEXT } as unknown as SchemaFieldType,
   ];
+  const submitLabelMock = 'any-submit-label-mock';
   const configMock = {
     id: expect.any(String),
+    submitLabel: submitLabelMock,
     validateOnSubmit: true,
   } as FormConfigInterface;
-  const submitLabelMock = 'any-submit-label-mock';
 
   const onSubmitMock = jest.fn();
   const onPostSubmitMock = jest.fn();
@@ -59,11 +57,10 @@ describe('DTO2FormComponent', () => {
   it('should match the snapshot', () => {
     // When
     const { container } = render(
-      <DTO2FormComponent
+      <Dto2FormComponent
         config={configMock}
         initialValues={initialValuesMock}
         schema={schemaMock}
-        submitLabel={submitLabelMock}
         onSubmit={onSubmitMock}
         onValidate={onValidateMock}
       />,
@@ -76,11 +73,10 @@ describe('DTO2FormComponent', () => {
   it('should call FormComponent', () => {
     // When
     render(
-      <DTO2FormComponent
+      <Dto2FormComponent
         config={configMock}
         initialValues={initialValuesMock}
         schema={schemaMock}
-        submitLabel={submitLabelMock}
         onSubmit={onSubmitMock}
         onValidate={onValidateMock}
       />,
@@ -95,7 +91,6 @@ describe('DTO2FormComponent', () => {
         initialValues: initialValuesMock,
         onSubmit: submitHandlerMock,
         onValidate: onValidateMock,
-        submitLabel: 'any-submit-label-mock',
       },
       undefined,
     );
@@ -107,7 +102,7 @@ describe('DTO2FormComponent', () => {
 
     // When
     render(
-      <DTO2FormComponent
+      <Dto2FormComponent
         config={configMock}
         initialValues={initialValuesMock}
         schema={schemaMock}
@@ -124,7 +119,7 @@ describe('DTO2FormComponent', () => {
   it('should call and use the useFormSubmit hook with on[X]Submit params', () => {
     // When
     render(
-      <DTO2FormComponent
+      <Dto2FormComponent
         config={configMock}
         initialValues={initialValuesMock}
         schema={schemaMock}
@@ -147,7 +142,7 @@ describe('DTO2FormComponent', () => {
 
     // When
     render(
-      <DTO2FormComponent
+      <Dto2FormComponent
         config={configMock}
         initialValues={initialValuesMock}
         schema={schemaMock}
@@ -161,16 +156,16 @@ describe('DTO2FormComponent', () => {
     expect(sortByKey).toHaveBeenCalledWith('order');
     expect(orderSorterMock).toHaveBeenCalledTimes(3);
     // input
-    expect(DTO2InputComponent).toHaveBeenCalledTimes(3);
-    expect(DTO2InputComponent).toHaveBeenNthCalledWith(1, { field: schemaMock[0] }, undefined);
-    expect(DTO2InputComponent).toHaveBeenNthCalledWith(2, { field: schemaMock[1] }, undefined);
-    expect(DTO2InputComponent).toHaveBeenNthCalledWith(3, { field: schemaMock[3] }, undefined);
+    expect(Dto2InputComponent).toHaveBeenCalledTimes(3);
+    expect(Dto2InputComponent).toHaveBeenNthCalledWith(1, { field: schemaMock[0] }, undefined);
+    expect(Dto2InputComponent).toHaveBeenNthCalledWith(2, { field: schemaMock[1] }, undefined);
+    expect(Dto2InputComponent).toHaveBeenNthCalledWith(3, { field: schemaMock[3] }, undefined);
     // section
-    expect(DTO2SectionComponent).toHaveBeenCalledOnce();
-    expect(DTO2SectionComponent).toHaveBeenNthCalledWith(1, { field: schemaMock[2] }, undefined);
+    expect(Dto2SectionComponent).toHaveBeenCalledOnce();
+    expect(Dto2SectionComponent).toHaveBeenNthCalledWith(1, { field: schemaMock[2] }, undefined);
   });
 
-  it('should call FormComponent without the validate function when DTO2Form.validateOnSubmit is false', () => {
+  it('should call FormComponent without the validate function when Dto2Form.validateOnSubmit is false', () => {
     // Given
     const configWithoutValidateMock = {
       ...configMock,
@@ -178,7 +173,7 @@ describe('DTO2FormComponent', () => {
     };
     // When
     render(
-      <DTO2FormComponent
+      <Dto2FormComponent
         config={configWithoutValidateMock}
         initialValues={initialValuesMock}
         schema={schemaMock}

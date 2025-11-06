@@ -136,9 +136,9 @@ describe('LightProtocolCommonsService', () => {
         .mockReturnValueOnce(tokenDigestMock);
 
       toStringMock.mockReturnValueOnce(decodedTokenMock);
-      jest
-        .spyOn(Buffer, 'from')
-        .mockReturnValueOnce({ toString: toStringMock } as unknown as Buffer);
+      jest.spyOn(Buffer, 'from').mockReturnValueOnce({
+        toString: toStringMock,
+      } as unknown as Buffer<ArrayBuffer>);
     });
 
     it('sould retrieve the maxTokenSize from the config', () => {

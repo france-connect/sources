@@ -4,6 +4,7 @@ import { Link } from 'react-router';
 import { getAccessibleTitle } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { LogoRepubliqueFrancaiseComponent } from '@fc/dsfr';
+import { t } from '@fc/i18n';
 
 import { LayoutFooterBrandComponent } from './layout-footer.brand';
 
@@ -18,6 +19,15 @@ describe('LayoutFooterBrandComponent', () => {
         name: expect.any(String),
       },
     });
+    jest.mocked(t).mockReturnValue('any-back-to-homepage-mock');
+  });
+
+  it('should call t 1 times with params', () => {
+    // When
+    render(<LayoutFooterBrandComponent />);
+
+    // Then
+    expect(t).toHaveBeenCalledExactlyOnceWith('Layout.documentTitle.backToHomepage');
   });
 
   it('should match Snapshot', () => {
@@ -63,7 +73,7 @@ describe('LayoutFooterBrandComponent', () => {
     );
     expect(getAccessibleTitle).toHaveBeenNthCalledWith(
       2,
-      'Retour à l’accueil du site',
+      'any-back-to-homepage-mock',
       'any-service-baseline-mock - any-service-name-mock',
     );
   });
@@ -90,7 +100,7 @@ describe('LayoutFooterBrandComponent', () => {
       .mocked(getAccessibleTitle)
       .mockReturnValueOnce(expect.any(String))
       .mockReturnValueOnce(
-        'Retour à l’accueil du site - any-service-baseline-mock - any-service-name-mock',
+        'any-back-to-homepage-mock - any-service-baseline-mock - any-service-name-mock',
       );
 
     // When
@@ -102,7 +112,7 @@ describe('LayoutFooterBrandComponent', () => {
     expect(Link).toHaveBeenCalledWith(
       expect.objectContaining({
         className: 'fr-footer__brand-link',
-        title: 'Retour à l’accueil du site - any-service-baseline-mock - any-service-name-mock',
+        title: 'any-back-to-homepage-mock - any-service-baseline-mock - any-service-name-mock',
         to: '/any-service-homepage-mock',
       }),
       undefined,

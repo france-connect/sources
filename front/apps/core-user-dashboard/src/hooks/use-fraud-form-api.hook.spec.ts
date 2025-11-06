@@ -1,4 +1,4 @@
-import { act, renderHook, waitFor } from '@testing-library/react';
+import { renderHook, waitFor } from '@testing-library/react';
 import { useLocalStorage } from 'usehooks-ts';
 
 import { post } from '@fc/http-client';
@@ -8,13 +8,9 @@ import { useFraudFormApi } from './use-fraud-form-api.hook';
 
 describe('useFraudFormApi', () => {
   // Given
-  const options: FraudConfigInterface = {
+  const options = {
     apiRouteFraudForm: 'any-route',
-    fraudSupportFormPathname: 'any',
-    fraudSurveyUrl: 'any-url',
-    supportFormUrl: 'any',
-    surveyOriginQueryParam: 'any',
-  };
+  } as unknown as FraudConfigInterface;
 
   const formValuesMock: FraudFormValuesInterface = {
     authenticationEventId: 'mock-uuid',
@@ -40,9 +36,7 @@ describe('useFraudFormApi', () => {
   it('should call post when commit is called with params', async () => {
     // When
     const { result } = renderHook(() => useFraudFormApi(options));
-    act(() => {
-      result.current.commit(formValuesMock);
-    });
+    result.current.commit(formValuesMock);
 
     // Then
     await waitFor(() => {
@@ -59,9 +53,7 @@ describe('useFraudFormApi', () => {
 
     // When
     const { result } = renderHook(() => useFraudFormApi(options));
-    act(() => {
-      result.current.commit(formValuesMock);
-    });
+    result.current.commit(formValuesMock);
 
     // Then
     await waitFor(() => {
@@ -76,10 +68,7 @@ describe('useFraudFormApi', () => {
 
     // hen
     const { result } = renderHook(() => useFraudFormApi(options));
-
-    act(() => {
-      result.current.commit(formValuesMock);
-    });
+    result.current.commit(formValuesMock);
 
     // Then
     await waitFor(() => {

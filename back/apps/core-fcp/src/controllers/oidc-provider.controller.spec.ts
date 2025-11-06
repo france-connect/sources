@@ -163,6 +163,7 @@ describe('OidcProviderController', () => {
     abortInteraction: jest.fn(),
     getInteraction: jest.fn(),
     finishInteraction: jest.fn(),
+    callback: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -235,12 +236,12 @@ describe('OidcProviderController', () => {
   });
 
   describe('getAuthorize()', () => {
-    it('should call next', async () => {
+    it('should call oidcProvider.callback', async () => {
       // Given
       validateDtoMock.mockResolvedValueOnce([]);
 
       // When
-      await oidcProviderController.getAuthorize(resMock, nextMock, queryMock);
+      await oidcProviderController.getAuthorize(req, resMock, queryMock);
 
       // Then
       expect(sessionServiceMock.reset).toHaveBeenCalledTimes(1);
@@ -250,10 +251,14 @@ describe('OidcProviderController', () => {
         AuthorizeParamsDto,
         validatorOptions,
       );
-      expect(nextMock).toHaveReturnedTimes(1);
+      expect(oidcProviderServiceMock.callback).toHaveBeenCalledTimes(1);
+      expect(oidcProviderServiceMock.callback).toHaveBeenCalledWith(
+        req,
+        resMock,
+      );
     });
 
-    it('should call next (sso mode)', async () => {
+    it('should call oidcProvider.callback (sso mode)', async () => {
       // Given
       validateDtoMock.mockResolvedValueOnce([]);
       configServiceMock.get.mockReset().mockReturnValueOnce({
@@ -261,17 +266,15 @@ describe('OidcProviderController', () => {
       });
 
       // When
-      await oidcProviderController.getAuthorize(resMock, nextMock, queryMock);
+      await oidcProviderController.getAuthorize(req, resMock, queryMock);
 
       // Then
       expect(sessionServiceMock.reset).toHaveBeenCalledTimes(0);
-      expect(validateDtoMock).toHaveBeenCalledTimes(1);
-      expect(validateDtoMock).toHaveBeenCalledWith(
-        queryMock,
-        AuthorizeParamsDto,
-        validatorOptions,
+      expect(oidcProviderServiceMock.callback).toHaveBeenCalledTimes(1);
+      expect(oidcProviderServiceMock.callback).toHaveBeenCalledWith(
+        req,
+        resMock,
       );
-      expect(nextMock).toHaveReturnedTimes(1);
     });
 
     it('should expose spName to templates', async () => {
@@ -279,7 +282,7 @@ describe('OidcProviderController', () => {
       validateDtoMock.mockResolvedValueOnce([]);
 
       // When
-      await oidcProviderController.getAuthorize(resMock, nextMock, queryMock);
+      await oidcProviderController.getAuthorize(req, resMock, queryMock);
 
       // Then
       expect(resMock.locals).toHaveProperty('spName');
@@ -291,7 +294,7 @@ describe('OidcProviderController', () => {
       validateDtoMock.mockResolvedValueOnce([{ property: 'invalid param' }]);
       // Then
       await expect(
-        oidcProviderController.getAuthorize(resMock, nextMock, queryMock),
+        oidcProviderController.getAuthorize(req, resMock, queryMock),
       ).rejects.toThrow(OidcProviderAuthorizeParamsException);
       expect(sessionServiceMock.reset).toHaveBeenCalledTimes(1);
       expect(validateDtoMock).toHaveBeenCalledTimes(1);
@@ -305,12 +308,12 @@ describe('OidcProviderController', () => {
   });
 
   describe('postAuthorize()', () => {
-    it('should call next', async () => {
+    it('should call oidcProvider.callback', async () => {
       // Given
       validateDtoMock.mockResolvedValueOnce([]);
 
       // When
-      await oidcProviderController.postAuthorize(resMock, nextMock, bodyMock);
+      await oidcProviderController.postAuthorize(req, resMock, bodyMock);
 
       // Then
       expect(sessionServiceMock.reset).toHaveBeenCalledTimes(1);
@@ -320,7 +323,10 @@ describe('OidcProviderController', () => {
         AuthorizeParamsDto,
         validatorOptions,
       );
-      expect(nextMock).toHaveReturnedTimes(1);
+      expect(oidcProviderServiceMock.callback).toHaveBeenCalledExactlyOnceWith(
+        req,
+        resMock,
+      );
     });
 
     it('should expose spName to templates', async () => {
@@ -328,7 +334,7 @@ describe('OidcProviderController', () => {
       validateDtoMock.mockResolvedValueOnce([]);
 
       // When
-      await oidcProviderController.getAuthorize(resMock, nextMock, queryMock);
+      await oidcProviderController.postAuthorize(req, resMock, bodyMock);
 
       // Then
       expect(resMock.locals).toHaveProperty('spName');
@@ -341,7 +347,7 @@ describe('OidcProviderController', () => {
 
       // Then
       await expect(
-        oidcProviderController.postAuthorize(resMock, nextMock, bodyMock),
+        oidcProviderController.postAuthorize(req, resMock, bodyMock),
       ).rejects.toThrow(OidcProviderAuthorizeParamsException);
       expect(sessionServiceMock.reset).toHaveBeenCalledTimes(1);
       expect(validateDtoMock).toHaveBeenCalledTimes(1);

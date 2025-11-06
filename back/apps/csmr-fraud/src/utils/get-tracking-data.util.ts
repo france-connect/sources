@@ -4,21 +4,19 @@ import { AccountIdsResultsInterface } from '@fc/csmr-account-client';
 import {
   AuthenticationEventDto,
   FraudCaseDto,
+  FraudTrackDto,
   TrackingDataDto,
 } from '@fc/csmr-fraud-client';
-import { TracksAdapterResultsInterface } from '@fc/tracks-adapter-elasticsearch';
-
-import { TracksFormatterOutputInterface } from '../interfaces';
 
 export function getTrackingData(
   fraudCase: FraudCaseDto,
   accountIds: AccountIdsResultsInterface,
-  tracks: TracksAdapterResultsInterface<TracksFormatterOutputInterface>,
+  fraudTracks: FraudTrackDto[],
 ): TrackingDataDto {
   const { accountIdLow: userAccountIdLow, accountIdHigh: userAccountIdHigh } =
     accountIds;
 
-  const { total: totalEvents, payload } = tracks;
+  const totalEvents = fraudTracks.length;
 
   const {
     id: fraudCaseId,
@@ -26,7 +24,7 @@ export function getTrackingData(
     authenticationEventId,
   } = fraudCase;
 
-  const authenticationEvents = buildAuthenticationEvents(payload);
+  const authenticationEvents = buildAuthenticationEvents(fraudTracks);
 
   const trackingData: TrackingDataDto = {
     fraudCaseId,
@@ -42,9 +40,16 @@ export function getTrackingData(
 }
 
 function buildAuthenticationEvents(
-  tracks: TracksFormatterOutputInterface[],
+  tracks: FraudTrackDto[],
 ): AuthenticationEventDto[] {
-  const omitProperties = ['spSub', 'idpSub', 'interactionAcr'];
+  const omitProperties = [
+    'spSub',
+    'idpSub',
+    'idpLabel',
+    'interactionAcr',
+    'date',
+    'id',
+  ];
 
   const authenticationEvents: AuthenticationEventDto[] = tracks.map(
     (entry) =>

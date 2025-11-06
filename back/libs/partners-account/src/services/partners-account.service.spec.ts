@@ -10,6 +10,9 @@ import {
   EntityType,
   PermissionsType,
 } from '@fc/access-control';
+import { TypeormService } from '@fc/typeorm';
+
+import { getQueryRunnerMock, getTypeormServiceMock } from '@mocks/typeorm';
 
 import { PartnersAccountInitException } from '../exceptions';
 import { AccountInitInputInterface } from '../interfaces';
@@ -35,16 +38,8 @@ describe('PartnersAccountService', () => {
     ],
   };
 
-  const queryRunnerMock = {
-    connect: jest.fn(),
-    startTransaction: jest.fn(),
-    commitTransaction: jest.fn(),
-    rollbackTransaction: jest.fn(),
-    release: jest.fn(),
-    manager: {
-      createQueryBuilder: jest.fn(),
-    },
-  };
+  const queryRunnerMock = getQueryRunnerMock();
+  const typeormServiceMock = getTypeormServiceMock();
 
   const repositoryMock = {
     manager: {
@@ -53,6 +48,7 @@ describe('PartnersAccountService', () => {
       },
     },
     findOneBy: jest.fn(),
+    findOne: jest.fn(),
   };
 
   const accountPermissionMock = { addPermissionTransactional: jest.fn() };
@@ -67,12 +63,15 @@ describe('PartnersAccountService', () => {
         PartnersAccountService,
         Repository<PartnersAccount>,
         AccountPermissionService,
+        TypeormService,
       ],
     })
       .overrideProvider(getRepositoryToken(PartnersAccount))
       .useValue(repositoryMock)
       .overrideProvider(AccountPermissionService)
       .useValue(accountPermissionMock)
+      .overrideProvider(TypeormService)
+      .useValue(typeormServiceMock)
       .compile();
 
     service = module.get<PartnersAccountService>(PartnersAccountService);
@@ -90,17 +89,12 @@ describe('PartnersAccountService', () => {
     const initResultMock = Symbol('initResultMock');
 
     beforeEach(() => {
-      service['getQueryRunner'] = jest.fn().mockReturnValue(queryRunnerMock);
       service['create'] = jest.fn().mockResolvedValue(initResultMock);
       service['addPermissions'] = jest.fn();
       service['handleException'] = jest.fn();
-    });
-    it('should get a queryRunner', async () => {
-      // When
-      await service.init(accountMock);
-
-      // Then
-      expect(service['getQueryRunner']).toHaveBeenCalledOnce();
+      typeormServiceMock.withTransaction.mockImplementationOnce((callback) =>
+        callback(queryRunnerMock),
+      );
     });
 
     it('should call get or create account', async () => {
@@ -125,22 +119,6 @@ describe('PartnersAccountService', () => {
       );
     });
 
-    it('should begin transaction', async () => {
-      // When
-      await service.init(accountMock);
-
-      // Then
-      expect(queryRunnerMock.startTransaction).toHaveBeenCalledOnce();
-    });
-
-    it('should commit transaction', async () => {
-      // When
-      await service.init(accountMock);
-
-      // Then
-      expect(queryRunnerMock.commitTransaction).toHaveBeenCalledOnce();
-    });
-
     it('should return result from create()', async () => {
       // When
       const result = await service.init(accountMock);
@@ -161,31 +139,38 @@ describe('PartnersAccountService', () => {
     });
   });
 
-  describe('getQueryRunner', () => {
-    it('should create a queryRunner', async () => {
-      // When
-      await service['getQueryRunner']();
+  describe('getOrCreateByEmail', () => {
+    // Given
+    const account = { email: 'name@provider.fr' } as AccountInitInputInterface;
+    const existingAccount = {
+      id: 'existingAccountId',
+    };
+    const createdAccountId = 'createdAccountId';
 
-      // Then
-      expect(
-        repositoryMock.manager.connection.createQueryRunner,
-      ).toHaveBeenCalledOnce();
+    beforeEach(() => {
+      service['create'] = jest.fn().mockResolvedValue(createdAccountId);
     });
 
-    it('should connect', async () => {
+    it('should return an accountId if it exists', async () => {
+      // Given
+      repositoryMock.findOne = jest.fn().mockResolvedValue(existingAccount);
+
       // When
-      await service['getQueryRunner']();
+      const result = await service.getOrCreateByEmail(queryRunnerMock, account);
 
       // Then
-      expect(queryRunnerMock.connect).toHaveBeenCalledOnce();
+      expect(result).toBe(existingAccount.id);
     });
 
-    it('should return queryRunner', async () => {
+    it('should create an account if it does not exist', async () => {
+      // Given
+      repositoryMock.findOne = jest.fn().mockResolvedValue(undefined);
+
       // When
-      const result = await service['getQueryRunner']();
+      const result = await service.getOrCreateByEmail(queryRunnerMock, account);
 
       // Then
-      expect(result).toBe(queryRunnerMock);
+      expect(result).toBe(createdAccountId);
     });
   });
 
@@ -244,10 +229,20 @@ describe('PartnersAccountService', () => {
       // Then
       expect(
         accountPermissionMock.addPermissionTransactional,
-      ).toHaveBeenCalledExactlyOnceWith(queryRunnerMock, {
+      ).toHaveBeenCalledTimes(2);
+      expect(
+        accountPermissionMock.addPermissionTransactional,
+      ).toHaveBeenCalledWith(queryRunnerMock, {
         accountId,
         permissionType: PermissionsType.LIST,
         entity: EntityType.SP_INSTANCE,
+      });
+      expect(
+        accountPermissionMock.addPermissionTransactional,
+      ).toHaveBeenCalledWith(queryRunnerMock, {
+        accountId,
+        permissionType: PermissionsType.LIST,
+        entity: EntityType.SERVICE_PROVIDER,
       });
     });
   });
@@ -278,11 +273,18 @@ describe('PartnersAccountService', () => {
       queryRunnerMock.manager.createQueryBuilder = jest
         .fn()
         .mockReturnValue(queryBuilderMock);
+
+      typeormServiceMock.withQueryRunner.mockImplementationOnce((callback) =>
+        callback(queryRunnerMock),
+      );
+      service['buildUpdateValues'] = jest.fn().mockReturnValue({
+        lastConnection: expect.any(Function),
+      });
     });
 
     it('should update last connection', async () => {
       // When
-      await service.updateLastConnection(data);
+      await service.updateAccount(data);
 
       // Then
       expect(queryBuilderMock.update).toHaveBeenCalledExactlyOnceWith(
@@ -299,15 +301,54 @@ describe('PartnersAccountService', () => {
       ]);
       expect(queryBuilderMock.execute).toHaveBeenCalledOnce();
     });
+  });
 
-    it('should releaser queryRunner', async () => {
+  describe('buildUpdateValues', () => {
+    const existingAccount = {
+      sub: 'sub',
+      firstname: 'firstname',
+      lastname: 'lastname',
+      email: 'email',
+    } as PartnersAccount;
+
+    it('should return lastConnection if no changes', () => {
+      // Given
+      const data = {
+        sub: existingAccount.sub,
+        firstname: existingAccount.firstname,
+        lastname: existingAccount.lastname,
+        email: existingAccount.email,
+      } as AccountInitInputInterface;
+
       // When
-      await service.updateLastConnection(
-        {} as unknown as AccountInitInputInterface,
-      );
+      const result = service['buildUpdateValues'](data, existingAccount);
 
       // Then
-      expect(queryRunnerMock.release).toHaveBeenCalledOnce();
+      expect(result).toEqual({
+        lastConnection: expect.any(Function),
+      });
+    });
+
+    it('should return updated values if changes', () => {
+      // Given
+      const data = {
+        sub: 'newSub',
+        firstname: 'newFirstname',
+        lastname: 'newLastname',
+        email: 'newEmail',
+      } as AccountInitInputInterface;
+
+      // When
+      const result = service['buildUpdateValues'](data, existingAccount);
+
+      // Then
+      expect(result).toEqual({
+        lastConnection: expect.any(Function),
+        updatedAt: expect.any(Function),
+        sub: data.sub,
+        firstname: data.firstname,
+        lastname: data.lastname,
+      });
     });
   });
 });

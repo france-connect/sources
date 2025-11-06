@@ -1,18 +1,10 @@
-import type { Decorator, SubmissionErrors, ValidationErrors } from 'final-form';
+import type { Decorator } from 'final-form';
+import type { FormProps } from 'react-final-form';
 
 import type { HeadingTag } from '@fc/common';
 import type { HttpClientDataInterface } from '@fc/http-client';
 
-export type SubmitHandlerType<T extends HttpClientDataInterface> = (
-  values: T,
-) => SubmissionErrors | Promise<SubmissionErrors>;
-
-export type ValidateHandlerType<T extends HttpClientDataInterface> = (
-  values: T,
-) => ValidationErrors | Promise<ValidationErrors>;
-
-export type PreSubmitHandlerType<T> = (values: T) => Promise<T>;
-export type PostSubmitHandlerType<T> = (values: T) => Promise<SubmissionErrors> | void;
+import type { FormActionsInterface } from './form-actions.interface';
 
 export interface FormConfigInterface {
   description?: string;
@@ -23,17 +15,17 @@ export interface FormConfigInterface {
   validateOnFieldChange?: boolean;
   validateOnSubmit?: boolean;
   showFieldValidationMessage?: boolean;
+  noRequired?: boolean;
+  scrollTopOnSubmit?: boolean;
+  actions?: FormActionsInterface[];
 }
 
 export interface FormInterface<T extends HttpClientDataInterface> {
   initialValues?: T;
   config: FormConfigInterface;
-  noRequired?: boolean;
-  scrollTopOnSubmit?: boolean;
   decorators?: Decorator<T, Partial<T>>[];
-  onValidate?: ValidateHandlerType<T>;
-  onSubmit: SubmitHandlerType<T>;
-  onPreSubmit?: PreSubmitHandlerType<T>;
-  onPostSubmit?: PostSubmitHandlerType<T>;
-  submitLabel?: string;
+  onValidate?: FormProps<T>['onValidate'];
+  onSubmit: FormProps<T>['onSubmit'];
+  onPreSubmit?: (values: T) => Promise<T>;
+  onPostSubmit?: FormProps<T>['onSubmit'];
 }

@@ -1,4 +1,10 @@
-import { IsArray, IsBoolean, IsString, MinLength } from 'class-validator';
+import {
+  IsArray,
+  IsBoolean,
+  IsOptional,
+  IsString,
+  MinLength,
+} from 'class-validator';
 
 export class GetDiscoveryDto {
   @IsString({ each: true })
@@ -112,9 +118,17 @@ export class GetDiscoveryDto {
   readonly request_uri_parameter_supported: boolean;
 
   @IsBoolean()
+  @IsOptional()
   // oidc defined variable name
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  readonly require_request_uri_registration: boolean;
+  readonly require_request_uri_registration?: boolean;
+
+  @IsOptional()
+  @IsString({ each: true })
+  @IsArray()
+  // oidc defined variable name
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  readonly dpop_signing_alg_values_supported?: string[];
 
   @IsString()
   @MinLength(1)

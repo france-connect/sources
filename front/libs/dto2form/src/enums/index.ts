@@ -1,3 +1,3 @@
+export * from './dto2form-options.enum';
 export * from './fields-component.enum';
-export * from './options.enum';
 export * from './validators.enum';

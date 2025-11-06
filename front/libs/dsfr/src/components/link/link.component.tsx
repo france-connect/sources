@@ -1,23 +1,14 @@
 import classnames from 'classnames';
-import type { PropsWithChildren } from 'react';
 import React from 'react';
 import { Link } from 'react-router';
 
-import type { PropsWithClassName } from '@fc/common';
-
 import { IconPlacement, Sizes } from '../../enums';
+import type { LinkInterface } from '../../interfaces';
 
-interface LinkComponentProps extends PropsWithChildren, PropsWithClassName {
-  href: string;
-  icon?: string;
-  iconPlacement?: IconPlacement;
-  size?: Sizes;
-  label?: string | undefined;
+interface LinkComponentProps extends LinkInterface {
   external?: boolean;
   target?: string;
-  title?: string;
   rel?: string;
-  dataTestId?: string;
 }
 
 export const LinkComponent = React.memo(

@@ -25,8 +25,9 @@ interface TableComponentProps<T extends TableDataSourceInterface> {
   hideHeader?: boolean;
   bordered?: boolean;
   styles?: TableComponentStyles;
-  scrollable?: boolean;
+  noScroll?: boolean;
   columns?: TableColumnInterface[];
+  multiline?: boolean;
 }
 
 export const TableComponent = React.memo(
@@ -36,7 +37,8 @@ export const TableComponent = React.memo(
     columns = undefined,
     hideHeader = false,
     id,
-    scrollable = true,
+    multiline = false,
+    noScroll = false,
     size = Sizes.MEDIUM,
     sources,
     styles = {},
@@ -58,7 +60,9 @@ export const TableComponent = React.memo(
           // eslint-disable-next-line @typescript-eslint/naming-convention
           'fr-table--bordered': bordered,
           // eslint-disable-next-line @typescript-eslint/naming-convention
-          'fr-table--no-scroll': !scrollable,
+          'fr-table--multiline': multiline,
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          'fr-table--no-scroll': noScroll,
         })}
         id={id}>
         <div className="fr-table__wrapper">

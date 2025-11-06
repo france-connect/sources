@@ -13,7 +13,11 @@ import {
 import { LoggerService } from '@fc/logger';
 
 import { getLoggerMock } from '@mocks/logger';
-import { getRepositoryMock, resetRepositoryMock } from '@mocks/typeorm';
+import {
+  getQueryRunnerMock,
+  getRepositoryMock,
+  resetRepositoryMock,
+} from '@mocks/typeorm';
 
 import { PartnersServiceProviderInstanceService } from './partners-service-provider-instance.service';
 
@@ -25,6 +29,7 @@ describe('PartnersServiceProviderInstanceService', () => {
   const loggerServiceMock = getLoggerMock();
 
   const repositoryMock = getRepositoryMock();
+  let queryRunnerMock;
 
   const RelatedEntitiesHelperGetMock = jest.spyOn(RelatedEntitiesHelper, 'get');
 
@@ -66,6 +71,7 @@ describe('PartnersServiceProviderInstanceService', () => {
     );
 
     resetRepositoryMock(repositoryMock);
+    queryRunnerMock = getQueryRunnerMock();
   });
 
   it('should be defined', () => {
@@ -161,20 +167,89 @@ describe('PartnersServiceProviderInstanceService', () => {
     });
   });
 
+  describe('getByIdWithQueryRunner', () => {
+    it('should call queryRunner.manager.findOne', async () => {
+      // Given
+      queryRunnerMock.manager.findOne.mockResolvedValueOnce(
+        partnersServiceProvidersInstanceMock,
+      );
+
+      // When
+      await service.getByIdWithQueryRunner(queryRunnerMock, idMock);
+
+      // Then
+      expect(queryRunnerMock.manager.findOne).toHaveBeenCalledExactlyOnceWith(
+        PartnersServiceProviderInstance,
+        {
+          where: { id: idMock },
+          relations: ['versions'],
+          order: {
+            versions: {
+              createdAt: 'DESC',
+            },
+          },
+        },
+      );
+    });
+
+    it('should return le last version save for an instance', async () => {
+      // Given
+      queryRunnerMock.manager.findOne.mockResolvedValueOnce(
+        partnersServiceProvidersInstanceMock,
+      );
+
+      // When
+      const result = await service.getByIdWithQueryRunner(
+        queryRunnerMock,
+        idMock,
+      );
+
+      // Then
+      expect(result).toStrictEqual({
+        ...partnersServiceProvidersInstanceMock,
+        versions: [partnersServiceProvidersInstanceMock.versions[0]],
+      });
+    });
+
+    it('should return instance if no version found', async () => {
+      // Given
+      const partnersSPInstanceWithoutVersionMock = {
+        createdAt: '2022-02-21T23:00:00.000Z',
+        updatedAt: '2022-02-21T23:00:00.000Z',
+        id: idMock,
+        name: 'instance name',
+      };
+      queryRunnerMock.manager.findOne.mockResolvedValueOnce(
+        partnersSPInstanceWithoutVersionMock,
+      );
+
+      // When
+      const result = await service.getByIdWithQueryRunner(
+        queryRunnerMock,
+        idMock,
+      );
+
+      // Then
+      expect(result).toStrictEqual({ ...partnersSPInstanceWithoutVersionMock });
+    });
+  });
+
   describe('save', () => {
     it('should save instance', async () => {
       // Given
       const data = Symbol('data');
       const expected = Symbol('save result item');
-      repositoryMock.save.mockResolvedValue(expected);
+      queryRunnerMock.manager.execute.mockResolvedValueOnce({
+        raw: [expected],
+      });
 
       // When
       const result = await service.save(
+        queryRunnerMock,
         data as unknown as PartnersServiceProviderInstance,
       );
 
       // Then
-      expect(repositoryMock.save).toHaveBeenCalledExactlyOnceWith(data);
       expect(result).toBe(expected);
     });
   });

@@ -1,4 +1,15 @@
-import { IsEmail, IsOptional, IsString, IsUUID } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  IsArray,
+  IsEmail,
+  IsObject,
+  IsOptional,
+  IsString,
+  IsUUID,
+  ValidateNested,
+} from 'class-validator';
+
+import { FraudTrackDto } from './fraud-track.dto';
 
 export class FraudCaseDto {
   @IsUUID(4)
@@ -23,4 +34,11 @@ export class FraudCaseDto {
   @IsString()
   @IsOptional()
   phoneNumber?: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsObject({ each: true })
+  @ValidateNested({ each: true })
+  @Type(() => FraudTrackDto)
+  fraudTracks?: FraudTrackDto[];
 }

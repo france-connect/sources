@@ -5,6 +5,7 @@ import { defineConfig, globalIgnores } from 'eslint/config';
 import { baseConfig } from './configs/base.mjs';
 import { deprecatedConfig } from './configs/deprecated.mjs';
 import { jestConfig } from './configs/jest.mjs';
+import { jsonConfig } from './configs/json.mjs';
 import { jsxConfig } from './configs/jsx.mjs';
 import { legacyConfig } from './configs/legacy.mjs';
 import { typescriptConfig } from './configs/typescript.mjs';
@@ -31,6 +32,7 @@ export default defineConfig([
   typescriptConfig,
   jsxConfig,
   jestConfig,
+  jsonConfig,
   legacyConfig,
   deprecatedConfig,
 ]);

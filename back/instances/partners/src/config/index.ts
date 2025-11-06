@@ -12,6 +12,8 @@ import OidcClient from './oidc-client';
 import Postgres from './postgres';
 import Redis from './redis';
 import Session from './session';
+import WebhooksDatapass from './webhooks-datapass';
+import WebhooksInvitation from './webhooks-invitation';
 
 export default {
   App,
@@ -26,4 +28,6 @@ export default {
   I18n,
   ConfigSandboxLowMicroService,
   DefaultServiceProviderLowValue,
+  WebhooksDatapass,
+  WebhooksInvitation,
 } as PartnersConfig;

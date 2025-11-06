@@ -1,12 +1,15 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
+import Provider from 'oidc-provider';
 
 import { HttpAdapterHost } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger';
 import { OidcSession } from '@fc/oidc';
 import { RedisService } from '@fc/redis';
 
+import { getConfigMock } from '@mocks/config';
 import { getLoggerMock } from '@mocks/logger';
 import { getRedisServiceMock } from '@mocks/redis';
 
@@ -15,7 +18,6 @@ import {
   OidcProviderMiddlewareStep,
 } from './enums';
 import {
-  OidcProviderBindingException,
   OidcProviderInitialisationException,
   OidcProviderInteractionNotFoundException,
   OidcProviderRuntimeException,
@@ -29,7 +31,11 @@ describe('OidcProviderService', () => {
   let service: OidcProviderService;
 
   const loggerMock = getLoggerMock();
+  const configMock = getConfigMock();
 
+  const configDataMock = {
+    configuration: { jwks: { keys: [] } },
+  };
   const httpAdapterHostMock = {
     httpAdapter: {
       use: jest.fn(),
@@ -58,6 +64,7 @@ describe('OidcProviderService', () => {
     configuration: {
       adapter: oidcProviderRedisAdapterMock,
       jwks: { keys: [] },
+      timeout: 1234,
       features: {
         devInteractions: { enabled: false },
       },
@@ -123,6 +130,7 @@ describe('OidcProviderService', () => {
           provide: OIDC_PROVIDER_CONFIG_APP_TOKEN,
           useValue: oidcProviderConfigAppMock,
         },
+        ConfigService,
       ],
     })
       .overrideProvider(LoggerService)
@@ -135,6 +143,8 @@ describe('OidcProviderService', () => {
       .useValue(oidcProviderErrorServiceMock)
       .overrideProvider(OidcProviderConfigService)
       .useValue(oidcProviderConfigServiceMock)
+      .overrideProvider(ConfigService)
+      .useValue(configServiceMock)
       .compile();
 
     service = module.get<OidcProviderService>(OidcProviderService);
@@ -154,6 +164,8 @@ describe('OidcProviderService', () => {
     serviceProviderServiceMock.getList.mockResolvedValue(
       serviceProviderListMock,
     );
+
+    configMock.get.mockReturnValue(configDataMock);
   });
 
   it('should be defined', () => {
@@ -171,6 +183,14 @@ describe('OidcProviderService', () => {
       // Then / When
       expect(() => service.init()).toThrow(OidcProviderInitialisationException);
     });
+
+    it('should set provider, with proxy = true', () => {
+      // When
+      service.init();
+
+      // Then
+      expect(service['provider'].proxy).toBe(true);
+    });
   });
 
   describe('onModuleInit', () => {
@@ -185,36 +205,24 @@ describe('OidcProviderService', () => {
       });
       service['registerMiddlewares'] = jest.fn();
       service['catchErrorEvents'] = jest.fn();
+      service['init'] = jest.fn();
     });
 
-    it('should mount oidc-provider in express', () => {
+    it('should call init', () => {
       // When
       service.onModuleInit();
-      // Then
-      expect(httpAdapterHostMock.httpAdapter.use).toHaveBeenCalledTimes(1);
-      /**
-       * Sadly we can't test `toHaveBeenCalledWith(service['provider'].callback)`
-       * since `̀Provider.callback` is a getter that returns an anonymous function
-       */
-    });
 
-    it('should throw if provider can not be mounted to server', () => {
-      // Given
-      service['ProviderProxy'] = ProviderProxyMock;
-      httpAdapterHostMock.httpAdapter.use.mockImplementation(() => {
-        throw Error('not working');
-      });
       // Then
-      expect(() => service.onModuleInit()).toThrow(
-        OidcProviderBindingException,
-      );
+      expect(service['init']).toHaveBeenCalledTimes(1);
     });
 
     it('should call several internal initializers', () => {
       // Given
       service['ProviderProxy'] = ProviderProxyMock;
+
       // When
       service.onModuleInit();
+
       // Then
       expect(service['errorService']['catchErrorEvents']).toHaveBeenCalledTimes(
         1,
@@ -223,9 +231,12 @@ describe('OidcProviderService', () => {
 
     it('should call setProvider to allow oidcProviderConfigApp to retrieve this.provider ', () => {
       // Given
-      service['ProviderProxy'] = ProviderProxyMock;
+      const providerMock = {};
+
+      service['provider'] = providerMock as unknown as Provider;
       // When
       service.onModuleInit();
+
       // Then
       expect(
         oidcProviderConfigAppMock.setProvider,
@@ -237,8 +248,76 @@ describe('OidcProviderService', () => {
     it('should return the oidc-provider instance', () => {
       // When
       const result = service.getProvider();
+
       // Then
       expect(result).toBe(service['provider']);
+    });
+  });
+
+  describe('callback', () => {
+    const reqMock = {
+      originalUrl: '/api/callback',
+      url: '/api/callback',
+    } as Request;
+    const resMock = {} as Response;
+    const callbackFunction = jest.fn();
+    const callbackResult = Symbol('callbackResult');
+
+    beforeEach(() => {
+      providerMock.callback.mockReturnValue(callbackFunction);
+      callbackFunction.mockReturnValue(callbackResult);
+    });
+
+    it('should call callack with modified url', async () => {
+      // When
+      await service.callback(reqMock, resMock);
+
+      // Then
+      expect(callbackFunction).toHaveBeenCalledWith(
+        expect.objectContaining({
+          url: '/callback',
+        }),
+        resMock,
+      );
+    });
+
+    it('should return the result of provider.callback', async () => {
+      // When
+      const result = await service.callback(reqMock, resMock);
+
+      // Then
+      expect(result).toBe(callbackResult);
+    });
+  });
+
+  describe('fetch', () => {
+    it('should set AbortSignal.timeout with configuration timeout and call global fetch', async () => {
+      // Given
+      const signalMock = Symbol('signalMock') as unknown as AbortSignal;
+      const fetchResult = Symbol(
+        'fetchResult',
+      ) as unknown as globalThis.Response;
+
+      const timeoutSpy = jest
+        .spyOn(AbortSignal, 'timeout')
+        .mockReturnValueOnce(signalMock);
+
+      const fetchSpy = jest
+        .spyOn(globalThis, 'fetch')
+        .mockResolvedValueOnce(fetchResult);
+
+      const url = 'https://example.com/resource';
+      const options: RequestInit = { method: 'GET' };
+      service['configuration'] = { timeout: 1234 };
+
+      // When
+      const result = await service['fetch'](url, options);
+
+      // Then
+      expect(timeoutSpy).toHaveBeenCalledWith(1234);
+      expect(options.signal).toBe(signalMock);
+      expect(fetchSpy).toHaveBeenCalledWith(url, options);
+      expect(result).toBe(fetchResult);
     });
   });
 
@@ -537,25 +616,6 @@ describe('OidcProviderService', () => {
     });
   });
 
-  describe('getHttpOptions', () => {
-    const timeoutMock = 42;
-    it('should return the timeout http options', () => {
-      // Given
-      const options = {
-        timeout: timeoutMock,
-      };
-
-      service['configuration'] = options;
-
-      // When
-      const result = service['getHttpOptions'](options);
-      // Then
-      expect(result).toStrictEqual({
-        timeout: timeoutMock,
-      });
-    });
-  });
-
   describe('getInteraction', () => {
     it('should return the result of oidc-provider.interactionDetails()', async () => {
       // Given
@@ -670,6 +730,16 @@ describe('OidcProviderService', () => {
         sessionDataMock,
         sessionIdMock,
       );
+    });
+  });
+
+  describe('getJwks', () => {
+    it('should return the jwks from the configuration', () => {
+      // When
+      const result = service.getJwks();
+
+      // Then
+      expect(result).toBe(configOidcProviderMock.configuration.jwks);
     });
   });
 

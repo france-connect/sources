@@ -35,6 +35,11 @@ const blackout = [
   {
     selector: '[data-testid="connection-notification-browsing-session-id"]',
   },
+  {
+    selector:
+      '[data-testid="TrackCardConnexionDetailsComponent-connection-datetime-label"]',
+    width: 200,
+  },
 ];
 const blackoutDiv = (width) => {
   const style = width ? ` style="width: ${width}px"` : '';

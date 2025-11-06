@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 
 import { useScrollTo } from '@fc/common';
 import { CreateInstanceButton, InstancesListComponent } from '@fc/core-partners';
-import { AlertComponent, Sizes, TileComponent } from '@fc/dsfr';
+import { AlertComponent, LinkEmailComponent, Sizes, TileComponent } from '@fc/dsfr';
 import { SeeAlsoElement } from '@fc/forms';
 import { t } from '@fc/i18n';
 
@@ -17,7 +17,7 @@ export const InstancesPage = React.memo(() => {
   }, [submitState, scrollToTop]);
 
   return (
-    <div className="fr-col-12 fr-col-md-6">
+    <div className="fr-col-12 fr-col-lg-10 fr-col-xl-8">
       <div className="fr-col-12">
         <h1 data-testid="instances-page-title">{t('Partners.homepage.sandboxTitle')}</h1>
         <p>
@@ -28,14 +28,31 @@ export const InstancesPage = React.memo(() => {
           />
         </p>
       </div>
+      <div className="fr-col-12 fr-mb-3w fr-mt-5w">
+        <AlertComponent title="Vous ne trouvez pas l’instance de votre fournisseur de service, bien que la demande de création ait été faite via Démarches Simplifiées ?">
+          <ul>
+            <li>
+              Si vous n’aviez pas renseigné de numéro d’habilitation (Datapass), nous vous invitons
+              à créer une nouvelle instance depuis cet espace.
+            </li>
+            <li>
+              Si vous aviez saisi un numéro de demande d’habilitation, vous pouvez soit contacter le
+              support partenaire à l’adresse{' '}
+              <LinkEmailComponent email="support.partenaires@franceconnect.gouv.fr" />, soit créer à
+              nouveau votre instance depuis cet espace.
+            </li>
+          </ul>
+        </AlertComponent>
+      </div>
       {submitState && (
-        <AlertComponent
-          className="fr-mb-3w"
-          dataTestId="instances-page-alert-top"
-          title={t(submitState.message)}
-          type={submitState.type}
-          onClose={closeAlertHandler}
-        />
+        <div className="fr-col-12 fr-mb-3w">
+          <AlertComponent
+            dataTestId="instances-page-alert-top"
+            title={t(submitState.message)}
+            type={submitState.type}
+            onClose={closeAlertHandler}
+          />
+        </div>
       )}
       {hasItems && (
         <React.Fragment>

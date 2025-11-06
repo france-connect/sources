@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="fr-FR" data-fr-scheme="light">
+  <%- include("includes/head") %>
+  <body>
+    <div class="fc-sticky-wrapper">
+      <div class="fc-sticky-body">
+        <%- include('includes/header.ejs') %>
+        <main>
+          <div class="fr-container fr-container-main fr-mt-4v">
+            <h2>Déclencher un appel webhook</h2>
+            <form method="POST" action="/webhook">
+              <input
+                class="fr-btn"
+                type="submit"
+                name="event"
+                id="btn-create"
+                value="create"
+              />
+              <input
+                class="fr-btn"
+                type="submit"
+                name="event"
+                id="btn-update"
+                value="update"
+              />
+              <input
+                class="fr-btn"
+                type="submit"
+                name="event"
+                id="btn-submit"
+                value="submit"
+              />
+              <input
+                class="fr-btn"
+                type="submit"
+                name="event"
+                id="btn-refuse"
+                value="refuse"
+              />
+              <input
+                class="fr-btn"
+                type="submit"
+                name="event"
+                id="btn-revoke"
+                value="revoke"
+              />
+              <input
+                class="fr-btn"
+                type="submit"
+                name="event"
+                id="btn-request_changes"
+                value="request_changes"
+              />
+              <input
+                class="fr-btn"
+                type="submit"
+                name="event"
+                id="btn-archive"
+                value="archive"
+              />
+              <input
+                class="fr-btn"
+                type="submit"
+                name="event"
+                id="btn-approve"
+                value="approve"
+              />
+              <input
+                class="fr-btn"
+                type="submit"
+                name="event"
+                id="btn-reopen"
+                value="reopen"
+              />
+              <input
+                class="fr-btn"
+                type="submit"
+                name="event"
+                id="btn-cancel_reopening"
+                value="cancel_reopening"
+              />
+              <input
+                class="fr-btn"
+                type="submit"
+                name="event"
+                id="btn-transfer"
+                value="transfer"
+              />
+            </form>
+          </div>
+        </main>
+      </div>
+    </div>
+    <%- include("includes/footer") %>
+  </body>
+</html>

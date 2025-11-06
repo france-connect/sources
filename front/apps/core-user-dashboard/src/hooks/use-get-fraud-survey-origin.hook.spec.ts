@@ -6,13 +6,9 @@ import { useGetFraudSurveyOrigin } from './use-get-fraud-survey-origin.hook';
 
 describe('useGetFraudSurveyOrigin', () => {
   // Given
-  const options: FraudConfigInterface = {
-    apiRouteFraudForm: 'any-route',
-    fraudSupportFormPathname: 'any-pathname',
-    fraudSurveyUrl: 'any-url',
-    supportFormUrl: 'any-url',
+  const options = {
     surveyOriginQueryParam: 'any-param',
-  };
+  } as unknown as FraudConfigInterface;
 
   const nowMock = 1860000;
 

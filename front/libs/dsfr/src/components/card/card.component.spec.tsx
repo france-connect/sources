@@ -50,27 +50,52 @@ describe('CardComponent', () => {
     expect(container).toMatchSnapshot();
   });
 
-  it('should optionnal classnames on the main container', () => {
-    // When
-    const { container } = render(
-      <CardComponent
-        enlargeLink
-        isHorizontal
-        background={CardBackgrounds.SHADOW}
-        className="any-classname-mock"
-        size={Sizes.LARGE}
-        title="Card title mock">
-        any description text treat as children
-      </CardComponent>,
-    );
-    const element = container.firstChild;
+  describe('className', () => {
+    it('should render classnames on the main container when className is a string', () => {
+      // When
+      const { container } = render(
+        <CardComponent
+          enlargeLink
+          isHorizontal
+          background={CardBackgrounds.SHADOW}
+          className="any-classname-mock"
+          size={Sizes.LARGE}
+          title="Card title mock">
+          any description text treat as children
+        </CardComponent>,
+      );
+      const element = container.firstChild;
 
-    // Then
-    expect(element).toHaveClass('fr-enlarge-link');
-    expect(element).toHaveClass('fr-card--horizontal');
-    expect(element).toHaveClass('fr-card--shadow');
-    expect(element).toHaveClass('any-classname-mock');
-    expect(element).toHaveClass('fr-card--lg');
+      // Then
+      expect(element).toHaveClass('fr-enlarge-link');
+      expect(element).toHaveClass('fr-card--horizontal');
+      expect(element).toHaveClass('fr-card--shadow');
+      expect(element).toHaveClass('any-classname-mock');
+      expect(element).toHaveClass('fr-card--lg');
+    });
+
+    it('should be an object with container, title and description properties', () => {
+      // When
+      const { container, getByTestId } = render(
+        <CardComponent
+          className={{
+            container: 'any-classname-container-mock',
+            description: 'any-classname-description-mock',
+            title: 'any-classname-title-mock',
+          }}
+          title="Card title mock">
+          any description text treat as children
+        </CardComponent>,
+      );
+      const element = container.firstChild;
+      const titleElt = getByTestId('CardComponent-title');
+      const descriptionElt = getByTestId('CardComponent-description');
+
+      // Then
+      expect(element).toHaveClass('any-classname-container-mock');
+      expect(titleElt).toHaveClass('any-classname-title-mock');
+      expect(descriptionElt).toHaveClass('any-classname-description-mock');
+    });
   });
 
   it('should render the heading tag with a link and the title', () => {

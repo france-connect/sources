@@ -4,38 +4,65 @@
 
 ## Instances index
 
-1. [command-runner-instance](#command-runner-instance)
-2. [core-fcp-high](#core-fcp-high)
-3. [core-fcp-low](#core-fcp-low)
-4. [csmr-account-instance](#csmr-account-instance)
-5. [csmr-config-partners](#csmr-config-partners)
-6. [csmr-config-sandbox-low](#csmr-config-sandbox-low)
-7. [csmr-fraud-instance](#csmr-fraud-instance)
-8. [csmr-hsm-high](#csmr-hsm-high)
-9. [csmr-import-core-instance](#csmr-import-core-instance)
-10. [csmr-tracks-instance](#csmr-tracks-instance)
-11. [csmr-user-preferences-high](#csmr-user-preferences-high)
-12. [eidas-bridge](#eidas-bridge)
-13. [mock-data-provider](#mock-data-provider)
-14. [mock-identity-provider-fcp-high](#mock-identity-provider-fcp-high)
-15. [mock-identity-provider-fcp-low](#mock-identity-provider-fcp-low)
-16. [mock-proconnect](#mock-proconnect)
-17. [mock-rnipp](#mock-rnipp)
-18. [mock-service-provider-fcp-high](#mock-service-provider-fcp-high)
-19. [mock-service-provider-fcp-legacy](#mock-service-provider-fcp-legacy)
-20. [mock-service-provider-fcp-low](#mock-service-provider-fcp-low)
-21. [partners](#partners)
-22. [user-dashboard](#user-dashboard)
+1. [command-import-sp-sandbox](#command-import-sp-sandbox)
+2. [command-runner-instance](#command-runner-instance)
+3. [core-fcp-high](#core-fcp-high)
+4. [core-fcp-low](#core-fcp-low)
+5. [csmr-account-instance](#csmr-account-instance)
+6. [csmr-config-partners](#csmr-config-partners)
+7. [csmr-config-sandbox-low](#csmr-config-sandbox-low)
+8. [csmr-fraud-instance](#csmr-fraud-instance)
+9. [csmr-hsm-high](#csmr-hsm-high)
+10. [csmr-import-core-instance](#csmr-import-core-instance)
+11. [csmr-tracks-instance](#csmr-tracks-instance)
+12. [csmr-user-preferences-high](#csmr-user-preferences-high)
+13. [eidas-bridge](#eidas-bridge)
+14. [mock-data-provider](#mock-data-provider)
+15. [mock-datapass-instance](#mock-datapass-instance)
+16. [mock-identity-provider-fcp-high](#mock-identity-provider-fcp-high)
+17. [mock-identity-provider-fcp-low](#mock-identity-provider-fcp-low)
+18. [mock-proconnect](#mock-proconnect)
+19. [mock-rnipp](#mock-rnipp)
+20. [mock-service-provider-fcp-high](#mock-service-provider-fcp-high)
+21. [mock-service-provider-fcp-legacy](#mock-service-provider-fcp-legacy)
+22. [mock-service-provider-fcp-low](#mock-service-provider-fcp-low)
+23. [partners](#partners)
+24. [user-dashboard](#user-dashboard)
 
 ## Variables
 
+
+### command-import-sp-sandbox
+
+| Var Name | Inferred type |
+|---|---|
+| AdapterMongo_CLIENT_SECRET_CIPHER_PASS | string |
+| AdapterMongo_PLATFORM | string |
+| App_DS_CSV_PATH | string |
+| App_ENVIRONMENT | string |
+| App_INVITATION_ENDPOINT | string |
+| App_TEST_EMAIL | string |
+| App_TEST_INSTANCE_ID | string |
+| Logger_THRESHOLD | string |
+| MicroserviceConfigSandboxLow_MESSAGE_TTL | number |
+| MicroserviceConfigSandboxLow_QUEUE | string |
+| MicroserviceConfigSandboxLow_URLS | json |
+| Mongoose_DATABASE | string |
+| Mongoose_HOSTS | string |
+| Mongoose_PASSWORD | string |
+| Mongoose_TLS | boolean |
+| Mongoose_TLS_ALLOW_INVALID_HOST_NAME | boolean |
+| Mongoose_TLS_CA_FILE | string |
+| Mongoose_TLS_INSECURE | boolean |
+| Mongoose_USER | string |
+| REQUEST_TIMEOUT | string |
+| WebhooksInvitation_SECRET | string |
 
 ### command-runner-instance
 
 | Var Name | Inferred type |
 |---|---|
 | App_ENVIRONMENT | string |
-| App_NAME | string |
 | Logger_THRESHOLD | string |
 
 ### core-fcp-high
@@ -45,6 +72,7 @@
 | AdapterMongo_CLIENT_SECRET_CIPHER_PASS | string |
 | AdapterMongo_DECRYPT_CLIENT_SECRET_FEATURE | boolean |
 | AdapterMongo_DISABLE_IDP_VALIDATION_ON_LEGACY | boolean |
+| AdapterMongo_URL_REQUIRE_TLD | boolean |
 | App_ASSETS_CACHE_TTL | number |
 | App_ASSETS_PATHS | json |
 | App_DSFR_ASSETS_PATHS | json |
@@ -92,11 +120,10 @@
 | OidcClient_JWKS_ENC_ECDH_ES_PRIV_KEYS | json |
 | OidcClient_SCOPE | string |
 | OidcProvider_COOKIES_KEYS | json |
-| OidcProvider_CRYPTO_SIG_FAKE_PRIV_KEYS | json |
 | OidcProvider_ERROR_URI_BASE | string |
-| OidcProvider_IS_LOCALHOST_ALLOWED | boolean |
+| OidcProvider_HSM_PUB_KEYS | json |
 | OidcProvider_PREFIX | string |
-| OverrideOidcProvider_CRYPTO_SIG_HSM_PUB_KEYS | json |
+| OidcProvider_URL_REQUIRE_TLD | boolean |
 | REQUEST_TIMEOUT | string |
 | Redis_CACERT | file |
 | Redis_DB | number |
@@ -122,6 +149,7 @@
 | AdapterMongo_DECRYPT_CLIENT_SECRET_FEATURE | boolean |
 | AdapterMongo_DISABLE_IDP_VALIDATION_ON_LEGACY | boolean |
 | AdapterMongo_PLATFORM | string |
+| AdapterMongo_URL_REQUIRE_TLD | boolean |
 | App_AIDANTS_CONNECT_UID | string |
 | App_ASSETS_CACHE_TTL | number |
 | App_ASSETS_PATHS | json |
@@ -169,10 +197,9 @@
 | OidcProvider_CRYPTO_SIG_ES256_PRIV_KEYS | json |
 | OidcProvider_CRYPTO_SIG_RS256_PRIV_KEYS | json |
 | OidcProvider_ERROR_URI_BASE | string |
-| OidcProvider_IS_LOCALHOST_ALLOWED | boolean |
 | OidcProvider_PREFIX | string |
+| OidcProvider_URL_REQUIRE_TLD | boolean |
 | OidcProvider_USE_ENCRYPTION | string |
-| OverrideOidcProvider_CRYPTO_SIG_HSM_PUB_KEYS | json |
 | REQUEST_TIMEOUT | string |
 | Redis_CACERT | file |
 | Redis_DB | number |
@@ -214,7 +241,6 @@
 
 | Var Name | Inferred type |
 |---|---|
-| APP_NAME | string |
 | App_ENVIRONMENT | string |
 | ConfigBroker_MESSAGE_TTL | number |
 | ConfigBroker_QUEUE | string |
@@ -264,7 +290,6 @@
 
 | Var Name | Inferred type |
 |---|---|
-| APP_NAME | string |
 | AccountHighBroker_MESSAGE_TTL | number |
 | AccountHighBroker_QUEUE | string |
 | AccountHighBroker_URLS | json |
@@ -281,6 +306,7 @@
 | FraudBroker_MESSAGE_TTL | number |
 | FraudBroker_QUEUE | string |
 | FraudBroker_URLS | json |
+| Idp_MAPPINGS | json |
 | Logger_THRESHOLD | string |
 | Mailer_HOST | string |
 | Mailer_PORT | number |
@@ -294,7 +320,6 @@
 
 | Var Name | Inferred type |
 |---|---|
-| APP_NAME | string |
 | App_ENVIRONMENT | string |
 | CryptographyBroker_MESSAGE_TTL | number |
 | CryptographyBroker_QUEUE | string |
@@ -311,7 +336,6 @@
 
 | Var Name | Inferred type |
 |---|---|
-| APP_NAME | string |
 | AdapterMongo_CLIENT_SECRET_CIPHER_PASS | string |
 | App_ENVIRONMENT | string |
 | CryptographyBroker_MESSAGE_TTL | number |
@@ -337,7 +361,6 @@
 
 | Var Name | Inferred type |
 |---|---|
-| APP_NAME | string |
 | AccountHighBroker_MESSAGE_TTL | number |
 | AccountHighBroker_QUEUE | string |
 | AccountHighBroker_URLS | json |
@@ -360,7 +383,6 @@
 
 | Var Name | Inferred type |
 |---|---|
-| APP_NAME | string |
 | AdapterMongo_CLIENT_SECRET_CIPHER_PASS | string |
 | AdapterMongo_DECRYPT_CLIENT_SECRET_FEATURE | boolean |
 | AdapterMongo_DISABLE_IDP_VALIDATION_ON_LEGACY | boolean |
@@ -446,11 +468,10 @@
 | OidcClient_HTTPS_CLIENT_KEY | file |
 | OidcClient_JWKS | json |
 | OidcProvider_COOKIES_KEYS | json |
-| OidcProvider_CRYPTO_SIG_FAKE_PRIV_KEYS | json |
+| OidcProvider_CRYPTO_SIG_ES256_PRIV_KEYS | json |
 | OidcProvider_ERROR_URI_BASE | string |
 | OidcProvider_ISSUER | string |
 | OidcProvider_PREFIX | string |
-| OverrideOidcProvider_CRYPTO_SIG_HSM_PUB_KEYS | json |
 | REQUEST_TIMEOUT | string |
 | Redis_CACERT | file |
 | Redis_DB | number |
@@ -505,6 +526,21 @@
 | DataProviderAdapterCore_JWKS | json |
 | DataProviderAdapterCore_JWKS_ENDPOINT | string |
 | Logger_THRESHOLD | string |
+
+### mock-datapass-instance
+
+| Var Name | Inferred type |
+|---|---|
+| App_ASSETS_CACHE_TTL | number |
+| App_ASSETS_PATHS | json |
+| App_DSFR_ASSETS_PATHS | json |
+| App_ENVIRONMENT | string |
+| App_HTTPS_SERVER_CERT | file |
+| App_HTTPS_SERVER_KEY | file |
+| App_VIEWS_PATHS | json |
+| App_WEBHOOK_URL | string |
+| Logger_THRESHOLD | string |
+| WebhooksDatapass_SECRET | string |
 
 ### mock-identity-provider-fcp-high
 
@@ -801,7 +837,6 @@
 | App_HTTPS_SERVER_CERT | file |
 | App_HTTPS_SERVER_KEY | file |
 | App_IDP_ID | string |
-| App_NAME | string |
 | FQDN | string |
 | IdentityProviderAdapterEnv_CLIENT_ID | string |
 | IdentityProviderAdapterEnv_CLIENT_SECRET | string |
@@ -852,6 +887,8 @@
 | Redis_SENTINEL_PASSWORD | string |
 | Session_COOKIE_SECRETS | json |
 | Session_ENCRYPTION_KEY | string |
+| WebhooksDatapass_SECRET | string |
+| WebhooksInvitation_SECRET | string |
 
 ### user-dashboard
 

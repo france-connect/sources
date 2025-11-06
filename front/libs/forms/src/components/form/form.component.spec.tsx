@@ -15,6 +15,8 @@ describe('FormComponent', () => {
     const configMock = {
       description: 'any-description-mock',
       id: 'any-id-mock',
+      noRequired: false,
+      scrollTopOnSubmit: true,
       title: 'any-title-mock',
     };
 
@@ -35,13 +37,10 @@ describe('FormComponent', () => {
     expect(Form).toHaveBeenCalledWith(
       {
         children: expect.any(Function),
-        config: configMock,
         decorators: undefined,
         initialValues: { any: 'initial-value-mock' },
         mutators: expect.anything(),
-        noRequired: false,
         onSubmit: submitMock,
-        scrollTopOnSubmit: true,
         validate: validateMock,
       },
       undefined,
@@ -51,9 +50,8 @@ describe('FormComponent', () => {
       expect.objectContaining({
         children: childrenMock,
         config: configMock,
-        noRequired: false,
-        scrollTopOnSubmit: true,
       }),
+      undefined,
     );
   });
 
@@ -61,22 +59,22 @@ describe('FormComponent', () => {
     // Given
     const submitMock = jest.fn();
     const validateMock = jest.fn();
+    const submitLabelMock = 'any-submit-label-mock';
     const childrenMock = <div>any-children-mock</div>;
     const configMock = {
       description: 'any-description-mock',
       id: 'any-id-mock',
+      noRequired: true,
+      scrollTopOnSubmit: false,
+      submitLabel: submitLabelMock,
       title: 'any-title-mock',
     };
-    const submitLabelMock = 'any-submit-label-mock';
 
     // When
     const { container } = render(
       <FormComponent
-        noRequired
         config={configMock}
         initialValues={{ any: 'initial-value-mock' }}
-        scrollTopOnSubmit={false}
-        submitLabel={submitLabelMock}
         onSubmit={submitMock}
         onValidate={validateMock}>
         {childrenMock}
@@ -89,13 +87,10 @@ describe('FormComponent', () => {
     expect(Form).toHaveBeenCalledWith(
       {
         children: expect.any(Function),
-        config: configMock,
         decorators: undefined,
         initialValues: { any: 'initial-value-mock' },
         mutators: expect.anything(),
-        noRequired: true,
         onSubmit: submitMock,
-        scrollTopOnSubmit: false,
         validate: validateMock,
       },
       undefined,
@@ -105,10 +100,8 @@ describe('FormComponent', () => {
       expect.objectContaining({
         children: childrenMock,
         config: configMock,
-        noRequired: true,
-        scrollTopOnSubmit: false,
-        submitLabel: submitLabelMock,
       }),
+      undefined,
     );
   });
 });

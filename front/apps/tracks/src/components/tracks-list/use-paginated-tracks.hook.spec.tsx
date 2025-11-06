@@ -1,4 +1,4 @@
-import { act, renderHook, waitFor } from '@testing-library/react';
+import { renderHook, waitFor } from '@testing-library/react';
 import type { AxiosResponse } from 'axios';
 import type { Location } from 'react-router';
 import { useLocation } from 'react-router';
@@ -54,11 +54,9 @@ describe('usePaginatedTracks', () => {
     it('should call axios.get with formatted endpoint based on query params', async () => {
       // When
       renderHook(() => usePaginatedTracks());
-      act(() => {
-        jest.mocked(useLocation).mockReturnValueOnce({
-          search: '?size=2&offset=30',
-        } as Location);
-      });
+      jest.mocked(useLocation).mockReturnValueOnce({
+        search: '?size=2&offset=30',
+      } as Location);
 
       // Then
       await waitFor(() => {

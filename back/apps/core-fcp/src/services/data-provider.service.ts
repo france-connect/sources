@@ -1,5 +1,4 @@
 import { ValidatorOptions } from 'class-validator';
-import { JSONWebKeySet } from 'jose';
 
 import { HttpStatus, Injectable } from '@nestjs/common';
 
@@ -17,7 +16,7 @@ import { CryptographyFcpService } from '@fc/cryptography-fcp';
 import { DataProviderMetadata } from '@fc/data-provider-adapter-mongo';
 import { JwtService } from '@fc/jwt';
 import { AccessToken, atHashFromAccessToken, stringToArray } from '@fc/oidc';
-import { OidcProviderConfig } from '@fc/oidc-provider';
+import { OidcProviderConfig, OidcProviderService } from '@fc/oidc-provider';
 import { OidcProviderRedisAdapter } from '@fc/oidc-provider/adapters';
 import { RedisService } from '@fc/redis';
 import { RnippPivotIdentity } from '@fc/rnipp';
@@ -36,6 +35,7 @@ export class DataProviderService {
     private readonly redis: RedisService,
     private readonly session: SessionService,
     private readonly cryptographyFcp: CryptographyFcpService,
+    private readonly oidcProvider: OidcProviderService,
   ) {}
 
   async checkRequestValid(
@@ -199,16 +199,10 @@ export class DataProviderService {
     payload: DpJwtPayloadInterface,
     dataProvider: DataProviderMetadata,
   ): Promise<string> {
-    const { checktoken_signed_response_alg: signingAlgorithm } = dataProvider;
+    const { issuer } = this.config.get<OidcProviderConfig>('OidcProvider');
 
-    const { issuer, configuration } =
-      this.config.get<OidcProviderConfig>('OidcProvider');
+    const signingKey = this.getSigningKey(dataProvider);
 
-    const signingKey = this.jwt.getFirstRelevantKey(
-      configuration.jwks as JSONWebKeySet, // Types are incompatible for now, @todo see if we can fix this without side effect
-      signingAlgorithm,
-      Use.SIG,
-    );
     const jws = await this.jwt.sign(
       payload,
       issuer,
@@ -217,6 +211,20 @@ export class DataProviderService {
     );
 
     return jws;
+  }
+
+  private getSigningKey(dataProvider: DataProviderMetadata) {
+    const { checktoken_signed_response_alg: signingAlgorithm } = dataProvider;
+
+    const jwks = this.oidcProvider.getJwks();
+
+    const signingKey = this.jwt.getFirstRelevantKey(
+      jwks,
+      signingAlgorithm,
+      Use.SIG,
+    );
+
+    return signingKey;
   }
 
   private async generateJwe(

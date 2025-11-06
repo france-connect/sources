@@ -4,4 +4,5 @@ export enum Strings {
   DASH = '-',
   WHITE_SPACE = ' ',
   SLASH = '/',
+  NBSP_UNICODE = '\u00A0',
 }

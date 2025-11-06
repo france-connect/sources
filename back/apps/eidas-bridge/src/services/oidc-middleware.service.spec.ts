@@ -80,10 +80,10 @@ describe('OidcMiddlewareService', () => {
     jest.resetAllMocks();
   });
 
-  describe('onModuleInit()', () => {
+  describe('onApplicationBootstrap()', () => {
     it('should register middlewares', () => {
       // When
-      service.onModuleInit();
+      service.onApplicationBootstrap();
       // Then
       expect(oidcProviderServiceMock.registerMiddleware).toHaveBeenCalledTimes(
         4,

@@ -2,16 +2,16 @@ import React from 'react';
 
 import type { BaseAttributes } from '../../interfaces';
 
-interface DTO2SectionComponentProps {
+interface Dto2SectionComponentProps {
   field: BaseAttributes;
 }
 
-export const DTO2SectionComponent = React.memo(
-  ({ field: { label, name } }: DTO2SectionComponentProps) => (
-    <h3 className="fr-h6" data-testid={`DTO2SectionComponent-${name}-testid`}>
+export const Dto2SectionComponent = React.memo(
+  ({ field: { label, name } }: Dto2SectionComponentProps) => (
+    <h3 className="fr-h6" data-testid={`Dto2SectionComponent-${name}-testid`}>
       {label}
     </h3>
   ),
 );
 
-DTO2SectionComponent.displayName = 'DTO2SectionComponent';
+Dto2SectionComponent.displayName = 'Dto2SectionComponent';

@@ -41,7 +41,7 @@ describe('convertRegExpToStrings', () => {
     const validationArgsMock = [
       {
         max: 64,
-        min: 36,
+        min: 32,
       },
     ];
 

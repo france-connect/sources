@@ -1,46 +1,31 @@
 import { render } from '@testing-library/react';
-import { use } from 'react';
+import { useToggle } from 'usehooks-ts';
 
-import { ConfigService } from '@fc/config';
-import { StepperContext } from '@fc/dsfr';
-import type { SchemaFieldType } from '@fc/dto2form';
-import { useDto2Form } from '@fc/dto2form';
+import { HeadingTag, MessageTypes } from '@fc/common';
+import {
+  IdentityTheftReportFormComponent,
+  IdentityTheftReportHelpEventIdAccordionComponent,
+} from '@fc/core-user-dashboard';
+import { AlertComponent } from '@fc/dsfr';
+import { t } from '@fc/i18n';
 
 import { IdentityTheftReportAuthenticationEventIdPage } from './identity-theft-report-authentication-event-id.page';
 
-jest.mock('react', () => ({
-  ...jest.requireActual('react'),
-  use: jest.fn(),
-}));
-
 describe('IdentityTheftReportAuthenticationEventIdPage', () => {
-  const useMock = jest.mocked(use);
-
-  const configServiceMock = jest.mocked(ConfigService);
-  const handleClickMock = jest.fn();
-
-  const useDto2FormMock = jest.mocked(useDto2Form);
-  const configMock = {
-    IdentityTheftDescription: {},
-  };
-
-  const initialValuesMock = {};
-  const schemaMock = [] as SchemaFieldType[];
-  const submitHandlerMock = jest.fn();
-
-  const useDto2FormResult = {
-    initialValues: initialValuesMock,
-    schema: schemaMock,
-    submitHandler: submitHandlerMock,
-  };
+  // Given
+  const toggleHandlerMock = jest.fn();
+  const toggleValueMock = expect.any(Boolean);
 
   beforeEach(() => {
-    useMock.mockImplementation(() => ({
-      gotoNextStep: handleClickMock,
-    }));
-
-    useDto2FormMock.mockReturnValue(useDto2FormResult);
-    configServiceMock.get.mockReturnValue(configMock);
+    // Given
+    jest
+      .mocked(t)
+      .mockReturnValueOnce('IdentityTheftReport.codeIdentificationPage.title-mock')
+      .mockReturnValueOnce('IdentityTheftReport.codeIdentificationPage.alertTitle-mock')
+      .mockReturnValueOnce('IdentityTheftReport.codeIdentificationPage.alertContent-mock');
+    jest
+      .mocked(useToggle)
+      .mockReturnValue([toggleValueMock, toggleHandlerMock, expect.any(Function)]);
   });
 
   it('should match the snapshot', () => {
@@ -51,20 +36,64 @@ describe('IdentityTheftReportAuthenticationEventIdPage', () => {
     expect(container).toMatchSnapshot();
   });
 
-  it('should get the configuration for Dto2Form', () => {
+  it('should call the translations', () => {
     // When
     render(<IdentityTheftReportAuthenticationEventIdPage />);
 
     // Then
-    expect(ConfigService.get).toHaveBeenCalledExactlyOnceWith('Dto2Form');
+    expect(t).toHaveBeenCalledTimes(3);
+    expect(t).toHaveBeenNthCalledWith(1, 'IdentityTheftReport.codeIdentificationPage.title');
+    expect(t).toHaveBeenNthCalledWith(2, 'IdentityTheftReport.codeIdentificationPage.alertTitle');
+    expect(t).toHaveBeenNthCalledWith(3, 'IdentityTheftReport.codeIdentificationPage.alertContent');
   });
 
-  it('should use StepperContext', () => {
+  it('should render the title', () => {
+    // When
+    const { getByText } = render(<IdentityTheftReportAuthenticationEventIdPage />);
+    const titleElt = getByText('IdentityTheftReport.codeIdentificationPage.title-mock');
+
+    // Then
+    expect(titleElt).toBeInTheDocument();
+  });
+
+  it('should call the AlertComponent', () => {
+    // When
+    const { getByText } = render(<IdentityTheftReportAuthenticationEventIdPage />);
+    const contentElt = getByText('IdentityTheftReport.codeIdentificationPage.alertContent-mock');
+
+    // Then
+    expect(AlertComponent).toHaveBeenCalledExactlyOnceWith(
+      {
+        children: expect.any(Object),
+        heading: HeadingTag.H6,
+        title: 'IdentityTheftReport.codeIdentificationPage.alertTitle-mock',
+        type: MessageTypes.INFO,
+      },
+      undefined,
+    );
+    expect(contentElt).toBeInTheDocument();
+  });
+
+  it('should render IdentityTheftReportFormComponent with arguments', () => {
     // When
     render(<IdentityTheftReportAuthenticationEventIdPage />);
 
     // Then
-    expect(useMock).toHaveBeenCalledOnce();
-    expect(useMock).toHaveBeenCalledWith(StepperContext);
+    expect(IdentityTheftReportFormComponent).toHaveBeenCalledOnce();
+    expect(IdentityTheftReportFormComponent).toHaveBeenCalledWith(
+      {
+        id: 'IdentityTheftConnection',
+      },
+      undefined,
+    );
+  });
+
+  it('should render IdentityTheftReportHelpEventIdAccordionComponent', () => {
+    // When
+    render(<IdentityTheftReportAuthenticationEventIdPage />);
+
+    // Then
+    expect(IdentityTheftReportHelpEventIdAccordionComponent).toHaveBeenCalledOnce();
+    expect(IdentityTheftReportHelpEventIdAccordionComponent).toHaveBeenCalledWith({}, undefined);
   });
 });

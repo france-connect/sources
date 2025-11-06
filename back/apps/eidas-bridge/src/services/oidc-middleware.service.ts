@@ -26,7 +26,7 @@ export class OidcMiddlewareService {
     private readonly tracking: TrackingService,
   ) {}
 
-  onModuleInit() {
+  onApplicationBootstrap() {
     this.registerMiddleware(
       OidcProviderMiddlewareStep.BEFORE,
       OidcProviderRoutes.AUTHORIZATION,

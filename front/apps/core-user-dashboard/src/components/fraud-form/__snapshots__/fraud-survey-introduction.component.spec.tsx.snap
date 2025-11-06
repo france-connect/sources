@@ -7,13 +7,13 @@ exports[`FraudSurveyIntroductionComponent should match the snapshot 1`] = `
       class="fr-h3 fr-text-title--blue-france fr-mb-1w"
     >
       <b>
-        Je signale une usurpation
+        any-title-mock
       </b>
     </h1>
-    <p>
-      Vous recevez une alerte de connexion dont vous n’êtes pas à l’origine ?
-      <br />
-      Afin de vous protéger contre une éventuelle usurpation de votre identité, laissez-nous vous guider à sécuriser votre accès FranceConnect.
+    <p
+      class="is-whitespace-prewrap"
+    >
+      any-description-mock
     </p>
     <div>
       SimpleButton

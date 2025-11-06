@@ -5,7 +5,7 @@ import { useLocation } from 'react-router';
 import { ConfigService } from '@fc/config';
 import { get } from '@fc/http-client';
 
-import { Options } from '../../enums';
+import { TracksOptions } from '../../enums';
 import type { TracksConfig, UserDashboardTracks } from '../../interfaces';
 
 export const DEFAULT_SIZE = '10';
@@ -14,7 +14,7 @@ export const DEFAULT_OFFSET = '0';
 export const usePaginatedTracks = () => {
   const {
     endpoints: { tracks: tracksEndpoint },
-  } = ConfigService.get<TracksConfig>(Options.CONFIG_NAME);
+  } = ConfigService.get<TracksConfig>(TracksOptions.CONFIG_NAME);
 
   const { search } = useLocation();
   const [tracks, setTracks] = useState<UserDashboardTracks>({} as UserDashboardTracks);

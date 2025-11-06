@@ -1,4 +1,5 @@
 import { ToggleInput } from '@fc/dsfr';
+import { t } from '@fc/i18n';
 import { useStylesQuery, useStylesVariables } from '@fc/styles';
 import { renderWithFinalForm } from '@fc/testing-library';
 
@@ -23,6 +24,20 @@ describe('ServiceComponent', () => {
     // @NOTE used to prevent useStylesVariables.useStylesContext to throw
     // useStylesContext requires to be into a StylesProvider context
     jest.mocked(useStylesVariables).mockReturnValueOnce([expect.any(Number), expect.any(Number)]);
+    jest
+      .mocked(t)
+      .mockReturnValueOnce('any-idp-checked-mock')
+      .mockReturnValueOnce('any-idp-unchecked-mock');
+  });
+
+  it('should call t 2 times with correct params', () => {
+    // When
+    renderWithFinalForm(<ServiceComponent service={serviceMock} />);
+
+    // Then
+    expect(t).toHaveBeenCalledTimes(2);
+    expect(t).toHaveBeenNthCalledWith(1, 'UserPreferences.idp.checked');
+    expect(t).toHaveBeenNthCalledWith(2, 'UserPreferences.idp.unchecked');
   });
 
   it('should match the snapshot, in a desktop viewport', () => {
@@ -101,7 +116,7 @@ describe('ServiceComponent', () => {
         disabled: false,
         initialValue: serviceMock.isChecked,
         label: expect.any(Function),
-        legend: { checked: 'Autorisé', unchecked: 'Bloqué' },
+        legend: { checked: 'any-idp-checked-mock', unchecked: 'any-idp-unchecked-mock' },
         name: 'idpList.any-uid',
       }),
       undefined,

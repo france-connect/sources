@@ -1,12 +1,15 @@
 import React from 'react';
 
 import { useSafeContext } from '@fc/common';
+import { t } from '@fc/i18n';
 
 import { LayoutContext } from '../../../context';
 import type { LayoutContextState } from '../../../interfaces';
 
 export const LayoutHeaderMobileBurgerButton = React.memo(() => {
   const { menuIsOpened, toggleMenu } = useSafeContext<LayoutContextState>(LayoutContext);
+
+  const menuLabel = t('Layout.menu.label');
   return (
     <div className="fr-header__navbar">
       <button
@@ -16,9 +19,9 @@ export const LayoutHeaderMobileBurgerButton = React.memo(() => {
         data-fr-opened={menuIsOpened}
         data-testid="burger-button-mobile-menu"
         id="burger-button-mobile-menu"
-        title="Menu"
+        title={menuLabel}
         onClick={toggleMenu}>
-        Menu
+        {menuLabel}
       </button>
     </div>
   );

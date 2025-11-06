@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`IdentityTheftReportFormComponent should match the snapshot 1`] = `
+<div>
+  <div
+    class="fr-border-default--grey fr-mt-3w fr-p-3w"
+  >
+    <div
+      data-mockid="Dto2FormComponent"
+    />
+  </div>
+</div>
+`;

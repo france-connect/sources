@@ -1,1 +1,1 @@
-export * from './options.enum';
+export * from './user-preferences-options.enum';

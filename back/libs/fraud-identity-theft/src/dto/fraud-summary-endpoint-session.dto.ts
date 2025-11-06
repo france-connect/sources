@@ -1,5 +1,7 @@
 import { Type } from 'class-transformer';
-import { IsObject, ValidateNested } from 'class-validator';
+import { IsArray, IsObject, ValidateNested } from 'class-validator';
+
+import { FraudTrackDto } from '@fc/csmr-fraud-client';
 
 import { FraudConnectionSessionDto } from './fraud-connection-session.dto';
 import { FraudContactSessionDto } from './fraud-contact-session.dto';
@@ -16,6 +18,12 @@ export class FraudSummaryEndpointSessionDto {
   @ValidateNested()
   @Type(() => FraudConnectionSessionDto)
   connection: FraudConnectionSessionDto;
+
+  @IsArray()
+  @IsObject({ each: true })
+  @ValidateNested({ each: true })
+  @Type(() => FraudTrackDto)
+  fraudTracks: FraudTrackDto[];
 
   @IsObject()
   @ValidateNested()

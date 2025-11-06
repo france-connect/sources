@@ -1,3 +1,5 @@
+import { Request, Response } from 'express';
+
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { PartialExcept } from '@fc/common';
@@ -32,7 +34,8 @@ const oidcSessionDataMock: OidcSession = {
 describe('OidcProviderController', () => {
   let oidcProviderController: OidcProviderController;
 
-  const reqMock = {};
+  const reqMock = {} as Request;
+  const resMock = {} as Response;
 
   const loggerMock = getLoggerMock();
 
@@ -44,6 +47,7 @@ describe('OidcProviderController', () => {
     getProvider: () => providerMock,
     wellKnownKeys: jest.fn(),
     decodeAuthorizationHeader: jest.fn(),
+    callback: jest.fn(),
   };
 
   const serviceProviderServiceMock = {
@@ -93,93 +97,132 @@ describe('OidcProviderController', () => {
     jest.resetAllMocks();
   });
 
-  describe('getUserInfo()', () => {
-    it('should call identity service', () => {
-      // Given
-      const next = jest.fn();
-
+  describe('getAuthorize', () => {
+    it('should call oidcProvider.callback', async () => {
       // When
-      oidcProviderController.getUserInfo(next, reqMock);
+      await oidcProviderController.getAuthorize(reqMock, resMock);
+
       // Then
-      expect(next).toHaveBeenCalledTimes(1);
+      expect(oidcProviderServiceMock.callback).toHaveBeenCalledExactlyOnceWith(
+        reqMock,
+        resMock,
+      );
+    });
+  });
+
+  describe('getUserInfo()', () => {
+    it('should call identity service', async () => {
+      // When
+      await oidcProviderController.getUserInfo(reqMock, resMock);
+
+      // Then
+      expect(oidcProviderServiceMock.callback).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('getLogin()', () => {
     it('should call service.finishInteraction', async () => {
       // Given
-      const req = {};
-      const res = {};
       sessionServiceMock.get.mockReturnValueOnce(oidcSessionDataMock);
+
       // When
-      await oidcProviderController.getLogin(req, res, sessionServiceMock);
+      await oidcProviderController.getLogin(
+        reqMock,
+        resMock,
+        sessionServiceMock,
+      );
+
       // Then
       expect(oidcProviderConfigAppMock.finishInteraction).toHaveBeenCalledTimes(
         1,
       );
       expect(oidcProviderConfigAppMock.finishInteraction).toHaveBeenCalledWith(
-        req,
-        res,
+        reqMock,
+        resMock,
         oidcSessionDataMock,
       );
     });
   });
 
   describe('postToken()', () => {
-    it('should call next()', () => {
-      // Given
-      const next = jest.fn();
+    it('should call next()', async () => {
       // When
-      oidcProviderController.postToken(next, reqMock);
+      await oidcProviderController.postToken(reqMock, resMock);
+
       // Then
-      expect(next).toHaveBeenCalledTimes(1);
+      expect(oidcProviderServiceMock.callback).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('getEndSession()', () => {
-    it('should call logout service', () => {
+    it('should call logout service', async () => {
       // Given
-      const next = jest.fn();
       const queryMock = {} as LogoutParamsDto;
 
       // When
-      oidcProviderController.getEndSession(next, queryMock);
+      await oidcProviderController.getEndSession(reqMock, resMock, queryMock);
+
       // Then
-      expect(next).toHaveBeenCalledTimes(1);
+      expect(oidcProviderServiceMock.callback).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('revokeToken()', () => {
-    it('should call next()', () => {
+    it('should call next()', async () => {
       // Given
-      const next = jest.fn();
       const bodyMock = {} as RevocationTokenParamsDTO;
+
       // When
-      oidcProviderController.revokeToken(next, bodyMock);
+      await oidcProviderController.revokeToken(reqMock, resMock, bodyMock);
+
       // Then
-      expect(next).toHaveBeenCalledTimes(1);
+      expect(oidcProviderServiceMock.callback).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('getEndSessionConfirmation', () => {
+    it('should call oidcProvider.callback', async () => {
+      // When
+      await oidcProviderController.getEndSessionConfirmation(reqMock, resMock);
+
+      // Then
+      expect(oidcProviderServiceMock.callback).toHaveBeenCalledExactlyOnceWith(
+        reqMock,
+        resMock,
+      );
+    });
+  });
+
+  describe('getEndSessionSuccess', () => {
+    it('should call oidcProvider.callback', async () => {
+      // When
+      await oidcProviderController.getEndSessionSuccess(reqMock, resMock);
+
+      // Then
+      expect(oidcProviderServiceMock.callback).toHaveBeenCalledExactlyOnceWith(
+        reqMock,
+        resMock,
+      );
     });
   });
 
   describe('getJwks()', () => {
-    it('should call next()', () => {
-      // Given
-      const next = jest.fn();
+    it('should call next()', async () => {
       // When
-      oidcProviderController.getJwks(next);
+      await oidcProviderController.getJwks(reqMock, resMock);
+
       // Then
-      expect(next).toHaveBeenCalledTimes(1);
+      expect(oidcProviderServiceMock.callback).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('getOpenidConfiguration()', () => {
-    it('should call next()', () => {
-      // Given
-      const next = jest.fn();
+    it('should call next()', async () => {
       // When
-      oidcProviderController.getOpenidConfiguration(next);
+      await oidcProviderController.getOpenidConfiguration(reqMock, resMock);
+
       // Then
-      expect(next).toHaveBeenCalledTimes(1);
+      expect(oidcProviderServiceMock.callback).toHaveBeenCalledTimes(1);
     });
   });
 });

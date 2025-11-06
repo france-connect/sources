@@ -177,7 +177,7 @@ export class ServiceProviderInstanceVersionDto
 
   @Input({
     order: 81,
-    validators: [$IsLength({ max: 64, min: 36 }), $Matches(/^[a-zA-Z0-9-]+$/)],
+    validators: [$IsLength({ max: 64, min: 32 }), $Matches(/^[a-zA-Z0-9-]+$/)],
     seeAlso:
       'https://docs.partenaires.franceconnect.gouv.fr/fs/devenir-fs/projet-bac-a-sable/#gestion-des-subs-pour-votre-fournisseur-de-service',
   })

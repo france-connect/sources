@@ -20,12 +20,4 @@ const AppDataSource = new DataSource({
   synchronize: false, // do not set to true, we do not want schema automatic creation
 });
 
-AppDataSource.initialize()
-  .then(() => {
-    console.log('Data Source has been initialized!');
-  })
-  .catch((err) => {
-    console.error('Error during Data Source initialization', err);
-  });
-
-export default AppDataSource;
+module.exports = AppDataSource;

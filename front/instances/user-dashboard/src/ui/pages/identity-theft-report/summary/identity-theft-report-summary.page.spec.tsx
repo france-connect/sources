@@ -1,14 +1,16 @@
 import { render } from '@testing-library/react';
 
+import { TrackCardComponent } from '@fc/core-user-dashboard';
 import { TableComponent } from '@fc/dsfr';
 import type { BaseAttributes, Dto2FormFormConfigInterface } from '@fc/dto2form';
-import { DTO2FormComponent } from '@fc/dto2form';
+import { Dto2FormComponent } from '@fc/dto2form';
+import type { FormConfigInterface } from '@fc/forms';
 import { t } from '@fc/i18n';
 
+import { useSummaryPage } from '../../../../hooks';
 import { IdentityTheftReportSummaryPage } from './identity-theft-report-summary.page';
-import { useSummaryPage } from './summary-page.hook';
 
-jest.mock('./summary-page.hook');
+jest.mock('../../../../hooks/identity-theft-report/summary/summary-page.hook');
 
 describe('IdentityTheftReportSummaryPage', () => {
   // Given
@@ -17,7 +19,7 @@ describe('IdentityTheftReportSummaryPage', () => {
   const onPreSubmitMock = jest.fn();
   const onPostSubmitMock = jest.fn();
   const schemaMock = Symbol('schemaMock') as unknown as BaseAttributes[];
-  const valuesMock = {
+  const summaryMock = {
     connection: {
       code: 'any-connection-code-mock',
     },
@@ -26,6 +28,20 @@ describe('IdentityTheftReportSummaryPage', () => {
       phone: 'any-phone-mock',
     },
     description: { description: 'any-description-mock' },
+    fraudTracks: [
+      {
+        datetime: 'any-fraud-track-datetime-mock',
+        idpName: 'any-idp-name-mock',
+        spName: 'any-sp-name-mock',
+        trackId: 'any-track-id-mock-1',
+      },
+      {
+        datetime: 'any-fraud-track-datetime-mock',
+        idpName: 'any-idp-name-mock',
+        spName: 'any-sp-name-mock',
+        trackId: 'any-track-id-mock-2',
+      },
+    ],
     identity: {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       family_name: 'any-family_name-mock',
@@ -36,22 +52,38 @@ describe('IdentityTheftReportSummaryPage', () => {
       rawBirthplace: 'any-rawBirthplace-mock',
     },
   };
-  const useSummaryPageResultMock = {
-    config: configMock,
-    onPostSubmit: onPostSubmitMock,
-    onPreSubmit: onPreSubmitMock,
-    onSubmit: onSubmitMock,
-    redirectUrl: null,
-    schema: schemaMock,
-    values: valuesMock,
-  };
 
   beforeEach(() => {
     // Given
-    jest.mocked(useSummaryPage).mockReturnValue(useSummaryPageResultMock);
+    jest.mocked(useSummaryPage).mockReturnValue({
+      config: configMock.form as unknown as FormConfigInterface,
+      onPostSubmit: onPostSubmitMock,
+      onPreSubmit: onPreSubmitMock,
+      onSubmit: onSubmitMock,
+      schema: schemaMock,
+      summary: summaryMock,
+    });
+    jest.mocked(t).mockReturnValue('any-acme-tracks-translation');
   });
 
   it('should match the snapshot', () => {
+    // When
+    const { container } = render(<IdentityTheftReportSummaryPage />);
+
+    // Then
+    expect(container).toMatchSnapshot();
+  });
+
+  it('should match the snapshot when tracks is empty', () => {
+    // Given
+    jest.mocked(useSummaryPage).mockReturnValueOnce({
+      ...useSummaryPage(),
+      summary: {
+        ...summaryMock,
+        fraudTracks: [],
+      },
+    });
+
     // When
     const { container } = render(<IdentityTheftReportSummaryPage />);
 
@@ -67,6 +99,15 @@ describe('IdentityTheftReportSummaryPage', () => {
     expect(useSummaryPage).toHaveBeenCalledExactlyOnceWith();
   });
 
+  it('should call translations 1 times', () => {
+    // When
+    render(<IdentityTheftReportSummaryPage />);
+
+    // Then
+    expect(t).toHaveBeenCalledOnce();
+    expect(t).toHaveBeenNthCalledWith(1, 'IdentityTheftReport.summaryPage.tracksTitle');
+  });
+
   it('should call TableComponent 5 times', () => {
     // When
     render(<IdentityTheftReportSummaryPage />);
@@ -79,6 +120,7 @@ describe('IdentityTheftReportSummaryPage', () => {
         caption: 'Décrivez votre cas d’usurpation en quelques mots',
         hideHeader: true,
         id: 'identity-theft-report-summary--description',
+        multiline: true,
         sources: [{ label: 'any-description-mock' }],
       },
       undefined,
@@ -131,25 +173,115 @@ describe('IdentityTheftReportSummaryPage', () => {
     );
   });
 
-  it('should call DTO2FormComponent with arguments', () => {
-    // Given
-    jest.mocked(t).mockReturnValueOnce('Form.submit.label--mock');
-
+  it('should call Dto2FormComponent with arguments', () => {
     // When
     render(<IdentityTheftReportSummaryPage />);
 
     // Then
-    expect(t).toHaveBeenCalledOnce();
-    expect(t).toHaveBeenCalledWith('Fraud.IdentityTheftReport.sendReportButton');
-    expect(DTO2FormComponent).toHaveBeenCalledExactlyOnceWith({
-      config: configMock,
+    expect(Dto2FormComponent).toHaveBeenCalledExactlyOnceWith({
+      config: configMock.form,
       initialValues: expect.objectContaining({}),
-      noRequired: true,
       onPostSubmit: onPostSubmitMock,
       onPreSubmit: onPreSubmitMock,
       onSubmit: onSubmitMock,
       schema: schemaMock,
-      submitLabel: 'Form.submit.label--mock',
+    });
+  });
+
+  it('should render tracks', () => {
+    // When
+    const { getByText } = render(<IdentityTheftReportSummaryPage />);
+    const tracksTitleElt = getByText('any-acme-tracks-translation');
+
+    // Then
+    expect(tracksTitleElt).toBeInTheDocument();
+    expect(TrackCardComponent).toHaveBeenCalledTimes(2);
+    expect(TrackCardComponent).toHaveBeenNthCalledWith(
+      1,
+      { track: summaryMock.fraudTracks[0] },
+      undefined,
+    );
+    expect(TrackCardComponent).toHaveBeenNthCalledWith(
+      2,
+      { track: summaryMock.fraudTracks[1] },
+      undefined,
+    );
+  });
+
+  it('should not render tracks when tracks is empty', () => {
+    // Given
+    jest.mocked(useSummaryPage).mockReturnValueOnce({
+      ...useSummaryPage(),
+      summary: {
+        ...summaryMock,
+        fraudTracks: [],
+      },
+    });
+
+    // When
+    const { getByText } = render(<IdentityTheftReportSummaryPage />);
+
+    // Then
+    expect(() => getByText('any-acme-tracks-translation')).toThrow();
+    expect(TrackCardComponent).not.toHaveBeenCalled();
+  });
+
+  describe('when phone is undefined', () => {
+    beforeEach(() => {
+      // Given
+      jest
+        .mocked(t)
+        .mockReturnValueOnce('any-acme-phone-translation')
+        .mockReturnValueOnce('any-acme-tracks-translation');
+      jest.mocked(useSummaryPage).mockReturnValueOnce({
+        config: configMock.form as unknown as FormConfigInterface,
+        onPostSubmit: onPostSubmitMock,
+        onPreSubmit: onPreSubmitMock,
+        onSubmit: onSubmitMock,
+        schema: schemaMock,
+        summary: {
+          ...summaryMock,
+          contact: {
+            ...summaryMock.contact,
+            phone: undefined,
+          },
+        },
+      });
+    });
+
+    it('should call translations 2 times', () => {
+      // When
+      render(<IdentityTheftReportSummaryPage />);
+
+      // Then
+      expect(t).toHaveBeenCalledTimes(2);
+      expect(t).toHaveBeenNthCalledWith(1, 'FC.Common.notAvailable');
+      expect(t).toHaveBeenNthCalledWith(2, 'IdentityTheftReport.summaryPage.tracksTitle');
+    });
+
+    it('should call translation function if phone is undefined', () => {
+      // When
+      render(<IdentityTheftReportSummaryPage />);
+
+      // Then
+      expect(t).toHaveBeenNthCalledWith(1, 'FC.Common.notAvailable');
+    });
+
+    it('should render the 5th TableComponent with params if phone is undefined', () => {
+      // When
+      render(<IdentityTheftReportSummaryPage />);
+
+      // Then
+      expect(TableComponent).toHaveBeenNthCalledWith(
+        5,
+        {
+          caption: 'Numéro de téléphone',
+          hideHeader: true,
+          id: 'identity-theft-report-summary--phone',
+          sources: [{ label: 'any-acme-phone-translation' }],
+        },
+        undefined,
+      );
     });
   });
 });

@@ -38,7 +38,8 @@ async function getAllI18nFolders(dir, lang) {
       folders
       .filter(folder => folder.isDirectory())
       .map(async folder => {
-        // Construct the path to the i18n directory within the subdirectory structure
+        // Construct the path to the i18n directory
+        // within the subdirectory structure
         const nextPath = path.join(dir, folder.name, 'src', 'i18n');
         const folderExists = fs.existsSync(nextPath);
 
@@ -63,8 +64,9 @@ async function getAllI18nFolders(dir, lang) {
  * The final file is then written to an output file in JSON format.
  * @param {string} name - The name of the instance.
  * @param {string} lang - The language of the i18n files to read (e.g., 'fr' or 'en').
+ * @param {string} excluded - Paths of lib or apps to exclude from the process
  */
-async function readI18nFiles(name, lang) {
+async function readI18nFiles(instanceName, lang, excluded) {
   try {
     const filename = url.fileURLToPath(import.meta.url);
     const dirname = path.dirname(filename);
@@ -76,11 +78,14 @@ async function readI18nFiles(name, lang) {
     const appspath = path.join(dirname, '..', 'apps');
     const appsFiles = await getAllI18nFolders(appspath, lang);
 
-    const instancePath = path.join(dirname, '..', 'instances', name, 'src', 'i18n');
+    const instancePath = path.join(dirname, '..', 'instances', instanceName, 'src', 'i18n');
     const instanceFiles = await getAllI18nFiles(instancePath, lang);
 
     // Merge all found files into one array
-    const allFiles = [...libsFiles, ...appsFiles, ...instanceFiles].flat().filter(v => v);
+    const allFiles = [...libsFiles, ...appsFiles, ...instanceFiles].flat().filter(v => v).filter(filepath => {
+      const almostOne = excluded.some(p => filepath.includes(p))
+      return !almostOne;
+    });
 
     let merged = {};
     // Create a promise to read and merge the JSON files
@@ -105,7 +110,7 @@ async function readI18nFiles(name, lang) {
       dirname,
       '..',
       'instances',
-      name,
+      instanceName,
       'src',
       `${lang}.i18n.json`
     );
@@ -115,7 +120,7 @@ async function readI18nFiles(name, lang) {
     await fs.promises.writeFile(outputFile, jsonContent);
     // @NOTE Debug du script
     // eslint-disable-next-line no-console
-    console.log(`i18n file for ${lang} successfully written to ${outputFile}`);
+    console.log(`${instanceName} i18n file for ${lang} successfully written`);
 
   } catch (err) {
     // @NOTE Debug du script
@@ -130,7 +135,8 @@ if (!arg) {
   // Handle missing required argument
   throw new Error('❌ Missing argument');
 } else {
-  // Start reading i18n files for 'fr' and 'en'
-  await readI18nFiles(arg, 'fr');
-  await readI18nFiles(arg, 'en');
+  // optionnal argument
+  const excluded = process.argv.slice(3);
+  // Start reading i18n files for languages
+  await readI18nFiles(arg, 'fr', excluded);
 }

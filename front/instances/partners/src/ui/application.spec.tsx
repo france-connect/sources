@@ -5,6 +5,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { AccountProvider, ConnectValidator } from '@fc/account';
 import { AxiosErrorCatcherProvider } from '@fc/axios-error-catcher';
 import { ConfigService } from '@fc/config';
+import { Dto2FormServiceProvider } from '@fc/dto2form-service';
 import { AppBoundaryComponent } from '@fc/exceptions';
 import { I18nService } from '@fc/i18n';
 import { useMatomo } from '@fc/matomo';
@@ -15,11 +16,6 @@ import { Application } from './application';
 import { ApplicationRoutes } from './application.routes';
 
 jest.mock('./application.routes');
-
-jest.mock('@fc/matomo', () => ({
-  Options: { CONFIG_NAME: 'matomoConfig' },
-  useMatomo: jest.fn(),
-}));
 
 describe('Application', () => {
   const matomoConfigMock = Symbol('any-matomo-config-mock');
@@ -103,6 +99,14 @@ describe('Application', () => {
 
     // Then
     expect(HelmetProvider).toHaveBeenCalledOnce();
+  });
+
+  it('should call Dto2FormServiceProvider', () => {
+    // When
+    render(<Application />);
+
+    // Then
+    expect(Dto2FormServiceProvider).toHaveBeenCalledOnce();
   });
 
   it('should call ApplicationRoutes', () => {

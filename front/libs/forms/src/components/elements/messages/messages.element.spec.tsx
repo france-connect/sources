@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 
-import { EventTypes } from '@fc/common';
+import { MessageTypes } from '@fc/common';
 import { ConfigService } from '@fc/config';
 
 import type { FieldMessage } from '../../../interfaces';
@@ -13,17 +13,17 @@ jest.mock('../message/message.element');
 describe('MessagesElement', () => {
   const infoMessageMock1: FieldMessage = {
     content: 'mockInfo1',
-    level: EventTypes.INFO,
+    level: MessageTypes.INFO,
     priority: 20,
   };
   const infoMessageMock2: FieldMessage = {
     content: 'mockInfo2',
-    level: EventTypes.INFO,
+    level: MessageTypes.INFO,
     priority: 20,
   };
   const errorMessageMock: FieldMessage = {
     content: 'mockError',
-    level: EventTypes.ERROR,
+    level: MessageTypes.ERROR,
     priority: 50,
   };
 

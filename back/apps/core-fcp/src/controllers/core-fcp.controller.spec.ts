@@ -6,7 +6,7 @@ import { ConfigService } from '@fc/config';
 import { CoreAcrService, CoreRoutes, CoreVerifyService } from '@fc/core';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerService } from '@fc/logger';
-import { NotificationsService } from '@fc/notifications';
+import { NotificationService } from '@fc/notification';
 import { IOidcIdentity, OidcSession } from '@fc/oidc';
 import { OidcAcrService } from '@fc/oidc-acr';
 import { OidcClientRoutes, OidcClientService } from '@fc/oidc-client';
@@ -120,7 +120,7 @@ describe('CoreFcpController', () => {
 
   const randomStringMock = 'randomStringMockValue';
 
-  const notificationsServiceMock = {
+  const notificationServiceMock = {
     getNotificationToDisplay: jest.fn(),
   };
 
@@ -176,7 +176,7 @@ describe('CoreFcpController', () => {
     stepRoute: '/some/route',
   };
 
-  const notificationsMock = Symbol('notifications');
+  const notificationMock = Symbol('notification');
 
   const handleVerifyResult = 'urlPrefixValue/login';
 
@@ -195,7 +195,7 @@ describe('CoreFcpController', () => {
         ServiceProviderAdapterMongoService,
         SessionService,
         ConfigService,
-        NotificationsService,
+        NotificationService,
         OidcClientService,
         CoreAcrService,
         CoreVerifyService,
@@ -219,10 +219,8 @@ describe('CoreFcpController', () => {
       .useValue(oidcSessionServiceMock)
       .overrideProvider(ConfigService)
       .useValue(configServiceMock)
-      .overrideProvider(NotificationsService)
-      .useValue(notificationsServiceMock)
-      .overrideProvider(NotificationsService)
-      .useValue(notificationsServiceMock)
+      .overrideProvider(NotificationService)
+      .useValue(notificationServiceMock)
       .overrideProvider(OidcClientService)
       .useValue(oidcClientServiceMock)
       .overrideProvider(CoreAcrService)
@@ -333,8 +331,8 @@ describe('CoreFcpController', () => {
       oidcAcrServiceMock.getMinAcr.mockReturnValue('minAcrValue');
       oidcAcrServiceMock.isAcrValid.mockReturnValue(true);
       coreFcpServiceMock.isInsufficientAcrLevel.mockReturnValue(false);
-      notificationsServiceMock.getNotificationToDisplay.mockResolvedValue(
-        notificationsMock,
+      notificationServiceMock.getNotificationToDisplay.mockResolvedValue(
+        notificationMock,
       );
       configServiceMock.get.mockReturnValue({
         ...appConfigMock,
@@ -585,7 +583,7 @@ describe('CoreFcpController', () => {
       expect(res.render).toHaveBeenCalledTimes(1);
       expect(res.render).toHaveBeenCalledWith('interaction', {
         csrfToken,
-        notification: notificationsMock,
+        notification: notificationMock,
         params: interactionDetailsMock.params,
         providers: [aidantsConnectProviderMock],
         aidantsConnect: undefined,
@@ -618,7 +616,7 @@ describe('CoreFcpController', () => {
       expect(res.render).toHaveBeenCalledTimes(1);
       expect(res.render).toHaveBeenCalledWith('interaction', {
         csrfToken,
-        notification: notificationsMock,
+        notification: notificationMock,
         params: interactionDetailsMock.params,
         providers: [aidantsConnectProviderMock],
         aidantsConnect: undefined,
@@ -656,7 +654,7 @@ describe('CoreFcpController', () => {
       expect(res.render).toHaveBeenCalledTimes(1);
       expect(res.render).toHaveBeenCalledWith('interaction', {
         csrfToken,
-        notification: notificationsMock,
+        notification: notificationMock,
         params: interactionDetailsMock.params,
         providers: [aidantsConnectProviderMock],
         aidantsConnect: aidantsConnectProviderMock,
@@ -679,10 +677,10 @@ describe('CoreFcpController', () => {
 
       // Then
       expect(
-        notificationsServiceMock.getNotificationToDisplay,
+        notificationServiceMock.getNotificationToDisplay,
       ).toHaveBeenCalledTimes(1);
       expect(
-        notificationsServiceMock.getNotificationToDisplay,
+        notificationServiceMock.getNotificationToDisplay,
       ).toHaveBeenCalledWith();
     });
 
@@ -739,7 +737,7 @@ describe('CoreFcpController', () => {
 
       const expectedInteractionDetails = {
         csrfToken,
-        notification: notificationsMock,
+        notification: notificationMock,
         params: interactionDetailsMock.params,
         providers: idpFilterListMock,
         aidantsConnect: undefined,
@@ -773,7 +771,7 @@ describe('CoreFcpController', () => {
       });
       const expectedInteractionDetails = {
         csrfToken,
-        notification: notificationsMock,
+        notification: notificationMock,
         params: interactionDetailsMock.params,
         providers: idpFilterListMock,
         aidantsConnect: undefined,

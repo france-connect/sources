@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Dto2FormServiceProvider should match snapshot 1`] = `
+<div>
+  <button
+    data-testid="Dto2FormServiceProvider.getConfigEndpointsById.button"
+  >
+    getConfigEndpointsById mock button
+  </button>
+  <button
+    data-testid="Dto2FormServiceProvider.getConfigFormById.button"
+  >
+    getConfigFormById mock button
+  </button>
+  <button
+    data-testid="Dto2FormServiceProvider.loadData.button"
+  >
+    loadData mock button
+  </button>
+</div>
+`;

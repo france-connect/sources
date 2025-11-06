@@ -1,19 +1,20 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 
 import {
   Body,
   Controller,
   Get,
   Header,
-  Next,
   Post,
   Query,
+  Req,
   Res,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 
 import { LoggerService } from '@fc/logger';
+import { OidcProviderService } from '@fc/oidc-provider';
 import { OidcProviderRoutes } from '@fc/oidc-provider/enums';
 import { SessionService } from '@fc/session';
 
@@ -24,6 +25,7 @@ export class OidcProviderController {
   constructor(
     private readonly logger: LoggerService,
     private readonly session: SessionService,
+    private readonly oidcProvider: OidcProviderService,
   ) {}
 
   /**
@@ -44,15 +46,14 @@ export class OidcProviderController {
     }),
   )
   async getAuthorize(
+    @Req() req: Request,
     @Res() res: Response,
-    @Next() next,
     @Query() _query: AuthorizeParamsDto,
   ) {
     await this.session.reset(res);
     this.logger.info('Session was reset');
 
-    // Pass the query to oidc-provider
-    return next();
+    await this.oidcProvider.callback(req, res);
   }
 
   /**
@@ -72,8 +73,14 @@ export class OidcProviderController {
       forbidNonWhitelisted: true,
     }),
   )
-  postAuthorize(@Next() next, @Body() _body: AuthorizeParamsDto) {
-    // Pass the query to oidc-provider
-    return next();
+  async postAuthorize(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Body() _body: AuthorizeParamsDto,
+  ) {
+    await this.session.reset(res);
+    this.logger.debug('Session was reset');
+
+    await this.oidcProvider.callback(req, res);
   }
 }

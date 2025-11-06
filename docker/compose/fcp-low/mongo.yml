@@ -8,8 +8,6 @@ services:
     build:
       context: "${WORKING_DIR}"
       dockerfile: "${WORKING_DIR}/builds/mongodb/Dockerfile"
-      args:
-        MONGO_VERSION: "6.0.17"
     volumes:
       - "${VOLUMES_DIR}/mongo-fcp-low/scripts:/opt/scripts"
       - "${VOLUMES_DIR}/mongo-fcp-low/initdb.d:/docker-entrypoint-initdb.d"
@@ -19,3 +17,76 @@ services:
       - data
     ports:
       - "27017:27017"
+    healthcheck:
+      test: ["CMD-SHELL", "mongosh --host mongo-fcp-low --port 27017 --tls --tlsCAFile /usr/local/share/ca-certificates/docker-stack-ca.crt --username $$MONGO_INITDB_ROOT_USERNAME --password $$MONGO_INITDB_ROOT_PASSWORD --authenticationDatabase admin --quiet --eval 'db.adminCommand({ping:1})' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      start_period: 10s
+      retries: 5
+
+  mongo-fcp-low-replica-1:
+    hostname: mongo-fcp-low1
+    build:
+      context: "${WORKING_DIR}"
+      dockerfile: "${WORKING_DIR}/builds/mongodb/Dockerfile"
+    volumes:
+      - "${VOLUMES_DIR}/mongo-fcp-low/scripts:/opt/scripts"
+      - "${VOLUMES_DIR}/mongo-fcp-low/initdb.d:/docker-entrypoint-initdb.d"
+    env_file:
+      - "${COMPOSE_DIR}/fcp-low/.env/mongo-fcp-low.env"
+    networks:
+      - data
+    ports:
+      - "27018:27017"
+
+  mongo-fcp-low-replica-2:
+    hostname: mongo-fcp-low2
+    build:
+      context: "${WORKING_DIR}"
+      dockerfile: "${WORKING_DIR}/builds/mongodb/Dockerfile"
+    volumes:
+      - "${VOLUMES_DIR}/mongo-fcp-low/scripts:/opt/scripts"
+      - "${VOLUMES_DIR}/mongo-fcp-low/initdb.d:/docker-entrypoint-initdb.d"
+    env_file:
+      - "${COMPOSE_DIR}/fcp-low/.env/mongo-fcp-low.env"
+    networks:
+      - data
+    ports:
+      - "27019:27017"
+
+  mongo-fcp-low-replica-single-init:
+    build:
+      context: "${WORKING_DIR}"
+      dockerfile: "${WORKING_DIR}/builds/mongodb/Dockerfile"
+    env_file:
+      - "${COMPOSE_DIR}/fcp-low/.env/mongo-fcp-low.env"
+    volumes:
+      - "${VOLUMES_DIR}/mongo-fcp-low/scripts:/opt/scripts"
+    networks:
+      - data
+    depends_on:
+      mongo-fcp-low:
+        condition: service_healthy
+    entrypoint: ["/opt/scripts/init-rs.sh"]
+    command: ["single"]
+
+  mongo-fcp-low-replica-multi-init:
+    build:
+      context: "${WORKING_DIR}"
+      dockerfile: "${WORKING_DIR}/builds/mongodb/Dockerfile"
+    env_file:
+      - "${COMPOSE_DIR}/fcp-low/.env/mongo-fcp-low.env"
+    depends_on:
+      # Require "single-init" to make sure "multi" runs after "single"
+      mongo-fcp-low-replica-single-init:
+        condition: service_completed_successfully
+      mongo-fcp-low-replica-1:
+        condition: service_healthy
+      mongo-fcp-low-replica-2:
+        condition: service_healthy
+    volumes:
+      - "${VOLUMES_DIR}/mongo-fcp-low/scripts:/opt/scripts"
+    networks:
+      - data
+    entrypoint: ["/opt/scripts/init-rs.sh"]
+    command: ["multi"]

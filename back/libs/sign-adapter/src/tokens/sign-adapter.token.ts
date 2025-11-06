@@ -1,0 +1,1 @@
+export const SIGN_ADAPTER_TOKEN = Symbol('SIGN_ADAPTER_TOKEN');

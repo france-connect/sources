@@ -1,1 +1,1 @@
-export const DTO2InputComponent = jest.fn(() => <div data-mockid="DTO2InputComponent" />);
+export const Dto2InputComponent = jest.fn(() => <div data-mockid="Dto2InputComponent" />);

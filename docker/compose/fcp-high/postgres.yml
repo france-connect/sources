@@ -2,7 +2,7 @@
 ####################
 services:
   pg-exploitation-high:
-    image: postgres:13-bullseye
+    image: postgres:18-bookworm
     volumes:
       - "${VOLUMES_DIR}/postgres/init-multiple-postgresql-databases.sh:/docker-entrypoint-initdb.d/init-multiple-postgresql-databases.sh:ro"
       - "${VOLUMES_DIR}/postgres/start.sh:/usr/bin/start.sh:ro"

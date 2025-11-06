@@ -2,6 +2,7 @@ import { render } from '@testing-library/react';
 
 import { getAccessibleTitle } from '@fc/common';
 import { ConfigService } from '@fc/config';
+import { t } from '@fc/i18n';
 
 import { LayoutHeaderServiceComponent } from './layout-header.service';
 
@@ -9,6 +10,15 @@ describe('LayoutHeaderServiceComponent', () => {
   beforeEach(() => {
     // Given
     jest.mocked(ConfigService.get).mockReturnValue({ service: {} });
+    jest.mocked(t).mockReturnValue('any-back-to-homepage-mock');
+  });
+
+  it('should call t 1 times with params', () => {
+    // When
+    render(<LayoutHeaderServiceComponent />);
+
+    // Then
+    expect(t).toHaveBeenCalledExactlyOnceWith('Layout.documentTitle.backToHomepage');
   });
 
   it('should call ConfigService.get with Layout', () => {
@@ -34,7 +44,7 @@ describe('LayoutHeaderServiceComponent', () => {
     // Then
     expect(getAccessibleTitle).toHaveBeenCalledOnce();
     expect(getAccessibleTitle).toHaveBeenCalledWith(
-      'Retour à l’accueil du site',
+      'any-back-to-homepage-mock',
       undefined,
       'any service name mock',
     );
@@ -50,7 +60,7 @@ describe('LayoutHeaderServiceComponent', () => {
     });
     jest
       .mocked(getAccessibleTitle)
-      .mockReturnValueOnce('Retour à l’accueil du site - any service name mock');
+      .mockReturnValueOnce('any-back-to-homepage-mock - any service name mock');
 
     // When
     const { container, getByTestId } = render(<LayoutHeaderServiceComponent />);
@@ -65,7 +75,7 @@ describe('LayoutHeaderServiceComponent', () => {
     expect(elementName).toHaveTextContent('any service name mock');
     expect(elementName).toHaveAttribute(
       'title',
-      'Retour à l’accueil du site - any service name mock',
+      'any-back-to-homepage-mock - any service name mock',
     );
   });
 
@@ -101,7 +111,7 @@ describe('LayoutHeaderServiceComponent', () => {
     jest
       .mocked(getAccessibleTitle)
       .mockReturnValueOnce(
-        'Retour à l’accueil du site - any service baseline mock - any service name mock',
+        'any-back-to-homepage-mock - any service baseline mock - any service name mock',
       );
 
     // When
@@ -118,7 +128,7 @@ describe('LayoutHeaderServiceComponent', () => {
     expect(elementName).toHaveTextContent('any service name mock');
     expect(elementName).toHaveAttribute(
       'title',
-      'Retour à l’accueil du site - any service baseline mock - any service name mock',
+      'any-back-to-homepage-mock - any service baseline mock - any service name mock',
     );
     expect(elementBaseline).toBeInTheDocument();
     expect(elementBaseline).toHaveTextContent('any service baseline mock');

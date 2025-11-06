@@ -7,6 +7,7 @@ import { MailerConfig } from '@fc/mailer';
 import { RabbitmqConfig } from '@fc/rabbitmq';
 
 import { AppRmqConfig } from './app-rmq-config.dto';
+import { IdpMappings } from './idp-mappings.config';
 
 export class CsmrFraudConfig {
   @IsObject()
@@ -43,4 +44,9 @@ export class CsmrFraudConfig {
   @ValidateNested()
   @Type(() => ElasticsearchConfig)
   readonly Elasticsearch: ElasticsearchConfig;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => IdpMappings)
+  readonly IdpMappings: IdpMappings;
 }

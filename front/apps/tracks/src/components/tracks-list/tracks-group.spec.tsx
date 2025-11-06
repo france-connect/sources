@@ -1,6 +1,8 @@
 import { render } from '@testing-library/react';
 import { DateTime } from 'luxon';
 
+import { Platforms } from '@fc/common';
+
 import type { CinematicEvents, EidasToLabel } from '../../enums';
 import type { EnhancedTrackInterface } from '../../interfaces';
 import * as TrackUtils from '../../utils/tracks.util';
@@ -19,7 +21,7 @@ describe('tracksGroupComponent', () => {
     event: 'any' as CinematicEvents,
     idpLabel: 'any',
     interactionAcr: 'any' as keyof typeof EidasToLabel,
-    platform: 'FranceConnect',
+    platform: Platforms.FranceConnect,
     spLabel: 'any',
     time: 1633042800000,
     // '2021-10-01T00:00:00.000+01:00',
@@ -34,7 +36,7 @@ describe('tracksGroupComponent', () => {
     event: 'any' as CinematicEvents,
     idpLabel: 'any',
     interactionAcr: 'any' as keyof typeof EidasToLabel,
-    platform: 'FranceConnect',
+    platform: Platforms.FranceConnect,
     spLabel: 'any',
     time: 1635721200000,
     // '2021-11-01T00:00:00.000+01:00',
@@ -44,45 +46,35 @@ describe('tracksGroupComponent', () => {
 
   it('should render the defined label', () => {
     // Given
-    const { getByText, unmount } = render(
-      <TracksGroupComponent label="Any Label" tracks={allTracks} />,
-    );
+    const { getByText } = render(<TracksGroupComponent label="Any Label" tracks={allTracks} />);
     // Then
     const element = getByText('Any Label');
 
     expect(element).toBeInTheDocument();
-
-    unmount();
   });
 
   it('orderTracksByDateDesc should have been called', () => {
     // Given
     const sortFunctionSpy = jest.spyOn(TrackUtils, 'orderTracksByDateDesc');
-    const { unmount } = render(<TracksGroupComponent label="Any Label" tracks={allTracks} />);
+    render(<TracksGroupComponent label="Any Label" tracks={allTracks} />);
 
     // Then
     expect(sortFunctionSpy).toHaveBeenCalledOnce();
-
-    unmount();
   });
 
   it('trackCardComponent should have been called 2 times', () => {
     // Given
-    const { unmount } = render(<TracksGroupComponent label="Any Label" tracks={allTracks} />);
+    render(<TracksGroupComponent label="Any Label" tracks={allTracks} />);
 
     // Then
     expect(TrackCardComponent).toHaveBeenCalledTimes(2);
-
-    unmount();
   });
 
   it('trackCardComponent should have been sorted by tracks.time', () => {
     // Given
-    const { unmount } = render(<TracksGroupComponent label="Any Label" tracks={allTracks} />);
+    render(<TracksGroupComponent label="Any Label" tracks={allTracks} />);
 
     // Then
     expect(TrackCardComponent).toHaveBeenNthCalledWith(1, { track: newestTrack }, undefined);
-
-    unmount();
   });
 });

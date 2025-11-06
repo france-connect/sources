@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { t } from '@fc/i18n';
 import { redirectToUrl } from '@fc/routing';
 
 interface LayoutHeaderLogoutButtonProps {
@@ -14,14 +15,16 @@ export const LayoutHeaderLogoutButton = React.memo(
       redirectToUrl(endSessionUrl);
     };
 
+    const title = t('Layout.logoutButton.title');
+    const label = t('Layout.logoutButton.label');
     return (
       <a
         className="fr-btn fr-icon-logout-box-r-line"
         data-testid="layout-header-tools-logout-button"
         href={endSessionUrl}
-        title="bouton permettant la déconnexion de votre compte"
+        title={title}
         onClick={handleLogout}>
-        <span>Se déconnecter</span>
+        <span>{label}</span>
       </a>
     );
   },

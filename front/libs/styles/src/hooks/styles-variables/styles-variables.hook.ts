@@ -14,7 +14,8 @@ export const useStylesVariables = <T extends string>(
   const { cssVariables } = useStylesContext();
 
   const stylesObject = useMemo(() => {
-    const cssNames = typeof cssVariableNames === 'string' ? [cssVariableNames] : cssVariableNames;
+    const isString = typeof cssVariableNames === 'string';
+    const cssNames = isString ? [cssVariableNames] : cssVariableNames;
     return cssNames
       .map((cssName) => {
         const prefix = cssName.startsWith(Strings.DOUBLE_DASH)

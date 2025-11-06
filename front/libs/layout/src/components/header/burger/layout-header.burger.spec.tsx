@@ -1,6 +1,7 @@
 import { fireEvent, render } from '@testing-library/react';
 
 import { useSafeContext } from '@fc/common';
+import { t } from '@fc/i18n';
 
 import { LayoutContext } from '../../../context';
 import { LayoutHeaderMobileBurgerButton } from './layout-header.burger';
@@ -12,6 +13,16 @@ describe('LayoutHeaderMobileBurgerButton', () => {
       menuIsOpened: true,
       toggleMenu: jest.fn(),
     });
+    jest.mocked(t).mockReturnValue('any-menu-label-mock');
+  });
+
+  it('should call t 1 time with correct param', () => {
+    // When
+    render(<LayoutHeaderMobileBurgerButton />);
+
+    // Then
+    expect(t).toHaveBeenCalledOnce();
+    expect(t).toHaveBeenCalledWith('Layout.menu.label');
   });
 
   it('should match the snapshot', () => {

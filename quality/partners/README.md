@@ -98,11 +98,12 @@ You can create a test pipeline in Gitlab from a merge request or from the stagin
 3. Click on the "Run pipeline" button
 4. Start the back and front jobs
 
-| Environment Variable | Description                     | Comment                                                        |
-| -------------------- | ------------------------------- | -------------------------------------------------------------- |
-| CI_PIPELINE_SOURCE   | merge_request_event             | if pipeline linked to a merge request                          |
-| CI_MERGE_REQUEST_IID | id of the merge request         | for instance 860 for the merge request `/-/merge_requests/860` |
-| BDD_TAGS_PARTNERS    | tags for the partners BDD tests | by default '@ci and not @ignore'                               |
+| Environment Variable                | Description                             | Comment                                                        |
+| ----------------------------------- | --------------------------------------- | -------------------------------------------------------------- |
+| CI_PIPELINE_SOURCE                  | merge_request_event                     | if pipeline linked to a merge request                          |
+| CI_MERGE_REQUEST_IID                | id of the merge request                 | for instance 860 for the merge request `/-/merge_requests/860` |
+| CI_MERGE_REQUEST_TARGET_BRANCH_NAME | MR target branch (staging or US branch) | mandatory                                                      |
+| BDD_TAGS_PARTNERS                   | tags for the partners BDD tests         | by default '@ci and not @ignore'                               |
 
 ## Plugins VSCode
 

@@ -1,1 +1,1 @@
-export * from './options.enum';
+export * from './http-client-options.enum';

@@ -9,30 +9,26 @@ import { FormHeaderComponent } from '../form-header';
 import { FormMentionsComponent } from '../form-mentions';
 import { FormRequiredMessageComponent } from '../form-required';
 
-interface FormWrapperComponentProps extends PropsWithChildren {
+interface FormWrapperComponentProps extends Required<PropsWithChildren> {
   config: FormConfigInterface;
   handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
   submitError?: string | undefined;
   submitting: boolean;
-  noRequired: boolean;
-  scrollTopOnSubmit: boolean;
-  submitLabel?: string;
 }
 
 export const FormWrapperComponent = ({
   children,
   config,
   handleSubmit,
-  noRequired,
-  scrollTopOnSubmit,
   submitError,
-  submitLabel = undefined,
   submitting,
 }: FormWrapperComponentProps) => {
-  const { description, id, mentions, title, titleHeading } = config;
+  const { actions, description, id, mentions, noRequired, scrollTopOnSubmit, title, titleHeading } =
+    config;
 
   const canSubmit = !submitting;
   const showFormHeader = !!(title || description);
+  const scrollTopOnFailed = scrollTopOnSubmit ?? true;
 
   return (
     <form className="dto2form" data-testid={`${id}--testid`} id={id} onSubmit={handleSubmit}>
@@ -43,10 +39,10 @@ export const FormWrapperComponent = ({
         {submitError && <FormErrorComponent error={submitError} />}
         {!noRequired && <FormRequiredMessageComponent />}
         {children}
-        <FormActionsComponent canSubmit={canSubmit} submitLabel={submitLabel} />
+        <FormActionsComponent actions={actions} canSubmit={canSubmit} />
         {mentions && <FormMentionsComponent content={mentions} />}
         <FormErrorScrollComponent
-          active={scrollTopOnSubmit}
+          active={scrollTopOnFailed}
           elementClassName=".fr-message--error"
         />
       </div>

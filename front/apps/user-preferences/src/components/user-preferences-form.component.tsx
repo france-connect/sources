@@ -2,7 +2,7 @@ import classnames from 'classnames';
 import type { FormEventHandler } from 'react';
 import React, { useCallback } from 'react';
 
-import { EventTypes } from '@fc/common';
+import { MessageTypes } from '@fc/common';
 import { AlertComponent, ButtonTypes, SimpleButton, Sizes, ToggleInput } from '@fc/dsfr';
 import { useStylesQuery, useStylesVariables } from '@fc/styles';
 
@@ -57,7 +57,7 @@ export const UserPreferencesFormComponent: React.FC<UserPreferencesFormComponent
         <ServicesListComponent identityProviders={userPreferences.idpList} />
 
         {hasValidationErrors && (
-          <AlertComponent type={EventTypes.ERROR}>
+          <AlertComponent type={MessageTypes.ERROR}>
             <p className="fr-alert__title">
               Attention, vous devez avoir au moins un compte autorisé pour continuer à utiliser
               FranceConnect.

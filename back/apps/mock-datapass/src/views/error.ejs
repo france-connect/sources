@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="fr-FR" data-fr-scheme="light">
+  <%- include("includes/head") %>
+  <body>
+    <div class="fc-sticky-wrapper">
+      <div class="fc-sticky-body">
+        <%- include('includes/header.ejs') %>
+        <main>
+          <div class="fr-container fr-container-main fr-mt-4v">
+            <section class="welcome welcome--error">
+              <div class="container text-center">
+                <h1>Une erreur est survenue</h1>
+              </div>
+            </section>
+
+            <section class="container">
+              <h2 id="error-title" class="text-center">
+                <%= locals.exception?.constructor?.name ?? "Error" %>:
+                <span id="error-title"
+                  ><%= locals.exception?.message || locals.error %></span
+                >
+              </h2>
+
+
+              <p class="text-center">
+                              <!-- error description from query parameters -->
+                <pre id="error-description"><%= locals.error_description %></pre>
+
+                <!-- error details from exception -->
+                <pre id="error-stack"><%= locals.exception?.stack %></pre>
+                <pre id="original-stack"><%= locals.exception?.originalError?.stack %></pre>
+              </p>
+            </section>
+          </div>
+        </main>
+      </div>
+    </div>
+    <%- include('includes/footer') %>
+  </body>
+</html>

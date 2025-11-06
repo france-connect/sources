@@ -6,10 +6,11 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { AccountProvider, ConnectValidator } from '@fc/account';
 import { AxiosErrorCatcherProvider } from '@fc/axios-error-catcher';
 import { ConfigService } from '@fc/config';
+import { Dto2FormServiceProvider } from '@fc/dto2form-service';
 import { AppBoundaryComponent } from '@fc/exceptions';
 import { I18nService } from '@fc/i18n';
 import type { MatomoConfig } from '@fc/matomo';
-import { Options, useMatomo } from '@fc/matomo';
+import { MatomoOptions, useMatomo } from '@fc/matomo';
 import { StylesProvider } from '@fc/styles';
 
 import { AppConfig } from '../config';
@@ -20,7 +21,7 @@ export function Application() {
   I18nService.initialize('fr', translations);
   ConfigService.initialize(AppConfig);
 
-  const matomoConfig = ConfigService.get<MatomoConfig>(Options.CONFIG_NAME);
+  const matomoConfig = ConfigService.get<MatomoConfig>(MatomoOptions.CONFIG_NAME);
   useMatomo(matomoConfig);
 
   return (
@@ -29,7 +30,9 @@ export function Application() {
         <AccountProvider validator={ConnectValidator}>
           <HelmetProvider>
             <StylesProvider>
-              <ApplicationRoutes />
+              <Dto2FormServiceProvider>
+                <ApplicationRoutes />
+              </Dto2FormServiceProvider>
             </StylesProvider>
           </HelmetProvider>
         </AccountProvider>

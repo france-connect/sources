@@ -43,6 +43,10 @@ export const PaginationComponent: React.FC<PaginationComponentProps> = React.mem
     const isFirstPage = currentPage === 0;
     const isLastPage = currentPage === pagesCount - 1;
 
+    const lastPageLabel = t('DSFR.pagination.lastPage');
+    const firstPageLabel = t('DSFR.pagination.firstPage');
+    const nextPageLabel = t('DSFR.pagination.nextPage');
+    const previousPageLabel = t('DSFR.pagination.previousPage');
     return (
       <nav aria-label="Pagination" className="fr-pagination" role="navigation">
         <ul className="fr-pagination__list">
@@ -55,7 +59,7 @@ export const PaginationComponent: React.FC<PaginationComponentProps> = React.mem
                 onClick={() => {
                   paginationChangeHandler(0);
                 }}>
-                Première page
+                {firstPageLabel}
               </button>
             </li>
           )}
@@ -68,7 +72,7 @@ export const PaginationComponent: React.FC<PaginationComponentProps> = React.mem
                 onClick={() => {
                   paginationChangeHandler(currentPage - 1);
                 }}>
-                {t('TracksPage.previousPage')}
+                {previousPageLabel}
               </button>
             </li>
           )}
@@ -132,7 +136,7 @@ export const PaginationComponent: React.FC<PaginationComponentProps> = React.mem
                 onClick={() => {
                   paginationChangeHandler(currentPage + 1);
                 }}>
-                {t('TracksPage.nextPage')}
+                {nextPageLabel}
               </button>
             </li>
           )}
@@ -145,7 +149,7 @@ export const PaginationComponent: React.FC<PaginationComponentProps> = React.mem
                 onClick={() => {
                   paginationChangeHandler(pagesCount - 1);
                 }}>
-                Dernière page
+                {lastPageLabel}
               </button>
             </li>
           )}

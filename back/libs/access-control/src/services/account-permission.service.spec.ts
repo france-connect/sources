@@ -7,7 +7,6 @@ import { NO_ENTITY_ID } from '@entities/typeorm';
 import { uuid } from '@fc/common';
 import { LoggerService } from '@fc/logger';
 import { PartnersAccountSession } from '@fc/partners-account';
-import { PostgresNativeError } from '@fc/postgres';
 import { SessionService } from '@fc/session';
 
 import { getLoggerMock } from '@mocks/logger';
@@ -156,7 +155,7 @@ describe('AccountPermissionService', () => {
       queryRunnerMock.manager.orIgnore.mockReturnThis();
     });
 
-    it('should call queryRunner.manager.createQueryBuilder().insert().into().values() with correct data', async () => {
+    it('should insert correct data with queryRunner manager', async () => {
       // When
       await service.addPermissionTransactional(
         queryRunnerMock as unknown as QueryRunner,
@@ -173,6 +172,7 @@ describe('AccountPermissionService', () => {
       expect(queryRunnerMock.manager.values).toHaveBeenCalledWith(
         permissionMock,
       );
+      expect(queryRunnerMock.manager.orIgnore).toHaveBeenCalledTimes(1);
       expect(queryRunnerMock.manager.execute).toHaveBeenCalledTimes(1);
     });
 
@@ -194,40 +194,6 @@ describe('AccountPermissionService', () => {
         ...permissionMockWithoutEntityId,
         entityId: NO_ENTITY_ID,
       });
-    });
-
-    it('should log warning if permission already exists', async () => {
-      // Given
-      queryRunnerMock.manager.execute.mockRejectedValueOnce({
-        code: PostgresNativeError.DUPLICATE_ENTRY,
-      });
-
-      // When
-      await service.addPermissionTransactional(
-        queryRunnerMock as unknown as QueryRunner,
-        permissionMock,
-      );
-
-      // Then
-      expect(loggerMock.warning).toHaveBeenCalledTimes(1);
-      expect(loggerMock.warning).toHaveBeenCalledWith({
-        msg: 'Tried to insert existing permission',
-        ...permissionMock,
-      });
-    });
-
-    it('should throw if an error other than conflict occurs', async () => {
-      // Given
-      const errorMock = new Error('error');
-      queryRunnerMock.manager.execute.mockRejectedValueOnce(errorMock);
-
-      // When
-      await expect(
-        service.addPermissionTransactional(
-          queryRunnerMock as unknown as QueryRunner,
-          permissionMock,
-        ),
-      ).rejects.toThrow(errorMock);
     });
   });
 });

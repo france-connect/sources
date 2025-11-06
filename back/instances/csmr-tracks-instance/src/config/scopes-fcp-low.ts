@@ -1,4 +1,5 @@
 import {
+  ants,
   cnafMsa,
   cnam,
   cnous,
@@ -13,7 +14,19 @@ import {
 } from '@fc/scopes';
 
 const config: ScopesConfig = {
-  mapping: [cnam, cnous, dgfip, fcpLow, mesri, mi, ft, cnafMsa, dss, dsnj],
+  mapping: [
+    cnam,
+    cnous,
+    dgfip,
+    fcpLow,
+    mesri,
+    mi,
+    ft,
+    cnafMsa,
+    dss,
+    dsnj,
+    ants,
+  ],
 };
 
 export default config;

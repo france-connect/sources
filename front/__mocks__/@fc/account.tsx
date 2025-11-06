@@ -17,6 +17,6 @@ export const ConnectValidator = {
   validate: jest.fn(),
 };
 
-export const Options = {
+export const AccountOptions = {
   CONFIG_NAME: 'Account',
 };

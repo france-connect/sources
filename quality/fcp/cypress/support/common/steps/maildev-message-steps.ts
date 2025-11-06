@@ -1,9 +1,13 @@
-import { Given } from '@badeball/cypress-cucumber-preprocessor';
+import { Given, Step } from '@badeball/cypress-cucumber-preprocessor';
 
 import { MaildevHelper } from '../helpers';
 
 Given("je supprime les mails envoyés à l'usager", function () {
   const { email } = this.user;
+  Step(this, `je supprime les mails envoyés à "${email}"`);
+});
+
+Given('je supprime les mails envoyés à {string}', function (email: string) {
   MaildevHelper.deleteUserMessages(email);
   // Wait for maildev commands to end
   // eslint-disable-next-line cypress/no-unnecessary-waiting

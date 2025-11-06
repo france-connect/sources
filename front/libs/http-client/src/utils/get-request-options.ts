@@ -8,7 +8,7 @@ import { omit } from 'lodash';
 
 import { ConfigService } from '@fc/config';
 
-import { Options } from '../enums';
+import { HttpClientOptions } from '../enums';
 import type {
   HttpClientConfig,
   HttpClientOptionsInterface,
@@ -21,12 +21,12 @@ export const getTimeout = (requestOptions: HttpClientOptionsInterface) => {
     return requestOptions.timeout;
   }
 
-  const serviceConfig = ConfigService.get<HttpClientConfig>(Options.CONFIG_NAME);
+  const serviceConfig = ConfigService.get<HttpClientConfig>(HttpClientOptions.CONFIG_NAME);
   if (serviceConfig?.timeout) {
     return serviceConfig.timeout;
   }
 
-  return Options.TIMEOUT;
+  return HttpClientOptions.TIMEOUT;
 };
 
 export const getBaseURL = (requestOptions: HttpClientOptionsInterface) => {
@@ -34,7 +34,7 @@ export const getBaseURL = (requestOptions: HttpClientOptionsInterface) => {
     return requestOptions.baseURL;
   }
 
-  const serviceConfig = ConfigService.get<HttpClientConfig>(Options.CONFIG_NAME);
+  const serviceConfig = ConfigService.get<HttpClientConfig>(HttpClientOptions.CONFIG_NAME);
   if (serviceConfig?.baseURL) {
     return serviceConfig.baseURL;
   }

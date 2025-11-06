@@ -1,0 +1,37 @@
+services:
+  mongo-fcp-high:
+    hostname: mongo-fcp-high
+    build:
+      context: "${WORKING_DIR}"
+      dockerfile: "${WORKING_DIR}/builds/mongodb/Dockerfile"
+    volumes:
+      - "${VOLUMES_DIR}/mongo-fcp-high/scripts:/opt/scripts"
+      - "${VOLUMES_DIR}/mongo-fcp-high/initdb.d:/docker-entrypoint-initdb.d"
+    env_file:
+      - "${COMPOSE_DIR}/shared/.env/mongo-high.env"
+    ports:
+      - ${MONGO_FCPHIGH_LOCALPORT}:${MONGO_FCPHIGH_PORT}
+    networks:
+      - data
+    healthcheck:
+      test: ["CMD-SHELL", "mongosh --host mongo-fcp-high --port ${MONGO_FCPHIGH_PORT} --tls --tlsCAFile /usr/local/share/ca-certificates/docker-stack-ca.crt --username $$MONGO_INITDB_ROOT_USERNAME --password $$MONGO_INITDB_ROOT_PASSWORD --authenticationDatabase admin --quiet --eval 'db.adminCommand({ping:1})' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      start_period: 10s
+      retries: 5
+
+  mongo-fcp-high-replica-single-init:
+    build:
+      context: "${WORKING_DIR}"
+      dockerfile: "${WORKING_DIR}/builds/mongodb/Dockerfile"
+    env_file:
+      - "${COMPOSE_DIR}/shared/.env/mongo-high.env"
+    volumes:
+      - "${VOLUMES_DIR}/mongo-fcp-high/scripts:/opt/scripts"
+    networks:
+      - data
+    depends_on:
+      mongo-fcp-high:
+        condition: service_healthy
+    entrypoint: ["/opt/scripts/init-rs.sh"]
+    command: ["single"]

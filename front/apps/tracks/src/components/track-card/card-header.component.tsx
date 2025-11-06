@@ -5,7 +5,7 @@ import { AiOutlineMinus as MinusIcon, AiOutlinePlus as PlusIcon } from 'react-ic
 
 import { ConfigService } from '@fc/config';
 
-import { Options } from '../../enums';
+import { TracksOptions } from '../../enums';
 import type { TracksConfig } from '../../interfaces';
 import styles from './card-header.module.scss';
 
@@ -19,7 +19,7 @@ export const TrackCardHeaderComponent = React.memo(
   ({ datetime, opened, serviceProviderLabel }: TraceCardHeaderProps) => {
     const {
       luxon: { dayFormat },
-    } = ConfigService.get<TracksConfig>(Options.CONFIG_NAME);
+    } = ConfigService.get<TracksConfig>(TracksOptions.CONFIG_NAME);
 
     const formattedDay = datetime.setZone('Europe/Paris').setLocale('fr').toFormat(dayFormat);
     return (

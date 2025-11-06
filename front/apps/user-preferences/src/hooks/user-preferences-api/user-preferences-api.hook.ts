@@ -7,7 +7,7 @@ import { ConfigService } from '@fc/config';
 import type { AxiosException } from '@fc/http-client';
 import { get, post } from '@fc/http-client';
 
-import { Options } from '../../enums';
+import { UserPreferencesOptions } from '../../enums';
 import type {
   FormValuesInterface,
   UserPreferencesConfig,
@@ -21,7 +21,7 @@ export const useUserPreferencesApi = () => {
 
   const {
     endpoints: { userPreferences: userPreferencesEndpoint },
-  } = ConfigService.get<UserPreferencesConfig>(Options.CONFIG_NAME);
+  } = ConfigService.get<UserPreferencesConfig>(UserPreferencesOptions.CONFIG_NAME);
 
   const [submitErrors, setSubmitErrors] = useState<AxiosException | Error | undefined>(undefined);
   const [submitWithSuccess, setSubmitWithSuccess] = useState(false);

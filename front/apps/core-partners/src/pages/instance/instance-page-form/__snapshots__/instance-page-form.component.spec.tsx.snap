@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`InstancePageFormComponent should match the snapshot 1`] = `
+<div>
+  <div
+    class="fr-col-12 fr-col-md-8 fr-py-6w fc-grey-border--full"
+  >
+    <div
+      class="fr-col-offset-1 fr-col-10"
+    >
+      <div
+        data-mockid="Dto2FormComponent"
+      />
+    </div>
+  </div>
+</div>
+`;

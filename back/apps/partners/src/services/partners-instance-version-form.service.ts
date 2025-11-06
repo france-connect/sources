@@ -10,6 +10,7 @@ import { ServiceProviderInstanceVersionDto } from '@fc/partners-service-provider
 import { OidcClientInterface } from '@fc/service-provider';
 
 import { AppConfig, DefaultServiceProviderLowValueConfig } from '../dto';
+import { ExistingDataInterface } from '../interfaces';
 
 @Injectable()
 export class PartnersInstanceVersionFormService {
@@ -32,38 +33,48 @@ export class PartnersInstanceVersionFormService {
         'DefaultServiceProviderLowValue',
       );
 
-    const generatedValues = await this.getGeneratedValues(instanceId);
+    const { mutable, immutable } = await this.getOrGenerateValues(instanceId);
 
     const output = {
       ...DefaultServiceProviderLowValue,
+      ...mutable,
       ...values,
-      ...generatedValues,
+      ...immutable,
     };
 
     return output;
   }
 
-  private async getGeneratedValues(
+  private async getOrGenerateValues(
     instanceId?: string,
-  ): Promise<Pick<OidcClientInterface, 'client_id' | 'client_secret'>> {
+  ): Promise<ExistingDataInterface> {
     if (instanceId) {
-      return await this.getCredentialsForInstance(instanceId);
+      return await this.getLatestVersionForInstance(instanceId);
     }
 
-    return this.generateNewCredentials();
+    const immutable = this.generateNewCredentials();
+
+    return { immutable, mutable: {} };
   }
 
-  private async getCredentialsForInstance(
+  private async getLatestVersionForInstance(
     instanceId: string,
-  ): Promise<Pick<OidcClientInterface, 'client_id' | 'client_secret'>> {
+  ): Promise<ExistingDataInterface> {
     const { versions } = await this.instance.getById(instanceId);
 
-    const { client_id, client_secret } = versions[0].data;
+    const { data: mutable } = versions[0];
 
-    return {
-      client_id,
-      client_secret,
+    const immutable = {
+      client_id: mutable.client_id,
+      client_secret: mutable.client_secret,
+      /**
+       * TMP fix for mass import
+       * @todo remove once we have a cleaner way (clean up data ?)
+       */
+      idpFilterExclude: true,
     };
+
+    return { mutable, immutable };
   }
 
   private generateNewCredentials(): Pick<

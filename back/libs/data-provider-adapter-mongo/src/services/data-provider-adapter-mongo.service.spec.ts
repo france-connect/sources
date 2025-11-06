@@ -6,7 +6,7 @@ import { validateDto } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
 import { LoggerService } from '@fc/logger';
-import { MongooseCollectionOperationWatcherHelper } from '@fc/mongoose';
+import { MongooseChangeStreamService } from '@fc/mongoose-change-stream';
 
 import { getLoggerMock } from '@mocks/logger';
 
@@ -15,6 +15,7 @@ import {
   DataProviderNotFoundException,
 } from '../exceptions';
 import { DataProviderMetadata } from '../interfaces';
+import { DataProvider } from '../schemas';
 import { DataProviderAdapterMongoService } from './data-provider-adapter-mongo.service';
 
 jest.mock('@fc/common', () => ({
@@ -62,18 +63,15 @@ describe('DataProviderAdapterMongoService', () => {
     publish: jest.fn(),
   };
 
-  const mongooseCollectionOperationWatcherHelperMock = {
-    connectAllWatchers: jest.fn(),
-    watchWith: jest.fn(),
-    watch: jest.fn(),
-    operationTypeWatcher: jest.fn(),
+  const changeStreamServiceMock = {
+    registerWatcher: jest.fn(),
   };
 
   const appConfigMock = {
     configuration: { clientSecretEncryptKey: 'clientSecretEncryptKeyMock' },
   };
 
-  const dataProviderModel = getModelToken('DataProvider');
+  const dataProviderModel = getModelToken(DataProvider.name);
 
   beforeEach(async () => {
     jest.clearAllMocks();
@@ -91,7 +89,7 @@ describe('DataProviderAdapterMongoService', () => {
         LoggerService,
         EventBus,
         ConfigService,
-        MongooseCollectionOperationWatcherHelper,
+        MongooseChangeStreamService,
       ],
     })
       .overrideProvider(CryptographyService)
@@ -102,8 +100,8 @@ describe('DataProviderAdapterMongoService', () => {
       .useValue(loggerMock)
       .overrideProvider(EventBus)
       .useValue(eventBusMock)
-      .overrideProvider(MongooseCollectionOperationWatcherHelper)
-      .useValue(mongooseCollectionOperationWatcherHelperMock)
+      .overrideProvider(MongooseChangeStreamService)
+      .useValue(changeStreamServiceMock)
       .compile();
 
     service = module.get<DataProviderAdapterMongoService>(
@@ -133,13 +131,13 @@ describe('DataProviderAdapterMongoService', () => {
       expect(service['getList']).toHaveBeenCalledWith();
     });
 
-    it('should call watchWith from mongooseHelper', async () => {
+    it('should call registerWatcher method', async () => {
       // When
       await service.onModuleInit();
       // Then
       expect(
-        mongooseCollectionOperationWatcherHelperMock.watchWith,
-      ).toHaveBeenCalledTimes(1);
+        changeStreamServiceMock.registerWatcher,
+      ).toHaveBeenCalledExactlyOnceWith(repositoryMock, expect.any(Function));
     });
   });
 

@@ -1,7 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import {
-  FraudMessageDto,
+  FraudCaseMessageDto,
+  FraudTrackDto,
+  FraudTracksMessageDto,
   TrackingDataDto,
 } from '@fc/csmr-fraud-client/protocol';
 import { MicroservicesRmqSubscriberService } from '@fc/microservices-rmq';
@@ -14,6 +16,8 @@ import { CsmrFraudController } from './csmr-fraud.controller';
 
 describe('CsmrFraudController', () => {
   let controller: CsmrFraudController;
+
+  const authenticationEventIdMock = '1a344d7d-fb1f-432f-99df-01b374c93687';
 
   const identityMock = {
     given_name: 'firstName',
@@ -28,7 +32,7 @@ describe('CsmrFraudController', () => {
     fraudCaseId: 'fraudCaseIdMock',
     contactEmail: 'email@mock.fr',
     idpEmail: 'email@fi.fr',
-    authenticationEventId: '1a344d7d-fb1f-432f-99df-01b374c93687',
+    authenticationEventId: authenticationEventIdMock,
     fraudSurveyOrigin: 'fraudSurveyOriginMock',
     comment: 'commentMock',
     phoneNumber: '0678912345',
@@ -42,6 +46,10 @@ describe('CsmrFraudController', () => {
     'trackingDataMock',
   ) as unknown as TrackingDataDto;
 
+  const fraudTrackMock = Symbol(
+    'fraudConnexionMock',
+  ) as unknown as FraudTrackDto;
+
   const supportServiceMock = {
     createSecurityTicket: jest.fn(),
   };
@@ -49,15 +57,22 @@ describe('CsmrFraudController', () => {
   const dataServiceMock = {
     enrichFraudData: jest.fn(),
     enrichUnverifiedIdentityFraudData: jest.fn(),
+    fetchFraudTracks: jest.fn(),
   };
 
   const subscriberMock = getSubscriberMock();
 
-  const messageMock = {
+  const fraudCaseMessageMock = {
     type: 'MOCK',
     meta: { id: 'meta-mock' },
     payload: { fraudCase: fraudCaseMock, identity: identityMock },
-  } as unknown as FraudMessageDto;
+  } as unknown as FraudCaseMessageDto;
+
+  const fraudTracksMesssageMock = {
+    type: 'MOCK',
+    meta: { id: 'meta-mock' },
+    payload: { authenticationEventId: authenticationEventIdMock },
+  } as unknown as FraudTracksMessageDto;
 
   const responseMock = Symbol('responseMock');
 
@@ -93,6 +108,8 @@ describe('CsmrFraudController', () => {
       trackingData: trackingDataMock,
     });
 
+    dataServiceMock.fetchFraudTracks.mockReturnValue([fraudTrackMock]);
+
     subscriberMock.response.mockReturnValue(responseMock);
   });
 
@@ -103,7 +120,7 @@ describe('CsmrFraudController', () => {
   describe('processFraudCase', () => {
     it('should call data.enrichFraudData with correct parameters', async () => {
       // When
-      await controller.processFraudCase(messageMock);
+      await controller.processFraudCase(fraudCaseMessageMock);
 
       // Then
       expect(dataServiceMock.enrichFraudData).toHaveBeenCalledExactlyOnceWith(
@@ -114,7 +131,8 @@ describe('CsmrFraudController', () => {
 
     it('should call support.createSecurityTicket with ticketData', async () => {
       // When
-      await controller.processFraudCase(messageMock);
+      await controller.processFraudCase(fraudCaseMessageMock);
+
       // Then
       expect(
         supportServiceMock.createSecurityTicket,
@@ -123,7 +141,8 @@ describe('CsmrFraudController', () => {
 
     it('should call subscriber.response with trackingData', async () => {
       // When
-      await controller.processFraudCase(messageMock);
+      await controller.processFraudCase(fraudCaseMessageMock);
+
       // Then
       expect(subscriberMock.response).toHaveBeenCalledExactlyOnceWith(
         trackingDataMock,
@@ -132,7 +151,7 @@ describe('CsmrFraudController', () => {
 
     it('should return result of subscriber.response()', async () => {
       // When
-      const result = await controller.processFraudCase(messageMock);
+      const result = await controller.processFraudCase(fraudCaseMessageMock);
 
       // Then
       expect(result).toBe(responseMock);
@@ -142,7 +161,7 @@ describe('CsmrFraudController', () => {
   describe('processUnverifiedFraudCase', () => {
     it('should call data.enrichUnverifiedIdentityFraudData with correct parameters', async () => {
       // When
-      await controller.processUnverifiedFraudCase(messageMock);
+      await controller.processUnverifiedFraudCase(fraudCaseMessageMock);
 
       // Then
       expect(
@@ -152,7 +171,8 @@ describe('CsmrFraudController', () => {
 
     it('should call support.createSecurityTicket with ticketData', async () => {
       // When
-      await controller.processUnverifiedFraudCase(messageMock);
+      await controller.processUnverifiedFraudCase(fraudCaseMessageMock);
+
       // Then
       expect(
         supportServiceMock.createSecurityTicket,
@@ -161,7 +181,8 @@ describe('CsmrFraudController', () => {
 
     it('should call subscriber.response with trackingData', async () => {
       // When
-      await controller.processUnverifiedFraudCase(messageMock);
+      await controller.processUnverifiedFraudCase(fraudCaseMessageMock);
+
       // Then
       expect(subscriberMock.response).toHaveBeenCalledExactlyOnceWith(
         trackingDataMock,
@@ -170,7 +191,38 @@ describe('CsmrFraudController', () => {
 
     it('should return result of subscriber.response()', async () => {
       // When
-      const result = await controller.processUnverifiedFraudCase(messageMock);
+      const result =
+        await controller.processUnverifiedFraudCase(fraudCaseMessageMock);
+
+      // Then
+      expect(result).toBe(responseMock);
+    });
+  });
+
+  describe('getFraudTracks', () => {
+    it('should call data.fetchFraudTracks with the authenticationEventId', async () => {
+      // When
+      await controller.getFraudTracks(fraudTracksMesssageMock);
+
+      // Then
+      expect(dataServiceMock.fetchFraudTracks).toHaveBeenCalledExactlyOnceWith(
+        authenticationEventIdMock,
+      );
+    });
+
+    it('should call subscriber.response with fraudTracks', async () => {
+      // When
+      await controller.getFraudTracks(fraudTracksMesssageMock);
+
+      // Then
+      expect(subscriberMock.response).toHaveBeenCalledExactlyOnceWith([
+        fraudTrackMock,
+      ]);
+    });
+
+    it('should return result of subscriber.response()', async () => {
+      // When
+      const result = await controller.getFraudTracks(fraudTracksMesssageMock);
 
       // Then
       expect(result).toBe(responseMock);

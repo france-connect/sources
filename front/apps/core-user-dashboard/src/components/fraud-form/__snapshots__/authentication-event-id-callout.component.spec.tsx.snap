@@ -12,7 +12,7 @@ exports[`authenticationEventIdCallout should match the snapshot 1`] = `
       <p
         class="fr-callout__text"
       >
-        Le code se trouve dans :
+        any-callout-description-mock
       </p>
       <ul>
         <li
@@ -21,11 +21,11 @@ exports[`authenticationEventIdCallout should match the snapshot 1`] = `
           <p
             class="fr-callout__text"
           >
-            l’alerte de connexion que vous avez reçue par mail :
+            any-callout-bullet1-label-mock
           </p>
         </li>
         <img
-          alt="Code d'identification dans l'alerte de connexion"
+          alt="any-callout-bullet1-alt-mock"
           class="fr-responsive-img"
           data-testid="authentication-event-id-mail-img"
           src="/images/fraud/authentication-event-id-mail.svg"
@@ -38,15 +38,15 @@ exports[`authenticationEventIdCallout should match the snapshot 1`] = `
           >
             votre
              
-            <span
-              data-mockid="LinkComponent"
+            <a
+              href="mock"
             >
-              historique de connexion
-            </span>
+              mock
+            </a>
           </p>
         </li>
         <img
-          alt="Code d'identification dans l'historique de connexion"
+          alt="any-callout-bullet2-alt-mock"
           class="fr-responsive-img"
           data-testid="authentication-event-id-history-img"
           src="/images/fraud/authentication-event-id-history.svg"

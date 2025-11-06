@@ -1,4 +1,5 @@
 import js from '@eslint/js';
+import json from '@eslint/json';
 import comments from '@eslint-community/eslint-plugin-eslint-comments/configs';
 // @NOTE unable to get it resolved into this file
 // eslint-disable-next-line import/no-unresolved
@@ -22,6 +23,7 @@ export const baseConfig = [
       comments.recommended,
       eslintPluginPrettierRecommended,
     ],
+    ignores: ['**/*.json'],
     languageOptions: {
       globals: {
         ...globals.node,
@@ -44,6 +46,7 @@ export const baseConfig = [
       reportUnusedDisableDirectives: true,
     },
     plugins: {
+      json,
       prettier: prettierPlugin,
       react: reactPlugin,
       'simple-import-sort': simpleImportSortPlugin,

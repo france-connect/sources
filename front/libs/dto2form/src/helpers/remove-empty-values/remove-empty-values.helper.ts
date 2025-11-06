@@ -1,8 +1,7 @@
 import { Strings } from '@fc/common';
-import type { PreSubmitHandlerType } from '@fc/forms';
 import type { HttpClientDataInterface } from '@fc/http-client';
 
-export const removeEmptyValues: PreSubmitHandlerType<HttpClientDataInterface> = async (values) => {
+export const removeEmptyValues = async (values: HttpClientDataInterface) => {
   const filteredValues = Object.entries(values).reduce((acc, [key, value]) => {
     const isEmptyString = value === Strings.EMPTY_STRING;
 

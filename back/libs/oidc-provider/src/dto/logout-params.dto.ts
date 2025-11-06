@@ -11,7 +11,7 @@ export class LogoutParamsDto {
   @IsString()
   readonly id_token_hint: string;
 
-  @IsUrlRequiredTldFromConfig()
+  @IsUrlRequiredTldFromConfig('OidcProvider', 'urlsRequireTld')
   @IsOptional()
   readonly post_logout_redirect_uri?: string;
 

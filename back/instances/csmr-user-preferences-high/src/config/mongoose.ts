@@ -10,8 +10,6 @@ export default {
   database: env.string('DATABASE'),
   options: {
     authSource: env.string('DATABASE'),
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
     tls: env.boolean('TLS'),
     tlsAllowInvalidCertificates: env.boolean('TLS_INSECURE'),
     tlsCAFile: env.string('TLS_CA_FILE'),

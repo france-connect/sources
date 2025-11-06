@@ -31,7 +31,7 @@ export class AuthorizeParamsDto {
   @IsString()
   readonly state: string;
 
-  @IsUrlRequiredTldFromConfig()
+  @IsUrlRequiredTldFromConfig('OidcProvider', 'urlsRequireTld')
   readonly redirect_uri: string;
 
   // The openid verification is made into oidc-provider

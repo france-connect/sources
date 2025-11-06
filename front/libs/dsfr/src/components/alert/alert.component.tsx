@@ -2,7 +2,8 @@ import classnames from 'classnames';
 import type { PropsWithChildren } from 'react';
 import React from 'react';
 
-import { EventTypes, HeadingTag, type PropsWithClassName } from '@fc/common';
+import type { PropsWithClassName } from '@fc/common';
+import { HeadingTag, MessageTypes, Strings } from '@fc/common';
 import { t } from '@fc/i18n';
 
 import { Sizes } from '../../enums';
@@ -13,10 +14,11 @@ interface AlertComponentProps extends PropsWithClassName, PropsWithChildren {
   // - should NOT be defined if the Component is not injected dynamicly into the page
   noRole?: boolean;
   size?: Omit<Sizes, Sizes.LARGE>;
-  type?: EventTypes;
+  type?: MessageTypes;
   title?: string;
   // @NOTE TS Omit(H1) issued with HeadingTag's type
   heading?: HeadingTag.H2 | HeadingTag.H3 | HeadingTag.H4 | HeadingTag.H5 | HeadingTag.H6;
+  icon?: string;
   onClose?: () => void;
   dataTestId?: string;
 }
@@ -27,17 +29,21 @@ export const AlertComponent = React.memo(
     className,
     dataTestId = 'AlertComponent',
     heading: Heading = HeadingTag.H3,
+    icon = undefined,
     noRole = false,
     onClose = undefined,
     size = Sizes.MEDIUM,
     title = undefined,
-    type = EventTypes.INFO,
+    type = MessageTypes.INFO,
   }: AlertComponentProps) => {
     const closeLabel = (onClose && t('DSFR.alert.close')) || undefined;
 
     return (
       <div
-        className={classnames(className, `fr-alert fr-alert--${type} fr-alert--${size}`)}
+        className={classnames(
+          className,
+          `fr-alert fr-alert--${type} fr-alert--${size} ${icon ?? Strings.EMPTY_STRING}`,
+        )}
         data-testid={dataTestId}
         role={noRole ? undefined : 'alert'}>
         {title && (

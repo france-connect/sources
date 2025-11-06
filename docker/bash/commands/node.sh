@@ -17,6 +17,12 @@ _start() {
 
   # Reload RP in case the app took to long and was consired down by Nginx
   task "   * Reload RP" "_reload_rp"
+
+  if docker ps -a --format '{{.Names}}' | grep -q '^fc_haproxy_1$'; then
+    # Reload RP in case the app took to long and was consired down by Nginx
+    task "   * Reload HAProxy" "_reload_haproxy"
+  fi
+  
 }
 
 _start_prod() {
@@ -82,6 +88,13 @@ _do_start() {
 
   cd ${WORKING_DIR}
   $DOCKER_COMPOSE exec ${NO_TTY} "${app}" "/opt/scripts/start.sh"
+}
+
+_do_command() {
+  local command=$1
+
+  cd ${WORKING_DIR}
+  $DOCKER_COMPOSE exec ${NO_TTY} "${command}" bash -c "yarn cmd:${command}"
 }
 
 _do_start_ci() {

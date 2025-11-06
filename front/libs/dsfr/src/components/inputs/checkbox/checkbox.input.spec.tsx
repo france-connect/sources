@@ -1,5 +1,6 @@
 import { useField } from 'react-final-form';
 
+import { t } from '@fc/i18n';
 import { renderWithFinalForm } from '@fc/testing-library';
 
 import { CheckboxInput, validateCheckbox } from './checkbox.input';
@@ -42,7 +43,14 @@ describe('validateCheckbox', () => {
   });
 
   it('should return default message', () => {
-    // When / Then
-    expect(validateCheckbox(false)).toBe('Veuillez cocher cette case si vous souhaitez continuer');
+    // Given
+    jest.mocked(t).mockReturnValueOnce('any-checkbox-label-mock');
+
+    // When
+    const result = validateCheckbox(false);
+
+    // Then
+    expect(t).toHaveBeenCalledExactlyOnceWith('DSFR.checkbox.label');
+    expect(result).toBe('any-checkbox-label-mock');
   });
 });

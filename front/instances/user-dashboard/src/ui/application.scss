@@ -10,3 +10,7 @@
   // @TODO cette couleur n'existe pas dans le DSFR
   box-shadow: 0 0 7px -2px #66a1e4;
 }
+
+.fr-table--multiline .fr-table__content td {
+  white-space: pre-wrap;
+}

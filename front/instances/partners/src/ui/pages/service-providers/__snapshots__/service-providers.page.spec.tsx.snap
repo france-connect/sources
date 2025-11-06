@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ServiceProvidersPage should match snapshot 1`] = `
+<div>
+  <div
+    class="fr-col-12 fr-col-lg-10 fr-col-xl-8"
+  >
+    <div
+      class="fr-col-12"
+    >
+      <h1
+        data-testid="service-providers-page-title"
+      >
+        CorePartners.serviceProvidersPage.title
+      </h1>
+    </div>
+    <div
+      class="fr-col-12 fr-mt-5w"
+    >
+      <div
+        data-mockid="ServiceProvidersPageNoticeComponent"
+      />
+    </div>
+  </div>
+</div>
+`;

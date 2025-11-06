@@ -5,6 +5,10 @@ export default class TopMenuComponent {
     cy.visit('/');
   }
 
+  visitServiceProvidersPage(): void {
+    cy.visit('/fournisseurs-de-service');
+  }
+
   getUserLabel(): ChainableElement {
     return cy.get(
       '.fr-header__tools [data-testid="layout-header-tools-account-component"]',

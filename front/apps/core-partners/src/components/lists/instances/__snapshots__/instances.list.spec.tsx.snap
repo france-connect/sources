@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`InstancesListComponent should match snapshot while calling the sortByKey util 1`] = `
+<div>
+  <div
+    data-mockid="InstanceCardComponent"
+  />
+  <div
+    data-mockid="InstanceCardComponent"
+  />
+  <div
+    data-mockid="InstanceCardComponent"
+  />
+</div>
+`;

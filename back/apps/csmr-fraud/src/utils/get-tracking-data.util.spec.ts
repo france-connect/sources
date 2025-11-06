@@ -1,11 +1,10 @@
 import {
   AuthenticationEventDto,
   FraudCaseDto,
+  FraudTrackDto,
   TrackingDataDto,
 } from '@fc/csmr-fraud-client';
-import { TracksAdapterResultsInterface } from '@fc/tracks-adapter-elasticsearch';
 
-import { TracksFormatterOutputInterface } from '../interfaces';
 import { getTrackingData } from './get-tracking-data.util';
 
 const fraudCaseMock: FraudCaseDto = {
@@ -26,15 +25,21 @@ const userAccountIdsMock = {
   accountIdHigh: userAccountIdHighMock,
 };
 
-const trackMock: TracksFormatterOutputInterface = {
+const timeMock = 1664661600000;
+const readableDateMock = '02/10/2022 00:00:00';
+
+const trackMock: FraudTrackDto = {
+  id: 'idMock',
   platform: 'FranceConnect',
   city: 'Paris',
   country: 'FR',
   idpName: 'idpNameMock',
+  idpLabel: 'idpLabelMock',
   idpId: 'idpIdMock',
   spName: 'spNameMock',
   spId: 'spIdMock',
-  time: 1664661600000,
+  time: timeMock,
+  date: readableDateMock,
   accountId: 'accountIdMock',
   interactionAcr: 'interactionAcrMock',
   interactionId: 'interactionIdMock',
@@ -43,12 +48,6 @@ const trackMock: TracksFormatterOutputInterface = {
   idpSub: 'idpSubMock',
   ipAddress: ['ipAddressMock'],
 };
-
-const tracksMock: TracksAdapterResultsInterface<TracksFormatterOutputInterface> =
-  {
-    total: 1,
-    payload: [trackMock],
-  };
 
 const authenticationEventMock: AuthenticationEventDto = {
   platform: 'FranceConnect',
@@ -78,11 +77,9 @@ const trackingDataMock: TrackingDataDto = {
 describe('getTrackingData', () => {
   it('should return trackingData with authenticationEvent', () => {
     // When
-    const trackingData = getTrackingData(
-      fraudCaseMock,
-      userAccountIdsMock,
-      tracksMock,
-    );
+    const trackingData = getTrackingData(fraudCaseMock, userAccountIdsMock, [
+      trackMock,
+    ]);
 
     // Then
     expect(trackingData).toEqual(trackingDataMock);
@@ -101,7 +98,7 @@ describe('getTrackingData', () => {
     };
 
     // When
-    const trackingData = getTrackingData(fraudCaseMock, {}, tracksMock);
+    const trackingData = getTrackingData(fraudCaseMock, {}, [trackMock]);
 
     // Then
     expect(trackingData).toEqual(trackingUnknownDataMock);
@@ -113,10 +110,7 @@ describe('getTrackingData', () => {
     trackingDataMock.authenticationEvents = [];
 
     // When
-    const trackingData = getTrackingData(fraudCaseMock, userAccountIdsMock, {
-      total: 0,
-      payload: [],
-    });
+    const trackingData = getTrackingData(fraudCaseMock, userAccountIdsMock, []);
 
     // Then
     expect(trackingData).toEqual(trackingDataMock);

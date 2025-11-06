@@ -2,7 +2,7 @@ import classnames from 'classnames';
 import React from 'react';
 
 import { AccountContext, type AccountContextState } from '@fc/account';
-import { EventTypes, useSafeContext } from '@fc/common';
+import { MessageTypes, useSafeContext } from '@fc/common';
 import { AlertComponent, ConnectTypes, NoticeComponent, Sizes } from '@fc/dsfr';
 import { t } from '@fc/i18n';
 import { LoginFormComponent } from '@fc/login-form';
@@ -27,7 +27,7 @@ export const LoginPage = React.memo(() => {
             className="text-left fr-my-3w"
             size={Sizes.MEDIUM}
             title={t('FC.session.expired')}
-            type={EventTypes.ERROR}
+            type={MessageTypes.ERROR}
           />
         )}
         <div

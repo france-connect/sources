@@ -8,6 +8,9 @@ export interface CustomClientMetadata extends AllClientMetadata {
   idpFilterList: string[];
   rep_scope?: string[];
   type: string;
+
+  claims?: string[];
+  identityConsent?: boolean;
 }
 
 /**

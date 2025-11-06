@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
+import { SignatureDigest } from '@fc/cryptography';
 import {
   BufferEncodingEnum,
   CsmrHsmClientMessageDto,
   CsmrHsmRandomMessageDto,
-  SignatureDigest,
 } from '@fc/csmr-hsm-client/protocol';
 import { HsmService } from '@fc/hsm';
 import { MicroservicesRmqSubscriberService } from '@fc/microservices-rmq';

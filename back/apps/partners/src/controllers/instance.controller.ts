@@ -1,3 +1,5 @@
+import { QueryRunner } from 'typeorm';
+
 import {
   Body,
   Controller,
@@ -39,7 +41,9 @@ import {
   PartnersServiceProviderInstanceVersionService,
   ServiceProviderInstanceVersionDto,
 } from '@fc/partners-service-provider-instance-version';
+import { OidcClientInterface } from '@fc/service-provider';
 import { ISessionService, Session } from '@fc/session';
+import { TypeormService } from '@fc/typeorm';
 
 import { PartnersBackRoutes } from '../enums';
 import {
@@ -58,6 +62,7 @@ export class InstanceController {
     private readonly publication: PartnerPublicationService,
     private readonly form: PartnersInstanceVersionFormService,
     private readonly accessControl: AccountPermissionService,
+    private readonly typeorm: TypeormService,
   ) {}
 
   @Get(PartnersBackRoutes.SP_INSTANCES)
@@ -112,29 +117,14 @@ export class InstanceController {
     const {
       identity: { id: accountId, email },
     } = sessionPartnersAccount.get();
-    /**
-     * @TODO #2149 passer par une transaction
-     **/
-
     const data = await this.form.fromFormValues(values);
-    const { id: instanceId } = await this.instance.save({
-      environment: EnvironmentEnum.SANDBOX,
-    });
 
-    // Skip "DRAFT" for sandbox since there is no point to update right after creation
-    const status = PublicationStatusEnum.PENDING;
-    const { id: versionId } = await this.version.create(
-      data,
-      instanceId,
-      status,
+    const { instanceId, versionId } = await this.typeorm.withTransaction<{
+      instanceId: string;
+      versionId: string;
+    }>((queryRunner) =>
+      this.createInstanceInDatabase(queryRunner, data, accountId),
     );
-
-    await this.accessControl.addPermission({
-      accountId,
-      permissionType: PermissionsType.VIEW,
-      entity: EntityType.SP_INSTANCE,
-      entityId: instanceId,
-    });
 
     const dataWithCreatedInfo: ConfigCreateViaMessageDtoPayload = {
       ...data,
@@ -153,6 +143,34 @@ export class InstanceController {
       type: 'INSTANCE',
       payload: {},
     };
+  }
+
+  private async createInstanceInDatabase(
+    queryRunner: QueryRunner,
+    data: OidcClientInterface,
+    accountId: string,
+  ): Promise<{ instanceId: string; versionId: string }> {
+    const { id: instanceId } = await this.instance.save(queryRunner, {
+      environment: EnvironmentEnum.SANDBOX,
+    });
+
+    // Skip "DRAFT" for sandbox since there is no point to update right after creation
+    const status = PublicationStatusEnum.PENDING;
+    const { id: versionId } = await this.version.create(
+      queryRunner,
+      data,
+      instanceId,
+      status,
+    );
+
+    await this.accessControl.addPermissionTransactional(queryRunner, {
+      accountId,
+      permissionType: PermissionsType.VIEW,
+      entity: EntityType.SP_INSTANCE,
+      entityId: instanceId,
+    });
+
+    return { instanceId, versionId };
   }
 
   @Put(PartnersBackRoutes.SP_INSTANCE)
@@ -174,10 +192,18 @@ export class InstanceController {
 
     // Skip "DRAFT" for sandbox since there is no point to update right after creation
     const status = PublicationStatusEnum.PENDING;
-    const { id: versionId } = await this.version.create(
-      fullData,
-      instanceId,
-      status,
+
+    const versionId = await this.typeorm.withQueryRunner(
+      async (queryRunner: QueryRunner) => {
+        const { id } = await this.version.create(
+          queryRunner,
+          fullData,
+          instanceId,
+          status,
+        );
+
+        return id;
+      },
     );
 
     const {
@@ -186,8 +212,7 @@ export class InstanceController {
 
     const fullDataWithCreatedInfo: ConfigCreateViaMessageDtoPayload = {
       ...fullData,
-      createdBy: email,
-      createdVia: CreatedVia.PARTNERS_MANUAL,
+      updatedBy: email,
     };
 
     await this.publication.publish(

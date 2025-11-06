@@ -91,7 +91,7 @@ describe('MockIdentityProviderService', () => {
     );
   });
 
-  describe('onModuleInit()', () => {
+  describe('onApplicationBootstrap()', () => {
     let loadDatabasesMock: jest.Mock;
     beforeEach(() => {
       loadDatabasesMock = service['loadDatabases'] = jest.fn();
@@ -99,7 +99,7 @@ describe('MockIdentityProviderService', () => {
     it('should call loadDatabase', async () => {
       // Given
       // When
-      await service.onModuleInit();
+      await service.onApplicationBootstrap();
       // Then
       expect(loadDatabasesMock).toHaveBeenCalledTimes(1);
     });
@@ -107,7 +107,7 @@ describe('MockIdentityProviderService', () => {
     it('should register oidc provider middleware', async () => {
       // Given
       // When
-      await service.onModuleInit();
+      await service.onApplicationBootstrap();
       // Then
       expect(oidcProviderServiceMock.registerMiddleware).toHaveBeenCalledTimes(
         1,

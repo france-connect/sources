@@ -14,7 +14,7 @@ exports[`LayoutHeaderMenuComponent should match the snapshot, whithout navigatio
         aria-controls="layout-header-menu-modal"
         class="fr-btn--close fr-btn"
       >
-        Fermer
+        FC.Common.close
       </button>
       <div
         class="fr-header__menu-links"
@@ -42,7 +42,7 @@ exports[`LayoutHeaderMenuComponent should match the snapshot, with navigation de
         aria-controls="layout-header-menu-modal"
         class="fr-btn--close fr-btn"
       >
-        Fermer
+        FC.Common.close
       </button>
       <div
         class="fr-header__menu-links"

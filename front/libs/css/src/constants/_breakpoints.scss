@@ -2,12 +2,12 @@
 $breakpoints: (
   // Mobile Small
   xs: 320px,
-  // Mobile
-  sm: 576px,
-  // Tablet
-  md: 768px,
-  // Desktop
-  lg: 992px,
-  // Desktop Extra Large
-  xl: 1440px
+  // Mobile -> 576px
+  sm: 36em,
+  // Tablet -> 768px
+  md: 48em,
+  // Desktop -> 992px
+  lg: 62em,
+  // Desktop Extra Large -> 1440px
+  xl: 78em
 );

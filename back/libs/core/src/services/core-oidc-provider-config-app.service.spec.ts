@@ -47,12 +47,15 @@ describe('CoreOidcProviderConfigAppService', () => {
   const reqMock = { sessionId };
   const resMock = {};
 
+  const accountIdMock = 'accountIdMock';
+
   const ctxMock = {
     sessionId,
     req: reqMock,
     res: resMock,
     oidc: {
       entities: {
+        Session: { accountId: accountIdMock },
         IdTokenHint: {
           payload: {
             // OIDC defined var name
@@ -198,19 +201,20 @@ describe('CoreOidcProviderConfigAppService', () => {
       sessionServiceMock.getAlias.mockResolvedValue(sessionId);
     });
 
-    it('should return sessionId', async () => {
-      // Given
+    it('should return sessionId', () => {
       // When
-      const result = await service['getSessionId'](ctxMock);
+      const result = service['getSessionId'](ctxMock);
+
       // Then
-      expect(result).toBe(sessionId);
+      expect(result).toBe(accountIdMock);
     });
 
-    it('should throw CoreFcaMissingAtHashException if at_hash is not a string', async () => {
+    it('should throw CoreFcaMissingAtHashException', () => {
       // Given
-      ctxMock.oidc.entities.IdTokenHint.payload.at_hash = null;
+      ctxMock.oidc.entities.Session.accountId = null;
+
       // When
-      await expect(service['getSessionId'](ctxMock)).rejects.toThrow(
+      expect(() => service['getSessionId'](ctxMock)).toThrow(
         CoreMissingAtHashException,
       );
     });

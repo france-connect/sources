@@ -8,7 +8,7 @@ if [ -z "$1" ]; then
 fi
 
 # Those applications do not use the generic matrix and have specific bake targets
-SPECIFIC_TARGETS="csmr-hsm-high command-runner"
+SPECIFIC_TARGETS="csmr-hsm-high command-runner command-import-sp-sandbox"
 
 . "$(dirname "$0")/utils.sh"
 

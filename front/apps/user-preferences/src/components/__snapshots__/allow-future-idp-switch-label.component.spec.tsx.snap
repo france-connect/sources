@@ -6,7 +6,7 @@ exports[`AllowFutureIdpSwitchLabelComponent should render the label when switch 
     Les futurs moyens de connexion dans FranceConnect
     <strong>
        seront 
-      autorisés
+      any-futureidp-allowed-mock
     </strong>
   </span>
 </div>
@@ -18,7 +18,7 @@ exports[`AllowFutureIdpSwitchLabelComponent should render the label when switch 
     Les futurs moyens de connexion dans FranceConnect
     <strong>
        seront 
-      bloqués
+      any-futureidp-disallowed-mock
     </strong>
   </span>
 </div>

@@ -2,6 +2,7 @@ import classnames from 'classnames';
 import React, { useCallback, useState } from 'react';
 
 import { ToggleInput } from '@fc/dsfr';
+import { t } from '@fc/i18n';
 import { useStylesQuery, useStylesVariables } from '@fc/styles';
 
 import type { ServiceInterface } from '../interfaces';
@@ -42,6 +43,10 @@ export const ServiceComponent = React.memo(
     }, []);
 
     const inputName = `idpList.${service.uid}`;
+    const toggleLegendChecked = t('UserPreferences.idp.checked');
+    const toggleLegendUnchecked = t('UserPreferences.idp.unchecked');
+    const legend = { checked: toggleLegendChecked, unchecked: toggleLegendUnchecked };
+
     return (
       <li
         className={classnames('flex-start items-start fr-mb-0 fr-pt-2w fr-toggle--border-bottom', {
@@ -60,7 +65,7 @@ export const ServiceComponent = React.memo(
           disabled={!allowToBeUpdated}
           initialValue={service.isChecked}
           label={labelCallback}
-          legend={{ checked: 'Autorisé', unchecked: 'Bloqué' }}
+          legend={legend}
           name={inputName}
           onUpdate={allowToBeUpdated ? onChangeHandler : undefined}
         />

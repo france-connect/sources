@@ -4,9 +4,9 @@ import React from 'react';
 import * as ReactRouterDom from 'react-router';
 
 import { ConfigService } from '@fc/config';
+import type { TrackInterface } from '@fc/core-user-dashboard';
 import { PaginationComponent } from '@fc/dsfr';
 
-import type { TrackInterface } from '../../interfaces';
 import { orderGroupByKeyAsc, transformTrackToEnhanced } from '../../utils';
 import { TracksGroupComponent } from './tracks-group';
 import { TracksListComponent } from './tracks-list.component';

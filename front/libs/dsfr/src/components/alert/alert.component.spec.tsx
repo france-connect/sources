@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 
-import { EventTypes, HeadingTag } from '@fc/common';
+import { HeadingTag, MessageTypes } from '@fc/common';
 import { t } from '@fc/i18n';
 
 import { Sizes } from '../../enums';
@@ -37,9 +37,10 @@ describe('AlertComponent', () => {
         className="any-custom-class-mock"
         dataTestId="any-data-test-id-mock"
         heading={HeadingTag.H2}
+        icon="any-icon-mock-classname"
         size={Sizes.MEDIUM}
         title="any-title-mock"
-        type={EventTypes.ERROR}
+        type={MessageTypes.ERROR}
         onClose={onCloseMock}>
         <p className="any-description-class-mock">any-description-value-mock</p>
       </AlertComponent>,
@@ -55,6 +56,7 @@ describe('AlertComponent', () => {
     expect(container.firstChild).toHaveClass('fr-alert--md');
     expect(container.firstChild).toHaveClass('fr-alert--error');
     expect(container.firstChild).toHaveClass('any-custom-class-mock');
+    expect(container.firstChild).toHaveClass('any-icon-mock-classname');
     expect(container.firstChild).toHaveAttribute('data-testid', 'any-data-test-id-mock');
     expect(container.firstChild).not.toHaveRole('alert');
     expect(titleElt).toBeInTheDocument();

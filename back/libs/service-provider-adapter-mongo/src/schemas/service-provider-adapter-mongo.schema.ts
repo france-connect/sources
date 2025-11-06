@@ -103,6 +103,9 @@ export class ServiceProvider extends Document {
   @Prop({ type: Date, default: Date.now })
   updatedAt: Date;
 
+  @Prop({ type: String })
+  updatedBy: string;
+
   @Prop({ type: Date, default: Date.now })
   secretCreatedAt: Date;
 

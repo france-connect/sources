@@ -1,12 +1,15 @@
 import React from 'react';
 
-import { EventTypes } from '@fc/common';
+import { MessageTypes } from '@fc/common';
 import { AlertComponent, LinkComponent } from '@fc/dsfr';
 
 export const IdentityTheftReportSuccessPage = React.memo(() => (
   <React.Fragment>
     <div className="fr-px-14w fr-py-6w fr-mb-8w fr-mt-6w fr-background-alt--grey">
-      <AlertComponent title="Votre demande a bien été prise en compte" type={EventTypes.SUCCESS}>
+      <AlertComponent
+        dataTestId="success-alert"
+        title="Votre demande a bien été prise en compte"
+        type={MessageTypes.SUCCESS}>
         <p>
           Vous allez recevoir un message de confirmation à l’adresse électronique indiquée dans le
           formulaire.

@@ -1,26 +1,20 @@
 import { renderHook } from '@testing-library/react';
-import { useCallback } from 'react';
+import type { FormApi } from 'final-form';
+import React from 'react';
 
 import { useFormSubmit } from './form-submit.hook';
 
-jest.mock('react', () => ({
-  ...jest.requireActual('react'),
-  useCallback: jest.fn(),
-}));
-
 describe('useFormSubmit', () => {
-  const useCallbackMock = jest.mocked(useCallback);
-
   const onPreSubmitMock = jest.fn();
   const onPostSubmitMock = jest.fn();
   const onSubmitMock = jest.fn();
   const valuesMock = { some: 'values' };
   const preSubmitValuesMock = { some: 'preSubmitValues' };
   const errorsMock = [{ some: 'error' }];
+  const formApiMock = Symbol('formApiMock') as unknown as FormApi;
 
   beforeEach(() => {
-    jest.resetAllMocks();
-    useCallbackMock.mockImplementation((fn) => fn);
+    jest.spyOn(React, 'useCallback').mockImplementation((fn) => fn);
   });
 
   it('should call onPreSubmit if provided', async () => {
@@ -30,7 +24,7 @@ describe('useFormSubmit', () => {
     );
 
     // When
-    await result.current(valuesMock);
+    await result.current(valuesMock, formApiMock);
 
     // Then
     expect(onPreSubmitMock).toHaveBeenCalledExactlyOnceWith(valuesMock);
@@ -41,10 +35,10 @@ describe('useFormSubmit', () => {
     const { result } = renderHook(() => useFormSubmit(onSubmitMock));
 
     // When
-    await result.current(valuesMock);
+    await result.current(valuesMock, formApiMock);
 
     // Then
-    expect(onSubmitMock).toHaveBeenCalledExactlyOnceWith(valuesMock);
+    expect(onSubmitMock).toHaveBeenCalledExactlyOnceWith(valuesMock, formApiMock);
   });
 
   it('should call onSubmit with values from onPreSubmit if provided', async () => {
@@ -55,10 +49,10 @@ describe('useFormSubmit', () => {
     );
 
     // When
-    await result.current(valuesMock);
+    await result.current(valuesMock, formApiMock);
 
     // Then
-    expect(onSubmitMock).toHaveBeenCalledExactlyOnceWith(preSubmitValuesMock);
+    expect(onSubmitMock).toHaveBeenCalledExactlyOnceWith(preSubmitValuesMock, formApiMock);
   });
 
   it('should not call on postSubmit if provided but onSubmit returned errors', async () => {
@@ -69,7 +63,7 @@ describe('useFormSubmit', () => {
     );
 
     // When
-    await result.current(valuesMock);
+    await result.current(valuesMock, formApiMock);
 
     // Then
     expect(onPostSubmitMock).not.toHaveBeenCalled();
@@ -83,11 +77,11 @@ describe('useFormSubmit', () => {
     );
 
     // When
-    await result.current(valuesMock);
+    await result.current(valuesMock, formApiMock);
 
     // Then
     expect(onPostSubmitMock).toHaveBeenCalled();
-    expect(onPostSubmitMock).toHaveBeenCalledExactlyOnceWith(preSubmitValuesMock);
+    expect(onPostSubmitMock).toHaveBeenCalledExactlyOnceWith(preSubmitValuesMock, formApiMock);
   });
 
   it('should return error from onPostSubmit if provided', async () => {
@@ -99,7 +93,7 @@ describe('useFormSubmit', () => {
     );
 
     // When
-    const errors = await result.current(valuesMock);
+    const errors = await result.current(valuesMock, formApiMock);
 
     // Then
     expect(errors).toBe(postSubmitErrorsMock);

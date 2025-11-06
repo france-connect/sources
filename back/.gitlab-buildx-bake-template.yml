@@ -1,0 +1,32 @@
+.base-buildx-bake:
+  stage: 'Build Back'
+  image: docker:28-cli
+  services:
+    - name: docker:28-dind
+  tags:
+    - build-fc
+
+  allow_failure: true
+
+  rules:
+    - if: '$CI_COMMIT_TAG'
+      when: manual
+    - when: never
+
+  environment:
+    name: build
+
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ''
+    INTERNET_PROXY: ${PROXY_EXPLOITATION}
+    APP_VERSION: ${CI_COMMIT_REF_NAME}
+
+  before_script:
+    - echo "$FC_DOCKER_REGISTRY_PASS" | docker login -u "$FC_DOCKER_REGISTRY_USER" --password-stdin "$FC_DOCKER_REGISTRY"
+
+  script:
+    - ./docker/builds/cd/buildx-bake.sh $APP
+    - echo -e "\e[1;34m$MSG $APP_VERSION\e[0m"
+
+  interruptible: true

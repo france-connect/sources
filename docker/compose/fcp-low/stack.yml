@@ -11,6 +11,15 @@ services:
       - "fip1-low"
       - "dpp1-low"
 
+  fcp-low-mongo-multi-replica:
+    image: alpine
+    depends_on:
+      - "core-fcp-low"
+      - "mongo-fcp-low-replica-multi-init"
+      - "fsp1-low"
+      - "fip1-low"
+      - "dpp1-low"
+
   ####################
   # CSMR IMPORT CORE
   ####################
@@ -52,7 +61,6 @@ services:
       - "hsm"
       # -- Mailer
       - "maildev"
-
   ####################
   # ALL FCP LOW
   ####################

@@ -1,13 +1,11 @@
-import { FraudCaseDto } from '@fc/csmr-fraud-client';
+import { FraudCaseDto, FraudTrackDto } from '@fc/csmr-fraud-client';
 import { PivotIdentityDto } from '@fc/oidc';
-import { TracksAdapterResultsInterface } from '@fc/tracks-adapter-elasticsearch';
 
 import {
   SecurityTicketDataInterface,
   TicketTracksDataInterface,
-  TracksFormatterOutputInterface,
 } from '../interfaces';
-import { getReadableDateFromTime, getSecurityTicketData } from '../utils';
+import { getSecurityTicketData } from '../utils';
 
 jest.mock('../utils/get-readable-date-from-time.util.ts');
 
@@ -26,15 +24,18 @@ const accountIdsMock = ['accountIdMock'];
 const timeMock = 1664661600000;
 const readableDateMock = '02/10/2022 00:00:00';
 
-const trackWithAccountMatchMock: TracksFormatterOutputInterface = {
+const trackWithAccountMatchMock: FraudTrackDto = {
+  id: 'idMock',
   platform: 'FranceConnect',
   city: 'Paris',
   country: 'FR',
   idpName: 'idpNameMock',
+  idpLabel: 'idpLabelMock',
   idpId: 'idpIdMock',
   spName: 'spNameMock',
   spId: 'spIdMock',
   time: timeMock,
+  date: readableDateMock,
   accountId: 'accountIdMock',
   interactionAcr: 'interactionAcrMock',
   interactionId: 'interactionIdMock',
@@ -44,15 +45,18 @@ const trackWithAccountMatchMock: TracksFormatterOutputInterface = {
   ipAddress: ['ipAddressMock'],
 };
 
-const trackWithoutAccountMatchMock: TracksFormatterOutputInterface = {
+const trackWithoutAccountMatchMock: FraudTrackDto = {
+  id: 'idMock',
   platform: 'FranceConnect',
   city: 'Paris',
   country: 'FR',
   idpName: 'idpNameMock',
+  idpLabel: 'idpLabelMock',
   idpId: 'idpIdMock',
   spName: 'spNameMock',
   spId: 'spIdMock',
   time: timeMock,
+  date: readableDateMock,
   accountId: 'invalidAccountIdMock',
   interactionAcr: 'interactionAcrMock',
   interactionId: 'interactionIdMock',
@@ -61,12 +65,6 @@ const trackWithoutAccountMatchMock: TracksFormatterOutputInterface = {
   idpSub: 'idpSubMock',
   ipAddress: ['ipAddressMock'],
 };
-
-const tracksMock: TracksAdapterResultsInterface<TracksFormatterOutputInterface> =
-  {
-    total: 2,
-    payload: [trackWithAccountMatchMock, trackWithoutAccountMatchMock],
-  };
 
 const identityMock: PivotIdentityDto = {
   given_name: 'firstName',
@@ -124,38 +122,13 @@ const ticketDataMock: SecurityTicketDataInterface = {
 };
 
 describe('getSecurityTicketData', () => {
-  beforeEach(() => {
-    jest.mocked(getReadableDateFromTime).mockReturnValue(readableDateMock);
-  });
-
-  it('should call getReadableDateFromTime() with time', () => {
-    // When
-    getSecurityTicketData(
-      identityMock,
-      fraudCaseMock,
-      accountIdsMock,
-      tracksMock,
-    );
-
-    // Then
-    expect(getReadableDateFromTime).toHaveBeenCalledTimes(2);
-    expect(getReadableDateFromTime).toHaveBeenNthCalledWith(
-      1,
-      trackWithAccountMatchMock.time,
-    );
-    expect(getReadableDateFromTime).toHaveBeenNthCalledWith(
-      2,
-      trackWithoutAccountMatchMock.time,
-    );
-  });
-
   it('should return ticketData without error', () => {
     // When
     const ticketData = getSecurityTicketData(
       identityMock,
       fraudCaseMock,
       accountIdsMock,
-      tracksMock,
+      [trackWithAccountMatchMock, trackWithoutAccountMatchMock],
     );
 
     // Then
@@ -176,7 +149,7 @@ describe('getSecurityTicketData', () => {
       identityMock,
       fraudCaseMock,
       [],
-      tracksMock,
+      [trackWithAccountMatchMock, trackWithoutAccountMatchMock],
     );
 
     // Then
@@ -195,7 +168,7 @@ describe('getSecurityTicketData', () => {
       identityMock,
       fraudCaseMock,
       accountIdsMock,
-      { total: 0, payload: [] },
+      [],
     );
 
     // Then

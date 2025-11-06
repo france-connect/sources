@@ -4,6 +4,8 @@ export const ucfirst = jest.fn((v) => v);
 
 export const sortByKey = jest.fn(() => jest.fn());
 
+export const isoToDate = jest.fn();
+
 export const getAccessibleTitle = jest.fn();
 
 /* ----------------------
@@ -50,6 +52,7 @@ export enum Strings {
   WHITE_SPACE = ' ',
   DASH = '-',
   SLASH = '/',
+  NBSP_UNICODE = '\u00A0',
 }
 
 export enum ContentType {
@@ -66,7 +69,25 @@ export enum HttpMethods {
   DELETE = 'delete',
 }
 
-export enum EventTypes {
+export enum HttpProtocols {
+  HTTP = 'http',
+  HTTPS = 'https',
+}
+
+export const TypeOf = {
+  BOOLEAN: 'boolean',
+  FUNCTION: 'function',
+  NUMBER: 'number',
+  OBJECT: 'object',
+  STRING: 'string',
+};
+
+export enum SignedAlgorithm {
+  ES256 = 'ES256',
+  RS256 = 'RS256',
+}
+
+export enum MessageTypes {
   ERROR = 'error',
   INFO = 'info',
   SUCCESS = 'success',
@@ -78,3 +99,13 @@ export enum SortOrder {
   ASC = 'ASC',
   DESC = 'DESC',
 }
+
+export enum Platforms {
+  FranceConnect = 'FranceConnect',
+  FranceConnectPlus = 'FranceConnect+',
+}
+
+export const Timezones = {
+  EUROPE_PARIS: 'Europe/Paris',
+  UTC: 'utc',
+};

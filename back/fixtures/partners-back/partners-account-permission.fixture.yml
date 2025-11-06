@@ -28,6 +28,28 @@ items:
     entityId: 'efa51522-26e9-4d03-8958-816ff59a74bd'
     account: '@user-bernard-martinot'
 
+  permissions-sp-list-default:
+    id: 'c8568083-f5a7-4535-9fe9-f96059f43642'
+    permissionType: 'LIST'
+    entity: 'SERVICE_PROVIDER'
+    account: '@user-bdd-default'
+
+  permissions-sp-view-sp2-default:
+    id: '70721fc1-e2f4-455a-ae0c-149b77443245'
+    permissionType: 'VIEW'
+    entity: 'SERVICE_PROVIDER'
+    # @sp2-sandbox
+    entityId: '25c4e41c-a97d-4bc9-8e05-e353c91eaef5'
+    account: '@user-bdd-default'
+
+  permissions-sp-view-sp3-default:
+    id: 'f4638975-6443-4645-b430-a46fa1cd55cb'
+    permissionType: 'VIEW'
+    entity: 'SERVICE_PROVIDER'
+    # @sp3-sandbox
+    entityId: 'b66afba8-58b2-4465-a868-6a187ea67f5a'
+    account: '@user-bdd-default'
+
   permissions-spi-list-3:
     id: '049e6bbc-13cf-4202-8ada-a065d0703f03'
     permissionType: 'LIST'
@@ -55,3 +77,17 @@ items:
     # @sp4-i1-sandbox
     entityId: '50b70101-0e1f-419a-9365-81754c2de689'
     account: '@user-bdd-one-instance'
+
+  permissions-sp-list-angela:
+    id: '8a9c4d2e-1b5f-4a7c-9e3d-2f8b1c6a9e4d'
+    permissionType: 'LIST'
+    entity: 'SERVICE_PROVIDER'
+    account: '@user-angela-dubois'
+
+  permissions-sp-view-sp1-angela:
+    id: '7b8e5f3a-2c6d-4e9f-8a1b-5c4e7d9f2a6b'
+    permissionType: 'VIEW'
+    entity: 'SERVICE_PROVIDER'
+    # @sp1-sandbox
+    entityId: 'd7d36b81-0b68-4c26-a399-854848164f29'
+    account: '@user-angela-dubois'

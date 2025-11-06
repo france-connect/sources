@@ -4,12 +4,12 @@ import React from 'react';
 import { ConfigService } from '@fc/config';
 import { LinkComponent } from '@fc/dsfr';
 import type { LayoutConfig } from '@fc/layout';
-import { Options } from '@fc/layout';
+import { LayoutOptions } from '@fc/layout';
 
 import classes from './sitemap.module.scss';
 
 export const SitemapPage = React.memo(() => {
-  const { sitemap = [] } = ConfigService.get<LayoutConfig>(Options.CONFIG_NAME);
+  const { sitemap = [] } = ConfigService.get<LayoutConfig>(LayoutOptions.CONFIG_NAME);
 
   return (
     <nav className="fr-col-12 fr-col-md-8" id="plan-du-site">

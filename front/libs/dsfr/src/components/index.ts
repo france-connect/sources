@@ -9,6 +9,7 @@ export * from './callout';
 export * from './card';
 export * from './inputs';
 export * from './link';
+export * from './link-email';
 export * from './logos';
 export * from './notice';
 export * from './pagination';

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router';
 import { ConfigService } from '@fc/config';
 import { PaginationComponent } from '@fc/dsfr';
 
-import { Options } from '../../enums';
+import { TracksOptions } from '../../enums';
 import type { PaginationResultInterface, TrackListType, TracksConfig } from '../../interfaces';
 import { groupTracksByMonth, orderGroupByKeyAsc, transformTrackToEnhanced } from '../../utils';
 import { TracksGroupComponent } from './tracks-group';
@@ -15,7 +15,7 @@ const NUMBER_OF_PAGES_SHOWN_INTO_NAVIGATION = 3;
 export const TracksListComponent = React.memo(() => {
   const {
     luxon: { monthYearFormat },
-  } = ConfigService.get<TracksConfig>(Options.CONFIG_NAME);
+  } = ConfigService.get<TracksConfig>(TracksOptions.CONFIG_NAME);
 
   const navigate = useNavigate();
 

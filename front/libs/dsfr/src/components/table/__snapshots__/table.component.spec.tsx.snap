@@ -3,7 +3,7 @@
 exports[`TableComponent should match the snapshot with optionnals props 1`] = `
 <div>
   <div
-    class="fr-table--lg fr-table fr-table--bordered fr-table--no-scroll"
+    class="fr-table--lg fr-table fr-table--bordered"
     id="any-table-id-mock"
   >
     <div

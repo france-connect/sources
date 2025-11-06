@@ -117,9 +117,13 @@ describe('PartnersInstanceVersionFormService', () => {
     it('should return an object with generated values', async () => {
       // Given
       const generatedValues = {
-        generated: 'value',
+        mutable: { generated: 'value' },
+        immutable: {
+          client_id: generatedClientIdMock,
+          client_secret: generatedClientSecretMock,
+        },
       };
-      service['getGeneratedValues'] = jest
+      service['getOrGenerateValues'] = jest
         .fn()
         .mockResolvedValueOnce(generatedValues);
 
@@ -127,25 +131,30 @@ describe('PartnersInstanceVersionFormService', () => {
       const result = await service.fromFormValues(formVersionMock);
 
       // Then
-      expect(result).toStrictEqual(expect.objectContaining(generatedValues));
+      expect(result).toStrictEqual({
+        ...configDataMock,
+        ...generatedValues.mutable,
+        ...formVersionMock,
+        ...generatedValues.immutable,
+      });
     });
   });
 
-  describe('getGeneratedValues', () => {
+  describe('getOrGenerateValues', () => {
     it('should return credentials for given instanceId', async () => {
       // Given
-      const getCredentialsForInstanceResult = Symbol(
-        'getCredentialsForInstanceResult',
+      const getLatestVersionForInstanceResult = Symbol(
+        'getLatestVersionForInstanceResult',
       );
-      service['getCredentialsForInstance'] = jest
+      service['getLatestVersionForInstance'] = jest
         .fn()
-        .mockResolvedValueOnce(getCredentialsForInstanceResult);
+        .mockResolvedValueOnce(getLatestVersionForInstanceResult);
 
       // When
-      const result = await service['getGeneratedValues']('instanceId');
+      const result = await service['getOrGenerateValues']('instanceId');
 
       // Then
-      expect(result).toBe(getCredentialsForInstanceResult);
+      expect(result).toBe(getLatestVersionForInstanceResult);
     });
 
     it('should return generated credentials', async () => {
@@ -158,14 +167,17 @@ describe('PartnersInstanceVersionFormService', () => {
         .mockReturnValueOnce(generateNewCredentialsResult);
 
       // When
-      const result = await service['getGeneratedValues']();
+      const result = await service['getOrGenerateValues']();
 
       // Then
-      expect(result).toBe(generateNewCredentialsResult);
+      expect(result).toStrictEqual({
+        immutable: generateNewCredentialsResult,
+        mutable: {},
+      });
     });
   });
 
-  describe('getCredentialsForInstance', () => {
+  describe('getLatestVersionForInstance', () => {
     it('should return an object with client_id and client_secret', async () => {
       // Given
       instanceMock.getById.mockResolvedValueOnce({
@@ -177,12 +189,16 @@ describe('PartnersInstanceVersionFormService', () => {
       });
 
       // When
-      const result = await service['getCredentialsForInstance']('instanceId');
+      const result = await service['getLatestVersionForInstance']('instanceId');
 
       // Then
       expect(result).toStrictEqual({
-        client_id: databaseVersionMock.client_id,
-        client_secret: databaseVersionMock.client_secret,
+        immutable: {
+          client_id: databaseVersionMock.client_id,
+          client_secret: databaseVersionMock.client_secret,
+          idpFilterExclude: true,
+        },
+        mutable: databaseVersionMock,
       });
     });
   });

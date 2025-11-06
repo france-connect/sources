@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TrackCardComponent should match the snapshot, when is last 1`] = `
+<div>
+  <div
+    class="fr-border-default--blue-france fr-p-5w"
+    data-testid="TrackCardComponent"
+  />
+</div>
+`;
+
+exports[`TrackCardComponent should match the snapshot, when is not last 1`] = `
+<div>
+  <div
+    class="fr-border-default--blue-france fr-p-5w fr-mb-2w"
+    data-testid="TrackCardComponent"
+  />
+</div>
+`;

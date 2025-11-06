@@ -103,5 +103,18 @@
     },
     "method": "GET",
     "url": "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/userinfo"
+  },
+  "ud csrf-token": {
+    "method": "GET",
+    "url": "https://ud.docker.dev-franceconnect.fr/api/csrf-token"
+  },
+  "ud signalement-usurpation": {
+    "headers": {
+      "x-csrf-token": "49fbf16dd64a32216a6fb639426b41e11d678590e2879a55a41705368163aa97"
+    },
+    "body": {},
+    "form": true,
+    "method": "POST",
+    "url": "https://ud.docker.dev-franceconnect.fr/api/fraud/noauth/summary"
   }
 }

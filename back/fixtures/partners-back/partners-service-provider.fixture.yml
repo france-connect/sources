@@ -4,8 +4,11 @@ items:
   sp1-sandbox:
     id: 'd7d36b81-0b68-4c26-a399-854848164f29'
     name: 'Service Provider 1'
+    organizationName: 'Ministère de la Transition Écologique'
+    datapassRequestId: '12345'
+    authorizedScopes: ['openid', 'given_name', 'family_name', 'email']
     platform: '@france-connect-low'
-    organisation: '@orga-1'
+    organisation: null
     createdAt: '2022-02-22T23:00:00.000Z'
     updatedAt: '2022-05-02T22:00:00.000Z'
 
@@ -13,16 +16,23 @@ items:
   sp2-sandbox:
     id: '25c4e41c-a97d-4bc9-8e05-e353c91eaef5'
     name: 'Service Provider 2'
+    organizationName: "Ministère de l'Intérieur"
+    datapassRequestId: '13245'
+    authorizedScopes: ['openid', 'given_name', 'family_name']
     platform: '@france-connect-low'
-    organisation: '@orga-1'
+    organisation: null
     createdAt: '2022-02-22T23:00:00.000Z'
     updatedAt: '2022-05-02T22:00:00.000Z'
 
   # sp with 0 instance
   sp3-sandbox:
     id: 'b66afba8-58b2-4465-a868-6a187ea67f5a'
-    name: 'Service Provider 1'
+    name: 'Service Provider 3'
+    organizationName: 'Ministère de la Justice'
+    datapassRequestId: '14235'
+    authorizedScopes:
+      ['openid', 'given_name', 'family_name', 'email', 'birthdate']
     platform: '@france-connect-high'
-    organisation: '@orga-2'
+    organisation: null
     createdAt: '2022-02-22T23:00:00.000Z'
     updatedAt: '2022-05-02T22:00:00.000Z'

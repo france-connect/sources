@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TrackCardConnexionHeaderComponent should match snapshot 1`] = `
+<div>
+  <div
+    class="fr-mb-2w flex-columns flex-between items-center"
+  >
+    <div>
+      <h4
+        class="fr-text--lg fr-text-title--blue-france fr-mb-0"
+        data-testid="TrackCardHeaderComponent-spName"
+      >
+        any-acme-spLabel
+      </h4>
+    </div>
+  </div>
+</div>
+`;

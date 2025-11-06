@@ -45,7 +45,7 @@ _command_register "create-es-alias-v2" "_create_es_alias_v2" "create manual es a
 _command_register "generate-metrics" "_generate_metrics" "" # Description to be defined
 _command_register "generate-stats" "_generate_stats" "generate-stats => restore all stats (logs, event and metrics) index"
 _command_register "generate-events" "_generate_events" "restore logs and events index"
-_command_register "delete-indices" "_delete_indices" "Deletes elasticsearch indices" 
+_command_register "delete-indices" "_delete_indices" "Deletes elasticsearch indices"
 _command_register "restore-snapshot" "_es_restore_snapshot" "" # Description to be defined # Deprecated
 
 ## Nodejs apps
@@ -117,6 +117,8 @@ _command_register "help" "_command_list" "Display this help: help <search term>"
 
 _command_register "reload-rp" "_reload_rp" "Reload Reverse proxy"
 
+_command_register "reload-haproxy" "_reload_haproxy" "Reload HAProxy"
+
 _command_register "compose" "_compose" "Run a docker compose command on project"
 
 _command_register "wait" "wait_for_nodejs" "Wait for a nodejs HTTP service to respond on an URL or try to display logs"
@@ -137,4 +139,7 @@ _command_register "detect-back-changes" "_ci_job_relevant_for_back_apps" "ci-dif
 _command_register "detect-front-changes" "_ci_job_relevant_for_front_apps" "ci-diff-files <app1> [<app2> <app3> ...] => CI ONLY! Runs inspect-updated-files-for-apps but auto build the applications and fetches the git revision"
 
 _command_register "add" "_add_node_app" "Start a node application."
+
+_command_register "command" "_run_command" "Executes a containerized command."
+
 _command_run "$1" "${@:2}"

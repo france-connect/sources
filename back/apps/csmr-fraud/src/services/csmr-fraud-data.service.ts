@@ -4,13 +4,10 @@ import {
   AccountIdsResultsInterface,
   CsmrAccountClientService,
 } from '@fc/csmr-account-client';
-import { FraudCaseDto } from '@fc/csmr-fraud-client';
+import { FraudCaseDto, FraudTrackDto } from '@fc/csmr-fraud-client';
 import { LoggerService } from '@fc/logger';
 import { PivotIdentityDto } from '@fc/oidc';
-import {
-  TracksAdapterElasticsearchService,
-  TracksAdapterResultsInterface,
-} from '@fc/tracks-adapter-elasticsearch';
+import { TracksAdapterElasticsearchService } from '@fc/tracks-adapter-elasticsearch';
 
 import {
   SecurityTicketContextInterface,
@@ -72,25 +69,35 @@ export class CsmrFraudDataService {
     accountIds: AccountIdsResultsInterface,
     groupIds: string[],
   ): Promise<SecurityTicketContextInterface> {
-    let tracks: TracksAdapterResultsInterface<TracksFormatterOutputInterface>;
-    try {
-      tracks = await this.tracks.getTracksForAuthenticationEventId(
+    let fraudTracks = fraudCase.fraudTracks;
+
+    const hasFraudTracks = fraudTracks && fraudTracks.length > 0;
+
+    if (!hasFraudTracks) {
+      fraudTracks = await this.fetchFraudTracks(
         fraudCase.authenticationEventId,
       );
-    } catch (error) {
-      this.logger.err(error);
-      tracks = { total: 0, payload: [] };
     }
 
     const ticketData = getSecurityTicketData(
       identity,
       fraudCase,
       groupIds,
-      tracks,
+      fraudTracks,
     );
 
-    const trackingData = getTrackingData(fraudCase, accountIds, tracks);
+    const trackingData = getTrackingData(fraudCase, accountIds, fraudTracks);
 
     return { ticketData, trackingData };
+  }
+
+  async fetchFraudTracks(
+    authenticationEventId: string,
+  ): Promise<FraudTrackDto[]> {
+    const { payload: fraudTracks } =
+      await this.tracks.getTracksForAuthenticationEventId(
+        authenticationEventId,
+      );
+    return fraudTracks;
   }
 }

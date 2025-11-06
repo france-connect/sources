@@ -66,7 +66,7 @@ describe('PartnersOidcClientService', () => {
 
   const partnersAccountServiceMock = {
     init: jest.fn(),
-    updateLastConnection: jest.fn(),
+    updateAccount: jest.fn(),
   };
 
   const accountPermissionServiceMock = {
@@ -298,7 +298,7 @@ describe('PartnersOidcClientService', () => {
 
     it('should not init account if it already exists', async () => {
       // Given
-      partnersAccountServiceMock.updateLastConnection.mockResolvedValue(idMock);
+      partnersAccountServiceMock.updateAccount.mockResolvedValue(idMock);
 
       // When
       await service.retrieveOrCreateAccount(identityMock);
@@ -309,9 +309,7 @@ describe('PartnersOidcClientService', () => {
 
     it('should init account with identity', async () => {
       // Given
-      partnersAccountServiceMock.updateLastConnection.mockResolvedValue(
-        undefined,
-      );
+      partnersAccountServiceMock.updateAccount.mockResolvedValue(undefined);
 
       // When
       await service.retrieveOrCreateAccount(identityMock);
@@ -325,7 +323,7 @@ describe('PartnersOidcClientService', () => {
 
     it('should store identity in session', async () => {
       // Given
-      partnersAccountServiceMock.updateLastConnection.mockResolvedValue(idMock);
+      partnersAccountServiceMock.updateAccount.mockResolvedValue(idMock);
 
       // When
       await service.retrieveOrCreateAccount(identityMock);

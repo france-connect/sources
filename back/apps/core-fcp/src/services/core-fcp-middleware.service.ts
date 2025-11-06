@@ -63,7 +63,7 @@ export class CoreFcpMiddlewareService extends CoreOidcProviderMiddlewareService 
     );
   }
 
-  onModuleInit() {
+  onApplicationBootstrap() {
     this.registerMiddleware(
       OidcProviderMiddlewareStep.BEFORE,
       OidcProviderRoutes.AUTHORIZATION,
@@ -199,6 +199,7 @@ export class CoreFcpMiddlewareService extends CoreOidcProviderMiddlewareService 
       ...sessionProperties,
       browsingSessionId,
       spScope,
+      stepRoute: OidcProviderRoutes.AUTHORIZATION,
     });
 
     await this.sessionService.commit();

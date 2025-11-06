@@ -1,4 +1,4 @@
-import { Repository, UpdateResult } from 'typeorm';
+import { QueryRunner, Repository, UpdateResult } from 'typeorm';
 
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -10,6 +10,7 @@ import {
 
 import { uuid } from '@fc/common';
 import { OidcClientInterface } from '@fc/service-provider';
+import { getInsertedEntity } from '@fc/typeorm';
 
 @Injectable()
 export class PartnersServiceProviderInstanceVersionService {
@@ -19,6 +20,7 @@ export class PartnersServiceProviderInstanceVersionService {
   ) {}
 
   async create(
+    queryRunner: QueryRunner,
     version: OidcClientInterface,
     instanceId: uuid,
     publicationStatus: PublicationStatusEnum = PublicationStatusEnum.DRAFT,
@@ -28,9 +30,18 @@ export class PartnersServiceProviderInstanceVersionService {
       instance: instanceId,
       publicationStatus,
     } as unknown as PartnersServiceProviderInstanceVersion;
-    const result = await this.repository.save(data);
 
-    return result;
+    const insertResult = await queryRunner.manager
+      .createQueryBuilder()
+      .insert()
+      .into(PartnersServiceProviderInstanceVersion)
+      .values(data)
+      .returning(['id'])
+      .execute();
+
+    return getInsertedEntity<PartnersServiceProviderInstanceVersion>(
+      insertResult,
+    );
   }
 
   async getById(
@@ -44,10 +55,38 @@ export class PartnersServiceProviderInstanceVersionService {
     return version;
   }
 
+  async getByIdWithQueryRunner(
+    queryRunner: QueryRunner,
+    versionId: string,
+  ): Promise<PartnersServiceProviderInstanceVersion | null> {
+    const version = await queryRunner.manager.findOne(
+      PartnersServiceProviderInstanceVersion,
+      {
+        where: { id: versionId },
+        relations: ['instance'],
+      },
+    );
+
+    return version;
+  }
+
   async updateStatus(
     version: Partial<PartnersServiceProviderInstanceVersion>,
   ): Promise<UpdateResult> {
     const success = await this.repository.update(
+      { id: version.id },
+      { publicationStatus: version.publicationStatus },
+    );
+
+    return success;
+  }
+
+  async updateStatusWithQueryRunner(
+    queryRunner: QueryRunner,
+    version: Partial<PartnersServiceProviderInstanceVersion>,
+  ): Promise<UpdateResult> {
+    const success = await queryRunner.manager.update(
+      PartnersServiceProviderInstanceVersion,
       { id: version.id },
       { publicationStatus: version.publicationStatus },
     );

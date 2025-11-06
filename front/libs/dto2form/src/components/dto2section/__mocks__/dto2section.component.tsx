@@ -1,1 +1,1 @@
-export const DTO2SectionComponent = jest.fn(() => <div data-mockid="DTO2SectionComponent" />);
+export const Dto2SectionComponent = jest.fn(() => <div data-mockid="Dto2SectionComponent" />);

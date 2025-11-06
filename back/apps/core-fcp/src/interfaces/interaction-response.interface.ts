@@ -1,4 +1,4 @@
-import { NotificationInterface } from '@fc/notifications';
+import { NotificationInterface } from '@fc/notification';
 import { IdentityProviderMetadata } from '@fc/oidc';
 
 export interface InteractionResponseInterface {

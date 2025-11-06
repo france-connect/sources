@@ -1,3 +1,5 @@
+import { ValidationArguments } from 'class-validator';
+
 import { ConfigService } from '@fc/config';
 
 import { IsUrlRequiredTldFromConfigConstraint } from './is-url-required-tld-from-config';
@@ -9,6 +11,12 @@ const configMock = {
 const instance = new IsUrlRequiredTldFromConfigConstraint(
   configMock as unknown as ConfigService,
 );
+
+const configName = 'SomeModuleConfig';
+const propertyName = 'someProperty';
+
+const constraints = [configName, propertyName];
+
 describe('IsUrlRequiredTldFromConfig', () => {
   const valuesToTestLocalhostNotAllowed = [
     {
@@ -18,30 +26,30 @@ describe('IsUrlRequiredTldFromConfig', () => {
     },
     {
       value: 'https://localhost/oidc-callback',
-      expected: false,
-      context: 'isLocalhostAllowed = false',
+      expected: true,
+      context: 'someProperty = false',
     },
     {
       value: 'http://localhost/oidc-callback',
-      expected: false,
-      context: 'isLocalhostAllowed = false',
+      expected: true,
+      context: 'someProperty = false',
     },
     {
       value: 'http://localhost:3000',
-      expected: false,
-      context: 'isLocalhostAllowed = false',
+      expected: true,
+      context: 'someProperty = false',
     },
   ];
 
   const valuesToTestLocalhostAllowed = [
     {
       value: 'http://localhost:3000/oidc-callback',
-      expected: true,
+      expected: false,
       context: `contain port, path and without ssl certificate`,
     },
     {
       value: 'https://localhost:3000/oidc-callback',
-      expected: true,
+      expected: false,
       context: 'contain port & path',
     },
     {
@@ -77,11 +85,13 @@ describe('IsUrlRequiredTldFromConfig', () => {
       ({ value, expected }) => {
         // Given
         configMock.get.mockReturnValueOnce({
-          isLocalhostAllowed: false,
+          someProperty: false,
         });
 
         // When
-        const result = instance.validate(value);
+        const result = instance.validate(value, {
+          constraints,
+        } as ValidationArguments);
 
         // Then
         expect(result).toStrictEqual(expected);
@@ -93,11 +103,13 @@ describe('IsUrlRequiredTldFromConfig', () => {
       ({ value, expected }) => {
         // Given
         configMock.get.mockReturnValueOnce({
-          isLocalhostAllowed: true,
+          someProperty: true,
         });
 
         // When
-        const result = instance.validate(value);
+        const result = instance.validate(value, {
+          constraints,
+        } as ValidationArguments);
 
         // Then
         expect(result).toStrictEqual(expected);
@@ -107,31 +119,22 @@ describe('IsUrlRequiredTldFromConfig', () => {
 
   describe('defaultMessage', () => {
     const invalidURL = 'URL is invalid';
-    const defaultMessageContext = [
-      { isLocalhostAllowed: true, defaultMessage: `${invalidURL}` },
-      {
-        isLocalhostAllowed: false,
-        defaultMessage: `${invalidURL} (localhost is disabled by configuration)`,
-      },
-    ];
 
-    it.each(defaultMessageContext)(
-      'should return the default message : $defaultMessage',
-      ({ isLocalhostAllowed, defaultMessage }) => {
-        configMock.get.mockReturnValueOnce({
-          isLocalhostAllowed,
-        });
-        // given
-        const instance = new IsUrlRequiredTldFromConfigConstraint(
-          configMock as unknown as ConfigService,
-        );
+    it('should return the default message : $defaultMessage', () => {
+      // given
+      configMock.get.mockReturnValueOnce({
+        someProperty: true,
+      });
 
-        // when
-        const result = instance.defaultMessage();
+      const instance = new IsUrlRequiredTldFromConfigConstraint(
+        configMock as unknown as ConfigService,
+      );
 
-        // then
-        expect(result).toStrictEqual(defaultMessage);
-      },
-    );
+      // when
+      const result = instance.defaultMessage();
+
+      // then
+      expect(result).toStrictEqual(invalidURL);
+    });
   });
 });

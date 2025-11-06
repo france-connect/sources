@@ -15,7 +15,6 @@ import { LoggerConfig as LoggerLegacyConfig } from '@fc/logger-legacy';
 import { OidcAcrConfig } from '@fc/oidc-acr';
 import { OidcClientConfig } from '@fc/oidc-client';
 import { OidcProviderConfig } from '@fc/oidc-provider';
-import { OverrideOidcProviderConfig } from '@fc/override-oidc-provider';
 import { RedisConfig } from '@fc/redis';
 import { ServiceProviderAdapterEnvConfig } from '@fc/service-provider-adapter-env';
 import { SessionConfig } from '@fc/session';
@@ -97,11 +96,6 @@ export class EidasBridgeConfig {
   @ValidateNested()
   @Type(() => OidcProviderConfig)
   readonly OidcProvider: OidcProviderConfig;
-
-  @IsObject()
-  @ValidateNested()
-  @Type(() => OverrideOidcProviderConfig)
-  readonly OverrideOidcProvider: OverrideOidcProviderConfig;
 
   @IsObject()
   @ValidateNested()

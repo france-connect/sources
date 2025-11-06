@@ -12,6 +12,7 @@ import {
   HttpExceptionFilter,
   UnknownHtmlExceptionFilter,
 } from '@fc/exceptions';
+import { HttpProxyModule } from '@fc/http-proxy';
 import {
   IdentityProviderAdapterEnvModule,
   IdentityProviderAdapterEnvService,
@@ -50,6 +51,7 @@ const oidcClientModule = OidcClientModule.register(
     CryptographyModule,
     oidcClientModule,
     HttpModule,
+    HttpProxyModule,
     ViewTemplatesModule,
     CsrfModule,
   ],

@@ -1,4 +1,11 @@
 {
-  "CorePartners.instance.createdAt": "Créée le : {date}",
-  "Form.FORM_ERROR": "Veuillez réessayer ultérieurement"
+  "CorePartners.documentation.label": "documentation partenaires",
+  "CorePartners.instance.noticeTitle": "Une évolution des adresses a été faite récemment. Une modification de votre configuration sera nécessaire pour que le bac à sable soit fonctionnel.",
+  "CorePartners.serviceProvidersPage.calloutBullet1": "L’habilitation du fournisseur de service n’a pas encore été finalisée",
+  "CorePartners.serviceProvidersPage.calloutBullet2": "Vous n’avez pas été désigné comme demandeur ou responsable technique lors de la demande d’habilitation",
+  "CorePartners.serviceProvidersPage.calloutBullet3": "Le fournisseur de service a été désactivé ou supprimé",
+  "CorePartners.serviceProvidersPage.calloutSubtitle": "Cela peut s’expliquer par l’une des raisons suivantes{NBSP_UNICODE}:",
+  "CorePartners.serviceProvidersPage.calloutTitle": "Vous ne voyez pas un fournisseur de service attendu{NBSP_UNICODE}?",
+  "CorePartners.serviceProvidersPage.datapassRequestId": "Numéro de demande d’habilitation{NBSP_UNICODE}:{NBSP_UNICODE}",
+  "CorePartners.serviceProvidersPage.title": "Mes fournisseurs de service"
 }

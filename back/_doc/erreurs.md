@@ -105,12 +105,6 @@
 | [<b>110004</b>](../apps/mock-service-provider/src/exceptions/mock-service-provider-token-revocation.exception.ts) | Une erreur s&#39;est produite lors de la révocation d&#39;un token par un FS de démo. Le token a dû expirer avec révocation. Si le problème persiste, contacter le support N3. |  | <b>Classe :</b> [MockServiceProviderTokenRevocationException](../apps/mock-service-provider/src/exceptions/mock-service-provider-token-revocation.exception.ts) <br /><b>Code HTTP :</b> 500 <br /><b>error :</b> server_error <br /> <b>error_description :</b> authentication aborted due to a technical error on the authorization server |
 | [<b>110005</b>](../apps/mock-service-provider/src/exceptions/mock-service-provider-auth.exception.ts) | L&#39;usager n&#39;est pas authentifié |  | <b>Classe :</b> [MockServiceProviderAuthException](../apps/mock-service-provider/src/exceptions/mock-service-provider-auth.exception.ts) <br /><b>Code HTTP :</b> 500 <br /><b>error :</b>  <br /> <b>error_description :</b>  |
 
-## @fc/override-oidc-provider
-| Code d'erreur | Description | Message utilisateur | Infos techniques |
-|---|---|---|---|
-| [<b>150001</b>](../libs/override-oidc-provider/src/exceptions/cryptography-gateway.exception.ts) | Il y a un problème de communication avec le HSM. L&#39;application est inutilisable pour tous les usagers. Contacter le support N3 en urgence. | Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter. | <b>Classe :</b> [CryptographyGatewayException](../libs/override-oidc-provider/src/exceptions/cryptography-gateway.exception.ts) <br /><b>Code HTTP :</b> 502 <br /><b>error :</b> temporarily_unavailable <br /> <b>error_description :</b> authentication aborted due to a technical error on the authorization server |
-| [<b>150003</b>](../libs/override-oidc-provider/src/exceptions/cryptography-invalid-payload-format.exception.ts) | Il y a un problème dans le format du payload à signer (on attend du Uint8Array, on reçoit autre chose). L&#39;application est inutilisable pour tous les usagers. Contacter le support N3 en urgence. | Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter. | <b>Classe :</b> [CryptographyInvalidPayloadFormatException](../libs/override-oidc-provider/src/exceptions/cryptography-invalid-payload-format.exception.ts) <br /><b>Code HTTP :</b> 400 <br /><b>error :</b> server_error <br /> <b>error_description :</b> authentication aborted due to a technical error on the authorization server |
-
 ## @fc/cryptography
 | Code d'erreur | Description | Message utilisateur | Infos techniques |
 |---|---|---|---|
@@ -270,6 +264,12 @@
 | [<b>490002</b>](../libs/i18n/src/exceptions/i18n-invalid-or-missing-count-variable.exception.ts) | La variable passée en paramètre de traduction pour la gestion du pluriel est invalide ou manquante | Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter. | <b>Classe :</b> [I18nInvalidOrMissingCountVariableException](../libs/i18n/src/exceptions/i18n-invalid-or-missing-count-variable.exception.ts) <br /><b>Code HTTP :</b> 500 <br /><b>error :</b> server_error <br /> <b>error_description :</b> authentication aborted due to a technical error on the authorization server |
 | [<b>490003</b>](../libs/i18n/src/exceptions/i18n-missing-variable.exception.ts) | La clé de traduction nécessite des variables mais aucune n&#39;ont été passées en paramètre | Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter. | <b>Classe :</b> [I18nMissingVariableException](../libs/i18n/src/exceptions/i18n-missing-variable.exception.ts) <br /><b>Code HTTP :</b> 500 <br /><b>error :</b> server_error <br /> <b>error_description :</b> authentication aborted due to a technical error on the authorization server |
 
+## @fc/datapass
+| Code d'erreur | Description | Message utilisateur | Infos techniques |
+|---|---|---|---|
+| [<b>500001</b>](../libs/datapass/src/exceptions/datapass-transformation.exception.ts) | Échec de la transformation du payload webhook Datapass |  | <b>Classe :</b> [DatapassTransformationException](../libs/datapass/src/exceptions/datapass-transformation.exception.ts) <br /><b>Code HTTP :</b> 500 <br /><b>error :</b> server_error <br /> <b>error_description :</b> Failed to transform Datapass webhook payload |
+| [<b>500002</b>](../libs/datapass/src/exceptions/datapass-validation.exception.ts) | Échec de la validation du payload webhook Datapass |  | <b>Classe :</b> [DatapassValidationException](../libs/datapass/src/exceptions/datapass-validation.exception.ts) <br /><b>Code HTTP :</b> 500 <br /><b>error :</b> server_error <br /> <b>error_description :</b> Failed to validate Datapass webhook payload |
+
 ## @fc/device
 | Code d'erreur | Description | Message utilisateur | Infos techniques |
 |---|---|---|---|
@@ -302,6 +302,11 @@
 |---|---|---|---|
 | [<b>570001</b>](../libs/partners-account/src/exceptions/partners-account-init.exception.ts) |  |  | <b>Classe :</b> [PartnersAccountInitException](../libs/partners-account/src/exceptions/partners-account-init.exception.ts) <br /><b>Code HTTP :</b> 500 <br /><b>error :</b>  <br /> <b>error_description :</b>  |
 
+## @fc/partners-service-provider
+| Code d'erreur | Description | Message utilisateur | Infos techniques |
+|---|---|---|---|
+| [<b>580001</b>](../libs/partners-service-provider/src/exceptions/partners-service-provider-creation-failure.exception.ts) | Une erreur est survenue lors de la création du fournisseur de service. Contacter le support N3. |  | <b>Classe :</b> [PartnersServiceProviderCreationFailureException](../libs/partners-service-provider/src/exceptions/partners-service-provider-creation-failure.exception.ts) <br /><b>Code HTTP :</b> 500 <br /><b>error :</b>  <br /> <b>error_description :</b>  |
+
 ## @fc/core-fcp
 | Code d'erreur | Description | Message utilisateur | Infos techniques |
 |---|---|---|---|
@@ -322,3 +327,10 @@
 | Code d'erreur | Description | Message utilisateur | Infos techniques |
 |---|---|---|---|
 | [<b>620001</b>](../libs/common/src/exceptions/common-dto-validation.exception.ts) |  |  | <b>Classe :</b> [CommonDtoValidationException](../libs/common/src/exceptions/common-dto-validation.exception.ts) <br /><b>Code HTTP :</b> 500 <br /><b>error :</b>  <br /> <b>error_description :</b>  |
+
+## @fc/typeorm
+| Code d'erreur | Description | Message utilisateur | Infos techniques |
+|---|---|---|---|
+| [<b>630001</b>](../libs/typeorm/src/exceptions/typeorm-no-inserted-entity.exception.ts) |  |  | <b>Classe :</b> [TypeormNoInsertedEntityException](../libs/typeorm/src/exceptions/typeorm-no-inserted-entity.exception.ts) <br /><b>Code HTTP :</b> 500 <br /><b>error :</b>  <br /> <b>error_description :</b>  |
+| [<b>630002</b>](../libs/typeorm/src/exceptions/typeorm-transaction-failed.exception.ts) |  |  | <b>Classe :</b> [TypeormTransactionFailedException](../libs/typeorm/src/exceptions/typeorm-transaction-failed.exception.ts) <br /><b>Code HTTP :</b> 500 <br /><b>error :</b>  <br /> <b>error_description :</b>  |
+| [<b>630003</b>](../libs/typeorm/src/exceptions/typeorm-query-runner-failed.exception.ts) |  |  | <b>Classe :</b> [TypeormQueryRunnerFailedException](../libs/typeorm/src/exceptions/typeorm-query-runner-failed.exception.ts) <br /><b>Code HTTP :</b> 500 <br /><b>error :</b>  <br /> <b>error_description :</b>  |

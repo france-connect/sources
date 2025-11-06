@@ -56,7 +56,7 @@ without TLS client authentication activated
 setting docker-compose tmpdir to /var/tmp-docker-compose
 Current Mongosh Log ID:	66ed427ad5d58e82a6964032
 Connecting to:		mongodb://<credentials>@127.0.0.1:27017/core-fcp-high?directConnection=true&serverSelectionTimeoutMS=2000&authSource=admin&tls=true&appName=mongosh+2.3.1
-Using MongoDB:		6.0.17
+Using MongoDB:		7.0.22
 Using Mongosh:		2.3.1
 
 For mongosh info see: https://www.mongodb.com/docs/mongodb-shell/
@@ -91,7 +91,7 @@ _<u>Use docker stack CLI: Test connexion **with TLS Client** and **with TLS serv
 	MONGO TLS APP KEY: /home/pbarrillion/repos/fc_new/fc/docker/volumes/ssl/app.pem
 	Current Mongosh Log ID:	66ed4373e89377c2565e739b
 	Connecting to:		mongodb://<credentials>@127.0.0.1:27018/core-fcp-high?directConnection=true&serverSelectionTimeoutMS=2000&authSource=admin&tls=true&tlsCertificateKeyFile=%2Fhome%2Fpbarrillion%2Frepos%2Ffc_new%2Ffc%2Fdocker%2Fvolumes%2Fssl%2Fapp.pem&tlsCAFile=%2Fhome%2Fpbarrillion%2Frepos%2Ffc_new%2Ffc%2Fdocker%2Fvolumes%2Fssl%2Fdocker-stack-ca.crt&appName=mongosh+2.3.0
-	Using MongoDB:		6.0.17
+	Using MongoDB:		7.0.22
 	Using Mongosh:		2.3.0
 	mongosh 2.3.1 is available for download: https://www.mongodb.com/try/download/shell
 	
@@ -119,7 +119,7 @@ _<u>Use docker stack CLI: Test connexion **with TLS Client** and **with TLS serv
 {"t":{"$date":"2024-09-19T14:06:55.365+00:00"},"s":"I",  "c":"REPL",     "id":5123008, "ctx":"main","msg":"Successfully registered PrimaryOnlyService","attr":{"service":"ShardSplitDonorService","namespace":"config.tenantSplitDonors"}}
 {"t":{"$date":"2024-09-19T14:06:55.366+00:00"},"s":"I",  "c":"CONTROL",  "id":5945603, "ctx":"main","msg":"Multi threading initialized"}
 {"t":{"$date":"2024-09-19T14:06:55.366+00:00"},"s":"I",  "c":"CONTROL",  "id":4615611, "ctx":"initandlisten","msg":"MongoDB starting","attr":{"pid":1,"port":27017,"dbPath":"/data/db","architecture":"64-bit","host":"mongo-fcp-high"}}
-{"t":{"$date":"2024-09-19T14:06:55.366+00:00"},"s":"I",  "c":"CONTROL",  "id":23403,   "ctx":"initandlisten","msg":"Build Info","attr":{"buildInfo":{"version":"6.0.17","gitVersion":"1b0ca02043c6d35d5cfdc91e21fc00a05d901539","openSSLVersion":"OpenSSL 3.0.2 15 Mar 2022","modules":[],"allocator":"tcmalloc","environment":{"distmod":"ubuntu2204","distarch":"x86_64","target_arch":"x86_64"}}}}
+{"t":{"$date":"2024-09-19T14:06:55.366+00:00"},"s":"I",  "c":"CONTROL",  "id":23403,   "ctx":"initandlisten","msg":"Build Info","attr":{"buildInfo":{"version":"7.0.22","gitVersion":"1b0ca02043c6d35d5cfdc91e21fc00a05d901539","openSSLVersion":"OpenSSL 3.0.2 15 Mar 2022","modules":[],"allocator":"tcmalloc","environment":{"distmod":"ubuntu2204","distarch":"x86_64","target_arch":"x86_64"}}}}
 {"t":{"$date":"2024-09-19T14:06:55.366+00:00"},"s":"I",  "c":"CONTROL",  "id":51765,   "ctx":"initandlisten","msg":"Operating System","attr":{"os":{"name":"Ubuntu","version":"22.04"}}}
 {"t":{"$date":"2024-09-19T14:06:55.366+00:00"},"s":"I",  "c":"CONTROL",  "id":21951,   "ctx":"initandlisten","msg":"Options set by command line","attr":{"options":{"net":{"bindIp":"*","tls":{"CAFile":"/usr/local/share/ca-certificates/docker-stack-ca.crt","allowConnectionsWithoutCertificates":true,"certificateKeyFile":"/mongo.pem","mode":"requireTLS"}},"replication":{"enableMajorityReadConcern":true,"replSet":"rs0"},"security":{"authorization":"enabled","keyFile":"/mongo-key-file"}}}}
 ...

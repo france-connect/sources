@@ -2,6 +2,7 @@ import classnames from 'classnames';
 import React from 'react';
 import { Field, useField } from 'react-final-form';
 
+import { Strings } from '@fc/common';
 import { composeValidators, type ValidatorType } from '@fc/core-user-dashboard';
 
 export interface TextInput {
@@ -15,7 +16,15 @@ export interface TextInput {
 }
 
 export const TextInputComponent = React.memo((props: TextInput) => {
-  const { description, info = '', label, name, required = true, type = 'text', validators } = props;
+  const {
+    description,
+    info = Strings.EMPTY_STRING,
+    label,
+    name,
+    required = true,
+    type = 'text',
+    validators,
+  } = props;
 
   const validate = composeValidators(...validators);
 

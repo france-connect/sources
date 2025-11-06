@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ServiceProvidersPageNoticeComponent should match snapshot when has items 1`] = `
+<div>
+  <div
+    data-mockid="CalloutComponent"
+  >
+    <div>
+      CalloutComponent
+    </div>
+    <div>
+      <div>
+        <p>
+          any-i18n-translation
+        </p>
+        <ul>
+          <li>
+            any-i18n-translation
+          </li>
+          <li>
+            any-i18n-translation
+          </li>
+          <li>
+            any-i18n-translation
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ServiceProvidersPageNoticeComponent should match snapshot when has no items 1`] = `
+<div>
+  <div
+    data-mockid="AlertComponent"
+  >
+    <div>
+      AlertComponent
+    </div>
+    <div>
+      <div>
+        <p>
+          any-i18n-translation
+        </p>
+        <ul>
+          <li>
+            any-i18n-translation
+          </li>
+          <li>
+            any-i18n-translation
+          </li>
+          <li>
+            any-i18n-translation
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+`;

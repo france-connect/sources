@@ -1,14 +1,15 @@
 import { DefaultServiceProviderLowValueConfig } from '@fc/partners';
 import {
+  ants,
   cnafMsa,
   cnam,
   cnous,
   dgfip,
+  dsnj,
   dss,
   fcpLow,
   ft,
   mesri,
-  mi,
 } from '@fc/scopes';
 import {
   ClientTypeEnum,
@@ -26,10 +27,11 @@ export default {
       ...Object.keys(cnam.scopes),
       ...Object.keys(cnous.scopes),
       ...Object.keys(mesri.scopes),
-      ...Object.keys(mi.scopes),
       ...Object.keys(ft.scopes),
       ...Object.keys(cnafMsa.scopes),
       ...Object.keys(dss.scopes),
+      ...Object.keys(dsnj.scopes),
+      ...Object.keys(ants.scopes),
     ]),
   ],
   emails: [''],

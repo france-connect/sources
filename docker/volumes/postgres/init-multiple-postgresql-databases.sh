@@ -10,22 +10,35 @@ export PGPASSWORD="$POSTGRES_PASSWORD";
 alias psql="psql -v ON_ERROR_STOP=1 --username \"$POSTGRES_USER\"";
 
 function create_user() {
-  echo "Creating user \"$1\"";
 
-  psql -c "CREATE USER $1 WITH PASSWORD '$2';";
+  local user=$1
+  local db=$1
+  local password=$2
+
+  echo "Creating user \"$user\"";
+
+  psql -c "CREATE USER $user WITH PASSWORD '$password';";
 }
 
 function create_database_with_owner() {
-  echo "Creating database \"$1\" with owner \"$2\""
+  local db=$1
+  local user=$2
 
-  psql -c "CREATE DATABASE $1;";
-  psql -c "GRANT ALL PRIVILEGES ON DATABASE $1 TO $2;";
+
+  echo "Creating database \"$db\" with owner \"$user\""
+
+  psql -c "CREATE DATABASE $db;";
+  psql -c "GRANT ALL PRIVILEGES ON DATABASE $db TO $user;";
+  psql -d "$db" -c "GRANT USAGE, CREATE ON SCHEMA public TO $user;"
 }
 
 function load_extensions() {
-  echo "Activating extension $2 on database $1"
+  local db=$1
+  local extension=$2
 
-  psql -c "CREATE EXTENSION IF NOT EXISTS \"$2\";" -d "$1" 
+  echo "Activating extension $extension on database $db"
+
+  psql -c "CREATE EXTENSION IF NOT EXISTS \"$extension\";" -d "$db" 
 }
 
 function init() {

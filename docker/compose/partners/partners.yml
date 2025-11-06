@@ -5,10 +5,16 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
-      - "redis-pwd"
-      - "postgres"
-      - "broker"
-      - "squid"
+      redis-pwd:
+        condition: service_healthy
+      postgres:
+        condition: service_started
+      broker:
+        condition: service_started
+      squid:
+        condition: service_started
+      partners-post-deploy:
+        condition: service_completed_successfully
     volumes:
       - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
       - "${VOLUMES_DIR}/app:/opt/scripts"
@@ -30,7 +36,8 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
-      - "partners-back"
+      partners-back:
+        condition: service_started
     volumes:
       - "${VOLUMES_DIR}/src/fc/front:/var/www/app"
       - "${VOLUMES_DIR}/app:/opt/scripts"
@@ -50,8 +57,11 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
-      - "broker"
-      - "mongo-fcp-low"
+      broker:
+        condition: service_started
+      mongo-fcp-low-replica-single-init:
+        condition: service_completed_successfully
+
     volumes:
       - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
       - "${VOLUMES_DIR}/app:/opt/scripts"
@@ -73,8 +83,10 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
-      - "broker"
-      - "postgres"
+      broker:
+        condition: service_started
+      postgres:
+        condition: service_started
     volumes:
       - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
       - "${VOLUMES_DIR}/app:/opt/scripts"
@@ -88,3 +100,39 @@ services:
       - data
     init: true
     command: "pm2 logs"
+
+  mock-datapass:
+    hostname: mock-datapass
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    volumes:
+      - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
+      - "${VOLUMES_DIR}/app:/opt/scripts"
+      - "${VOLUMES_DIR}/log:/var/log/app"
+      - "${VOLUMES_DIR}/.home:/home"
+      - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
+    env_file:
+      - "${COMPOSE_DIR}/shared/.env/base-app.env"
+      - "${COMPOSE_DIR}/partners/.env/mock-datapass.env"
+    networks:
+      - public
+    init: true
+    command: "pm2 logs"
+
+  partners-post-deploy:
+    hostname: partners-post-deploy
+    image: ${FC_DOCKER_REGISTRY}/post-deploy:dev
+    env_file:
+      - "${COMPOSE_DIR}/shared/.env/base-app.env"
+      - "${COMPOSE_DIR}/partners/.env/partners-post-deploy.env"
+    volumes:
+      - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
+      - "${VOLUMES_DIR}/src/fc/back/fixtures:/tmp/build/fixtures"
+      - "${VOLUMES_DIR}/src/fc/back/migrations:/tmp/build/migrations"
+    networks:
+      - data
+    depends_on:
+      postgres:
+        condition: service_started
+    command: ["partners"]

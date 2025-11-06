@@ -1,0 +1,212 @@
+import { Model } from 'mongoose';
+
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+
+import { ArrayAsyncHelper, validateDto } from '@fc/common';
+import { ConfigService, validationOptions } from '@fc/config';
+import { CryptographyService } from '@fc/cryptography';
+import { LoggerService } from '@fc/logger';
+import { MongooseChangeStreamService } from '@fc/mongoose-change-stream';
+import { IServiceProviderAdapter, ServiceProviderMetadata } from '@fc/oidc';
+
+import {
+  ServiceProviderAdapterMongoConfig,
+  ServiceProviderAdapterMongoDTO,
+} from '../dto';
+import { Types } from '../enums';
+import { MongoRequestFilterArgument } from '../interfaces';
+import { ServiceProvider } from '../schemas';
+
+@Injectable()
+export class ServiceProviderAdapterMongoService
+  implements IServiceProviderAdapter
+{
+  private listCache: ServiceProviderMetadata[];
+
+  // Dependency injection can require more than 4 parameters
+  /* eslint-disable-next-line max-params */
+  constructor(
+    @InjectModel(ServiceProvider.name)
+    private readonly serviceProviderModel: Model<ServiceProvider>,
+    private readonly cryptography: CryptographyService,
+    private readonly config: ConfigService,
+    private readonly logger: LoggerService,
+    private readonly changeStream: MongooseChangeStreamService,
+  ) {}
+
+  async onModuleInit() {
+    const { disableAutoLoading } =
+      this.config.get<ServiceProviderAdapterMongoConfig>(
+        'ServiceProviderAdapterMongo',
+      );
+
+    if (disableAutoLoading) {
+      return;
+    }
+
+    await this.init();
+  }
+
+  async init() {
+    this.changeStream.registerWatcher<ServiceProvider>(
+      this.serviceProviderModel,
+      this.refreshCache.bind(this),
+    );
+
+    // Warm up cache and shows up excluded SpPs
+    await this.getList();
+  }
+
+  async refreshCache(): Promise<void> {
+    await this.getList(true);
+  }
+
+  private async findAllServiceProvider(): Promise<ServiceProviderMetadata[]> {
+    const { platform } = this.config.get<ServiceProviderAdapterMongoConfig>(
+      'ServiceProviderAdapterMongo',
+    );
+
+    const requestFilterArgument: MongoRequestFilterArgument = {
+      active: true,
+    };
+
+    if (platform) {
+      requestFilterArgument.platform = platform;
+    }
+
+    const rawResult = await this.serviceProviderModel
+      .find(requestFilterArgument, {
+        _id: false,
+        active: true,
+        name: true,
+        title: true,
+        key: true,
+        entityId: true,
+        client_secret: true,
+        scopes: true,
+        claims: true,
+        redirect_uris: true,
+        post_logout_redirect_uris: true,
+        sector_identifier_uri: true,
+        id_token_signed_response_alg: true,
+        id_token_encrypted_response_alg: true,
+        id_token_encrypted_response_enc: true,
+        userinfo_signed_response_alg: true,
+        userinfo_encrypted_response_alg: true,
+        userinfo_encrypted_response_enc: true,
+        jwks_uri: true,
+        idpFilterExclude: true,
+        idpFilterList: true,
+        type: true,
+        identityConsent: true,
+        platform: true,
+        rep_scope: true,
+        signup_id: true,
+      })
+      .lean();
+
+    const serviceProviders =
+      await ArrayAsyncHelper.filterAsync<ServiceProviderMetadata>(
+        rawResult,
+        async (doc: ServiceProviderMetadata) => {
+          const { name, uid } = doc;
+
+          const errors = await validateDto(
+            doc,
+            ServiceProviderAdapterMongoDTO,
+            validationOptions,
+          );
+
+          if (errors.length > 0) {
+            this.logger.alert(
+              `Service provider "${name}" (${uid}) was excluded at DTO validation`,
+            );
+
+            this.logger.debug({ errors });
+          }
+
+          return errors.length === 0;
+        },
+      );
+
+    return serviceProviders;
+  }
+
+  /**
+   * @param refreshCache  Should we refreshCache the cache made by the service?
+   */
+  async getList(refreshCache = false): Promise<ServiceProviderMetadata[]> {
+    if (refreshCache || !this.listCache) {
+      this.logger.debug('Refresh cache from DB');
+
+      const list = await this.findAllServiceProvider();
+      this.listCache = list.map(this.legacyToOpenIdPropertyName.bind(this));
+    }
+
+    return this.listCache;
+  }
+
+  async getById(
+    spId: string,
+    refreshCache = false,
+  ): Promise<ServiceProviderMetadata> {
+    const list = await this.getList(refreshCache);
+    const serviceProvider: ServiceProviderMetadata = list.find(
+      ({ client_id: dbId }) => dbId === spId,
+    );
+
+    return serviceProvider;
+  }
+
+  /**
+   * Method triggered when you want to filter or check if
+   * an identity provider is blacklisted or whitelisted
+   * @param spId service provider ID
+   * @param idpId identity provider ID
+   */
+  async shouldExcludeIdp(spId: string, idpId: string): Promise<boolean> {
+    const { idpFilterExclude, idpFilterList } = await this.getById(spId);
+    const idpFound = idpFilterList.includes(idpId);
+
+    return idpFilterExclude ? idpFound : !idpFound;
+  }
+
+  private legacyToOpenIdPropertyName(
+    source: ServiceProvider,
+  ): ServiceProviderMetadata {
+    const client_id = source.key;
+    const client_secret = this.decryptClientSecret(source.client_secret);
+    const scope = source.scopes.join(' ');
+    const signupId = source.signup_id;
+
+    const result = {
+      ...source,
+      client_id,
+      client_secret,
+      scope,
+      signupId,
+    };
+
+    delete result.key;
+    delete result.scopes;
+    delete result.signup_id;
+
+    return result as ServiceProviderMetadata;
+  }
+
+  private decryptClientSecret(clientSecret: string): string {
+    const { clientSecretEncryptKey } =
+      this.config.get<ServiceProviderAdapterMongoConfig>(
+        'ServiceProviderAdapterMongo',
+      );
+    return this.cryptography.decrypt(
+      clientSecretEncryptKey,
+      Buffer.from(clientSecret, 'base64'),
+    );
+  }
+
+  consentRequired(type, identityConsent) {
+    return type === Types.PRIVATE && identityConsent;
+  }
+}

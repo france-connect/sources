@@ -8,11 +8,11 @@ import { FieldsCommponentMap } from '../../enums';
 import { useFieldValidate } from '../../hooks';
 import type { FieldAttributes } from '../../interfaces';
 
-interface DTO2InputComponentProps {
+interface Dto2InputComponentProps {
   field: FieldAttributes;
 }
 
-export const DTO2InputComponent = React.memo(({ field }: DTO2InputComponentProps) => {
+export const Dto2InputComponent = React.memo(({ field }: Dto2InputComponentProps) => {
   // @NOTE Should we use the flag into the useFieldValidate hook ?
   // Or into fields subscription
   // @SEE https://final-form.org/docs/react-final-form/types/FieldProps#subscription
@@ -71,4 +71,4 @@ export const DTO2InputComponent = React.memo(({ field }: DTO2InputComponentProps
   return <Component choices={choices} config={config} />;
 });
 
-DTO2InputComponent.displayName = 'DTO2InputComponent';
+Dto2InputComponent.displayName = 'Dto2InputComponent';

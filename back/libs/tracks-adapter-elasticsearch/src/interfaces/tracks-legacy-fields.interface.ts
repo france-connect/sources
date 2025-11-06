@@ -12,6 +12,7 @@ export interface TracksLegacyFieldsInterface {
   // Legacy field name
   // eslint-disable-next-line @typescript-eslint/naming-convention
   fs_label: string;
+  fiLabel: string;
   time: string;
   service: CoreInstance;
   source: SourceInterface;

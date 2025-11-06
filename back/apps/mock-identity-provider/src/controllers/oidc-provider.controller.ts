@@ -1,14 +1,18 @@
+import { Request, Response } from 'express';
+
 import {
   Body,
   Controller,
   Get,
-  Next,
   Post,
   Query,
+  Req,
+  Res,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 
+import { OidcProviderService } from '@fc/oidc-provider';
 import { OidcProviderRoutes } from '@fc/oidc-provider/enums';
 import { ISessionService, Session } from '@fc/session';
 
@@ -16,7 +20,7 @@ import { AppSession, AuthorizeParamsDto } from '../dto';
 
 @Controller()
 export class OidcProviderController {
-  constructor() {}
+  constructor(private readonly oidcProvider: OidcProviderService) {}
 
   /**
    * Authorize route via HTTP GET
@@ -34,15 +38,15 @@ export class OidcProviderController {
       forbidNonWhitelisted: true,
     }),
   )
-  getAuthorize(
-    @Next() next,
+  async getAuthorize(
+    @Req() req: Request,
+    @Res() res: Response,
     @Query() query: AuthorizeParamsDto,
     @Session('App') appSession: ISessionService<AppSession>,
   ) {
     appSession.set('finalSpId', query.sp_id);
 
-    // Pass the query to oidc-provider
-    return next();
+    await this.oidcProvider.callback(req, res);
   }
 
   /**
@@ -61,9 +65,12 @@ export class OidcProviderController {
       forbidNonWhitelisted: true,
     }),
   )
-  postAuthorize(@Next() next, @Body() _body: AuthorizeParamsDto) {
-    // Pass the query to oidc-provider
-    return next();
+  async postAuthorize(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Body() _body: AuthorizeParamsDto,
+  ) {
+    await this.oidcProvider.callback(req, res);
   }
 
   /**
@@ -73,7 +80,7 @@ export class OidcProviderController {
    * It then forward the request to `next` controller, in this case `oidc-provider`.
    */
   @Post(OidcProviderRoutes.TOKEN)
-  postToken(@Next() next, @Body() _body) {
-    return next();
+  async postToken(@Req() req: Request, @Res() res: Response, @Body() _body) {
+    await this.oidcProvider.callback(req, res);
   }
 }

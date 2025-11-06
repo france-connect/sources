@@ -57,7 +57,7 @@ Fonctionnalité: Instance - Modification avec erreurs
       | site[0]                      | L’url de site doit être de 1024 caractères maximum                 |
       | redirect_uris[0]             | L’url de connexion doit être de 1024 caractères maximum            |
       | post_logout_redirect_uris[0] | L’url de déconnexion doit être de 1024 caractères maximum          |
-      | entityId                     | Le client id doit être compris entre 36 et 64 caractères           |
+      | entityId                     | Le client id doit être compris entre 32 et 64 caractères           |
 
   @ci
   Scénario: Instance Modification - Erreur autres validations

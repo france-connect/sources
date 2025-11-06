@@ -8,9 +8,10 @@ import {
 } from '@fc/common';
 import { CryptographyModule } from '@fc/cryptography';
 import { MongooseModule } from '@fc/mongoose';
+import { MongooseChangeStreamModule } from '@fc/mongoose-change-stream';
 
 import { ServiceProviderSchema } from './schemas';
-import { ServiceProviderAdapterMongoService } from './service-provider-adapter-mongo.service';
+import { ServiceProviderAdapterMongoService } from './services';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { ServiceProviderAdapterMongoService } from './service-provider-adapter-m
     MongooseModule.forFeature([
       { name: 'ServiceProvider', schema: ServiceProviderSchema },
     ]),
+    MongooseChangeStreamModule,
     CqrsModule,
   ],
   providers: [

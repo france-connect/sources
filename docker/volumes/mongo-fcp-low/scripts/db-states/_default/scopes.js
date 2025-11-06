@@ -485,6 +485,35 @@ const scopeList = [
     label:
       "Statut Service National (Direction du Service National et de la Jeunesse)",
   },
+  {
+    scope: "ants_extrait_immatriculation_vehicule_identite_particulier",
+    fd: "ANTS",
+    label: "Identité particulier (Agence Nationale des Titres Sécurisés)",
+  },
+  {
+    scope: "ants_extrait_immatriculation_vehicule_adresse_particulier",
+    fd: "ANTS",
+    label: "Adresse particulier (Agence Nationale des Titres Sécurisés)",
+  },
+  {
+    scope: "ants_extrait_immatriculation_vehicule_statut_rattachement",
+    fd: "ANTS",
+    label: "Statut Rattachement (Agence Nationale des Titres Sécurisés)",
+  },
+  {
+    scope:
+      "ants_extrait_immatriculation_vehicule_donnees_immatriculation_vehicule",
+    fd: "ANTS",
+    label:
+      "Données immatriculation véhicule (Agence Nationale des Titres Sécurisés)",
+  },
+  {
+    scope:
+      "ants_extrait_immatriculation_vehicule_caracteristiques_techniques_vehicule",
+    fd: "ANTS",
+    label:
+      "Caractéristiques techniques véhicule (Agence Nationale des Titres Sécurisés)",
+  },
 ];
 
 print("Insert scopes");

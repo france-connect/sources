@@ -1,14 +1,16 @@
 import { getAccessibleTitle } from '@fc/common';
 import { ConfigService } from '@fc/config';
+import { t } from '@fc/i18n';
 
-import { Options } from '../../../enums';
+import { LayoutOptions } from '../../../enums';
 import type { LayoutConfig } from '../../../interfaces';
 
 export const LayoutHeaderServiceComponent = () => {
-  const config = ConfigService.get<LayoutConfig>(Options.CONFIG_NAME);
+  const config = ConfigService.get<LayoutConfig>(LayoutOptions.CONFIG_NAME);
   const { baseline, homepage, name } = config.service;
 
-  const linkTitle = getAccessibleTitle('Retour à l’accueil du site', baseline, name);
+  const backToHomepage = t('Layout.documentTitle.backToHomepage');
+  const linkTitle = getAccessibleTitle(backToHomepage, baseline, name);
   return (
     <div className="fr-header__service" data-testid="layout-header-service-component">
       {name && (

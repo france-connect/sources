@@ -37,7 +37,7 @@ export class DeploymentCommand extends CommandRunner {
     flags: '-n, --name [string]',
     description: 'Name flag',
   })
-  parseName(val: string): string {
-    return val;
+  parseName(rawName: string): string {
+    return rawName;
   }
 }

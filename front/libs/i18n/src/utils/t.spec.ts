@@ -25,13 +25,27 @@ describe('t shorthand', () => {
     expect(I18nService.instance).toHaveBeenCalledOnce();
   });
 
+  it('should call I18nService.translate with default values', () => {
+    // When
+    t(inputMock);
+
+    // Then
+    expect(mockedService.translate).toHaveBeenCalledOnce();
+    expect(mockedService.translate).toHaveBeenCalledWith(inputMock, {
+      NBSP_UNICODE: '\u00A0',
+    });
+  });
+
   it('should call I18nService.translate with given arguments', () => {
     // When
     t(inputMock, valuesMock);
 
     // Then
     expect(mockedService.translate).toHaveBeenCalledOnce();
-    expect(mockedService.translate).toHaveBeenCalledWith(inputMock, valuesMock);
+    expect(mockedService.translate).toHaveBeenCalledWith(inputMock, {
+      ...valuesMock,
+      NBSP_UNICODE: '\u00A0',
+    });
   });
 
   it('should return the result of call to I18nService.translate()', () => {

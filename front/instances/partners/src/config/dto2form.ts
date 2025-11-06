@@ -1,7 +1,7 @@
 import { HeadingTag, HttpMethods } from '@fc/common';
 import type { Dto2FormConfigInterface } from '@fc/dto2form';
 
-export const Dto2Form: Dto2FormConfigInterface = {
+export const Dto2FormService: Dto2FormConfigInterface = {
   InstancesCreate: {
     endpoints: {
       schema: {
@@ -13,10 +13,12 @@ export const Dto2Form: Dto2FormConfigInterface = {
         path: '/api/instances',
       },
     },
-    id: 'DTO2Form-instance-create',
-    showFieldValidationMessage: false,
-    validateOnFieldChange: false,
-    validateOnSubmit: false,
+    form: {
+      id: 'Dto2Form-instance-create',
+      showFieldValidationMessage: false,
+      validateOnFieldChange: false,
+      validateOnSubmit: false,
+    },
   },
   InstancesUpdate: {
     endpoints: {
@@ -30,10 +32,12 @@ export const Dto2Form: Dto2FormConfigInterface = {
         path: '/api/instances/:instanceId',
       },
     },
-    id: 'DTO2Form-instance-update',
-    showFieldValidationMessage: false,
-    titleHeading: HeadingTag.H2,
-    validateOnFieldChange: false,
-    validateOnSubmit: false,
+    form: {
+      id: 'Dto2Form-instance-update',
+      showFieldValidationMessage: false,
+      titleHeading: HeadingTag.H2,
+      validateOnFieldChange: false,
+      validateOnSubmit: false,
+    },
   },
 };

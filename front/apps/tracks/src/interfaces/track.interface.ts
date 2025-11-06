@@ -1,8 +1,7 @@
 import type { DateTime } from 'luxon';
 
 import type { FSAInterface } from '@fc/common';
-
-import type { CinematicEvents, EidasToLabel } from '../enums';
+import type { TrackInterface } from '@fc/core-user-dashboard';
 
 interface ProviderInterface {
   slug: string;
@@ -23,23 +22,11 @@ export type PaginationResultInterface = {
   offset: number;
 };
 
-export type UserDashboardTracks = FSAInterface<PaginationResultInterface, TrackInterface[]>;
-
-export interface TrackInterface {
-  city: string;
-  claims: RichClaimInterface[];
-  country: string;
-  event: CinematicEvents;
-  idpLabel: string;
-  platform: 'FranceConnect' | 'FranceConnect+';
-  interactionAcr: keyof typeof EidasToLabel;
-  spLabel?: string;
-  authenticationEventId: string;
-  time: number;
-  trackId: string;
-}
+export type UserDashboardTracks = FSAInterface<TrackInterface[], PaginationResultInterface>;
 
 export interface EnhancedTrackInterface extends TrackInterface {
+  // @TODO delete this interface
+  // should not add extra properties to TrackInterface
   datetime: DateTime;
 }
 

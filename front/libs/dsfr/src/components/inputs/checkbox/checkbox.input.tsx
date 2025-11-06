@@ -1,6 +1,8 @@
 import React from 'react';
 import { Field, useField } from 'react-final-form';
 
+import { t } from '@fc/i18n';
+
 import { CheckboxComponent } from './checkbox.component';
 
 interface CheckboxInputProps {
@@ -16,7 +18,7 @@ interface CheckboxInputProps {
 }
 
 export const validateCheckbox = (value?: boolean) => {
-  const msg = 'Veuillez cocher cette case si vous souhaitez continuer';
+  const msg = t('DSFR.checkbox.label');
   return !value ? msg : undefined;
 };
 

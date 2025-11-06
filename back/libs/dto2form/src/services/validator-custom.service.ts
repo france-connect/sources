@@ -104,4 +104,20 @@ export class ValidatorCustomService {
 
     return hasSectorIdentifier || sameHost;
   }
+
+  /**
+   * Validates if a value is true (for consent checkboxes).
+   *
+   * @param value - The value to validate
+   * @returns True if the value is boolean true, false otherwise
+   */
+  isTrue(value: unknown): boolean {
+    /**
+     * @Todo #2436 Migration of form encoding to JSON
+     * Pending the complete migration of forms to JSON,
+     * consent checkboxes may return the string 'true'.
+     *
+     */
+    return value === 'true' || value === true;
+  }
 }

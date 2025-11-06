@@ -18,7 +18,6 @@ import { MongooseConfig } from '@fc/mongoose';
 import { OidcAcrConfig } from '@fc/oidc-acr';
 import { OidcClientConfig } from '@fc/oidc-client';
 import { OidcProviderConfig } from '@fc/oidc-provider';
-import { OverrideOidcProviderConfig } from '@fc/override-oidc-provider';
 import { RedisConfig } from '@fc/redis';
 import { RnippConfig } from '@fc/rnipp';
 import { ScopesConfig } from '@fc/scopes';
@@ -117,11 +116,6 @@ export class CoreFcpConfig {
   @ValidateNested()
   @Type(() => CryptographyEidasConfig)
   readonly CryptographyEidas: CryptographyEidasConfig;
-
-  @IsObject()
-  @ValidateNested()
-  @Type(() => OverrideOidcProviderConfig)
-  readonly OverrideOidcProvider: OverrideOidcProviderConfig;
 
   @IsObject()
   @ValidateNested()

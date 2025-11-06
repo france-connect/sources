@@ -1,6 +1,6 @@
 import { ConfigService } from '@fc/config';
 
-import { Options } from '../enums';
+import { HttpClientOptions } from '../enums';
 import type { HttpClientOptionsInterface } from '../interfaces';
 import * as Module from './get-request-options';
 import { slashifyPath } from './slashify-path';
@@ -8,13 +8,13 @@ import { slashifyPath } from './slashify-path';
 jest.mock('./slashify-path');
 
 describe('getTimeout', () => {
-  it('should call ConfigService.get with HttpClient identifier from enums Options', () => {
+  it('should call ConfigService.get with HttpClient identifier from enums HttpClientOptions', () => {
     // When
     Module.getTimeout(expect.any(Object));
 
     // Then
     expect(ConfigService.get).toHaveBeenCalledOnce();
-    expect(ConfigService.get).toHaveBeenCalledWith(Options.CONFIG_NAME);
+    expect(ConfigService.get).toHaveBeenCalledWith('HttpClient');
   });
 
   it('should return a timeout from requestOptions', () => {
@@ -44,7 +44,7 @@ describe('getTimeout', () => {
     const result = Module.getTimeout({});
 
     // Then
-    expect(result).toStrictEqual(Options.TIMEOUT);
+    expect(result).toStrictEqual(HttpClientOptions.TIMEOUT);
   });
 });
 
@@ -55,7 +55,7 @@ describe('getBaseURL', () => {
 
     // Then
     expect(ConfigService.get).toHaveBeenCalledOnce();
-    expect(ConfigService.get).toHaveBeenCalledWith(Options.CONFIG_NAME);
+    expect(ConfigService.get).toHaveBeenCalledWith(HttpClientOptions.CONFIG_NAME);
   });
 
   it('should return a baseURL from requestOptions', () => {
@@ -152,7 +152,7 @@ describe('getRequestOptions', () => {
     expect(result).toStrictEqual({
       data: { key: 'any-mock-value' },
       method: 'get',
-      timeout: Options.TIMEOUT,
+      timeout: HttpClientOptions.TIMEOUT,
       url: 'http://any-url.mock/any-endpoint',
       validateStatus: validateStatusMock,
     });

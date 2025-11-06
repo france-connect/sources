@@ -4,5 +4,6 @@ export interface PartnersConfig {
   };
   endpoints: {
     instances: string;
+    serviceProviders: string;
   };
 }

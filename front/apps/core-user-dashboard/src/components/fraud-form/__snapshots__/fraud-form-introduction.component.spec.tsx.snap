@@ -7,11 +7,11 @@ exports[`FraudFormIntroductionComponent should match the snapshot 1`] = `
       class="fr-h3 fr-text-title--blue-france fr-mb-1w"
     >
       <b>
-        Je signale une usurpation
+        any-introduction-title-mock
       </b>
     </h1>
     <p>
-      En remplissant ce formulaire, le support FranceConnect sera informé de votre demande. Nous vous recontacterons sous peu.
+      any-description-title-mock
     </p>
   </div>
 </div>

@@ -6,7 +6,7 @@ export const typescriptConfig = tseslint.config([
   tseslint.configs.recommendedTypeChecked,
   {
     extends: [tseslint.configs.disableTypeChecked],
-    files: ['**/*.mjs', '**/*.js', '**/*.jsx'],
+    files: ['**/*.mjs', '**/*.js', '**/*.jsx', '**/*.json'],
   },
   {
     extends: [tseslint.configs.strictTypeChecked],

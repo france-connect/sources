@@ -2,6 +2,7 @@ import { render } from '@testing-library/react';
 
 import { HeadingTag } from '@fc/common';
 
+import type { FormActionsInterface } from '../../../interfaces';
 import { FormActionsComponent } from '../form-actions';
 import { FormErrorComponent } from '../form-error';
 import { FormErrorScrollComponent } from '../form-error-scroll';
@@ -18,9 +19,6 @@ jest.mock('./../form-mentions/form-mentions.component');
 jest.mock('./../form-required/form-required.component');
 
 describe('FormWrapperComponent', () => {
-  // Given
-  const scrollTopOnSubmitMock = Symbol('scroll-top-on-submit-mock') as unknown as boolean;
-
   it('should match snapshot', () => {
     // Given
     const handleSubmitMock = jest.fn();
@@ -33,12 +31,11 @@ describe('FormWrapperComponent', () => {
           description: 'any-description-mock',
           id: 'any-id-mock',
           mentions: 'any-mentions-text-mock',
+          noRequired: false,
           title: 'any-title-mock',
           titleHeading: HeadingTag.H6,
         }}
         handleSubmit={handleSubmitMock}
-        noRequired={false}
-        scrollTopOnSubmit={scrollTopOnSubmitMock}
         submitError="any-submit-error-mock"
         submitting={false}>
         {childrenMock}
@@ -81,14 +78,13 @@ describe('FormWrapperComponent', () => {
     );
     expect(FormErrorScrollComponent).toHaveBeenCalledOnce();
     expect(FormErrorScrollComponent).toHaveBeenCalledWith(
-      { active: scrollTopOnSubmitMock, elementClassName: '.fr-message--error' },
+      { active: true, elementClassName: '.fr-message--error' },
       undefined,
     );
   });
 
-  it('should match snapshot without descriptionn, title, submit label and a disable submit button', () => {
+  it('should match snapshot without description, title, submit label and a disable submit button', () => {
     // Given
-    const submitLabelMock = 'any-submit-label-mock';
     const handleSubmitMock = jest.fn();
 
     const childrenMock = <div>any-children-mock</div>;
@@ -99,12 +95,10 @@ describe('FormWrapperComponent', () => {
         submitting
         config={{
           id: 'any-id-mock',
+          noRequired: false,
         }}
         handleSubmit={handleSubmitMock}
-        noRequired={false}
-        scrollTopOnSubmit={scrollTopOnSubmitMock}
-        submitError="any-submit-error-mock"
-        submitLabel={submitLabelMock}>
+        submitError="any-submit-error-mock">
         {childrenMock}
       </FormWrapperComponent>,
     );
@@ -115,7 +109,6 @@ describe('FormWrapperComponent', () => {
     expect(FormActionsComponent).toHaveBeenCalledWith(
       {
         canSubmit: false,
-        submitLabel: submitLabelMock,
       },
       undefined,
     );
@@ -130,12 +123,11 @@ describe('FormWrapperComponent', () => {
     // When
     const { container } = render(
       <FormWrapperComponent
-        noRequired
         config={{
           id: 'any-id-mock',
+          noRequired: true,
         }}
         handleSubmit={handleSubmitMock}
-        scrollTopOnSubmit={scrollTopOnSubmitMock}
         submitError="any-submit-error-mock"
         submitting={false}>
         {childrenMock}
@@ -156,12 +148,11 @@ describe('FormWrapperComponent', () => {
     // When
     const { container } = render(
       <FormWrapperComponent
-        noRequired
         config={{
           id: 'any-id-mock',
+          noRequired: true,
         }}
         handleSubmit={handleSubmitMock}
-        scrollTopOnSubmit={scrollTopOnSubmitMock}
         submitError={undefined}
         submitting={false}>
         {childrenMock}
@@ -182,12 +173,12 @@ describe('FormWrapperComponent', () => {
     // When
     const { container } = render(
       <FormWrapperComponent
-        noRequired
         config={{
           id: 'any-id-mock',
+          noRequired: true,
+          scrollTopOnSubmit: false,
         }}
         handleSubmit={handleSubmitMock}
-        scrollTopOnSubmit={false}
         submitError={undefined}
         submitting={false}>
         {childrenMock}
@@ -199,6 +190,37 @@ describe('FormWrapperComponent', () => {
     expect(FormErrorScrollComponent).toHaveBeenCalledOnce();
     expect(FormErrorScrollComponent).toHaveBeenCalledWith(
       { active: false, elementClassName: '.fr-message--error' },
+      undefined,
+    );
+  });
+
+  it('should call FormActionsComponent with defined actions', () => {
+    // Given
+    const handleSubmitMock = jest.fn();
+    const childrenMock = <div>any-children-mock</div>;
+    const formActionsMock = Symbol('form-actions-mock') as unknown as FormActionsInterface[];
+
+    // When
+    render(
+      <FormWrapperComponent
+        config={{
+          actions: formActionsMock,
+          id: 'any-id-mock',
+          noRequired: true,
+        }}
+        handleSubmit={handleSubmitMock}
+        submitError={undefined}
+        submitting={false}>
+        {childrenMock}
+      </FormWrapperComponent>,
+    );
+
+    // Then
+    expect(FormActionsComponent).toHaveBeenCalledWith(
+      {
+        actions: formActionsMock,
+        canSubmit: true,
+      },
       undefined,
     );
   });

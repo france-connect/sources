@@ -71,5 +71,4 @@ _mongo_shell_core_fcp_high() {
 
 _mongo_shell_core_fcp_low() {
   _mongo_core_shell "fcp-low"
-
 }

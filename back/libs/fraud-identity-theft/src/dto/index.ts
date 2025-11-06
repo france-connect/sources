@@ -13,3 +13,4 @@ export * from './fraud-identity-form.dto';
 export * from './fraud-identity-session.dto';
 export * from './fraud-summary-endpoint-session.dto';
 export * from './fraud-summary-form.dto';
+export * from './fraud-tracks-endpoint-session.dto';

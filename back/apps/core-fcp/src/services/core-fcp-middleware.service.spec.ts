@@ -161,12 +161,12 @@ describe('CoreFcpMiddlewareService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('onModuleInit()', () => {
+  describe('onApplicationBootstrap()', () => {
     it('should register ovrrideAuthorizePrompt middleware', () => {
       // Given
       service['registerMiddleware'] = jest.fn();
       // When
-      service.onModuleInit();
+      service.onApplicationBootstrap();
       // Then
       expect(service['registerMiddleware']).toHaveBeenCalledTimes(8);
     });
@@ -181,7 +181,7 @@ describe('CoreFcpMiddlewareService', () => {
       service['tokenMiddleware'] = jest.fn();
       service['userinfoMiddleware'] = jest.fn();
       // When
-      service.onModuleInit();
+      service.onApplicationBootstrap();
       // Then
       expect(oidcProviderServiceMock.registerMiddleware).toHaveBeenCalledWith(
         OidcProviderMiddlewareStep.BEFORE,
@@ -239,6 +239,7 @@ describe('CoreFcpMiddlewareService', () => {
       spId: spIdMock,
       spName: spNameMock,
       spScope: spScopeMock,
+      stepRoute: OidcProviderRoutes.AUTHORIZATION,
     };
 
     beforeEach(() => {
@@ -370,6 +371,7 @@ describe('CoreFcpMiddlewareService', () => {
           sessionId: '42',
         },
         spScope: ['openid', 'givenName', 'gender'],
+        stepRoute: OidcProviderRoutes.AUTHORIZATION,
       };
       service['buildSessionWithNewInteraction'] = jest
         .fn()

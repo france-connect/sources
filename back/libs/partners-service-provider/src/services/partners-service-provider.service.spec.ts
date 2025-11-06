@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { In, QueryRunner, Repository } from 'typeorm';
 
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
@@ -8,10 +8,10 @@ import { PartnersServiceProvider } from '@entities/typeorm';
 import {
   EntityType,
   PermissionInterface,
+  PermissionsType,
   RelatedEntitiesHelper,
 } from '@fc/access-control';
 import { LoggerService } from '@fc/logger';
-import { PostgresOperationFailure } from '@fc/postgres';
 
 import { getLoggerMock } from '@mocks/logger';
 import { getRepositoryMock, resetRepositoryMock } from '@mocks/typeorm';
@@ -24,23 +24,30 @@ describe('PartnersServiceProviderService', () => {
   let service: PartnersServiceProviderService;
 
   const loggerServiceMock = getLoggerMock();
-
   const repositoryMock = getRepositoryMock();
-
   const RelatedEntitiesHelperGetMock = jest.spyOn(RelatedEntitiesHelper, 'get');
 
-  const permissionsMock = [] as PermissionInterface[];
+  const permissionsMock = [
+    {
+      permissionType: PermissionsType.VIEW,
+      entity: EntityType.SERVICE_PROVIDER,
+      entityId: 'service-provider-id',
+    },
+  ] as PermissionInterface[];
 
-  const idMock = 'id';
-  const serviceProviderIds = ['sp1', 'sp2'];
-  const partnersServiceProvidersMock = {
-    createdAt: '2022-02-21T23:00:00.000Z',
-    updatedAt: '2022-02-21T23:00:00.000Z',
-    id: idMock,
-    name: 'sp name',
-    instances: [{ id: 'instanceId', name: 'instance name' }],
-    organisation: { id: 'organisationId', name: 'organisation name' },
+  const serviceProviderMock: PartnersServiceProvider = {
+    id: 'service-provider-id',
+    name: 'Test Service Provider',
+    organizationName: 'Test Organization',
+    datapassRequestId: '12345',
+    authorizedScopes: ['openid', 'given_name', 'family_name', 'email'],
+    platform: null,
+    organisation: null,
+    createdAt: new Date('2024-01-01'),
+    updatedAt: new Date('2024-01-01'),
   };
+
+  const serviceProviderIdMock = 'service-provider-id';
 
   beforeEach(async () => {
     jest.resetAllMocks();
@@ -71,174 +78,201 @@ describe('PartnersServiceProviderService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('getInstancesFromServiceProvider', () => {
+  describe('getAllowedServiceProviders', () => {
     beforeEach(() => {
-      service['getByIds'] = jest
-        .fn()
-        .mockResolvedValue([partnersServiceProvidersMock]);
+      service.getByIds = jest.fn().mockResolvedValue([serviceProviderMock]);
     });
 
-    it('should call RelatedEntitiesHelper.get() with instance entity', async () => {
+    it('should call RelatedEntitiesHelper.get() with SERVICE_PROVIDER entity', async () => {
       // Given
       RelatedEntitiesHelperGetMock.mockReturnValueOnce([]);
 
       // When
-      await service.getInstancesFromServiceProvider(idMock, permissionsMock);
+      await service.getAllowedServiceProviders(permissionsMock);
 
       // Then
-      expect(RelatedEntitiesHelperGetMock).toHaveBeenCalledTimes(1);
-      expect(RelatedEntitiesHelperGetMock).toHaveBeenCalledWith(
+      expect(RelatedEntitiesHelperGetMock).toHaveBeenCalledExactlyOnceWith(
         permissionsMock,
         {
-          entityTypes: [EntityType.SP_INSTANCE],
+          entityTypes: [EntityType.SERVICE_PROVIDER],
         },
       );
     });
 
-    it('should call getByIds() and return result', async () => {
+    it('should call getByIds() with service provider IDs and return results', async () => {
       // Given
-      const spIdMock = serviceProviderIds[0];
-      const instanceIdsMock = ['instanceId1', 'instanceId2'];
-
-      RelatedEntitiesHelperGetMock.mockReturnValueOnce(instanceIdsMock);
+      const serviceProviderIds = ['sp1', 'sp2'];
+      RelatedEntitiesHelperGetMock.mockReturnValueOnce(serviceProviderIds);
 
       // When
-      const result = await service.getInstancesFromServiceProvider(
-        spIdMock,
-        permissionsMock,
-      );
+      const result = await service.getAllowedServiceProviders(permissionsMock);
 
       // Then
-      expect(service['getByIds']).toHaveBeenCalledTimes(1);
-      expect(service['getByIds']).toHaveBeenCalledWith(
-        [spIdMock],
-        instanceIdsMock,
+      expect(service.getByIds).toHaveBeenCalledExactlyOnceWith(
+        serviceProviderIds,
       );
-      expect(result).toStrictEqual(partnersServiceProvidersMock);
+      expect(result).toEqual([serviceProviderMock]);
+    });
+
+    it('should call getByIds() with empty array when no service provider IDs', async () => {
+      // Given
+      RelatedEntitiesHelperGetMock.mockReturnValueOnce([]);
+      service.getByIds = jest.fn().mockResolvedValue([]);
+
+      // When
+      const result = await service.getAllowedServiceProviders(permissionsMock);
+
+      // Then
+      expect(service.getByIds).toHaveBeenCalledExactlyOnceWith([]);
+      expect(result).toEqual([]);
     });
   });
 
   describe('getByIds', () => {
-    it('should create a query and filter by serviceProviderIds', async () => {
-      // Given
-      const instancesIds = [];
-      const mockResult = [
-        { id: 'org1' },
-        { id: 'org2' },
-      ] as PartnersServiceProvider[];
-
-      repositoryMock.getMany.mockResolvedValue(mockResult);
-
+    it('should return empty array when no IDs provided', async () => {
       // When
-      const result = await service.getByIds(serviceProviderIds, instancesIds);
+      const result = await service.getByIds([]);
 
       // Then
-      expect(repositoryMock.createQueryBuilder).toHaveBeenCalledWith(
-        'partnersServiceProvider',
-      );
-      expect(repositoryMock.leftJoinAndSelect).toHaveBeenNthCalledWith(
-        1,
-        'partnersServiceProvider.instances',
-        'instances',
-      );
-      expect(repositoryMock.leftJoinAndSelect).toHaveBeenNthCalledWith(
-        2,
-        'partnersServiceProvider.organisation',
-        'organisation',
-      );
-      expect(repositoryMock.where).toHaveBeenCalledWith(
-        'partnersServiceProvider.id IN(:...serviceProviderIds)',
-        { serviceProviderIds },
-      );
-      expect(repositoryMock.select).toHaveBeenCalledWith([
-        'partnersServiceProvider',
-        'instances.id',
-        'instances.name',
-        'organisation.id',
-        'organisation.name',
-      ]);
-      expect(repositoryMock.orderBy).toHaveBeenCalledWith(
-        'partnersServiceProvider.name',
-        'ASC',
-      );
-      expect(repositoryMock.getMany).toHaveBeenCalled();
-      expect(result).toEqual(mockResult);
+      expect(repositoryMock.find).not.toHaveBeenCalled();
+      expect(result).toEqual([]);
     });
 
-    it('should add "andWhere" clause for instanceIds when provided', async () => {
+    it('should call repository.find with In operator and order by createdAt DESC', async () => {
       // Given
-      const instancesIds = ['instanceId1', 'instanceId2'];
-      const mockResult = [
-        { id: 'sp1' },
-        { id: 'sp2' },
-      ] as PartnersServiceProvider[];
-
-      repositoryMock.getMany.mockResolvedValue(mockResult);
+      const serviceProviderIds = ['sp1', 'sp2'];
+      repositoryMock.find.mockResolvedValue([serviceProviderMock]);
 
       // When
-      const result = await service.getByIds(serviceProviderIds, instancesIds);
+      const result = await service.getByIds(serviceProviderIds);
 
       // Then
-      expect(repositoryMock.andWhere).toHaveBeenCalledWith(
-        'instances.id IN (:...instancesIds)',
-        { instancesIds },
-      );
-      expect(result).toEqual(mockResult);
-    });
-
-    it('should not add "andWhere" clause when serviceProviderIds is empty', async () => {
-      // Given
-      const serviceProviderIds: string[] = [];
-      const mockResult = [
-        { id: 'sp1' },
-        { id: 'sp2' },
-      ] as PartnersServiceProvider[];
-
-      repositoryMock.getMany.mockResolvedValue(mockResult);
-
-      // When
-      const result = await service.getByIds(
-        serviceProviderIds,
-        serviceProviderIds,
-      );
-
-      // Then
-      expect(repositoryMock.andWhere).not.toHaveBeenCalled();
-      expect(result).toEqual(mockResult);
-    });
-
-    it('should throw PostgresConnectionFailure call to getMany throws', async () => {
-      // Given
-      const errorMock = new Error('some error');
-      repositoryMock.getMany.mockImplementationOnce(() => {
-        throw errorMock;
+      expect(repositoryMock.find).toHaveBeenCalledExactlyOnceWith({
+        where: { id: In(serviceProviderIds) },
+        order: { createdAt: 'DESC' },
       });
-
-      // When / Then
-      await expect(service.getByIds(serviceProviderIds)).rejects.toThrow(
-        PostgresOperationFailure,
-      );
+      expect(result).toEqual([serviceProviderMock]);
     });
   });
 
   describe('upsert', () => {
-    it('should upsert service provider', async () => {
-      // Given
-      const data = Symbol('data');
-      const expected = Symbol('save result item');
-      repositoryMock.save.mockResolvedValue(expected);
+    const queryRunnerMock = {
+      manager: {
+        createQueryBuilder: jest.fn().mockReturnThis(),
+        insert: jest.fn().mockReturnThis(),
+        into: jest.fn().mockReturnThis(),
+        values: jest.fn().mockReturnThis(),
+        orUpdate: jest.fn().mockReturnThis(),
+        returning: jest.fn().mockReturnThis(),
+        execute: jest.fn(),
+      },
+    };
 
+    const upsertResultMock = {
+      generatedMaps: [serviceProviderMock],
+    };
+
+    beforeEach(() => {
+      jest.resetAllMocks();
+      queryRunnerMock.manager.createQueryBuilder.mockReturnThis();
+      queryRunnerMock.manager.insert.mockReturnThis();
+      queryRunnerMock.manager.into.mockReturnThis();
+      queryRunnerMock.manager.values.mockReturnThis();
+      queryRunnerMock.manager.orUpdate.mockReturnThis();
+      queryRunnerMock.manager.returning.mockReturnThis();
+      queryRunnerMock.manager.execute.mockResolvedValue(upsertResultMock);
+    });
+
+    it('should create queryBuilder chain with correct parameters', async () => {
       // When
-      const result = await service.upsert(
-        data as unknown as PartnersServiceProvider,
+      await service.upsert(
+        queryRunnerMock as unknown as QueryRunner,
+        serviceProviderMock,
       );
 
       // Then
-      expect(result).toBe(expected);
+      expect(queryRunnerMock.manager.createQueryBuilder).toHaveBeenCalledTimes(
+        1,
+      );
+      expect(queryRunnerMock.manager.insert).toHaveBeenCalledTimes(1);
+      expect(queryRunnerMock.manager.into).toHaveBeenCalledWith(
+        PartnersServiceProvider,
+      );
+      expect(queryRunnerMock.manager.values).toHaveBeenCalledWith(
+        serviceProviderMock,
+      );
+      expect(queryRunnerMock.manager.orUpdate).toHaveBeenCalledWith(
+        ['name', 'organizationName', 'authorizedScopes'],
+        ['datapassRequestId'],
+      );
+      expect(queryRunnerMock.manager.returning).toHaveBeenCalledWith('*');
+      expect(queryRunnerMock.manager.execute).toHaveBeenCalledTimes(1);
+    });
+
+    it('should return the upserted entity from generatedMaps', async () => {
+      // When
+      const result = await service.upsert(
+        queryRunnerMock as unknown as QueryRunner,
+        serviceProviderMock,
+      );
+
+      // Then
+      expect(result).toBe(serviceProviderMock);
+    });
+
+    it('should log success message with entity details', async () => {
+      // When
+      await service.upsert(
+        queryRunnerMock as unknown as QueryRunner,
+        serviceProviderMock,
+      );
+
+      // Then
+      expect(loggerServiceMock.debug).toHaveBeenCalledWith({
+        message: 'Service Provider upserted successfully',
+        serviceProviderId: serviceProviderMock.id,
+        datapassRequestId: serviceProviderMock.datapassRequestId,
+      });
+    });
+
+    it('should handle upsert execution and return correct entity', async () => {
+      // Given
+      const customServiceProvider = {
+        ...serviceProviderMock,
+        id: 'custom-id',
+        datapassRequestId: 'custom-datapass-123',
+      };
+      const customUpsertResult = {
+        generatedMaps: [customServiceProvider],
+      };
+      queryRunnerMock.manager.execute.mockResolvedValue(customUpsertResult);
+
+      // When
+      const result = await service.upsert(
+        queryRunnerMock as unknown as QueryRunner,
+        customServiceProvider,
+      );
+
+      // Then
+      expect(result).toBe(customServiceProvider);
     });
   });
 
   describe('delete', () => {
+    it('should call repository.delete with the ID', async () => {
+      // Given
+      const deleteResult = { affected: 1 };
+      repositoryMock.delete.mockResolvedValue(deleteResult);
+
+      // When
+      const _result = await service.delete(serviceProviderIdMock);
+
+      // Then
+      expect(repositoryMock.delete).toHaveBeenCalledExactlyOnceWith(
+        serviceProviderIdMock,
+      );
+    });
+
     it('should delete service provider by id', async () => {
       // Given
       const id = 'id';

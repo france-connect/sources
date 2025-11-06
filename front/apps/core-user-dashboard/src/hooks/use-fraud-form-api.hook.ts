@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 import { useLocalStorage } from 'usehooks-ts';
 
+import { Strings } from '@fc/common';
 import { post } from '@fc/http-client';
 
 import type { FraudConfigInterface, FraudFormValuesInterface } from '../interfaces';
@@ -8,7 +9,7 @@ import type { FraudConfigInterface, FraudFormValuesInterface } from '../interfac
 export const useFraudFormApi = (options: FraudConfigInterface) => {
   const [, , removeLocalFraudSurveyOrigin] = useLocalStorage(options.surveyOriginQueryParam, {
     createdAt: Date.now(),
-    value: '',
+    value: Strings.EMPTY_STRING,
   });
 
   const [submitErrors, setSubmitErrors] = useState<Error | undefined>(undefined);

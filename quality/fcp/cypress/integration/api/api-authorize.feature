@@ -43,7 +43,7 @@ Fonctionnalité: API - authorize
     Et l'entête de la réponse a une propriété "content-type" contenant "text/html"
     Et le corps de la réponse contient une page web
     Et je suis redirigé vers la page erreur technique FranceConnect
-    Et le code d'erreur FranceConnect est "Y04A3BD"
+    Et le code d'erreur FranceConnect est "Y04A8220"
     Et le message d'erreur FranceConnect est "Une erreur de communication avec le fournisseur de service est survenue : Impossible de contacter le \"sector_identifier_uri\"."
 
 
@@ -164,7 +164,7 @@ Fonctionnalité: API - authorize
     Et le code d'erreur FranceConnect est "Y030007"
     Et le lien retour vers le FS n'est pas affiché dans la page erreur technique
 
-  Plan du Scénario: API authorize - erreur Y04EA6E client_id=<clientId>
+  Plan du Scénario: API authorize - erreur Y04EA6EF client_id=<clientId>
     Etant donné que je prépare une requête "authorize"
     Et je mets "<clientId>" dans le paramètre "client_id" de la requête
     Quand je lance la requête
@@ -172,7 +172,7 @@ Fonctionnalité: API - authorize
     Et l'entête de la réponse a une propriété "content-type" contenant "text/html"
     Et le corps de la réponse contient une page web
     Et je suis redirigé vers la page erreur technique FranceConnect
-    Et le code d'erreur FranceConnect est "Y04EA6E"
+    Et le code d'erreur FranceConnect est "Y04EA6EF"
     Et le message d'erreur FranceConnect est "Une erreur de communication avec le fournisseur de service est survenue. Veuillez réessayer ultérieurement."
     Et le lien retour vers le FS n'est pas affiché dans la page erreur technique
 
@@ -213,10 +213,10 @@ Fonctionnalité: API - authorize
 
     @exceptions
     Exemples:
-      | redirectUri                          | httpCode | error   | errorDescription                                                                                            |
-      |                                      | 400      | Y030007 | Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous.                 |
-      | https://my-malicious-url.fr/callback | 400      | Y04C013 | Une erreur de communication avec le fournisseur de service est survenue. Veuillez réessayer ultérieurement. |
-      | example.com                          | 400      | Y030007 | Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous.                 |
+      | redirectUri                          | httpCode | error    | errorDescription                                                                                            |
+      |                                      | 400      | Y030007  | Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous.                 |
+      | https://my-malicious-url.fr/callback | 400      | Y04C013C | Une erreur de communication avec le fournisseur de service est survenue. Veuillez réessayer ultérieurement. |
+      | example.com                          | 400      | Y030007  | Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous.                 |
 
 
   @exceptions

@@ -1,7 +1,7 @@
 export const LoginFormComponent = jest.fn(() => <div data-mockid="LoginFormComponent" />);
 
-// @TODO to be removed when input has been moved into libs/forms
-export const FraudFormComponent = jest.fn(() => <div>FraudFormComponent</div>);
+export const FraudFormComponent = jest.fn(() => <div data-mockid="FraudFormComponent" />);
+
 export const TextInputComponent = jest.fn(() => <div>TextInputComponent</div>);
 export const TextAreaInputComponent = jest.fn(() => <div>TextAreaInputComponent</div>);
 
@@ -15,11 +15,35 @@ export const FraudSurveyIntroductionComponent = jest.fn(() => (
   <div>FraudSurveyIntroductionComponent</div>
 ));
 
+export const IdentityTheftReportFormComponent = jest.fn(() => (
+  <div data-mockid="IdentityTheftReportFormComponent" />
+));
+
+export const IdentityTheftReportNoTracksFound = jest.fn(() => (
+  <div data-mockid="IdentityTheftReportNoTracksFound" />
+));
+
+export const IdentityTheftReportConnectionListActionsComponent = jest.fn(() => (
+  <div data-mockid="IdentityTheftReportConnectionListActionsComponent" />
+));
+
+export const IdentityTheftReportHelpEventIdAccordionComponent = jest.fn(() => (
+  <div data-mockid="IdentityTheftReportHelpEventIdAccordionComponent" />
+));
+
+export const IdentityTheftReportTracksComponent = jest.fn(() => (
+  <div data-mockid="IdentityTheftReportTracksComponent" />
+));
+
 export const UserPreferencesIntroductionComponent = jest.fn(() => (
   <div>UserPreferencesIntroductionComponent</div>
 ));
 
-export const getFraudSupportFormUrl = jest.fn();
+export const SessionExpiredAlertComponent = jest.fn(() => (
+  <div data-mockid="SessionExpiredAlertComponent" />
+));
+
+export const TrackCardComponent = jest.fn(() => <div data-mockid="TrackCardComponent" />);
 
 export const useFraudFormApi = jest.fn();
 

@@ -1,7 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
-import { HsmService, SignatureDigest } from '@fc/hsm';
+import { SignatureDigest } from '@fc/cryptography';
+import { HsmService } from '@fc/hsm';
 import { LoggerService } from '@fc/logger';
 
 import { getLoggerMock } from '@mocks/logger';

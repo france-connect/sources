@@ -54,15 +54,7 @@ export abstract class OidcProviderAppConfigLibService
       </head>
       <body>
         ${form}
-        <script>
-          var form = document.forms[0];
-          var input = document.createElement('input');
-          input.type = 'hidden';
-          input.name = 'logout';
-          input.value = 'yes';
-          form.appendChild(input);
-          form.submit();
-        </script>
+        <script src="/js/auto-submit.js" defer></script>
       </body>
     </html>`;
   }
@@ -209,10 +201,7 @@ export abstract class OidcProviderAppConfigLibService
       <body>
         <form method="${method}" action="${uri}">
         </form>
-        <script>
-          var form = document.forms[0];
-          form.submit();
-        </script>
+        <script src="/js/auto-submit.js" defer></script>
       </body>
     </html>`;
   }

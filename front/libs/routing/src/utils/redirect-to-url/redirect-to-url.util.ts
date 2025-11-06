@@ -1,6 +1,8 @@
+import { Strings } from '@fc/common';
+
 import { RedirectException } from '../../exceptions';
 
-export const redirectToUrl = (url: string = ''): void => {
+export const redirectToUrl = (url: string = Strings.EMPTY_STRING): void => {
   try {
     if (url.trim().length === 0) {
       throw new Error('URL is empty or whitespace only');

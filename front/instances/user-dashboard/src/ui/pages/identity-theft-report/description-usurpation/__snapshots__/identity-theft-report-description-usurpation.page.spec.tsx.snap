@@ -18,11 +18,7 @@ exports[`IdentityTheftReportDescriptionUsurpationPage should match the snapshot 
     </div>
   </div>
   <div
-    class="fr-border-default--grey fr-mt-3w fr-p-3w"
-  >
-    <div
-      data-mockid="DTO2FormComponent"
-    />
-  </div>
+    data-mockid="IdentityTheftReportFormComponent"
+  />
 </div>
 `;

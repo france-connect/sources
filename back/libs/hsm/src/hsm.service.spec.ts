@@ -5,8 +5,8 @@ import * as pkcs11js from 'pkcs11js';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
+import { SignatureDigest } from '@fc/cryptography';
 
-import { SignatureDigest } from './enums';
 import { HsmService } from './hsm.service';
 
 /**

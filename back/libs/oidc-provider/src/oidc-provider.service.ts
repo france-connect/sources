@@ -1,27 +1,28 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
+import { JSONWebKeySet } from 'jose';
 import { get } from 'lodash';
 import {
+  Configuration,
   InteractionResults,
   KoaContextWithOIDC,
   Provider,
 } from 'oidc-provider';
-import { HttpOptions } from 'openid-client';
 
 import { Global, Inject, Injectable } from '@nestjs/common';
-import { HttpAdapterHost } from '@nestjs/core';
 
 import { AsyncFunctionSafe, FunctionSafe } from '@fc/common';
+import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger';
 import { OidcSession } from '@fc/oidc';
 import { RedisService } from '@fc/redis';
 
+import { OidcProviderConfig } from './dto';
 import {
   OidcProviderMiddlewarePattern,
   OidcProviderMiddlewareStep,
   OidcProviderRoutes,
 } from './enums';
 import {
-  OidcProviderBindingException,
   OidcProviderInitialisationException,
   OidcProviderInteractionNotFoundException,
   OidcProviderRuntimeException,
@@ -58,23 +59,14 @@ export class OidcProviderService {
   // Dependency injection can require more than 4 parameters
   /* eslint-disable-next-line max-params */
   constructor(
-    private httpAdapterHost: HttpAdapterHost,
     readonly logger: LoggerService,
     readonly redis: RedisService,
     private readonly errorService: OidcProviderErrorService,
     private readonly configService: OidcProviderConfigService,
     @Inject(OIDC_PROVIDER_CONFIG_APP_TOKEN)
     private readonly oidcProviderConfigApp: IOidcProviderConfigAppService,
-  ) {
-    /**
-     * Call init() in constructor rather than onModuleInit().
-     *
-     * The `Provider` instance has to be ready before the `onModuleInit()` part of the cycle,
-     * so that any extending library can use it in its own `onModuleInit()`.
-     * The main usage is middleware registration in apps.
-     */
-    this.init();
-  }
+    private readonly config: ConfigService,
+  ) {}
 
   /**
    * Wait for nest to load its own route before binding oidc-provider routes
@@ -85,11 +77,13 @@ export class OidcProviderService {
     const { issuer, configuration } = this.configService.getConfig(this);
     this.configuration = configuration;
 
+    const conf = {
+      ...configuration,
+      fetch: this.fetch.bind(this),
+    } as Configuration;
+
     try {
-      this.provider = new this.ProviderProxy(issuer, {
-        ...configuration,
-        httpOptions: this.getHttpOptions.bind(this),
-      });
+      this.provider = new this.ProviderProxy(issuer, conf);
       this.provider.proxy = true;
     } catch (error) {
       throw new OidcProviderInitialisationException(error);
@@ -97,20 +91,9 @@ export class OidcProviderService {
   }
 
   onModuleInit() {
-    const { prefix } = this.configService.getConfig(this);
+    this.init();
 
     this.oidcProviderConfigApp.setProvider(this.provider);
-
-    try {
-      /**
-       * @see https://github.com/panva/node-oidc-provider/blob/main/docs/README.md#mounting-oidc-provider
-       */
-      this.httpAdapterHost.httpAdapter.use(prefix, this.provider.callback());
-      // You can't remove the catch argument, it's mandatory
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (error) {
-      throw new OidcProviderBindingException();
-    }
 
     this.errorService.catchErrorEvents(this.provider);
   }
@@ -136,15 +119,25 @@ export class OidcProviderService {
     return this.provider;
   }
 
+  async callback(req: Request, res: Response) {
+    const { prefix } = this.configService.getConfig(this);
+    req.url = req.originalUrl.replace(prefix, '');
+
+    return await this.provider.callback()(req, res);
+  }
+
   /**
    * Add global request timeout
    * @see https://github.com/panva/node-oidc-provider/blob/HEAD/docs/README.md#httpoptions
    *
    * @param {HttpOptions} options
    */
-  private getHttpOptions(options: HttpOptions): HttpOptions {
-    options.timeout = this.configuration.timeout;
-    return options;
+  private fetch(
+    url: string,
+    options: RequestInit,
+  ): Promise<globalThis.Response> {
+    options.signal = AbortSignal.timeout(this.configuration.timeout);
+    return globalThis.fetch(url, options);
   }
 
   /**
@@ -264,6 +257,14 @@ export class OidcProviderService {
       session,
       sessionId,
     );
+  }
+
+  getJwks(): JSONWebKeySet {
+    const {
+      configuration: { jwks },
+    } = this.config.get<OidcProviderConfig>('OidcProvider');
+
+    return jwks as JSONWebKeySet;
   }
 
   clearCookies(res: Response): void {

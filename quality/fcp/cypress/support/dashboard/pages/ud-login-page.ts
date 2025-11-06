@@ -8,7 +8,7 @@ export default class UdLoginPage {
   }
 
   getExpiredSessionAlert(): ChainableElement {
-    return cy.get('[data-testid="AlertComponent"]');
+    return cy.get('[data-testid="AlertComponent-session-expired-alert"]');
   }
 
   getAuthorizeButton(): ChainableElement {
@@ -27,8 +27,8 @@ export default class UdLoginPage {
   checkIsExpiredSessionAlertDisplayed(displayed: boolean): void {
     if (displayed) {
       cy.contains(
-        '[data-testid="AlertComponent"]',
-        'Votre session a expiré, veuillez vous reconnecter',
+        '[data-testid="AlertComponent-session-expired-alert"]',
+        'Votre session a expiré, veuillez vous reconnecter.',
       );
     } else {
       this.getExpiredSessionAlert().should('not.exist');

@@ -401,17 +401,18 @@ You can create a test pipeline in Gitlab from a merge request or from the stagin
 3. Click on the "Run pipeline" button
 4. Start the back and front jobs
 
-| Environment Variable | Description                                                                  | Comment                                                          |
-| -------------------- | ---------------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| CI_PIPELINE_SOURCE   | merge_request_event                                                          | if pipeline linked to a merge request                            |
-| CI_MERGE_REQUEST_IID | id of the merge request                                                      | for instance 860 for the merge request `/-/merge_requests/860`   |
-| FC_LEGACY_VERSION    | branch from core-legacy repository                                           | only if not staging                                              |
-| FC_APPS_VERSION      | branch from fc-apps repository                                               | only if not staging                                              |
-| SKIP_DIFF_CHECK      | allows to skip the difference check in order to force the BDD test execution | by default "true" for BDD jobs run on staging or MR from staging |
-| BDD_TAGS_FCP_LOW     | tags for the fcp-low BDD tests                                               | by default '@fcpLow and not @ignoreLow and @ci'                  |
-| BDD_TAGS_FCP_HIGH    | tags for the fcp-high BDD tests                                              | by default '@fcpHigh and not @ignoreHigh and @ci'                |
-| BDD_TAGS_EIDAS       | tags for the eidas-bridge BDD tests                                          | by default '@ci and not @ignore'                                 |
-| BDD_TAGS_UD          | tags for the user-dashboard BDD tests                                        | by default '@ci and not @ignore'                                 |
+| Environment Variable                | Description                                                                  | Comment                                                          |
+| ----------------------------------- | ---------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| CI_PIPELINE_SOURCE                  | merge_request_event                                                          | if pipeline linked to a merge request                            |
+| CI_MERGE_REQUEST_IID                | id of the merge request                                                      | for instance 860 for the merge request `/-/merge_requests/860`   |
+| CI_MERGE_REQUEST_TARGET_BRANCH_NAME | MR target branch (staging or US branch)                                      | mandatory                                                        |
+| FC_LEGACY_VERSION                   | branch from core-legacy repository                                           | only if not staging                                              |
+| FC_APPS_VERSION                     | branch from fc-apps repository                                               | only if not staging                                              |
+| SKIP_DIFF_CHECK                     | allows to skip the difference check in order to force the BDD test execution | by default "true" for BDD jobs run on staging or MR from staging |
+| BDD_TAGS_FCP_LOW                    | tags for the fcp-low BDD tests                                               | by default '@fcpLow and not @ignoreLow and @ci'                  |
+| BDD_TAGS_FCP_HIGH                   | tags for the fcp-high BDD tests                                              | by default '@fcpHigh and not @ignoreHigh and @ci'                |
+| BDD_TAGS_EIDAS                      | tags for the eidas-bridge BDD tests                                          | by default '@ci and not @ignore'                                 |
+| BDD_TAGS_UD                         | tags for the user-dashboard BDD tests                                        | by default '@ci and not @ignore'                                 |
 
 ## Plugins VSCode
 

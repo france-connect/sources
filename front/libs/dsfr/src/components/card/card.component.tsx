@@ -30,13 +30,19 @@ interface CardComponentProps extends PropsWithChildren {
   enlargeLink?: boolean;
   size?: Sizes;
   media?: MediaInterface;
-  background?: CardBackgrounds | undefined;
-  details?: CardComponentDetails | undefined;
+  background?: CardBackgrounds;
+  details?: CardComponentDetails;
   isHorizontal?: boolean;
   Heading?: HeadingTag;
-  link?: To | undefined;
-  badges?: BadgeInterface[] | undefined;
-  className?: string | undefined;
+  link?: To;
+  badges?: BadgeInterface[];
+  className?:
+    | {
+        container?: string;
+        title?: string;
+        description?: string;
+      }
+    | string;
 }
 
 export const CardComponent = React.memo(
@@ -53,51 +59,65 @@ export const CardComponent = React.memo(
     media,
     size = Sizes.MEDIUM,
     title,
-  }: CardComponentProps) => (
-    <div
-      className={classnames(
-        `fr-card fr-card--${size} fr-card--${background}`,
-        {
-          // Class CSS
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          'fr-card--horizontal': isHorizontal,
-          // Class CSS
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          'fr-enlarge-link': enlargeLink,
-        },
-        className,
-      )}
-      data-testid="CardComponent">
-      <div className="fr-card__body">
-        <div className="fr-card__content">
-          <Heading className="fr-card__title" data-testid="CardComponent-title">
-            <Link to={link}>{title}</Link>
-          </Heading>
-          <p className="fr-card__desc">{description}</p>
-          {details?.bottom && details?.bottom.content && (
-            <div className="fr-card__end">
-              <CardDetailComponent
-                className={details.bottom.className}
-                content={details.bottom.content}
-                dataTestId="CardComponent-detail-bottom"
-              />
+  }: CardComponentProps) => {
+    const containerClassName = typeof className === 'string' ? className : className?.container;
+
+    const titleClassName = typeof className === 'string' ? undefined : className?.title;
+
+    const descriptionClassName = typeof className === 'string' ? undefined : className?.description;
+
+    return (
+      <div
+        className={classnames(
+          `fr-card fr-card--${size} fr-card--${background}`,
+          {
+            // Class CSS
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            'fr-card--horizontal': isHorizontal,
+            // Class CSS
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            'fr-enlarge-link': enlargeLink,
+          },
+          containerClassName,
+        )}
+        data-testid="CardComponent">
+        <div className="fr-card__body">
+          <div className="fr-card__content">
+            <Heading
+              className={classnames('fr-card__title', titleClassName)}
+              data-testid="CardComponent-title">
+              <Link to={link}>{title}</Link>
+            </Heading>
+            <div
+              className={classnames('fr-card__desc', descriptionClassName)}
+              data-testid="CardComponent-description">
+              {description}
             </div>
-          )}
-          <div className="fr-card__start">
-            {media && <CardMediaComponent alt={media.alt} src={media.src} />}
-            {badges && <BadgesGroupComponent item={badges} />}
-            {details?.top && details?.top.content && (
-              <CardDetailComponent
-                className={details.top.className}
-                content={details.top.content}
-                dataTestId="CardComponent-detail-top"
-              />
+            {details?.bottom && details?.bottom.content && (
+              <div className="fr-card__end">
+                <CardDetailComponent
+                  className={details.bottom.className}
+                  content={details.bottom.content}
+                  dataTestId="CardComponent-detail-bottom"
+                />
+              </div>
             )}
+            <div className="fr-card__start">
+              {media && <CardMediaComponent alt={media.alt} src={media.src} />}
+              {badges && <BadgesGroupComponent item={badges} />}
+              {details?.top && details?.top.content && (
+                <CardDetailComponent
+                  className={details.top.className}
+                  content={details.top.content}
+                  dataTestId="CardComponent-detail-top"
+                />
+              )}
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  ),
+    );
+  },
 );
 
 CardComponent.displayName = 'CardComponent';

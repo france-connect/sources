@@ -1,81 +1,124 @@
 import { render } from '@testing-library/react';
 
-import { SimpleButton, Sizes } from '@fc/dsfr';
+import { ButtonTypes, SimpleButton } from '@fc/dsfr';
 import { t } from '@fc/i18n';
 
 import { FormActionsComponent } from './form-actions.component';
 
 describe('FormActionsComponent', () => {
-  it('should match the snapshot when reset button is not defined', () => {
-    // When
-    const { container } = render(<FormActionsComponent canSubmit />);
+  describe('actions are undefined', () => {
+    it('should match the snapshot', () => {
+      // When
+      const { container } = render(<FormActionsComponent canSubmit />);
 
-    // Then
-    expect(container).toMatchSnapshot();
-    expect(SimpleButton).toHaveBeenCalledOnce();
-    expect(SimpleButton).toHaveBeenCalledWith(
-      {
-        children: 'Form.submit',
-        disabled: false,
-        size: 'md',
-        type: 'submit',
-      },
-      undefined,
-    );
-    expect(t).toHaveBeenCalledOnce();
-    expect(t).toHaveBeenCalledWith('Form.submit');
+      // Then
+      expect(container).toMatchSnapshot();
+    });
+
+    it('should call SimpleButton with default action params', () => {
+      // Given
+      jest.mocked(t).mockReturnValueOnce('any-form-submit-label-mock');
+
+      // When
+      render(<FormActionsComponent canSubmit />);
+
+      // Then
+      expect(t).toHaveBeenCalledExactlyOnceWith('Form.submit');
+      expect(SimpleButton).toHaveBeenCalledExactlyOnceWith(
+        {
+          children: 'any-form-submit-label-mock',
+          className: 'fr-mr-1w',
+          disabled: false,
+          priority: 'primary',
+          size: 'md',
+          type: 'submit',
+        },
+        undefined,
+      );
+    });
   });
 
-  it('should match the snapshot when reset button is defined', () => {
-    // When
-    const { container } = render(<FormActionsComponent canSubmit showReset size={Sizes.LARGE} />);
-
-    // Then
-    expect(container).toMatchSnapshot();
-    expect(SimpleButton).toHaveBeenCalledTimes(2);
-    expect(SimpleButton).toHaveBeenNthCalledWith(
-      1,
-      {
-        children: 'Form.reset',
-        className: 'fr-mr-1w',
-        priority: 'secondary',
-        size: 'lg',
-        type: 'reset',
-      },
-      undefined,
-    );
-    expect(SimpleButton).toHaveBeenNthCalledWith(
-      2,
-      {
-        children: 'Form.submit',
-        disabled: false,
-        size: 'lg',
-        type: 'submit',
-      },
-      undefined,
-    );
-    expect(t).toHaveBeenCalledTimes(2);
-    expect(t).toHaveBeenCalledWith('Form.submit');
-  });
-
-  it('should match the snapshot when submit label is defined', () => {
+  describe('actions are defined', () => {
     // Given
-    const submitLabelMock = 'any-submit-label-mock';
-
-    // When
-    const { container } = render(<FormActionsComponent canSubmit submitLabel={submitLabelMock} />);
-
-    // Then
-    expect(container).toMatchSnapshot();
-    expect(SimpleButton).toHaveBeenCalledOnce();
-    expect(SimpleButton).toHaveBeenCalledWith(
+    const disabledMock = jest.fn(({ canSubmit }) => !canSubmit);
+    const actionsMock = [
       {
-        children: 'any-submit-label-mock',
-        disabled: false,
-        size: 'md',
-        type: 'submit',
+        disabled: disabledMock,
+        label: 'Form.submit',
+        type: ButtonTypes.SUBMIT,
       },
-      undefined,
-    );
+      {
+        disabled: true,
+        label: 'Any.i18n.translation.key',
+        type: ButtonTypes.BUTTON,
+      },
+    ];
+
+    it('should throw an error if more than one submit button is defined', () => {
+      // Given
+      const actionsWithTwoSubmitButtons = [
+        ...actionsMock,
+        {
+          label: expect.any(String),
+          type: ButtonTypes.SUBMIT,
+        },
+      ];
+
+      // When / Then
+      expect(() =>
+        render(<FormActionsComponent canSubmit actions={actionsWithTwoSubmitButtons} />),
+      ).toThrow('FormActionsComponent: Only one button with type "submit" is allowed.');
+    });
+
+    it('should match the snapshot when actions are defined', () => {
+      // When
+      const { container } = render(<FormActionsComponent canSubmit actions={actionsMock} />);
+
+      // Then
+      expect(container).toMatchSnapshot();
+    });
+
+    it('should call SimpleButton 2 times with defined action params', () => {
+      // Given
+      jest
+        .mocked(t)
+        .mockReturnValueOnce('any-form-submit-label-mock')
+        .mockReturnValueOnce('any-i18n-translation-key-mock');
+
+      // When
+      render(<FormActionsComponent canSubmit actions={actionsMock} />);
+
+      // Then
+      expect(t).toHaveBeenCalledWith('Form.submit');
+      expect(t).toHaveBeenCalledWith('Any.i18n.translation.key');
+
+      expect(SimpleButton).toHaveBeenCalledTimes(2);
+
+      expect(SimpleButton).toHaveBeenNthCalledWith(
+        1,
+        {
+          children: 'any-form-submit-label-mock',
+          className: 'fr-mr-1w',
+          disabled: false,
+          priority: 'primary',
+          size: 'md',
+          type: 'submit',
+        },
+        undefined,
+      );
+
+      expect(SimpleButton).toHaveBeenNthCalledWith(
+        2,
+        {
+          children: 'any-i18n-translation-key-mock',
+          className: 'fr-mr-1w',
+          disabled: true,
+          priority: 'primary',
+          size: 'md',
+          type: 'button',
+        },
+        undefined,
+      );
+    });
   });
 });

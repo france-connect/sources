@@ -16,9 +16,9 @@ describe('Stepper', () => {
     // When
     const { container, getByText } = render(
       <StepperComponent
-        currentStep={1}
-        currentStepTitle="current step title mock"
         nextStepTitle="next step title mock"
+        stepNumber={1}
+        stepTitle="current step title mock"
         totalSteps={5}
       />,
     );
@@ -40,11 +40,7 @@ describe('Stepper', () => {
 
     // When
     const { container, getByText } = render(
-      <StepperComponent
-        currentStep={1}
-        currentStepTitle="current step title mock"
-        totalSteps={5}
-      />,
+      <StepperComponent stepNumber={1} stepTitle="current step title mock" totalSteps={5} />,
     );
     const titleElt = getByText('current step title mock');
 
@@ -62,9 +58,9 @@ describe('Stepper', () => {
     // When
     const { container, getByTestId } = render(
       <StepperComponent
-        currentStep={1}
-        currentStepTitle="current step title mock"
         heading={HeadingTag.H3}
+        stepNumber={1}
+        stepTitle="current step title mock"
         totalSteps={5}
       />,
     );

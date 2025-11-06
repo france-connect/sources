@@ -13,6 +13,10 @@ _reload_rp() {
   docker exec fc-rp-all service nginx reload
 }
 
+_reload_haproxy() {
+  docker restart fc_haproxy_1
+}
+
 _container_to_compose_name() {
   local input=$1
   local output=""

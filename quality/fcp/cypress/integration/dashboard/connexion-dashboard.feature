@@ -13,7 +13,7 @@ Fonctionnalité: Connexion User Dashboard
     Et le nom de l'usager du tableau de bord usager est affiché
     Et le lien de déconnexion du tableau de bord usager est affiché
     Et je me déconnecte du tableau de bord usager
-  
+
   Scénario: User Dashboard - Abandon de connexion
     Etant donné que je navigue sur la page d'accueil du tableau de bord usager
     Et que je clique sur le bouton FranceConnect du tableau de bord usager

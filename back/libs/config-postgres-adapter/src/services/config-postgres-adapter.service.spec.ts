@@ -5,21 +5,27 @@ import { PartnersServiceProviderInstance } from '@entities/typeorm';
 import { ConfigMessageDto } from '@fc/csmr-config-client';
 import { PartnersServiceProviderInstanceService } from '@fc/partners-service-provider-instance';
 import { PartnersServiceProviderInstanceVersionService } from '@fc/partners-service-provider-instance-version';
+import { TypeormService } from '@fc/typeorm';
+
+import { getQueryRunnerMock, getTypeormServiceMock } from '@mocks/typeorm';
 
 import { ConfigPostgresAdapterService } from './config-postgres-adapter.service';
 
 describe('ConfigPostgresAdapterService', () => {
   let service: ConfigPostgresAdapterService;
 
+  const queryRunnerMock = getQueryRunnerMock();
+  const typeormServiceMock = getTypeormServiceMock();
+
   const instancesMock = {
-    getById: jest.fn(),
+    getByIdWithQueryRunner: jest.fn(),
     save: jest.fn(),
   };
 
   const versionsMock = {
-    getById: jest.fn(),
+    getByIdWithQueryRunner: jest.fn(),
     create: jest.fn(),
-    updateStatus: jest.fn(),
+    updateStatusWithQueryRunner: jest.fn(),
   };
 
   const messageMock = {
@@ -36,12 +42,15 @@ describe('ConfigPostgresAdapterService', () => {
         ConfigPostgresAdapterService,
         PartnersServiceProviderInstanceService,
         PartnersServiceProviderInstanceVersionService,
+        TypeormService,
       ],
     })
       .overrideProvider(PartnersServiceProviderInstanceService)
       .useValue(instancesMock)
       .overrideProvider(PartnersServiceProviderInstanceVersionService)
       .useValue(versionsMock)
+      .overrideProvider(TypeormService)
+      .useValue(typeormServiceMock)
       .compile();
 
     service = module.get<ConfigPostgresAdapterService>(
@@ -58,7 +67,7 @@ describe('ConfigPostgresAdapterService', () => {
       // Given
       const saveResult = Symbol('saveResult');
 
-      service['save'] = jest.fn().mockResolvedValue(saveResult);
+      service['save'] = jest.fn().mockResolvedValueOnce(saveResult);
 
       // When
       const result = await service.create(messageMock);
@@ -73,7 +82,7 @@ describe('ConfigPostgresAdapterService', () => {
       // Given
       const saveResult = Symbol('saveResult');
 
-      service['save'] = jest.fn().mockResolvedValue(saveResult);
+      service['save'] = jest.fn().mockResolvedValueOnce(saveResult);
 
       // When
       const result = await service.update(messageMock);
@@ -84,6 +93,12 @@ describe('ConfigPostgresAdapterService', () => {
   });
 
   describe('save', () => {
+    beforeEach(() => {
+      typeormServiceMock.withTransaction.mockImplementationOnce((callback) =>
+        callback(queryRunnerMock),
+      );
+    });
+
     it('should update version publication status', async () => {
       // Given
       const instance = Symbol('instance');
@@ -91,14 +106,17 @@ describe('ConfigPostgresAdapterService', () => {
         publicationStatus: Symbol('ExistingPublicationStatus'),
       };
 
-      service['getInstance'] = jest.fn().mockResolvedValue(instance);
-      service['getVersion'] = jest.fn().mockResolvedValue(version);
+      service['getInstance'] = jest.fn().mockResolvedValueOnce(instance);
+      service['getVersion'] = jest.fn().mockResolvedValueOnce(version);
 
       // When
       await service['save'](messageMock);
 
       // Then
-      expect(versionsMock.updateStatus).toHaveBeenCalledWith(version);
+      expect(versionsMock.updateStatusWithQueryRunner).toHaveBeenCalledWith(
+        queryRunnerMock,
+        version,
+      );
     });
 
     it('should return result with version id', async () => {
@@ -109,8 +127,8 @@ describe('ConfigPostgresAdapterService', () => {
         publicationStatus: Symbol('ExistingPublicationStatus'),
       };
 
-      service['getInstance'] = jest.fn().mockResolvedValue(instance);
-      service['getVersion'] = jest.fn().mockResolvedValue(version);
+      service['getInstance'] = jest.fn().mockResolvedValueOnce(instance);
+      service['getVersion'] = jest.fn().mockResolvedValueOnce(version);
 
       // When
       const result = await service['save'](messageMock);
@@ -127,10 +145,10 @@ describe('ConfigPostgresAdapterService', () => {
       // Given
       const instance = Symbol('instance');
 
-      instancesMock.getById.mockReturnValue(instance);
+      instancesMock.getByIdWithQueryRunner.mockResolvedValueOnce(instance);
 
       // When
-      const result = await service['getInstance'](messageMock);
+      const result = await service['getInstance'](queryRunnerMock, messageMock);
 
       // Then
       expect(result).toBe(instance);
@@ -140,11 +158,28 @@ describe('ConfigPostgresAdapterService', () => {
       // Given
       const instance = Symbol('instance');
 
-      instancesMock.getById.mockReturnValue(null);
-      instancesMock.save.mockReturnValue(instance);
+      instancesMock.getByIdWithQueryRunner.mockResolvedValueOnce(null);
+      instancesMock.save.mockResolvedValueOnce(instance);
 
       // When
-      const result = await service['getInstance'](messageMock);
+      await service['getInstance'](queryRunnerMock, messageMock);
+
+      // Then
+      expect(instancesMock.save).toHaveBeenCalledWith(queryRunnerMock, {
+        id: messageMock.meta.instanceId,
+        ...messageMock.payload,
+      });
+    });
+
+    it('should return instance if not found', async () => {
+      // Given
+      const instance = Symbol('instance');
+
+      instancesMock.getByIdWithQueryRunner.mockResolvedValueOnce(null);
+      instancesMock.save.mockResolvedValueOnce(instance);
+
+      // When
+      const result = await service['getInstance'](queryRunnerMock, messageMock);
 
       // Then
       expect(result).toBe(instance);
@@ -159,10 +194,14 @@ describe('ConfigPostgresAdapterService', () => {
 
     it('should return version by id', async () => {
       // Given
-      versionsMock.getById.mockReturnValue(version);
+      versionsMock.getByIdWithQueryRunner.mockResolvedValueOnce(version);
 
       // When
-      const result = await service['getVersion'](messageMock, instance);
+      const result = await service['getVersion'](
+        queryRunnerMock,
+        messageMock,
+        instance,
+      );
 
       // Then
       expect(result).toBe(version);
@@ -170,11 +209,15 @@ describe('ConfigPostgresAdapterService', () => {
 
     it('should create version if not found', async () => {
       // Given
-      versionsMock.getById.mockReturnValue(null);
-      versionsMock.create.mockReturnValue(version);
+      versionsMock.getByIdWithQueryRunner.mockResolvedValueOnce(null);
+      versionsMock.create.mockResolvedValueOnce(version);
 
       // When
-      const result = await service['getVersion'](messageMock, instance);
+      const result = await service['getVersion'](
+        queryRunnerMock,
+        messageMock,
+        instance,
+      );
 
       // Then
       expect(result).toBe(version);

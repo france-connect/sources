@@ -49,7 +49,7 @@ describe('OidcProviderErrorService', () => {
   describe('catchErrorEvents', () => {
     it('should call register event for each error case', () => {
       // Given
-      const EVENT_COUNT = 17;
+      const EVENT_COUNT = 15;
       const provider = { on: jest.fn() as unknown } as Provider;
       // When
       service.catchErrorEvents(provider);

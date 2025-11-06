@@ -27,9 +27,9 @@ import variables from '@fc/dsfr/variables.module.json';
 `page.layout.tsx`
 
 ```typescript
-import { Options, StepperContextProvider } from '@fc/dsfr';
+import { DsfrOptions, StepperContextProvider } from '@fc/dsfr';
 
-const stepperConfig = ConfigService.get<StepperConfig>(Options.CONFIG_NAME_STEPPER);
+const stepperConfig = ConfigService.get<StepperConfig>(DsfrOptions.CONFIG_NAME_STEPPER);
 
 return (
   <StepperContextProvider config={stepperConfig}>
@@ -43,7 +43,7 @@ return (
 ```typescript
 import { StepperContext } from '@fc/dsfr';
 
-const { gotoNextPage } = use(StepperContext);
+const { gotoNextPage } = useSafeContext(StepperContext);
 
 return (
   <button onClick={gotoNextPage}>

@@ -5,6 +5,7 @@ import reactPlugin from 'eslint-plugin-react';
 export const legacyConfig = [
   {
     extends: [jsxA11yPlugin.flatConfigs.recommended, importPlugin.flatConfigs.recommended],
+    ignores: ['**/*.json'],
     plugins: {
       react: reactPlugin,
     },

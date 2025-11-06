@@ -1,4 +1,4 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsOptional, IsString } from 'class-validator';
 
 export class ServiceProviderAdapterMongoConfig {
   @IsString()
@@ -7,4 +7,12 @@ export class ServiceProviderAdapterMongoConfig {
   @IsOptional()
   @IsString()
   readonly platform?: string;
+
+  @IsBoolean()
+  @IsOptional()
+  readonly urlsRequireTld?: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  readonly disableAutoLoading?: boolean;
 }

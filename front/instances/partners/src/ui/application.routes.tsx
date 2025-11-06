@@ -1,13 +1,13 @@
 import React from 'react';
 import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router';
 
-import { ConfigService } from '@fc/config';
-import { type Dto2FormConfigInterface, loadSchema } from '@fc/dto2form';
+import { useSafeContext } from '@fc/common';
+import { PartnersService } from '@fc/core-partners';
+import type { Dto2FormServiceContextInterface } from '@fc/dto2form-service';
+import { Dto2FormServiceContext } from '@fc/dto2form-service';
 import { ApplicationLayout } from '@fc/layout';
 import { AuthedRoute, RouterErrorBoundaryComponent, UnauthedRoute } from '@fc/routing';
 
-import { loadVersion } from '../helpers';
-import { InstancesService } from '../services';
 import { PageLayout } from './layouts';
 import {
   HomePage,
@@ -16,11 +16,13 @@ import {
   InstanceUpdatePage,
   LegalNoticesPage,
   LoginPage,
+  ServiceProvidersPage,
   SitemapPage,
 } from './pages';
 
 export const ApplicationRoutes = React.memo(() => {
-  const forms = ConfigService.get<Dto2FormConfigInterface>('Dto2Form');
+  const { getConfigFormById, loadData } =
+    useSafeContext<Dto2FormServiceContextInterface>(Dto2FormServiceContext);
 
   const routes = createRoutesFromElements(
     <Route element={<ApplicationLayout />} errorElement={<RouterErrorBoundaryComponent />} path="/">
@@ -29,18 +31,27 @@ export const ApplicationRoutes = React.memo(() => {
       </Route>
       <Route element={<AuthedRoute fallback="/login" />}>
         <Route element={<PageLayout />}>
-          <Route
-            id={forms.InstancesCreate.endpoints.schema.path}
-            loader={loadSchema(forms.InstancesCreate.endpoints.schema.path)}
-            path="instances">
-            <Route element={<InstanceCreatePage />} path="create" />
+          <Route path="fournisseurs-de-service">
+            <Route
+              index
+              element={<ServiceProvidersPage />}
+              loader={PartnersService.loadAllServiceProviders}
+            />
+          </Route>
+          <Route path="instances">
+            <Route
+              element={<InstanceCreatePage />}
+              id={getConfigFormById('InstancesCreate').id}
+              loader={loadData('InstancesCreate')}
+              path="create"
+            />
             <Route
               element={<InstanceUpdatePage />}
-              id={forms.InstancesUpdate.endpoints.load?.path}
-              loader={loadVersion(forms.InstancesUpdate.endpoints.load?.path as string)}
+              id={getConfigFormById('InstancesUpdate').id}
+              loader={loadData('InstancesUpdate')}
               path=":instanceId"
             />
-            <Route index element={<InstancesPage />} loader={InstancesService.loadAll} />
+            <Route index element={<InstancesPage />} loader={PartnersService.loadAllInstances} />
           </Route>
         </Route>
         <Route index element={<HomePage />} />

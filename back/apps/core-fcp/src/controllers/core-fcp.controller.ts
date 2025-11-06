@@ -22,7 +22,7 @@ import { DeviceSession } from '@fc/device';
 import { ForbidRefresh, IsStep } from '@fc/flow-steps';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerService } from '@fc/logger';
-import { NotificationsService } from '@fc/notifications';
+import { NotificationService } from '@fc/notification';
 import { OidcSession } from '@fc/oidc';
 import { OidcAcrService } from '@fc/oidc-acr';
 import { OidcClientRoutes, OidcClientSession } from '@fc/oidc-client';
@@ -52,7 +52,7 @@ export class CoreFcpController {
     private readonly serviceProvider: ServiceProviderAdapterMongoService,
     private readonly coreFcp: CoreFcpService,
     private readonly config: ConfigService,
-    private readonly notifications: NotificationsService,
+    private readonly notification: NotificationService,
     private readonly oidcAcr: OidcAcrService,
     private readonly coreAcr: CoreAcrService,
     private readonly coreVerify: CoreVerifyService,
@@ -151,7 +151,7 @@ export class CoreFcpController {
 
     // -- generate and store in session the CSRF token
 
-    const notification = await this.notifications.getNotificationToDisplay();
+    const notification = await this.notification.getNotificationToDisplay();
 
     /** Currently, we don't have the ability to know what the error message is.
      * Therefore, the only way to check if we have an error is to verify

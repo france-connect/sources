@@ -282,14 +282,15 @@ target "csmr-hsm-high" {
 
 target "command-runner" {
   inherits = ["prod-base"]
-  target = "command-runner"
+  target = "command-runner-generic"
 
   args = {
     APP_NAME  = "command-runner-instance"
+    COMMAND_ARGS = "deployment"
   }
   
   contexts = {
-    pm2 = "./docker/builds/command-runner/includes/pm2"
+    pm2 = "./docker/builds/command-apps/includes/pm2"
   }
 
   output = [
@@ -299,6 +300,32 @@ target "command-runner" {
     )
   ]
 }
+
+# ---------------------------
+# Target: command-import-sp-sandbox (specific)
+# ---------------------------
+
+target "command-import-sp-sandbox" {
+  inherits = ["prod-base"]
+  target = "command-runner-generic"
+
+  args = {
+    APP_NAME  = "command-import-sp-sandbox"
+    COMMAND_ARGS = "import-sp-sandbox"
+  }
+  
+  contexts = {
+    pm2 = "./docker/builds/command-apps/includes/pm2"
+  }
+
+  output = [
+    merge(
+      REGISTRY_OUTPUT_COMMON,
+      { name = "${REGISTRY_URL}/nodejs-apps/command-import-sp-sandbox:${APP_VERSION}" }
+    )
+  ]
+}
+
 
 # ---------------------------
 # Groups

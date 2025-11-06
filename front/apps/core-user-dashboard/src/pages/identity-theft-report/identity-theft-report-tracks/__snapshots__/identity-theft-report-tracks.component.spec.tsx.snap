@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`IdentityTheftReportTracksComponent should match snapshot 1`] = `
+<div>
+  <h3>
+    IdentityTheftReport.tracks.title
+  </h3>
+  <p
+    class="fr-text--lead"
+  >
+    <b>
+      any-acme-code-mock
+    </b>
+  </p>
+  <div />
+</div>
+`;

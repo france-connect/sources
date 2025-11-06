@@ -1,5 +1,8 @@
+import { Request, Response } from 'express';
+
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { OidcProviderService } from '@fc/oidc-provider';
 import { ISessionService } from '@fc/session';
 
 import { AppSession, AuthorizeParamsDto } from '../dto';
@@ -12,11 +15,18 @@ describe('OidcProviderController', () => {
     set: jest.fn(),
   } as unknown as ISessionService<AppSession>;
 
+  const oidcProviderServiceMock = {
+    callback: jest.fn(),
+  } as unknown as OidcProviderService;
+
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       controllers: [OidcProviderController],
-      providers: [],
-    }).compile();
+      providers: [OidcProviderService],
+    })
+      .overrideProvider(OidcProviderService)
+      .useValue(oidcProviderServiceMock)
+      .compile();
 
     oidcProviderController = app.get<OidcProviderController>(
       OidcProviderController,
@@ -28,7 +38,8 @@ describe('OidcProviderController', () => {
   describe('getAuthorize()', () => {
     it('should set the finalSpId into the session', async () => {
       // Given
-      const nextMock = jest.fn();
+      const req = {} as Request;
+      const resMock = {} as Response;
       const queryMock = {
         // Parameter should be like an openid one because it is in the same url
         sp_id: 'abcdefghijklmnopqrstuvwxyz0123456789',
@@ -36,7 +47,8 @@ describe('OidcProviderController', () => {
 
       // When
       await oidcProviderController.getAuthorize(
-        nextMock,
+        req,
+        resMock,
         queryMock,
         appSessionServiceMock,
       );
@@ -51,42 +63,58 @@ describe('OidcProviderController', () => {
 
     it('should call next', async () => {
       // Given
-      const nextMock = jest.fn();
+      const req = {} as Request;
+      const resMock = {} as Response;
       const queryMock = {} as AuthorizeParamsDto;
 
       // When
       await oidcProviderController.getAuthorize(
-        nextMock,
+        req,
+        resMock,
         queryMock,
         appSessionServiceMock,
       );
 
       // Then
-      expect(nextMock).toHaveReturnedTimes(1);
+      expect(oidcProviderServiceMock.callback).toHaveBeenCalledTimes(1);
+      expect(oidcProviderServiceMock.callback).toHaveBeenCalledWith(
+        req,
+        resMock,
+      );
     });
   });
 
   describe('postAuthorize()', () => {
-    it('should call next', () => {
+    it('should call next', async () => {
       // Given
-      const nextMock = jest.fn();
+      const req = {} as Request;
+      const resMock = {} as Response;
       const bodyMock = {} as AuthorizeParamsDto;
       // When
-      oidcProviderController.postAuthorize(nextMock, bodyMock);
+      await oidcProviderController.postAuthorize(req, resMock, bodyMock);
       // Then
-      expect(nextMock).toHaveReturnedTimes(1);
+      expect(oidcProviderServiceMock.callback).toHaveBeenCalledTimes(1);
+      expect(oidcProviderServiceMock.callback).toHaveBeenCalledWith(
+        req,
+        resMock,
+      );
     });
   });
 
   describe('postToken()', () => {
-    it('should call next', () => {
+    it('should call next', async () => {
       // Given
-      const nextMock = jest.fn();
+      const req = {} as Request;
+      const resMock = {} as Response;
       const bodyMock = {} as AuthorizeParamsDto;
       // When
-      oidcProviderController.postToken(nextMock, bodyMock);
+      await oidcProviderController.postToken(req, resMock, bodyMock);
       // Then
-      expect(nextMock).toHaveReturnedTimes(1);
+      expect(oidcProviderServiceMock.callback).toHaveBeenCalledTimes(1);
+      expect(oidcProviderServiceMock.callback).toHaveBeenCalledWith(
+        req,
+        resMock,
+      );
     });
   });
 });

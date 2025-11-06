@@ -1,12 +1,21 @@
 {
+  "DSFR.alert.close": "Masquer le message",
+  "DSFR.breadcrumbs.location": "vous êtes ici :",
+  "DSFR.breadcrumbs.show": "Voir le fil d’Ariane",
+  "DSFR.button.loginConnect.authenticateWith": "S’identifier avec",
+  "DSFR.button.loginConnect.whatIs": "Qu’est ce que {connectType} ?",
+  "DSFR.checkbox.label": "Veuillez cocher cette case si vous souhaitez continuer",
+  "DSFR.link.sendEmailTo": "Envoyer un email à {email}",
+  "DSFR.notice.close": "Masquer le message",
+  "DSFR.pagination.firstPage": "Première page",
+  "DSFR.pagination.lastPage": "Dernière page",
+  "DSFR.pagination.nextPage": "Page suivante",
+  "DSFR.pagination.previousPage": "Page précédente",
   "DSFR.stepper.location": "Étape {current} sur {total}",
   "DSFR.stepper.nextStep": "Étape suivante",
   "DSFR.stepper.nextStepButton": "Suivant",
   "DSFR.stepper.previousStepButton": "Précédent",
-  "DSFR.breadcrumbs.show": "Voir le fil d’Ariane",
-  "DSFR.breadcrumbs.location": "vous êtes ici :",
-  "DSFR.button.loginConnect.whatIs": "Qu’est ce que {connectType} ?",
-  "DSFR.button.loginConnect.authenticateWith": "S’identifier avec",
-  "DSFR.alert.close": "Masquer le message",
-  "DSFR.notice.close": "Masquer le message"
+  "DSFR.stepper.skipStepButton": "Passer cette étape",
+  "DSFR.toggle.checked": "Activé",
+  "DSFR.toggle.unchecked": "Désactivé"
 }

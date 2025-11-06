@@ -1,4 +1,4 @@
-import { DynamicModule, Global, Module } from '@nestjs/common';
+import { DynamicModule, Module } from '@nestjs/common';
 import { CqrsModule, EventBus } from '@nestjs/cqrs';
 import {
   ModelDefinition,
@@ -9,11 +9,8 @@ import {
 import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger';
 
-import { MongooseConnectionConnectedHandler } from './handlers';
-import { MongooseCollectionOperationWatcherHelper } from './helpers';
 import { MongooseProvider } from './providers';
 
-@Global()
 @Module({})
 export class MongooseModule {
   static forRoot(): DynamicModule {
@@ -29,13 +26,9 @@ export class MongooseModule {
     });
     return {
       ...mongoose,
+      global: true,
       imports: [...mongoose.imports, CqrsModule],
-      providers: [
-        EventBus,
-        MongooseConnectionConnectedHandler,
-        MongooseCollectionOperationWatcherHelper,
-      ],
-      exports: [MongooseCollectionOperationWatcherHelper],
+      providers: [EventBus],
     };
   }
 
@@ -44,11 +37,8 @@ export class MongooseModule {
     return {
       ...mongoose,
       imports: [CqrsModule],
-      providers: [
-        ...mongoose.providers,
-        MongooseCollectionOperationWatcherHelper,
-      ],
-      exports: [...mongoose.exports, MongooseCollectionOperationWatcherHelper],
+      providers: [...mongoose.providers],
+      exports: [...mongoose.exports],
     };
   }
 }

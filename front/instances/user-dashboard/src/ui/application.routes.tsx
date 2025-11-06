@@ -7,13 +7,14 @@ import {
   RouterProvider,
 } from 'react-router';
 
-import { ConfigService } from '@fc/config';
+import { useSafeContext } from '@fc/common';
 import { authedFallback, unauthedFallback } from '@fc/core-user-dashboard';
-import type { Dto2FormConfigInterface } from '@fc/dto2form';
-import { loadData, loadSchema } from '@fc/dto2form';
+import type { Dto2FormServiceContextInterface } from '@fc/dto2form-service';
+import { Dto2FormServiceContext } from '@fc/dto2form-service';
 import { ApplicationLayout } from '@fc/layout';
 import { AuthedRoute, RouterErrorBoundaryComponent, UnauthedRoute } from '@fc/routing';
 
+import { loadFraudTracks } from '../loaders';
 import { IdentityTheftReportLayout, StepperLayout } from './layouts';
 import {
   Error409Component,
@@ -23,9 +24,10 @@ import {
   FraudLoginPage,
   HomePage,
   IdentityTheftReportAuthenticationEventIdPage,
+  IdentityTheftReportConnectionListPage,
   IdentityTheftReportContactPage,
   IdentityTheftReportDescriptionUsurpationPage,
-  IdentityTheftReportPivotIdentityPage,
+  IdentityTheftReportIdentityPage,
   IdentityTheftReportSuccessPage,
   IdentityTheftReportSummaryPage,
   LegalNoticesPage,
@@ -35,7 +37,7 @@ import {
 } from './pages';
 
 export const ApplicationRoutes = React.memo(() => {
-  const forms = ConfigService.get<Dto2FormConfigInterface>('Dto2Form');
+  const { loadData } = useSafeContext<Dto2FormServiceContextInterface>(Dto2FormServiceContext);
 
   const routes = createRoutesFromElements(
     <Route element={<ApplicationLayout />} errorElement={<RouterErrorBoundaryComponent />} path="/">
@@ -53,31 +55,32 @@ export const ApplicationRoutes = React.memo(() => {
         <Route element={<StepperLayout />}>
           <Route
             element={<IdentityTheftReportSummaryPage />}
-            loader={loadData(forms.IdentityTheftSummary.endpoints.schema.path)}
+            loader={loadData('IdentityTheftSummary')}
             path="recapitulatif"
           />
           <Route
             element={<IdentityTheftReportContactPage />}
-            id={forms.IdentityTheftContact.endpoints.schema.path}
-            loader={loadSchema(forms.IdentityTheftContact.endpoints.schema.path)}
+            loader={loadData('IdentityTheftContact')}
             path="contact"
           />
           <Route
-            element={<IdentityTheftReportPivotIdentityPage />}
-            id={forms.IdentityTheftIdentity.endpoints.schema.path}
-            loader={loadSchema(forms.IdentityTheftIdentity.endpoints.schema.path)}
+            element={<IdentityTheftReportIdentityPage />}
+            loader={loadData('IdentityTheftIdentity')}
             path="identite-usurpee"
           />
           <Route
+            element={<IdentityTheftReportConnectionListPage />}
+            loader={loadFraudTracks}
+            path="connexions-existantes"
+          />
+          <Route
             element={<IdentityTheftReportAuthenticationEventIdPage />}
-            id={forms.IdentityTheftConnection.endpoints.schema.path}
-            loader={loadSchema(forms.IdentityTheftConnection.endpoints.schema.path)}
+            loader={loadData('IdentityTheftConnection')}
             path="code-identification"
           />
           <Route
             element={<IdentityTheftReportDescriptionUsurpationPage />}
-            id={forms.IdentityTheftDescription.endpoints.schema.path}
-            loader={loadSchema(forms.IdentityTheftDescription.endpoints.schema.path)}
+            loader={loadData('IdentityTheftDescription')}
             path="description-usurpation"
           />
         </Route>

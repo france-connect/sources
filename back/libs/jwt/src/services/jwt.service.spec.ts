@@ -1,5 +1,6 @@
 import { ValidationError } from 'class-validator';
 import {
+  base64url,
   compactDecrypt,
   CompactDecryptResult,
   CompactEncrypt,
@@ -11,7 +12,6 @@ import {
   JWTVerifyResult,
   KeyLike,
   ResolvedKey,
-  SignJWT,
 } from 'jose';
 import { lastValueFrom } from 'rxjs';
 
@@ -22,6 +22,7 @@ import { validateDto } from '@fc/common';
 import { DekAlg, KekAlg, Use } from '@fc/cryptography';
 import { FetchJwksFailedException } from '@fc/jwt/exceptions/fetch-jwks-failed.exception';
 import { LoggerService } from '@fc/logger';
+import { SIGN_ADAPTER_TOKEN } from '@fc/sign-adapter';
 
 import { getLoggerMock } from '@mocks/logger';
 
@@ -46,20 +47,34 @@ jest.mock('@fc/common', () => ({
   validateDto: jest.fn(),
 }));
 
-const httpServiceMock = {
-  get: jest.fn(),
-};
-
-const loggerServiceMock = getLoggerMock();
-
 describe('JwtService', () => {
   let service: JwtService;
+
+  const httpServiceMock = {
+    get: jest.fn(),
+  };
+
+  const loggerServiceMock = getLoggerMock();
+
+  const signAdapterMock = {
+    sign: jest.fn(),
+  };
+
+  const base64urlEncodeMock = jest.mocked(base64url.encode);
 
   beforeEach(async () => {
     jest.clearAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [LoggerService, JwtService, HttpService],
+      providers: [
+        LoggerService,
+        JwtService,
+        HttpService,
+        {
+          provide: SIGN_ADAPTER_TOKEN,
+          useValue: signAdapterMock,
+        },
+      ],
     })
       .overrideProvider(HttpService)
       .useValue(httpServiceMock)
@@ -311,28 +326,15 @@ describe('JwtService', () => {
     const audience = 'client_id';
     const jwk = { alg: 'RS256', use: 'sig' } as JWK;
     const key = Symbol('key');
+    const signatureMock = 'signature';
 
-    const signResult = 'foo';
-    const signJWTInstance = {
-      setProtectedHeader: jest.fn(),
-      setIssuedAt: jest.fn(),
-      setIssuer: jest.fn(),
-      setAudience: jest.fn(),
-      sign: jest.fn(),
-    };
-    const signJwtMock = function () {
-      return signJWTInstance as unknown as SignJWT;
-    };
+    const signResult = 'header.body.signature';
 
     beforeEach(() => {
       service['importJwk'] = jest.fn().mockResolvedValue(key);
-      jest.mocked(SignJWT).mockImplementation(signJwtMock);
-
-      signJWTInstance.setProtectedHeader.mockReturnValue(signJWTInstance);
-      signJWTInstance.setIssuedAt.mockReturnValue(signJWTInstance);
-      signJWTInstance.setIssuer.mockReturnValue(signJWTInstance);
-      signJWTInstance.setAudience.mockReturnValue(signJWTInstance);
-      signJWTInstance.sign.mockResolvedValue(signResult);
+      base64urlEncodeMock.mockReturnValueOnce(signatureMock);
+      service['buildSignedHeader'] = jest.fn().mockReturnValue('header');
+      service['buildSignedPayload'] = jest.fn().mockReturnValue('body');
     });
 
     it('should call this.importJwk()', async () => {
@@ -344,61 +346,10 @@ describe('JwtService', () => {
       expect(service['importJwk']).toHaveBeenCalledWith(jwk);
     });
 
-    it('should instantiate SignJWT and call setProtectedHeader, setIssuedAt, setIssuer and sign', async () => {
-      // When
-      await service.sign(payload, issuer, audience, jwk);
-
-      // Then
-      expect(signJWTInstance.setProtectedHeader).toHaveBeenCalledTimes(1);
-      expect(signJWTInstance.setProtectedHeader).toHaveBeenCalledWith({
-        alg: 'RS256',
-      });
-
-      expect(signJWTInstance.setIssuedAt).toHaveBeenCalledTimes(1);
-      expect(signJWTInstance.setIssuedAt).toHaveBeenCalledWith();
-
-      expect(signJWTInstance.setIssuer).toHaveBeenCalledTimes(1);
-      expect(signJWTInstance.setIssuer).toHaveBeenCalledWith(issuer);
-
-      expect(signJWTInstance.setAudience).toHaveBeenCalledTimes(1);
-      expect(signJWTInstance.setAudience).toHaveBeenCalledWith(audience);
-
-      expect(signJWTInstance.sign).toHaveBeenCalledTimes(1);
-      expect(signJWTInstance.sign).toHaveBeenCalledWith(key);
-    });
-
-    it('should instantiate SignJWT and call setProtectedHeader with a kid, setIssuedAt, setIssuer and sign', async () => {
-      // Given
-      const kidExpectedValue = 'NewKidValue12345';
-      const jwkWithKid = {
-        kid: kidExpectedValue,
-        ...jwk,
-      };
-
-      // When
-      await service.sign(payload, issuer, audience, jwkWithKid);
-
-      // Then
-      expect(signJWTInstance.setProtectedHeader).toHaveBeenCalledTimes(1);
-      expect(signJWTInstance.setProtectedHeader).toHaveBeenCalledWith({
-        alg: 'RS256',
-        kid: kidExpectedValue,
-      });
-
-      expect(signJWTInstance.setIssuedAt).toHaveBeenCalledTimes(1);
-      expect(signJWTInstance.setIssuedAt).toHaveBeenCalledWith();
-
-      expect(signJWTInstance.setIssuer).toHaveBeenCalledTimes(1);
-      expect(signJWTInstance.setIssuer).toHaveBeenCalledWith(issuer);
-
-      expect(signJWTInstance.sign).toHaveBeenCalledTimes(1);
-      expect(signJWTInstance.sign).toHaveBeenCalledWith(key);
-    });
-
-    it('should throw CanNotSignJwtException if signJWT.sign() throws', async () => {
+    it('should throw CanNotSignJwtException if signAdapter.sign() throws', async () => {
       // Given
       const error = new Error('foo');
-      signJWTInstance.sign.mockRejectedValueOnce(error);
+      signAdapterMock.sign.mockRejectedValueOnce(error);
 
       // When / Then
       await expect(
@@ -406,12 +357,57 @@ describe('JwtService', () => {
       ).rejects.toThrow(CanNotSignJwtException);
     });
 
-    it('should return the result of signJWT.sign()', async () => {
+    it('should return the signed jwt', async () => {
       // When
       const result = await service.sign(payload, issuer, audience, jwk);
 
       // Then
       expect(result).toEqual(signResult);
+    });
+  });
+
+  describe('buildSignedHeader', () => {
+    it('should return the signed header', () => {
+      // Given
+      const jwk = { alg: 'RS256', use: 'sig' } as JWK;
+      base64urlEncodeMock.mockReset().mockReturnValueOnce('header');
+
+      // When
+      const result = service['buildSignedHeader'](jwk);
+
+      // Then
+      expect(result).toEqual('header');
+    });
+
+    it('should include kid in header if provided', () => {
+      // Given
+      const jwk = { alg: 'RS256', use: 'sig', kid: 'my-key' } as JWK;
+      const spy = jest.spyOn(JSON, 'stringify');
+
+      // When
+      service['buildSignedHeader'](jwk);
+
+      // Then
+      expect(spy).toHaveBeenCalledExactlyOnceWith({
+        alg: 'RS256',
+        kid: 'my-key',
+      });
+    });
+  });
+
+  describe('buildSignedPayload', () => {
+    it('should return the signed payload', () => {
+      // Given
+      const payload = { foo: 'bar' };
+      const issuer = 'https://issuer.com';
+      const audience = 'client_id';
+      base64urlEncodeMock.mockReset().mockReturnValueOnce('body');
+
+      // When
+      const result = service['buildSignedPayload'](payload, issuer, audience);
+
+      // Then
+      expect(result).toEqual('body');
     });
   });
 

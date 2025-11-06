@@ -1,4 +1,5 @@
 export enum FraudIdentityTheftRoutes {
+  FRAUD_DATA_TRACKS = '/fraud/data/tracks',
   FRAUD_FORM = '/fraud-form',
   FRAUD_NO_AUTH_DESCRIPTION = '/fraud/no-auth/description',
   FRAUD_NO_AUTH_CONNECTION = '/fraud/no-auth/connection',

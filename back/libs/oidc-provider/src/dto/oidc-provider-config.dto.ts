@@ -22,7 +22,6 @@ import {
   ErrorOut,
   JWK,
   KoaContextWithOIDC,
-  PKCEMethods,
   ResponseType,
   SigningAlgorithm,
   SigningAlgorithmWithNone,
@@ -30,6 +29,10 @@ import {
   SymmetricSigningAlgorithm,
 } from 'oidc-provider';
 
+import { FunctionSafe } from '@fc/common';
+import { JwksDto } from '@fc/jwt';
+
+import { OidcProviderSignAdapter } from '../adapters';
 import { OidcProviderPrompt, OidcProviderRoutes } from '../enums';
 
 /**
@@ -147,6 +150,10 @@ class FeatureSetting {
   @IsOptional()
   readonly requestUri?: boolean;
 }
+export class ExperimentalFeatureSetting extends FeatureSetting {
+  @IsOptional()
+  readonly ack?: string;
+}
 
 class LogoutSourceFeatureSetting extends FeatureSetting {
   /**
@@ -225,6 +232,11 @@ class Features {
   @ValidateNested()
   @Type(() => FeatureSetting)
   readonly resourceIndicators?: FeatureSetting;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => ExperimentalFeatureSetting)
+  readonly externalSigningSupport?: ExperimentalFeatureSetting;
 }
 
 class Ttl {
@@ -338,13 +350,13 @@ class EnabledJWA {
   )[];
 }
 
-class Jwks {
+export class Jwks {
   @IsArray()
   /**
    * @TODO #143 properly validate keys
    * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/143
    */
-  readonly keys: Array<unknown>;
+  readonly keys: Array<OidcProviderSignAdapter | JwksDto>;
 }
 
 class OidcProviderInteractionConfig {
@@ -635,7 +647,7 @@ class AllClientMetadataValidator implements AllClientMetadata {
 }
 
 export class Pkce {
-  readonly methods: PKCEMethods[];
+  readonly methods: unknown[];
 
   readonly required: (ctx, client) => boolean;
 }
@@ -825,6 +837,8 @@ export class Configuration {
 
   @IsOptional()
   readonly pkce?: Pkce;
+
+  readonly fetch: FunctionSafe;
 }
 
 export class OidcProviderConfig {
@@ -853,4 +867,8 @@ export class OidcProviderConfig {
 
   @IsUrl()
   readonly errorUriBase?: string;
+
+  @IsBoolean()
+  @IsOptional()
+  readonly urlsRequireTld?: boolean;
 }

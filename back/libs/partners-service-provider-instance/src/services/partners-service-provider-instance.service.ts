@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { QueryRunner, Repository } from 'typeorm';
 
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -10,6 +10,7 @@ import {
   PermissionInterface,
   RelatedEntitiesHelper,
 } from '@fc/access-control';
+import { getInsertedEntity } from '@fc/typeorm';
 
 @Injectable()
 export class PartnersServiceProviderInstanceService {
@@ -34,7 +35,9 @@ export class PartnersServiceProviderInstanceService {
       instanceIds.map(async (instanceId) => await this.getById(instanceId)),
     );
 
-    return instances;
+    const existsInstances = instances.filter(Boolean);
+
+    return existsInstances;
   }
 
   async getById(
@@ -58,12 +61,43 @@ export class PartnersServiceProviderInstanceService {
     return instance;
   }
 
+  async getByIdWithQueryRunner(
+    queryRunner: QueryRunner,
+    instanceId: string,
+  ): Promise<PartnersServiceProviderInstance | null> {
+    const instance = await queryRunner.manager.findOne(
+      PartnersServiceProviderInstance,
+      {
+        where: { id: instanceId },
+        relations: ['versions'],
+        order: {
+          versions: {
+            createdAt: 'DESC',
+          },
+        },
+      },
+    );
+
+    if (instance?.versions?.length > 0) {
+      const latestVersion = instance.versions[0];
+      instance.versions = [latestVersion];
+    }
+
+    return instance;
+  }
   async save(
+    queryRunner: QueryRunner,
     data: Partial<PartnersServiceProviderInstance>,
   ): Promise<PartnersServiceProviderInstance> {
-    const result = await this.repository.save(data);
+    const insertResult = await queryRunner.manager
+      .createQueryBuilder()
+      .insert()
+      .into(PartnersServiceProviderInstance)
+      .values(data)
+      .returning('*')
+      .execute();
 
-    return result;
+    return getInsertedEntity<PartnersServiceProviderInstance>(insertResult);
   }
 
   async delete(id: string): Promise<number> {

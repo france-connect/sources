@@ -4,7 +4,7 @@ import { ConfigParser } from '@fc/config';
 const env = new ConfigParser(process.env, 'App');
 
 export default {
-  name: 'USER_DASHBOARD',
+  name: 'USER-DASHBOARD',
   urlPrefix: '/api',
   httpsOptions: {
     key: env.file('HTTPS_SERVER_KEY', { optional: true }),

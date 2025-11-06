@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { t } from '@fc/i18n';
+
 interface ServiceSwitchLabelComponentProps {
   checked: boolean;
   disabled?: boolean;
@@ -8,7 +10,9 @@ interface ServiceSwitchLabelComponentProps {
 
 export const ServiceSwitchLabelComponent = React.memo(
   ({ checked, disabled = false, serviceTitle }: ServiceSwitchLabelComponentProps) => {
-    const state = checked ? 'autorisée' : 'bloquée';
+    const idpConnexionAllowed = t('UserPreferences.idpConnexion.allowed');
+    const idpConnexionBlocked = t('UserPreferences.idpConnexion.blocked');
+    const state = checked ? idpConnexionAllowed : idpConnexionBlocked;
     return (
       (!disabled && (
         <span>

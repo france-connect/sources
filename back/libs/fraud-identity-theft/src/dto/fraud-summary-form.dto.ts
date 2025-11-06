@@ -1,4 +1,4 @@
-import { $IsNotEmpty, Form, FormDtoBase, Input } from '@fc/dto2form';
+import { $IsTrue, Form, FormDtoBase, Input } from '@fc/dto2form';
 
 @Form()
 export class FraudSummaryFormDto extends FormDtoBase {
@@ -6,7 +6,7 @@ export class FraudSummaryFormDto extends FormDtoBase {
     required: true,
     type: 'consent',
     order: 1,
-    validators: [$IsNotEmpty()],
+    validators: [$IsTrue()],
   })
   consent: boolean;
 }

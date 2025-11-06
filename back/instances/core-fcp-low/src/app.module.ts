@@ -9,6 +9,7 @@ import {
   LoggerRequestPlugin,
   LoggerSessionPlugin,
 } from '@fc/logger-plugins';
+import { SignAdapterNativeModule } from '@fc/sign-adapter-native';
 
 @Module({})
 export class AppModule {
@@ -27,7 +28,7 @@ export class AppModule {
         // 2.1 Load logger legacy module next for business logs
         LoggerLegacyModule,
         // 3. Load other modules
-        CoreFcpModule,
+        CoreFcpModule.register(SignAdapterNativeModule),
       ],
     };
   }

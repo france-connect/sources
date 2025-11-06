@@ -11,34 +11,78 @@ import { exceptionSourceMap } from '../exceptions/runtime';
 
 @Injectable()
 export class OidcProviderErrorService {
-  private errorEvents = [
-    OidcProviderEvents.AUTHORIZATION_ERROR,
-    OidcProviderEvents.BACKCHANNEL_ERROR,
-    OidcProviderEvents.JWKS_ERROR,
-    OidcProviderEvents.CHECK_SESSION_ORIGIN_ERROR,
-    OidcProviderEvents.CHECK_SESSION_ERROR,
-    OidcProviderEvents.DISCOVERY_ERROR,
-    OidcProviderEvents.END_SESSION_ERROR,
-    OidcProviderEvents.GRANT_ERROR,
-    OidcProviderEvents.INTROSPECTION_ERROR,
-    OidcProviderEvents.PUSHED_AUTHORIZATION_REQUEST_ERROR,
-    OidcProviderEvents.REGISTRATION_CREATE_ERROR,
-    OidcProviderEvents.REGISTRATION_DELETE_ERROR,
-    OidcProviderEvents.REGISTRATION_READ_ERROR,
-    OidcProviderEvents.REGISTRATION_UPDATE_ERROR,
-    OidcProviderEvents.REVOCATION_ERROR,
-    OidcProviderEvents.SERVER_ERROR,
-    OidcProviderEvents.USERINFO_ERROR,
-  ];
-
   /**
    * @param {Provider} provider PANVA provider object
    *
    */
   catchErrorEvents(provider: Provider) {
-    this.errorEvents.forEach((eventName) => {
-      provider.on(eventName, this.listenError.bind(this, eventName));
-    });
+    /**
+     * We can not iterate over the events, because the on() method signature
+     * is built with overloads rather than with a type union.
+     */
+    provider.on(
+      OidcProviderEvents.AUTHORIZATION_ERROR,
+      this.listenError.bind(this, OidcProviderEvents.AUTHORIZATION_ERROR),
+    );
+    provider.on(
+      OidcProviderEvents.BACKCHANNEL_ERROR,
+      this.listenError.bind(this, OidcProviderEvents.BACKCHANNEL_ERROR),
+    );
+    provider.on(
+      OidcProviderEvents.JWKS_ERROR,
+      this.listenError.bind(this, OidcProviderEvents.JWKS_ERROR),
+    );
+    provider.on(
+      OidcProviderEvents.DISCOVERY_ERROR,
+      this.listenError.bind(this, OidcProviderEvents.DISCOVERY_ERROR),
+    );
+    provider.on(
+      OidcProviderEvents.END_SESSION_ERROR,
+      this.listenError.bind(this, OidcProviderEvents.END_SESSION_ERROR),
+    );
+    provider.on(
+      OidcProviderEvents.GRANT_ERROR,
+      this.listenError.bind(this, OidcProviderEvents.GRANT_ERROR),
+    );
+    provider.on(
+      OidcProviderEvents.INTROSPECTION_ERROR,
+      this.listenError.bind(this, OidcProviderEvents.INTROSPECTION_ERROR),
+    );
+    provider.on(
+      OidcProviderEvents.PUSHED_AUTHORIZATION_REQUEST_ERROR,
+      this.listenError.bind(
+        this,
+        OidcProviderEvents.PUSHED_AUTHORIZATION_REQUEST_ERROR,
+      ),
+    );
+    provider.on(
+      OidcProviderEvents.REGISTRATION_CREATE_ERROR,
+      this.listenError.bind(this, OidcProviderEvents.REGISTRATION_CREATE_ERROR),
+    );
+    provider.on(
+      OidcProviderEvents.REGISTRATION_DELETE_ERROR,
+      this.listenError.bind(this, OidcProviderEvents.REGISTRATION_DELETE_ERROR),
+    );
+    provider.on(
+      OidcProviderEvents.REGISTRATION_READ_ERROR,
+      this.listenError.bind(this, OidcProviderEvents.REGISTRATION_READ_ERROR),
+    );
+    provider.on(
+      OidcProviderEvents.REGISTRATION_UPDATE_ERROR,
+      this.listenError.bind(this, OidcProviderEvents.REGISTRATION_UPDATE_ERROR),
+    );
+    provider.on(
+      OidcProviderEvents.REVOCATION_ERROR,
+      this.listenError.bind(this, OidcProviderEvents.REVOCATION_ERROR),
+    );
+    provider.on(
+      OidcProviderEvents.SERVER_ERROR,
+      this.listenError.bind(this, OidcProviderEvents.SERVER_ERROR),
+    );
+    provider.on(
+      OidcProviderEvents.USERINFO_ERROR,
+      this.listenError.bind(this, OidcProviderEvents.USERINFO_ERROR),
+    );
   }
 
   async listenError(_eventName: string, ctx: KoaContextWithOIDC, error: Error) {

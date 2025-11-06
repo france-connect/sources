@@ -1,5 +1,8 @@
+import { KeyLike as NativeKeyLike } from 'crypto';
+
 import { AxiosResponse } from 'axios';
 import {
+  base64url,
   compactDecrypt,
   CompactEncrypt,
   decodeProtectedHeader,
@@ -11,17 +14,20 @@ import {
   JWTVerifyResult,
   KeyLike,
   ProtectedHeaderParameters,
-  SignJWT,
 } from 'jose';
 import { lastValueFrom } from 'rxjs';
 
 import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 
 import { validateDto } from '@fc/common';
 import { DekAlg, KekAlg, Use } from '@fc/cryptography';
 import { FetchJwksFailedException } from '@fc/jwt/exceptions/fetch-jwks-failed.exception';
 import { LoggerService } from '@fc/logger';
+import {
+  SIGN_ADAPTER_TOKEN,
+  SignAdapterServiceInterface,
+} from '@fc/sign-adapter';
 
 import { JwksDto } from '../dto';
 import {
@@ -42,6 +48,8 @@ export class JwtService {
   constructor(
     private readonly http: HttpService,
     private readonly logger: LoggerService,
+    @Inject(SIGN_ADAPTER_TOKEN)
+    private readonly signAdapter: SignAdapterServiceInterface,
   ) {}
 
   getFirstRelevantKey(
@@ -125,24 +133,51 @@ export class JwtService {
     audience: string,
     jwk: JWK,
   ): Promise<string> {
-    const key = await this.importJwk(jwk);
-    const { alg, kid } = jwk;
-
     let jwt: string;
-    const protectedHeader = kid ? { alg, kid } : { alg };
 
     try {
-      jwt = await new SignJWT(payload)
-        .setProtectedHeader(protectedHeader)
-        .setIssuedAt()
-        .setIssuer(issuer)
-        .setAudience(audience)
-        .sign(key);
+      const { alg } = jwk;
+
+      const encodedHeader = this.buildSignedHeader(jwk);
+      const encodedPayload = this.buildSignedPayload(payload, issuer, audience);
+      const signingInput = `${encodedHeader}.${encodedPayload}`;
+
+      const key = await this.importJwk(jwk);
+      const signature = await this.signAdapter.sign(
+        signingInput,
+        alg,
+        key as NativeKeyLike,
+      );
+      const encodedSig = base64url.encode(signature);
+
+      jwt = `${signingInput}.${encodedSig}`;
     } catch (error) {
       throw new CanNotSignJwtException(error);
     }
 
     return jwt;
+  }
+
+  private buildSignedHeader(jwk: JWK): string {
+    const { alg, kid } = jwk;
+
+    const protectedHeader = kid ? { alg, kid } : { alg };
+    const encodedHeader = base64url.encode(JSON.stringify(protectedHeader));
+
+    return encodedHeader;
+  }
+
+  private buildSignedPayload(
+    payload: JWTPayload,
+    issuer: string,
+    audience: string,
+  ): string {
+    const now = Math.floor(Date.now() / 1000);
+    const body = { ...payload, iss: issuer, aud: audience, iat: now };
+
+    const encodedPayload = base64url.encode(JSON.stringify(body));
+
+    return encodedPayload;
   }
 
   async verify(

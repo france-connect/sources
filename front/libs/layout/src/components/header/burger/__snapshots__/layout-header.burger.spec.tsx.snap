@@ -12,9 +12,9 @@ exports[`LayoutHeaderMobileBurgerButton should match the snapshot 1`] = `
       data-fr-opened="true"
       data-testid="burger-button-mobile-menu"
       id="burger-button-mobile-menu"
-      title="Menu"
+      title="any-menu-label-mock"
     >
-      Menu
+      any-menu-label-mock
     </button>
   </div>
 </div>

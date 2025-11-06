@@ -1,6 +1,10 @@
 [
   {
-    "descriptions": ["default"],
+    "descriptions": [
+      "default",
+      "partenaire déjà existant",
+      "partenaire avec au moins un fournisseur de service"
+    ],
     "credentials": {
       "username": "bdd_default",
       "password": "123"
@@ -15,7 +19,10 @@
     }
   },
   {
-    "descriptions": ["partenaire sans instance"],
+    "descriptions": [
+      "partenaire sans instance",
+      "partenaire sans fournisseur de service"
+    ],
     "credentials": {
       "username": "bdd_new",
       "password": "123"
@@ -30,7 +37,9 @@
     }
   },
   {
-    "descriptions": ["partenaire avec une instance"],
+    "descriptions": [
+      "partenaire avec une instance"
+    ],
     "credentials": {
       "username": "bdd_one_instance",
       "password": "123"
@@ -42,6 +51,23 @@
       "email": "cchevalier@yopmail.com",
       "is_service_public": "false",
       "sub": "0db92561-9007-49e6-8e3b-e17294ff7818"
+    }
+  },
+  {
+    "descriptions": [
+      "partenaire invité"
+    ],
+    "credentials": {
+      "username": "bdd_new2",
+      "password": "123"
+    },
+    "claims": {
+      "uid": "25",
+      "given_name": "Lady Di",
+      "usual_name": "NUM",
+      "email": "bdd2@yopmail.com",
+      "is_service_public": "true",
+      "sub": "784cd652e99549eb66ae63fb245c6d9ed44436a49d98335a1b71f053bdaaa313"
     }
   }
 ]

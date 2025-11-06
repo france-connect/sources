@@ -11,4 +11,5 @@ export const enum Providers {
   DESK = 'DESK',
   CNAF_MSA = 'CNAF_MSA',
   DSNJ = 'DSNJ',
+  ANTS = 'ANTS',
 }

@@ -1,7 +1,10 @@
 import { useCallback } from 'react';
 import { useLoaderData, useLocation, useNavigate } from 'react-router';
 
-import type { LocationWithSubmitStateType } from '../../types';
+import type { FSAInterface } from '@fc/common';
+import type { InstanceInterface } from '@fc/partners-service-providers';
+
+import type { LocationWithSubmitStateType } from '../../interfaces';
 
 export const useInstances = () => {
   const navigate = useNavigate();
@@ -16,7 +19,7 @@ export const useInstances = () => {
     navigate('.', { replace: false, state: undefined });
   }, [navigate]);
 
-  const { payload } = response;
+  const { payload } = response as Required<FSAInterface<InstanceInterface[]>>;
   const hasItems = !!(payload && payload.length);
 
   const submitState = location.state?.submitState || undefined;

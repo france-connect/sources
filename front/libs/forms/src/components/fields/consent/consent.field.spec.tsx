@@ -112,7 +112,6 @@ describe('ConsentField', () => {
       {
         choice: {
           label: 'any-label-mock',
-          value: 'consented',
         },
         component: ChoiceInput,
         config: {
@@ -145,7 +144,6 @@ describe('ConsentField', () => {
       expect.objectContaining({
         choice: {
           label: 'any-label-mock *',
-          value: 'consented',
         },
       }),
       undefined,

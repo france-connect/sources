@@ -4,9 +4,10 @@ import { Link } from 'react-router';
 import { getAccessibleTitle, useSafeContext } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { LogoRepubliqueFrancaiseComponent } from '@fc/dsfr';
+import { t } from '@fc/i18n';
 
 import { LayoutContext } from '../../../context';
-import { Options } from '../../../enums';
+import { LayoutOptions } from '../../../enums';
 import type { LayoutConfig, LayoutContextState } from '../../../interfaces';
 import { LayoutHeaderMobileBurgerButton } from '../burger';
 import { LayoutHeaderServiceComponent } from '../service';
@@ -14,12 +15,13 @@ import { LayoutHeaderServiceComponent } from '../service';
 export const LayoutHeaderBrandComponent = React.memo(() => {
   const { isUserConnected } = useSafeContext<LayoutContextState>(LayoutContext);
 
-  const config = ConfigService.get<LayoutConfig>(Options.CONFIG_NAME);
+  const config = ConfigService.get<LayoutConfig>(LayoutOptions.CONFIG_NAME);
   const { showServiceTitle } = config.features;
   const { baseline, homepage, logo, name } = config.service;
 
+  const backToHomepage = t('Layout.documentTitle.backToHomepage');
   const linkTitle = getAccessibleTitle(baseline, name);
-  const homepageLinkTitle = getAccessibleTitle('Retour à l’accueil du site', linkTitle);
+  const homepageLinkTitle = getAccessibleTitle(backToHomepage, linkTitle);
   return (
     <div className="fr-header__brand fr-enlarge-link">
       <div className="fr-header__brand-top">

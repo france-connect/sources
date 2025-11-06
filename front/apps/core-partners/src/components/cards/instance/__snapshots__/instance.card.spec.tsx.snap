@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`InstanceComponent should match the snapshot 1`] = `
+<div>
+  <div
+    data-mockid="CardComponent"
+  >
+    <p>
+      <b
+        class="is-block"
+      >
+        Client ID
+      </b>
+      <span
+        data-testid="InstanceComponent-client-id"
+      >
+        any-client_id-mock-1
+      </span>
+    </p>
+    <p>
+      <b
+        class="is-block"
+      >
+        Client Secret
+      </b>
+      <span
+        data-testid="InstanceComponent-client-secret"
+      >
+        any-client_secret-mock-1
+      </span>
+    </p>
+  </div>
+</div>
+`;

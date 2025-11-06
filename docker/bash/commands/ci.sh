@@ -141,6 +141,13 @@ _ci_job_relevant_for_back_apps() {
     exit 0
   fi
 
+  if [ "${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}" == "" ]; then
+    echo "STATUS=ERRORS"
+    echo "❌ the variable CI_MERGE_REQUEST_TARGET_BRANCH_NAME is not set"
+    echo "Exiting job with failure"
+    exit 0
+  fi
+
   # Build the apps to obtain the stats file
   cd "${CI_PROJECT_DIR}/back"
 
@@ -177,6 +184,13 @@ _ci_job_relevant_for_back_apps() {
 _ci_job_relevant_for_front_apps() {
   if [ "${SKIP_DIFF_CHECK}" == "true" ]; then
     echo "STATUS=SKIP"
+    exit 0
+  fi
+
+  if [ "${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}" == "" ]; then
+    echo "STATUS=ERRORS"
+    echo "❌ the variable CI_MERGE_REQUEST_TARGET_BRANCH_NAME is not set"
+    echo "Exiting job with failure"
     exit 0
   fi
 

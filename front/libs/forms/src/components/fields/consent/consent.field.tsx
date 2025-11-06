@@ -32,7 +32,7 @@ export const ConsentField = React.memo(({ config }: ConsentFieldProps) => {
     <FieldsetElement hasError={hasError} isValid={isValid} name={name}>
       <Field
         // @TODO find a better way to handle the choice value
-        choice={{ label: choiceLabel, value: 'consented' }}
+        choice={{ label: choiceLabel }}
         component={ChoiceInput}
         config={config}
         name={name}

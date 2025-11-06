@@ -23,7 +23,7 @@ exports[`LayoutHeaderBrandComponent should match the snapshot 1`] = `
         class="fr-header__operator"
       >
         <img
-          alt="Retour à l’accueil du site - any-service-baseline-mock - any-service-name-mock"
+          alt="any-back-to-homepage-mock - any-service-baseline-mock - any-service-name-mock"
           class="fr-responsive-img"
           src="Any"
         />

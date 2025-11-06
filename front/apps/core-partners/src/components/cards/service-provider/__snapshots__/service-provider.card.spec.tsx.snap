@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ServiceProviderCardComponent should match the snapshot 1`] = `
+<div>
+  <div
+    data-mockid="CardComponent"
+  >
+    <p
+      class="is-uppercase fr-text--sm fr-mb-2w"
+    >
+      <b>
+        Organization Name
+      </b>
+    </p>
+    <p>
+      <b>
+        any-habilitation-number-text-mock
+      </b>
+      <span
+        class="is-block is-inline--md"
+        data-testid="ServiceProviderCardComponent-request-id"
+      >
+        123456
+      </span>
+    </p>
+  </div>
+</div>
+`;

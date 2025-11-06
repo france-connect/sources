@@ -10,6 +10,7 @@ import {
   HttpExceptionFilter,
   UnknownHtmlExceptionFilter,
 } from '@fc/exceptions';
+import { HttpProxyModule } from '@fc/http-proxy';
 import { OidcAcrModule } from '@fc/oidc-acr';
 import {
   OidcProviderGrantService,
@@ -26,6 +27,7 @@ import {
   ServiceProviderAdapterEnvService,
 } from '@fc/service-provider-adapter-env';
 import { SessionModule } from '@fc/session';
+import { SignAdapterNativeModule } from '@fc/sign-adapter-native';
 import { ViewTemplatesModule } from '@fc/view-templates';
 
 import {
@@ -52,9 +54,11 @@ import {
       OidcProviderConfigAppService,
       ServiceProviderAdapterEnvService,
       ServiceProviderAdapterEnvModule,
+      SignAdapterNativeModule,
     ),
     ViewTemplatesModule,
     OidcAcrModule,
+    HttpProxyModule,
   ],
   controllers: [MockIdentityProviderController, OidcProviderController],
   providers: [

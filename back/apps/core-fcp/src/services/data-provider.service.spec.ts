@@ -14,6 +14,7 @@ import { DataProviderMetadata } from '@fc/data-provider-adapter-mongo';
 import { JwtService } from '@fc/jwt';
 import { LoggerService } from '@fc/logger';
 import { atHashFromAccessToken, stringToArray } from '@fc/oidc';
+import { OidcProviderService } from '@fc/oidc-provider';
 import { OidcProviderRedisAdapter } from '@fc/oidc-provider/adapters';
 import { RedisService } from '@fc/redis';
 import { RnippPivotIdentity } from '@fc/rnipp';
@@ -74,6 +75,10 @@ const sessionDataMock = {
 
 const redisMock = getRedisServiceMock();
 
+const oidcProviderServiceMock = {
+  getJwks: jest.fn(),
+};
+
 describe('DataProviderService', () => {
   let service: DataProviderService;
 
@@ -94,6 +99,7 @@ describe('DataProviderService', () => {
         RedisService,
         SessionService,
         CryptographyFcpService,
+        OidcProviderService,
       ],
     })
       .overrideProvider(LoggerService)
@@ -108,6 +114,8 @@ describe('DataProviderService', () => {
       .useValue(sessionServiceMock)
       .overrideProvider(CryptographyFcpService)
       .useValue(cryptographyFcpMock)
+      .overrideProvider(OidcProviderService)
+      .useValue(oidcProviderServiceMock)
       .compile();
 
     service = module.get<DataProviderService>(DataProviderService);
@@ -547,6 +555,7 @@ describe('DataProviderService', () => {
 
     beforeEach(() => {
       jwtServiceMock.sign.mockReturnValue(jwsMock);
+      service['getSigningKey'] = jest.fn();
     });
 
     it('should get signing and encryption keys', async () => {
@@ -557,27 +566,18 @@ describe('DataProviderService', () => {
       );
 
       // Then
-      expect(jwtServiceMock.getFirstRelevantKey).toHaveBeenCalledTimes(1);
-      expect(jwtServiceMock.getFirstRelevantKey).toHaveBeenCalledWith(
-        configDataMock.configuration.jwks,
-        DataProviderMock.checktoken_signed_response_alg,
-        'sig',
+      expect(service['getSigningKey']).toHaveBeenCalledExactlyOnceWith(
+        DataProviderMock as DataProviderMetadata,
       );
     });
 
     it('should sign token', async () => {
       // Given
       const sigKey = {};
-      const encKey = {};
 
-      jwtServiceMock.getFirstRelevantKey
-        .mockReturnValueOnce(sigKey)
-        .mockReturnValueOnce(encKey);
+      service['getSigningKey'] = jest.fn().mockReturnValue(sigKey);
       // When
-      await service['generateJws'](
-        payload,
-        DataProviderMock as DataProviderMetadata,
-      );
+      await service['generateJws'](payload, DataProviderMock);
 
       // Then
       expect(jwtServiceMock.sign).toHaveBeenCalledTimes(1);
@@ -595,6 +595,32 @@ describe('DataProviderService', () => {
 
       // Then
       expect(result).toBe(jwsMock);
+    });
+  });
+
+  describe('getSigningKey', () => {
+    it('should return undefined if no jwks are found', () => {
+      // Given
+      service['getJwks'] = jest.fn().mockReturnValue(undefined);
+
+      // When
+      const result = service['getSigningKey'](DataProviderMock);
+
+      // Then
+      expect(result).toBe(undefined);
+    });
+
+    it('should return the signing key', () => {
+      // Given
+      const keyMock = {};
+      jwtServiceMock.getFirstRelevantKey = jest.fn().mockReturnValue(keyMock);
+      oidcProviderServiceMock.getJwks = jest.fn().mockReturnValue({});
+
+      // When
+      const result = service['getSigningKey'](DataProviderMock);
+
+      // Then
+      expect(result).toBe(keyMock);
     });
   });
 

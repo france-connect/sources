@@ -22,6 +22,13 @@ Given(
 );
 
 Given(
+  "je mets la valeur {string} dans l'entête {string} de la requête",
+  function (value: string, property: string) {
+    this.apiRequest.headers[property] = value;
+  },
+);
+
+Given(
   "je mets la donnée mémorisée {string} dans la propriété {string} de l'entête de la requête",
   function (dataKey: string, property: string) {
     cy.get(`@api:${dataKey}`)

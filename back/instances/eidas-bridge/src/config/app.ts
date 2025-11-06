@@ -4,7 +4,7 @@ import { AppConfig } from '@fc/eidas-bridge';
 const env = new ConfigParser(process.env, 'App');
 
 export default {
-  name: 'EIDAS_BRIDGE',
+  name: 'EIDAS-BRIDGE',
   urlPrefix: '',
   assetsPaths: env.json('ASSETS_PATHS'),
   assetsDsfrPaths: env.json('DSFR_ASSETS_PATHS'),

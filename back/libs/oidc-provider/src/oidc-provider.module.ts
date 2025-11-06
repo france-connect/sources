@@ -31,6 +31,7 @@ export class OidcProviderModule {
     OidcProviderConfigApp: Type<IOidcProviderConfigAppService>,
     ServiceProviderClass: Type<IServiceProviderAdapter>,
     ServiceProviderModule: Type<ModuleMetadata>,
+    SignAdapterModule: Type<ModuleMetadata>,
   ): DynamicModule {
     const serviceProviderProvider = {
       provide: SERVICE_PROVIDER_SERVICE_TOKEN,
@@ -49,6 +50,7 @@ export class OidcProviderModule {
         ServiceProviderModule,
         OidcAcrModule,
         SessionModule,
+        SignAdapterModule,
       ],
       providers: [
         oidcProviderConfigApp,

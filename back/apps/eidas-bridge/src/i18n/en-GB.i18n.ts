@@ -35,8 +35,8 @@ export const enGB: I18nTranslationsMapType = {
   'EidasBridge.exceptions.eidasBridgeInvalidFrIdentity':
     'A problem with your identity data is preventing the connection from succeeding. Please contact us to resolve the issue.',
 
-  'OidcProvider.exceptions.InvalidClient.EA6E': 'Please try again later.',
-  'OidcProvider.exceptions.InvalidRedirectUri.C013': 'Please try again later.',
+  'OidcProvider.exceptions.InvalidClient.EA6EF': 'Please try again later.',
+  'OidcProvider.exceptions.InvalidRedirectUri.C013C': 'Please try again later.',
 
   // App specific keys
   'meta.lang': 'en',

@@ -1,6 +1,6 @@
 import { IsString } from 'class-validator';
 
-import { SignatureDigest } from '../enums';
+import { SignatureDigest } from '@fc/cryptography';
 
 export class SignPayloadDto {
   @IsString()

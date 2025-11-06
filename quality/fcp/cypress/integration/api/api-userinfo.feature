@@ -90,10 +90,10 @@ Fonctionnalité: API - userinfo
     Etant donné que je prépare une requête "userinfo"
     Et que je retire "authorization" de l'entête de la requête
     Quand je lance la requête
-    Alors le statut de la réponse est 400
+    Alors le statut de la réponse est 401
     Et l'entête de la réponse a une propriété "content-type" contenant "application/json"
     Et l'entête de la réponse n'a pas de propriété "set-cookie"
     Et le corps de la réponse contient une erreur
-    Et le corps de la réponse a une propriété "error" égale à "invalid_request"
-    Et le corps de la réponse a une propriété "error_description" égale à "no access token provided (undefined)"
-    Et le corps de la réponse a une propriété "error_uri" contenant "https://docs.partenaires.franceconnect.gouv.fr/fs/fs-technique/fs-technique-erreurs/?code=Y04ECC9&id="
+    Et le corps de la réponse a une propriété "error" égale à "invalid_token"
+    Et le corps de la réponse a une propriété "error_description" égale à "no access token provided (no access token provided)"
+    Et le corps de la réponse a une propriété "error_uri" contenant "https://docs.partenaires.franceconnect.gouv.fr/fs/fs-technique/fs-technique-erreurs/?code=Y04146A2&id="

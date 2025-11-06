@@ -1,4 +1,8 @@
 {
+  "FC.Common.close": "Fermer",
+  "FC.Common.createdAt.female": "Créée le{NBSP_UNICODE}: {date}",
+  "FC.Common.createdAt.male": "Créé le{NBSP_UNICODE}: {date}",
   "FC.Common.newWindow": "Nouvelle fenêtre",
+  "FC.Common.notAvailable": "Non renseigné",
   "FC.session.expired": "Votre session a expiré, veuillez vous reconnecter."
 }

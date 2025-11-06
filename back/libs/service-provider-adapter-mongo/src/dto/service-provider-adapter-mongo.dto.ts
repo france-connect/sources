@@ -36,11 +36,15 @@ export class ServiceProviderAdapterMongoDTO {
   readonly client_secret: string;
 
   @IsArray()
-  @IsUrlRequiredTldFromConfig({ each: true })
+  @IsUrlRequiredTldFromConfig('ServiceProviderAdapterMongo', 'urlsRequireTld', {
+    each: true,
+  })
   readonly redirect_uris: string[];
 
   @IsArray()
-  @IsUrlRequiredTldFromConfig({ each: true })
+  @IsUrlRequiredTldFromConfig('ServiceProviderAdapterMongo', 'urlsRequireTld', {
+    each: true,
+  })
   readonly post_logout_redirect_uris: string[];
 
   @IsOptional()
@@ -106,4 +110,7 @@ export class ServiceProviderAdapterMongoDTO {
   @IsArray()
   @IsString({ each: true })
   readonly rep_scope?: string[];
+
+  @IsOptional()
+  readonly signup_id?: string;
 }

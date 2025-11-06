@@ -53,5 +53,63 @@
     },
     "method": "GET",
     "url": "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/authorize"
+  },
+  "datapass": {
+    "headers": {
+      "X-Hub-Signature-256": "sha256=1350813c4ea46c94aff4d067700eaeea03ce7af39bb6696e727ce1a4fff21f20"
+    },
+    "body": {
+      "event": "approve",
+      "fired_at": 1753704929,
+      "model_type": "authorization_request/franceconnect",
+      "data": {
+        "id": 9001,
+        "public_id": "a90939e8-f906-4343-8996-5955257f161d",
+        "state": "approve",
+        "form_uid": "franceconnect-demande-libre",
+        "organization": {
+          "id": 9002,
+          "name": "UMAD CORP",
+          "siret": "98043033400022"
+        },
+        "applicant": {
+          "id": 9003,
+          "email": "jean.dupont@beta.gouv.fr",
+          "given_name": "Jean",
+          "family_name": "Dupont",
+          "phone_number": "0836656565",
+          "job_title": "Rockstar"
+        },
+        "data": {
+          "intitule": "Ma demande",
+          "scopes": ["identite_pivot", "email"],
+          "contact_technique_given_name": "Tech",
+          "contact_technique_family_name": "Os",
+          "contact_technique_phone_number": "08366666666",
+          "contact_technique_job_title": "DSI",
+          "contact_technique_email": "tech@beta.gouv.fr"
+        }
+      }
+    },
+    "method": "POST",
+    "url": "https://partners.docker.dev-franceconnect.fr/api/datapass/webhook"
+  },
+  "invitation-new-user": {
+    "headers": {
+      "X-Hub-Signature-256": "sha256=a096d5968730db474a625c474d1dd0da2038ef03cd9a4bb5d57d97dd226cda23"
+    },
+    "body": "emails[]=bdd2@yopmail.com&instances[]=50b70101-0e1f-419a-9365-81754c2de689",
+    "form": true,
+    "method": "POST",
+    "url": "https://partners.docker.dev-franceconnect.fr/api/invitation"
+  },
+  "invitation-default-user": {
+    "headers": {
+      "X-Hub-Signature-256": "sha256=2ee61e9b586c5803577c53c66df69ba2b601b543c4013fad3a4b3735757efd44"
+    },
+    "body": "emails[]=hdubois@yopmail.com&instances[]=50b70101-0e1f-419a-9365-81754c2de689",
+    "form": true,
+    "method": "POST",
+    "url": "https://partners.docker.dev-franceconnect.fr/api/invitation"
   }
 }

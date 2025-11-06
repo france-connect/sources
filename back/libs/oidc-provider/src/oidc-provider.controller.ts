@@ -4,7 +4,6 @@ import {
   Get,
   Header,
   Inject,
-  Next,
   Post,
   Query,
   Req,
@@ -24,6 +23,7 @@ import { LogoutParamsDto, RevocationTokenParamsDTO } from './dto';
 import { OidcProviderRoutes } from './enums';
 import { OidcProviderRenderedJsonExceptionFilter } from './filters';
 import { IOidcProviderConfigAppService } from './interfaces';
+import { OidcProviderService } from './oidc-provider.service';
 import { OIDC_PROVIDER_CONFIG_APP_TOKEN } from './tokens';
 
 @Controller()
@@ -32,7 +32,14 @@ export class OidcProviderController {
     @Inject(OIDC_PROVIDER_CONFIG_APP_TOKEN)
     private readonly oidcProviderConfigApp: IOidcProviderConfigAppService,
     private readonly logger: LoggerService,
+    private readonly oidcProvider: OidcProviderService,
   ) {}
+
+  @Get(OidcProviderRoutes.AUTHORIZATION_WITH_INTERACTION_ID)
+  @Header('cache-control', 'no-store')
+  async getAuthorize(@Req() req, @Res() res) {
+    await this.oidcProvider.callback(req, res);
+  }
 
   @Post(OidcProviderRoutes.REDIRECT_TO_SP)
   @UsePipes(new ValidationPipe({ whitelist: true }))
@@ -51,7 +58,7 @@ export class OidcProviderController {
   @Post(OidcProviderRoutes.TOKEN)
   @Header('Content-Type', ApiContentType.JSON)
   @UseFilters(OidcProviderRenderedJsonExceptionFilter)
-  postToken(@Next() next, @Req() req) {
+  async postToken(@Req() req, @Res() res) {
     const { body, query, headers } = req;
 
     this.logger.debug({
@@ -61,7 +68,7 @@ export class OidcProviderController {
     });
 
     // Pass the query to oidc-provider
-    return next();
+    await this.oidcProvider.callback(req, res);
   }
 
   @Post(OidcProviderRoutes.REVOCATION)
@@ -73,15 +80,19 @@ export class OidcProviderController {
       forbidNonWhitelisted: true,
     }),
   )
-  revokeToken(@Next() next, @Body() _body: RevocationTokenParamsDTO) {
+  async revokeToken(
+    @Req() req,
+    @Res() res,
+    @Body() _body: RevocationTokenParamsDTO,
+  ) {
     // Pass the query to oidc-provider
-    return next();
+    await this.oidcProvider.callback(req, res);
   }
 
   @Get(OidcProviderRoutes.USERINFO)
   @Header('Content-Type', ApiContentType.JWT)
   @UseFilters(OidcProviderRenderedJsonExceptionFilter)
-  getUserInfo(@Next() next, @Req() req) {
+  async getUserInfo(@Req() req, @Res() res) {
     const { body, query, headers } = req;
 
     this.logger.debug({
@@ -90,7 +101,7 @@ export class OidcProviderController {
       headers,
     });
     // Pass the query to oidc-provider
-    return next();
+    await this.oidcProvider.callback(req, res);
   }
 
   @Get(OidcProviderRoutes.END_SESSION)
@@ -100,25 +111,41 @@ export class OidcProviderController {
       forbidNonWhitelisted: true,
     }),
   )
-  getEndSession(@Next() next, @Query() _query: LogoutParamsDto) {
+  async getEndSession(
+    @Req() req,
+    @Res() res,
+    @Query() _query: LogoutParamsDto,
+  ) {
     // Pass the query to oidc-provider
-    return next();
+    await this.oidcProvider.callback(req, res);
+  }
+
+  @Post(OidcProviderRoutes.END_SESSION_CONFIRMATION)
+  async getEndSessionConfirmation(@Req() req, @Res() res) {
+    // Pass the query to oidc-provider
+    await this.oidcProvider.callback(req, res);
+  }
+
+  @Get(OidcProviderRoutes.END_SESSION_SUCCESS)
+  async getEndSessionSuccess(@Req() req, @Res() res) {
+    // Pass the query to oidc-provider
+    await this.oidcProvider.callback(req, res);
   }
 
   @Get(OidcProviderRoutes.JWKS)
   @Header('Content-Type', ApiContentType.JWKS)
   @Header('cache-control', 'public, max-age=600')
   @UseFilters(OidcProviderRenderedJsonExceptionFilter)
-  getJwks(@Next() next) {
+  async getJwks(@Req() req, @Res() res) {
     // Pass the query to oidc-provider
-    return next();
+    await this.oidcProvider.callback(req, res);
   }
 
   @Get(OidcProviderRoutes.OPENID_CONFIGURATION)
   @Header('cache-control', 'public, max-age=600')
   @UseFilters(OidcProviderRenderedJsonExceptionFilter)
-  getOpenidConfiguration(@Next() next) {
+  async getOpenidConfiguration(@Req() req, @Res() res) {
     // Pass the query to oidc-provider
-    return next();
+    await this.oidcProvider.callback(req, res);
   }
 }

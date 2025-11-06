@@ -3,7 +3,7 @@ import React from 'react';
 
 import { ConfigService } from '@fc/config';
 
-import { CinematicEvents, Options } from '../../enums';
+import { CinematicEvents, TracksOptions } from '../../enums';
 import type { IGroupedClaims, RichClaimInterface, TracksConfig } from '../../interfaces';
 import { groupByDataProvider } from '../../utils';
 
@@ -22,7 +22,7 @@ export const ClaimsComponent = React.memo(
   ({ claims, datetime, eventType }: ClaimsComponentProps) => {
     const {
       luxon: { datetimeShortFrFormat },
-    } = ConfigService.get<TracksConfig>(Options.CONFIG_NAME);
+    } = ConfigService.get<TracksConfig>(TracksOptions.CONFIG_NAME);
 
     const formattedTime = datetime
       .setZone('Europe/Paris')

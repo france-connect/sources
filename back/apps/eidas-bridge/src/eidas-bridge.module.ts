@@ -39,6 +39,7 @@ import {
   ServiceProviderAdapterEnvService,
 } from '@fc/service-provider-adapter-env';
 import { SessionModule } from '@fc/session';
+import { SignAdapterNativeModule } from '@fc/sign-adapter-native';
 import { TrackingModule } from '@fc/tracking';
 import { ViewTemplatesModule } from '@fc/view-templates';
 
@@ -65,6 +66,7 @@ const oidcProviderModule = OidcProviderModule.register(
   OidcProviderConfigAppService,
   ServiceProviderAdapterEnvService,
   ServiceProviderAdapterEnvModule,
+  SignAdapterNativeModule,
 );
 
 @Global()

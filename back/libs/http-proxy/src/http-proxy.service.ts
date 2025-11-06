@@ -1,4 +1,5 @@
 import { bootstrap } from 'global-agent';
+import { EnvHttpProxyAgent, setGlobalDispatcher } from 'undici';
 
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
@@ -24,6 +25,15 @@ export class HttpProxyService {
     // Activate the GLOBAL_AGENT_HTTP(S)_PROXY env variable on proxy settings
 
     void bootstrap();
+
+    //  Undici library used by oidc-provider does not support Global-Agent
+    setGlobalDispatcher(
+      new EnvHttpProxyAgent({
+        httpsProxy: globalThis['GLOBAL_AGENT'].HTTPS_PROXY,
+        httpProxy: globalThis['GLOBAL_AGENT'].HTTP_PROXY,
+        noProxy: globalThis['GLOBAL_AGENT'].NO_PROXY,
+      }),
+    );
 
     this.logger.notice(
       `Set up HTTPS proxy to: ${globalThis['GLOBAL_AGENT'].HTTPS_PROXY}`,

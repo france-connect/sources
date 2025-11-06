@@ -31,18 +31,25 @@ import {
   ServiceProviderAdapterEnvService,
 } from '@fc/service-provider-adapter-env';
 import { SessionModule } from '@fc/session';
+import { TypeormModule } from '@fc/typeorm';
 import { ViewTemplatesModule } from '@fc/view-templates';
+import { WebhooksModule } from '@fc/webhooks';
 
 import {
+  DatapassWebhookController,
   InstanceController,
+  InvitationController,
   OidcClientController,
   PartnersController,
+  ServiceProviderController,
   VersionController,
 } from './controllers/';
 import { AppPermissionsHandler } from './handlers';
 import {
   PartnerPublicationService,
+  PartnersDatapassService,
   PartnersInstanceVersionFormService,
+  PartnersInvitationService,
   PartnersOidcClientService,
 } from './services';
 
@@ -79,11 +86,14 @@ const accessControlModule = AccessControlModule.withRolesHandler(
     Dto2formModule,
     CsmrConfigClientModule.registerFor('SandboxLow'),
     HttpProxyModule,
+    TypeormModule,
+    WebhooksModule,
   ],
   providers: [
     FcWebJsonExceptionFilter,
     FormValidationExceptionFilter,
     PartnerPublicationService,
+    PartnersInvitationService,
     {
       provide: APP_FILTER,
       useClass: UnknownJsonExceptionFilter,
@@ -98,12 +108,16 @@ const accessControlModule = AccessControlModule.withRolesHandler(
     },
     PartnersInstanceVersionFormService,
     PartnersOidcClientService,
+    PartnersDatapassService,
   ],
   controllers: [
     InstanceController,
+    InvitationController,
     OidcClientController,
     PartnersController,
+    ServiceProviderController,
     VersionController,
+    DatapassWebhookController,
   ],
   exports: [CqrsModule],
 })

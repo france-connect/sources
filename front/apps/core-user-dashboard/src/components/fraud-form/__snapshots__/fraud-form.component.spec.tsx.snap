@@ -12,12 +12,12 @@ exports[`FraudFormComponent should match the snapshot on desktop layout 1`] = `
       <h5
         class="fr-mb-1w"
       >
-        Formulaire de contact
+        any-form-title-mock
       </h5>
       <p
         class="fr-text--sm"
       >
-        * champs obligatoires.
+        any-form-mention-mock
       </p>
       <div
         data-mockid="Field"
@@ -64,12 +64,12 @@ exports[`FraudFormComponent should match the snapshot on mobile layout 1`] = `
       <h5
         class="fr-mb-1w"
       >
-        Formulaire de contact
+        any-form-title-mock
       </h5>
       <p
         class="fr-text--sm"
       >
-        * champs obligatoires.
+        any-form-mention-mock
       </p>
       <div
         data-mockid="Field"

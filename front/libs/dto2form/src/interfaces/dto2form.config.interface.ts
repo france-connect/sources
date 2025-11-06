@@ -5,15 +5,14 @@ export interface Dto2FormRoute {
   method: HttpMethods;
   path: string;
 }
-export interface Dto2FormFormConfigInterface extends FormConfigInterface {
-  id: string;
-  title?: string;
+
+export interface Dto2FormFormConfigInterface {
+  form: FormConfigInterface;
   endpoints: {
     load?: Dto2FormRoute;
     schema: Dto2FormRoute;
     submit: Dto2FormRoute;
   };
-  [key: string]: unknown; // Allows for additional properties
 }
 
 export interface Dto2FormConfigInterface {

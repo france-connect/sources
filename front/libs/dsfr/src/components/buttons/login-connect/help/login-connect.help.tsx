@@ -22,7 +22,7 @@ export const LoginConnectHelp = React.memo(
 
     const titleSuffix = showIcon
       ? `${Strings.WHITE_SPACE}${Strings.DASH}${Strings.WHITE_SPACE}${t('FC.Common.newWindow')}`
-      : '';
+      : Strings.EMPTY_STRING;
 
     const helpLabel = t('DSFR.button.loginConnect.whatIs', { connectType });
 

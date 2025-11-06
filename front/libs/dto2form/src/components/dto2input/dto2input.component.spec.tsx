@@ -5,11 +5,11 @@ import type { FormConfigInterface } from '@fc/forms';
 import { ArrayField, ChoicesField, FieldTypes, InputField, SelectField } from '@fc/forms';
 
 import { useFieldValidate } from '../../hooks';
-import { DTO2InputComponent } from './dto2input.component';
+import { Dto2InputComponent } from './dto2input.component';
 
 jest.mock('../../hooks/field-validate/field-validate.hook');
 
-describe('DTO2InputComponent', () => {
+describe('Dto2InputComponent', () => {
   // Given
   const maxCharsMock = Symbol('maxChars') as unknown as number;
   const inlineMock = Symbol('inline') as unknown as boolean;
@@ -49,7 +49,7 @@ describe('DTO2InputComponent', () => {
 
   it('should call useFieldValidate hook', () => {
     // When
-    render(<DTO2InputComponent field={{ ...fieldMock, type: FieldTypes.TEXT }} />);
+    render(<Dto2InputComponent field={{ ...fieldMock, type: FieldTypes.TEXT }} />);
 
     // Then
     expect(useFieldValidate).toHaveBeenCalledOnce();
@@ -63,7 +63,7 @@ describe('DTO2InputComponent', () => {
   it('should match the snapshot, should create an InputField', () => {
     // When
     const { container } = render(
-      <DTO2InputComponent field={{ ...fieldMock, type: FieldTypes.TEXT }} />,
+      <Dto2InputComponent field={{ ...fieldMock, type: FieldTypes.TEXT }} />,
     );
 
     // Then
@@ -106,7 +106,7 @@ describe('DTO2InputComponent', () => {
 
     // When
     render(
-      <DTO2InputComponent
+      <Dto2InputComponent
         field={{ ...fieldMock, options: optionsMock, type: FieldTypes.SELECT }}
       />,
     );
@@ -149,7 +149,7 @@ describe('DTO2InputComponent', () => {
     const radioFieldMock = { ...fieldMock, options: optionsMock, type: FieldTypes.RADIO };
 
     // When
-    render(<DTO2InputComponent field={radioFieldMock} />);
+    render(<Dto2InputComponent field={radioFieldMock} />);
 
     // Then
     expect(ChoicesField).toHaveBeenCalledOnce();
@@ -189,7 +189,7 @@ describe('DTO2InputComponent', () => {
     const checkboxFieldMock = { ...fieldMock, options: optionsMock, type: FieldTypes.CHECKBOX };
 
     // When
-    render(<DTO2InputComponent field={checkboxFieldMock} />);
+    render(<Dto2InputComponent field={checkboxFieldMock} />);
 
     // Then
     expect(ChoicesField).toHaveBeenCalledOnce();
@@ -219,7 +219,7 @@ describe('DTO2InputComponent', () => {
     const arrayFieldMock = { ...fieldMock, array: true, type: FieldTypes.TEXT };
 
     // When
-    render(<DTO2InputComponent field={arrayFieldMock} />);
+    render(<Dto2InputComponent field={arrayFieldMock} />);
 
     // Then
     expect(ArrayField).toHaveBeenCalledOnce();
@@ -244,14 +244,14 @@ describe('DTO2InputComponent', () => {
     );
   });
 
-  it('should call InputField without the validate function when DTO2Form.validateOnFieldChange is false', () => {
+  it('should call InputField without the validate function when Dto2Form.validateOnFieldChange is false', () => {
     // Given
     jest
       .mocked(useSafeContext)
       .mockReturnValue({ validateOnFieldChange: false } as FormConfigInterface);
 
     // When
-    render(<DTO2InputComponent field={{ ...fieldMock, type: FieldTypes.TEXT }} />);
+    render(<Dto2InputComponent field={{ ...fieldMock, type: FieldTypes.TEXT }} />);
 
     // Then
     expect(useFieldValidate).toHaveBeenCalledOnce();

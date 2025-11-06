@@ -10,6 +10,7 @@ import { TracksFormatterOutputAbstract } from '@fc/tracks-adapter-elasticsearch'
  *   spName: 'ANTS',
  *   spId: 'any-id';
  *   time: 1664661600000,
+ *   date: 02/07/2025 03:35:03
  *   accountId: 'any-string'
  *   idpSub: 'any-string'
  *   spSub: 'any-string'
@@ -21,10 +22,13 @@ import { TracksFormatterOutputAbstract } from '@fc/tracks-adapter-elasticsearch'
  */
 export interface TracksFormatterOutputInterface
   extends TracksFormatterOutputAbstract {
+  id: string;
   time: number;
+  date: string;
   accountId: string;
   spName: string;
-  idpName?: string;
+  idpName: string;
+  idpLabel: string;
   spId: string;
   idpId: string;
   spSub: string;

@@ -22,6 +22,7 @@ Fonctionnalité: Perte de session Espace Partenaires
     Etant donné que je me connecte à l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je clique sur le lien d'ajout d'une instance
+    Et que je suis redirigé vers la page création d'instance
     Et que j'utilise l'instance de FS "avec entityId"
     Et que j'entre les valeurs par défaut pour mon instance
     Et que je supprime tous les cookies
@@ -33,6 +34,7 @@ Fonctionnalité: Perte de session Espace Partenaires
     Etant donné que je me connecte à l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je clique sur le lien d'ajout d'une instance
+    Et que je suis redirigé vers la page création d'instance
     Et que je supprime tous les cookies
     Quand je rafraîchis la page
     Alors je suis redirigé vers la page login de l'espace partenaires
@@ -52,6 +54,7 @@ Fonctionnalité: Perte de session Espace Partenaires
     Etant donné que je me connecte à l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je clique sur la première instance
+    Et que je suis sur la page modification d'instance
     Et que je supprime tous les cookies
     Quand je rafraîchis la page
     Alors je suis redirigé vers la page login de l'espace partenaires

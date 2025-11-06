@@ -41,6 +41,7 @@ export default {
     UserDashboardBackRoutes.ERROR,
     UserDashboardBackRoutes.USER_PREFERENCES,
     FraudIdentityTheftRoutes.FRAUD_FORM,
+    FraudIdentityTheftRoutes.FRAUD_DATA_TRACKS,
     FraudIdentityTheftRoutes.FRAUD_NO_AUTH_DESCRIPTION,
     FraudIdentityTheftRoutes.FRAUD_NO_AUTH_CONNECTION,
     FraudIdentityTheftRoutes.FRAUD_NO_AUTH_IDENTITY,

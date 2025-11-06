@@ -14,6 +14,19 @@ exports[`IdentityTheftReportSummaryPage should match the snapshot 1`] = `
     <div>
       TableComponent
     </div>
+    <h4>
+      any-acme-tracks-translation
+    </h4>
+    <div
+      class="fr-mb-5w"
+    >
+      <div
+        data-mockid="TrackCardComponent"
+      />
+      <div
+        data-mockid="TrackCardComponent"
+      />
+    </div>
     <div>
       TableComponent
     </div>
@@ -24,7 +37,37 @@ exports[`IdentityTheftReportSummaryPage should match the snapshot 1`] = `
       TableComponent
     </div>
     <div
-      data-mockid="DTO2FormComponent"
+      data-mockid="Dto2FormComponent"
+    />
+  </div>
+</div>
+`;
+
+exports[`IdentityTheftReportSummaryPage should match the snapshot when tracks is empty 1`] = `
+<div>
+  <h2>
+    Récapitulatif des informations saisies
+  </h2>
+  <div
+    class="fr-border-default--grey fr-mt-3w fr-p-3w"
+  >
+    <div>
+      TableComponent
+    </div>
+    <div>
+      TableComponent
+    </div>
+    <div>
+      TableComponent
+    </div>
+    <div>
+      TableComponent
+    </div>
+    <div>
+      TableComponent
+    </div>
+    <div
+      data-mockid="Dto2FormComponent"
     />
   </div>
 </div>

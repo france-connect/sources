@@ -1,4 +1,4 @@
-import { Then } from '@badeball/cypress-cucumber-preprocessor';
+import { Step, Then } from '@badeball/cypress-cucumber-preprocessor';
 
 import { MaildevHelper } from '../../common/helpers';
 import UdFraudFormSupportNotificationPage from '../pages/ud-fraud-form-support-notification';
@@ -8,15 +8,22 @@ const udFraudFormSupportNotificationPage =
 
 Then('le mail "demande de support" est envoyé', function () {
   const { contactEmail } = this.fraudFormValues;
-  // Wait for the email to reach maildev
-  // eslint-disable-next-line cypress/no-unnecessary-waiting
-  cy.wait(1000);
-  udFraudFormSupportNotificationPage
-    .visitLastSupportRequest(contactEmail)
-    .then((message) => {
-      this.mail = message;
-    });
+  Step(this, `le mail "demande de support" est envoyé à "${contactEmail}"`);
 });
+
+Then(
+  'le mail "demande de support" est envoyé à {string}',
+  function (email: string) {
+    // Wait for the email to reach maildev
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(1000);
+    udFraudFormSupportNotificationPage
+      .visitLastSupportRequest(email)
+      .then((message) => {
+        this.mail = message;
+      });
+  },
+);
 
 Then(
   'le sujet est {string} dans le mail "demande de support"',

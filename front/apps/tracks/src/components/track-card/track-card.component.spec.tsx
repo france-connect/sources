@@ -2,6 +2,8 @@ import { fireEvent, render } from '@testing-library/react';
 import { DateTime } from 'luxon';
 import { useToggle } from 'usehooks-ts';
 
+import { Platforms } from '@fc/common';
+
 import type { CinematicEvents, EidasToLabel } from '../../enums';
 import type { EnhancedTrackInterface, RichClaimInterface } from '../../interfaces';
 import { TrackCardBadgeComponent } from './card-badge.component';
@@ -41,7 +43,7 @@ describe('TrackCardComponent', () => {
     event: 'MOCK_EVENT' as CinematicEvents,
     idpLabel: 'mock-idpLabel',
     interactionAcr: 'eidas1' as keyof typeof EidasToLabel,
-    platform: 'FranceConnect',
+    platform: Platforms.FranceConnect,
     spLabel: 'mock-spLabel',
     time: 1633042800000,
     // '2021-10-01T00:00:00.000+01:00'

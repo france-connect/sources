@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 
+import { t } from '@fc/i18n';
 import { useStylesQuery } from '@fc/styles';
 
 import { DEFAULT_NUMBER_OF_PAGES_SHOWN_INTO_NAVIGATION, DEFAULT_USE_ELLIPSIS } from '../../enums';
@@ -24,7 +25,35 @@ describe('PaginationComponent', () => {
   const onPageClickCallbackMock = jest.fn();
 
   beforeEach(() => {
+    // Given
     jest.mocked(usePagination).mockReturnValueOnce(usePaginationMock);
+    jest
+      .mocked(t)
+      .mockReturnValueOnce('any-lastpage-label-mock')
+      .mockReturnValueOnce('any-firstpage-label-mock')
+      .mockReturnValueOnce('any-nextpage-label-mock')
+      .mockReturnValueOnce('any-previouspage-label-mock');
+  });
+
+  it('should call t 4 times with params', () => {
+    // When
+    render(
+      <PaginationComponent
+        numberOfPagesShownIntoNavigation={DEFAULT_NUMBER_OF_PAGES_SHOWN_INTO_NAVIGATION}
+        pagination={expect.any(Object)}
+        useEdgeArrows={expect.any(Boolean)}
+        useEllipsis={expect.any(Boolean)}
+        useNavArrows={expect.any(Boolean)}
+        onPageClick={expect.any(Function)}
+      />,
+    );
+
+    // Then
+    expect(t).toHaveBeenCalledTimes(4);
+    expect(t).toHaveBeenNthCalledWith(1, 'DSFR.pagination.lastPage');
+    expect(t).toHaveBeenNthCalledWith(2, 'DSFR.pagination.firstPage');
+    expect(t).toHaveBeenNthCalledWith(3, 'DSFR.pagination.nextPage');
+    expect(t).toHaveBeenNthCalledWith(4, 'DSFR.pagination.previousPage');
   });
 
   it('should match the snapshot', () => {
@@ -202,7 +231,7 @@ describe('PaginationComponent', () => {
           />,
         );
 
-        const button = getByText(/Première page/);
+        const button = getByText('any-firstpage-label-mock');
         fireEvent.click(button);
 
         // Then
@@ -336,7 +365,7 @@ describe('PaginationComponent', () => {
             onPageClick={onPageClickCallbackMock(3)}
           />,
         );
-        const button = getByText(/Dernière page/);
+        const button = getByText('any-lastpage-label-mock');
         fireEvent.click(button);
 
         // Then

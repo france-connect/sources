@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-import { Options } from '../enums';
+import { MatomoOptions } from '../enums';
 
 declare global {
   interface Window {
@@ -11,7 +11,7 @@ declare global {
 export const useMatomo = ({ siteId, url }: { siteId: number; url: string }) => {
   useEffect(() => {
     // @NOTE check if the element with the ID exist
-    const matomoScript = document.getElementById(Options.HTML_SCRIPT_ID);
+    const matomoScript = document.getElementById(MatomoOptions.HTML_SCRIPT_ID);
 
     if (!matomoScript) {
       // eslint-disable-next-line no-underscore-dangle, no-multi-assign

@@ -13,32 +13,25 @@ export function FormComponent<T extends HttpClientDataInterface>({
   config,
   decorators,
   initialValues,
-  noRequired = false,
   onSubmit,
   onValidate,
-  scrollTopOnSubmit = true,
-  submitLabel = undefined,
-}: FormInterface<T> & PropsWithChildren) {
+}: FormInterface<T> & Required<PropsWithChildren>) {
   return (
     <Form<T>
-      config={config}
       decorators={decorators}
       initialValues={initialValues}
       mutators={{ ...finalFormArrays }}
-      noRequired={noRequired}
-      scrollTopOnSubmit={scrollTopOnSubmit}
       validate={onValidate}
       onSubmit={onSubmit}>
-      {(props: FormRenderProps<T>) =>
-        FormWrapperComponent({
-          ...props,
-          children,
-          config,
-          noRequired,
-          scrollTopOnSubmit,
-          submitLabel,
-        })
-      }
+      {(props: FormRenderProps<T>) => (
+        // @NOTE We need to spread props here
+        // to pass all the necessary props to the FormWrapperComponent
+        // such as handleSubmit, form, values, etc.
+        // eslint-disable-next-line react/jsx-props-no-spreading
+        <FormWrapperComponent {...props} config={config}>
+          {children}
+        </FormWrapperComponent>
+      )}
     </Form>
   );
 }

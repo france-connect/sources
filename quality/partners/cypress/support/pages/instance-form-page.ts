@@ -2,11 +2,11 @@ import { ChainableElement } from '../types';
 
 export default class InstanceFormPage {
   checkIsCreatePageVisible(): void {
-    cy.get('[id="DTO2Form-instance-create"]').should('be.visible');
+    cy.get('[id="Dto2Form-instance-create"]').should('be.visible');
   }
 
   checkIsUpdatePageVisible(): void {
-    cy.get('[id="DTO2Form-instance-update"]').should('be.visible');
+    cy.get('[id="Dto2Form-instance-update"]').should('be.visible');
   }
 
   getClientId(): Cypress.Chainable<string> {

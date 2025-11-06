@@ -95,6 +95,7 @@ export * from './validator-custom/is-not-empty-validator.descriptor';
 export * from './validator-custom/is-redirect-url-validator.descriptor';
 export * from './validator-custom/is-signed-response-alg-validator.descriptor';
 export * from './validator-custom/is-string-validator.descriptor';
+export * from './validator-custom/is-true-validator.descriptor';
 export * from './validator-custom/is-valid-redirect-url-list-validator.descriptor';
 export * from './validator-custom/is-website-url-validator.descriptor';
 

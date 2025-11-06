@@ -3,13 +3,13 @@
 ## Description
 
 Provides a service handling the communication with the csmr-fraud.
-The csmr-fraud is responsible for processing fraud case filled on the user dashboard.
+The csmr-fraud is responsible for fetching fraud tracks and processing fraud cases filed on the user dashboard.
 
 ## Configuration
 
-This library requires the access to RabbitMQ to communicate with the fraud consumer, therefore the fraud broker configuration is needed.
+This library requires access to RabbitMQ to communicate with the fraud consumer, therefore the fraud broker configuration is needed.
 
-config example in instance:
+Config example in `instance`:
 
 ```typescript
 import { ConfigParser } from '@fc/config';
@@ -29,22 +29,50 @@ export default {
 
 The following environment variables must be defined:
 
-- FraudBroker_QUEUE
-- FraudBroker_URLS
-- REQUEST_TIMEOUT
+- `FraudBroker_QUEUE`
+- `FraudBroker_URLS`
+- `REQUEST_TIMEOUT`
 
 ## Usage
 
-Use the async processFraudCase method to send the form to OTRS
+Use the async methods on `CsmrFraudClientService` to publish messages to the fraud service.
+
+### Process a fraud case
 
 ```typescript
 import { CsmrFraudClientService } from '@fc/csmr-fraud-client';
+import {
+  FraudCaseMessageDto,
+  FraudCaseResponseDto,
+} from '@fc/csmr-fraud-client/dto';
 
 class Foo {
   constructor(private readonly csmrFraudClient: CsmrFraudClientService) {}
 
-  async someMethod(idenity: IOidcIdentity) {
-    await this.csmrFraudClient.processFraudCase(identity, fraudCase);
+  async processCase(
+    message: FraudCaseMessageDto,
+  ): Promise<FraudCaseResponseDto> {
+    return this.csmrFraudClient.publishFraudCase(message);
+  }
+}
+```
+
+### Fetch fraud tracks
+
+```typescript
+import { CsmrFraudClientService } from '@fc/csmr-fraud-client';
+import {
+  FraudTracksMessageDto,
+  FraudTracksResponseDto,
+} from '@fc/csmr-fraud-client/dto';
+
+class Foo {
+  constructor(private readonly csmrFraudClient: CsmrFraudClientService) {}
+
+  async fetchTracks(
+    message: FraudTracksMessageDto,
+  ): Promise<FraudTracksResponseDto> {
+    return this.csmrFraudClient.publishFraudTracks(message);
   }
 }
 ```

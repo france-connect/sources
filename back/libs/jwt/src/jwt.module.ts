@@ -1,11 +1,16 @@
 import { HttpModule } from '@nestjs/axios';
-import { Module } from '@nestjs/common';
+import { DynamicModule, Module, ModuleMetadata, Type } from '@nestjs/common';
 
 import { JwtService } from './services';
 
-@Module({
-  imports: [HttpModule],
-  providers: [JwtService],
-  exports: [JwtService],
-})
-export class JwtModule {}
+@Module({})
+export class JwtModule {
+  static register(SignAdapterModule: Type<ModuleMetadata>): DynamicModule {
+    return {
+      module: JwtModule,
+      imports: [HttpModule, SignAdapterModule],
+      providers: [JwtService],
+      exports: [JwtService],
+    };
+  }
+}

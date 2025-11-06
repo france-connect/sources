@@ -1,4 +1,4 @@
-import { EventTypes, useSafeContext } from '@fc/common';
+import { MessageTypes, useSafeContext } from '@fc/common';
 import { t } from '@fc/i18n';
 
 import { FormConfigContext } from '../../context';
@@ -26,7 +26,7 @@ export const useFieldMessages = ({
   const validMessage = showValidMessage
     ? {
         content: t('Form.message.valid'),
-        level: EventTypes.VALID,
+        level: MessageTypes.VALID,
         priority: 30,
       }
     : undefined;

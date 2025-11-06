@@ -27,6 +27,6 @@ export const frFR: I18nTranslationsMapType = {
     'Une erreur de communication avec le fournisseur de service est survenue. Veuillez réessayer ultérieurement.',
   'OidcProvider.exceptions.InvalidRedirectUri.6350':
     'Une erreur de communication avec le fournisseur de service est survenue. Veuillez réessayer ultérieurement.',
-  'OidcProvider.exceptions.InvalidClientMetadata.A3BD':
+  'OidcProvider.exceptions.InvalidClientMetadata.A8220':
     'Une erreur de communication avec le fournisseur de service est survenue : Impossible de contacter le "sector_identifier_uri".',
 };

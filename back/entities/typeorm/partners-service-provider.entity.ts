@@ -21,6 +21,24 @@ export class PartnersServiceProvider {
   })
   name: string;
 
+  @Column({
+    type: 'text',
+    nullable: true,
+  })
+  organizationName: string;
+
+  @Column({
+    type: 'text',
+    nullable: true,
+  })
+  datapassRequestId: string;
+
+  @Column({
+    type: 'json',
+    nullable: true,
+  })
+  authorizedScopes: string[];
+
   @ManyToOne(() => PartnersPlatform)
   platform: PartnersPlatform;
 
@@ -31,9 +49,15 @@ export class PartnersServiceProvider {
   )
   organisation: PartnersOrganisation;
 
-  @CreateDateColumn()
+  @CreateDateColumn({
+    default: () => 'NOW()',
+    nullable: false,
+  })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({
+    default: () => 'NOW()',
+    nullable: false,
+  })
   updatedAt: Date;
 }

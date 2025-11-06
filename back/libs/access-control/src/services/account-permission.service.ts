@@ -6,7 +6,6 @@ import { NO_ENTITY_ID, PartnersAccountPermission } from '@entities/typeorm';
 
 import { LoggerService } from '@fc/logger';
 import { PartnersAccountSession } from '@fc/partners-account';
-import { PostgresNativeError } from '@fc/postgres';
 import { SessionService } from '@fc/session';
 
 import { AddPermissionInterface, PermissionInterface } from '../interfaces';
@@ -56,30 +55,17 @@ export class AccountPermissionService {
       entityId = NO_ENTITY_ID,
     } = permission;
 
-    try {
-      await queryRunner.manager
-        .createQueryBuilder()
-        .insert()
-        .into(PartnersAccountPermission)
-        .values({
-          accountId,
-          permissionType,
-          entity,
-          entityId,
-        })
-        .execute();
-    } catch (error) {
-      if (error.code === PostgresNativeError.DUPLICATE_ENTRY) {
-        this.logger.warning({
-          msg: 'Tried to insert existing permission',
-          accountId,
-          permissionType,
-          entity,
-          entityId,
-        });
-      } else {
-        throw error;
-      }
-    }
+    await queryRunner.manager
+      .createQueryBuilder()
+      .insert()
+      .into(PartnersAccountPermission)
+      .values({
+        accountId,
+        permissionType,
+        entity,
+        entityId,
+      })
+      .orIgnore()
+      .execute();
   }
 }

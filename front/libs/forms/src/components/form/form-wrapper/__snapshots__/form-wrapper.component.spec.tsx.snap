@@ -36,7 +36,7 @@ exports[`FormWrapperComponent should match snapshot 1`] = `
 </div>
 `;
 
-exports[`FormWrapperComponent should match snapshot without descriptionn, title, submit label and a disable submit button 1`] = `
+exports[`FormWrapperComponent should match snapshot without description, title, submit label and a disable submit button 1`] = `
 <div>
   <form
     class="dto2form"

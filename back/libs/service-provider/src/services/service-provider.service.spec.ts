@@ -52,6 +52,7 @@ describe('ServiceProviderService', () => {
     createdBy: userMock,
     createdVia: CreatedVia.EXPLOITATION_BULK_FORM,
     secretUpdatedBy: userMock,
+    updatedBy: userMock,
   };
 
   const v2Client: Partial<ServiceProviderClientInterface> = {
@@ -85,6 +86,7 @@ describe('ServiceProviderService', () => {
     entityId: 'entityId',
     createdBy: userMock,
     createdVia: CreatedVia.EXPLOITATION_BULK_FORM,
+    updatedBy: userMock,
   };
 
   beforeEach(async () => {
@@ -105,6 +107,7 @@ describe('ServiceProviderService', () => {
       const {
         createdBy: _createdBy,
         createdVia: _createdVia,
+        updatedBy: _updatedBy,
         ...expected
       } = v2Client;
 

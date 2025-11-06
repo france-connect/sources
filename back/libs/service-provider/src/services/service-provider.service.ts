@@ -161,6 +161,7 @@ export class ServiceProviderService {
       entityId,
       createdBy,
       createdVia,
+      updatedBy,
     } = input;
 
     return {
@@ -216,6 +217,7 @@ export class ServiceProviderService {
       createdBy,
       createdVia,
       secretUpdatedBy: createdBy,
+      updatedBy,
     };
   }
 }

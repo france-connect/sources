@@ -3,7 +3,7 @@ import React from 'react';
 
 import { ConfigService } from '@fc/config';
 
-import { EidasToLabel, Options } from '../../enums';
+import { EidasToLabel, TracksOptions } from '../../enums';
 import type { TracksConfig } from '../../interfaces';
 
 type TrackCardConnectionProps = {
@@ -26,7 +26,7 @@ export const ConnectionComponent = React.memo(
   }: TrackCardConnectionProps) => {
     const {
       luxon: { datetimeShortFrFormat },
-    } = ConfigService.get<TracksConfig>(Options.CONFIG_NAME);
+    } = ConfigService.get<TracksConfig>(TracksOptions.CONFIG_NAME);
 
     const formattedTime = datetime
       .setZone('Europe/Paris')

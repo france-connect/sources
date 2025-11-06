@@ -1,6 +1,6 @@
 {
-    "rabbit_version": "3.8.11",
-    "rabbitmq_version": "3.8.11",
+    "rabbit_version": "4.1.1",
+    "rabbitmq_version": "4.1.1",
     "bindings": [],
     "exchanges": [],
     "global_parameters": [

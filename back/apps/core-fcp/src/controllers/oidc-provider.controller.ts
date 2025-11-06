@@ -6,7 +6,6 @@ import {
   Controller,
   Get,
   Header,
-  Next,
   Post,
   Query,
   Req,
@@ -89,10 +88,9 @@ export class OidcProviderController {
    */
   @Get(OidcProviderRoutes.AUTHORIZATION)
   @Header('cache-control', 'no-store')
-  @IsStep()
   async getAuthorize(
+    @Req() req,
     @Res() res,
-    @Next() next,
     @Query() query: AuthorizeParamsDto,
   ) {
     const { enableSso } = this.config.get<CoreConfig>('Core');
@@ -125,11 +123,8 @@ export class OidcProviderController {
       const { name: spName } = serviceProvider;
       res.locals.spName = spName;
     }
-    // We do not need an `else` case to handle unknown service provider here,
-    // it will be handled by oidc-provider in `next()`.
 
-    // Pass the query to oidc-provider
-    return next();
+    await this.oidcProvider.callback(req, res);
   }
 
   /**
@@ -142,10 +137,9 @@ export class OidcProviderController {
    */
   @Post(OidcProviderRoutes.AUTHORIZATION)
   @Header('cache-control', 'no-store')
-  @IsStep()
   async postAuthorize(
+    @Req() req,
     @Res() res,
-    @Next() next,
     @Body() body: AuthorizeParamsDto,
   ) {
     const { enableSso } = this.config.get<CoreConfig>('Core');
@@ -175,8 +169,7 @@ export class OidcProviderController {
     const { name: spName } = await this.serviceProvider.getById(spId);
     res.locals.spName = spName;
 
-    // Pass the query to oidc-provider
-    return next();
+    await this.oidcProvider.callback(req, res);
   }
 
   @Get(CoreRoutes.REDIRECT_TO_SP_WITH_ERROR)

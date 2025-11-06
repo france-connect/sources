@@ -1,27 +1,26 @@
 import { render } from '@testing-library/react';
 import { useLocation } from 'react-router';
 
-import { AccountContext } from '@fc/account';
-import { useSafeContext } from '@fc/common';
-import { AlertComponent } from '@fc/dsfr';
+import { Sizes } from '@fc/dsfr';
+import { t } from '@fc/i18n';
 import { LoginFormComponent } from '@fc/login-form';
-import { useStylesQuery, useStylesVariables } from '@fc/styles';
 
+import { LoginLayout } from '../../layouts';
 import { HomePage } from './home.page';
+
+jest.mock('../../layouts/login/login.layout');
 
 describe('HomePage', () => {
   beforeEach(() => {
-    jest.mocked(useSafeContext).mockReturnValue({ expired: false });
-    // @NOTE used to prevent useStylesVariables.useStylesContext to throw
-    // useStylesContext requires to be into a StylesProvider context
-    jest.mocked(useStylesVariables).mockReturnValue([expect.any(Number), expect.any(Number)]);
-    jest.mocked(useStylesQuery).mockReturnValue(true);
+    // Given
+    jest
+      .mocked(t)
+      .mockReturnValueOnce('UserDashboard-homepage-documentTitle--mock')
+      .mockReturnValueOnce('UserDashboard-homepage-title--mock')
+      .mockReturnValueOnce('UserDashboard-homepage-paragraph--mock');
   });
 
-  it('should match the snapshot when session is not expired', () => {
-    // Given
-    jest.mocked(useSafeContext).mockReturnValueOnce({ expired: false });
-
+  it('should match the snapshot', () => {
     // When
     const { container } = render(<HomePage />);
 
@@ -29,71 +28,15 @@ describe('HomePage', () => {
     expect(container).toMatchSnapshot();
   });
 
-  it('should match snapshot when session is expired', () => {
-    // Given
-    jest.mocked(useSafeContext).mockReturnValueOnce({ expired: true });
-
-    // When
-    const { container } = render(<HomePage />);
-
-    // Then
-    expect(container).toMatchSnapshot();
-  });
-
-  it('should match the snapshot on mobile layout', () => {
-    // Given
-    jest.mocked(useStylesQuery).mockReturnValueOnce(false).mockReturnValueOnce(false);
-
-    // When
-    const { container } = render(<HomePage />);
-
-    // Then
-    expect(container).toMatchSnapshot();
-  });
-
-  it('should match the snapshot on desktop layout', () => {
-    // Given
-    jest.mocked(useStylesQuery).mockReturnValueOnce(true).mockReturnValueOnce(false);
-
-    // When
-    const { container } = render(<HomePage />);
-
-    // Then
-    expect(container).toMatchSnapshot();
-  });
-
-  it('should match the snapshot on tablet layout', () => {
-    // Given
-    jest.mocked(useStylesQuery).mockReturnValueOnce(false).mockReturnValueOnce(true);
-
-    // When
-    const { container } = render(<HomePage />);
-
-    // Then
-    expect(container).toMatchSnapshot();
-  });
-
-  it('should call useSafeContext with AccountContext', () => {
+  it('should call the translation function 3 times', () => {
     // When
     render(<HomePage />);
 
     // Then
-    expect(useSafeContext).toHaveBeenCalledOnce();
-    expect(useSafeContext).toHaveBeenCalledWith(AccountContext);
-  });
-
-  it('should render the main heading', () => {
-    // Given
-    const { getByRole } = render(<HomePage />);
-
-    // When
-    const element = getByRole('heading');
-
-    // Then
-    expect(element).toBeInTheDocument();
-    expect(element).toHaveTextContent(
-      'Pour accéder à votre tableau de bord FranceConnect, veuillez vous connecter',
-    );
+    expect(t).toHaveBeenCalledTimes(3);
+    expect(t).toHaveBeenNthCalledWith(1, 'UserDashboard.homepage.documentTitle');
+    expect(t).toHaveBeenNthCalledWith(2, 'UserDashboard.homepage.title');
+    expect(t).toHaveBeenNthCalledWith(3, 'UserDashboard.homepage.paragraph');
   });
 
   it('should have called useLocation hook', () => {
@@ -104,44 +47,39 @@ describe('HomePage', () => {
     expect(useLocation).toHaveBeenCalled();
   });
 
-  it('should render the paragraph', () => {
+  it('should call login layout', () => {
     // Given
-    const { getByTestId } = render(<HomePage />);
+    render(<HomePage />);
 
+    // Then
+    expect(LoginLayout).toHaveBeenCalledExactlyOnceWith(
+      {
+        children: expect.any(Object),
+        documentTitle: 'UserDashboard-homepage-documentTitle--mock',
+        size: Sizes.MEDIUM,
+      },
+      undefined,
+    );
+  });
+
+  it('should render the main heading', () => {
     // When
+    const { getByRole } = render(<HomePage />);
+    const element = getByRole('heading');
+
+    // Then
+    expect(element).toBeInTheDocument();
+    expect(element).toHaveTextContent('UserDashboard-homepage-title--mock');
+  });
+
+  it('should render the paragraph', () => {
+    // When
+    const { getByTestId } = render(<HomePage />);
     const element = getByTestId('paragraph');
 
     // Then
     expect(element).toBeInTheDocument();
-    expect(element).toHaveTextContent(
-      'Une fois connecté, vous pourrez consulter l’historique de vos connexions et configurer vos accès FranceConnect.',
-    );
-  });
-
-  it('should render AlertComponent with specific props if session has expired', () => {
-    // Given
-    jest.mocked(useSafeContext).mockReturnValueOnce({ expired: true });
-    jest
-      .mocked(AlertComponent)
-      .mockImplementationOnce(({ children }) => <div data-testid="AlertComponent">{children}</div>);
-
-    // When
-    const { container, getByText } = render(<HomePage />);
-    const textElt = getByText('Votre session a expiré, veuillez vous reconnecter');
-
-    // Then
-    expect(container).toMatchSnapshot();
-    expect(textElt).toBeInTheDocument();
-    expect(AlertComponent).toHaveBeenCalledOnce();
-    expect(AlertComponent).toHaveBeenCalledWith(
-      {
-        children: expect.any(Object),
-        className: 'text-left fr-my-3w',
-        size: 'sm',
-        type: 'warning',
-      },
-      undefined,
-    );
+    expect(element).toHaveTextContent('UserDashboard-homepage-paragraph--mock');
   });
 
   it('should render LoginFormComponent without redirectUrl', () => {

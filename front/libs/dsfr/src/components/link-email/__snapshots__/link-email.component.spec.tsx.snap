@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LinkEmailComponent should match the snapshot, with all props 1`] = `
+<div>
+  <a
+    aria-label="any-acme-sendto-email"
+    class="fr-link fr-link--sm fr-icon-any-icon-mock fr-link--icon-right any-classname-mock"
+    data-testid="data-test-id"
+    href="mailto:any-email-mock"
+    title="any-title-mock"
+  >
+    any-email-children-mock
+  </a>
+</div>
+`;
+
+exports[`LinkEmailComponent should match the snapshot, with default props 1`] = `
+<div>
+  <a
+    aria-label="any-acme-sendto-email"
+    class="fr-link fr-link--md"
+    href="mailto:any-email-mock"
+  >
+    any-email-mock
+  </a>
+</div>
+`;
+
+exports[`LinkEmailComponent should match the snapshot, with the label props 1`] = `
+<div>
+  <a
+    aria-label="any-acme-sendto-email"
+    class="fr-link fr-link--md"
+    href="mailto:any-email-mock"
+  >
+    any-email-label-mock
+  </a>
+</div>
+`;

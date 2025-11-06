@@ -2,6 +2,7 @@ import classnames from 'classnames';
 import React from 'react';
 
 import { type NavigationLinkInterface, useSafeContext } from '@fc/common';
+import { t } from '@fc/i18n';
 
 import { LayoutContext } from '../../../context';
 import type { LayoutContextState } from '../../../interfaces';
@@ -30,7 +31,7 @@ export const LayoutHeaderMenuComponent = React.memo(
             aria-controls="layout-header-menu-modal"
             className="fr-btn--close fr-btn"
             onClick={toggleMenu}>
-            Fermer
+            {t('FC.Common.close')}
           </button>
           <div className="fr-header__menu-links">
             <LayoutHeaderToolsComponent />

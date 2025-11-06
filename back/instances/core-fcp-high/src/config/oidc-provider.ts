@@ -106,12 +106,12 @@ export default {
       userinfoSigningAlgValues: ['ES256'],
     },
     jwks: {
-      keys: env.json('CRYPTO_SIG_FAKE_PRIV_KEYS'),
+      keys: env.json('HSM_PUB_KEYS'),
     },
 
     // Global request timeout used for any outgoing app requests.
     timeout: parseInt(process.env.REQUEST_TIMEOUT, 10),
   },
-  isLocalhostAllowed: env.boolean('IS_LOCALHOST_ALLOWED'),
+  urlsRequireTld: env.boolean('URL_REQUIRE_TLD'),
   errorUriBase: env.string('ERROR_URI_BASE'),
 } as OidcProviderConfig;

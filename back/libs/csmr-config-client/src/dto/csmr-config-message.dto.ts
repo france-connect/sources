@@ -128,14 +128,24 @@ export class ConfigCreateMessageDtoPayload
   @IsNumber()
   @IsOptional()
   readonly eidas?: number;
+
+  @IsString()
+  @IsOptional()
+  readonly environment?: string;
 }
 
 export class ConfigCreateViaMessageDtoPayload extends ConfigCreateMessageDtoPayload {
   @IsString()
-  createdBy: string;
+  @IsOptional()
+  createdBy?: string;
 
   @IsString()
-  createdVia: string;
+  @IsOptional()
+  createdVia?: string;
+
+  @IsString()
+  @IsOptional()
+  updatedBy?: string;
 }
 
 export class ConfigMessageDtoMeta implements FSAMeta {

@@ -65,21 +65,11 @@ async function bootstrap() {
   app.use(
     helmet.contentSecurityPolicy({
       directives: {
-        defaultSrc: ["'self'"],
-
-        scriptSrc: ["'self'", "'unsafe-inline'"],
         /**
          * We should be able to call to any domain that we need (SPs, IdPs, rnipp), the default "self"
          * is too restricting. We don't have a precise domain to restrain to.
          */
         formAction: null,
-        /**
-         * Allow inline CSS and JS
-         * @TODO #168 remove this header once the UI is properly implemented
-         * to forbid the use of inline CSS or JS
-         * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/168
-         */
-        styleSrc: ["'self'", "'unsafe-inline'"],
       },
     }),
   );

@@ -101,13 +101,31 @@ const allowedSnakeCaseParameters = [
   'organizational_unit',
   'signup_id',
   'sp_id',
+
+  // Datapass
+  'contact_technique_email',
+  'contact_technique_family_name',
+  'contact_technique_given_name',
+  'contact_technique_job_title',
+  'contact_technique_phone_number',
+  'fired_at',
+  'form_uid',
+  'job_title',
+  'model_type',
+  'public_id',
+  'token_id',
 ];
 
 const allowedSnakeCaseParametersRegexPattern = `^(${allowedSnakeCaseParameters.join('|')})$`;
 
 export default [
   {
-    ignores: ['**/*.ejs', 'eslint.config.mjs'],
+    ignores: [
+      '**/*.ejs',
+      'eslint.config.mjs',
+      'apps/core-fcp/src/public/js/**',
+      'apps/eidas-bridge/src/public/js/**',
+    ],
   },
   ...compat.extends(
     'plugin:@eslint-community/eslint-comments/recommended',

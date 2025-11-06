@@ -21,6 +21,7 @@ export const jestConfig = [
           allow: ['beforeEach', 'afterEach'],
         },
       ],
+      'jest/prefer-ending-with-an-expect': 0,
       'jest/prefer-expect-assertions': 0,
       'jest/prefer-importing-jest-globals': 0,
       'jest/prefer-lowercase-title': 0,

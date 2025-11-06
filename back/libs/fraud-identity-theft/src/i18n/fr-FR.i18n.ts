@@ -19,6 +19,8 @@ export const frFR = {
     'Le code renseigné n’est pas valide.\nAssurez-vous de renseigner celui qui correspond à la connexion frauduleuse.',
   'Form.isNotEmpty_error.code':
     'Le code renseigné n’est pas valide.\nAssurez-vous de renseigner celui qui correspond à la connexion frauduleuse.',
+  'Form.isWrong_error.code':
+    'Aucune connexion ne correspond au code renseigné.\nAssurez-vous de renseigner celui qui correspond à la connexion frauduleuse. La date de la connexion ne doit pas remonter à plus de six mois.',
 
   // Fraud Identity Form
   'Form.label.family_name': 'Nom complet de naissance',
@@ -79,6 +81,6 @@ export const frFR = {
   'Form.hint.consent': '',
   'Form.isFilled_error.consent':
     'Veuillez accepter la demande pour envoyer votre signalement',
-  'Form.isNotEmpty_error.consent':
+  'Form.isTrue_error.consent':
     'Veuillez accepter la demande pour envoyer votre signalement',
 };

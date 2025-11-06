@@ -6,7 +6,7 @@ exports[`ServiceImageComponent should be in a disabled state 1`] = `
     class="image is-relative no-overflow fr-mr-3w disabled opacity-45"
   >
     <img
-      alt="fournisseur d'identité title-mock"
+      alt="any-labels-idp-mock title-mock"
       class="is-block is-absolute"
       height="auto"
       src="/images/fi/image.mock"
@@ -50,7 +50,7 @@ exports[`ServiceImageComponent should show an image 1`] = `
     class="image is-relative no-overflow fr-mr-3w"
   >
     <img
-      alt="fournisseur d'identité title-mock"
+      alt="any-labels-idp-mock title-mock"
       class="is-block is-absolute"
       height="auto"
       src="/images/fi/image.mock"

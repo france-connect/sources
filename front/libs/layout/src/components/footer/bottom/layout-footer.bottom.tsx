@@ -3,11 +3,11 @@ import React from 'react';
 import { ConfigService } from '@fc/config';
 import { LinkComponent } from '@fc/dsfr';
 
-import { Options } from '../../../enums';
+import { LayoutOptions } from '../../../enums';
 import type { LayoutConfig } from '../../../interfaces';
 
 export const LayoutFooterBottomComponent = React.memo(() => {
-  const config = ConfigService.get<LayoutConfig>(Options.CONFIG_NAME);
+  const config = ConfigService.get<LayoutConfig>(LayoutOptions.CONFIG_NAME);
   const { navigation } = config.footer;
   const { showLicence } = config.features;
 

@@ -80,14 +80,14 @@ describe('OidcProviderMiddlewareService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('onModuleInit', () => {
+  describe('onApplicationBootstrap', () => {
     beforeEach(() => {
       service['registerMiddleware'] = jest.fn();
     });
 
     it('should register two middleware', () => {
       // When
-      service.onModuleInit();
+      service.onApplicationBootstrap();
 
       // Then
       expect(service['registerMiddleware']).toHaveBeenCalledTimes(1);
@@ -95,7 +95,7 @@ describe('OidcProviderMiddlewareService', () => {
 
     it('should register a userinfo after middleware', () => {
       // When
-      service.onModuleInit();
+      service.onApplicationBootstrap();
 
       // Then
       expect(service['registerMiddleware']).toHaveBeenCalledWith(

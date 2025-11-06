@@ -2,6 +2,7 @@ import classnames from 'classnames';
 import React from 'react';
 
 import type { PropsWithClassName } from '@fc/common';
+import { t } from '@fc/i18n';
 
 import type { ServiceInterface } from '../interfaces';
 import styles from './service-image.module.scss';
@@ -15,6 +16,7 @@ interface ServiceImageComponentProps extends PropsWithClassName {
 export const ServiceImageComponent = React.memo(
   ({ className = undefined, disabled = false, service }: ServiceImageComponentProps) => {
     const { image, title } = service;
+    const idpLabel = t('UserPreferences.labels.idp');
     return (
       <div
         className={classnames(
@@ -29,7 +31,7 @@ export const ServiceImageComponent = React.memo(
           <b className="is-table-cell v-align-middle text-center w100 fr-text--sm">{title}</b>
         )) || (
           <img
-            alt={`fournisseur d'identité ${title}`}
+            alt={`${idpLabel} ${title}`}
             className="is-block is-absolute"
             height="auto"
             src={`/images/fi/${image}`}

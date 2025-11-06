@@ -1,7 +1,9 @@
+import { Strings } from '@fc/common';
+
 import { InvalidProtocol } from '../errors';
 import { isValidProtocol } from './is-valid-protocol';
 
-export const slashifyPath = (endpoint: string, baseURL: string = ''): string => {
+export const slashifyPath = (endpoint: string, baseURL: string = Strings.EMPTY_STRING): string => {
   const isEndpointAbsolute = isValidProtocol(endpoint);
   if (isEndpointAbsolute || !baseURL) {
     return endpoint;

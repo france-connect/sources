@@ -301,4 +301,31 @@ describe('ValidatorCustomService', () => {
       expect(result).toBe(true);
     });
   });
+
+  describe('isTrue', () => {
+    // Given
+    const valuesToTest = [
+      [true, 'true'],
+      [true, true],
+      [false, 'false'],
+      [false, false],
+      [false, 1],
+      [false, 0],
+      [false, ''],
+      [false, null],
+      [false, undefined],
+      [false, {}],
+      [false, []],
+      [false, 'True'],
+      [false, 'TRUE'],
+    ];
+
+    it.each(valuesToTest)(
+      'should return %p if value is %p',
+      (expected, value) => {
+        // When / Then
+        expect(service.isTrue(value)).toBe(expected);
+      },
+    );
+  });
 });

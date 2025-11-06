@@ -1,20 +1,33 @@
 import { HttpMethods } from '@fc/common';
+import { ButtonTypes } from '@fc/dsfr';
 import type { Dto2FormConfigInterface } from '@fc/dto2form';
 import type { FormConfigInterface } from '@fc/forms';
 
 const FRAUD_NO_AUTH_ENDPOINT = '/api/fraud/no-auth';
 
 const commonConfig: FormConfigInterface = {
+  actions: [
+    {
+      // @NOTE can only be tested with BDD
+      // config are not tested
+      disabled: /* istanbul ignore next */ ({ canSubmit }) => !canSubmit,
+      label: 'DSFR.stepper.nextStepButton',
+      type: ButtonTypes.SUBMIT,
+    },
+  ],
   id: 'IdentityTheftReport',
   showFieldValidationMessage: false,
   validateOnFieldChange: false,
   validateOnSubmit: false,
 };
 
-export const Dto2Form: Dto2FormConfigInterface = {
+export const Dto2FormService: Dto2FormConfigInterface = {
   IdentityTheftConnection: {
-    ...commonConfig,
     endpoints: {
+      load: {
+        method: HttpMethods.GET,
+        path: `${FRAUD_NO_AUTH_ENDPOINT}/connection`,
+      },
       schema: {
         method: HttpMethods.GET,
         path: `${FRAUD_NO_AUTH_ENDPOINT}/connection`,
@@ -24,12 +37,18 @@ export const Dto2Form: Dto2FormConfigInterface = {
         path: `${FRAUD_NO_AUTH_ENDPOINT}/connection`,
       },
     },
-    id: `${commonConfig.id}-Connection`,
+    form: {
+      ...commonConfig,
+      id: `${commonConfig.id}-Connection`,
+    },
   },
 
   IdentityTheftContact: {
-    ...commonConfig,
     endpoints: {
+      load: {
+        method: HttpMethods.GET,
+        path: `${FRAUD_NO_AUTH_ENDPOINT}/contact`,
+      },
       schema: {
         method: HttpMethods.GET,
         path: `${FRAUD_NO_AUTH_ENDPOINT}/contact`,
@@ -39,12 +58,18 @@ export const Dto2Form: Dto2FormConfigInterface = {
         path: `${FRAUD_NO_AUTH_ENDPOINT}/contact`,
       },
     },
-    id: `${commonConfig.id}-Contact`,
+    form: {
+      ...commonConfig,
+      id: `${commonConfig.id}-Contact`,
+    },
   },
 
   IdentityTheftDescription: {
-    ...commonConfig,
     endpoints: {
+      load: {
+        method: HttpMethods.GET,
+        path: `${FRAUD_NO_AUTH_ENDPOINT}/description`,
+      },
       schema: {
         method: HttpMethods.GET,
         path: `${FRAUD_NO_AUTH_ENDPOINT}/description`,
@@ -54,12 +79,18 @@ export const Dto2Form: Dto2FormConfigInterface = {
         path: `${FRAUD_NO_AUTH_ENDPOINT}/description`,
       },
     },
-    id: `${commonConfig.id}-Description`,
+    form: {
+      ...commonConfig,
+      id: `${commonConfig.id}-Description`,
+    },
   },
 
   IdentityTheftIdentity: {
-    ...commonConfig,
     endpoints: {
+      load: {
+        method: HttpMethods.GET,
+        path: `${FRAUD_NO_AUTH_ENDPOINT}/identity`,
+      },
       schema: {
         method: HttpMethods.GET,
         path: `${FRAUD_NO_AUTH_ENDPOINT}/identity`,
@@ -69,12 +100,18 @@ export const Dto2Form: Dto2FormConfigInterface = {
         path: `${FRAUD_NO_AUTH_ENDPOINT}/identity`,
       },
     },
-    id: `${commonConfig.id}-Identity`,
+    form: {
+      ...commonConfig,
+      id: `${commonConfig.id}-Identity`,
+    },
   },
 
   IdentityTheftSummary: {
-    ...commonConfig,
     endpoints: {
+      load: {
+        method: HttpMethods.GET,
+        path: `${FRAUD_NO_AUTH_ENDPOINT}/summary`,
+      },
       schema: {
         method: HttpMethods.GET,
         path: `${FRAUD_NO_AUTH_ENDPOINT}/summary`,
@@ -84,6 +121,18 @@ export const Dto2Form: Dto2FormConfigInterface = {
         path: `${FRAUD_NO_AUTH_ENDPOINT}/summary`,
       },
     },
-    id: `${commonConfig.id}-Summary`,
+    form: {
+      ...commonConfig,
+      actions: [
+        {
+          // @NOTE can only be tested with BDD
+          // config are not tested
+          disabled: /* istanbul ignore next */ ({ canSubmit }) => !canSubmit,
+          label: 'IdentityTheftReport.summaryPage.submit',
+          type: ButtonTypes.SUBMIT,
+        },
+      ],
+      id: `${commonConfig.id}-Summary`,
+    },
   },
 };

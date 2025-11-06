@@ -14,7 +14,6 @@ import { frFR as frMailer } from '@fc/mailer/i18n';
 import { frFR as frOidcAcr } from '@fc/oidc-acr/i18n';
 import { frFR as frOidcClient } from '@fc/oidc-client/i18n';
 import { frFR as frOidcProvider } from '@fc/oidc-provider/i18n';
-import { frFR as frOverrideOidcProvider } from '@fc/override-oidc-provider/i18n';
 import { frFR as frRnipp } from '@fc/rnipp/i18n';
 import { frFR as frScopes } from '@fc/scopes/i18n';
 import { frFR as frSession } from '@fc/session/i18n';
@@ -44,7 +43,6 @@ export const frFR: I18nTranslationsMapType = {
   ...frOidcAcr,
   ...frOidcClient,
   ...frOidcProvider,
-  ...frOverrideOidcProvider,
   ...frRnipp,
   ...frScopes,
   ...frSession,
@@ -53,9 +51,9 @@ export const frFR: I18nTranslationsMapType = {
 
   // Libraries overrides
   'OidcProvider.exceptions.InvalidRequest.99B1': 'Page non trouvée',
-  'OidcProvider.exceptions.InvalidClient.EA6E':
+  'OidcProvider.exceptions.InvalidClient.EA6EF':
     'Une erreur de communication avec le fournisseur de service est survenue. Veuillez réessayer ultérieurement.',
-  'OidcProvider.exceptions.InvalidRedirectUri.C013':
+  'OidcProvider.exceptions.InvalidRedirectUri.C013C':
     'Une erreur de communication avec le fournisseur de service est survenue. Veuillez réessayer ultérieurement.',
 
   'CoreFcp.exceptions.coreFcpFailedAbortSession': ERROR_RECONNECT,

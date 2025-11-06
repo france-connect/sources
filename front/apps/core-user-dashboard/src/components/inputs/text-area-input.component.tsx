@@ -2,6 +2,8 @@ import classnames from 'classnames';
 import React from 'react';
 import { Field, useField } from 'react-final-form';
 
+import { Strings } from '@fc/common';
+
 export interface TextAreaInput {
   label: string;
   name: string;
@@ -12,7 +14,7 @@ export interface TextAreaInput {
 }
 
 export const TextAreaInputComponent = React.memo((props: TextAreaInput) => {
-  const { description, info = '', label, maxLength, name, rows = 4 } = props;
+  const { description, info = Strings.EMPTY_STRING, label, maxLength, name, rows = 4 } = props;
 
   const metaField = useField(name, {
     subscription: { value: true },

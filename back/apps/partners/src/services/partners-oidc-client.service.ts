@@ -118,8 +118,7 @@ export class PartnersOidcClientService {
       email: identity.email,
     };
 
-    let accountId =
-      await this.partnersAccount.updateLastConnection(partnersAccount);
+    let accountId = await this.partnersAccount.updateAccount(partnersAccount);
 
     if (!accountId) {
       accountId = await this.partnersAccount.init({

@@ -78,6 +78,7 @@ The table below provides a clear view of the technical keys used by the library 
 
 | Slug     | Grouped claims identifier | Provider Label                                                            |
 | -------- | ------------------------- | ------------------------------------------------------------------------- |
+| ANTS     | ants                      | Agence Nationale des Titres Sécurisés                                     |
 | CNAF_MSA | cnafMsa                   | Caisse nationale des allocations familiales & Mutualité sociale agricole  |
 | CNAM     | cnam                      | Caisse nationale de l’assurance maladie                                   |
 | CNOUS    | cnous                     | Centre national des œuvres universitaires et scolaires                    |
