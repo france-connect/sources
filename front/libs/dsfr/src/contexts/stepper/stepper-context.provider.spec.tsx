@@ -81,7 +81,7 @@ describe('StepperContextProvider', () => {
   it('should sort steps by order', () => {
     // Given
     const sorterMock = jest.fn();
-    jest.mocked(sortByKey).mockImplementationOnce(() => sorterMock);
+    jest.mocked(sortByKey).mockReturnValueOnce(sorterMock);
 
     // When
     render(<ProviderMock />);

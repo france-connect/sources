@@ -1,3 +1,5 @@
+import { FraudTrackDto } from '@fc/csmr-fraud-client';
+
 export interface TicketTracksDataInterface {
   date: string;
   idpName: string;
@@ -28,4 +30,5 @@ export interface SecurityTicketDataInterface {
   error: string;
   total: number;
   tracks: TicketTracksDataInterface[];
+  fraudTracks: FraudTrackDto[];
 }

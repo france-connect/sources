@@ -1,6 +1,7 @@
 import { DefaultServiceProviderLowValueConfig } from '@fc/partners';
 import {
   ants,
+  asc,
   cnafMsa,
   cnam,
   cnous,
@@ -32,6 +33,7 @@ export default {
       ...Object.keys(dss.scopes),
       ...Object.keys(dsnj.scopes),
       ...Object.keys(ants.scopes),
+      ...Object.keys(asc.scopes),
     ]),
   ],
   emails: [''],

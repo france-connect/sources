@@ -14,6 +14,12 @@ Fonctionnalité: API - Datapass
     Quand je lance la requête
     Alors le statut de la réponse est 403
 
+  # Test ignoré car l'intégration avec Datapass n'est pas encore effective
+  # En attente de la finalisation des migrations PostgreSQL
+  # - https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/2463
+  # En attente des logs techniques pour récupérer un payload Datapass
+  # - https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/2469
+  @ignoreInteg01
   Scénario: API datapass - succès vérification signature
     Etant donné que je prépare une requête "datapass"
     Quand je lance la requête

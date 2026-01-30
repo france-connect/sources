@@ -53,9 +53,7 @@ describe('useScrollToElement', () => {
   it('should not call scrollIntoView if parent element do not exist', () => {
     // Given
     jest.useFakeTimers();
-    jest
-      .spyOn(document, 'querySelector')
-      .mockImplementationOnce(() => undefined as unknown as HTMLElement);
+    jest.spyOn(document, 'querySelector').mockReturnValueOnce(undefined as unknown as HTMLElement);
     const scrollIntoViewMock = jest.fn();
     HTMLElement.prototype.scrollIntoView = scrollIntoViewMock;
 
@@ -78,7 +76,7 @@ describe('useScrollToElement', () => {
 
     const scrollIntoViewMock = jest.fn();
     HTMLElement.prototype.scrollIntoView = scrollIntoViewMock;
-    const scrollBySpy = jest.spyOn(window, 'scrollBy').mockImplementationOnce(() => jest.fn());
+    const scrollBySpy = jest.spyOn(window, 'scrollBy').mockImplementationOnce(jest.fn());
 
     // When
     const { result } = renderWithScrollToElement(
@@ -99,11 +97,11 @@ describe('useScrollToElement', () => {
     // Given
     jest.useFakeTimers();
     const topPositionMock = 100;
-    const scrollBySpy = jest.spyOn(window, 'scrollBy').mockImplementationOnce(() => jest.fn());
+    const scrollBySpy = jest.spyOn(window, 'scrollBy').mockImplementationOnce(jest.fn());
     document.documentElement.scrollIntoView = undefined as unknown as () => void;
     jest
       .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
-      .mockImplementationOnce(() => ({ top: topPositionMock }) as DOMRect);
+      .mockReturnValueOnce({ top: topPositionMock } as DOMRect);
 
     // When
     const { result } = renderWithScrollToElement(

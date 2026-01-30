@@ -21,7 +21,7 @@ export const CalloutComponent = React.memo(
     className,
     dataTestId,
     heading: Heading = HeadingTag.H3,
-    icon = undefined,
+    icon,
     size = Sizes.MEDIUM,
     title,
   }: CalloutComponentProps) => (

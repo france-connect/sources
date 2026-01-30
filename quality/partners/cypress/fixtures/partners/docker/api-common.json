@@ -111,5 +111,13 @@
     "form": true,
     "method": "POST",
     "url": "https://partners.docker.dev-franceconnect.fr/api/invitation"
+  },
+  "service-providers-list": {
+    "method": "GET",
+    "url": "https://partners.docker.dev-franceconnect.fr/api/service-providers"
+  },
+  "service-provider-get": {
+    "method": "GET",
+    "url": "https://partners.docker.dev-franceconnect.fr/api/service-providers/25c4e41c-a97d-4bc9-8e05-e353c91eaef5"
   }
 }

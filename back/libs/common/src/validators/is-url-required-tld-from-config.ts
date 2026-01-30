@@ -15,9 +15,7 @@ import { MustEndWith } from '../types';
 
 @ValidatorConstraint({ name: 'IsUrlRequiredTldFromConfig' })
 @Injectable()
-export class IsUrlRequiredTldFromConfigConstraint
-  implements ValidatorConstraintInterface
-{
+export class IsUrlRequiredTldFromConfigConstraint implements ValidatorConstraintInterface {
   constructor(public readonly config: ConfigService) {}
 
   validate(url: string, { constraints }: ValidationArguments): boolean {

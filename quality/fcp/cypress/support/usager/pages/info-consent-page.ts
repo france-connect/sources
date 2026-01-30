@@ -14,6 +14,14 @@ export default class InfoConsentPage {
     return cy.get('input[name="csrfToken"]');
   }
 
+  getConsentForm(): ChainableElement {
+    return cy.get('[data-testid="consent-form"]');
+  }
+
+  getLoadingModal(): ChainableElement {
+    return cy.get('#loading-modal');
+  }
+
   getConsentButton(): ChainableElement {
     return cy.get('[data-testid="consent-continue"]');
   }
@@ -27,7 +35,9 @@ export default class InfoConsentPage {
   }
 
   getClaimDetailsItems(): ChainableElement {
-    return cy.get('[data-testid="consent-detail"] li');
+    return cy.get(
+      '[data-testid="consent-detail"] li, [data-testid="consent-detail"]:not(ul)',
+    );
   }
 
   checkIsVisible(): void {
@@ -77,5 +87,12 @@ export default class InfoConsentPage {
           `The claims count should be ${expectedClaimsSet.size}`,
         );
       });
+  }
+
+  checkIsLoadingModalVisible(): void {
+    this.getLoadingModal()
+      .should('exist')
+      .and('be.visible')
+      .and('have.attr', 'open');
   }
 }

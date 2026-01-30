@@ -19,4 +19,5 @@ export const enum ErrorCode {
   INVALID_DATA = 11,
   BAD_COOKIE = 12,
   CANNOT_COMMIT = 13,
+  INVALID_SET_CALL = 14,
 }

@@ -51,6 +51,7 @@ import {
 import {
   AuthorizeParamsDto,
   CoreConfig,
+  GetAutoLoginSessionDto,
   GetLoginOidcClientSessionDto,
 } from '../dto';
 import { ConfirmationType, DataType } from '../enums';
@@ -241,6 +242,10 @@ export class OidcProviderController {
     await this.tracking.track(eventKey, context);
   }
 
+  /**
+   * POST /login - Standard login route with CSRF protection
+   * Called from the consent page after user clicks "Continue"
+   */
   @Post(CoreRoutes.INTERACTION_LOGIN)
   @Header('cache-control', 'no-store')
   @UsePipes(new ValidationPipe({ whitelist: true }))
@@ -258,6 +263,37 @@ export class OidcProviderController {
     @Session('OidcClient', GetLoginOidcClientSessionDto)
     sessionOidc: ISessionService<OidcClientSession>,
   ) {
+    await this.processLogin(req, res, sessionOidc);
+  }
+
+  /**
+   * GET /auto-login - Auto-login route without CSRF for authorized SPs
+   * Used when spPrompt='login' (skip consent page)
+   */
+  @Get(CoreRoutes.INTERACTION_AUTO_LOGIN)
+  @Header('cache-control', 'no-store')
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  @IsStep()
+  @ForbidRefresh()
+  async getAutoLogin(
+    @Req() req: Request,
+    @Res() res: Response,
+    /**
+     * @todo #1020 Partage d'une session entre oidc-provider & oidc-client
+     * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1020
+     * @ticket FC-1020
+     */
+    @Session('OidcClient', GetAutoLoginSessionDto)
+    sessionOidc: ISessionService<OidcClientSession>,
+  ) {
+    await this.processLogin(req, res, sessionOidc);
+  }
+
+  private async processLogin(
+    req: Request,
+    res: Response,
+    sessionOidc: ISessionService<OidcClientSession>,
+  ): Promise<void> {
     const session: OidcSession = sessionOidc.get();
 
     const { spId, spIdentity, rnippIdentity } = session;

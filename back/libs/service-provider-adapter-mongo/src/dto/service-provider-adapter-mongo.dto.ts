@@ -1,6 +1,7 @@
 import {
   IsArray,
   IsBoolean,
+  IsEnum,
   IsIn,
   IsOptional,
   IsString,
@@ -11,6 +12,7 @@ import {
 // Creates a cyclic dependency
 import { IsEqualToConfig, IsUrlRequiredTldFromConfig } from '@fc/common';
 import { SUPPORTED_SIG_ALG } from '@fc/cryptography';
+import { OidcProviderPrompt } from '@fc/oidc-provider';
 
 import { ServiceProviderAdapterMongoConfig } from './service-provider-adapter-mongo-config.dto';
 
@@ -113,4 +115,14 @@ export class ServiceProviderAdapterMongoDTO {
 
   @IsOptional()
   readonly signup_id?: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  readonly allowedIdpHints?: string[];
+
+  @IsOptional()
+  @IsArray()
+  @IsEnum(OidcProviderPrompt, { each: true })
+  readonly allowedPrompts?: OidcProviderPrompt[];
 }

@@ -1,4 +1,5 @@
 export * from './ants';
+export * from './asc';
 export * from './cnaf-msa';
 export * from './cnam';
 export * from './cnous';

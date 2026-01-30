@@ -27,8 +27,9 @@ async function bootstrap() {
   const {
     urlPrefix,
     assetsPaths,
-    assetsDsfrPaths,
     assetsCacheTtl,
+    assetsUrlPrefix,
+    assetsUrlDomain,
     viewsPaths,
     httpsOptions: { key, cert },
   } = configService.get<AppConfig>('App');
@@ -47,20 +48,31 @@ async function bootstrap() {
   app.useLogger(logger);
 
   app.setGlobalPrefix(urlPrefix);
+
   /**
    * Protect app from common risks
    * @see https://helmetjs.github.io/
    */
+
+  const directives: Record<string, string[]> = {
+    /**
+     * We should be able to call to any domain that we need (SPs, IdPs, rnipp), the default "self"
+     * is too restricting. We don't have a precise domain to restrain to.
+     */
+    formAction: null,
+  };
+
+  if (assetsUrlDomain) {
+    directives.scriptSrc = ["'self'", assetsUrlDomain];
+    directives.styleSrc = ["'self'", assetsUrlDomain];
+    directives.imgSrc = ["'self'", 'data:', assetsUrlDomain];
+    directives.fontSrc = ["'self'", assetsUrlDomain];
+  }
+
   app.use(helmet());
   app.use(
     helmet.contentSecurityPolicy({
-      directives: {
-        /**
-         * We should be able to call to any domain that we need (SPs, IdPs, rnipp), the default "self"
-         * is too restricting. We don't have a precise domain to restrain to.
-         */
-        formAction: null,
-      },
+      directives,
     }),
   );
   app.use(helmet.permittedCrossDomainPolicies());
@@ -74,20 +86,10 @@ async function bootstrap() {
     }),
   );
 
-  /**
-   * @TODO #1203 All below useStaticAssets functions need to be removed (until line 146) when webpack has been configured to load assets from @gouvfr/dsfr package
-   * @ticket FC-1203
-   */
-  assetsDsfrPaths.forEach(({ assetPath, prefix }) => {
-    app.useStaticAssets(join(__dirname, assetPath), {
-      maxAge: assetsCacheTtl * 1000,
-      prefix,
-    });
-  });
-
   assetsPaths.forEach((assetsPath) => {
     app.useStaticAssets(join(__dirname, assetsPath, 'public'), {
       maxAge: assetsCacheTtl * 1000,
+      prefix: assetsUrlPrefix,
     });
   });
 

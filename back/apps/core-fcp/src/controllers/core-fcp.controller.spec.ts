@@ -1269,6 +1269,59 @@ describe('CoreFcpController', () => {
       expect(oidcSessionServiceMock.get).toHaveBeenCalledTimes(1);
     });
 
+    it('should get data from interaction with oidc provider', async () => {
+      // When
+      await coreController.getConsent(
+        req,
+        res,
+        params,
+        oidcSessionServiceMock,
+        csrfToken,
+      );
+      // Then
+      expect(oidcProviderServiceMock.getInteraction).toHaveBeenCalledTimes(1);
+      expect(oidcProviderServiceMock.getInteraction).toHaveBeenCalledWith(
+        req,
+        res,
+      );
+    });
+
+    it('should get scopes for interaction', async () => {
+      // When
+      await coreController.getConsent(
+        req,
+        res,
+        params,
+        oidcSessionServiceMock,
+        csrfToken,
+      );
+      // Then
+      expect(coreFcpServiceMock.getScopesForInteraction).toHaveBeenCalledTimes(
+        1,
+      );
+      expect(coreFcpServiceMock.getScopesForInteraction).toHaveBeenCalledWith(
+        interactionDetailsMock,
+      );
+    });
+
+    it('should get claims labels for interaction', async () => {
+      // When
+      await coreController.getConsent(
+        req,
+        res,
+        params,
+        oidcSessionServiceMock,
+        csrfToken,
+      );
+      // Then
+      expect(
+        coreFcpServiceMock.getClaimsLabelsForInteraction,
+      ).toHaveBeenCalledTimes(1);
+      expect(
+        coreFcpServiceMock.getClaimsLabelsForInteraction,
+      ).toHaveBeenCalledWith(interactionDetailsMock);
+    });
+
     it('should check if consent is required', async () => {
       // When
       await coreController.getConsent(
@@ -1285,7 +1338,7 @@ describe('CoreFcpController', () => {
       );
     });
 
-    it('should get data from interaction with oidc provider', async () => {
+    it('should track the event FC_SHOWED_CONSENT when page was not refreshed (first display)', async () => {
       // When
       await coreController.getConsent(
         req,
@@ -1294,12 +1347,33 @@ describe('CoreFcpController', () => {
         oidcSessionServiceMock,
         csrfToken,
       );
+
       // Then
-      expect(oidcProviderServiceMock.getInteraction).toHaveBeenCalledTimes(1);
-      expect(oidcProviderServiceMock.getInteraction).toHaveBeenCalledWith(
+      expect(trackingServiceMock.track).toHaveBeenCalledTimes(1);
+      expect(trackingServiceMock.track).toHaveBeenCalledWith(
+        trackingServiceMock.TrackedEventsMap.FC_SHOWED_CONSENT,
+        { req },
+      );
+    });
+
+    it('should not track the event FC_SHOWED_CONSENT when page was refreshed', async () => {
+      // Given
+      oidcSessionServiceMock.get.mockReturnValueOnce({
+        ...oidcSessionMock,
+        stepRoute: CoreRoutes.INTERACTION_CONSENT,
+      });
+
+      // When
+      await coreController.getConsent(
         req,
         res,
+        params,
+        oidcSessionServiceMock,
+        csrfToken,
       );
+
+      // Then
+      expect(trackingServiceMock.track).toHaveBeenCalledTimes(0);
     });
 
     it('should return data from session for interactionId', async () => {

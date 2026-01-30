@@ -2,6 +2,7 @@ import { Global, Module } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
 import { CqrsModule } from '@nestjs/cqrs';
 
+import { AppModule } from '@fc/app';
 import { AsyncLocalStorageModule } from '@fc/async-local-storage';
 import { CryptographyModule } from '@fc/cryptography';
 import { CryptographyEidasModule } from '@fc/cryptography-eidas';
@@ -72,6 +73,7 @@ const oidcProviderModule = OidcProviderModule.register(
 @Global()
 @Module({
   imports: [
+    AppModule,
     ExceptionsModule,
     AsyncLocalStorageModule,
     CqrsModule,

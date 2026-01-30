@@ -72,6 +72,8 @@ export class ServiceProviderService {
       id_token_encrypted_response_alg,
       id_token_encrypted_response_enc,
       entityId,
+      allowedIdpHints,
+      allowedPrompts,
     } = input;
 
     return {
@@ -117,6 +119,8 @@ export class ServiceProviderService {
       userinfo_encrypted_response_enc:
         userinfo_encrypted_response_enc as EncryptionEncodingEnum,
       entityId,
+      allowedIdpHints,
+      allowedPrompts,
     };
   }
 
@@ -162,6 +166,8 @@ export class ServiceProviderService {
       createdBy,
       createdVia,
       updatedBy,
+      allowedIdpHints,
+      allowedPrompts,
     } = input;
 
     return {
@@ -218,6 +224,8 @@ export class ServiceProviderService {
       createdVia,
       secretUpdatedBy: createdBy,
       updatedBy,
+      allowedIdpHints,
+      allowedPrompts,
     };
   }
 }

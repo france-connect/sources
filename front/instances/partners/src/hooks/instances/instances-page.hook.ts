@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { useLoaderData, useLocation, useNavigate } from 'react-router';
 
 import type { FSAInterface } from '@fc/common';
-import type { InstanceInterface } from '@fc/partners-service-providers';
+import type { InstanceInterface } from '@fc/core-partners';
 
 import type { LocationWithSubmitStateType } from '../../interfaces';
 

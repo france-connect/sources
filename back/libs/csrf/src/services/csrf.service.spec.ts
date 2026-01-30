@@ -169,5 +169,13 @@ describe('CsrfService', () => {
       // When / Then
       expect(() => service.check('input')).toThrow(CsrfBadTokenException);
     });
+
+    it('should not throw if the token matches the expected one', () => {
+      // Given
+      sessionServiceMock.get.mockReturnValue({ csrfToken: 'input' });
+
+      // When / Then
+      expect(() => service.check('input')).not.toThrow();
+    });
   });
 });

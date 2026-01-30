@@ -1,5 +1,12 @@
 <% if (locals.spScope === 'openid') { %>
-<p class="fr-badge fr-badge--info fr-mb-2w" data-testid="anomymous-identification">
-    <%=$translate('interaction.anonymous_no_personal_data') %>
-</p>
+<div class="fr-col-12 fr-col-lg-8 fr-col-offset-lg-2">
+  <section class="fr-alert fr-alert--info fr-alert--sm fr-mb-2w fc-text--left" role="alert">
+    <h3 class="fr-alert__title" data-testid="anonymous-identification-title">
+      <%=$translate('interaction.anonymous_title') %>
+    </h3>
+    <p data-testid="anonymous-identification-description">
+      <%=$translate('interaction.anonymous_description') %>
+    </p>
+  </section>
+</div>
 <% } %>

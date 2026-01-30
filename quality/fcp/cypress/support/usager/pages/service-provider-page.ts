@@ -112,6 +112,10 @@ export default class ServiceProviderPage {
     cy.get('input[name="acr_values"]').clearThenType(acrValue);
   }
 
+  setMockRequestedPrompt(promptValue: string): void {
+    cy.get('input[name="prompt"]').clearThenType(promptValue);
+  }
+
   setMockRequestedAmr(isRequested: boolean): void {
     if (isRequested) {
       cy.get('#claim_amr').check();

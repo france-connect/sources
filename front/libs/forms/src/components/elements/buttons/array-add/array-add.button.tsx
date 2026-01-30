@@ -10,7 +10,7 @@ interface ArrayAddButtonProps extends Required<PropsWithOnClick> {
 }
 
 export const ArrayAddButton = React.memo(
-  ({ dataTestId = undefined, disabled = false, onClick }: ArrayAddButtonProps) => (
+  ({ dataTestId, disabled = false, onClick }: ArrayAddButtonProps) => (
     <SimpleButton
       className="fr-mt-2v"
       dataTestId={dataTestId}

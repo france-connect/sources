@@ -5,7 +5,7 @@ Fonctionnalité: Connexion avec chiffrement
   # je veux me connecter à un FI en utilisant du chiffrement
   # afin d'accéder à mon service
 
-  @ignoreInteg01
+  @ignoreInteg01 @ci
   Plan du Scénario: Connexion avec chiffrement - FCP high - FI <acrValues> avec chiffrement "<encoding>" et signature "<signature>"
     Etant donné que le fournisseur de service requiert l'accès aux informations du scope "identite_pivot"
     Et que je navigue sur la page fournisseur de service
@@ -22,19 +22,11 @@ Fonctionnalité: Connexion avec chiffrement
     Et je suis connecté au fournisseur de service
     Et le fournisseur de service a accès aux informations du scope "identite_pivot"
 
-    @ci
-    Exemples:
-      | acrValues | encoding         | signature |
-      | eidas2    | RSA-OAEP,A256GCM | ES256     |
-      | eidas2    | ECDH-ES,A256GCM  | RS256     |
-      | eidas3    |                  | RS256     |
-
     Exemples:
       | acrValues | encoding             | signature |
-      | eidas2    |                      | ES256     |
       | eidas3    | RSA-OAEP-256,A256GCM | ES256     |
-      | eidas3    | RSA-OAEP,A256GCM     | RS256     |
-      | eidas3    | ECDH-ES,A256GCM      | ES256     |
+      | eidas3    | ECDH-ES,A256GCM      | RS256     |
+      | eidas2    |                      | RS256     |
 
   @ignoreInteg01 @ci
   Scénario: Connexion - FCP high - Le HSM est utilisé pour signer les réponses aux FS
@@ -42,7 +34,6 @@ Fonctionnalité: Connexion avec chiffrement
     Et que je navigue sur la page fournisseur de service
     Et que je clique sur le bouton FranceConnect
     Et que je suis redirigé vers la page sélection du fournisseur d'identité
-    Et que j'utilise un fournisseur d'identité "actif"
     Et que je clique sur le fournisseur d'identité
     Et que je suis redirigé vers la page login du fournisseur d'identité
     Et que je m'authentifie avec succès

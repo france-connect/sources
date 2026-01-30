@@ -13,6 +13,10 @@ const FRANCE_COG = '99100';
 
 @Injectable()
 export class RnippResponseParserService {
+  static readonly birthdate = /^\d{4}-\d{2}-\d{2}$/;
+  static readonly birthmonth = /^\d{4}-\d{2}$/;
+  static readonly birthyear = /^\d{4}$/;
+
   public async parseRnippData(xmlData: string): Promise<CitizenStatus> {
     // this.logger.debug(`Serializer XML ${xmlData}`);
     const options = {
@@ -121,23 +125,37 @@ export class RnippResponseParserService {
     return !!this.getXmlAttribute<boolean>(parsedXml, path, false);
   }
 
+  /**
+   * This code run at every connection except SSO session connections.
+   * It has to be efficient and optimized.
+   * Code is still readable enough to understand the logic.
+   */
+  // eslint-disable-next-line complexity
   private getBirthdateAttribute(
     parsedXml: JSON,
     birthdatePath: string,
   ): string | null {
     const birthdate = this.getXmlAttribute<string>(parsedXml, birthdatePath);
 
-    if (birthdate.length !== 10) {
-      if (birthdate.match(/^[0-9]{4}$/)) {
-        return `${birthdate}-01-01`;
-      }
+    switch (birthdate.length) {
+      case 10: // YYYY-MM-DD, most frequent case
+        return RnippResponseParserService.birthdate.test(birthdate)
+          ? birthdate
+          : null;
 
-      if (birthdate.match(/^[0-9]{4}-[0-9]{2}$/)) {
-        return `${birthdate}-01`;
-      }
+      case 7: // YYYY-MM, presumed
+        return RnippResponseParserService.birthmonth.test(birthdate)
+          ? `${birthdate}-01`
+          : null;
+
+      case 4: // YYYY, presumed
+        return RnippResponseParserService.birthyear.test(birthdate)
+          ? `${birthdate}-01-01`
+          : null;
+
+      default:
+        return null;
     }
-
-    return birthdate;
   }
 
   private getBirthplaceAttribute(

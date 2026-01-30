@@ -15,6 +15,8 @@ export const frFR: I18nTranslationsMapType = {
     'Votre session est invalide, fermez l’onglet de votre navigateur et reconnectez-vous.',
   'Session.exceptions.sessionInvalidSession':
     'Votre session a expiré ou est invalide, fermez l’onglet de votre navigateur et reconnectez-vous.',
+  'Session.exceptions.sessionInvalidSetCall':
+    'Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous. Si le problème persiste, contacter le support.',
   'Session.exceptions.sessionNoSessionId':
     'Votre session a expiré ou est invalide, fermez l’onglet de votre navigateur et reconnectez-vous.',
   'Session.exceptions.sessionNotFound':

@@ -27,17 +27,10 @@ export class ExceptionOccurredHandler {
   }
 
   protected getContentType(res: Response): string {
-    const contentTypeHeader = res.getHeaders()['content-type'] as
-      | string
-      | undefined;
+    const header = res.getHeaders()['content-type'] as string | undefined;
 
-    if (contentTypeHeader) {
-      const parsedContentType = contentTypeHeader.split(';')[0];
-      if (parsedContentType) {
-        return parsedContentType;
-      }
-    }
+    const parsedContentType = header?.split(';')?.[0];
 
-    return ApiContentType.HTML;
+    return parsedContentType || ApiContentType.HTML;
   }
 }

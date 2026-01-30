@@ -161,7 +161,7 @@ describe('CoreAccountService', () => {
       // Then
       await service.checkIfAccountIsBlocked(identityHash);
 
-      expect(accountServiceMock.isBlocked).toBeCalledTimes(1);
+      expect(accountServiceMock.isBlocked).toHaveBeenCalledTimes(1);
     });
 
     it('should throw if account is blocked', async () => {
@@ -173,7 +173,7 @@ describe('CoreAccountService', () => {
         service.checkIfAccountIsBlocked(identityHash),
       ).rejects.toThrow(AccountBlockedException);
 
-      expect(accountServiceMock.isBlocked).toBeCalledTimes(1);
+      expect(accountServiceMock.isBlocked).toHaveBeenCalledTimes(1);
     });
 
     it('should throw if account blocked check fails', async () => {
@@ -186,12 +186,23 @@ describe('CoreAccountService', () => {
         service.checkIfAccountIsBlocked(identityHash),
       ).rejects.toThrow(error);
 
-      expect(accountServiceMock.isBlocked).toBeCalledTimes(1);
+      expect(accountServiceMock.isBlocked).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('checkIfIdpIsBlockedForAccount', () => {
-    it('should throw an exception when the IDP is blocked', () => {
+    it('should not throw when the account has no preferences', () => {
+      // Given
+      const accountMock = {} as unknown as Account;
+      const idpMock = 'IDP-1';
+      // When
+      const call = () =>
+        service.checkIfIdpIsBlockedForAccount(accountMock, idpMock);
+      // Then
+      expect(call).not.toThrow(CoreIdpBlockedForAccountException);
+    });
+
+    it('should throw CoreIdpBlockedForAccountException when isExcludeList is true and the list contains the idp', () => {
       // Given
       const accountMock = {
         preferences: {
@@ -200,7 +211,7 @@ describe('CoreAccountService', () => {
             list: ['IDP-1'],
           },
         },
-      } as unknown as Account; // Cela permet de ne pas devoir créer un accountMock contenant toutes les variables
+      } as unknown as Account;
       const idpMock = 'IDP-1';
       // When
       const call = () =>
@@ -208,13 +219,17 @@ describe('CoreAccountService', () => {
       // Then
       expect(call).toThrow(CoreIdpBlockedForAccountException);
     });
-    it('should not throw an exception if the IDP is not blocked', () => {
+
+    it('should not throw when isExcludeList is true and the list does not contain the idp', () => {
       // Given
       const accountMock = {
         preferences: {
-          idpSettings: {},
+          idpSettings: {
+            isExcludeList: true,
+            list: ['OTHER-IDP'],
+          },
         },
-      } as unknown as Account; // Cela permet de ne pas devoir créer un accountMock contenant toutes les variables
+      } as unknown as Account;
       const idpMock = 'IDP-1';
       // When
       const call = () =>
@@ -223,15 +238,40 @@ describe('CoreAccountService', () => {
       expect(call).not.toThrow(CoreIdpBlockedForAccountException);
     });
 
-    it('should not throw an exception if the account has no preferences', () => {
+    it('should not throw when isExcludeList is false and the list contains the idp', () => {
       // Given
-      const accountMock = {} as unknown as Account; // Cela permet de ne pas devoir créer un accountMock contenant toutes les variables
+      const accountMock = {
+        preferences: {
+          idpSettings: {
+            isExcludeList: false,
+            list: ['IDP-1'],
+          },
+        },
+      } as unknown as Account;
       const idpMock = 'IDP-1';
       // When
       const call = () =>
         service.checkIfIdpIsBlockedForAccount(accountMock, idpMock);
       // Then
       expect(call).not.toThrow(CoreIdpBlockedForAccountException);
+    });
+
+    it('should throw CoreIdpBlockedForAccountException when isExcludeList is false and the list does not contain the idp', () => {
+      // Given
+      const accountMock = {
+        preferences: {
+          idpSettings: {
+            isExcludeList: false,
+            list: ['OTHER-IDP'],
+          },
+        },
+      } as unknown as Account;
+      const idpMock = 'IDP-1';
+      // When
+      const call = () =>
+        service.checkIfIdpIsBlockedForAccount(accountMock, idpMock);
+      // Then
+      expect(call).toThrow(CoreIdpBlockedForAccountException);
     });
   });
 });

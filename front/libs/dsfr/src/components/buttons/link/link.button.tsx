@@ -12,15 +12,15 @@ export interface LinkButtonProps extends ButtonInterface {
 export const LinkButton = React.memo(
   ({
     children: label,
-    className = undefined,
-    dataTestId = undefined,
-    icon = undefined,
+    className,
+    dataTestId,
+    icon,
     iconPlacement = IconPlacement.RIGHT,
     link,
     noOutline = false,
     priority = Priorities.PRIMARY,
     size = Sizes.MEDIUM,
-    title = undefined,
+    title,
   }: LinkButtonProps) => (
     <Link
       className={classnames(

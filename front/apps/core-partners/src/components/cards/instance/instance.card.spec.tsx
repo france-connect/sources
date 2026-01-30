@@ -1,18 +1,19 @@
 import { render } from '@testing-library/react';
 
-import type { Environment, ISODate } from '@fc/common';
+import type { ISODate } from '@fc/common';
 import { isoToDate } from '@fc/common';
 import { CardComponent, Sizes } from '@fc/dsfr';
 import { t } from '@fc/i18n';
-import type { VersionInterface } from '@fc/partners-service-providers';
 
+import type { PartnersEnvironment } from '../../../enums';
+import type { VersionInterface } from '../../../interfaces';
 import { InstanceCardComponent } from './instance.card';
 
 describe('InstanceComponent', () => {
   // Given
   const instanceMock = {
     createdAt: 'any-createdAt-mock-1' as unknown as ISODate,
-    environment: 'SANDBOX' as unknown as Environment,
+    environment: 'SANDBOX' as unknown as PartnersEnvironment,
     id: 'any-instance-id-mock-1',
     updatedAt: 'any-updatedAt-mock-1' as unknown as ISODate,
     versions: [

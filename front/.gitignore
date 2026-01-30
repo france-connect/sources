@@ -329,7 +329,7 @@ temp/
 **/*.temp.*
 
 **/*.css.d.ts
-**/*.scss.d.ts
+**/*.d.scss.ts
 
 instances/**/dist
 instances/**/build
@@ -341,12 +341,3 @@ instances/**/public/*.mock.json
 apps/**/*.yarn.lock
 instances/**/*.yarn.lock
 libs/**/*.yarn.lock
-
-# TSProject
-tsconfig.json
-tsconfig.app.json
-tsconfig.jest.json
-!**/src/**/tsconfig.json
-
-# i18n
-instances/**/src/*.i18n.json

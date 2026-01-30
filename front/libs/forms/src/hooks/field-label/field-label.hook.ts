@@ -7,12 +7,7 @@ interface FieldLabelProps extends PropsWithHintType, PropsWithSeeAlsoType {
   label: string;
 }
 
-export const useFieldLabel = ({
-  hint = undefined,
-  label,
-  required = false,
-  seeAlso = undefined,
-}: FieldLabelProps) => {
+export const useFieldLabel = ({ hint, label, required = false, seeAlso }: FieldLabelProps) => {
   const nextHint = typeof hint === 'function' ? hint(required) : hint;
 
   const labelPrefix = !required

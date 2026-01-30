@@ -1,8 +1,8 @@
 import React from 'react';
 
 import { sortByKey, SortOrder } from '@fc/common';
-import type { InstanceInterface } from '@fc/partners-service-providers';
 
+import type { InstanceInterface } from '../../../interfaces';
 import { InstanceCardComponent } from '../../cards/instance';
 
 interface InstancesListComponentProps {

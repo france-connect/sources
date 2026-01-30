@@ -7,6 +7,7 @@ import {
 } from '@fc/oidc-provider';
 import {
   ants,
+  asc,
   cnafMsa,
   cnam,
   cnous,
@@ -96,6 +97,7 @@ export default {
       ...dss.scopes,
       ...dsnj.scopes,
       ...ants.scopes,
+      ...asc.scopes,
     },
     clientAuthMethods: ['client_secret_post', 'private_key_jwt'],
     clientDefaults: {

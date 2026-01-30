@@ -59,7 +59,7 @@ describe('readCSV', () => {
     createReadStreamMock.mockReturnValue(mockReadStream);
 
     // When / Then
-    await expect(readCSV(csvFilePath)).rejects.toThrowError('Mocked error');
+    await expect(readCSV(csvFilePath)).rejects.toThrow('Mocked error');
   });
 });
 

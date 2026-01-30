@@ -613,7 +613,7 @@ describe('CryptographyService', () => {
       );
 
       // When / Then
-      await expect(service.passwordHash(password)).rejects.toThrowError(
+      await expect(service.passwordHash(password)).rejects.toThrow(
         PasswordHashFailure,
       );
     });

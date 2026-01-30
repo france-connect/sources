@@ -27,6 +27,8 @@ Fonctionnalité: Historique Connexion sur FC+ (integ01)
     Et le niveau de sécurité de l'évènement est "Substantiel"
     Et le code d'identification de l'évènement est affiché
 
+  # Suite à la migration oidc-provider v9, la signature du jeton d'introspection ne fonctionne plus sur FC+
+  @ignoreInteg01
   Scénario: Historique Connexion - FC+ - FS public avec scope data
     Etant donné que j'utilise la plateforme "FranceConnect+"
     Et que j'utilise un compte usager "pour les tests de traces"
@@ -111,6 +113,8 @@ Fonctionnalité: Historique Connexion sur FC+ (integ01)
     Et l'évènement concerne aucune donnée "DGFIP"
     Et l'évènement concerne aucune donnée "CNAM"
 
+  # Suite à la migration oidc-provider v9, la signature du jeton d'introspection ne fonctionne plus sur FC+
+  @ignoreInteg01
   Scénario: Historique Connexion - FC+ - FS privé avec scope data
     Etant donné que j'utilise la plateforme "FranceConnect+"
     Et que j'utilise un compte usager "pour les tests de traces"

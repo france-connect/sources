@@ -157,4 +157,6 @@ export interface OidcClientLegacyInterface {
   id_token_encrypted_response_enc: string;
   entityId: string;
   claims: string[];
+  allowedIdpHints: string[];
+  allowedPrompts: string[];
 }

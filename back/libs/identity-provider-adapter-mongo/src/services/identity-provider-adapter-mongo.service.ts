@@ -47,9 +47,7 @@ const ISSUER_METADATA = [
   'end_session_endpoint',
 ];
 @Injectable()
-export class IdentityProviderAdapterMongoService
-  implements IIdentityProviderAdapter
-{
+export class IdentityProviderAdapterMongoService implements IIdentityProviderAdapter {
   private listCache: IdentityProviderMetadata[];
 
   // Dependency injection can require more than 4 parameters
@@ -170,7 +168,7 @@ export class IdentityProviderAdapterMongoService
       this.logger.debug('Refresh cache from DB');
       const list = await this.findAllIdentityProvider();
       this.listCache = deepFreeze(
-        list.map(this.legacyToOpenIdPropertyName.bind(this)),
+        list.map(this.legacyToOpenIdPropertyName.bind(this)).filter(Boolean),
       ) as IdentityProviderMetadata[];
     }
 
@@ -209,7 +207,7 @@ export class IdentityProviderAdapterMongoService
   async getById(
     id: string,
     refreshCache = false,
-  ): Promise<IdentityProviderMetadata> {
+  ): Promise<IdentityProviderMetadata | undefined> {
     const providers = cloneDeep(await this.getList(refreshCache));
 
     const provider = providers.find(({ uid }) => uid === id);
@@ -262,7 +260,22 @@ export class IdentityProviderAdapterMongoService
       Reflect.deleteProperty(result, legacyName);
     });
 
-    result.client_secret = this.decryptClientSecret(source.client_secret);
+    const { decryptClientSecretFeature } =
+      this.config.get<IdentityProviderAdapterMongoConfig>(
+        'IdentityProviderAdapterMongo',
+      );
+
+    if (decryptClientSecretFeature) {
+      result.client_secret = this.decryptClientSecret(source.client_secret);
+
+      if (!result.client_secret) {
+        this.logger.err({
+          msg: `Failed to decrypt client secret for identity provider ${source.name}`,
+        });
+
+        return null;
+      }
+    }
 
     /**
      * @TODO #326 Fix type issues between legacy model and `oidc-client` library
@@ -297,19 +310,19 @@ export class IdentityProviderAdapterMongoService
    * @param clientSecret
    */
   private decryptClientSecret(clientSecret: string): string {
-    const { clientSecretEncryptKey, decryptClientSecretFeature } =
+    const { clientSecretEncryptKey } =
       this.config.get<IdentityProviderAdapterMongoConfig>(
         'IdentityProviderAdapterMongo',
       );
 
-    if (!decryptClientSecretFeature) {
+    try {
+      return this.crypto.decrypt(
+        clientSecretEncryptKey,
+        Buffer.from(clientSecret, 'base64'),
+      );
+    } catch {
       return null;
     }
-
-    return this.crypto.decrypt(
-      clientSecretEncryptKey,
-      Buffer.from(clientSecret, 'base64'),
-    );
   }
 
   private getIdentityProviderDTO(

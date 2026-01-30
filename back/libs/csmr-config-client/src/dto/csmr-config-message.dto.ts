@@ -24,9 +24,7 @@ import {
 
 import { ActionTypes } from '../enums';
 
-export class ConfigCreateMessageDtoPayload
-  implements Partial<OidcClientInterface>
-{
+export class ConfigCreateMessageDtoPayload implements Partial<OidcClientInterface> {
   @IsString()
   readonly client_id: string;
 
@@ -72,6 +70,16 @@ export class ConfigCreateMessageDtoPayload
   @IsString({ each: true })
   @IsArray()
   readonly rep_scope: string[];
+
+  @IsString({ each: true })
+  @IsArray()
+  @IsOptional()
+  readonly allowedIdpHints?: string[];
+
+  @IsString({ each: true })
+  @IsArray()
+  @IsOptional()
+  readonly allowedPrompts?: string[];
 
   @IsBoolean()
   readonly idpFilterExclude: boolean;

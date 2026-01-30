@@ -25,14 +25,6 @@ class HttpsOptions {
   readonly cert?: string;
 }
 
-class DsfrAssets {
-  @IsString()
-  readonly assetPath: string;
-
-  @IsString()
-  readonly prefix: string;
-}
-
 export class AppConfig {
   @IsString()
   readonly name: string;
@@ -58,14 +50,17 @@ export class AppConfig {
   readonly udFqdn?: string;
 
   @IsOptional()
+  @IsString()
+  readonly assetsUrlPrefix?: string;
+
+  @IsOptional()
+  @IsString()
+  readonly assetsUrlDomain?: string;
+
+  @IsOptional()
   @IsString({ each: true })
   @IsArray()
   readonly assetsPaths?: string[];
-
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => DsfrAssets)
-  readonly assetsDsfrPaths?: DsfrAssets[];
 
   @IsOptional()
   @IsNumber()

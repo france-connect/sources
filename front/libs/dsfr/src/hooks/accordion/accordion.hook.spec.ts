@@ -61,6 +61,6 @@ describe('useAccordion', () => {
     const { contentRef } = useAccordion(false);
 
     // Then
-    expect(contentRef).toBeDefined();
+    expect(contentRef).toEqual({ current: null });
   });
 });

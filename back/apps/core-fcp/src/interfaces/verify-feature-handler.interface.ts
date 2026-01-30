@@ -6,8 +6,10 @@ export interface IVerifyFeatureHandlerHandleArgument {
   sessionOidc: ISessionService<OidcClientSession>;
   trackingContext: Record<string, unknown>;
 }
-export interface IVerifyFeatureHandler
-  extends IFeatureHandler<void, IVerifyFeatureHandlerHandleArgument> {
+export interface IVerifyFeatureHandler extends IFeatureHandler<
+  void,
+  IVerifyFeatureHandlerHandleArgument
+> {
   /**
    * Override default handler.handle argument type
    */

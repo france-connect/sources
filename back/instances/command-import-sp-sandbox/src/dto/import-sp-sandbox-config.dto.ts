@@ -4,6 +4,7 @@ import { IsObject, ValidateNested } from 'class-validator';
 import { LoggerConfig } from '@fc/logger';
 import { MicroservicesRmqConfig } from '@fc/microservices-rmq';
 import { MongooseConfig } from '@fc/mongoose';
+import { MongooseChangeStreamConfig } from '@fc/mongoose-change-stream';
 import { ServiceProviderAdapterMongoConfig } from '@fc/service-provider-adapter-mongo';
 import { WebhooksConfig } from '@fc/webhooks';
 
@@ -30,6 +31,11 @@ export class ImportSpSandboxConfig {
   @ValidateNested()
   @Type(() => ServiceProviderAdapterMongoConfig)
   readonly ServiceProviderAdapterMongo: ServiceProviderAdapterMongoConfig;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => MongooseChangeStreamConfig)
+  readonly MongooseChangeStream: MongooseChangeStreamConfig;
 
   @IsObject()
   @ValidateNested()

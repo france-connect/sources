@@ -3,8 +3,11 @@ import { Document, Model } from 'mongoose';
 import { getConnectionToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { FunctionSafe, wait } from '@fc/common';
+import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger';
 
+import { getConfigMock } from '@mocks/config';
 import { getLoggerMock } from '@mocks/logger';
 
 import { ChangeStreamCompatibleDocument } from '../types';
@@ -32,7 +35,15 @@ describe('MongooseChangeStreamService', () => {
 
   const mockError = new Error(errorMessageMock);
 
+  const configMock = getConfigMock();
+  const mongooseChangeStreamConfigMock = {
+    debounceDelayMs: 10,
+  };
+
   beforeEach(async () => {
+    // Wait for setTimeout from previous test to complete
+    await wait(20);
+
     jest.clearAllMocks();
     jest.resetAllMocks();
     jest.restoreAllMocks();
@@ -41,11 +52,14 @@ describe('MongooseChangeStreamService', () => {
       providers: [
         MongooseChangeStreamService,
         LoggerService,
+        ConfigService,
         { provide: getConnectionToken(), useValue: mockConnection },
       ],
     })
       .overrideProvider(LoggerService)
       .useValue(loggerServiceMock)
+      .overrideProvider(ConfigService)
+      .useValue(configMock)
       .compile();
 
     service = module.get<MongooseChangeStreamService>(
@@ -56,6 +70,8 @@ describe('MongooseChangeStreamService', () => {
       on: mockOn,
       close: mockClose,
     });
+
+    configMock.get.mockReturnValue(mongooseChangeStreamConfigMock);
   });
 
   it('should be defined', () => {
@@ -97,6 +113,7 @@ describe('MongooseChangeStreamService', () => {
       expect(service['collectionsToWatch'].get(collectionNameMock)).toEqual({
         callback: callbackMock,
         modelName: modelNameMock,
+        timeoutPointer: null,
       });
     });
 
@@ -160,10 +177,12 @@ describe('MongooseChangeStreamService', () => {
       service['collectionsToWatch'].set('collection1', {
         callback: callbackMock,
         modelName: 'Model1',
+        timeoutPointer: undefined,
       });
       service['collectionsToWatch'].set('collection2', {
         callback: callbackMock,
         modelName: 'Model2',
+        timeoutPointer: undefined,
       });
     });
 
@@ -236,10 +255,12 @@ describe('MongooseChangeStreamService', () => {
       service['collectionsToWatch'].set('collection1', {
         callback: callbackMock,
         modelName: 'Model1',
+        timeoutPointer: undefined,
       });
       service['collectionsToWatch'].set('collection2', {
         callback: callbackMock,
         modelName: 'Model2',
+        timeoutPointer: undefined,
       });
 
       // When
@@ -262,29 +283,113 @@ describe('MongooseChangeStreamService', () => {
       ns: { coll: collectionNameMock },
     } as unknown as ChangeStreamCompatibleDocument;
 
+    const timeoutPointerMock = Symbol(
+      'timeoutPointer',
+    ) as unknown as NodeJS.Timeout;
+
+    let setTimeoutMock: jest.SpyInstance;
+    let clearTimeoutMock: jest.SpyInstance;
+
     beforeEach(() => {
       service['collectionsToWatch'].set(collectionNameMock, {
         callback: callbackMock,
         modelName: modelNameMock,
+        timeoutPointer: null,
       });
+
+      setTimeoutMock = jest.spyOn(global, 'setTimeout');
+      clearTimeoutMock = jest.spyOn(global, 'clearTimeout');
     });
 
-    it('should log the change event', () => {
+    it('should clear the timeout pointer if it exists', () => {
+      // Given
+      service['collectionsToWatch'].get(collectionNameMock).timeoutPointer =
+        timeoutPointerMock;
+
+      // When
+      service['onChange'](mockEvent);
+
+      // Then
+      expect(clearTimeoutMock).toHaveBeenCalledExactlyOnceWith(
+        timeoutPointerMock,
+      );
+    });
+
+    it('should not clear the timeout pointer if it does not exist', () => {
+      // When
+      service['onChange'](mockEvent);
+
+      // Then
+      expect(clearTimeoutMock).not.toHaveBeenCalled();
+    });
+
+    it('should debounce the call to the callback', async () => {
+      // Given
+      service['onChange'](mockEvent);
+      service['onChange'](mockEvent);
+      service['onChange'](mockEvent);
+
+      // When
+      await wait(20);
+
+      // Then
+      expect(callbackMock).toHaveBeenCalledOnce();
+    });
+
+    it('should log as debug the event reception', () => {
+      // Given
+      setTimeoutMock.mockImplementationOnce((callback: FunctionSafe) =>
+        callback(),
+      );
+
+      // When
+      service['onChange'](mockEvent);
+
+      // Then
+      expect(loggerServiceMock.debug).toHaveBeenCalledExactlyOnceWith(
+        `Detected "${mockEvent.operationType}" on "${modelNameMock}"`,
+      );
+    });
+
+    it('should log as notice the call to the callback', () => {
+      // Given
+      setTimeoutMock.mockImplementationOnce((callback: FunctionSafe) =>
+        callback(),
+      );
+
       // When
       service['onChange'](mockEvent);
 
       // Then
       expect(loggerServiceMock.notice).toHaveBeenCalledExactlyOnceWith(
-        `Detected "${operationTypeMock}" on "${modelNameMock}", calling handler.`,
+        `Timeout reached for "${modelNameMock}", calling handler.`,
       );
     });
 
     it('should call the registered callback with the change event', () => {
+      // Given
+      setTimeoutMock.mockImplementationOnce((callback: FunctionSafe) =>
+        callback(),
+      );
+
       // When
       service['onChange'](mockEvent);
 
       // Then
       expect(callbackMock).toHaveBeenCalledWith(mockEvent);
+    });
+
+    it('should set a new timeout pointer', () => {
+      // Given
+      setTimeoutMock.mockReturnValueOnce(timeoutPointerMock);
+
+      // When
+      service['onChange'](mockEvent);
+
+      // Then
+      expect(
+        service['collectionsToWatch'].get(collectionNameMock).timeoutPointer,
+      ).toBe(timeoutPointerMock);
     });
   });
 

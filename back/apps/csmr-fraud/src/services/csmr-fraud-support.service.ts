@@ -24,6 +24,7 @@ export class CsmrFraudSupportService {
 
   async createSecurityTicket(
     ticketData: SecurityTicketDataInterface,
+    withTracksExport: boolean = false,
   ): Promise<void> {
     const { givenName, familyName, contactEmail } = ticketData;
 
@@ -33,7 +34,15 @@ export class CsmrFraudSupportService {
 
     const attachments = this.getMailAttachments(ticketData.tracks);
 
-    await this.sendFraudMail(from, body, attachments);
+    const supportAttachments = this.getSupportAttachments(
+      ticketData,
+      withTracksExport,
+    );
+
+    await this.sendFraudMail(from, body, [
+      ...attachments,
+      ...supportAttachments,
+    ]);
   }
 
   private getMailFrom(
@@ -83,6 +92,25 @@ export class CsmrFraudSupportService {
     );
 
     return [...spAttachments, ...idpAttachments];
+  }
+
+  private getSupportAttachments(
+    ticketData: SecurityTicketDataInterface,
+    withTracksExport: boolean,
+  ): Attachment[] {
+    const { fraudTracks } = ticketData;
+
+    if (!withTracksExport) {
+      return [];
+    }
+
+    return [
+      {
+        filename: `support_connexions.csv`,
+        content: generateCSVContent(fraudTracks),
+        contentType: 'text/csv',
+      },
+    ];
   }
 
   private async sendFraudMail(

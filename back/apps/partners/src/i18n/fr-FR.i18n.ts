@@ -1,5 +1,6 @@
 import { frFR as frAsyncLocalStorage } from '@fc/async-local-storage/i18n';
 import { frFR as frCsrf } from '@fc/csrf/i18n';
+import { datapassScopesFrFR } from '@fc/datapass';
 import { frFR as frDto2Form } from '@fc/dto2form/i18n';
 import { I18nTranslationsMapType } from '@fc/i18n';
 import { frFR as frI18n } from '@fc/i18n/i18n';
@@ -16,6 +17,7 @@ export const frFR: I18nTranslationsMapType = {
   ...frOidcClient,
   ...frSession,
   ...frViewTemplates,
+  ...datapassScopesFrFR,
 
   // form text
   'Form.label.platformSection': '1. Choix de l’environnement',

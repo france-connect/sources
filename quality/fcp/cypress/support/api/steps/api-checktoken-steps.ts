@@ -7,25 +7,49 @@ import {
 } from '../dto/post-checktoken.dto';
 import { validateDto } from '../helpers/class-validator-helper';
 
-Then("le corps de la réponse contient un JWT d'introspection", function () {
-  cy.get('@apiResponse')
-    .its('body')
-    .then((body) => {
-      expect(body).to.be.a('string');
-      expect(body.length).to.be.greaterThan(500);
-      const jwk = Cypress.env('EC_ENC_PRIV_KEY');
-      cy.task('getJwtContent', { jwk, jwt: body }).then((jwtContent) => {
-        const content = JSON.stringify(jwtContent, null, 2);
-        cy.document().then((document) => {
-          document.documentElement.innerHTML = content;
-        });
-        cy.get('body')
-          .invoke('text')
-          .then((json) => JSON.parse(json))
-          .as('jwt');
+Then(
+  "le corps de la réponse contient un JWT d'introspection avec chiffrement {string}",
+  function (encAlg: string) {
+    cy.get('@apiResponse')
+      .its('body')
+      .then((body) => {
+        expect(body).to.be.a('string');
+        expect(body.length).to.be.greaterThan(500);
+        const jwk =
+          encAlg === 'ECDH-ES'
+            ? Cypress.env('DP_EC_ENC_PRIV_KEY')
+            : Cypress.env('DP_RSA_ENC_PRIV_KEY');
+        cy.task('getJwtContent', { jwk, jwt: body })
+          .as('jwt')
+          .then((jwtContent) => {
+            const content = JSON.stringify(jwtContent, null, 2);
+            cy.document().then((document) => {
+              document.documentElement.innerHTML = content;
+            });
+          });
       });
-    });
-});
+  },
+);
+
+Then(
+  /^le JWT d'introspection est signé avec la clé "(RS256|ES256)" de FranceConnect$/,
+  function (sigAlg: string) {
+    const jws = this.jwt?.rawJwt;
+    cy.request('GET', `${this.env.fcRootUrl}/api/v2/jwks`)
+      .its('body')
+      .then(({ keys }) => {
+        const jwk = keys.find((key) => key.alg === sigAlg && key.use === 'sig');
+        expect(jwk, `JWK with alg=${sigAlg} and use=sig not found in FC jwks`)
+          .to.exist;
+
+        cy.task('verifyJwsSignature', {
+          jws,
+          keys,
+          sigAlg,
+        }).should('be.equal', true);
+      });
+  },
+);
 
 Then(
   "le checktoken endpoint envoie un token d'introspection valide",

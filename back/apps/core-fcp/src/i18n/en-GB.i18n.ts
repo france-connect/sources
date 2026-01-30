@@ -24,6 +24,9 @@ export const enGB: I18nTranslationsMapType = {
 
   // Interaction
   'interaction.page_title': 'Connection - Choose an account - {platform}',
+  'interaction.anonymous_title': 'You will login anonymously',
+  'interaction.anonymous_description': 'no personal data will be transmitted',
+  'interaction.error_page_title': 'Error - Choose an account - {platform}',
   'interaction.anonymous_no_personal_data':
     'You will login anonymously, no personal data will be transmitted',
   'interaction.idp_connexion_failed':
@@ -36,6 +39,8 @@ export const enGB: I18nTranslationsMapType = {
   // Consent
   'consent.page_title':
     'Connection - Continue to {spName} Service - {platform}',
+  'consent.error_page_title':
+    'Error - Continue to {spName} Service - {platform}',
   'consent.login_as': 'You will login as:',
   'consent.login_anonymously': 'You will login anonymously',
   'consent.continue_to_sp': 'Continue to {spName}',
@@ -43,7 +48,9 @@ export const enGB: I18nTranslationsMapType = {
     'I agree for FranceConnect to transmit my data to the service in order to log me in',
   'consent.consent_checkbox': 'Check the box to accept the data transfer',
   'consent.transmitted_data': 'Transmitted data',
+  'consent.transmitted_data_singular': 'Transmitted data',
   'consent.data_fetched_from': 'Data fetched from {dpName}',
+  'consent.data_fetched_from_singular': 'Information fetched from {dpName}',
   'consent.no_personal_data_transmitted':
     'No personal data will be transmitted',
   'consent.information_block_title':
@@ -51,7 +58,7 @@ export const enGB: I18nTranslationsMapType = {
   'consent.information_block_content':
     'FranceConnect will no longer systematically send you a notification for each connection. A notification will be sent only when an unusual connection is detected.',
   // Errors
-  'error.page_title': 'Connection - Error - {platform}',
+  'error.page_title': 'Connection error - {platform}',
   'error.support.title': 'What to do?',
   'error.support.button_label': 'Contact us',
   'error.error_title': 'An error occurred',
@@ -60,4 +67,11 @@ export const enGB: I18nTranslationsMapType = {
   'error.faq.button_label': 'Please refer to the help page',
   'error.faq.body':
     'For more information on how to use FranceConnect, please visit our help page.',
+
+  'skiplinks.quick_access': 'Quick access',
+  'skiplinks.content': 'Content',
+  'skiplinks.footer': 'Footer',
+
+  'loading_modal.redirecting': 'Redirecting...',
+  'loading_modal.wait': 'please wait',
 };

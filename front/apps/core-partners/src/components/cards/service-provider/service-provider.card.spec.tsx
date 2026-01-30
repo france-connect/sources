@@ -7,23 +7,32 @@ import { t } from '@fc/i18n';
 import { ServiceProviderCardComponent } from './service-provider.card';
 
 describe('ServiceProviderCardComponent', () => {
+  // Given
+  const dateMock = 'any-acme-date' as ISODate;
   const itemMock = {
-    authorizedScopes: ['openid', 'email'],
-    createdAt: '2022-02-22T23:00:00.000Z' as ISODate,
-    datapassRequestId: '123456',
+    createdAt: dateMock as ISODate,
+    datapassRequestId: 'any-datapass-request-id-mock',
+    datapassScopes: ['Identifiant technique', 'Adresse électronique'],
     id: 'any-id-mock',
-    name: 'Service Provider Name',
-    organizationName: 'Organization Name',
-    updatedAt: '2024-01-01T00:00:00.000Z' as ISODate,
+    name: 'any-service-provider-name-mock',
+    organisation: {
+      createdAt: dateMock as ISODate,
+      id: 'any-organisation-id-mock',
+      name: 'any-organisation-name-mock',
+      serviceProviders: [],
+      updatedAt: dateMock as ISODate,
+    },
+    organizationName: 'any-organization-name-mock',
+    platform: {
+      id: 'any-platform-id-mock',
+      name: 'any-platform-name-mock',
+    },
+    updatedAt: 'any-acme-date' as ISODate,
   };
 
   beforeEach(() => {
     // Given
-    jest.mocked(isoToDate).mockReturnValue('23/02/2022');
-    jest
-      .mocked(t)
-      .mockReturnValueOnce('Créée le 23/02/2022')
-      .mockReturnValueOnce('any-habilitation-number-text-mock');
+    jest.mocked(isoToDate).mockReturnValue('any-transformed-date-mock');
   });
 
   it('should match the snapshot', () => {
@@ -39,8 +48,10 @@ describe('ServiceProviderCardComponent', () => {
     render(<ServiceProviderCardComponent data={itemMock} />);
 
     // Then
-    expect(isoToDate).toHaveBeenCalledExactlyOnceWith('2022-02-22T23:00:00.000Z');
-    expect(t).toHaveBeenNthCalledWith(1, 'FC.Common.createdAt.male', { date: '23/02/2022' });
+    expect(isoToDate).toHaveBeenCalledExactlyOnceWith(dateMock);
+    expect(t).toHaveBeenNthCalledWith(1, 'FC.Common.createdAt.male', {
+      date: 'any-transformed-date-mock',
+    });
   });
 
   it('should call CardComponent with params', () => {
@@ -49,15 +60,20 @@ describe('ServiceProviderCardComponent', () => {
 
     // Then
     expect(CardComponent).toHaveBeenCalledExactlyOnceWith(
-      {
+      expect.objectContaining({
         Heading: 'h4',
         children: expect.anything(),
         className: undefined,
-        details: { top: { content: 'Créée le 23/02/2022' } },
+        details: {
+          top: {
+            content: 'FC.Common.createdAt.male',
+          },
+        },
         enlargeLink: true,
+        link: '/fournisseurs-de-service/any-id-mock',
         size: Sizes.MEDIUM,
-        title: 'Service Provider Name',
-      },
+        title: 'any-service-provider-name-mock',
+      }),
       undefined,
     );
   });
@@ -65,7 +81,7 @@ describe('ServiceProviderCardComponent', () => {
   it('should render Service provider name', () => {
     // When
     const { getByText } = render(<ServiceProviderCardComponent data={itemMock} />);
-    const organizationNameElt = getByText('Organization Name');
+    const organizationNameElt = getByText('any-organization-name-mock');
 
     // Then
     expect(organizationNameElt).toBeInTheDocument();
@@ -74,7 +90,7 @@ describe('ServiceProviderCardComponent', () => {
   it('should render datapass authorization id', () => {
     // When
     const { getByText } = render(<ServiceProviderCardComponent data={itemMock} />);
-    const datapassRequestIdElt = getByText('123456');
+    const datapassRequestIdElt = getByText('any-datapass-request-id-mock');
 
     // Then
     expect(datapassRequestIdElt).toBeInTheDocument();

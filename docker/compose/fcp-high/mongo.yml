@@ -2,8 +2,8 @@ services:
   mongo-fcp-high:
     hostname: mongo-fcp-high
     build:
-      context: "${WORKING_DIR}"
-      dockerfile: "${WORKING_DIR}/builds/mongodb/Dockerfile"
+      context: "${DOCKER_DIR}"
+      dockerfile: "${DOCKER_DIR}/builds/mongodb/Dockerfile"
     volumes:
       - "${VOLUMES_DIR}/mongo-fcp-high/scripts:/opt/scripts"
       - "${VOLUMES_DIR}/mongo-fcp-high/initdb.d:/docker-entrypoint-initdb.d"
@@ -22,8 +22,8 @@ services:
 
   mongo-fcp-high-replica-single-init:
     build:
-      context: "${WORKING_DIR}"
-      dockerfile: "${WORKING_DIR}/builds/mongodb/Dockerfile"
+      context: "${DOCKER_DIR}"
+      dockerfile: "${DOCKER_DIR}/builds/mongodb/Dockerfile"
     env_file:
       - "${COMPOSE_DIR}/shared/.env/mongo-high.env"
     volumes:

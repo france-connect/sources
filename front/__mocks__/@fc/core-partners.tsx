@@ -31,7 +31,7 @@ export const PartnersService = {
   loadAllServiceProviders: jest.fn(),
 };
 
-export enum Environment {
+export enum PartnersEnvironment {
   SANDBOX = 'SANDBOX',
   PRODUCTION = 'PRODUCTION',
 }

@@ -1,5 +1,6 @@
 import {
   ants,
+  asc,
   cnafMsa,
   cnam,
   cnous,
@@ -26,6 +27,7 @@ const config: ScopesConfig = {
     dss,
     dsnj,
     ants,
+    asc,
   ],
 };
 

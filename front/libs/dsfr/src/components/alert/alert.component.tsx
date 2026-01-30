@@ -29,11 +29,11 @@ export const AlertComponent = React.memo(
     className,
     dataTestId = 'AlertComponent',
     heading: Heading = HeadingTag.H3,
-    icon = undefined,
+    icon,
     noRole = false,
-    onClose = undefined,
+    onClose,
     size = Sizes.MEDIUM,
-    title = undefined,
+    title,
     type = MessageTypes.INFO,
   }: AlertComponentProps) => {
     const closeLabel = (onClose && t('DSFR.alert.close')) || undefined;

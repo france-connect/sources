@@ -5,29 +5,31 @@
 ## Instances index
 
 1. [command-import-sp-sandbox](#command-import-sp-sandbox)
-2. [command-runner-instance](#command-runner-instance)
-3. [core-fcp-high](#core-fcp-high)
-4. [core-fcp-low](#core-fcp-low)
-5. [csmr-account-instance](#csmr-account-instance)
-6. [csmr-config-partners](#csmr-config-partners)
-7. [csmr-config-sandbox-low](#csmr-config-sandbox-low)
-8. [csmr-fraud-instance](#csmr-fraud-instance)
-9. [csmr-hsm-high](#csmr-hsm-high)
-10. [csmr-import-core-instance](#csmr-import-core-instance)
-11. [csmr-tracks-instance](#csmr-tracks-instance)
-12. [csmr-user-preferences-high](#csmr-user-preferences-high)
-13. [eidas-bridge](#eidas-bridge)
-14. [mock-data-provider](#mock-data-provider)
-15. [mock-datapass-instance](#mock-datapass-instance)
-16. [mock-identity-provider-fcp-high](#mock-identity-provider-fcp-high)
-17. [mock-identity-provider-fcp-low](#mock-identity-provider-fcp-low)
-18. [mock-proconnect](#mock-proconnect)
-19. [mock-rnipp](#mock-rnipp)
-20. [mock-service-provider-fcp-high](#mock-service-provider-fcp-high)
-21. [mock-service-provider-fcp-legacy](#mock-service-provider-fcp-legacy)
-22. [mock-service-provider-fcp-low](#mock-service-provider-fcp-low)
-23. [partners](#partners)
-24. [user-dashboard](#user-dashboard)
+2. [command-pre-deploy](#command-pre-deploy)
+3. [command-runner-instance](#command-runner-instance)
+4. [command-support-ticket](#command-support-ticket)
+5. [core-fcp-high](#core-fcp-high)
+6. [core-fcp-low](#core-fcp-low)
+7. [csmr-account-instance](#csmr-account-instance)
+8. [csmr-config-partners](#csmr-config-partners)
+9. [csmr-config-sandbox-low](#csmr-config-sandbox-low)
+10. [csmr-fraud-instance](#csmr-fraud-instance)
+11. [csmr-hsm-high](#csmr-hsm-high)
+12. [csmr-import-core-instance](#csmr-import-core-instance)
+13. [csmr-tracks-instance](#csmr-tracks-instance)
+14. [csmr-user-preferences-high](#csmr-user-preferences-high)
+15. [eidas-bridge](#eidas-bridge)
+16. [mock-data-provider](#mock-data-provider)
+17. [mock-datapass-instance](#mock-datapass-instance)
+18. [mock-identity-provider-fcp-high](#mock-identity-provider-fcp-high)
+19. [mock-identity-provider-fcp-low](#mock-identity-provider-fcp-low)
+20. [mock-proconnect](#mock-proconnect)
+21. [mock-rnipp](#mock-rnipp)
+22. [mock-service-provider-fcp-high](#mock-service-provider-fcp-high)
+23. [mock-service-provider-fcp-legacy](#mock-service-provider-fcp-legacy)
+24. [mock-service-provider-fcp-low](#mock-service-provider-fcp-low)
+25. [partners](#partners)
+26. [user-dashboard](#user-dashboard)
 
 ## Variables
 
@@ -58,7 +60,21 @@
 | REQUEST_TIMEOUT | string |
 | WebhooksInvitation_SECRET | string |
 
+### command-pre-deploy
+
+| Var Name | Inferred type |
+|---|---|
+| App_BASEPATH | string |
+| Logger_THRESHOLD | string |
+
 ### command-runner-instance
+
+| Var Name | Inferred type |
+|---|---|
+| App_ENVIRONMENT | string |
+| Logger_THRESHOLD | string |
+
+### command-support-ticket
 
 | Var Name | Inferred type |
 |---|---|
@@ -75,7 +91,8 @@
 | AdapterMongo_URL_REQUIRE_TLD | boolean |
 | App_ASSETS_CACHE_TTL | number |
 | App_ASSETS_PATHS | json |
-| App_DSFR_ASSETS_PATHS | json |
+| App_ASSETS_URL_DOMAIN | string |
+| App_ASSETS_URL_PREFIX | string |
 | App_EIDAS_BRIDGE_UID | string |
 | App_ENVIRONMENT | string |
 | App_HTTPS_SERVER_CERT | file |
@@ -153,7 +170,8 @@
 | App_AIDANTS_CONNECT_UID | string |
 | App_ASSETS_CACHE_TTL | number |
 | App_ASSETS_PATHS | json |
-| App_DSFR_ASSETS_PATHS | json |
+| App_ASSETS_URL_DOMAIN | string |
+| App_ASSETS_URL_PREFIX | string |
 | App_EIDAS_BRIDGE_UID | string |
 | App_ENVIRONMENT | string |
 | App_HTTPS_SERVER_CERT | file |
@@ -418,8 +436,9 @@
 | ApacheIgnite_USE_TLS | boolean |
 | App_ASSETS_CACHE_TTL | number |
 | App_ASSETS_PATHS | json |
+| App_ASSETS_URL_DOMAIN | string |
+| App_ASSETS_URL_PREFIX | string |
 | App_AVAILABLE_COUNTRIES | json |
-| App_DSFR_ASSETS_PATHS | json |
 | App_ENVIRONMENT | string |
 | App_HTTPS_SERVER_CERT | file |
 | App_HTTPS_SERVER_KEY | file |
@@ -533,7 +552,6 @@
 |---|---|
 | App_ASSETS_CACHE_TTL | number |
 | App_ASSETS_PATHS | json |
-| App_DSFR_ASSETS_PATHS | json |
 | App_ENVIRONMENT | string |
 | App_HTTPS_SERVER_CERT | file |
 | App_HTTPS_SERVER_KEY | file |
@@ -549,6 +567,7 @@
 | APP_NAME | string |
 | App_ALLOW_CUSTOM_IDENTITY | boolean |
 | App_ASSETS_PATHS | json |
+| App_ASSETS_URL_PREFIX | string |
 | App_CITIZEN_DATABASE_PATH | string |
 | App_ENVIRONMENT | string |
 | App_HTTPS_SERVER_CERT | file |
@@ -593,6 +612,7 @@
 | APP_NAME | string |
 | App_ALLOW_CUSTOM_IDENTITY | boolean |
 | App_ASSETS_PATHS | json |
+| App_ASSETS_URL_PREFIX | string |
 | App_CITIZEN_DATABASE_PATH | string |
 | App_ENVIRONMENT | string |
 | App_HTTPS_SERVER_CERT | file |
@@ -636,6 +656,7 @@
 |---|---|
 | App_ALLOW_CUSTOM_IDENTITY | boolean |
 | App_ASSETS_PATHS | json |
+| App_ASSETS_URL_PREFIX | string |
 | App_CITIZEN_DATABASE_PATH | string |
 | App_ENVIRONMENT | string |
 | App_HTTPS_SERVER_CERT | file |
@@ -688,6 +709,7 @@
 | Var Name | Inferred type |
 |---|---|
 | App_ASSETS_PATHS | json |
+| App_ASSETS_URL_PREFIX | string |
 | App_DATA_APIS | json |
 | App_ENVIRONMENT | string |
 | App_HTTPS_SERVER_CERT | file |
@@ -786,6 +808,7 @@
 | Var Name | Inferred type |
 |---|---|
 | App_ASSETS_PATHS | json |
+| App_ASSETS_URL_PREFIX | string |
 | App_DATA_APIS | json |
 | App_ENVIRONMENT | string |
 | App_HTTPS_SERVER_CERT | file |

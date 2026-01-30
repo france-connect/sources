@@ -143,5 +143,20 @@ describe('ExceptionOccurredHandler', () => {
       // Then
       expect(result).toBe(ApiContentType.HTML);
     });
+
+    it('should return text/html if content type is undefined', () => {
+      // Given
+      const headers = {
+        'content-type': undefined,
+      };
+
+      resMock.getHeaders.mockReturnValue(headers);
+
+      // When
+      const result = handler['getContentType'](resMock as unknown as Response);
+
+      // Then
+      expect(result).toBe(ApiContentType.HTML);
+    });
   });
 });

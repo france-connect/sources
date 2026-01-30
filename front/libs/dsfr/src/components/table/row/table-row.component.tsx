@@ -18,7 +18,7 @@ export const TableRowComponent = React.memo(
     columns,
     data,
     index,
-    tableId = undefined,
+    tableId,
   }: TableRowComponentProps<T>) => {
     const rowid = tableId ? `${tableId}--row-${index}` : undefined;
     return (

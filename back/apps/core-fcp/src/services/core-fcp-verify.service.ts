@@ -12,7 +12,7 @@ import {
 } from '@fc/core';
 import { LoggerService } from '@fc/logger';
 import { OidcClientSession } from '@fc/oidc-client';
-import { OidcProviderService } from '@fc/oidc-provider';
+import { OidcProviderPrompt, OidcProviderService } from '@fc/oidc-provider';
 import { ISessionService } from '@fc/session';
 import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
 
@@ -48,10 +48,20 @@ export class CoreFcpVerifyService {
 
     await this.coreVerify.trackVerified(req);
 
-    const url = `${urlPrefix}${CoreRoutes.INTERACTION_CONSENT.replace(
-      ':uid',
-      interactionId,
-    )}`;
+    const { spPrompt } = sessionOidc.get();
+
+    let url: string;
+
+    // Auto-login feature: Skip consent page if prompt is personalized and does not include "consent"
+    if (spPrompt && !spPrompt.includes(OidcProviderPrompt.CONSENT)) {
+      url = `${urlPrefix}${CoreRoutes.INTERACTION_AUTO_LOGIN}`;
+    } else {
+      url = `${urlPrefix}${CoreRoutes.INTERACTION_CONSENT.replace(
+        ':uid',
+        interactionId,
+      )}`;
+    }
+
     return url;
   }
 

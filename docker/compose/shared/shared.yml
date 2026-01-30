@@ -46,15 +46,9 @@ services:
           - core-fcp-high.docker.dev-franceconnect.fr
           - fip1-high.docker.dev-franceconnect.fr
           - fip2-high.docker.dev-franceconnect.fr
-          - fip6-high.docker.dev-franceconnect.fr
-          - fip13-high.docker.dev-franceconnect.fr
-          - fip14-high.docker.dev-franceconnect.fr
-          - fip15-high.docker.dev-franceconnect.fr
-          - fip16-high.docker.dev-franceconnect.fr
-          - fip17-high.docker.dev-franceconnect.fr
-          - fip18-high.docker.dev-franceconnect.fr
-          - fip19-high.docker.dev-franceconnect.fr
-          - fip20-high.docker.dev-franceconnect.fr
+          - fip3-high.docker.dev-franceconnect.fr
+          - fip4-high.docker.dev-franceconnect.fr
+          - fip5-high.docker.dev-franceconnect.fr
           # FCP LOW
           - core-fcp-low.docker.dev-franceconnect.fr
           - fsp1-low.docker.dev-franceconnect.fr
@@ -90,6 +84,8 @@ services:
           # Espace partenaires
           - partners.docker.dev-franceconnect.fr
           - mock-proconnect.docker.dev-franceconnect.fr
+          # Znuny
+          - znuny.docker.dev-franceconnect.fr
           # Stack Legacy
           - fcp.docker.dev-franceconnect.fr
           - fip1.docker.dev-franceconnect.fr
@@ -104,6 +100,8 @@ services:
           - fsp2-legacy.docker.dev-franceconnect.fr
           - fdp1.docker.dev-franceconnect.fr
           - assets.docker.dev-franceconnect.fr
+          - cdn-low.docker.dev-franceconnect.fr
+          - cdn-high.docker.dev-franceconnect.fr
           - fc-exploitation.docker.dev-franceconnect.fr
           - fc-support.docker.dev-franceconnect.fr
           - ud.docker.dev-franceconnect.fr
@@ -180,8 +178,8 @@ services:
 
   broker:
     build:
-      context: "${WORKING_DIR}"
-      dockerfile: "${WORKING_DIR}/builds/broker/Dockerfile"
+      context: "${DOCKER_DIR}"
+      dockerfile: "${DOCKER_DIR}/builds/broker/Dockerfile"
     # Specify hostname to fix cluster name
     hostname: broker
     depends_on:
@@ -298,6 +296,16 @@ services:
       - "5432:5432"
     networks:
       - data
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U $${POSTGRES_USER:-postgres} -d $${POSTGRES_DB:-postgres} -h localhost || exit 1",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
   ####################
   # HSM
@@ -342,7 +350,7 @@ services:
   cypress:
     build:
       context: "${VOLUMES_DIR}/src/fc/quality"
-      dockerfile: "${WORKING_DIR}/builds/cypress/Dockerfile"
+      dockerfile: "${DOCKER_DIR}/builds/cypress/Dockerfile"
     image: ${FC_DOCKER_REGISTRY}/cypress:${IMAGE_VERSION:-${CYPRESS_IMAGE_VERSION}}
 
   cypress-fcp:
@@ -752,6 +760,28 @@ services:
       - data
     init: true
     command: "pm2 logs"
+
+  cdn-low:
+    image: nginx:1.22.1
+    volumes:
+      - ${VOLUMES_DIR}/nginx-assets/etc/assets-fcp-low.conf:/etc/nginx/conf.d/assets-fcp-low.conf:ro
+      - ${VOLUMES_DIR}/src/fc/back/dist/instances:/var/www:ro
+    environment:
+      - "VIRTUAL_PORT:443"
+      - "VIRTUAL_HOST=cdn-low.docker.dev-franceconnect.fr"
+    networks:
+      - public
+
+  cdn-high:
+    image: nginx:1.22.1
+    volumes:
+      - ${VOLUMES_DIR}/nginx-assets/etc/assets-fcp-high.conf:/etc/nginx/conf.d/assets-fcp-high.conf:ro
+      - ${VOLUMES_DIR}/src/fc/back/dist/instances:/var/www:ro
+    environment:
+      - "VIRTUAL_PORT:443"
+      - "VIRTUAL_HOST=cdn-high.docker.dev-franceconnect.fr"
+    networks:
+      - public
 
 ####################
 # Networks

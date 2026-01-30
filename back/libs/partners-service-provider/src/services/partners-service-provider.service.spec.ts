@@ -16,6 +16,7 @@ import { LoggerService } from '@fc/logger';
 import { getLoggerMock } from '@mocks/logger';
 import { getRepositoryMock, resetRepositoryMock } from '@mocks/typeorm';
 
+import { PartnersServiceProviderNotFoundException } from '../exceptions';
 import { PartnersServiceProviderService } from './partners-service-provider.service';
 
 jest.mock('@fc/access-control');
@@ -152,6 +153,29 @@ describe('PartnersServiceProviderService', () => {
         order: { createdAt: 'DESC' },
       });
       expect(result).toEqual([serviceProviderMock]);
+    });
+  });
+
+  describe('getById', () => {
+    it('should return service provider when found', async () => {
+      // Given
+      repositoryMock.findOne.mockResolvedValue(serviceProviderMock);
+
+      // When
+      const result = await service.getById(serviceProviderIdMock);
+
+      // Then
+      expect(result).toEqual(serviceProviderMock);
+    });
+
+    it('should throw PartnersServiceProviderNotFoundException when service provider not found', async () => {
+      // Given
+      repositoryMock.findOne.mockResolvedValue(null);
+
+      // When / Then
+      await expect(service.getById(serviceProviderIdMock)).rejects.toThrow(
+        PartnersServiceProviderNotFoundException,
+      );
     });
   });
 

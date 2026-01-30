@@ -15,6 +15,7 @@ import Logger from './logger';
 import LoggerLegacy from './logger-legacy';
 import Mailer from './mailer';
 import Mongoose from './mongoose';
+import MongooseChangeStream from './mongoose-change-stream';
 import OidcAcr from './oidc-acr';
 import OidcClient from './oidc-client';
 import OidcProvider from './oidc-provider';
@@ -36,6 +37,7 @@ export default {
   OidcProvider,
   OidcClient,
   Mongoose,
+  MongooseChangeStream,
   Redis,
   Rnipp,
   CryptographyFcp,

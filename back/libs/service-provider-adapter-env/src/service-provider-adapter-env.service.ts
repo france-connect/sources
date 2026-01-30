@@ -12,9 +12,7 @@ import {
 import { ServiceProviderAdapterEnvConfig } from './dto';
 
 @Injectable()
-export class ServiceProviderAdapterEnvService
-  implements IServiceProviderAdapter
-{
+export class ServiceProviderAdapterEnvService implements IServiceProviderAdapter {
   constructor(private readonly config: ConfigService) {}
 
   // Needed to match the interface
@@ -34,7 +32,7 @@ export class ServiceProviderAdapterEnvService
     return idpFilterExclude ? idpFound : !idpFound;
   }
 
-  async getById(id: string): Promise<ServiceProviderMetadata> {
+  async getById(id: string): Promise<ServiceProviderMetadata | undefined> {
     const list = await this.getList();
     return list.find(({ client_id: dbId }) => dbId === id);
   }

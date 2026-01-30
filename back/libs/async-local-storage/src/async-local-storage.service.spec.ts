@@ -78,7 +78,7 @@ describe('AsyncLocalStorageService', () => {
         service['storage'] = undefined;
 
         // When / Then
-        expect(() => service.mandatory).toThrowError(
+        expect(() => service.mandatory).toThrow(
           AsyncLocalStorageNotFoundException,
         );
       });

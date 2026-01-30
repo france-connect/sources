@@ -115,9 +115,7 @@ describe('DataProviderAdapterCoreService', () => {
       });
 
       // When / Then
-      await expect(service.checktoken(tokenMock)).rejects.toThrowError(
-        errorMock,
-      );
+      await expect(service.checktoken(tokenMock)).rejects.toThrow(errorMock);
       expect(service['checktokenHttpError']).toHaveBeenCalledTimes(1);
       expect(service['checktokenHttpError']).toHaveBeenCalledWith(errorMock);
     });
@@ -303,7 +301,7 @@ describe('DataProviderAdapterCoreService', () => {
       mocked(lastValueFrom).mockRejectedValue(errorMock);
 
       // When / Then
-      await expect(service['fetchSignKeys'](urlMock)).rejects.toThrowError(
+      await expect(service['fetchSignKeys'](urlMock)).rejects.toThrow(
         JwksFetchFailedException,
       );
     });
@@ -331,7 +329,7 @@ describe('DataProviderAdapterCoreService', () => {
         error_description: string;
       }>;
 
-      expect(() => service['checktokenHttpError'](error)).toThrowError(
+      expect(() => service['checktokenHttpError'](error)).toThrow(
         ChecktokenTimeoutException,
       );
     });
@@ -345,7 +343,7 @@ describe('DataProviderAdapterCoreService', () => {
         error_description: string;
       }>;
 
-      expect(() => service['checktokenHttpError'](error)).toThrowError(
+      expect(() => service['checktokenHttpError'](error)).toThrow(
         ChecktokenTimeoutException,
       );
     });
@@ -359,7 +357,7 @@ describe('DataProviderAdapterCoreService', () => {
         error_description: string;
       }>;
 
-      expect(() => service['checktokenHttpError'](error)).toThrowError(
+      expect(() => service['checktokenHttpError'](error)).toThrow(
         ChecktokenTimeoutException,
       );
     });
@@ -373,7 +371,7 @@ describe('DataProviderAdapterCoreService', () => {
         error_description: string;
       }>;
 
-      expect(() => service['checktokenHttpError'](error)).toThrowError(
+      expect(() => service['checktokenHttpError'](error)).toThrow(
         ChecktokenHttpStatusException,
       );
     });
@@ -390,6 +388,19 @@ describe('DataProviderAdapterCoreService', () => {
         service['checkEncryptAlgorithm'](jwt, encryptAlgorithm),
       ).toThrow(ChecktokenInvalidAlgorithmException);
     });
+
+    it('should not throw if encrypt algorithm receive are the same that we have in config', () => {
+      // Given
+      const jwt = 'foo';
+      jwtServiceMock.retrieveJwtHeaders.mockReturnValue({
+        alg: encryptAlgorithm,
+      });
+
+      // When / Then
+      expect(() =>
+        service['checkEncryptAlgorithm'](jwt, encryptAlgorithm),
+      ).not.toThrow();
+    });
   });
 
   describe('checkEncryptEncoding', () => {
@@ -402,6 +413,19 @@ describe('DataProviderAdapterCoreService', () => {
       expect(() =>
         service['checkEncryptEncoding'](jwt, encryptEncoding),
       ).toThrow(ChecktokenInvalidEncodingException);
+    });
+
+    it('should not throw if encrypt encoding receive are the same that we have in config', () => {
+      // Given
+      const jwt = 'foo';
+      jwtServiceMock.retrieveJwtHeaders.mockReturnValue({
+        enc: encryptEncoding,
+      });
+
+      // When / Then
+      expect(() =>
+        service['checkEncryptEncoding'](jwt, encryptEncoding),
+      ).not.toThrow();
     });
   });
 });

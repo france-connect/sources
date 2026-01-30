@@ -1,10 +1,9 @@
 import type { FSAInterface } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { fetchWithAuthHandling } from '@fc/http-client';
-import type { ServiceProviderInterface } from '@fc/partners-service-providers';
 
 import { CorePartnersOptions } from '../../../enums';
-import type { PartnersConfig } from '../../../interfaces';
+import type { PartnersConfig, ServiceProviderInterface } from '../../../interfaces';
 
 // @TODO #2356
 // Implementing a DTO2Form config like

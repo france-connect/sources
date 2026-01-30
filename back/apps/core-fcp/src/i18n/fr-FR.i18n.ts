@@ -77,6 +77,10 @@ export const frFR: I18nTranslationsMapType = {
   'nav.more_info': 'En savoir plus',
 
   'interaction.page_title': 'Connexion - Choix du compte - {platform}',
+  'interaction.anonymous_title': 'Vous allez continuer de façon anonyme',
+  'interaction.anonymous_description':
+    'aucune donnée personnelle ne sera transmise',
+  'interaction.error_page_title': 'Erreur lors du choix du compte - {platform}',
   'interaction.anonymous_no_personal_data':
     'Vous allez continuer de façon anonyme, aucune donnée personnelle ne sera transmise',
   'interaction.idp_connexion_failed':
@@ -89,6 +93,8 @@ export const frFR: I18nTranslationsMapType = {
 
   'consent.page_title':
     'Connexion - Continuer sur Service {spName} - {platform}',
+  'consent.error_page_title':
+    'Erreur pour continuer sur le service {spName} - {platform}',
   'consent.login_as': 'Vous allez vous connecter en tant que :',
   'consent.login_anonymously': 'Vous allez vous connecter de façon anonyme',
   'consent.continue_to_sp': 'Continuer sur {spName}',
@@ -97,14 +103,16 @@ export const frFR: I18nTranslationsMapType = {
   'consent.consent_checkbox':
     'Veuillez cocher la case pour accepter le transfert des données',
   'consent.transmitted_data': 'Données transmises',
+  'consent.transmitted_data_singular': 'Donnée transmise',
   'consent.data_fetched_from': 'Informations récupérées depuis {dpName}',
+  'consent.data_fetched_from_singular': 'Information récupérée depuis {dpName}',
   'consent.no_personal_data_transmitted':
     'Aucune donnée personnelle ne sera transmise',
   'consent.information_block_title': 'Les notifications de connexion évoluent',
   'consent.information_block_content':
     'FranceConnect ne vous enverra plus systématiquement une notification à chacune de vos connexions. Une notification vous sera envoyée uniquement lorsqu’une connexion inhabituelle est détectée.',
 
-  'error.page_title': 'Connexion - Erreur - {platform}',
+  'error.page_title': 'Erreur de connexion - {platform}',
   'error.support.title': 'Que faire ?',
   'error.support.button_label': 'Contactez-nous',
   'error.error_title': 'Une erreur s’est produite',
@@ -117,4 +125,10 @@ export const frFR: I18nTranslationsMapType = {
     "Une erreur s'est produite, veuillez réessayer ultérieurement",
 
   'exceptions.http.404': 'Page non trouvée',
+  'loading_modal.redirecting': 'Redirection en cours...',
+  'loading_modal.wait': 'veuillez patienter',
+
+  'skiplinks.quick_access': 'Accès rapide',
+  'skiplinks.content': 'Contenu',
+  'skiplinks.footer': 'Pied de page',
 };

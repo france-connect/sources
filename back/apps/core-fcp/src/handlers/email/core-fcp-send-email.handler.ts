@@ -53,7 +53,8 @@ export class CoreFcpSendEmailHandler implements IFeatureHandler<void> {
     const { family_name: familyName, given_name_array: givenNameArray } =
       rnippIdentity;
 
-    const { fqdn, udFqdn } = this.config.get<AppConfig>('App');
+    const { fqdn, udFqdn, assetsUrlDomain, assetsUrlPrefix } =
+      this.config.get<AppConfig>('App');
     const { title: idpTitle } = await this.identityProvider.getById(idpId);
 
     const person = MailerHelper.getPerson({
@@ -70,6 +71,8 @@ export class CoreFcpSendEmailHandler implements IFeatureHandler<void> {
       spName,
       today,
       fqdn,
+      assetsUrlDomain,
+      assetsUrlPrefix,
       udFqdn,
       browsingSessionId,
     };

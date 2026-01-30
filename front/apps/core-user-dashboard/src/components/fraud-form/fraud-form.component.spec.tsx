@@ -215,7 +215,7 @@ describe('FraudFormComponent', () => {
         children: 'any-form-report-mock',
         className: 'fr-mt-4w',
         dataTestId: 'fraud-form-submit-button',
-        disabled: expect.any(Boolean),
+        disabled: undefined,
         size: Sizes.MEDIUM,
         type: ButtonTypes.SUBMIT,
       },

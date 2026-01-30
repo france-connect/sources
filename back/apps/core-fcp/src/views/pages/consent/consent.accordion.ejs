@@ -1,6 +1,11 @@
 <%
 
 const claimsGroups = $groupByDataProvider(claims);
+const totalClaims = (claims || []).filter((c) => c && c.label).length;
+const transmittedTitleKey =
+  totalClaims === 1
+    ? 'consent.transmitted_data_singular'
+    : 'consent.transmitted_data';
 
 %>
 <div class="fr-accordion">
@@ -10,7 +15,7 @@ const claimsGroups = $groupByDataProvider(claims);
       class="fr-accordion__btn"
       aria-expanded="<%= !!locals.consentRequired %>"
       aria-controls="accordion-consent">
-      <%= $translate('consent.transmitted_data') %>
+      <%= $translate(transmittedTitleKey) %>
     </button>
   </h3>
   <div class="fr-collapse" id="accordion-consent">
@@ -18,16 +23,19 @@ const claimsGroups = $groupByDataProvider(claims);
     <div>
     <% Object.values(claimsGroups).forEach((group) => { %>
 
-         <p class="fr-mb-0"><strong><%= $translate('consent.data_fetched_from', { dpName: group[0].provider.label }) %></strong></p>
-
-         <ul data-testid="consent-detail">
-          <%# last minute sort to avoid unnecessary loops %>
-         <% group.sort($claimOrder).forEach((claim) => { %>
-            <li>
-              <%= claim.label %>
-            </li>
-          <% })%>
-         </ul>
+         <% const isSingle = group.length === 1; %>
+         <p class="fr-mb-0"><strong><%= $translate(isSingle ? 'consent.data_fetched_from_singular' : 'consent.data_fetched_from', { dpName: group[0].provider.label }) %></strong></p>
+         <% if (isSingle) { %>
+           <p data-testid="consent-detail"><%= group[0].label %></p>
+         <% } else { %>
+           <ul data-testid="consent-detail">
+            <% group.sort($claimOrder).forEach((claim) => { %>
+               <li>
+                 <%= claim.label %>
+               </li>
+             <% }) %>
+           </ul>
+         <% } %>
 
       <% }) %>
 

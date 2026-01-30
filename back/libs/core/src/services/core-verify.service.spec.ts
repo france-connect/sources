@@ -129,8 +129,8 @@ describe('CoreVerifyService', () => {
       // When
       await service.verify(sessionServiceMock, reqMock);
       // Then
-      expect(sessionServiceMock.get).toBeCalledTimes(1);
-      expect(sessionServiceMock.get).toBeCalledWith();
+      expect(sessionServiceMock.get).toHaveBeenCalledTimes(1);
+      expect(sessionServiceMock.get).toHaveBeenCalledWith();
     });
 
     it('should call `getFeature` to get instantiated featureHandler class', async () => {
@@ -142,8 +142,8 @@ describe('CoreVerifyService', () => {
       // When
       await service.verify(sessionServiceMock, reqMock);
       // Then
-      expect(getFeatureMock).toBeCalledTimes(1);
-      expect(getFeatureMock).toBeCalledWith(
+      expect(getFeatureMock).toHaveBeenCalledTimes(1);
+      expect(getFeatureMock).toHaveBeenCalledWith(
         sessionDataMock.idpId,
         ProcessCore.CORE_VERIFY,
       );
@@ -158,8 +158,10 @@ describe('CoreVerifyService', () => {
       // When
       await service.verify(sessionServiceMock, reqMock);
       // Then
-      expect(featureHandlerServiceMock.handle).toBeCalledTimes(1);
-      expect(featureHandlerServiceMock.handle).toBeCalledWith(handlerArgument);
+      expect(featureHandlerServiceMock.handle).toHaveBeenCalledTimes(1);
+      expect(featureHandlerServiceMock.handle).toHaveBeenCalledWith(
+        handlerArgument,
+      );
     });
   });
 

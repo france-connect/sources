@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { AppConfig } from '@fc/app';
+import { AppConfig, AssetsService } from '@fc/app';
 import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger';
 import { OidcSession } from '@fc/oidc';
@@ -28,8 +28,16 @@ export class CoreOidcProviderConfigAppService extends OidcProviderAppConfigLibSe
     protected readonly config: ConfigService,
     protected readonly oidcClient: OidcClientService,
     protected readonly tracking: TrackingService,
+    protected readonly assetsService: AssetsService,
   ) {
-    super(logger, sessionService, errorService, grantService, config);
+    super(
+      logger,
+      sessionService,
+      errorService,
+      grantService,
+      config,
+      assetsService,
+    );
   }
 
   /**

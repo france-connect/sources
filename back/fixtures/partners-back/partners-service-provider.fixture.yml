@@ -6,7 +6,18 @@ items:
     name: 'Service Provider 1'
     organizationName: 'Ministère de la Transition Écologique'
     datapassRequestId: '12345'
-    authorizedScopes: ['openid', 'given_name', 'family_name', 'email']
+    authorizedScopes:
+      [
+        'openid',
+        'given_name',
+        'family_name',
+        'email',
+        'gender',
+        'birthdate',
+        'birthplace',
+        'birthcountry',
+        'preferred_username',
+      ]
     platform: '@france-connect-low'
     organisation: null
     createdAt: '2022-02-22T23:00:00.000Z'
@@ -18,7 +29,18 @@ items:
     name: 'Service Provider 2'
     organizationName: "Ministère de l'Intérieur"
     datapassRequestId: '13245'
-    authorizedScopes: ['openid', 'given_name', 'family_name']
+    authorizedScopes:
+      [
+        'openid',
+        'given_name',
+        'family_name',
+        'email',
+        'gender',
+        'birthdate',
+        'birthplace',
+        'birthcountry',
+        'preferred_username',
+      ]
     platform: '@france-connect-low'
     organisation: null
     createdAt: '2022-02-22T23:00:00.000Z'

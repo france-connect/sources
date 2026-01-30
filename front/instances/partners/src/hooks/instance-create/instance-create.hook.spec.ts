@@ -55,11 +55,11 @@ describe('useInstanceCreate', () => {
     const { config, initialValues, postSubmit, preSubmit, schema, submitHandler } = result.current;
 
     // Then
-    expect(config).toBeDefined();
-    expect(initialValues).toBeDefined();
-    expect(postSubmit).toBeDefined();
+    expect(config).toEqual(expect.any(Object));
+    expect(initialValues).toEqual(expect.any(Object));
+    expect(postSubmit).toEqual(expect.any(Function));
     expect(preSubmit).toBe(removeEmptyValues);
-    expect(schema).toBeDefined();
-    expect(submitHandler).toBeDefined();
+    expect(schema).toEqual(expect.any(Object));
+    expect(submitHandler).toEqual(expect.any(Function));
   });
 });

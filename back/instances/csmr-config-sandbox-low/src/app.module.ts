@@ -6,7 +6,7 @@ import { CsmrConfigModule } from '@fc/csmr-config';
 import { CsmrConfigClientModule } from '@fc/csmr-config-client';
 import { CsmrProxyClientModule } from '@fc/csmr-proxy-client';
 import { LoggerModule } from '@fc/logger';
-import { LoggerDebugPlugin } from '@fc/logger-plugins';
+import { LoggerDebugPlugin } from '@fc/logger-debug-plugin';
 import { MongooseModule } from '@fc/mongoose';
 
 import {

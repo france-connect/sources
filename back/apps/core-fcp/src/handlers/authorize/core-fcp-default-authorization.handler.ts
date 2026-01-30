@@ -6,9 +6,10 @@ import { AuthorizationParameters } from '@fc/oidc-client';
 
 @Injectable()
 @FeatureHandler('core-fcp-default-authorization')
-export class CoreFcpDefaultAuthorizationHandler
-  implements IFeatureHandler<AuthorizationParameters, AuthorizationParameters>
-{
+export class CoreFcpDefaultAuthorizationHandler implements IFeatureHandler<
+  AuthorizationParameters,
+  AuthorizationParameters
+> {
   constructor(protected readonly logger: LoggerService) {}
 
   // Need to respect the interface, has no real impact on the code

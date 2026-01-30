@@ -51,6 +51,7 @@ import {
   PartnersInstanceVersionFormService,
   PartnersInvitationService,
   PartnersOidcClientService,
+  PartnersServiceProviderFormService,
 } from './services';
 
 const oidcClientModule = OidcClientModule.register(
@@ -109,6 +110,7 @@ const accessControlModule = AccessControlModule.withRolesHandler(
     PartnersInstanceVersionFormService,
     PartnersOidcClientService,
     PartnersDatapassService,
+    PartnersServiceProviderFormService,
   ],
   controllers: [
     InstanceController,

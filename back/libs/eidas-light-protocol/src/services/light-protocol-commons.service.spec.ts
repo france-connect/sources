@@ -237,9 +237,9 @@ describe('LightProtocolCommonsService', () => {
         .mockReturnValueOnce({ maxTokenSize: 0 });
 
       // When / Then
-      expect(() =>
-        service.parseToken(encodedTokenMock, secretMock),
-      ).toThrowError(EidasOversizedTokenException);
+      expect(() => service.parseToken(encodedTokenMock, secretMock)).toThrow(
+        EidasOversizedTokenException,
+      );
     });
 
     it('should throw an EidasInvalidTokenChecksumException if the calculated digest does not equal the light token digest', () => {
@@ -249,9 +249,9 @@ describe('LightProtocolCommonsService', () => {
         .mockReturnValueOnce('Not the expected digest');
 
       // When / Then
-      expect(() =>
-        service.parseToken(encodedTokenMock, secretMock),
-      ).toThrowError(EidasInvalidTokenChecksumException);
+      expect(() => service.parseToken(encodedTokenMock, secretMock)).toThrow(
+        EidasInvalidTokenChecksumException,
+      );
     });
   });
 

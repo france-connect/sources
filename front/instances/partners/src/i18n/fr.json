@@ -16,5 +16,11 @@
   "Partners.loginpage.title": "Mon espace partenaires",
   "Partners.page.noticeDescription": "L’espace partenaire sera prochainement disponible pour les fournisseurs de service FranceConnect+",
   "Partners.page.noticeTitle": "Disponible pour les fournisseurs de service FranceConnect uniquement.",
+  "Partners.serviceProviderPage.authorizedData.description": "Les données d’identité autorisées sont les suivantes{NBSP_UNICODE}:",
+  "Partners.serviceProviderPage.authorizedData.title": "Données autorisées",
+  "Partners.serviceProviderPage.habilitation.number": "Numéro de demande d’habilitation{NBSP_UNICODE}:",
+  "Partners.serviceProviderPage.habilitation.requestLabel": "la demande d’habilitation",
+  "Partners.serviceProviderPage.habilitation.title": "Habilitation FranceConnect",
+  "Partners.serviceProviderPage.mention": "Toute modification des données autorisées doit se faire dans",
   "Partners.updatepage.title": "Modification d’un bac à sable"
 }

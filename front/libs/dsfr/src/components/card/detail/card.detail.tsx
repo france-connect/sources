@@ -8,7 +8,7 @@ interface CardDetailComponentProps {
 }
 
 export const CardDetailComponent = React.memo(
-  ({ className = undefined, content, dataTestId = undefined }: CardDetailComponentProps) => (
+  ({ className, content, dataTestId }: CardDetailComponentProps) => (
     <div className={classnames('fr-card__detail', className)} data-testid={dataTestId}>
       {content}
     </div>

@@ -53,7 +53,7 @@ describe('TextWithRemoveInput', () => {
     const isRemovableMock = false;
 
     const useCallbackMock = jest.fn();
-    jest.spyOn(React, 'useCallback').mockImplementationOnce(() => useCallbackMock);
+    jest.spyOn(React, 'useCallback').mockReturnValueOnce(useCallbackMock);
 
     // When
     const { container } = render(
@@ -140,7 +140,7 @@ describe('TextWithRemoveInput', () => {
     const isRemovableMock = false;
 
     const useCallbackMock = jest.fn();
-    jest.spyOn(React, 'useCallback').mockImplementationOnce(() => useCallbackMock);
+    jest.spyOn(React, 'useCallback').mockReturnValueOnce(useCallbackMock);
 
     // When
     const { container } = render(
@@ -221,7 +221,7 @@ describe('TextWithRemoveInput', () => {
     const isRemovableMock = false;
 
     const useCallbackMock = jest.fn();
-    jest.spyOn(React, 'useCallback').mockImplementationOnce(() => useCallbackMock);
+    jest.spyOn(React, 'useCallback').mockReturnValueOnce(useCallbackMock);
 
     // When
     const { container } = render(

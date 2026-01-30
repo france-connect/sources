@@ -16,6 +16,8 @@ import {
   InstanceUpdatePage,
   LegalNoticesPage,
   LoginPage,
+  ServiceProviderErrorPage,
+  ServiceProviderPage,
   ServiceProvidersPage,
   SitemapPage,
 } from './pages';
@@ -32,6 +34,12 @@ export const ApplicationRoutes = React.memo(() => {
       <Route element={<AuthedRoute fallback="/login" />}>
         <Route element={<PageLayout />}>
           <Route path="fournisseurs-de-service">
+            <Route
+              element={<ServiceProviderPage />}
+              errorElement={<ServiceProviderErrorPage />}
+              loader={PartnersService.loadServiceProviderById}
+              path=":serviceProviderId"
+            />
             <Route
               index
               element={<ServiceProvidersPage />}

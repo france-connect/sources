@@ -20,7 +20,7 @@ const DEFAULT_ACTIONS: FormActionsInterface[] = [
 ];
 
 export const FormActionsComponent = React.memo(
-  ({ actions = undefined, canSubmit, size = Sizes.MEDIUM }: FormActionsComponentProps) => {
+  ({ actions, canSubmit, size = Sizes.MEDIUM }: FormActionsComponentProps) => {
     const buttons = useMemo(() => {
       const items = actions ?? DEFAULT_ACTIONS;
       const submittingButtons = items.filter(({ type }) => type === ButtonTypes.SUBMIT);

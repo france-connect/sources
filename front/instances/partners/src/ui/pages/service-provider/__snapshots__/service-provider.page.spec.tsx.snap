@@ -1,0 +1,68 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ServiceProviderPage should match snapshot 1`] = `
+<div>
+  <div
+    class="fr-col-12 fr-col-lg-10 fr-col-xl-8"
+  >
+    <div
+      class="fr-col-12"
+    >
+      <h1>
+        any-name-mock
+      </h1>
+      <p
+        class="is-uppercase"
+      >
+        any-organizationName-mock
+      </p>
+      <h2
+        class="fr-mt-7w"
+      >
+        Partners.serviceProviderPage.habilitation.title
+      </h2>
+      <hr />
+      <ul>
+        <li>
+          <b>
+            Partners.serviceProviderPage.habilitation.number
+             
+          </b>
+          <span
+            data-mockid="LinkComponent"
+          />
+        </li>
+      </ul>
+      <h2
+        class="fr-mt-5w"
+      >
+        Partners.serviceProviderPage.authorizedData.title
+      </h2>
+      <hr />
+      <p>
+        Partners.serviceProviderPage.authorizedData.description
+      </p>
+      <ul
+        class="fr-mb-3w"
+      >
+        <li>
+          any-scope-mock1
+        </li>
+        <li>
+          any-scope-mock2
+        </li>
+        <li>
+          any-scope-mock3
+        </li>
+      </ul>
+      <p>
+        Partners.serviceProviderPage.mention
+         
+        <span
+          data-mockid="LinkComponent"
+        />
+      </p>
+    </div>
+  </div>
+</div>
+`;

@@ -69,6 +69,7 @@ Fonctionnalité: Formulaire Usurpation
     Et le nombre de ligne est 1 dans le fichier csv "fip1-no-discovery_connexions.csv"
     Et le fichier csv "fip1-no-discovery_connexions.csv" contient les traces pour un partenaire de type FI
     Et "idpSub" est "82" pour la ligne 1 du fichier csv "fip1-no-discovery_connexions.csv"
+    Et le fichier "support_connexions.csv" n'est pas joint dans le mail "demande de support"
 
   @ignoreInteg01
   Scénario: Formulaire usurpation - cas passant avec une trace fcp-high de l'usager
@@ -113,6 +114,7 @@ Fonctionnalité: Formulaire Usurpation
     Et le nombre de ligne est 1 dans le fichier csv "fip1-high_connexions.csv"
     Et le fichier csv "fip1-high_connexions.csv" contient les traces pour un partenaire de type FI
     Et "idpSub" est "229850d7940580fe24818d574b88bfd98353fe5bd8949232410a86a5964cca74" pour la ligne 1 du fichier csv "fip1-high_connexions.csv"
+    Et le fichier "support_connexions.csv" n'est pas joint dans le mail "demande de support"
 
   @ignoreInteg01
   Scénario: Formulaire usurpation - cas passant avec une trace fcp-low de l'usager
@@ -157,6 +159,7 @@ Fonctionnalité: Formulaire Usurpation
     Et le nombre de ligne est 1 dans le fichier csv "fip1-low_connexions.csv"
     Et le fichier csv "fip1-low_connexions.csv" contient les traces pour un partenaire de type FI
     Et "idpSub" est "229850d7940580fe24818d574b88bfd98353fe5bd8949232410a86a5964cca74" pour la ligne 1 du fichier csv "fip1-low_connexions.csv"
+    Et le fichier "support_connexions.csv" n'est pas joint dans le mail "demande de support"
 
   @ignoreInteg01
   Scénario: Formulaire usurpation - cas passant avec une trace d'un autre usager
@@ -185,6 +188,7 @@ Fonctionnalité: Formulaire Usurpation
     Et "accountIdMatch" est "Non" pour la trace numéro 1 dans le mail "demande de support"
     Et le fichier "FSP - FSP1-LOW_connexions.csv" est joint dans le mail "demande de support"
     Et le fichier "fip1-low_connexions.csv" est joint dans le mail "demande de support"
+    Et le fichier "support_connexions.csv" n'est pas joint dans le mail "demande de support"
 
   @ignoreInteg01
   Scénario: Formulaire usurpation - cas passant avec deux traces
@@ -216,6 +220,7 @@ Fonctionnalité: Formulaire Usurpation
     Et le fichier "fip1-low_connexions.csv" est joint dans le mail "demande de support"
     Et je télécharge le fichier csv "fip1-low_connexions.csv" en pièce jointe
     Et le nombre de ligne est 2 dans le fichier csv "fip1-low_connexions.csv"
+    Et le fichier "support_connexions.csv" n'est pas joint dans le mail "demande de support"
 
   @ignoreDocker
   Scénario: Formulaire usurpation - demande support prise en compte

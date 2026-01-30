@@ -11,19 +11,15 @@ Fonctionnalité: Fournisseur Identité - Sélection - fcp-high
     Et que je navigue sur la page fournisseur de service
     Quand je clique sur le bouton FranceConnect
     Alors je suis redirigé vers la page sélection du fournisseur d'identité
-    Et j'utilise un fournisseur d'identité avec niveau de sécurité "eidas2", chiffrement "" et signature "ES256"
-    Et le fournisseur d'identité est actif dans la mire
-    Et j'utilise un fournisseur d'identité avec niveau de sécurité "eidas2", chiffrement "RSA-OAEP,A256GCM" et signature "ES256"
-    Et le fournisseur d'identité est actif dans la mire
-    Et j'utilise un fournisseur d'identité avec niveau de sécurité "eidas2", chiffrement "ECDH-ES,A256GCM" et signature "RS256"
-    Et le fournisseur d'identité est actif dans la mire
-    Et j'utilise un fournisseur d'identité avec niveau de sécurité "eidas3", chiffrement "" et signature "RS256"
-    Et le fournisseur d'identité est actif dans la mire
     Et j'utilise un fournisseur d'identité avec niveau de sécurité "eidas3", chiffrement "RSA-OAEP-256,A256GCM" et signature "ES256"
     Et le fournisseur d'identité est actif dans la mire
-    Et j'utilise un fournisseur d'identité avec niveau de sécurité "eidas3", chiffrement "RSA-OAEP,A256GCM" et signature "RS256"
+    Et j'utilise un fournisseur d'identité avec niveau de sécurité "eidas3", chiffrement "ECDH-ES,A256GCM" et signature "RS256"
     Et le fournisseur d'identité est actif dans la mire
-    Et j'utilise un fournisseur d'identité avec niveau de sécurité "eidas3", chiffrement "ECDH-ES,A256GCM" et signature "ES256"
+    Et j'utilise un fournisseur d'identité avec niveau de sécurité "eidas2", chiffrement "RSA-OAEP-256,A256GCM" et signature "ES256"
+    Et le fournisseur d'identité est actif dans la mire
+    Et j'utilise un fournisseur d'identité avec niveau de sécurité "eidas2", chiffrement "" et signature "RS256"
+    Et le fournisseur d'identité est actif dans la mire
+    Et j'utilise un fournisseur d'identité avec niveau de sécurité "eidas3", chiffrement "RSA-OAEP-256,A256GCM" et signature "RS256"
     Et le fournisseur d'identité est actif dans la mire
 
   @ignoreInteg01
@@ -32,17 +28,15 @@ Fonctionnalité: Fournisseur Identité - Sélection - fcp-high
     Et que je navigue sur la page fournisseur de service
     Quand je clique sur le bouton FranceConnect
     Alors je suis redirigé vers la page sélection du fournisseur d'identité
-    Et j'utilise un fournisseur d'identité avec niveau de sécurité "eidas2", chiffrement "" et signature "ES256"
-    Et le fournisseur d'identité est désactivé dans la mire
-    Et j'utilise un fournisseur d'identité avec niveau de sécurité "eidas2", chiffrement "RSA-OAEP,A256GCM" et signature "ES256"
-    Et le fournisseur d'identité est désactivé dans la mire
-    Et j'utilise un fournisseur d'identité avec niveau de sécurité "eidas2", chiffrement "ECDH-ES,A256GCM" et signature "RS256"
-    Et le fournisseur d'identité est désactivé dans la mire
-    Et j'utilise un fournisseur d'identité avec niveau de sécurité "eidas3", chiffrement "" et signature "RS256"
+    Et j'utilise un fournisseur d'identité avec niveau de sécurité "eidas3", chiffrement "RSA-OAEP-256,A256GCM" et signature "ES256"
     Et le fournisseur d'identité est actif dans la mire
-    Et j'utilise un fournisseur d'identité avec niveau de sécurité "eidas3", chiffrement "RSA-OAEP,A256GCM" et signature "RS256"
+    Et j'utilise un fournisseur d'identité avec niveau de sécurité "eidas3", chiffrement "ECDH-ES,A256GCM" et signature "RS256"
     Et le fournisseur d'identité est actif dans la mire
-    Et j'utilise un fournisseur d'identité avec niveau de sécurité "eidas3", chiffrement "ECDH-ES,A256GCM" et signature "ES256"
+    Et j'utilise un fournisseur d'identité avec niveau de sécurité "eidas2", chiffrement "RSA-OAEP-256,A256GCM" et signature "ES256"
+    Et le fournisseur d'identité est désactivé dans la mire
+    Et j'utilise un fournisseur d'identité avec niveau de sécurité "eidas2", chiffrement "" et signature "RS256"
+    Et le fournisseur d'identité est désactivé dans la mire
+    Et j'utilise un fournisseur d'identité avec niveau de sécurité "eidas3", chiffrement "RSA-OAEP-256,A256GCM" et signature "RS256"
     Et le fournisseur d'identité est actif dans la mire
 
   Scénario: Affichage des FI sur la mire - aucun FI désactivé et non visible
@@ -70,12 +64,11 @@ Fonctionnalité: Fournisseur Identité - Sélection - fcp-high
 
   @ci @ignoreInteg01
   Scénario: Affichage des FI sur la mire - FI avec modale, confirmation
-    Etant donné que j'utilise un fournisseur d'identité "actif"
+    Etant donné que j'utilise le fournisseur d'identité "avec modale de sélection FI"
     Et que je navigue sur la page fournisseur de service
     Et que je clique sur le bouton FranceConnect
     Et que je suis redirigé vers la page sélection du fournisseur d'identité
     Et que j'attends le chargement de la page 500ms
-    Et que j'utilise le fournisseur d'identité "avec modale de sélection FI"
     Et que le fournisseur d'identité est actif dans la mire
     Quand je clique sur le fournisseur d'identité
     Alors la modale "sélection FI" est présente sur la mire
@@ -84,12 +77,11 @@ Fonctionnalité: Fournisseur Identité - Sélection - fcp-high
 
   @ci @ignoreInteg01
   Scénario: Affichage des FI sur la mire - FI avec modale, abandon
-    Etant donné que j'utilise un fournisseur d'identité "actif"
+    Etant donné que j'utilise le fournisseur d'identité "avec modale de sélection FI"
     Et que je navigue sur la page fournisseur de service
     Et que je clique sur le bouton FranceConnect
     Et que je suis redirigé vers la page sélection du fournisseur d'identité
     Et que j'attends le chargement de la page 500ms
-    Et que j'utilise le fournisseur d'identité "avec modale de sélection FI"
     Et que le fournisseur d'identité est actif dans la mire
     Quand je clique sur le fournisseur d'identité
     Alors la modale "sélection FI" est présente sur la mire
@@ -98,12 +90,11 @@ Fonctionnalité: Fournisseur Identité - Sélection - fcp-high
 
   @ci @ignoreInteg01
   Scénario: Affichage des FI sur la mire - FI avec modale, fermeture
-    Etant donné que j'utilise un fournisseur d'identité "actif"
+    Etant donné que j'utilise le fournisseur d'identité "avec modale de sélection FI"
     Et que je navigue sur la page fournisseur de service
     Et que je clique sur le bouton FranceConnect
     Et que je suis redirigé vers la page sélection du fournisseur d'identité
     Et que j'attends le chargement de la page 500ms
-    Et que j'utilise le fournisseur d'identité "avec modale de sélection FI"
     Et que le fournisseur d'identité est actif dans la mire
     Quand je clique sur le fournisseur d'identité
     Alors la modale "sélection FI" est présente sur la mire
@@ -119,6 +110,24 @@ Fonctionnalité: Fournisseur Identité - Sélection - fcp-high
     Et que le fournisseur d'identité est désactivé dans la mire
     Quand je clique sur le fournisseur d'identité
     Alors je ne suis pas redirigé vers la page login du fournisseur d'identité
+
+  @ci
+  Scénario: Connexion d'un usager - protection contre le double clic sur les FI
+    Etant donné que je navigue sur la page fournisseur de service
+    Et que je clique sur le bouton FranceConnect
+    Et que je suis redirigé vers la page sélection du fournisseur d'identité
+    Quand je double-clique sur le fournisseur d'identité
+    Alors je suis redirigé vers la page login du fournisseur d'identité
+
+  @ci
+  Scénario: Connexion d'un usager - désactivation du bouton du FI et affichage de la modale de chargement
+    Etant donné que je navigue sur la page fournisseur de service
+    Et que je clique sur le bouton FranceConnect
+    Et que je suis redirigé vers la page sélection du fournisseur d'identité
+    Et que je bloque temporairement la navigation des formulaires de la mire
+    Quand je double-clique sur le fournisseur d'identité
+    Alors tous les fournisseurs d'identité sont désactivés
+    Et la modale de chargement du fournisseur d'identité est affichée
 
   @ci @exceptions
   Scénario: Connexion d'un usager - erreur si on force la connexion via un FI désactivé

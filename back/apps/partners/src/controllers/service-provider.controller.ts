@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 
 import { PartnersServiceProvider } from '@entities/typeorm';
 
@@ -14,11 +14,14 @@ import { FSA, FSAMeta } from '@fc/common';
 import { PartnersServiceProviderService } from '@fc/partners-service-provider';
 
 import { PartnersBackRoutes } from '../enums';
+import { PartnersServiceProviderPayloadInterface } from '../interfaces';
+import { PartnersServiceProviderFormService } from '../services';
 
 @Controller()
 export class ServiceProviderController {
   constructor(
     private readonly serviceProviderService: PartnersServiceProviderService,
+    private readonly formService: PartnersServiceProviderFormService,
   ) {}
 
   @Get(PartnersBackRoutes.SERVICE_PROVIDERS)
@@ -36,6 +39,28 @@ export class ServiceProviderController {
     return {
       type: 'SERVICE_PROVIDER',
       payload: serviceProviders,
+    };
+  }
+
+  @Get(PartnersBackRoutes.SERVICE_PROVIDER)
+  @RequirePermission({
+    permissionType: PermissionsType.VIEW,
+    entity: EntityType.SERVICE_PROVIDER,
+    entityIdLocation: { src: 'params', key: 'serviceProviderId' },
+  })
+  @UseGuards(AccessControlGuard)
+  async getServiceProvider(
+    @Param('serviceProviderId') serviceProviderId: string,
+  ): Promise<FSA<FSAMeta, PartnersServiceProviderPayloadInterface>> {
+    const serviceProvider =
+      await this.serviceProviderService.getById(serviceProviderId);
+
+    const transformedServiceProvider =
+      this.formService.toDisplayValue(serviceProvider);
+
+    return {
+      type: 'SERVICE_PROVIDER',
+      payload: transformedServiceProvider,
     };
   }
 }

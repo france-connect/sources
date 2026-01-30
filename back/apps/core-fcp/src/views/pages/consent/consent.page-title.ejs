@@ -1,4 +1,7 @@
 <title>
-  <%= $translate('consent.page_title', { spName, platform:
-  $config('App.platform') } ) %>
+  <% if (locals?.errorContext?.hasError) { %> <%=
+  $translate('consent.error_page_title', { spName, platform:
+  $config('App.platform') }) %> <% } else { %> <%=
+  $translate('consent.page_title', { spName, platform: $config('App.platform')
+  }) %> <% } %>
 </title>

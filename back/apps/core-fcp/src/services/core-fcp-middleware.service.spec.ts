@@ -566,68 +566,115 @@ describe('CoreFcpMiddlewareService', () => {
 
     beforeEach(() => {
       service['isFinishedInteractionSession'] = jest.fn().mockReturnValue(true);
-
-      configServiceMock.get
-        .mockReturnValueOnce({
-          enableSso: true,
-        })
-        .mockReturnValueOnce({
-          allowedSsoAcrs: ['eidas3'],
-        });
+      service['detachSessionIfNeeded'] = jest.fn().mockResolvedValue(undefined);
+      service['resetSessionIfNeeded'] = jest.fn().mockResolvedValue(undefined);
     });
 
-    it('should call session.reset() if sso is disabled', async () => {
-      // Given
-      configServiceMock.get
-        .mockReset()
-        .mockReturnValueOnce({
-          enableSso: false,
-        })
-        .mockReturnValueOnce({
-          allowedSsoAcrs: ['eidas3'],
-        });
-      // When
-      await service['renewSession'](ctxMock, spAcrMock);
-      // Then
-      expect(sessionServiceMock.reset).toHaveBeenCalledTimes(1);
-      expect(sessionServiceMock.reset).toHaveBeenCalledWith(resMock);
-    });
-
-    it('should call session.reset() if acr is authorized for sso', async () => {
-      // Given
-      configServiceMock.get
-        .mockReset()
-        .mockReturnValueOnce({
-          enableSso: true,
-        })
-        .mockReturnValueOnce({
-          allowedSsoAcrs: ['eidas2'],
-        });
-      // When
-      await service['renewSession'](ctxMock, spAcrMock);
-      // Then
-      expect(sessionServiceMock.reset).toHaveBeenCalledTimes(1);
-      expect(sessionServiceMock.reset).toHaveBeenCalledWith(resMock);
-    });
-
-    it('should check if session is SSO compliant with isFinishedInteractionSession()', async () => {
+    it('should call isFinishedInteractionSession()', async () => {
       // When
       await service['renewSession'](ctxMock, spAcrMock);
       // Then
       expect(service['isFinishedInteractionSession']).toHaveBeenCalledTimes(1);
     });
 
-    it('should call sessionService.duplicate if sso is enabled, spIdentity is present and sso authorized for acr', async () => {
-      // Given
-      sessionServiceMock.get.mockReturnValueOnce(true);
+    it('should call detachSessionIfNeeded() with isFinishedInteractionSession result and ctx', async () => {
       // When
       await service['renewSession'](ctxMock, spAcrMock);
+      // Then
+      expect(service['detachSessionIfNeeded']).toHaveBeenCalledTimes(1);
+      expect(service['detachSessionIfNeeded']).toHaveBeenCalledWith(
+        true,
+        ctxMock,
+      );
+    });
+
+    it('should call resetSessionIfNeeded() with isFinishedInteractionSession result, ctx and spAcr', async () => {
+      // When
+      await service['renewSession'](ctxMock, spAcrMock);
+      // Then
+      expect(service['resetSessionIfNeeded']).toHaveBeenCalledTimes(1);
+      expect(service['resetSessionIfNeeded']).toHaveBeenCalledWith(
+        true,
+        ctxMock,
+        spAcrMock,
+      );
+    });
+  });
+
+  describe('detachSessionIfNeeded', () => {
+    const ctxMock = {
+      res: resMock,
+    } as unknown as OidcCtx;
+
+    it('should call sessionService.duplicate() if isFinishedInteractionSession is true', async () => {
+      // When
+      await service['detachSessionIfNeeded'](true, ctxMock);
       // Then
       expect(sessionServiceMock.duplicate).toHaveBeenCalledTimes(1);
       expect(sessionServiceMock.duplicate).toHaveBeenCalledWith(
         resMock,
         GetAuthorizeSessionDto,
       );
+    });
+
+    it('should not call sessionService.duplicate() if isFinishedInteractionSession is false', async () => {
+      // When
+      await service['detachSessionIfNeeded'](false, ctxMock);
+      // Then
+      expect(sessionServiceMock.duplicate).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('resetSessionIfNeeded', () => {
+    const ctxMock = {
+      res: resMock,
+    } as unknown as OidcCtx;
+
+    beforeEach(() => {
+      configServiceMock.get
+        .mockReturnValueOnce({ enableSso: true })
+        .mockReturnValueOnce({ allowedSsoAcrs: ['eidas3'] });
+    });
+
+    it('should call sessionService.reset() if isFinishedInteractionSession is false', async () => {
+      // When
+      await service['resetSessionIfNeeded'](false, ctxMock, spAcrMock);
+      // Then
+      expect(sessionServiceMock.reset).toHaveBeenCalledTimes(1);
+      expect(sessionServiceMock.reset).toHaveBeenCalledWith(resMock);
+    });
+
+    it('should call sessionService.reset() if sso is disabled', async () => {
+      // Given
+      configServiceMock.get
+        .mockReset()
+        .mockReturnValueOnce({ enableSso: false })
+        .mockReturnValueOnce({ allowedSsoAcrs: ['eidas3'] });
+      // When
+      await service['resetSessionIfNeeded'](true, ctxMock, spAcrMock);
+      // Then
+      expect(sessionServiceMock.reset).toHaveBeenCalledTimes(1);
+      expect(sessionServiceMock.reset).toHaveBeenCalledWith(resMock);
+    });
+
+    it('should call sessionService.reset() if acr is not authorized for sso', async () => {
+      // Given
+      configServiceMock.get
+        .mockReset()
+        .mockReturnValueOnce({ enableSso: true })
+        .mockReturnValueOnce({ allowedSsoAcrs: ['eidas2'] });
+      // When
+      await service['resetSessionIfNeeded'](true, ctxMock, spAcrMock);
+      // Then
+      expect(sessionServiceMock.reset).toHaveBeenCalledTimes(1);
+      expect(sessionServiceMock.reset).toHaveBeenCalledWith(resMock);
+    });
+
+    it('should not call sessionService.reset() if sso is enabled, spIdentity is present and sso authorized for acr', async () => {
+      // When
+      await service['resetSessionIfNeeded'](true, ctxMock, spAcrMock);
+      // Then
+      expect(sessionServiceMock.reset).not.toHaveBeenCalled();
     });
   });
 

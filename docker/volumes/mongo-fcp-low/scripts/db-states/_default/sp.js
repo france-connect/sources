@@ -70,6 +70,7 @@ const fsp = {
     platform: "CORE_FCP",
     rep_scope: [],
     signup_id: "9992001",
+    allowedPrompts: ["login", "consent"],
   },
   // FSP2-LOW - amr not authorized
   "FSP2-LOW": {
@@ -126,10 +127,10 @@ const fsp = {
       "cnam_paiements_ij",
     ],
     claims: [],
-    id_token_signed_response_alg: "HS256",
+    id_token_signed_response_alg: "ES256",
     id_token_encrypted_response_alg: "",
     id_token_encrypted_response_enc: "",
-    userinfo_signed_response_alg: "HS256",
+    userinfo_signed_response_alg: "ES256",
     userinfo_encrypted_response_alg: "",
     userinfo_encrypted_response_enc: "",
     idpFilterExclude: false,
@@ -142,6 +143,7 @@ const fsp = {
     platform: "CORE_FCP",
     rep_scope: [],
     signup_id: "9992002",
+    allowedIdpHints: ["b5e9539a-599a-4ed2-9b4f-8f4bfc5fbb64"],
   },
   // FSP3-LOW - private sp
   "FSP3-LOW": {
@@ -198,10 +200,10 @@ const fsp = {
       "cnam_paiements_ij",
     ],
     claims: ["amr"],
-    id_token_signed_response_alg: "HS256",
+    id_token_signed_response_alg: "RS256",
     id_token_encrypted_response_alg: "",
     id_token_encrypted_response_enc: "",
-    userinfo_signed_response_alg: "HS256",
+    userinfo_signed_response_alg: "RS256",
     userinfo_encrypted_response_alg: "",
     userinfo_encrypted_response_enc: "",
     idpFilterExclude: true,
@@ -271,10 +273,10 @@ const fsp = {
       "cnam_paiements_ij",
     ],
     claims: ["amr"],
-    id_token_signed_response_alg: "HS256",
+    id_token_signed_response_alg: "ES256",
     id_token_encrypted_response_alg: "",
     id_token_encrypted_response_enc: "",
-    userinfo_signed_response_alg: "HS256",
+    userinfo_signed_response_alg: "ES256",
     userinfo_encrypted_response_alg: "",
     userinfo_encrypted_response_enc: "",
     idpFilterExclude: false,
@@ -285,7 +287,7 @@ const fsp = {
     signup_id: "9992004",
   },
 
-  // FSP5-LOW: identical to FSP4-LOW but with invalid sector_identifier_uri
+  // FSP5-LOW: identical to FSP4-LOW but with invalid sector_identifier_uri and no allowedPrompts
   "FSP5-LOW": {
     name: "fsp5-low",
     title: "FSP5 - LOW",

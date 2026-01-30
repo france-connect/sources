@@ -7,7 +7,7 @@ export default {
   name: 'MOCK_DATAPASS',
   urlPrefix: '',
   assetsPaths: env.json('ASSETS_PATHS'),
-  assetsDsfrPaths: env.json('DSFR_ASSETS_PATHS'),
+  assetsUrlPrefix: '/assets',
   assetsCacheTtl: env.number('ASSETS_CACHE_TTL'),
   viewsPaths: env.json('VIEWS_PATHS'),
   httpsOptions: {

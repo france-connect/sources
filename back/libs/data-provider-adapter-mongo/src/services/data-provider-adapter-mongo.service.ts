@@ -56,27 +56,44 @@ export class DataProviderAdapterMongoService implements IDataProviderAdapter {
       this.logger.debug('Refresh cache from DB');
       const list = await this.findAllDataProvider();
       this.listCache = deepFreeze(
-        list.map((listItem) => {
-          listItem.client_secret = this.decryptClientSecret(
-            listItem.client_secret,
-          );
-          return listItem;
-        }),
+        list
+          .map((listItem) => {
+            const clientSecret = this.decryptClientSecret(
+              listItem.client_secret,
+            );
+
+            if (!clientSecret) {
+              this.logger.err({
+                msg: `Failed to decrypt client secret for data provider ${listItem.uid}`,
+              });
+
+              return null;
+            }
+
+            listItem.client_secret = clientSecret;
+
+            return listItem;
+          })
+          .filter(Boolean),
       ) as DataProviderMetadata[];
     }
     return this.listCache;
   }
 
-  private decryptClientSecret(clientSecret: string): string {
+  private decryptClientSecret(clientSecret: string): string | null {
     const { clientSecretEncryptKey } =
       this.config.get<DataProviderAdapterMongoConfig>(
         'DataProviderAdapterMongo',
       );
 
-    return this.cryptography.decryptSymetric(
-      clientSecretEncryptKey,
-      clientSecret,
-    );
+    try {
+      return this.cryptography.decryptSymetric(
+        clientSecretEncryptKey,
+        clientSecret,
+      );
+    } catch {
+      return null;
+    }
   }
 
   private async findAllDataProvider(): Promise<DataProviderMetadata[]> {
@@ -115,7 +132,7 @@ export class DataProviderAdapterMongoService implements IDataProviderAdapter {
   async getById(
     id: string,
     refreshCache?: boolean,
-  ): Promise<DataProviderMetadata> {
+  ): Promise<DataProviderMetadata | undefined> {
     const providers = cloneDeep(await this.getList(refreshCache));
 
     const provider = providers.find(({ uid }) => uid === id);
@@ -126,7 +143,7 @@ export class DataProviderAdapterMongoService implements IDataProviderAdapter {
   async getByClientId(
     clientId: string,
     refreshCache?: boolean,
-  ): Promise<DataProviderMetadata> {
+  ): Promise<DataProviderMetadata | undefined> {
     const providers = cloneDeep(await this.getList(refreshCache));
 
     const provider = providers.find(({ client_id }) => client_id === clientId);

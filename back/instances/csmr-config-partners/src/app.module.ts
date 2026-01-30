@@ -4,7 +4,7 @@ import { ConfigModule, ConfigService } from '@fc/config';
 import { ConfigPostgresAdapterProvider } from '@fc/config-postgres-adapter/providers';
 import { CsmrConfigModule } from '@fc/csmr-config';
 import { LoggerModule } from '@fc/logger';
-import { LoggerDebugPlugin } from '@fc/logger-plugins';
+import { LoggerDebugPlugin } from '@fc/logger-debug-plugin';
 import { PostgresModule } from '@fc/postgres';
 
 @Module({})

@@ -15,7 +15,7 @@ interface StepperComponentProps extends PropsWithChildren {
 export const StepperComponent = React.memo(
   ({
     heading: Heading = HeadingTag.H2,
-    nextStepTitle = undefined,
+    nextStepTitle,
     stepNumber,
     stepTitle,
     totalSteps,

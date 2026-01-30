@@ -8,7 +8,7 @@ import { log, table } from './console-log-plugin';
 import { createHexaHash } from './crypto-plugin';
 import { parseCsvContent } from './csv-plugin';
 import { getFixturePath } from './fixture-plugin';
-import { getJwtContent, isJwsValid } from './jwt-plugin';
+import { getJwtContent, isJwsValid, verifyJwsSignature } from './jwt-plugin';
 import {
   clearBusinessLog,
   getAllBusinessLogs,
@@ -49,6 +49,7 @@ const pluginConfig = async (
     removeAllTracks,
     removeTracks,
     table,
+    verifyJwsSignature,
   });
 
   on(

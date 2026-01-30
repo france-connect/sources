@@ -5,7 +5,7 @@ import { ConfigModule, ConfigService } from '@fc/config';
 import { CsmrConfigClientModule } from '@fc/csmr-config-client';
 import { HttpProxyModule } from '@fc/http-proxy';
 import { LoggerModule } from '@fc/logger';
-import { LoggerDebugPlugin } from '@fc/logger-plugins';
+import { LoggerDebugPlugin } from '@fc/logger-debug-plugin';
 import { MongooseModule } from '@fc/mongoose';
 import { ServiceProviderAdapterMongoModule } from '@fc/service-provider-adapter-mongo';
 import { WebhooksModule } from '@fc/webhooks';

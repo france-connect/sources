@@ -11,17 +11,17 @@ exports[`ServiceProvidersPageNoticeComponent should match snapshot when has item
     <div>
       <div>
         <p>
-          any-i18n-translation
+          CorePartners.serviceProvidersPage.noticeSubtitle
         </p>
         <ul>
           <li>
-            any-i18n-translation
+            CorePartners.serviceProvidersPage.noticeBullet1
           </li>
           <li>
-            any-i18n-translation
+            CorePartners.serviceProvidersPage.noticeBullet2
           </li>
           <li>
-            any-i18n-translation
+            CorePartners.serviceProvidersPage.noticeBullet3
           </li>
         </ul>
       </div>
@@ -41,17 +41,17 @@ exports[`ServiceProvidersPageNoticeComponent should match snapshot when has no i
     <div>
       <div>
         <p>
-          any-i18n-translation
+          CorePartners.serviceProvidersPage.noticeSubtitle
         </p>
         <ul>
           <li>
-            any-i18n-translation
+            CorePartners.serviceProvidersPage.noticeBullet1
           </li>
           <li>
-            any-i18n-translation
+            CorePartners.serviceProvidersPage.noticeBullet2
           </li>
           <li>
-            any-i18n-translation
+            CorePartners.serviceProvidersPage.noticeBullet3
           </li>
         </ul>
       </div>

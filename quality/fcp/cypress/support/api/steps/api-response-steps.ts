@@ -110,16 +110,14 @@ Then('le corps de la réponse contient un JWT', function () {
     .then((body) => {
       expect(body).to.be.a('string');
       expect(body.length).to.be.greaterThan(500);
-      cy.task('getJwtContent', { jwt: body }).then((jwtContent) => {
-        const content = JSON.stringify(jwtContent, null, 2);
-        cy.document().then((document) => {
-          document.documentElement.innerHTML = content;
+      cy.task('getJwtContent', { jwt: body })
+        .as('jwt')
+        .then((jwtContent) => {
+          const content = JSON.stringify(jwtContent, null, 2);
+          cy.document().then((document) => {
+            document.documentElement.innerHTML = content;
+          });
         });
-        cy.get('body')
-          .invoke('text')
-          .then((json) => JSON.parse(json))
-          .as('jwt');
-      });
     });
 });
 

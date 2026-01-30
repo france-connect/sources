@@ -8,6 +8,7 @@ import { getConfigMock } from '@mocks/config';
 import { getLoggerMock } from '@mocks/logger';
 
 import { LogLevels } from '../enums';
+import { LoggerPluginServiceInterface } from '../interfaces';
 import { PLUGIN_SERVICES } from '../tokens';
 import { LoggerService } from './logger.service';
 
@@ -508,6 +509,21 @@ describe('LoggerService', () => {
         ...plugin1Context,
         ...plugin2Context,
       });
+    });
+
+    it('should skip plugins without getContext method', () => {
+      // Given
+      const pluginWithoutGetContext = {};
+      service['plugins'].push(
+        pluginWithoutGetContext as unknown as LoggerPluginServiceInterface,
+      );
+
+      // When
+      service['getContextFromPlugins']();
+
+      // Then
+      expect(pluginMock1.getContext).toHaveBeenCalledExactlyOnceWith();
+      expect(pluginMock2.getContext).toHaveBeenCalledExactlyOnceWith();
     });
   });
 

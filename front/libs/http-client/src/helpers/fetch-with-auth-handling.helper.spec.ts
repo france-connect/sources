@@ -53,11 +53,8 @@ describe('fetchWithAuthHandling', () => {
       status: 500,
     });
 
-    // Then
-    await expect(() =>
-      // When
-      fetchWithAuthHandling('any-url-mock'),
-    ).rejects.toEqual({
+    // When / Then
+    await expect(fetchWithAuthHandling('any-url-mock')).rejects.toEqual({
       status: 500,
     });
   });

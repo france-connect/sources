@@ -117,6 +117,13 @@ export const frFR = {
   // Direction du Service National et de la Jeunesse
   'claim.dsnj_statut_service_national': 'Statut Service National',
 
+  // Agence du service civique
+  'claim.gip_mds_service_civique_statut_actuel':
+    'Statut actuel service civique',
+  'claim.gip_mds_service_civique_statut_passe': 'Statut passé service civique',
+  'claim.gip_mds_service_civique_organisme_accueil': 'Organisme d’accueil',
+  'claim.gip_mds_service_civique_dates': 'Dates de contrat',
+
   // Agence Nationale des Titres Sécurisés
   'claim.ants_extrait_immatriculation_vehicule_identite_particulier':
     'Identité du particulier',

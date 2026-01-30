@@ -102,6 +102,17 @@ describe('OidcProviderRenderedJsonExceptionFilter', () => {
       expect(exceptionMock.originalError.caught).toBe(true);
     });
 
+    it('should not mark the original error as caught if there is no originalError', () => {
+      // Given
+      exceptionMock.originalError = undefined;
+
+      // When
+      filter.catch(exceptionMock, hostMock as unknown as ArgumentsHost);
+
+      // Then
+      expect(exceptionMock.originalError).toBeUndefined();
+    });
+
     it('should call parent method', () => {
       // When
       filter.catch(exceptionMock, hostMock as unknown as ArgumentsHost);

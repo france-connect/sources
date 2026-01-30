@@ -63,10 +63,10 @@ const fsp = {
     ],
     claims: ["amr"],
     id_token_signed_response_alg: "ES256",
-    id_token_encrypted_response_alg: "RSA-OAEP",
+    id_token_encrypted_response_alg: "RSA-OAEP-256",
     id_token_encrypted_response_enc: "A256GCM",
     userinfo_signed_response_alg: "ES256",
-    userinfo_encrypted_response_alg: "RSA-OAEP",
+    userinfo_encrypted_response_alg: "RSA-OAEP-256",
     userinfo_encrypted_response_enc: "A256GCM",
     jwks_uri:
       "https://fsp1-high.docker.dev-franceconnect.fr/client/.well-known/keys",
@@ -75,10 +75,11 @@ const fsp = {
     eidas: 2,
     identityConsent: false,
     signup_id: "9990001",
+    allowedPrompts: ["login", "consent"],
   },
 
   // -- FSP - FSP2v2 - Activated - no post-logout-redirect-uri
-  // using blacklist including fip8-high
+  // using blacklist including fip56-high
   "FSP2-HIGH": {
     name: "FSP - FSP2v2",
     title: "FSP - FSP2v2 Title",
@@ -120,10 +121,10 @@ const fsp = {
     ],
     claims: ["amr"],
     id_token_signed_response_alg: "ES256",
-    id_token_encrypted_response_alg: "RSA-OAEP",
+    id_token_encrypted_response_alg: "ECDH-ES",
     id_token_encrypted_response_enc: "A256GCM",
     userinfo_signed_response_alg: "ES256",
-    userinfo_encrypted_response_alg: "RSA-OAEP",
+    userinfo_encrypted_response_alg: "ECDH-ES",
     userinfo_encrypted_response_enc: "A256GCM",
     jwks_uri:
       "https://fsp2-high.docker.dev-franceconnect.fr/client/.well-known/keys",
@@ -178,10 +179,10 @@ const fsp = {
     ],
     claims: ["amr"],
     id_token_signed_response_alg: "ES256",
-    id_token_encrypted_response_alg: "RSA-OAEP",
+    id_token_encrypted_response_alg: "RSA-OAEP-256",
     id_token_encrypted_response_enc: "A256GCM",
     userinfo_signed_response_alg: "ES256",
-    userinfo_encrypted_response_alg: "RSA-OAEP",
+    userinfo_encrypted_response_alg: "RSA-OAEP-256",
     userinfo_encrypted_response_enc: "A256GCM",
     jwks_uri:
       "https://fsp3-high.docker.dev-franceconnect.fr/client/.well-known/keys",
@@ -222,10 +223,10 @@ const fsp = {
     scopes: ["openid", "birthdate"],
     claims: ["amr"],
     id_token_signed_response_alg: "ES256",
-    id_token_encrypted_response_alg: "RSA-OAEP",
+    id_token_encrypted_response_alg: "RSA-OAEP-256",
     id_token_encrypted_response_enc: "A256GCM",
     userinfo_signed_response_alg: "ES256",
-    userinfo_encrypted_response_alg: "RSA-OAEP",
+    userinfo_encrypted_response_alg: "RSA-OAEP-256",
     userinfo_encrypted_response_enc: "A256GCM",
     jwks_uri:
       "https://fsp1-high.docker.dev-franceconnect.fr/client/.well-known/keys",
@@ -236,7 +237,7 @@ const fsp = {
   },
 
   // -- FSP - FSP5-HIGH - private FSP and identity consent required
-  // using whitelist not including fip8-high
+  // using whitelist not including fip56-high
   "FSP5-HIGH": {
     name: "FSP - FSP5-HIGH",
     title: "FSP - FSP5-HIGH title",
@@ -281,10 +282,10 @@ const fsp = {
     ],
     claims: ["amr"],
     id_token_signed_response_alg: "ES256",
-    id_token_encrypted_response_alg: "RSA-OAEP",
+    id_token_encrypted_response_alg: "ECDH-ES",
     id_token_encrypted_response_enc: "A256GCM",
     userinfo_signed_response_alg: "ES256",
-    userinfo_encrypted_response_alg: "RSA-OAEP",
+    userinfo_encrypted_response_alg: "ECDH-ES",
     userinfo_encrypted_response_enc: "A256GCM",
     jwks_uri:
       "https://fsp5-high.docker.dev-franceconnect.fr/client/.well-known/keys",
@@ -293,24 +294,12 @@ const fsp = {
       "8aa849db-8402-4f2e-bad9-7471dd21ff94",
       "dedc7160-8811-4d0f-9dd7-c072c15f2f18",
       "f9a3f6fe-f9b3-4cec-b787-33713fdffc79",
-      "621c3c17-5f49-4ca5-b8ef-a4b1cecaf7c2",
-      "ce0f6c4d-d70e-411e-a8a0-2a66afa7bd90",
-      "3ae390ce-c9b8-4090-926f-3db90f85fe6a",
-      "2031310b-186e-4643-944a-00efb9d59e0f",
-      "ed928691-4697-44b4-9e56-df1853876610",
-      "b4ae876d-773c-4b4a-bd45-33e0938af4a7",
-      "a97369fb-f7b0-478a-bcc1-6fa49c8782d9",
-      "a437f8aa-10b5-48bd-8931-78f2d055e3df",
-      "7f90ea0f-b965-4f10-bbf8-d6ad19a17451",
-      "8456c460-f89b-4744-93cf-e0b6ac694075",
-      "81e3c37a-e7ea-43be-aa7a-0ed28a1a6e47",
       "4c3e8c0d-12e3-46c2-bef8-5cb7b0702c9d",
-      "f403044b-fcd3-46f2-a87b-30e65f8e7bfe",
-      "913ef56e-0997-4e25-bc55-19a20d6e0532",
-      "c341093a-f4b4-4151-85ff-5fbdcd6baa58",
-      "3c8776ae-5278-425b-8e97-7f01eadd22a0",
-      "7d35f733-a3d0-49c1-9a6f-b9f4800b0b7a",
-      "da5bbb8d-3a93-4434-b1bf-448c69fa7fc9",
+      "34962c29-23a3-4748-8913-1875d3d424f2",
+      "0380ac4f-e07e-4496-bcde-d5eac12e9049",
+      "621c3c17-5f49-4ca5-b8ef-a4b1cecaf7c2",
+      "3ae390ce-c9b8-4090-926f-3db90f85fe6a",
+      "a437f8aa-10b5-48bd-8931-78f2d055e3df",
     ],
     identityConsent: true,
     eidas: 2,
@@ -362,10 +351,10 @@ const fsp = {
     ],
     claims: [],
     id_token_signed_response_alg: "ES256",
-    id_token_encrypted_response_alg: "RSA-OAEP",
+    id_token_encrypted_response_alg: "RSA-OAEP-256",
     id_token_encrypted_response_enc: "A256GCM",
     userinfo_signed_response_alg: "ES256",
-    userinfo_encrypted_response_alg: "RSA-OAEP",
+    userinfo_encrypted_response_alg: "RSA-OAEP-256",
     userinfo_encrypted_response_enc: "A256GCM",
     jwks_uri:
       "https://fsp6-high.docker.dev-franceconnect.fr/client/.well-known/keys",
@@ -373,6 +362,7 @@ const fsp = {
     idpFilterList: [],
     identityConsent: false,
     eidas: 2,
+    allowedIdpHints: ["f9a3f6fe-f9b3-4cec-b787-33713fdffc79"],
   },
 
   // -- FSP - FSP7 - private FSP and identity consent not required and wrong sector_identifier_uri
@@ -410,10 +400,10 @@ const fsp = {
     scopes: ["openid"],
     claims: [],
     id_token_signed_response_alg: "ES256",
-    id_token_encrypted_response_alg: "RSA-OAEP",
+    id_token_encrypted_response_alg: "RSA-OAEP-256",
     id_token_encrypted_response_enc: "A256GCM",
     userinfo_signed_response_alg: "ES256",
-    userinfo_encrypted_response_alg: "RSA-OAEP",
+    userinfo_encrypted_response_alg: "RSA-OAEP-256",
     userinfo_encrypted_response_enc: "A256GCM",
     jwks_uri:
       "https://fsp6-high.docker.dev-franceconnect.fr/client/.well-known/keys",
@@ -472,8 +462,6 @@ const fsp = {
       "https://eidas-bridge.docker.dev-franceconnect.fr/client/.well-known/keys",
     idpFilterExclude: true,
     idpFilterList: [
-      "2031310b-186e-4643-944a-00efb9d59e0f",
-      "0cbdf732-aaea-4566-a99e-4430f388ff18",
       "8aa849db-8402-4f2e-bad9-7471dd21ff94",
     ],
     identityConsent: false,

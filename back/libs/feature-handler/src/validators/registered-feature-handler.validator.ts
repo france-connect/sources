@@ -10,9 +10,7 @@ import { FeatureHandler } from '../decorators';
 import { IFeatureHandlerDatabase } from '../interfaces';
 import { isNotValidFeatureHandlerKey } from '../utils';
 
-export class IsRegisteredFeatureHandlerConstraint
-  implements ValidatorConstraintInterface
-{
+export class IsRegisteredFeatureHandlerConstraint implements ValidatorConstraintInterface {
   validate(value: IFeatureHandlerDatabase): boolean {
     if (!isObject(value)) {
       return false;

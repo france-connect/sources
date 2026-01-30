@@ -26,14 +26,9 @@ services:
       # -- IdP
       - "fip1-high"
       - "fip2-high"
-      - "fip13-high"
-      - "fip14-high"
-      - "fip15-high"
-      - "fip16-high"
-      - "fip17-high"
-      - "fip18-high"
-      - "fip19-high"
-      - "fip20-high"
+      - "fip3-high"
+      - "fip4-high"
+      - "fip5-high"
       # -- DP
       - "dpp1-high"
       - "dpp2-high"
@@ -54,15 +49,9 @@ services:
       # -- IdP
       - "fip1-high"
       - "fip2-high"
-      - "fip6-high"
-      - "fip13-high"
-      - "fip14-high"
-      - "fip15-high"
-      - "fip16-high"
-      - "fip17-high"
-      - "fip18-high"
-      - "fip19-high"
-      - "fip20-high"
+      - "fip3-high"
+      - "fip4-high"
+      - "fip5-high"
       # --
       - "csmr-hsm"
       # --

@@ -63,14 +63,14 @@ describe('useUserPreferencesForm', () => {
     jest.mocked(checkHasDefaultConfiguration).mockReturnValueOnce(true);
     jest.mocked(checkSomeIdpHasBeenChangedSinceLoading).mockReturnValueOnce(true);
     const setAlertInfoStateMock = jest.fn();
-    jest.spyOn(React, 'useState').mockImplementationOnce(() => [
+    jest.spyOn(React, 'useState').mockReturnValueOnce([
       {
         hasInteractedWithAlertInfo: false,
         isDisplayedAlertInfo: false,
       },
       setAlertInfoStateMock,
     ]);
-    jest.spyOn(React, 'useEffect').mockImplementationOnce(() => jest.fn());
+    jest.spyOn(React, 'useEffect').mockImplementationOnce(jest.fn());
 
     // When
     const { result } = renderHook(() => useUserPreferencesForm(options));

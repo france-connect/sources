@@ -1,24 +1,35 @@
 import fs from 'fs';
 import path from 'path';
-import url from 'url';
+import { fileURLToPath } from 'url';
+
+const { readdir, readFile, writeFile } = fs.promises;
+
+/**
+ * Resolve the directory containing this script file.
+ * @returns {string} Absolute path of the current script directory.
+ */
+function getScriptDir() {
+  const filename = fileURLToPath(import.meta.url);
+  return path.dirname(filename);
+}
 
 /**
  * Retrieves all i18n translation files for a given language within a directory.
+ * Only files named "<lang>.json" are returned.
+ *
  * @param {string} dir - The directory path to search.
- * @param {string} lang - The language (e.g., 'fr' or 'en') to filter files.
- * @returns {Promise<string[]>} - An array of full paths of matching i18n files.
+ * @param {string} lang - The language (e.g., "fr" or "en") to filter files.
+ * @returns {Promise<string[]>} An array of full paths of matching i18n files.
  */
 async function getAllI18nFiles(dir, lang) {
   try {
-    // Read the content of the directory
-    const files = await fs.promises.readdir(dir, { withFileTypes: true });
+    const entries = await readdir(dir, { withFileTypes: true });
 
-    // Filter and return the file paths that match the language file
-    return files
-      .filter(file => file.isFile() && file.name === `${lang}.json`)
-      .map(file => path.join(dir, file.name));
+    return entries
+      .filter((entry) => entry.isFile() && entry.name === `${lang}.json`)
+      .map((entry) => path.join(dir, entry.name));
   } catch (err) {
-    // @NOTE Debug du script
+    // Debug helper for the script
     // eslint-disable-next-line no-console
     console.error('Error reading files:', err);
     throw err;
@@ -26,33 +37,32 @@ async function getAllI18nFiles(dir, lang) {
 }
 
 /**
- * Scans a directory to find all subdirectories containing i18n files for a given language.
- * @param {string} dir - The root directory path to explore.
- * @param {string} lang - The language of the i18n files to search for (e.g., 'fr' or 'en').
- * @returns {Promise<string[]>} - An array of paths to all i18n files found.
+ * Scans a root directory to find all subdirectories that contain an "src/i18n"
+ * folder and returns all i18n files for a given language inside them.
+ *
+ * For each direct subdirectory of rootDir, this function checks:
+ *   <rootDir>/<subdir>/src/i18n/<lang>.json
+ *
+ * @param {string} rootDir - The root directory path to explore.
+ * @param {string} lang - The language of the i18n files to search for.
+ * @returns {Promise<string[]>} An array of paths to all i18n files found.
  */
-async function getAllI18nFolders(dir, lang) {
+async function getAllI18nFolders(rootDir, lang) {
   try {
-    const folders = await fs.promises.readdir(dir, { withFileTypes: true });
-    return await Promise.all(
-      folders
-      .filter(folder => folder.isDirectory())
-      .map(async folder => {
-        // Construct the path to the i18n directory
-        // within the subdirectory structure
-        const nextPath = path.join(dir, folder.name, 'src', 'i18n');
-        const folderExists = fs.existsSync(nextPath);
+    const entries = await readdir(rootDir, { withFileTypes: true });
 
-        if (folderExists) { // Check if the i18n directory exists
-          const files = await getAllI18nFiles(nextPath, lang);
-          return files;
-        }
+    const i18nDirs = entries
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => path.join(rootDir, entry.name, 'src', 'i18n'))
+      .filter((i18nDir) => fs.existsSync(i18nDir));
 
-        return null;
-      })
+    const filesPerDir = await Promise.all(
+      i18nDirs.map((i18nDir) => getAllI18nFiles(i18nDir, lang)),
     );
+
+    return filesPerDir.flat();
   } catch (err) {
-    // @NOTE Debug du script
+    // Debug helper for the script
     // eslint-disable-next-line no-console
     console.error('Error reading directories:', err);
     throw err;
@@ -60,83 +70,119 @@ async function getAllI18nFolders(dir, lang) {
 }
 
 /**
- * Reads and merges all i18n files from a specific instance with those from libs and apps.
- * The final file is then written to an output file in JSON format.
- * @param {string} name - The name of the instance.
- * @param {string} lang - The language of the i18n files to read (e.g., 'fr' or 'en').
- * @param {string} excluded - Paths of lib or apps to exclude from the process
+ * Filters out any file paths that match one of the excluded patterns.
+ * A file is excluded if its full path contains any of the provided substrings.
+ *
+ * @param {string[]} files - List of file paths to filter.
+ * @param {string[]} [excluded=[]] - List of substrings; if a path contains one, it is removed.
+ * @returns {string[]} Filtered list of file paths.
  */
-async function readI18nFiles(instanceName, lang, excluded) {
+function filterExcludedFiles(files, excluded = []) {
+  if (!excluded || excluded.length === 0) {
+    return files;
+  }
+
+  return files.filter((filepath) => !excluded.some((pattern) => filepath.includes(pattern)));
+}
+
+/**
+ * Sequentially reads and merges JSON files into a single object.
+ * Later files override keys from earlier ones when there is a conflict.
+ *
+ * @param {string[]} files - List of JSON file paths to merge.
+ * @returns {Promise<object>} The merged translation object.
+ */
+async function mergeJsonFiles(files) {
+  const merged = {};
+
+  for (const file of files) {
+    try {
+      const content = await readFile(file, 'utf8');
+      const parsed = JSON.parse(content);
+      Object.assign(merged, parsed);
+    } catch (err) {
+      // Debug helper for the script
+      // eslint-disable-next-line no-console
+      console.error(`Error reading file ${file}:`, err);
+    }
+  }
+
+  return merged;
+}
+
+/**
+ * Reads and merges all i18n files from "libs", "apps", and a specific "instance"
+ * for a given language. The final merged JSON is written to:
+ *
+ *   instances/<instanceName>/src/<lang>.i18n.json
+ *
+ * Merge order (later overrides earlier):
+ *   1. libs/<libName>/src/i18n/<lang>.json
+ *   2. apps/<appName>/src/i18n/<lang>.json
+ *   3. instances/<instanceName>/src/i18n/<lang>.json
+ *
+ * @param {string} instanceName - The name of the instance.
+ * @param {string} lang - The language of the i18n files to read (e.g., "fr" or "en").
+ * @param {string[]} [excluded=[]] - Paths of libs or apps to exclude from the process.
+ * @returns {Promise<void>}
+ */
+async function readI18nFiles(instanceName, lang, excluded = []) {
   try {
-    const filename = url.fileURLToPath(import.meta.url);
-    const dirname = path.dirname(filename);
+    const scriptDir = getScriptDir();
+    const workspaceRoot = path.join(scriptDir, '..');
 
-    // Define paths for 'libs', 'apps', and 'instances' directories
-    const libspath = path.join(dirname, '..', 'libs');
-    const libsFiles = await getAllI18nFolders(libspath, lang);
+    const libsPath = path.join(workspaceRoot, 'libs');
+    const appsPath = path.join(workspaceRoot, 'apps');
+    const instanceI18nPath = path.join(workspaceRoot, 'instances', instanceName, 'src', 'i18n');
 
-    const appspath = path.join(dirname, '..', 'apps');
-    const appsFiles = await getAllI18nFolders(appspath, lang);
+    // Discover all candidate files in libs, apps, and the instance itself.
+    const [libsFiles, appsFiles, instanceFiles] = await Promise.all([
+      getAllI18nFolders(libsPath, lang),
+      getAllI18nFolders(appsPath, lang),
+      getAllI18nFiles(instanceI18nPath, lang),
+    ]);
 
-    const instancePath = path.join(dirname, '..', 'instances', instanceName, 'src', 'i18n');
-    const instanceFiles = await getAllI18nFiles(instancePath, lang);
+    const allFiles = filterExcludedFiles([...libsFiles, ...appsFiles, ...instanceFiles], excluded);
 
-    // Merge all found files into one array
-    const allFiles = [...libsFiles, ...appsFiles, ...instanceFiles].flat().filter(v => v).filter(filepath => {
-      const almostOne = excluded.some(p => filepath.includes(p))
-      return !almostOne;
-    });
+    // Deterministic merge: libs → apps → instance (order of allFiles).
+    const merged = await mergeJsonFiles(allFiles);
 
-    let merged = {};
-    // Create a promise to read and merge the JSON files
-    const fileReadPromises = allFiles.map(async (file) => {
-      try {
-        // Read the JSON file
-        const content = await fs.promises.readFile(file, 'utf8');
-        const object = JSON.parse(content); // Parse the content into JSON
-        merged = { ...merged, ...object }; // Merge with other content
-      } catch (err) {
-        // @NOTE Debug du script
-        // eslint-disable-next-line no-console
-        console.error(`Error reading file ${file}:`, err);
-      }
-    });
-
-    // Wait for all files to be read in parallel
-    await Promise.all(fileReadPromises);
-
-    // Define the output file path
     const outputFile = path.join(
-      dirname,
-      '..',
+      workspaceRoot,
       'instances',
       instanceName,
       'src',
-      `${lang}.i18n.json`
+      `${lang}.i18n.json`,
     );
-    const jsonContent = JSON.stringify(merged, null, 2);
+    const jsonContent = `${JSON.stringify(merged, null, 2)}\n`;
 
-    // Write the merged JSON file
-    await fs.promises.writeFile(outputFile, jsonContent);
-    // @NOTE Debug du script
+    await writeFile(outputFile, jsonContent);
+    // Debug helper for the script
     // eslint-disable-next-line no-console
     console.log(`${instanceName} i18n file for ${lang} successfully written`);
-
   } catch (err) {
-    // @NOTE Debug du script
+    // Debug helper for the script
     // eslint-disable-next-line no-console
     console.error('General error:', err);
   }
 }
 
-// Get the argument from the command line (instance name)
-const arg = process.argv[2];
-if (!arg) {
-  // Handle missing required argument
-  throw new Error('❌ Missing argument');
-} else {
-  // optionnal argument
-  const excluded = process.argv.slice(3);
-  // Start reading i18n files for languages
-  await readI18nFiles(arg, 'fr', excluded);
+/**
+ * CLI entry point.
+ * Expected usage:
+ *   node script.mjs <instanceName> [excludedPath1 excludedPath2 ...]
+ */
+async function main() {
+  const [instanceName, ...excluded] = process.argv.slice(2);
+
+  if (!instanceName) {
+    throw new Error('❌ Missing argument');
+  }
+
+  const languages = ['fr'];
+
+  await Promise.all(languages.map((lang) => readI18nFiles(instanceName, lang, excluded)));
 }
+
+// Top-level await is used here because this is an ES module.
+await main();

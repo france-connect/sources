@@ -12,6 +12,8 @@ import {
 } from '@fc/access-control';
 import { LoggerService } from '@fc/logger';
 
+import { PartnersServiceProviderNotFoundException } from '../exceptions';
+
 @Injectable()
 export class PartnersServiceProviderService {
   constructor(
@@ -49,6 +51,18 @@ export class PartnersServiceProviderService {
     });
 
     return serviceProviders;
+  }
+
+  async getById(id: string): Promise<PartnersServiceProvider> {
+    const serviceProvider = await this.repository.findOne({
+      where: { id },
+    });
+
+    if (!serviceProvider) {
+      throw new PartnersServiceProviderNotFoundException();
+    }
+
+    return serviceProvider;
   }
 
   async upsert(

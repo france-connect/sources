@@ -36,6 +36,7 @@ interface CardComponentProps extends PropsWithChildren {
   Heading?: HeadingTag;
   link?: To;
   badges?: BadgeInterface[];
+  dataTestId?: string;
   className?:
     | {
         container?: string;
@@ -52,6 +53,7 @@ export const CardComponent = React.memo(
     badges,
     children: description,
     className,
+    dataTestId,
     details,
     enlargeLink = false,
     isHorizontal = false,
@@ -80,7 +82,7 @@ export const CardComponent = React.memo(
           },
           containerClassName,
         )}
-        data-testid="CardComponent">
+        data-testid={dataTestId || 'CardComponent'}>
         <div className="fr-card__body">
           <div className="fr-card__content">
             <Heading

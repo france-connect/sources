@@ -185,6 +185,14 @@ export class OidcSession {
   @IsIn(['private', 'public'])
   readonly spType?: string;
 
+  /**
+   * Original prompt value passed by the SP if allowed via allowedPrompts.
+   * Used to skip the consent page when value is 'none' or 'login'.
+   */
+  @IsOptional()
+  @IsString()
+  readonly spPrompt?: string;
+
   @IsOptional()
   @IsString()
   readonly oidcProviderLogoutForm?: string;

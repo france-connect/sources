@@ -1,7 +1,7 @@
 <nav class="navbar navbar-light" role="navigation">
   <div class="container-fluid">
     <a class="navbar-brand" href="/">
-      <img src="/img/fc_logo_v2.svg" alt="Logo FC" height="42" class="d-inline-block align-top">
+      <img src="<%= $asset('/img/fc_logo_v2.svg') %>" alt="Logo FC" height="42" class="d-inline-block align-top">
     </a>
 
     <% if (locals.accessToken) { %>
@@ -22,7 +22,7 @@
       <% } else { %>
       <li class="nav-item">
         <a class="nav-link" href="/login">
-          <img src="/img/FCboutons-10.svg" alt="Se connecter à FranceConnect" height="42" id="get-authorize" />
+          <img src="<%= $asset('/img/FCboutons-10.svg') %>" alt="Se connecter à FranceConnect" height="42" id="get-authorize" />
         </a>
       </li>
       <% } %>

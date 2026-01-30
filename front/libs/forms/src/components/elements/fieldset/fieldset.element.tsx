@@ -10,13 +10,7 @@ interface FieldsetElementProps extends Required<PropsWithChildren> {
 }
 
 export const FieldsetElement = React.memo(
-  ({
-    children,
-    className = undefined,
-    hasError = false,
-    isValid = false,
-    name,
-  }: FieldsetElementProps) => (
+  ({ children, className, hasError = false, isValid = false, name }: FieldsetElementProps) => (
     <fieldset
       aria-labelledby={`${name}-legend ${name}-messages`}
       className={classnames('fr-fieldset', className, {

@@ -198,5 +198,24 @@ describe('FcBaseExceptionFilter', () => {
       // Then
       expect(result).toEqual(`${prefixMock}000000`);
     });
+
+    it('should return default code if the exception is a NodeJS Error', () => {
+      // Given
+      const errorMock = new Error('errorMockMessage');
+
+      // When
+      const result = filter['getExceptionCodeFor'](errorMock);
+
+      // Then
+      expect(result).toEqual(`${prefixMock}000000`);
+    });
+
+    it('should return default code if no exception is provided', () => {
+      // When
+      const result = filter['getExceptionCodeFor']();
+
+      // Then
+      expect(result).toEqual(`${prefixMock}000000`);
+    });
   });
 });

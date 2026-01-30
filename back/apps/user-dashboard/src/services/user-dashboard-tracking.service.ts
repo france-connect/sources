@@ -14,9 +14,7 @@ import {
 } from '../interfaces';
 
 @Injectable()
-export class UserDashboardTrackingService
-  implements AppTrackingServiceAbstract
-{
+export class UserDashboardTrackingService implements AppTrackingServiceAbstract {
   // Needed to match the interface
   // eslint-disable-next-line require-await
   async buildLog(

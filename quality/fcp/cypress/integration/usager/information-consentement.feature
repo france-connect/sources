@@ -55,6 +55,26 @@ Fonctionnalité: Information Consentement
     Et le fournisseur de service a accès aux informations du scope "identite_pivot sans alias"
 
   @ci
+  Scénario: Consentement - protection contre le double clic sur le bouton continuer vers le FS
+    Etant donné que je navigue sur la page fournisseur de service
+    Et que je clique sur le bouton FranceConnect
+    Et que je me connecte au fournisseur d'identité via FranceConnect
+    Et que je suis redirigé vers la page d'information
+    Quand je double-clique sur le bouton continuer sur le fournisseur de service
+    Alors je suis redirigé vers la page fournisseur de service
+
+  @ci
+  Scénario: Consentement - désactivation du bouton continuer vers le FS et affichage de la modale de chargement
+    Etant donné que je navigue sur la page fournisseur de service
+    Et que je clique sur le bouton FranceConnect
+    Et que je me connecte au fournisseur d'identité via FranceConnect
+    Et que je suis redirigé vers la page d'information
+    Et que je bloque temporairement la navigation de la page pour continuer sur le fournisseur de service
+    Quand je double-clique sur le bouton continuer sur le fournisseur de service
+    Alors le bouton continuer sur le fournisseur de service est désactivé
+    Et la modale de chargement du fournisseur de service est affichée
+
+  @ci
   Scénario: Information - scope anonyme avec FS public
     Etant donné que j'utilise un fournisseur de service "public"
     Et que le fournisseur de service requiert l'accès aux informations du scope "anonyme"

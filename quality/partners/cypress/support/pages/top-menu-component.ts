@@ -9,6 +9,13 @@ export default class TopMenuComponent {
     cy.visit('/fournisseurs-de-service');
   }
 
+  getServiceProvidersLink(): ChainableElement {
+    return cy.contains(
+      'header[role="banner"] nav[role="navigation"] a',
+      'Fournisseurs de service',
+    );
+  }
+
   getUserLabel(): ChainableElement {
     return cy.get(
       '.fr-header__tools [data-testid="layout-header-tools-account-component"]',

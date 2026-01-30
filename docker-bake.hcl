@@ -326,6 +326,38 @@ target "command-import-sp-sandbox" {
   ]
 }
 
+# ---------------------------
+# Target: command-pre-deploy (specific)
+# ---------------------------
+
+target "command-pre-deploy" {
+  inherits = ["prod-base"]
+  target = "command-pre-deploy"
+
+  matrix = {
+    app = ["partners"]
+  }
+
+  name = "${app}-pre-deploy"
+
+  args = {
+    APP_NAME = "command-pre-deploy"
+    TARGET_APP = "${app}"
+    COMMAND_ARGS = "command-pre-deploy"
+  }
+
+  contexts = {
+    pm2 = "./docker/builds/command-apps/includes/pm2"
+  }
+
+  output = [
+    merge(
+      REGISTRY_OUTPUT_COMMON,
+      { name = "${REGISTRY_URL}/nodejs-apps/${app}-pre-deploy:${APP_VERSION}" }
+    )
+  ]
+}
+
 
 # ---------------------------
 # Groups

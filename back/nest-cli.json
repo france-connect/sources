@@ -26,6 +26,15 @@
         "tsConfigPath": "libs/account/tsconfig.lib.json"
       }
     },
+    "anonymizer": {
+      "type": "library",
+      "root": "libs/anonymizer",
+      "entryFile": "index",
+      "sourceRoot": "libs/anonymizer/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/anonymizer/tsconfig.lib.json"
+      }
+    },
     "apache-ignite": {
       "type": "library",
       "root": "libs/apache-ignite",
@@ -71,6 +80,15 @@
         "tsConfigPath": "instances/command-import-sp-sandbox/tsconfig.app.json"
       }
     },
+    "command-pre-deploy": {
+      "type": "application",
+      "root": "instances/command-pre-deploy",
+      "entryFile": "main",
+      "sourceRoot": "instances/command-pre-deploy/src",
+      "compilerOptions": {
+        "tsConfigPath": "instances/command-pre-deploy/tsconfig.app.json"
+      }
+    },
     "command-runner": {
       "type": "library",
       "root": "apps/command-runner",
@@ -87,6 +105,15 @@
       "sourceRoot": "instances/command-runner-instance/src",
       "compilerOptions": {
         "tsConfigPath": "instances/command-runner-instance/tsconfig.app.json"
+      }
+    },
+    "command-support-ticket": {
+      "type": "application",
+      "root": "instances/command-support-ticket",
+      "entryFile": "main",
+      "sourceRoot": "instances/command-support-ticket/src",
+      "compilerOptions": {
+        "tsConfigPath": "instances/command-support-ticket/tsconfig.app.json"
       }
     },
     "common": {
@@ -177,7 +204,12 @@
           "../../../instances/core-fcp-high/src/**/*.png",
           "../../../instances/core-fcp-high/src/**/*.woff2",
           "../../../instances/core-fcp-high/src/**/*.webmanifest",
-          "../../../instances/core-fcp-high/src/**/robots.txt"
+          "../../../instances/core-fcp-high/src/**/robots.txt",
+          {
+            "include": "../../../node_modules/@gouvfr/dsfr/dist/",
+            "outDir": "dist/instances/core-fcp-high/public/gouvfr/.",
+            "watchAssets": false
+          }
         ]
       }
     },
@@ -215,7 +247,12 @@
           "../../../instances/core-fcp-low/src/**/*.png",
           "../../../instances/core-fcp-low/src/**/*.woff2",
           "../../../instances/core-fcp-low/src/**/*.webmanifest",
-          "../../../instances/core-fcp-low/src/**/robots.txt"
+          "../../../instances/core-fcp-low/src/**/robots.txt",
+          {
+            "include": "../../../node_modules/@gouvfr/dsfr/dist/",
+            "outDir": "dist/instances/core-fcp-low/public/gouvfr/.",
+            "watchAssets": false
+          }
         ]
       }
     },
@@ -647,6 +684,15 @@
         "tsConfigPath": "libs/hsm/tsconfig.lib.json"
       }
     },
+    "http-otrs-client": {
+      "type": "library",
+      "root": "libs/http-otrs-client",
+      "entryFile": "index",
+      "sourceRoot": "libs/http-otrs-client/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/http-otrs-client/tsconfig.lib.json"
+      }
+    },
     "http-proxy": {
       "type": "library",
       "root": "libs/http-proxy",
@@ -710,6 +756,15 @@
         "tsConfigPath": "libs/logger/tsconfig.lib.json"
       }
     },
+    "logger-debug-plugin": {
+      "type": "library",
+      "root": "libs/logger-debug-plugin",
+      "entryFile": "index",
+      "sourceRoot": "libs/logger-debug-plugin/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/logger-debug-plugin/tsconfig.lib.json"
+      }
+    },
     "logger-legacy": {
       "type": "library",
       "root": "libs/logger-legacy",
@@ -719,13 +774,22 @@
         "tsConfigPath": "libs/logger-legacy/tsconfig.lib.json"
       }
     },
-    "logger-plugins": {
+    "logger-request-plugin": {
       "type": "library",
-      "root": "libs/logger-plugins",
+      "root": "libs/logger-request-plugin",
       "entryFile": "index",
-      "sourceRoot": "libs/logger-plugins/src",
+      "sourceRoot": "libs/logger-request-plugin/src",
       "compilerOptions": {
-        "tsConfigPath": "libs/logger-plugins/tsconfig.lib.json"
+        "tsConfigPath": "libs/logger-request-plugin/tsconfig.lib.json"
+      }
+    },
+    "logger-session-plugin": {
+      "type": "library",
+      "root": "libs/logger-session-plugin",
+      "entryFile": "index",
+      "sourceRoot": "libs/logger-session-plugin/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/logger-session-plugin/tsconfig.lib.json"
       }
     },
     "mailer": {
@@ -1098,6 +1162,15 @@
       "sourceRoot": "libs/partners-service-provider-instance-version/src",
       "compilerOptions": {
         "tsConfigPath": "libs/partners-service-provider-instance-version/tsconfig.lib.json"
+      }
+    },
+    "plugins": {
+      "type": "library",
+      "root": "libs/plugins",
+      "entryFile": "index",
+      "sourceRoot": "libs/plugins/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/plugins/tsconfig.lib.json"
       }
     },
     "postgres": {

@@ -16,7 +16,8 @@ export const TextAreaInput = React.memo(({ config, input, meta }: PropsWithInput
   const hasMessages = fieldMessages && fieldMessages.length > 0;
 
   const count = input.value.length;
-  const maxLength = maxChars ? Number(maxChars) + 1 : undefined;
+  const isNumber = typeof maxChars === 'number';
+  const maxLength = isNumber ? maxChars + 1 : undefined;
 
   return (
     <GroupElement

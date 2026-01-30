@@ -1,10 +1,10 @@
 import { render } from '@testing-library/react';
 
 import { type MessageTypes, useScrollTo } from '@fc/common';
+import type { InstanceInterface } from '@fc/core-partners';
 import { CreateInstanceButton, InstancesListComponent } from '@fc/core-partners';
 import { AlertComponent, LinkEmailComponent, TileComponent } from '@fc/dsfr';
 import { t } from '@fc/i18n';
-import type { InstanceInterface } from '@fc/partners-service-providers';
 
 import type { SubmitTypesMessage } from '../../../enums';
 import { useInstances } from '../../../hooks';

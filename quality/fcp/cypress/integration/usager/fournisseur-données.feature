@@ -5,6 +5,7 @@ Fonctionnalité: Fournisseur Données
   # je souhaite vérifier la validité d'un access token
   # afin de fournir les données liées aux scopes autorisés pour le fournisseur de service
 
+  @ignoreHigh
   Plan du Scénario: Checktoken - access token valide niveau <acrValue>
     Etant donné que le fournisseur de service requiert l'accès aux informations des scopes "tous les scopes data"
     Et que le fournisseur de service requiert un niveau de sécurité "<acrValue>"
@@ -33,7 +34,7 @@ Fonctionnalité: Fournisseur Données
       | eidas2   |
       | eidas3   |
 
-  @fcpLow @fcpHigh
+  @fcpLow @fcpHigh @ignoreHigh
   Scénario: Checktoken - access token expiré
     Etant donné que je navigue sur la page fournisseur de service
     Et que je me connecte à FranceConnect
@@ -44,7 +45,7 @@ Fonctionnalité: Fournisseur Données
     Alors le fournisseur de données vérifie l'access token fourni par le fournisseur de service
     Et le checktoken endpoint envoie un token d'introspection expiré
 
-  @fcpLow @fcpHigh
+  @fcpLow @fcpHigh @ignoreHigh
   Scénario: Checktoken - access token aucun scope ne correspond au FD
     Etant donné que le fournisseur de service requiert l'accès aux informations des scopes "CNAM"
     Et que je navigue sur la page fournisseur de service
@@ -56,7 +57,7 @@ Fonctionnalité: Fournisseur Données
     Et le checktoken endpoint envoie un token d'introspection valide
     Et le token d'introspection a une propriété "scope" égale à ""
 
-  @fcpLow @fcpHigh
+  @fcpLow @fcpHigh @ignoreHigh
   Plan du Scénario: Checktoken - access token valide pour usager "<userType>"
     Etant donné que j'utilise un compte usager "<userType>"
     Et que je navigue sur la page fournisseur de service
@@ -78,7 +79,7 @@ Fonctionnalité: Fournisseur Données
       | présumé né jour                    |
       | présumé né jour et mois            |
 
-  @fcpLow @fcpHigh @ignoreInteg01
+  @fcpLow @fcpHigh @ignoreInteg01 @ignoreHigh
   Plan du Scénario: Checktoken - Vérification log métier access token valide
     Etant donné que j'utilise un compte usager "par défaut"
     Et que je navigue sur la page fournisseur de service

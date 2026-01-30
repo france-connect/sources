@@ -1,9 +1,26 @@
-import { Then, When } from '@badeball/cypress-cucumber-preprocessor';
+import { Given, Then, When } from '@badeball/cypress-cucumber-preprocessor';
 
 import { getScopeByType } from '../../common/helpers';
 import InfoConsentPage from '../pages/info-consent-page';
 
 const infoConsentPage = new InfoConsentPage();
+
+Given(
+  'je bloque temporairement la navigation de la page pour continuer sur le fournisseur de service',
+  function () {
+    infoConsentPage.getConsentForm().then(($form) => {
+      const form = $form[0];
+
+      form.addEventListener(
+        'submit',
+        (e) => {
+          e.preventDefault();
+        },
+        { capture: true, once: true },
+      );
+    });
+  },
+);
 
 Then('je suis redirigé vers la page confirmation de connexion', function () {
   infoConsentPage.checkIsVisible();
@@ -70,3 +87,24 @@ When('je retire le csrf de consentement', function () {
 When('je continue sur le fournisseur de service', function () {
   infoConsentPage.getConsentButton().click();
 });
+
+When(
+  'je double-clique sur le bouton continuer sur le fournisseur de service',
+  function () {
+    infoConsentPage.getConsentButton().dblclick();
+  },
+);
+
+Then(
+  'le bouton continuer sur le fournisseur de service est désactivé',
+  function () {
+    infoConsentPage.getConsentButton().should('be.disabled');
+  },
+);
+
+Then(
+  'la modale de chargement du fournisseur de service est affichée',
+  function () {
+    infoConsentPage.checkIsLoadingModalVisible();
+  },
+);

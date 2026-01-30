@@ -37,6 +37,10 @@ describe('ConfigPostgresAdapterService', () => {
   } as unknown as ConfigMessageDto;
 
   beforeEach(async () => {
+    jest.clearAllMocks();
+    jest.resetAllMocks();
+    jest.restoreAllMocks();
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ConfigPostgresAdapterService,
@@ -117,6 +121,34 @@ describe('ConfigPostgresAdapterService', () => {
         queryRunnerMock,
         version,
       );
+    });
+
+    it('should not update version publication status if unchanged', async () => {
+      // Given
+      const instance = Symbol('instance');
+      const publicationStatus = Symbol('ExistingPublicationStatus');
+      const version = {
+        publicationStatus,
+      };
+
+      // Use a fresh message object to avoid nested mutation issues
+      const sameMessageMock = {
+        payload: { publicationStatus },
+        meta: {
+          instanceId: messageMock.meta.instanceId,
+          versionId: messageMock.meta.versionId,
+          publicationStatus,
+        },
+      } as unknown as ConfigMessageDto;
+
+      service['getInstance'] = jest.fn().mockResolvedValueOnce(instance);
+      service['getVersion'] = jest.fn().mockResolvedValueOnce(version);
+
+      // When
+      await service['save'](sameMessageMock);
+
+      // Then
+      expect(versionsMock.updateStatusWithQueryRunner).not.toHaveBeenCalled();
     });
 
     it('should return result with version id', async () => {

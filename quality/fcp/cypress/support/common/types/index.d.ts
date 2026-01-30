@@ -7,6 +7,7 @@ import { Environment } from './environment';
 import { FraudFormValues } from './fraud-form-values';
 import { IdentityProviderInterface } from './identity-provider';
 import { IdentityProviderConfig } from './identity-provider-config';
+import { JwtContent } from './jwt';
 import { NotificationConfig } from './notification-config';
 import { ScopeContext, ServiceProvider } from './service-provider';
 import { ServiceProviderConfig } from './service-provider-config';
@@ -21,6 +22,7 @@ declare global {
     interface Chainable {
       // custom commands
       clearThenType(text: string, options?: Partial<Cypress.TypeOptions>): void;
+      checkWithinViewport(expectedWithinViewport: boolean): Chainable<Element>;
     }
   }
 }
@@ -35,6 +37,8 @@ declare module 'mocha' {
     // API context
     apiRequests: Partial<Cypress.RequestOptions>[];
     apiRequest?: Partial<Cypress.RequestOptions>;
+    apiResponse: Cypress.Response<unknown>;
+    jwt?: JwtContent;
 
     // BDD context
     env: Environment;
@@ -64,6 +68,7 @@ export * from './email';
 export * from './environment';
 export * from './identity-provider';
 export * from './identity-provider-config';
+export * from './jwt';
 export * from './notification-config';
 export * from './service-provider';
 export * from './service-provider-config';

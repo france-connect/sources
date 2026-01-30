@@ -80,7 +80,7 @@ describe('useSummaryPage', () => {
   it('should return the expected values', () => {
     // Given
     const callbackMock = jest.fn();
-    jest.spyOn(React, 'useCallback').mockImplementationOnce(() => callbackMock);
+    jest.spyOn(React, 'useCallback').mockReturnValueOnce(callbackMock);
 
     // When
     const { result } = renderHook(() => useSummaryPage());

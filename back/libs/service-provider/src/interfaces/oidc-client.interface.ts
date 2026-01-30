@@ -23,6 +23,16 @@ export interface OidcClientInterface {
   rep_scope: string[];
 
   /**
+   * Allow a client to use a specific idp hint
+   */
+  allowedIdpHints?: string[];
+
+  /**
+   * Allow a client to use a specific prompts
+   */
+  allowedPrompts?: string[];
+
+  /**
    * Filter list parameters
    */
   idpFilterExclude: boolean;

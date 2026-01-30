@@ -113,11 +113,35 @@ Given(
   },
 );
 
+Given(
+  'je bloque temporairement la navigation des formulaires de la mire',
+  function () {
+    identityProviderSelectionPage.getAllIdpForms().then(($forms) => {
+      [...$forms].forEach((form) => {
+        form.addEventListener(
+          'submit',
+          (e) => {
+            e.preventDefault();
+          },
+          { capture: true, once: true },
+        );
+      });
+    });
+  },
+);
+
 When("je clique sur le fournisseur d'identité", function () {
   expect(this.identityProvider).to.exist;
   identityProviderSelectionPage
     .getIdpButton(this.identityProvider)
     .click({ force: true });
+});
+
+When("je double-clique sur le fournisseur d'identité", function () {
+  expect(this.identityProvider).to.exist;
+  identityProviderSelectionPage
+    .getIdpButton(this.identityProvider)
+    .dblclick({ force: true });
 });
 
 When('je clique sur le lien retour vers le FS sous la mire', function () {
@@ -167,6 +191,10 @@ Then(
   },
 );
 
+Then("tous les fournisseurs d'identité sont désactivés", function () {
+  identityProviderSelectionPage.getAllIdpButtons().should('be.disabled');
+});
+
 Then(
   /^le bouton Aidants Connect (est|n'est pas) affiché sous la mire$/,
   function (text: string) {
@@ -200,6 +228,13 @@ Then(
       .getIdpSelectionModal(idpId)
       .getModal()
       .should(isVisible ? 'be.visible' : 'not.be.visible');
+  },
+);
+
+Then(
+  "la modale de chargement du fournisseur d'identité est affichée",
+  function () {
+    identityProviderSelectionPage.checkIsLoadingModalVisible();
   },
 );
 

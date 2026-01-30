@@ -55,7 +55,7 @@ describe('LabelElement', () => {
     const seeAlsoElt = getByTestId('SeeAlsoElement');
 
     // Then
-    expect(seeAlsoElt).toBeDefined();
+    expect(seeAlsoElt).toBeInTheDocument();
   });
 
   it('should render the span even if only hint is provided', () => {
@@ -72,7 +72,7 @@ describe('LabelElement', () => {
 
     // Then
     expect(hintElt).toHaveClass('fr-hint-text');
-    expect(seeAlsoElt).toBeDefined();
+    expect(seeAlsoElt).toBeInTheDocument();
   });
 
   it('should match the snapshot', () => {

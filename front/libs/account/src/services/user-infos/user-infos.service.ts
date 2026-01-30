@@ -24,7 +24,7 @@ export const fetchUserInfosErrorHandler =
 export const fetchUserInfosSuccessHandler =
   (updateState: UserInfosFetcherInterface['updateState'], validator: UserInfosValidatorInterface) =>
   ({ data }: AxiosResponse<UserInfosInterface>) => {
-    const isConnected = !!(data && validator.validate(data));
+    const isConnected = data && validator.validate(data);
     const userinfos = (isConnected && data) || undefined;
     const next = { connected: isConnected, expired: false, ready: true, userinfos };
     updateState(next);

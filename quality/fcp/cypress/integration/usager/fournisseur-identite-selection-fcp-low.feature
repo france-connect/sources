@@ -54,6 +54,24 @@ Fonctionnalité: Fournisseur Identité - Sélection - fcp-low
     Quand je clique sur le fournisseur d'identité
     Alors je ne suis pas redirigé vers la page login du fournisseur d'identité
 
+  @ci
+  Scénario: Connexion d'un usager - protection contre le double clic sur les FI
+    Etant donné que je navigue sur la page fournisseur de service
+    Et que je clique sur le bouton FranceConnect
+    Et que je suis redirigé vers la page sélection du fournisseur d'identité
+    Quand je double-clique sur le fournisseur d'identité
+    Alors je suis redirigé vers la page login du fournisseur d'identité
+
+  @ci
+  Scénario: Connexion d'un usager - désactivation du bouton du FI et affichage de la modale de chargement
+    Etant donné que je navigue sur la page fournisseur de service
+    Et que je clique sur le bouton FranceConnect
+    Et que je suis redirigé vers la page sélection du fournisseur d'identité
+    Et que je bloque temporairement la navigation des formulaires de la mire
+    Quand je double-clique sur le fournisseur d'identité
+    Alors tous les fournisseurs d'identité sont désactivés
+    Et la modale de chargement du fournisseur d'identité est affichée
+
   # configuration de FI manquante
   @ci @ignoreInteg01 @exceptions
   Scénario: Connexion d'un usager - erreur si on force la connexion via un FI désactivé

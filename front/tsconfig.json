@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {},
+  "exclude": [
+    "**/.template",
+    "**/tmp/*",
+    "**/temp/*",
+    "**/dist/*",
+    "**/build/*",
+    "**/public/*",
+    "**/scripts/*",
+    "**/coverage/*",
+    "**/node_modules/*",
+    "**/__fixtures__*",
+    "**/__snapshots__/*",
+    "**/*.css",
+    "**/*.scss"
+  ],
+  "extends": "@fc/react-app/tsconfig.json",
+  "files": [".configs/react-app/globals.d.ts", "jest.setup.ts"],
+  "include": [
+    "**/__mocks__",
+    "**/src/**/*",
+    "**/src/**/*.d.ts",
+    "**/vite.config.js"
+  ]
+}

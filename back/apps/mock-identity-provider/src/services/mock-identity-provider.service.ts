@@ -208,9 +208,9 @@ export class MockIdentityProviderService {
   private oidcAddressFieldPresent(identity: CsvParsed) {
     return Boolean(
       identity.country ||
-        identity.postal_code ||
-        identity.locality ||
-        identity.street_address,
+      identity.postal_code ||
+      identity.locality ||
+      identity.street_address,
     );
   }
 }

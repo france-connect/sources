@@ -9,7 +9,7 @@ interface TableHeaderComponentProps extends PropsWithClassName {
 }
 
 export const TableHeaderComponent = React.memo(
-  ({ className = undefined, columns }: TableHeaderComponentProps) => (
+  ({ className, columns }: TableHeaderComponentProps) => (
     <thead className={className}>
       <tr>
         {columns.map((item) => (

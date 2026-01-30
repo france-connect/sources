@@ -6,7 +6,7 @@ import { HiddenInput } from './hidden.input';
 describe('HiddenInput', () => {
   beforeEach(() => {
     // Given
-    jest.mocked(Field).mockImplementation(() => <div data-mockid="Field" />);
+    jest.mocked(Field).mockReturnValue(<div data-mockid="Field" />);
   });
 
   it('should match the snapshot', () => {

@@ -1,10 +1,9 @@
 import type { FSAInterface } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { fetchWithAuthHandling } from '@fc/http-client';
-import type { InstanceInterface } from '@fc/partners-service-providers';
 
 import { CorePartnersOptions } from '../../../enums';
-import type { PartnersConfig } from '../../../interfaces';
+import type { InstanceInterface, PartnersConfig } from '../../../interfaces';
 
 // @TODO #2356
 // The Dto2Form Back API should return

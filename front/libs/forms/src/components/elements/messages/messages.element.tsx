@@ -10,7 +10,7 @@ interface MessagesElementProps {
 }
 
 export const MessagesElement = React.memo(
-  ({ dataTestId = undefined, id, messages = [] }: MessagesElementProps) => {
+  ({ dataTestId, id, messages = [] }: MessagesElementProps) => {
     const maxPriority = Math.max(...messages.map((m) => m.priority));
 
     const filteredMessages = messages.filter((m) => m.priority === maxPriority);

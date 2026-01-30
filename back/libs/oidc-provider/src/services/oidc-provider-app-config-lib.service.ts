@@ -6,6 +6,7 @@ import {
 
 import { Injectable } from '@nestjs/common';
 
+import { AssetsService } from '@fc/app';
 import { AsyncFunctionSafe } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { throwException } from '@fc/exceptions/helpers';
@@ -26,9 +27,7 @@ import { OidcProviderErrorService } from './oidc-provider-error.service';
 import { OidcProviderGrantService } from './oidc-provider-grant.service';
 
 @Injectable()
-export abstract class OidcProviderAppConfigLibService
-  implements IOidcProviderConfigAppService
-{
+export abstract class OidcProviderAppConfigLibService implements IOidcProviderConfigAppService {
   protected provider: Provider;
 
   // Dependency injection can require more than 4 parameters
@@ -39,6 +38,7 @@ export abstract class OidcProviderAppConfigLibService
     protected readonly errorService: OidcProviderErrorService,
     protected readonly grantService: OidcProviderGrantService,
     protected readonly config: ConfigService,
+    protected readonly assetsService: AssetsService,
   ) {}
 
   /**
@@ -54,7 +54,7 @@ export abstract class OidcProviderAppConfigLibService
       </head>
       <body>
         ${form}
-        <script src="/js/auto-submit.js" defer></script>
+        <script src="${this.assetsService.getAssetFullPath('/js/auto-submit.js')}" defer></script>
       </body>
     </html>`;
   }
@@ -201,7 +201,7 @@ export abstract class OidcProviderAppConfigLibService
       <body>
         <form method="${method}" action="${uri}">
         </form>
-        <script src="/js/auto-submit.js" defer></script>
+        <script src="${this.assetsService.getAssetFullPath('/js/auto-submit.js')}" defer></script>
       </body>
     </html>`;
   }

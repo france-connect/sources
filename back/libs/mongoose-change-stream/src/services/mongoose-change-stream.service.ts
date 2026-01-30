@@ -4,9 +4,11 @@ import { Injectable } from '@nestjs/common';
 import { InjectConnection } from '@nestjs/mongoose';
 
 import { FunctionSafe } from '@fc/common';
+import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger';
 
 import { OPERATIONS_TO_WATCH } from '../constants';
+import { MongooseChangeStreamConfig } from '../dto';
 import {
   ChangeStreamCompatibleDocument,
   CollectionsToWatchType,
@@ -19,6 +21,7 @@ export class MongooseChangeStreamService {
 
   constructor(
     private readonly logger: LoggerService,
+    private readonly config: ConfigService,
     @InjectConnection() private readonly connection: Connection,
   ) {}
 
@@ -40,6 +43,7 @@ export class MongooseChangeStreamService {
     this.collectionsToWatch.set(collectionName, {
       callback,
       modelName,
+      timeoutPointer: null,
     });
 
     this.logger.info(
@@ -77,13 +81,24 @@ export class MongooseChangeStreamService {
   }
 
   private onChange(event: ChangeStreamCompatibleDocument): void {
-    const { callback, modelName } = this.collectionsToWatch.get(event.ns.coll);
+    const watcher = this.collectionsToWatch.get(event.ns.coll);
+    const { callback, modelName } = watcher;
 
-    this.logger.notice(
-      `Detected "${event.operationType}" on "${modelName}", calling handler.`,
-    );
+    const { debounceDelayMs: timeout } =
+      this.config.get<MongooseChangeStreamConfig>('MongooseChangeStream');
 
-    callback(event);
+    this.logger.debug(`Detected "${event.operationType}" on "${modelName}"`);
+
+    if (watcher.timeoutPointer) {
+      clearTimeout(watcher.timeoutPointer);
+    }
+
+    watcher.timeoutPointer = setTimeout(() => {
+      this.logger.notice(
+        `Timeout reached for "${modelName}", calling handler.`,
+      );
+      callback(event);
+    }, timeout);
   }
 
   private async onError(error: Error): Promise<void> {

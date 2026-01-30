@@ -119,6 +119,7 @@ const ticketDataMock: SecurityTicketDataInterface = {
   error: '',
   total: 2,
   tracks: [ticketTrackWithAccountMatchMock, ticketTrackWithoutAccountMatchMock],
+  fraudTracks: [trackWithAccountMatchMock, trackWithoutAccountMatchMock],
 };
 
 describe('getSecurityTicketData', () => {
@@ -158,10 +159,13 @@ describe('getSecurityTicketData', () => {
 
   it('should return ticketData with error if tracks total is 0', () => {
     // Given
-    ticketDataMock.error =
-      'aucune trace ne correspond au code d’identitication';
-    ticketDataMock.total = 0;
-    ticketDataMock.tracks = [];
+    const errorTicketDataMock = {
+      ...ticketDataMock,
+      error: 'aucune trace ne correspond au code d’identitication',
+      total: 0,
+      tracks: [],
+      fraudTracks: [],
+    };
 
     // When
     const ticketData = getSecurityTicketData(
@@ -172,6 +176,6 @@ describe('getSecurityTicketData', () => {
     );
 
     // Then
-    expect(ticketData).toEqual(ticketDataMock);
+    expect(ticketData).toEqual(errorTicketDataMock);
   });
 });

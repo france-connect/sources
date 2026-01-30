@@ -15,9 +15,7 @@ import { IIdentityCheckFeatureHandler } from '../../interfaces';
 
 @Injectable()
 @FeatureHandler('core-fcp-default-identity-check')
-export class CoreFcpDefaultIdentityCheckHandler
-  implements IIdentityCheckFeatureHandler
-{
+export class CoreFcpDefaultIdentityCheckHandler implements IIdentityCheckFeatureHandler {
   constructor(
     public readonly logger: LoggerService,
     public readonly session: SessionService,

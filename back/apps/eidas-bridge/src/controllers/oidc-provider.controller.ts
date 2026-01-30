@@ -51,7 +51,7 @@ export class OidcProviderController {
     @Query() _query: AuthorizeParamsDto,
   ) {
     await this.session.reset(res);
-    this.logger.info('Session was reset');
+    this.logger.debug('Session was reset');
 
     await this.oidcProvider.callback(req, res);
   }

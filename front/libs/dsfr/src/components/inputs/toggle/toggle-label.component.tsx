@@ -17,7 +17,7 @@ interface ToggleLabelComponentProps {
 }
 
 export const ToggleLabelComponent = React.memo(
-  ({ input, label, legend = undefined }: ToggleLabelComponentProps) => {
+  ({ input, label, legend }: ToggleLabelComponentProps) => {
     const defaultCheckedLabel = t('DSFR.toggle.checked');
     const defaultUncheckedLabel = t('DSFR.toggle.unchecked');
 

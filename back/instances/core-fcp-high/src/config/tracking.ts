@@ -182,12 +182,25 @@ export default {
       event: 'FC_DATATRANSFER_CONSENT_IDENTITY',
     },
 
+    FC_AUTO_LOGIN: {
+      step: '6.3.0',
+      category: EventsCategories.FRONT_CINEMATIC,
+      event: 'FC_AUTO_LOGIN',
+      interceptRoutes: [
+        {
+          method: RequestMethod.GET,
+          path: CoreRoutes.INTERACTION_AUTO_LOGIN,
+        },
+      ],
+    },
+
     FC_REDIRECTED_TO_SP: {
       step: '7.0.0',
       category: EventsCategories.FRONT_CINEMATIC,
       event: 'FC_REDIRECTED_TO_SP',
       interceptRoutes: [
         { method: RequestMethod.POST, path: CoreRoutes.INTERACTION_LOGIN },
+        { method: RequestMethod.GET, path: CoreRoutes.INTERACTION_AUTO_LOGIN },
       ],
     },
 

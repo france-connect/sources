@@ -5,18 +5,18 @@
       "par défaut",
       "public",
       "avec un entityId",
-      "avec accès au FI par défaut (premier FS)"
+      "avec accès au FI par défaut (premier FS)",
+      "avec prompt login uniquement", 
+      "avec prompt consent uniquement",
+      "avec prompt login et consent",
+      "avec chiffrement RSA-OAEP-256"
     ],
     "mocked": true,
     "url": "https://fsp1-high.docker.dev-franceconnect.fr",
     "clientId": "6925fb8143c76eded44d32b40c0cb1006065f7f003de52712b78985704f39950",
     "acrValue": "eidas2",
-    "claims": [
-      "amr"
-    ],
-    "scopes": [
-      "tous les scopes"
-    ],
+    "claims": ["amr"],
+    "scopes": ["tous les scopes"],
     "explicitConsent": false,
     "selectors": {
       "fcButton": "#call-authorize-button",
@@ -37,12 +37,8 @@
     "url": "https://fsp2-high.docker.dev-franceconnect.fr",
     "clientId": "7a79e45107f9ccc6a3a5971d501220dc4fd9e87bb5e3fc62ce4104c756e22775",
     "acrValue": "eidas2",
-    "claims": [
-      "amr"
-    ],
-    "scopes": [
-      "identite_pivot"
-    ],
+    "claims": ["amr"],
+    "scopes": ["identite_pivot"],
     "explicitConsent": false,
     "selectors": {
       "fcButton": "#call-authorize-button",
@@ -56,18 +52,15 @@
       "privé avec consentement obligatoire",
       "avec une whitelist de FI",
       "avec un entityId différent",
-      "avec un sub existant"
+      "avec un sub existant",
+      "avec chiffrement ECDH-ES"
     ],
     "mocked": true,
     "url": "https://fsp5-high.docker.dev-franceconnect.fr",
     "clientId": "6925fb8143c76eded44d32b40c0cb1006065f7f003de52712b78985704f39555",
     "acrValue": "eidas2",
-    "claims": [
-      "amr"
-    ],
-    "scopes": [
-      "tous les scopes"
-    ],
+    "claims": ["amr"],
+    "scopes": ["tous les scopes"],
     "explicitConsent": true,
     "selectors": {
       "fcButton": "#call-authorize-button",
@@ -79,16 +72,15 @@
     "name": "fsp6-high",
     "descriptions": [
       "privé sans consentement obligatoire",
-      "non habilité à demander le claim amr"
+      "non habilité à demander le claim amr",
+      "avec idp_hint personnalisé"
     ],
     "mocked": true,
     "url": "https://fsp6-high.docker.dev-franceconnect.fr",
     "clientId": "6925fb8143c76eded44d32b40c0cb1006065f7f003de52712b78985704f39950",
     "acrValue": "eidas3",
     "claims": [],
-    "scopes": [
-      "tous les scopes"
-    ],
+    "scopes": ["tous les scopes"],
     "explicitConsent": false,
     "selectors": {
       "fcButton": "#call-authorize-button",
@@ -98,32 +90,24 @@
   },
   {
     "name": "eidas-mock",
-    "descriptions": [
-      "eidas-mock"
-    ],
+    "descriptions": ["eidas-mock"],
     "mocked": false,
     "url": "https://eidas-mock.docker.dev-franceconnect.fr",
     "clientId": "",
     "acrValue": "eidas2",
     "claims": [],
-    "scopes": [
-      "eidas"
-    ],
+    "scopes": ["eidas"],
     "explicitConsent": false
   },
   {
     "name": "eidas-be",
-    "descriptions": [
-      "eidas-be"
-    ],
+    "descriptions": ["eidas-be"],
     "mocked": false,
     "url": "https://eidas-be.docker.dev-franceconnect.fr",
     "clientId": "",
     "acrValue": "eidas2",
     "claims": [],
-    "scopes": [
-      "eidas"
-    ],
+    "scopes": ["eidas"],
     "explicitConsent": false
   }
 ]

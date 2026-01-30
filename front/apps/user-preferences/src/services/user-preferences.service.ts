@@ -8,7 +8,7 @@ export interface UserPreferencesServiceInterface {
 export class UserPreferencesService {
   static encodeFormData({ allowFutureIdp, idpList }: UserPreferencesServiceInterface) {
     const uidList = Object.entries(idpList || {})
-      .filter(([, isChecked]) => !!isChecked)
+      .filter(([, isChecked]) => isChecked)
       .map(([uid]) => uid);
 
     return {

@@ -1,8 +1,6 @@
 import js from '@eslint/js';
 import json from '@eslint/json';
 import comments from '@eslint-community/eslint-plugin-eslint-comments/configs';
-// @NOTE unable to get it resolved into this file
-// eslint-disable-next-line import/no-unresolved
 import tsParser from '@typescript-eslint/parser';
 import importPlugin from 'eslint-plugin-import';
 import prettierPlugin from 'eslint-plugin-prettier';
@@ -136,6 +134,9 @@ export const baseConfig = [
       'import/resolver': {
         node: {
           extensions: ['.cts', '.mts', '.mjs', '.json', '.js', '.jsx', '.ts', '.tsx', '.d.ts'],
+        },
+        typescript: {
+          alwaysTryTypes: true,
         },
       },
       propWrapperFunctions: ['forbidExtraProps', 'exact', 'Object.freeze'],

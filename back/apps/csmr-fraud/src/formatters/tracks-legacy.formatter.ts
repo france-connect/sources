@@ -19,9 +19,7 @@ import { TracksFormatterOutputInterface } from '../interfaces';
 import { getReadableDateFromTime } from '../utils';
 
 @Injectable()
-export class TracksLegacyFormatter
-  implements TracksFormatterAbstract<TracksFormatterOutputInterface>
-{
+export class TracksLegacyFormatter implements TracksFormatterAbstract<TracksFormatterOutputInterface> {
   constructor(
     private readonly logger: LoggerService,
     private readonly config: ConfigService,

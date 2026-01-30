@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-source "$FC_ROOT/fc/docker/bash/index.sh"

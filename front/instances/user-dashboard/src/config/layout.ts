@@ -1,4 +1,4 @@
-import { LogoFranceConnect } from '@fc/assets';
+import { LogoFranceConnect10Ans } from '@fc/assets';
 import type { LayoutConfig } from '@fc/layout';
 
 export const Layout: LayoutConfig = {
@@ -24,9 +24,9 @@ export const Layout: LayoutConfig = {
       },
       {
         external: true,
-        href: 'https://www.service-public.fr/',
-        label: 'service-public.fr',
-        title: 'Accéder au site service-public.fr nouvelle fenêtre',
+        href: 'https://www.service-public.gouv.fr/',
+        label: 'service-public.gouv.fr',
+        title: 'Accéder au site service-public.gouv.fr nouvelle fenêtre',
       },
       {
         external: true,
@@ -74,6 +74,6 @@ export const Layout: LayoutConfig = {
   ],
   service: {
     homepage: '/',
-    logo: LogoFranceConnect,
+    logo: LogoFranceConnect10Ans,
   },
 };

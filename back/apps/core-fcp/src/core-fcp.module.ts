@@ -87,7 +87,7 @@ export class CoreFcpModule {
       module: CoreFcpModule,
       global: true,
       imports: [
-        JwtModule.register(SignAdapterModule),
+        JwtModule,
         CqrsModule,
         AsyncLocalStorageModule,
         MongooseModule.forRoot(),

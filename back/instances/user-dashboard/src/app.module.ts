@@ -2,12 +2,10 @@ import { DynamicModule, Module } from '@nestjs/common';
 
 import { ConfigModule, ConfigService } from '@fc/config';
 import { LoggerModule } from '@fc/logger';
+import { LoggerDebugPlugin } from '@fc/logger-debug-plugin';
 import { LoggerModule as LoggerLegacyModule } from '@fc/logger-legacy';
-import {
-  LoggerDebugPlugin,
-  LoggerRequestPlugin,
-  LoggerSessionPlugin,
-} from '@fc/logger-plugins';
+import { LoggerRequestPlugin } from '@fc/logger-request-plugin';
+import { LoggerSessionPlugin } from '@fc/logger-session-plugin';
 import { UserDashboardModule } from '@fc/user-dashboard';
 
 @Module({})

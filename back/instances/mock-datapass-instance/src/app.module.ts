@@ -2,7 +2,7 @@ import { DynamicModule, Module } from '@nestjs/common';
 
 import { ConfigModule, ConfigService } from '@fc/config';
 import { LoggerModule } from '@fc/logger';
-import { LoggerRequestPlugin } from '@fc/logger-plugins/plugins/logger-request.plugin';
+import { LoggerRequestPlugin } from '@fc/logger-request-plugin';
 import { MockDatapassModule } from '@fc/mock-datapass';
 
 @Module({})

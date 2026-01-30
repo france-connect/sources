@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { AssetsService } from '@fc/app';
 import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger';
 import {
@@ -30,6 +31,10 @@ describe('OidcProviderConfigAppService', () => {
     saveGrant: jest.fn(),
   };
 
+  const assetsServiceMock = {
+    getAssetFullPath: jest.fn(),
+  };
+
   const loggerServiceMock = getLoggerMock();
   const configServiceMock = getConfigMock();
 
@@ -45,6 +50,7 @@ describe('OidcProviderConfigAppService', () => {
         OidcProviderErrorService,
         OidcProviderGrantService,
         ConfigService,
+        AssetsService,
       ],
     })
       .overrideProvider(LoggerService)
@@ -57,6 +63,8 @@ describe('OidcProviderConfigAppService', () => {
       .useValue(oidcProviderGrantServiceMock)
       .overrideProvider(ConfigService)
       .useValue(configServiceMock)
+      .overrideProvider(AssetsService)
+      .useValue(assetsServiceMock)
       .compile();
 
     service = module.get<OidcProviderConfigAppService>(

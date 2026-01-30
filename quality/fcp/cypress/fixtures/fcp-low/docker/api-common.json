@@ -47,6 +47,16 @@
   "checktoken": {
     "body": {
       "token": "tototototo",
+      "client_id": "71c27fec9540e5aa30b34f8c012154f88f8416530b25f31ba4873a2e58e3d3fe",
+      "client_secret": "36aa214e7a0043c8da60ae991d8908947147d637137c5bf14bc2fc53e1055847"
+    },
+    "form": true,
+    "method": "POST",
+    "url": "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/checktoken"
+  },
+  "checktoken pour un FD avec signature RS256": {
+    "body": {
+      "token": "tototototo",
       "client_id": "423dcbdc5a15ece61ed00ff5989d72379c26d9ed4c8e4e05a87cffae019586e0",
       "client_secret": "36aa214e7a0043c8da60ae991d8908947147d637137c5bf14bc2fc53e1055847"
     },
@@ -91,6 +101,18 @@
       "client_id": "6925fb8143c76eded44d32b40c0cb1006065f7f003de52712b78985704f39950",
       "client_secret": "a970fc88b3111fcfdce515c2ee03488d8a349e5379a3ba2aa48c225dcea243a5",
       "redirect_uri": "https://fsp1-low.docker.dev-franceconnect.fr/oidc-callback",
+      "code": "bAEk2ZasUawAGYjicNwLYvefJsDhoxi0VA61xUZqh44"
+    },
+    "form": true,
+    "method": "POST",
+    "url": "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/token"
+  },
+  "token pour un FS avec signature RS256": {
+    "body": {
+      "grant_type": "authorization_code",
+      "client_id": "5a6e58c6e0cf3cb21de192c567335a8ec121a3f96d0fd48cf58c1f1c48235b63",
+      "client_secret": "a970fc88b3111fcfdce515c2ee03488d8a349e5379a3ba2aa48c225dcea243a5",
+      "redirect_uri": "https://fsp3-low.docker.dev-franceconnect.fr/oidc-callback",
       "code": "bAEk2ZasUawAGYjicNwLYvefJsDhoxi0VA61xUZqh44"
     },
     "form": true,

@@ -15,32 +15,32 @@ source "$FC_ROOT/fc/docker/bash/config/docker.sh"
 
 _e2e_idp_insert() {
   echo "Insert idp in `core-fcp-high` database..."
-  cd ${WORKING_DIR} && ${DOCKER_COMPOSE} exec -T mongo-fcp-high mongo -u 'fc' -p 'pass' --host mongo-fcp-high --tls  --authenticationDatabase core-fcp-high core-fcp-high /opt/scripts/db-states/e2e-idp/e2e-idp-insert.js
+  cd ${DOCKER_DIR} && ${DOCKER_COMPOSE} exec -T mongo-fcp-high mongo -u 'fc' -p 'pass' --host mongo-fcp-high --tls  --authenticationDatabase core-fcp-high core-fcp-high /opt/scripts/db-states/e2e-idp/e2e-idp-insert.js
 }
 
 _e2e_idp_update_activate() {
   echo "Update idp in `core-fcp-high` database, activate idp..."
-  cd ${WORKING_DIR} && ${DOCKER_COMPOSE} exec -T mongo-fcp-high mongo -u 'fc' -p 'pass' --host mongo-fcp-high --tls  --authenticationDatabase core-fcp-high core-fcp-high /opt/scripts/db-states/e2e-idp/e2e-idp-update-activate.js
+  cd ${DOCKER_DIR} && ${DOCKER_COMPOSE} exec -T mongo-fcp-high mongo -u 'fc' -p 'pass' --host mongo-fcp-high --tls  --authenticationDatabase core-fcp-high core-fcp-high /opt/scripts/db-states/e2e-idp/e2e-idp-update-activate.js
 }
 
 _e2e_idp_update_desactivate() {
   echo "Update idp in `core-fcp-high` database, desactivate idp..."
-  cd ${WORKING_DIR} && ${DOCKER_COMPOSE} exec -T mongo-fcp-high mongo -u 'fc' -p 'pass' --host mongo-fcp-high --tls  --authenticationDatabase core-fcp-high core-fcp-high /opt/scripts/db-states/e2e-idp/e2e-idp-update-desactivate.js
+  cd ${DOCKER_DIR} && ${DOCKER_COMPOSE} exec -T mongo-fcp-high mongo -u 'fc' -p 'pass' --host mongo-fcp-high --tls  --authenticationDatabase core-fcp-high core-fcp-high /opt/scripts/db-states/e2e-idp/e2e-idp-update-desactivate.js
 }
 
 _e2e_idp_update_wrong_issuer() {
   echo "Update idp in `core-fcp-high` database, set a wrong secret idp..."
-  cd ${WORKING_DIR} && ${DOCKER_COMPOSE} exec -T mongo-fcp-high mongo -u 'fc' -p 'pass' --host mongo-fcp-high --tls  --authenticationDatabase core-fcp-high core-fcp-high /opt/scripts/db-states/e2e-idp/e2e-idp-update-wrong-issuer.js
+  cd ${DOCKER_DIR} && ${DOCKER_COMPOSE} exec -T mongo-fcp-high mongo -u 'fc' -p 'pass' --host mongo-fcp-high --tls  --authenticationDatabase core-fcp-high core-fcp-high /opt/scripts/db-states/e2e-idp/e2e-idp-update-wrong-issuer.js
 }
 
 _e2e_sp_update_scopes() {
   echo "Update sp in `core-fcp-high` database, autorize fewer scopes..."
-  cd ${WORKING_DIR} && ${DOCKER_COMPOSE} exec -T mongo-fcp-high mongo -u 'fc' -p 'pass' --host mongo-fcp-high --tls  --authenticationDatabase core-fcp-high core-fcp-high /opt/scripts/db-states/e2e-sp/e2e-sp-update-scopes.js
+  cd ${DOCKER_DIR} && ${DOCKER_COMPOSE} exec -T mongo-fcp-high mongo -u 'fc' -p 'pass' --host mongo-fcp-high --tls  --authenticationDatabase core-fcp-high core-fcp-high /opt/scripts/db-states/e2e-sp/e2e-sp-update-scopes.js
 }
 
 _e2e_idp_remove() {
   echo "Remove idp in `core-fcp-high` database..."
-  cd ${WORKING_DIR} && ${DOCKER_COMPOSE} exec -T mongo-fcp-high mongo -u 'fc' -p 'pass' --host mongo-fcp-high --tls  --authenticationDatabase core-fcp-high core-fcp-high /opt/scripts/db-states/e2e-idp/e2e-idp-remove.js
+  cd ${DOCKER_DIR} && ${DOCKER_COMPOSE} exec -T mongo-fcp-high mongo -u 'fc' -p 'pass' --host mongo-fcp-high --tls  --authenticationDatabase core-fcp-high core-fcp-high /opt/scripts/db-states/e2e-idp/e2e-idp-remove.js
 }
 
 script=$0

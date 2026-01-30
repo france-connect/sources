@@ -12,15 +12,15 @@ interface LinkEmailComponentProps extends Omit<LinkInterface, 'href'> {
 
 export const LinkEmailComponent = React.memo(
   ({
-    children = undefined,
+    children,
     className,
     dataTestId,
     email,
     icon,
     iconPlacement = IconPlacement.LEFT,
-    label = undefined,
+    label,
     size = Sizes.MEDIUM,
-    title = undefined,
+    title,
   }: LinkEmailComponentProps) => (
     <a
       aria-label={t('DSFR.link.sendEmailTo', { email })}

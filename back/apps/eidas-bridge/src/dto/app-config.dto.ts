@@ -3,6 +3,8 @@ import {
   IsArray,
   IsEnum,
   IsNotEmpty,
+  IsNumber,
+  IsPositive,
   IsString,
 } from 'class-validator';
 
@@ -18,4 +20,15 @@ export class AppConfig extends AppGenericConfig {
   @IsString()
   @IsNotEmpty()
   readonly idpId: string;
+
+  @IsString({ each: true })
+  @IsArray()
+  readonly assetsPaths: string[];
+
+  @IsString()
+  readonly assetsUrlPrefix: string;
+
+  @IsNumber()
+  @IsPositive()
+  readonly assetsCacheTtl: number;
 }

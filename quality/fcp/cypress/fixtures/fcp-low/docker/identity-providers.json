@@ -90,7 +90,8 @@
     "descriptions": [
       "actif",
       "non autorisé pour idp_hint",
-      "différent"
+      "différent",
+      "autorisé pour idp_hint personnalisé"
     ],
     "mocked": true,
     "usable": true,

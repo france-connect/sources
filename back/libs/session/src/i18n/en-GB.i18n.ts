@@ -15,6 +15,8 @@ export const enGB: I18nTranslationsMapType = {
     'Your session is invalid. Please close your browser tab and reconnect.',
   'Session.exceptions.sessionInvalidSession':
     'Your session has expired or is invalid. Please close your browser tab and reconnect.',
+  'Session.exceptions.sessionInvalidSetCall':
+    'A technical error has occurred. Please close your browser tab and reconnect. If the problem persists, please contact support.',
   'Session.exceptions.sessionNoSessionId':
     'Your session has expired or is invalid. Please close your browser tab and reconnect.',
   'Session.exceptions.sessionNotFound':

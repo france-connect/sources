@@ -20,8 +20,7 @@ import { TracksFormatterOutputAbstract } from '@fc/tracks-adapter-elasticsearch'
  *   ipAddress: ['ipAddress']
  * -}
  */
-export interface TracksFormatterOutputInterface
-  extends TracksFormatterOutputAbstract {
+export interface TracksFormatterOutputInterface extends TracksFormatterOutputAbstract {
   id: string;
   time: number;
   date: string;

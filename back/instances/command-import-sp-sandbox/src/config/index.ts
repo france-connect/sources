@@ -4,6 +4,7 @@ import App from './app';
 import ConfigSandboxLowMicroService from './config-sandbox-low-microservice';
 import Logger from './logger';
 import Mongoose from './mongoose';
+import MongooseChangeStream from './mongoose-change-stream';
 import ServiceProviderAdapterMongo from './service-provider-adapter-mongo';
 import WebhooksInvitation from './webhooks-invitation';
 
@@ -12,6 +13,7 @@ export default {
   ConfigSandboxLowMicroService,
   Logger,
   Mongoose,
+  MongooseChangeStream,
   ServiceProviderAdapterMongo,
   [WEBHOOK_NAME]: WebhooksInvitation,
 } as ImportSpSandboxConfig;

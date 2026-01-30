@@ -1,7 +1,7 @@
 import { useLoaderData } from 'react-router';
 
 import type { FSAInterface } from '@fc/common';
-import type { ServiceProviderInterface } from '@fc/partners-service-providers';
+import type { ServiceProviderInterface } from '@fc/core-partners';
 
 export const useServiceProviders = () => {
   const response = useLoaderData();

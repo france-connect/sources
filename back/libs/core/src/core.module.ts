@@ -2,6 +2,7 @@ import { DynamicModule, Module, ModuleMetadata, Type } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
 
 import { AccountModule } from '@fc/account';
+import { AppModule } from '@fc/app';
 import {
   ExceptionsModule,
   FcWebHtmlExceptionFilter,
@@ -48,6 +49,7 @@ export class CoreModule {
     return {
       module: CoreModule,
       imports: [
+        AppModule,
         ExceptionsModule,
         FlowStepsModule,
         ServiceProviderAdapterMongoModule,

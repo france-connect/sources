@@ -3,7 +3,8 @@ import React from 'react';
 import { isoToDate, type PropsWithClassName } from '@fc/common';
 import { CardComponent, Sizes } from '@fc/dsfr';
 import { t } from '@fc/i18n';
-import type { InstanceInterface } from '@fc/partners-service-providers';
+
+import type { InstanceInterface } from '../../../interfaces';
 
 interface InstanceCardComponentProps extends PropsWithClassName {
   data: InstanceInterface;

@@ -664,6 +664,17 @@ describe('GenerateCity', () => {
       });
     });
 
+    it('should not create the target directory if it already exists', () => {
+      // Given
+      jest.mocked(existsSync).mockReturnValue(true);
+
+      // When
+      service['writeCsvFile'](searchDataMock);
+
+      // Then
+      expect(mkdirSync).not.toHaveBeenCalled();
+    });
+
     it('should join the target directory path with the file name', () => {
       // When
       service['writeCsvFile'](searchDataMock);

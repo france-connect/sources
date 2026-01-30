@@ -342,7 +342,7 @@ describe('EidasClientService', () => {
       // When / Then
       await expect(
         service.writeLightRequestInCache(id, lightRequest),
-      ).rejects.toThrowError(WriteLightRequestInCacheException);
+      ).rejects.toThrow(WriteLightRequestInCacheException);
     });
   });
 
@@ -394,9 +394,9 @@ describe('EidasClientService', () => {
       connectorResponseCacheMock.get.mockRejectedValueOnce(new Error('any'));
 
       // When / Then
-      await expect(
-        service.readLightResponseFromCache(token),
-      ).rejects.toThrowError(ReadLightResponseFromCacheException);
+      await expect(service.readLightResponseFromCache(token)).rejects.toThrow(
+        ReadLightResponseFromCacheException,
+      );
     });
   });
 

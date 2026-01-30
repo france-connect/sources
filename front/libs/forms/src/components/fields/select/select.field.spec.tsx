@@ -9,7 +9,7 @@ describe('selectField', () => {
   it('should match the snapshot', () => {
     // Given
     const valildateMock = jest.fn();
-    jest.mocked(Field).mockImplementationOnce(() => <div data-mockid="Field" />);
+    jest.mocked(Field).mockReturnValueOnce(<div data-mockid="Field" />);
 
     // When
     const { container } = render(

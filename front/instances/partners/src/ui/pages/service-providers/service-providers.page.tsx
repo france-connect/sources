@@ -19,7 +19,7 @@ export const ServiceProvidersPage = React.memo(() => {
         </h1>
       </div>
       {hasItems && (
-        <div className="fr-col-12 fr-mb-3w fr-mt-5w">
+        <div className="fr-col-12 fr-mb-3w fr-mt-5w" data-testid="service-providers-card-list">
           <ServiceProvidersListComponent items={items} />
         </div>
       )}

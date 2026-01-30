@@ -1,0 +1,15 @@
+include: '/back/.gitlab-buildx-bake-template.yml'
+
+fc_low/assets-core-fcp-low-preprod:
+  extends: .base-buildx-bake
+  variables:
+    CACHE_BUSTING: ${CACHE_BUSTING}
+    APP_DOMAIN: fcp-low.pp.dev-franceconnect.fr
+    APP_NAME: core-fcp-low
+
+fc_low/assets-core-fcp-low-prod:
+  extends: .base-buildx-bake
+  variables:
+    CACHE_BUSTING: ${CACHE_BUSTING}
+    APP_DOMAIN: oidc.franceconnect.fr
+    APP_NAME: core-fcp-low

@@ -116,6 +116,23 @@ describe('SessionTemplateService', () => {
       // Then
       expect(result).toBe(lodashGetResult);
     });
+
+    it('should return undefined if templateExposed is falsy', () => {
+      // Given
+      const configMockWithoutTemplateExposed: Partial<SessionConfig> = {
+        ...configMock,
+        templateExposed: null,
+      };
+      configServiceMock.get.mockReturnValueOnce(
+        configMockWithoutTemplateExposed,
+      );
+
+      // When
+      const result = service.get(key);
+
+      // Then
+      expect(result).toBeUndefined();
+    });
   });
 
   describe('fillObject', () => {

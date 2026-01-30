@@ -281,7 +281,7 @@ describe('PaginationComponent', () => {
         const button = screen.getByTestId('PaginationComponent-previous-page-button');
 
         expect(container).toMatchSnapshot();
-        expect(button).toBeDefined();
+        expect(button).toBeInTheDocument();
       });
     });
 

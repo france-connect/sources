@@ -2,47 +2,42 @@
 <html lang="<%= $translate('meta.lang') %>" data-fr-scheme="light">
   <head>
     <%- include('includes/head.ejs') %>
-    <link rel="stylesheet" href="/css/pages/interaction.css" />
+    <link rel="stylesheet" href="<%= $asset('/css/pages/interaction.css') %>" />
     <%- include('pages/interaction/interaction.page-title.ejs') %>
   </head>
   <body id="fc-interaction-page">
+    <%- include('includes/skiplinks.ejs') %>
     <div class="fc-sticky-wrapper">
       <div class="fc-sticky-body">
         <%- include('includes/header.ejs') %>
-        <main>
+        <main role="main" id="main-content">
           <%- include('pages/interaction/interaction.notification.ejs') %>
 
           <div class="fr-container fr-mt-5w fr-mt-md-8w">
             <section class="fr-grid-row fr-grid-row--gutters">
               <%- include('pages/interaction/interaction.error.ejs') %>
-
-              <div
-                class="fr-col-12 fr-col-md-10 fr-col-lg-10 fr-col-offset-lg-1 fc-text--left fc-text-lg--center"
-              >
-                <%- include('pages/interaction/interaction.anonymous.ejs') %>
-                <%- include('pages/interaction/interaction.welcome.ejs') %>
-              </div>
+              <%- include('pages/interaction/interaction.anonymous.ejs') %>
+              <%- include('pages/interaction/interaction.welcome.ejs') %>
             </section>
           </div>
 
           <div class="fr-container--fluid fr-mt-4w fr-mt-md-5w">
             <section id="grid-main-providers">
-              <div
+              <ul
                 class="fc-grid--provider fr-my-n3v"
                 data-testid="main-providers"
               >
                 <%- include('pages/interaction/interaction.providers-loop.ejs')
                 %>
+              </ul>
+
+              <div class="fr-container fr-col-12 fc-text--center">
+                <%- include('pages/interaction/interaction.eidas.ejs'); %>
               </div>
             </section>
           </div>
 
           <div class="fr-container">
-            <section class="fr-grid-row">
-              <div class="fr-col-12 fc-text--center">
-                <%- include('pages/interaction/interaction.eidas.ejs'); %>
-              </div>
-            </section>
             <section class="fr-grid-row">
               <div class="fr-col-12 fr-mt-4w fr-mt-md-5w fc-text--center">
                 <%- include('includes/back-button.ejs') %>
@@ -62,6 +57,10 @@
       </div>
       <%- include('includes/footer.ejs') %>
     </div>
-    <%- include('includes/scripts.ejs') %>
+    <%- include('includes/loading-modal.ejs') %> <%-
+    include('includes/scripts.ejs') %>
+    <% if (locals.errorContext && locals.errorContext.hasError && locals.errorContext.idpLabel) { %>
+    <script type="text/javascript" src="<%= $asset('/js/interaction-error-banner.js') %>"></script>
+    <% } %>
   </body>
 </html>

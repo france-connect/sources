@@ -5,6 +5,7 @@ const env = new ConfigParser(process.env, 'App');
 
 export default {
   assetsPaths: env.json('ASSETS_PATHS'),
+  assetsUrlPrefix: env.string('ASSETS_URL_PREFIX'),
   httpsOptions: {
     cert: env.file('HTTPS_SERVER_CERT', { optional: true }),
     key: env.file('HTTPS_SERVER_KEY', { optional: true }),

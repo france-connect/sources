@@ -11,9 +11,7 @@ import { CoreAuthorizationServiceInterface } from '../interfaces';
 export const CORE_AUTHORIZATION_FEATURE = 'coreAuthorization';
 
 @Injectable()
-export class CoreAuthorizationService
-  implements CoreAuthorizationServiceInterface
-{
+export class CoreAuthorizationService implements CoreAuthorizationServiceInterface {
   constructor(
     private readonly logger: LoggerService,
     private readonly identityProvider: IdentityProviderAdapterMongoService,

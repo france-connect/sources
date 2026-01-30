@@ -9,18 +9,18 @@ exports[`ServiceProviderCardComponent should match the snapshot 1`] = `
       class="is-uppercase fr-text--sm fr-mb-2w"
     >
       <b>
-        Organization Name
+        any-organization-name-mock
       </b>
     </p>
     <p>
       <b>
-        any-habilitation-number-text-mock
+        CorePartners.serviceProvidersPage.datapassRequestId
       </b>
       <span
         class="is-block is-inline--md"
         data-testid="ServiceProviderCardComponent-request-id"
       >
-        123456
+        any-datapass-request-id-mock
       </span>
     </p>
   </div>

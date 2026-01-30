@@ -4,8 +4,16 @@ locals.providers
   .filter(p => p.uid !== $config('App.aidantsConnectUid'))
   .forEach((provider) => {
 %>
-  <form action="/api/v2/redirect-to-idp" method="POST" class="interaction-main-content-form" name="fs-request">
-    <%- include('pages/interaction/provider/interaction.provider.ejs', { provider }) %>
-    <%- include('pages/interaction/provider/interaction.provider-inputs.ejs', { provider }) %>
-  </form>
+  <li>
+    <form
+      action="/api/v2/redirect-to-idp" 
+      method="POST" 
+      class="interaction-main-content-form"
+      name="fs-request" 
+      <%= provider.active ? 'data-prevent-double-submit' : '' %>
+    >
+      <%- include('pages/interaction/provider/interaction.provider.ejs', { provider }) %>
+      <%- include('pages/interaction/provider/interaction.provider-inputs.ejs', { provider }) %>
+    </form>
+  </li>
 <% }); %>

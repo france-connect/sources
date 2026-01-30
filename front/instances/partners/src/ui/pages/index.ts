@@ -4,5 +4,6 @@ export * from './instance-update';
 export * from './instances';
 export * from './legal-notices';
 export * from './login';
+export * from './service-provider';
 export * from './service-providers';
 export * from './sitemap';

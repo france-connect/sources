@@ -6,7 +6,7 @@ import { ConfigService } from '@fc/config';
 import { throwException } from '@fc/exceptions/helpers';
 import { FlowStepsService } from '@fc/flow-steps';
 import { LoggerService } from '@fc/logger';
-import { atHashFromAccessToken } from '@fc/oidc';
+import { atHashFromAccessToken, stringToArray } from '@fc/oidc';
 import { OidcAcrService } from '@fc/oidc-acr';
 import { OidcClientRoutes } from '@fc/oidc-client';
 import {
@@ -47,6 +47,7 @@ describe('CoreOidcProviderMiddlewareService', () => {
   const sessionServiceMock = getSessionServiceMock();
 
   const atHashFromAccessTokenMock = jest.mocked(atHashFromAccessToken);
+  const stringToArrayMock = jest.mocked(stringToArray);
 
   const oidcProviderServiceMock = {
     getInteractionIdFromCtx: jest.fn(),
@@ -649,51 +650,108 @@ describe('CoreOidcProviderMiddlewareService', () => {
   });
 
   describe('overrideAuthorizePrompt()', () => {
-    it('should set prompt parameter on query', () => {
+    beforeEach(() => {
+      configServiceMock.get.mockReturnValue({
+        forcedPrompt: ['login', 'consent'],
+      });
+      service['persistAllowedPrompt'] = jest.fn();
+    });
+
+    it('should set prompt parameter on query for GET method', async () => {
       // Given
       const ctxMock = {
         method: 'GET',
-        query: {},
-      } as OidcCtx;
-      const overridePrompt = 'test';
-      configServiceMock.get.mockReturnValue({
-        forcedPrompt: ['test'],
-      });
+        query: { client_id: 'client-123' },
+      } as unknown as OidcCtx;
+
       // When
-      service['overrideAuthorizePrompt'](ctxMock);
+      await service['overrideAuthorizePrompt'](ctxMock);
+
       // Then
-      expect(ctxMock.query.prompt).toBe(overridePrompt);
+      expect(ctxMock.query.prompt).toBe('login consent');
       expect(ctxMock.body).toBeUndefined();
     });
 
-    it('should set prompt parameter on body', () => {
+    it('should set prompt parameter on body for POST method', async () => {
       // Given
       const ctxMock: OidcCtx = {
         method: 'POST',
-        req: { body: {} },
+        req: { body: { client_id: 'client-123' } },
       } as unknown as OidcCtx;
-      const overridePrompt = 'test';
-      configServiceMock.get.mockReturnValue({
-        forcedPrompt: ['test'],
-      });
+
       // When
-      service['overrideAuthorizePrompt'](ctxMock);
+      await service['overrideAuthorizePrompt'](ctxMock);
+
       // Then
-      expect(ctxMock.req.body.prompt).toBe(overridePrompt);
+      expect(ctxMock.req.body.prompt).toBe('login consent');
       expect(ctxMock.query).toBeUndefined();
     });
 
-    it('should not do anything but log if method is not handled', () => {
+    it('should call persistAllowedPrompt with original prompt and client_id', async () => {
+      // Given
+      const ctxMock = {
+        method: 'GET',
+        query: { prompt: 'none', client_id: 'client-123' },
+      } as unknown as OidcCtx;
+
+      // When
+      await service['overrideAuthorizePrompt'](ctxMock);
+
+      // Then
+      expect(service['persistAllowedPrompt']).toHaveBeenCalledExactlyOnceWith(
+        'client-123',
+        'none',
+        ctxMock,
+      );
+    });
+
+    it('should override prompt even if original prompt exists', async () => {
+      // Given
+      const ctxMock = {
+        method: 'GET',
+        query: { prompt: 'none', client_id: 'client-123' },
+      } as unknown as OidcCtx;
+
+      // When
+      await service['overrideAuthorizePrompt'](ctxMock);
+
+      // Then
+      expect(ctxMock.query.prompt).toBe('login consent');
+    });
+
+    it('should log the override operation', async () => {
+      // Given
+      const ctxMock = {
+        method: 'GET',
+        query: { prompt: 'none', client_id: 'client-123' },
+      } as unknown as OidcCtx;
+
+      // When
+      await service['overrideAuthorizePrompt'](ctxMock);
+
+      // Then
+      expect(loggerServiceMock.debug).toHaveBeenCalledExactlyOnceWith({
+        message: 'Overriding "prompt" with "login consent"',
+        originalPrompt: 'none',
+        overriddenPrompt: 'login consent',
+      });
+    });
+
+    it('should not do anything but log if method is not handled', async () => {
       // Given
       const ctxMock = { method: 'DELETE' } as OidcCtx;
-      configServiceMock.get.mockReturnValue({
-        forcedPrompt: ['login'],
-      });
+
       // When
-      service['overrideAuthorizePrompt'](ctxMock);
+
+      await service['overrideAuthorizePrompt'](ctxMock);
+
       // Then
       expect(ctxMock).toEqual({ method: 'DELETE' });
-      expect(pickAcr).toHaveBeenCalledTimes(0);
+      expect(service['persistAllowedPrompt']).toHaveBeenCalledTimes(0);
+      expect(loggerServiceMock.warning).toHaveBeenCalledTimes(1);
+      expect(loggerServiceMock.warning).toHaveBeenCalledWith(
+        'Unsupported method "DELETE".',
+      );
     });
   });
 
@@ -1271,14 +1329,12 @@ describe('CoreOidcProviderMiddlewareService', () => {
       },
     } as unknown as OidcCtx;
 
-    const idpHintConfigMock = {
-      allowedIdpHints: [idpHintMock, 'foo'],
-    };
-
     beforeEach(() => {
-      configServiceMock.get.mockReturnValue(idpHintConfigMock);
       service['shouldAbortIdpHint'] = jest.fn();
       service['trackRedirectToIdp'] = jest.fn().mockResolvedValue({});
+      service['getAllowedIdpHints'] = jest
+        .fn()
+        .mockResolvedValue([idpHintMock, 'foo']);
     });
 
     it('should throw Exception if an idp hint was provided but is NOT valid', async () => {
@@ -1410,6 +1466,55 @@ describe('CoreOidcProviderMiddlewareService', () => {
     });
   });
 
+  describe('getAllowedIdpHints', () => {
+    // Given
+    const spIdMock = Symbol('spIdMock');
+    const spMock = {
+      allowedIdpHints: ['foo', 'bar'],
+    };
+
+    const configMock = {
+      allowedIdpHints: ['fizz', 'buzz'],
+    };
+
+    beforeEach(() => {
+      configServiceMock.get.mockReturnValue(configMock);
+      sessionServiceMock.get.mockReturnValue({ spId: spIdMock });
+      serviceProviderServiceMock.getById.mockReturnValue(spMock);
+    });
+
+    it('should fetch the sp with spId from session', async () => {
+      // When
+      await service['getAllowedIdpHints']();
+
+      // Then
+      expect(
+        serviceProviderServiceMock.getById,
+      ).toHaveBeenCalledExactlyOnceWith(spIdMock);
+    });
+
+    it('should return the allowed idp hints from sp if sp.allowedIdpHints is defined', async () => {
+      // When
+      const result = await service['getAllowedIdpHints']();
+
+      // Then
+      expect(result).toEqual(spMock.allowedIdpHints);
+    });
+
+    it('should return the allowed idp hints from config if sp.allowedIdpHints is not defined', async () => {
+      // Given
+      serviceProviderServiceMock.getById.mockReturnValueOnce({
+        allowedIdpHints: undefined,
+      });
+
+      // When
+      const result = await service['getAllowedIdpHints']();
+
+      // Then
+      expect(result).toEqual(configMock.allowedIdpHints);
+    });
+  });
+
   describe('getSessionId()  ', () => {
     beforeEach(() => {
       service['getEventContext'] = jest.fn().mockReturnValue(eventContextMock);
@@ -1520,6 +1625,225 @@ describe('CoreOidcProviderMiddlewareService', () => {
       );
       // Then
       expect(result).toBe(false);
+    });
+  });
+
+  describe('isPromptAllowedForSp()', () => {
+    it('should return false if allowedPrompts is empty', () => {
+      // Given
+      const allowedPrompts = [];
+      const prompt = 'login';
+      // When
+      const result = service['isPromptAllowedForSp'](allowedPrompts, prompt);
+      // Then
+      expect(result).toBe(false);
+    });
+
+    it('should return false if prompt is empty', () => {
+      // Given
+      const allowedPrompts = ['login', 'consent'];
+      const prompt = '';
+      // When
+      const result = service['isPromptAllowedForSp'](allowedPrompts, prompt);
+      // Then
+      expect(result).toBe(false);
+    });
+
+    it('should call stringToArray with the prompt', () => {
+      // Given
+      const allowedPrompts = ['login', 'consent'];
+      const prompt = 'login';
+      stringToArrayMock.mockReturnValueOnce(['login']);
+
+      // When
+      service['isPromptAllowedForSp'](allowedPrompts, prompt);
+
+      // Then
+      expect(stringToArrayMock).toHaveBeenCalledExactlyOnceWith(prompt);
+    });
+
+    it('should return true if all prompts are allowed', () => {
+      // Given
+      const allowedPrompts = ['login', 'consent'];
+      const prompt = 'login consent';
+      stringToArrayMock.mockReturnValueOnce(['login', 'consent']);
+      // When
+      const result = service['isPromptAllowedForSp'](allowedPrompts, prompt);
+      // Then
+      expect(result).toBe(true);
+    });
+
+    it('should return false if some prompts are not allowed', () => {
+      // Given
+      const allowedPrompts = ['login', 'consent'];
+      const prompt = 'login select_account';
+      stringToArrayMock.mockReturnValueOnce(['login', 'select_account']);
+      // When
+      const result = service['isPromptAllowedForSp'](allowedPrompts, prompt);
+      // Then
+      expect(result).toBe(false);
+    });
+  });
+
+  describe('persistPromptToSession()', () => {
+    it('should load SP and check prompt authorization', async () => {
+      // Given
+      const clientId = 'client-123';
+      const originalPrompt = 'none';
+      const ctxMock = {} as OidcCtx;
+      serviceProviderServiceMock.getById.mockResolvedValue({
+        allowedPrompts: ['none'],
+      });
+      service['isPromptAllowedForSp'] = jest.fn().mockReturnValue(true);
+      // When
+      await service['persistPromptToSession'](
+        clientId,
+        originalPrompt,
+        ctxMock,
+      );
+      // Then
+      expect(serviceProviderServiceMock.getById).toHaveBeenCalledTimes(1);
+      expect(serviceProviderServiceMock.getById).toHaveBeenCalledWith(clientId);
+    });
+
+    it('should not set spPrompt in ctx if prompt is not allowed for SP', async () => {
+      // Given
+      const clientId = 'client-123';
+      const originalPrompt = 'none';
+      const ctxMock = {} as OidcCtx;
+      serviceProviderServiceMock.getById.mockResolvedValue({
+        allowedPrompts: ['login'],
+      });
+      service['isPromptAllowedForSp'] = jest.fn().mockReturnValue(false);
+      // When
+      await service['persistPromptToSession'](
+        clientId,
+        originalPrompt,
+        ctxMock,
+      );
+      // Then
+      expect(ctxMock['spPrompt']).toBeUndefined();
+    });
+
+    it('should set spPrompt in ctx if prompt is allowed for SP', async () => {
+      // Given
+      const clientId = 'client-123';
+      const originalPrompt = 'login consent';
+      const ctxMock = {} as OidcCtx;
+      serviceProviderServiceMock.getById.mockResolvedValue({
+        allowedPrompts: ['login', 'consent'],
+      });
+      service['isPromptAllowedForSp'] = jest.fn().mockReturnValue(true);
+      // When
+      await service['persistPromptToSession'](
+        clientId,
+        originalPrompt,
+        ctxMock,
+      );
+      // Then
+      expect(ctxMock['spPrompt']).toBe(originalPrompt);
+    });
+
+    it('should return early if SP is not found', async () => {
+      // Given
+      const clientId = 'client-123';
+      const originalPrompt = 'none';
+      const ctxMock = {} as OidcCtx;
+      serviceProviderServiceMock.getById.mockResolvedValue(null);
+      // When
+      await service['persistPromptToSession'](
+        clientId,
+        originalPrompt,
+        ctxMock,
+      );
+      // Then
+      expect(ctxMock['spPrompt']).toBeUndefined();
+    });
+
+    it('should handle SP with undefined allowedPrompts', async () => {
+      // Given
+      const clientId = 'client-123';
+      const originalPrompt = 'none';
+      const ctxMock = {} as OidcCtx;
+      serviceProviderServiceMock.getById.mockResolvedValue({
+        allowedPrompts: undefined,
+      });
+      service['isPromptAllowedForSp'] = jest.fn().mockReturnValue(false);
+      // When
+      await service['persistPromptToSession'](
+        clientId,
+        originalPrompt,
+        ctxMock,
+      );
+      // Then
+      expect(service['isPromptAllowedForSp']).toHaveBeenCalledWith(
+        [],
+        originalPrompt,
+      );
+    });
+
+    it('should log debug message when prompt is allowed', async () => {
+      // Given
+      const clientId = 'client-123';
+      const originalPrompt = 'none';
+      const ctxMock = {} as OidcCtx;
+      serviceProviderServiceMock.getById.mockResolvedValue({
+        allowedPrompts: ['none'],
+      });
+      service['isPromptAllowedForSp'] = jest.fn().mockReturnValue(true);
+      // When
+      await service['persistPromptToSession'](
+        clientId,
+        originalPrompt,
+        ctxMock,
+      );
+      // Then
+      expect(loggerServiceMock.debug).toHaveBeenCalledWith(
+        'SP "client-123" is allowed to use prompt="none". Persisting to context.',
+      );
+    });
+  });
+
+  describe('persistAllowedPrompt()', () => {
+    it('should return early if clientId is not provided', async () => {
+      // Given
+      const clientId = '';
+      const originalPrompt = 'none';
+      const ctxMock = {} as OidcCtx;
+      service['persistPromptToSession'] = jest.fn();
+      // When
+      await service['persistAllowedPrompt'](clientId, originalPrompt, ctxMock);
+      // Then
+      expect(service['persistPromptToSession']).toHaveBeenCalledTimes(0);
+    });
+
+    it('should return early if originalPrompt is not provided', async () => {
+      // Given
+      const clientId = 'client-123';
+      const originalPrompt = '';
+      const ctxMock = {} as OidcCtx;
+      service['persistPromptToSession'] = jest.fn();
+      // When
+      await service['persistAllowedPrompt'](clientId, originalPrompt, ctxMock);
+      // Then
+      expect(service['persistPromptToSession']).toHaveBeenCalledTimes(0);
+    });
+
+    it('should call persistPromptToSession if both clientId and originalPrompt are provided', async () => {
+      // Given
+      const clientId = 'client-123';
+      const originalPrompt = 'none';
+      const ctxMock = {} as OidcCtx;
+      service['persistPromptToSession'] = jest.fn();
+      // When
+      await service['persistAllowedPrompt'](clientId, originalPrompt, ctxMock);
+      // Then
+      expect(service['persistPromptToSession']).toHaveBeenCalledTimes(1);
+      expect(service['persistPromptToSession']).toHaveBeenCalledWith(
+        clientId,
+        originalPrompt,
+        ctxMock,
+      );
     });
   });
 });

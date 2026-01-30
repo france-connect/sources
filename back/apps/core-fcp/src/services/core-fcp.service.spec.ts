@@ -199,8 +199,8 @@ describe('CoreFcpService', () => {
       // When
       await service.sendNotificationMail(deviceInfo);
       // Then
-      expect(featureHandlerGetSpy).toBeCalledTimes(1);
-      expect(featureHandlerGetSpy).toBeCalledWith(
+      expect(featureHandlerGetSpy).toHaveBeenCalledTimes(1);
+      expect(featureHandlerGetSpy).toHaveBeenCalledWith(
         authenticationEmailMock,
         service,
       );

@@ -1,11 +1,11 @@
 import { render } from '@testing-library/react';
 
+import type { ServiceProviderInterface } from '@fc/core-partners';
 import {
   ServiceProvidersListComponent,
   ServiceProvidersPageNoticeComponent,
 } from '@fc/core-partners';
 import { t } from '@fc/i18n';
-import type { ServiceProviderInterface } from '@fc/partners-service-providers';
 
 import { useServiceProviders } from '../../../hooks';
 import { ServiceProvidersPage } from './service-providers.page';

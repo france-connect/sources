@@ -315,6 +315,17 @@ describe('I18nService', () => {
       // Then
       expect(result).toBe('hello world');
     });
+
+    it('should ignore replacement if no variables are provided', () => {
+      // Given
+      const input = 'hello {name}';
+
+      // When
+      const result = service['replaceVariables'](input, null, options);
+
+      // Then
+      expect(result).toBe(input);
+    });
   });
 
   describe('getPluralDefinition', () => {

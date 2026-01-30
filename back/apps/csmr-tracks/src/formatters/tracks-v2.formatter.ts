@@ -17,9 +17,7 @@ import { IdpMappings } from '../dto';
 import { Platform } from '../enums';
 
 @Injectable()
-export class TracksV2Formatter
-  implements TracksFormatterAbstract<TracksOutputInterface>
-{
+export class TracksV2Formatter implements TracksFormatterAbstract<TracksOutputInterface> {
   constructor(
     protected readonly config: ConfigService,
     protected readonly logger: LoggerService,

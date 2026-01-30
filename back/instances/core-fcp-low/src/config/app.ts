@@ -7,8 +7,9 @@ export default {
   name: 'fclow',
   platform: 'FranceConnect',
   urlPrefix: '/api/v2',
+  assetsUrlPrefix: env.string('ASSETS_URL_PREFIX'),
+  assetsUrlDomain: env.string('ASSETS_URL_DOMAIN'),
   assetsPaths: env.json('ASSETS_PATHS'),
-  assetsDsfrPaths: env.json('DSFR_ASSETS_PATHS'),
   assetsCacheTtl: env.number('ASSETS_CACHE_TTL'),
   viewsPaths: env.json('VIEWS_PATHS'),
   httpsOptions: {

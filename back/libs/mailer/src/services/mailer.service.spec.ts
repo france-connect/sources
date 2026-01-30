@@ -93,8 +93,8 @@ describe('MailerService', () => {
       service.onModuleInit();
 
       // Then
-      expect(configServiceMock.get).toBeCalledTimes(1);
-      expect(configServiceMock.get).toBeCalledWith(configName);
+      expect(configServiceMock.get).toHaveBeenCalledTimes(1);
+      expect(configServiceMock.get).toHaveBeenCalledWith(configName);
     });
 
     it('should create instance of the StdoutTransport with the logger instance if mailer is "logs"', () => {
@@ -106,8 +106,8 @@ describe('MailerService', () => {
       service.onModuleInit();
 
       // Then
-      expect(StdoutTransportMock).toBeCalledTimes(1);
-      expect(StdoutTransportMock).toBeCalledWith(loggerServiceMock);
+      expect(StdoutTransportMock).toHaveBeenCalledTimes(1);
+      expect(StdoutTransportMock).toHaveBeenCalledWith(loggerServiceMock);
     });
 
     it('should set the transport to SMPT if MailerConfig equal "smtp"', () => {
@@ -133,7 +133,7 @@ describe('MailerService', () => {
         service.onModuleInit();
       } catch (e) {
         // Then
-        expect(StdoutTransportMock).toBeCalledTimes(0);
+        expect(StdoutTransportMock).toHaveBeenCalledTimes(0);
 
         expect(e).toBeInstanceOf(Error);
         expect(e.message).toStrictEqual(error.message);
@@ -237,8 +237,8 @@ describe('MailerService', () => {
       );
 
       // THEN
-      expect(configServiceMock.get).toBeCalledTimes(1);
-      expect(configServiceMock.get).toBeCalledWith(configName);
+      expect(configServiceMock.get).toHaveBeenCalledTimes(1);
+      expect(configServiceMock.get).toHaveBeenCalledWith(configName);
     });
 
     it('should call getFilePath from templateService', async () => {

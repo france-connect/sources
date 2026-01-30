@@ -60,133 +60,22 @@ Logs an output like :
 ```json
 [
   {
-    "uid": "fip1-high",
-    "name": "fip1-high",
-    "image": "fi-mock-eleve.svg",
-    "title": "IDP1 - Identity Provider - eIDAS élevé - discov - crypt",
-    "active": true,
-    "isChecked": true
-  },
-  {
-    "uid": "fip2-high",
-    "name": "fip2-high",
-    "image": "fi-mock-eleve.svg",
-    "title": "IDP2 - Identity Provider - eIDAS élevé - nodiscov - nocrypt",
-    "active": true,
-    "isChecked": true
-  },
-  {
-    "uid": "fip3-desactive-visible",
-    "name": "fip3-desactive-visible",
-    "image": "fi-mock-eleve.svg",
-    "title": "FIP3 - FI désactivé mais visible",
-    "active": false,
-    "isChecked": true
-  },
-  {
-    "uid": "fip4-desactive-invisible",
-    "name": "fip4-desactive-invisible",
-    "image": "fi-mock-eleve.svg",
-    "title": "FIP4 - FI désactivé et invisible",
-    "active": false,
-    "isChecked": true
-  },
-  {
-    "uid": "fip5-active-invisible",
-    "name": "fip5-active-invisible",
-    "image": "fi-mock-eleve.svg",
-    "title": "FIP5 - FI activé et invisible",
-    "active": true,
-    "isChecked": true
-  },
-  {
-    "uid": "fip6-high",
-    "name": "fip6-high",
-    "image": "fi-mock-eleve.svg",
-    "title": "IDP6 - Identity Provider - eIDAS élevé - whitelisted - nodiscov - crypt",
-    "active": true,
-    "isChecked": true
-  },
-  {
-    "uid": "fip8-high",
-    "name": "fip8-high",
-    "image": "fi-mock-eleve.svg",
-    "title": "IDP8 - Identity Provider - eIDAS élevé - whitelisted - discov - crypt",
-    "active": true,
-    "isChecked": true
-  },
-  {
-    "uid": "fip11-high",
-    "name": "fip11-high",
-    "image": "fi-mock-eleve.svg",
-    "title": "IDP11 - Identity Provider - eIDAS élevé - whitelisted - nodiscov - crypt",
-    "active": true,
-    "isChecked": true
-  },
-  {
-    "uid": "fip13-high",
-    "name": "fip13-high",
-    "image": "fi-mock-eleve.svg",
-    "title": "IDP13 - Identity Provider - eIDAS élevé - crypted (ECDH-ES + A256GCM) - signed (ES256)",
-    "active": true,
-    "isChecked": true
-  },
-  {
-    "uid": "fip14-high",
-    "name": "fip14-high",
-    "image": "fi-mock-eleve.svg",
-    "title": "IDP14 - Identity Provider - eIDAS élevé - crypted (RSA-OAEP + A256GCM) - signed (RS256)",
-    "active": true,
-    "isChecked": true
-  },
-  {
-    "uid": "fip15-high",
-    "name": "fip15-high",
-    "image": "fi-mock-substantiel.svg",
-    "title": "IDP15 - Identity Provider - eIDAS substantiel - crypted (RSA-OAEP + A256GCM) - signed (ES256)",
-    "active": true,
-    "isChecked": true
-  },
-  {
-    "uid": "fip16-high",
-    "name": "fip16-high",
-    "image": "fi-mock-substantiel.svg",
-    "title": "IDP16 - Identity Provider - eIDAS substantiel - crypted (ECDH-ES + A256GCM) - signed (RS256)",
-    "active": true,
-    "isChecked": true
-  },
-  {
-    "uid": "fip17-high",
-    "name": "fip17-high",
-    "image": "fi-mock-substantiel.svg",
-    "title": "IDP17 - Identity Provider - eIDAS substantiel - crypted (none) - signed (ES256)",
-    "active": true,
-    "isChecked": true
-  },
-  {
-    "uid": "fip18-high",
-    "name": "fip18-high",
+    "uid": "07e573f2-3312-4bb9-bc48-6fcec737e497",
+    "name": "fip1-low",
     "image": "fi-mock-faible.svg",
-    "title": "IDP18 - Identity Provider - eIDAS faible - crypted (none) - signed (ES256)",
+    "title": "FIP1-LOW - eIDAS LOW",
     "active": true,
     "isChecked": true
   },
   {
-    "uid": "fip19-high",
-    "name": "fip19-high",
-    "image": "fi-mock-faible.svg",
-    "title": "IDP19 - Identity Provider - eIDAS faible - crypted (none) - signed (RS256)",
+    "uid": "b5e9539a-599a-4ed2-9b4f-8f4bfc5fbb64",
+    "name": "fip2-low",
+    "image": "fi-mock-substantiel.svg",
+    "title": "FIP2-LOW - eIDAS SUBSTANTIAL - NO DISCOVERY",
     "active": true,
-    "isChecked": true
+    "isChecked": false
   },
-  {
-    "uid": "fip20-high",
-    "name": "fip20-high",
-    "image": "fi-mock-faible.svg",
-    "title": "IDP20 - Identity Provider - eIDAS faible - crypted (none) - signed (HS256)",
-    "active": true,
-    "isChecked": true
-  }
+  [...]
 ]
 ```
 

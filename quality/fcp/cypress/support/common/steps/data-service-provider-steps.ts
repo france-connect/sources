@@ -48,6 +48,13 @@ Given(
 );
 
 Given(
+  'le fournisseur de service requiert le prompt {string}',
+  function (prompt: string) {
+    this.serviceProvider.prompt = prompt;
+  },
+);
+
+Given(
   'le fournisseur de service se connecte à FranceConnect via la méthode {string}',
   function (authorizeHttpMethod: 'post' | 'get') {
     this.serviceProvider.authorizeHttpMethod = authorizeHttpMethod;

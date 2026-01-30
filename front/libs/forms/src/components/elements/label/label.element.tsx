@@ -15,14 +15,7 @@ interface LabelElementProps extends PropsWithHintType, PropsWithSeeAlsoType {
 }
 
 export const LabelElement = React.memo(
-  ({
-    className = undefined,
-    hint = undefined,
-    label,
-    name,
-    required = false,
-    seeAlso = undefined,
-  }: LabelElementProps) => {
+  ({ className, hint, label, name, required = false, seeAlso }: LabelElementProps) => {
     const values = useFieldLabel({
       hint,
       label,

@@ -264,9 +264,9 @@ describe('EidasProviderService', () => {
       proxyServiceRequestCacheMock.get.mockRejectedValueOnce(new Error('any'));
 
       // When / Then
-      await expect(
-        service.readLightRequestFromCache(token),
-      ).rejects.toThrowError(ReadLightRequestFromCacheException);
+      await expect(service.readLightRequestFromCache(token)).rejects.toThrow(
+        ReadLightRequestFromCacheException,
+      );
     });
   });
 
@@ -467,7 +467,7 @@ describe('EidasProviderService', () => {
       // When / Then
       await expect(
         service.writeLightResponseInCache(id, lightRequest),
-      ).rejects.toThrowError(WriteLightResponseInCacheException);
+      ).rejects.toThrow(WriteLightResponseInCacheException);
     });
   });
 });

@@ -65,7 +65,7 @@ select {
 }
 
 #call-authorize-button {
-  background-image: url('/img/FCboutons-10.svg');
+  background-image: url('../img/FCboutons-10.svg');
   width: 232px;
   height: 62px;
   display: inline-block;
@@ -73,5 +73,5 @@ select {
 }
 
 #call-authorize-button:hover {
-  background-image: url('/img/FCboutons-10-hover.svg');
+  background-image: url('../img/FCboutons-10-hover.svg');
 }

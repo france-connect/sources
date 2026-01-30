@@ -71,7 +71,7 @@ export const FraudFormComponent = React.memo(
                 <SimpleButton
                   className="fr-mt-4w"
                   dataTestId="fraud-form-submit-button"
-                  disabled={!!submitting}
+                  disabled={submitting}
                   size={Sizes.MEDIUM}
                   type={ButtonTypes.SUBMIT}>
                   {report}

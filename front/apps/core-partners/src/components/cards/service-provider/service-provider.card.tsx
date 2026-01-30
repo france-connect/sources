@@ -3,7 +3,8 @@ import React from 'react';
 import { HeadingTag, isoToDate, type PropsWithClassName, Strings } from '@fc/common';
 import { CardComponent, Sizes } from '@fc/dsfr';
 import { t } from '@fc/i18n';
-import type { ServiceProviderInterface } from '@fc/partners-service-providers';
+
+import type { ServiceProviderInterface } from '../../../interfaces';
 
 interface ServiceProviderCardComponentProps extends PropsWithClassName {
   data: ServiceProviderInterface;
@@ -24,8 +25,10 @@ export const ServiceProviderCardComponent = React.memo(
       <CardComponent
         enlargeLink
         className={className}
+        dataTestId={`service-providers-card-${data.id}`}
         details={{ top: { content: createdDate } }}
         Heading={HeadingTag.H4}
+        link={`/fournisseurs-de-service/${data.id}`}
         size={Sizes.MEDIUM}
         title={name}>
         <p className="is-uppercase fr-text--sm fr-mb-2w">

@@ -108,10 +108,14 @@ const spIdMock = 'spIdMockValue';
 const idpStateMock = 'idpStateMockValue';
 const idpNonceMock = 'idpNonceMock';
 const idpIdMock = 'idpIdMockValue';
-const randomStringMock = 'randomStringMockValue';
 const scopesMock = ['toto', 'titi'];
 const claimsMock = ['foo', 'bar'];
 const claimsLabelMock = ['F o o', 'B a r'];
+const deviceInfoMock = {
+  isTrusted: false,
+  isSuspicious: false,
+  newIdentity: false,
+};
 
 const req = {
   fc: {
@@ -167,6 +171,10 @@ describe('OidcProviderController', () => {
   };
 
   beforeEach(async () => {
+    jest.clearAllMocks();
+    jest.resetAllMocks();
+    jest.restoreAllMocks();
+
     const app: TestingModule = await Test.createTestingModule({
       controllers: [OidcProviderController],
       providers: [
@@ -206,12 +214,7 @@ describe('OidcProviderController', () => {
 
     validateDtoMock = jest.mocked(validateDto);
 
-    jest.resetAllMocks();
-    jest.restoreAllMocks();
-
-    serviceProviderServiceMock.getById.mockResolvedValueOnce(
-      serviceProviderMock,
-    );
+    serviceProviderServiceMock.getById.mockResolvedValue(serviceProviderMock);
 
     coreServiceMock.verify.mockResolvedValue(interactionDetailsResolved);
     coreServiceMock.getClaimsForInteraction.mockReturnValue(claimsMock);
@@ -289,6 +292,19 @@ describe('OidcProviderController', () => {
       expect(resMock.locals['spName']).toEqual(serviceProviderMock.name);
     });
 
+    it('should not expose spName to templates if serviceProvider is not defined', async () => {
+      // Given
+      validateDtoMock.mockResolvedValueOnce([]);
+
+      serviceProviderServiceMock.getById.mockResolvedValueOnce(undefined);
+
+      // When
+      await oidcProviderController.getAuthorize(req, resMock, queryMock);
+
+      // Then
+      expect(resMock.locals).not.toHaveProperty('spName');
+    });
+
     it('should throw an Error if DTO not validated', async () => {
       // Given
       validateDtoMock.mockResolvedValueOnce([{ property: 'invalid param' }]);
@@ -308,7 +324,19 @@ describe('OidcProviderController', () => {
   });
 
   describe('postAuthorize()', () => {
-    it('should call oidcProvider.callback', async () => {
+    it('should retrieve SSO status from config', async () => {
+      // Given
+      validateDtoMock.mockResolvedValueOnce([]);
+
+      // When
+      await oidcProviderController.postAuthorize(req, resMock, bodyMock);
+
+      // Then
+      expect(configServiceMock.get).toHaveBeenCalledTimes(1);
+      expect(configServiceMock.get).toHaveBeenCalledWith('Core');
+    });
+
+    it('should reset the session if SSO is disabled', async () => {
       // Given
       validateDtoMock.mockResolvedValueOnce([]);
 
@@ -317,12 +345,46 @@ describe('OidcProviderController', () => {
 
       // Then
       expect(sessionServiceMock.reset).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not reset the session if SSO is enabled', async () => {
+      // Given
+      validateDtoMock.mockResolvedValueOnce([]);
+      configServiceMock.get.mockReset().mockReturnValueOnce({
+        enableSso: true,
+      });
+
+      // When
+      await oidcProviderController.postAuthorize(req, resMock, bodyMock);
+
+      // Then
+      expect(sessionServiceMock.reset).toHaveBeenCalledTimes(0);
+    });
+
+    it('should validate the body using the AuthorizeParamsDto DTO', async () => {
+      // Given
+      validateDtoMock.mockResolvedValueOnce([]);
+
+      // When
+      await oidcProviderController.postAuthorize(req, resMock, bodyMock);
+
+      // Then
       expect(validateDtoMock).toHaveBeenCalledTimes(1);
       expect(validateDtoMock).toHaveBeenCalledWith(
         bodyMock,
         AuthorizeParamsDto,
         validatorOptions,
       );
+    });
+
+    it('should call oidcProvider.callback', async () => {
+      // Given
+      validateDtoMock.mockResolvedValueOnce([]);
+
+      // When
+      await oidcProviderController.postAuthorize(req, resMock, bodyMock);
+
+      // Then
       expect(oidcProviderServiceMock.callback).toHaveBeenCalledExactlyOnceWith(
         req,
         resMock,
@@ -657,27 +719,134 @@ describe('OidcProviderController', () => {
   });
 
   describe('getLogin()', () => {
-    const deviceInfoMock = {
-      isTrusted: false,
-      isSuspicious: false,
-      newIdentity: false,
-    };
+    it('should call processLogin with correct parameters', async () => {
+      // Given
+      oidcProviderController['processLogin'] = jest.fn();
+
+      // When
+      await oidcProviderController.getLogin(req, res, sessionServiceMock);
+
+      // Then
+      expect(
+        oidcProviderController['processLogin'],
+      ).toHaveBeenCalledExactlyOnceWith(req, res, sessionServiceMock);
+    });
+  });
+
+  describe('getAutoLogin()', () => {
+    it('should call processLogin with correct parameters', async () => {
+      // Given
+      oidcProviderController['processLogin'] = jest.fn();
+
+      // When
+      await oidcProviderController.getAutoLogin(req, res, sessionServiceMock);
+
+      // Then
+      expect(
+        oidcProviderController['processLogin'],
+      ).toHaveBeenCalledExactlyOnceWith(req, res, sessionServiceMock);
+    });
+  });
+
+  describe('processLogin()', () => {
     beforeEach(() => {
       oidcProviderController['handleSessionLife'] = jest.fn();
-      deviceServiceMock.update.mockResolvedValue(deviceInfoMock);
       oidcProviderController['trackDatatransfer'] = jest.fn();
+      deviceServiceMock.update.mockResolvedValue(deviceInfoMock);
+      sessionServiceMock.get.mockReset().mockReturnValue(sessionDataMock);
     });
 
-    it('should track data transfert with contextual information regarding device', async () => {
+    it('should get session data', async () => {
+      // When
+      await oidcProviderController['processLogin'](
+        req,
+        res,
+        sessionServiceMock,
+      );
+
+      // Then
+      expect(sessionServiceMock.get).toHaveBeenCalledTimes(1);
+    });
+
+    it('should throw CoreMissingIdentityException if no spIdentity in session', async () => {
+      // Given
+      sessionServiceMock.get.mockReset().mockReturnValue({
+        spId: spIdMock,
+      });
+
+      // Then
+      await expect(
+        oidcProviderController['processLogin'](req, res, sessionServiceMock),
+      ).rejects.toThrow(CoreMissingIdentityException);
+    });
+
+    it('should use rnippIdentity for device update when available', async () => {
+      // When
+      await oidcProviderController['processLogin'](
+        req,
+        res,
+        sessionServiceMock,
+      );
+
+      // Then
+      expect(deviceServiceMock.update).toHaveBeenCalledExactlyOnceWith(
+        req,
+        res,
+        sessionDataMock.rnippIdentity,
+      );
+    });
+
+    it('should use spIdentity for device update when rnippIdentity is not available', async () => {
+      // Given
+      sessionServiceMock.get.mockReset().mockReturnValue({
+        ...sessionDataMock,
+        rnippIdentity: undefined,
+      });
+
+      // When
+      await oidcProviderController['processLogin'](
+        req,
+        res,
+        sessionServiceMock,
+      );
+
+      // Then
+      expect(deviceServiceMock.update).toHaveBeenCalledExactlyOnceWith(
+        req,
+        res,
+        sessionDataMock.spIdentity,
+      );
+    });
+
+    it('should get interaction from oidcProvider', async () => {
+      // When
+      await oidcProviderController['processLogin'](
+        req,
+        res,
+        sessionServiceMock,
+      );
+
+      // Then
+      expect(oidcProviderServiceMock.getInteraction).toHaveBeenCalledTimes(1);
+      expect(oidcProviderServiceMock.getInteraction).toHaveBeenCalledWith(
+        req,
+        res,
+      );
+    });
+
+    it('should call trackDatatransfer with device info and interaction', async () => {
       // Given
       const interactionMock = Symbol('interaction');
       oidcProviderServiceMock.getInteraction.mockResolvedValueOnce(
         interactionMock,
       );
-      deviceServiceMock.update.mockResolvedValueOnce(deviceInfoMock);
 
       // When
-      await oidcProviderController.getLogin(req, res, sessionServiceMock);
+      await oidcProviderController['processLogin'](
+        req,
+        res,
+        sessionServiceMock,
+      );
 
       // Then
       expect(
@@ -692,75 +861,63 @@ describe('OidcProviderController', () => {
       );
     });
 
-    it('should throw an exception if no identity in session', async () => {
-      // Given
-      sessionServiceMock.get.mockReset().mockReturnValueOnce({
-        csrfToken: randomStringMock,
-        interactionId: interactionIdMock,
-        spAcr: acrMock,
-        spName: spNameMock,
-      });
+    it('should call sendNotificationMail with device info', async () => {
+      // When
+      await oidcProviderController['processLogin'](
+        req,
+        res,
+        sessionServiceMock,
+      );
 
       // Then
-      await expect(
-        oidcProviderController.getLogin(req, res, sessionServiceMock),
-      ).rejects.toThrow(CoreMissingIdentityException);
+      expect(coreServiceMock.sendNotificationMail).toHaveBeenCalledTimes(1);
+      expect(coreServiceMock.sendNotificationMail).toHaveBeenCalledWith(
+        deviceInfoMock,
+      );
     });
 
-    it('should call core.sendNotificationMail()', async () => {
+    it('should get session id', async () => {
       // When
-      await oidcProviderController.getLogin(req, res, sessionServiceMock);
+      await oidcProviderController['processLogin'](
+        req,
+        res,
+        sessionServiceMock,
+      );
+
+      // Then
+      expect(sessionServiceMock.getId).toHaveBeenCalledTimes(1);
+    });
+
+    it('should call handleSessionLife', async () => {
+      // When
+      await oidcProviderController['processLogin'](
+        req,
+        res,
+        sessionServiceMock,
+      );
 
       // Then
       expect(
-        coreServiceMock.sendNotificationMail,
-      ).toHaveBeenCalledExactlyOnceWith(deviceInfoMock);
+        oidcProviderController['handleSessionLife'],
+      ).toHaveBeenCalledExactlyOnceWith(req, res);
     });
 
-    it('should call handleSessionLife()', async () => {
+    it('should call finishInteraction with session data and session id', async () => {
       // When
-      await oidcProviderController.getLogin(req, res, sessionServiceMock);
-      // Then
-      expect(oidcProviderController['handleSessionLife']).toHaveBeenCalledTimes(
-        1,
-      );
-      expect(oidcProviderController['handleSessionLife']).toHaveBeenCalledWith(
+      await oidcProviderController['processLogin'](
         req,
         res,
+        sessionServiceMock,
       );
-    });
 
-    it('should call oidcProvider.interactionFinish', async () => {
-      // When
-      await oidcProviderController.getLogin(req, res, sessionServiceMock);
       // Then
-      expect(oidcProviderServiceMock.finishInteraction).toHaveBeenCalledTimes(
-        1,
-      );
-      expect(oidcProviderServiceMock.finishInteraction).toHaveBeenCalledWith(
+      expect(
+        oidcProviderServiceMock.finishInteraction,
+      ).toHaveBeenCalledExactlyOnceWith(
         req,
         res,
         sessionDataMock,
         sessionIdMock,
-      );
-    });
-
-    it('should use spIdentity if rnippIdentity is not defined', async () => {
-      // Given
-      sessionServiceMock.get.mockReset().mockReturnValueOnce({
-        spId: spIdMock,
-        spIdentity: { sp: 'identity' } as unknown as IOidcIdentity,
-      });
-
-      // When
-      await oidcProviderController.getLogin(req, res, sessionServiceMock);
-
-      // Then
-      expect(deviceServiceMock.update).toHaveBeenCalledTimes(1);
-      expect(deviceServiceMock.update).toHaveBeenCalledWith(
-        req,
-        res,
-        sessionDataMock.spIdentity,
       );
     });
   });

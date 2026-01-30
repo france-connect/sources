@@ -1,4 +1,7 @@
 <title>
-  <%= $translate('interaction.page_title', { platform: $config('App.platform')})
-  %>
+  <% if (locals?.errorContext?.hasError) { %> <%=
+  $translate('interaction.error_page_title', { platform:
+  $config('App.platform')}) %> <% } else { %> <%=
+  $translate('interaction.page_title', { platform: $config('App.platform')}) %>
+  <% } %>
 </title>

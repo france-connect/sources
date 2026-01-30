@@ -133,12 +133,8 @@ describe('HttpClientService', () => {
         // Given
         jest.mocked(HttpClientService.makeRequest).mockRejectedValueOnce(errorMock);
 
-        // When
-        await expect(
-          () => HttpClientService.getCSRF(),
-
-          // Then
-        ).rejects.toThrow(AxiosException);
+        // When / Then
+        await expect(HttpClientService.getCSRF()).rejects.toThrow(AxiosException);
       });
     });
 
@@ -164,11 +160,10 @@ describe('HttpClientService', () => {
         // Given
         jest.mocked(HttpClientService.makeRequest).mockRejectedValueOnce(errorMock);
 
-        // Then
-        await expect(() =>
-          // When
-          HttpClientService.get(endpoint, data, axiosOptions),
-        ).rejects.toThrow(AxiosException);
+        // When / Then
+        await expect(HttpClientService.get(endpoint, data, axiosOptions)).rejects.toThrow(
+          AxiosException,
+        );
       });
     });
 
@@ -225,11 +220,10 @@ describe('HttpClientService', () => {
         jest.mocked(HttpClientService.makeRequest).mockRejectedValueOnce(errorMock);
         jest.mocked(HttpClientService.getCSRF).mockResolvedValueOnce({ csrfToken: csrfTokenMock });
 
-        // Then
-        await expect(() =>
-          // When
-          HttpClientService.post(endpoint, data, axiosOptions),
-        ).rejects.toThrow(AxiosException);
+        // When / Then
+        await expect(HttpClientService.post(endpoint, data, axiosOptions)).rejects.toThrow(
+          AxiosException,
+        );
       });
     });
   });

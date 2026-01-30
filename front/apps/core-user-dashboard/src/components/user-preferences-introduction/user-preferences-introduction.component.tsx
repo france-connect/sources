@@ -60,7 +60,7 @@ export const UserPreferencesIntroductionComponent: React.FC = React.memo(() => {
             'fr-mb-5w': gtDesktop,
           })}
           img="/images/user-preferences-tutoriel-01.png"
-          label="1. Un usurpateur tente de se connecter à Service-Public.fr"
+          label="1. Un usurpateur tente de se connecter à service-public.gouv.fr"
         />
         <UserPreferencesTutorialComponent
           alt="Utilisation d'un compte bloqué"

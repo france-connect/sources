@@ -7,6 +7,7 @@ export * from './core-session.dto';
 export * from './delagation-scope.dto';
 export * from './eidas-identity.dto';
 export * from './get-authorize-session.dto';
+export * from './get-auto-login-session-dto';
 export * from './get-consent-session-dto';
 export * from './get-interaction-session-dto';
 export * from './get-login-session-dto';

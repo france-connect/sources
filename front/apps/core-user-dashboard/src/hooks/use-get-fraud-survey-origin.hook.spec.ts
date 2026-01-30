@@ -13,9 +13,9 @@ describe('useGetFraudSurveyOrigin', () => {
   const nowMock = 1860000;
 
   const getMock = jest.fn();
-  const URLSearchParamsMock = jest.fn().mockImplementation(() => ({
+  const URLSearchParamsMock = jest.fn().mockReturnValue({
     get: getMock,
-  }));
+  });
 
   global.URLSearchParams = URLSearchParamsMock;
 

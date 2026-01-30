@@ -18,6 +18,7 @@ export default {
   passwordVerification: env.boolean('PASSWORD_VERIFICATION'),
   viewsPaths: env.json('VIEWS_PATHS'),
   assetsPaths: env.json('ASSETS_PATHS'),
+  assetsUrlPrefix: env.string('ASSETS_URL_PREFIX'),
   logo: '/img/fc-logo.svg',
   title: "Fournisseur d'identité de démonstration - FCP-LOW",
   allowCustomIdentity: env.boolean('ALLOW_CUSTOM_IDENTITY'),

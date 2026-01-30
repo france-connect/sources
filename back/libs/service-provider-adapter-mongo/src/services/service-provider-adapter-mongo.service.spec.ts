@@ -47,6 +47,7 @@ describe('ServiceProviderAdapterMongoService', () => {
     type: 'public',
     identityConsent: false,
     signup_id: '1337',
+    allowedIdpHints: ['idp1', 'idp2'],
   };
 
   const invalidServiceProviderMock = {
@@ -227,6 +228,31 @@ describe('ServiceProviderAdapterMongoService', () => {
       // Then
       expect(result).toStrictEqual(expected);
     });
+
+    it('should log an error if decrypt fails', () => {
+      // Given
+      const expected = {
+        ...validServiceProviderMock,
+        client_id: validServiceProviderMock.key,
+        client_secret: 'client_secret',
+        scope: validServiceProviderMock.scopes.join(' '),
+        signupId: '1337',
+      };
+      delete expected.key;
+      delete expected.scopes;
+      delete expected.signup_id;
+      service['decryptClientSecret'] = jest.fn().mockReturnValueOnce(null);
+
+      // When
+      service['legacyToOpenIdPropertyName'](
+        validServiceProviderMock as unknown as ServiceProvider,
+      );
+
+      // Then
+      expect(loggerMock.err).toHaveBeenCalledExactlyOnceWith({
+        msg: 'Failed to decrypt client secret for service provider foo',
+      });
+    });
   });
 
   describe('findAllServiceProvider', () => {
@@ -258,6 +284,8 @@ describe('ServiceProviderAdapterMongoService', () => {
       userinfo_signed_response_alg: true,
       rep_scope: true,
       signup_id: true,
+      allowedIdpHints: true,
+      allowedPrompts: true,
     };
 
     const validateDtoMock = jest.mocked(validateDto);
@@ -468,6 +496,26 @@ describe('ServiceProviderAdapterMongoService', () => {
       expect(service['findAllServiceProvider']).toHaveBeenCalledTimes(1);
       expect(result).toStrictEqual(expected);
     });
+
+    it('should filter out any entry with a null client_secret', async () => {
+      // Given
+      service['findAllServiceProvider'] = jest.fn().mockResolvedValueOnce([
+        {
+          client_id: 'foo',
+          client_secret: 'client_secret_foo',
+        },
+      ]);
+
+      service['legacyToOpenIdPropertyName'] = jest
+        .fn()
+        .mockReturnValueOnce(null);
+
+      // When
+      const result = await service.getList();
+
+      // Then
+      expect(result).toEqual([]);
+    });
   });
 
   describe('getById', () => {
@@ -596,6 +644,25 @@ describe('ServiceProviderAdapterMongoService', () => {
       // Then
       expect(result).toStrictEqual(expected);
     });
+
+    it('should return null if decrypt fails', () => {
+      // Given
+      const clientSecretEncryptKey = 'Key';
+      const decryptClientSecretFeature = true;
+      configMock.get.mockReturnValue({
+        clientSecretEncryptKey,
+        decryptClientSecretFeature,
+      });
+      service['decryptClientSecret'] = jest.fn().mockReturnValueOnce(null);
+
+      // When
+      const result = service['legacyToOpenIdPropertyName'](
+        validServiceProviderMock as unknown as ServiceProvider,
+      );
+
+      // Then
+      expect(result).toBeNull();
+    });
   });
 
   describe('decryptClientSecret', () => {
@@ -638,6 +705,27 @@ describe('ServiceProviderAdapterMongoService', () => {
       const result = service['decryptClientSecret'](clientSecretMock);
       // Then
       expect(result).toEqual('totoIsDecrypted');
+    });
+
+    it('should return null if decrypt fails', () => {
+      // Given
+      const clientSecretMock = 'some string';
+      const clientSecretEncryptKey = 'Key';
+      const decryptClientSecretFeature = true;
+
+      configMock.get.mockReturnValue({
+        clientSecretEncryptKey,
+        decryptClientSecretFeature,
+      });
+      cryptographyMock.decrypt.mockImplementationOnce(() => {
+        throw new Error('Decrypt failed');
+      });
+
+      // When
+      const result = service['decryptClientSecret'](clientSecretMock);
+
+      // Then
+      expect(result).toBeNull();
     });
   });
 

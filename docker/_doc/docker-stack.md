@@ -55,13 +55,16 @@ export FC_ROOT=/path/to/france/connect/workspace/
 export COMPOSE_HTTP_TIMEOUT=200
 
 # Makes cypress aware of root path, not having to create relative path from e2E test file
-export CYPRESS_FC_ROOT=$FC_ROOT
+export CYPRESS_FC_ROOT="${FC_ROOT}"
 
 # Setup the docker registry url
 export FC_DOCKER_REGISTRY=registry.gitlab.dev-franceconnect.fr/france-connect/fc
 
+# Mandatory
+export PATH="$PATH:$FC_ROOT/fc/tools/bin"
+
 # Alias for the docker-stack command (you can add it to your "~/.bash_aliases" if you prefer but don't forget to set the variables before the .bash_aliases sourcing in your .bashrc 😉) :
-alias dks=$FC_ROOT/fc/docker/docker-stack
+alias dks=docker-stack
 
 # If you use version 2 of docker compose
 export FC_DOCKER_COMPOSE='docker compose'

@@ -1,0 +1,92 @@
+#!/usr/bin/env bash
+
+_up() {
+  task " * Checking required services" \
+    "_check_for_unknown_services" "${@}"
+
+  echo " * Starting services: $(format_emphasis $(join_by ", " "${@}"))"
+
+  task " * Pull fresh node image" \
+    "_pull_node_image"
+
+  task " * Up containers" \
+    "_do_up" "${@}"
+
+  task " * Populate global variables"
+  "_get_running_containers"
+
+  task " * Automatically install dependencies for started containers" \
+    "_auto_install_dependencies"
+
+  echo " * Automatically run init scripts for started containers"
+  _auto_init_containers
+
+  task " * Up rp-all" \
+    "_do_up" "rp-all"
+}
+
+_add_node_app() {
+  task " * Up containers" \
+    "_do_up" "${@}"
+
+  _start "${@}"
+}
+
+_run_command() {
+  task " * Run command in containers" \
+    "_do_up" "${@}"
+
+  _do_command "${@}"
+}
+
+_do_up() {
+  # Get wanted services
+  local services=$(_get_services "$@")
+  # Add the --build flag only if OFFLINE env var is not set
+  local shouldBuild=""
+
+  if [ -z ${OFFLINE} ]; then
+    shouldBuild="--build"
+  fi
+
+  cd ${DOCKER_DIR}
+  $DOCKER_COMPOSE up $shouldBuild -d $services
+}
+
+_check_for_unknown_services() {
+  local asked=$(_get_services "$@")
+  local available=$(_list_services)
+
+  for service in $asked; do
+    declare -i match=$(echo "$available" | grep "^$service$" | wc -l)
+
+    if [ $match -eq 0 ]; then
+      echo "Service / Stack Not Found: $service"
+      exit 1
+    fi
+  done
+}
+
+_get_services() {
+  local apps=${@:-none}
+  local services=""
+
+  for app in $apps; do
+    services="$services $app"
+  done
+
+  echo $services
+}
+
+_auto_install_dependencies() {
+  if [ "${NODEJS_CONTAINERS:-xxx}" != "xxx" ]; then
+    echo "Installing node modules..."
+    _install_dependencies $NODEJS_CONTAINERS
+  fi
+}
+
+_auto_init_containers() {
+  for app in ${FC_CONTAINERS}; do
+    task "   * init $(format_emphasis "${app}")" "_init_hooks" "${app}"
+  done
+}

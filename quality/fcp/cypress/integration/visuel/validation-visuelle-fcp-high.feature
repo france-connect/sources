@@ -66,7 +66,6 @@ Fonctionnalité: Validation Visuelle
     Et que je clique sur le bouton FranceConnect
     Et que je suis redirigé vers la page sélection du fournisseur d'identité
     Et que la copie d'écran "selectionFIScopeAnonyme" correspond à la page actuelle sur "<device>"
-    Et que j'utilise un fournisseur d'identité "actif"
     Et que je clique sur le fournisseur d'identité
     Et que je suis redirigé vers la page login du fournisseur d'identité
     Quand je m'authentifie avec succès
@@ -91,7 +90,6 @@ Fonctionnalité: Validation Visuelle
     Et que je navigue sur la page fournisseur de service
     Et que je clique sur le bouton FranceConnect
     Et que je suis redirigé vers la page sélection du fournisseur d'identité
-    Et que j'utilise un fournisseur d'identité "actif"
     Et que je clique sur le fournisseur d'identité
     Et que je suis redirigé vers la page login du fournisseur d'identité
     Quand je m'authentifie avec succès

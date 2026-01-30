@@ -1,9 +1,10 @@
 import { render } from '@testing-library/react';
 
-import type { Environment, ISODate } from '@fc/common';
+import type { ISODate } from '@fc/common';
 import { sortByKey, SortOrder } from '@fc/common';
-import type { VersionInterface } from '@fc/partners-service-providers';
 
+import type { PartnersEnvironment } from '../../../enums';
+import type { VersionInterface } from '../../../interfaces';
 import { InstanceCardComponent } from '../../cards';
 import { InstancesListComponent } from './instances.list';
 
@@ -14,7 +15,7 @@ describe('InstancesListComponent', () => {
   const instanceItemsMock = [
     {
       createdAt: 'any-createdAt-mock-1' as unknown as ISODate,
-      environment: 'SANDBOX' as unknown as Environment,
+      environment: 'SANDBOX' as unknown as PartnersEnvironment,
       id: '1',
       updatedAt: 'any-updatedAt-mock-1' as unknown as ISODate,
       versions: [
@@ -33,7 +34,7 @@ describe('InstancesListComponent', () => {
     },
     {
       createdAt: 'any-createdAt-mock-2' as unknown as ISODate,
-      environment: 'SANDBOX' as unknown as Environment,
+      environment: 'SANDBOX' as unknown as PartnersEnvironment,
       id: '2',
       updatedAt: 'any-updatedAt-mock-2' as unknown as ISODate,
       versions: [
@@ -52,7 +53,7 @@ describe('InstancesListComponent', () => {
     },
     {
       createdAt: 'any-createdAt-mock-3' as unknown as ISODate,
-      environment: 'SANDBOX' as unknown as Environment,
+      environment: 'SANDBOX' as unknown as PartnersEnvironment,
       id: '3',
       updatedAt: 'any-updatedAt-mock-3' as unknown as ISODate,
       versions: [

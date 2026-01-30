@@ -36,7 +36,7 @@ describe('useSelectedItems', () => {
     const mockId = 'mock-id-1';
     const setSelectedMock = jest.fn();
     const selectedMock = ['mock-id-2', 'mock-id-3'];
-    jest.spyOn(React, 'useState').mockImplementationOnce(() => [selectedMock, setSelectedMock]);
+    jest.spyOn(React, 'useState').mockReturnValueOnce([selectedMock, setSelectedMock]);
 
     // When
     const { result } = renderHook((options) => useSelectedItems(options), {
@@ -58,7 +58,7 @@ describe('useSelectedItems', () => {
     const mockId = 'mock-id-1';
     const setSelectedMock = jest.fn();
     const selectedMock = ['mock-id-2', 'mock-id-3', 'mock-id-1'];
-    jest.spyOn(React, 'useState').mockImplementationOnce(() => [selectedMock, setSelectedMock]);
+    jest.spyOn(React, 'useState').mockReturnValueOnce([selectedMock, setSelectedMock]);
 
     // When
     const { result } = renderHook((options) => useSelectedItems(options), {
@@ -80,7 +80,7 @@ describe('useSelectedItems', () => {
     const mockId = 'mock-id-1';
     const setSelectedMock = jest.fn();
     const selectedMock = ['mock-id-2', 'mock-id-3'];
-    jest.spyOn(React, 'useState').mockImplementationOnce(() => [selectedMock, setSelectedMock]);
+    jest.spyOn(React, 'useState').mockReturnValueOnce([selectedMock, setSelectedMock]);
 
     // When
     const { result } = renderHook((options) => useSelectedItems(options), {
@@ -102,7 +102,7 @@ describe('useSelectedItems', () => {
     const mockId = 'mock-id-1';
     const setSelectedMock = jest.fn();
     const selectedMock = ['mock-id-1'];
-    jest.spyOn(React, 'useState').mockImplementationOnce(() => [selectedMock, setSelectedMock]);
+    jest.spyOn(React, 'useState').mockReturnValueOnce([selectedMock, setSelectedMock]);
 
     // When
     const { result } = renderHook((options) => useSelectedItems(options), {

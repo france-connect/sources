@@ -658,7 +658,7 @@ describe('CsmrUserPreferencesService', () => {
       );
       // Then
       expect(service['createIdpSettings']).toHaveBeenCalledTimes(1);
-      expect(service['createIdpSettings']).toBeCalledWith(
+      expect(service['createIdpSettings']).toHaveBeenCalledWith(
         idpListMock,
         inputIsExcludeList,
         idpUids,
@@ -671,7 +671,7 @@ describe('CsmrUserPreferencesService', () => {
 
       // Then
       expect(accountServiceMock.updatePreferences).toHaveBeenCalledTimes(1);
-      expect(accountServiceMock.updatePreferences).toBeCalledWith(
+      expect(accountServiceMock.updatePreferences).toHaveBeenCalledWith(
         identityHashMock,
         createIdpSettingsResultMock.list,
         createIdpSettingsResultMock.isExcludeList,

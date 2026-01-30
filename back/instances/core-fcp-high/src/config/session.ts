@@ -36,6 +36,8 @@ export default {
     OidcClientRoutes.OIDC_CALLBACK,
     CoreRoutes.INTERACTION_VERIFY,
     CoreRoutes.INTERACTION_CONSENT,
+    CoreRoutes.INTERACTION_AUTO_LOGIN,
+    CoreRoutes.INTERACTION_LOGIN,
     OidcProviderRoutes.REDIRECT_TO_SP,
 
     // Disconnect flow

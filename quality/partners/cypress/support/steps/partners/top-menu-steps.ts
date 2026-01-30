@@ -24,3 +24,7 @@ When(
     topMenuComponent.getOpenMobileMenuButton().click();
   },
 );
+
+When('je clique sur le lien vers la page fournisseurs de service', function () {
+  topMenuComponent.getServiceProvidersLink().click();
+});

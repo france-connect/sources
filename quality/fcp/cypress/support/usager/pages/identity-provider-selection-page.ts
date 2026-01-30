@@ -14,11 +14,19 @@ export default class IdentityProviderSelectionPage {
   }
 
   getIdpGrid(): ChainableElement {
-    return cy.get('[data-testid="main-providers"]');
+    return cy.get('#grid-main-providers, [data-testid="main-providers"]');
+  }
+
+  getAllIdpForms(): ChainableElement {
+    return this.getIdpGrid().find('form');
+  }
+
+  getAllIdpButtons(): ChainableElement {
+    return this.getAllIdpForms().find('button');
   }
 
   getIdpButton(idp: IdentityProviderInterface): ChainableElement {
-    return cy.get(idp.selectors.idpButton);
+    return cy.get(idp.selectors.idpButton, { timeout: 0 });
   }
 
   getAidantsConnectButton(): ChainableElement {
@@ -29,6 +37,10 @@ export default class IdentityProviderSelectionPage {
     const selector = `[data-testid="provider-selection-modal-${idpId}"]`;
     const modal = new Modal(selector);
     return modal;
+  }
+
+  getLoadingModal(): ChainableElement {
+    return cy.get('#loading-modal');
   }
 
   checkIsVisible(): void {
@@ -58,5 +70,12 @@ export default class IdentityProviderSelectionPage {
     } else {
       this.getNotificationSection().should('not.exist');
     }
+  }
+
+  checkIsLoadingModalVisible(): void {
+    this.getLoadingModal()
+      .should('exist')
+      .and('be.visible')
+      .and('have.attr', 'open');
   }
 }

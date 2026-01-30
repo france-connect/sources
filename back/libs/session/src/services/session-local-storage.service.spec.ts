@@ -6,6 +6,7 @@ import { AsyncLocalStorageService } from '@fc/async-local-storage';
 
 import { getAsyncLocalStorageMock } from '@mocks/async-local-storage';
 
+import { SessionInvalidSetCallException } from '../exceptions';
 import { SessionStoreContentInterface } from '../interfaces';
 import { SESSION_STORE_KEY } from '../tokens';
 import { SessionLocalStorageService } from './session-local-storage.service';
@@ -245,6 +246,32 @@ describe('SessionLocalStorageService', () => {
         data,
         inputData,
       );
+    });
+
+    it('should throw SessionInvalidSetCallException if keyOrData is neither string nor object', () => {
+      // Given
+      const invalidInput = Symbol('invalid input');
+
+      // When / Then
+      expect(() =>
+        service.set(moduleName, invalidInput as unknown as string),
+      ).toThrow(SessionInvalidSetCallException);
+    });
+
+    it('should add the argument type to the exception log', () => {
+      // Given
+      const invalidInput = 42;
+
+      // When
+      let exception: SessionInvalidSetCallException;
+      try {
+        service.set(moduleName, invalidInput as unknown as string);
+      } catch (err) {
+        exception = err;
+      }
+
+      // Then
+      expect(exception.log).toContain('Invalid argument type: number');
     });
   });
 

@@ -10,7 +10,7 @@ interface ToggleInputComponentProps {
 }
 
 export const ToggleInputComponent = React.memo(
-  ({ disabled = false, input, onUpdate = undefined }: ToggleInputComponentProps) => (
+  ({ disabled = false, input, onUpdate }: ToggleInputComponentProps) => (
     <input
       {...input}
       aria-describedby={`${input.name}-hint-text`}

@@ -14,7 +14,7 @@ interface ServiceImageComponentProps extends PropsWithClassName {
 }
 
 export const ServiceImageComponent = React.memo(
-  ({ className = undefined, disabled = false, service }: ServiceImageComponentProps) => {
+  ({ className, disabled = false, service }: ServiceImageComponentProps) => {
     const { image, title } = service;
     const idpLabel = t('UserPreferences.labels.idp');
     return (

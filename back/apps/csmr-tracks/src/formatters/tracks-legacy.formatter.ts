@@ -21,9 +21,7 @@ import { Platform } from '../enums';
 import { CsmrTracksUnknownActionException } from '../exceptions';
 
 @Injectable()
-export class TracksLegacyFormatter
-  implements TracksFormatterAbstract<TracksOutputInterface>
-{
+export class TracksLegacyFormatter implements TracksFormatterAbstract<TracksOutputInterface> {
   constructor(
     private readonly logger: LoggerService,
     private readonly config: ConfigService,

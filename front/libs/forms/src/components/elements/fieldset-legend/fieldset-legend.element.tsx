@@ -14,14 +14,7 @@ interface FieldsetLegendElementProps extends PropsWithHintType, PropsWithSeeAlso
 }
 
 export const FieldsetLegendElement = React.memo(
-  ({
-    className = undefined,
-    hint,
-    label,
-    name,
-    required = false,
-    seeAlso,
-  }: FieldsetLegendElementProps) => {
+  ({ className, hint, label, name, required = false, seeAlso }: FieldsetLegendElementProps) => {
     const values = useFieldLabel({
       hint,
       label,

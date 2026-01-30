@@ -29,6 +29,8 @@ Fonctionnalité: Historique Connexion sur FC Legacy (integ01)
     Et le niveau de sécurité de l'évènement est "Faible"
     Et le code d'identification de l'évènement est affiché
 
+  # FD mock v1 a été décommisionné, le test ci-dessous reste pour documentation
+  @ignoreInteg01
   Scénario: Historique Connexion - FC Legacy - FS public avec scope data
     Etant donné que j'utilise la plateforme "FranceConnect(CL)"
     Et que j'utilise un compte usager "pour les tests de traces"
@@ -101,6 +103,8 @@ Fonctionnalité: Historique Connexion sur FC Legacy (integ01)
     Et l'évènement concerne aucune donnée "DGFIP"
     Et l'évènement concerne aucune donnée "CNAM"
 
+  # FD mock v1 a été décommisionné, le test ci-dessous reste pour documentation
+  @ignoreInteg01
   Scénario: Historique Connexion - FC Legacy - FS privé avec scope data
     Etant donné que j'utilise la plateforme "FranceConnect(CL)"
     Et que j'utilise un compte usager "pour les tests de traces"

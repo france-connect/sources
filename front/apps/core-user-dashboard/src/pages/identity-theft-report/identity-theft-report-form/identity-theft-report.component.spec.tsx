@@ -18,9 +18,9 @@ describe('IdentityTheftReportFormComponent', () => {
 
   beforeEach(() => {
     // Given
-    jest.mocked(useSafeContext).mockImplementation(() => ({
+    jest.mocked(useSafeContext).mockReturnValue({
       gotoNextStep: gotoNextMock,
-    }));
+    });
     jest.mocked(useDto2FormService).mockReturnValue({
       form: formMock,
       initialValues: initialValuesMock,

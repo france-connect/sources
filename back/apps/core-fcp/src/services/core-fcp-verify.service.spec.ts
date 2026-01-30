@@ -7,7 +7,7 @@ import { CORE_VERIFY_SERVICE, CoreVerifyService, ProcessCore } from '@fc/core';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerService } from '@fc/logger';
 import { IOidcIdentity } from '@fc/oidc';
-import { OidcProviderService } from '@fc/oidc-provider';
+import { OidcProviderPrompt, OidcProviderService } from '@fc/oidc-provider';
 import { TrackingService } from '@fc/tracking';
 
 import { getLoggerMock } from '@mocks/logger';
@@ -104,14 +104,16 @@ describe('CoreFcpVerifyService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('handleVerify()', () => {
+  describe('handleVerifyIdentity()', () => {
     beforeEach(() => {
       service['trackVerified'] = jest.fn();
+      sessionServiceMock.get.mockReturnValue({ spPrompt: undefined });
     });
 
     it('should call core.verify()', async () => {
       // When
       await service['handleVerifyIdentity'](req, params);
+
       // Then
       expect(coreVerifyServiceMock.verify).toHaveBeenCalledTimes(1);
       expect(coreVerifyServiceMock.verify).toHaveBeenCalledWith(
@@ -123,16 +125,47 @@ describe('CoreFcpVerifyService', () => {
     it('should call trackVerified()', async () => {
       // When
       await service['handleVerifyIdentity'](req, params);
+
       // Then
       expect(coreVerifyServiceMock.trackVerified).toHaveBeenCalledTimes(1);
       expect(coreVerifyServiceMock.trackVerified).toHaveBeenCalledWith(req);
     });
 
-    it('should return url result', async () => {
+    it('should return consent url when spPrompt is undefined', async () => {
       // Given
       const expected = 'urlPrefixValue/interaction/interactionId/consent';
+
       // When
       const result = await service['handleVerifyIdentity'](req, params);
+
+      // Then
+      expect(result).toBe(expected);
+    });
+
+    it('should return consent url when spPrompt includes consent', async () => {
+      // Given
+      sessionServiceMock.get.mockReturnValue({
+        spPrompt: OidcProviderPrompt.CONSENT,
+      });
+      const expected = 'urlPrefixValue/interaction/interactionId/consent';
+
+      // When
+      const result = await service['handleVerifyIdentity'](req, params);
+
+      // Then
+      expect(result).toBe(expected);
+    });
+
+    it('should return auto-login url when spPrompt is "login"', async () => {
+      // Given
+      sessionServiceMock.get.mockReturnValue({
+        spPrompt: OidcProviderPrompt.LOGIN,
+      });
+      const expected = 'urlPrefixValue/auto-login';
+
+      // When
+      const result = await service['handleVerifyIdentity'](req, params);
+
       // Then
       expect(result).toBe(expected);
     });
@@ -148,6 +181,7 @@ describe('CoreFcpVerifyService', () => {
     it('should get urlPrefix from config', () => {
       // When
       service['handleInsufficientAcrLevel'](interactionIdMock);
+
       // Then
       expect(configServiceMock.get).toHaveBeenCalledTimes(1);
       expect(configServiceMock.get).toHaveBeenCalledWith('App');
@@ -156,8 +190,10 @@ describe('CoreFcpVerifyService', () => {
     it('should return url result', () => {
       // Given
       const expected = 'urlPrefixValue/interaction/interactionIdMockValue';
+
       // When
       const result = service['handleInsufficientAcrLevel'](interactionIdMock);
+
       // Then
       expect(result).toBe(expected);
     });

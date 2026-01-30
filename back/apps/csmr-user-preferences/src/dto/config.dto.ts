@@ -4,6 +4,7 @@ import { IsObject, ValidateNested } from 'class-validator';
 import { IdentityProviderAdapterMongoConfig } from '@fc/identity-provider-adapter-mongo';
 import { LoggerConfig } from '@fc/logger';
 import { MongooseConfig } from '@fc/mongoose';
+import { MongooseChangeStreamConfig } from '@fc/mongoose-change-stream';
 import { RabbitmqConfig } from '@fc/rabbitmq';
 
 import { AppRmqConfig } from './app-rmq-config.dto';
@@ -33,4 +34,9 @@ export class CsmrUserPreferencesConfig {
   @ValidateNested()
   @Type(() => IdentityProviderAdapterMongoConfig)
   readonly IdentityProviderAdapterMongo: IdentityProviderAdapterMongoConfig;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => MongooseChangeStreamConfig)
+  readonly MongooseChangeStream: MongooseChangeStreamConfig;
 }

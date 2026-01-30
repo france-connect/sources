@@ -10,6 +10,7 @@ import { IdentityProviderMetadata } from '@fc/oidc';
 import { getLoggerMock } from '@mocks/logger';
 
 import { IdentityProviderAdapter } from './dto';
+import { IdentityProviderAdapterEnvDecryptClientSecretFailedException } from './exceptions';
 import { IdentityProviderAdapterEnvService } from './identity-provider-adapter-env.service';
 
 describe('IdentityProviderAdapterEnvService', () => {
@@ -587,6 +588,42 @@ describe('IdentityProviderAdapterEnvService', () => {
       );
       // Then
       expect(result).toEqual('totoIsDecrypted');
+    });
+
+    it('should throw exception if decrypt fails', () => {
+      // Given
+      const clientSecretMock = 'some string';
+      const clientSecretEncryptKey = 'Key';
+      cryptographyMock.decrypt = jest.fn().mockImplementationOnce(() => {
+        throw new Error('Decrypt failed');
+      });
+
+      // When / Then
+      expect(() =>
+        service['decryptClientSecret'](
+          clientSecretMock,
+          clientSecretEncryptKey,
+        ),
+      ).toThrow(IdentityProviderAdapterEnvDecryptClientSecretFailedException);
+    });
+
+    it('should log an error if decrypt fails', () => {
+      // Given
+      const errorMock = new Error('Decrypt failed');
+      const clientSecretMock = 'some string';
+      const clientSecretEncryptKey = 'Key';
+      cryptographyMock.decrypt = jest.fn().mockImplementationOnce(() => {
+        throw errorMock;
+      });
+
+      // When / Then
+      expect(() =>
+        service['decryptClientSecret'](
+          clientSecretMock,
+          clientSecretEncryptKey,
+        ),
+      ).toThrow(IdentityProviderAdapterEnvDecryptClientSecretFailedException);
+      expect(loggerMock.err).toHaveBeenCalledExactlyOnceWith(errorMock);
     });
   });
 

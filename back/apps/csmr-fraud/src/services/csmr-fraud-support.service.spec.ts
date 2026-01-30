@@ -47,6 +47,7 @@ describe('CsmrFraudSupportService', () => {
     error: '',
     total: 0,
     tracks: tracksMock,
+    fraudTracks: [],
   };
 
   const fromMock = {
@@ -69,7 +70,10 @@ describe('CsmrFraudSupportService', () => {
 
   const bodyMock = 'myWonderful template content';
 
-  const attachmentsMock = Symbol('attachments') as unknown as Attachment[];
+  const attachmentsMock = [Symbol('attachments')] as unknown as Attachment[];
+  const supportAttachmentsMock = [
+    Symbol('supportAttachments'),
+  ] as unknown as Attachment[];
 
   beforeEach(async () => {
     jest.resetAllMocks();
@@ -104,6 +108,9 @@ describe('CsmrFraudSupportService', () => {
       service['getMailAttachments'] = jest
         .fn()
         .mockReturnValue(attachmentsMock);
+      service['getSupportAttachments'] = jest
+        .fn()
+        .mockReturnValue(supportAttachmentsMock);
       service['sendFraudMail'] = jest.fn();
     });
 
@@ -143,6 +150,17 @@ describe('CsmrFraudSupportService', () => {
       expect(service['getMailAttachments']).toHaveBeenCalledWith(tracksMock);
     });
 
+    it('should call getSupportAttachments', async () => {
+      // When
+      await service.createSecurityTicket(ticketDataMock, true);
+
+      // Then
+      expect(service['getSupportAttachments']).toHaveBeenCalledExactlyOnceWith(
+        ticketDataMock,
+        true,
+      );
+    });
+
     it('should call sendFraudMail', async () => {
       // When
       await service.createSecurityTicket(ticketDataMock);
@@ -152,8 +170,46 @@ describe('CsmrFraudSupportService', () => {
       expect(service['sendFraudMail']).toHaveBeenCalledWith(
         fromMock,
         bodyMock,
-        attachmentsMock,
+        [...attachmentsMock, ...supportAttachmentsMock],
       );
+    });
+  });
+
+  describe('getSupportAttachments', () => {
+    it('should return empty list if withTracksExport is false', () => {
+      // When
+      const result = service['getSupportAttachments'](ticketDataMock, false);
+
+      // Then
+      expect(result).toEqual([]);
+    });
+
+    it('should call generateCSVContent', () => {
+      // When
+      service['getSupportAttachments'](ticketDataMock, true);
+
+      // Then
+      expect(generateCSVContent).toHaveBeenCalledExactlyOnceWith(
+        ticketDataMock.fraudTracks,
+      );
+    });
+
+    it('should return attachments if withTracksExport is true', () => {
+      // Given
+      const csvContent = Symbol('csvContent') as unknown as string;
+      jest.mocked(generateCSVContent).mockReturnValueOnce(csvContent);
+
+      // When
+      const result = service['getSupportAttachments'](ticketDataMock, true);
+
+      // Then
+      expect(result).toEqual([
+        {
+          filename: 'support_connexions.csv',
+          content: csvContent,
+          contentType: 'text/csv',
+        },
+      ]);
     });
   });
 

@@ -19,6 +19,7 @@ export interface ServiceProvider extends ServiceProviderBase {
   scopes: string[];
   descriptions: string[];
   explicitConsent: boolean;
+  prompt?: string;
 }
 
 export interface ScopeContext {

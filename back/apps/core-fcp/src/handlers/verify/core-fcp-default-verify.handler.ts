@@ -150,11 +150,11 @@ export class CoreFcpDefaultVerifyHandler implements IVerifyFeatureHandler {
   ): string {
     let sub: string;
     if (account.spFederation?.hasOwnProperty(entityId)) {
-      this.logger.info('using existing sub from spFederation');
+      this.logger.debug('using existing sub from spFederation');
       const subData = account.spFederation[entityId];
       sub = typeof subData === 'string' ? subData : subData.sub;
     } else {
-      this.logger.info('creating new sub');
+      this.logger.debug('creating new sub');
       sub = this.cryptographyFcp.computeSubV1(entityId, identityHash);
     }
     this.logger.debug({ sub });

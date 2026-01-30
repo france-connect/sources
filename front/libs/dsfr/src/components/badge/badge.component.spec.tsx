@@ -84,6 +84,6 @@ describe('BadgeComponent', () => {
     render(<BadgeComponent noIcon Icon={UserIcon} label="label" />);
 
     // Then
-    expect(UserIcon).toHaveBeenCalledTimes(0);
+    expect(UserIcon).not.toHaveBeenCalled();
   });
 });

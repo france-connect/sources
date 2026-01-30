@@ -6,9 +6,7 @@ import { MicroservicesRmqResponseInterface } from '@fc/microservices-rmq/interfa
 
 import { FraudTrackDto } from './fraud-track.dto';
 
-export class FraudTracksResponseDto
-  implements MicroservicesRmqResponseInterface
-{
+export class FraudTracksResponseDto implements MicroservicesRmqResponseInterface {
   @IsEnum(ResponseStatus)
   readonly type: ResponseStatus;
 

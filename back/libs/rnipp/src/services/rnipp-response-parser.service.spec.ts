@@ -545,6 +545,56 @@ describe('RnippResponseParserService', () => {
       // Then
       expect(result).toStrictEqual('1962-01-01');
     });
+
+    it('should return null if the birthdate has an incorrect format', () => {
+      // Given
+      service['getXmlAttribute'] = jest
+        .fn()
+        .mockReturnValueOnce('fjfsefhsehfjksehjksehsjehbsfe');
+      // When
+      const result = service['getBirthdateAttribute'](
+        rnippCorrectResponseParsed as unknown as JSON,
+        RnippXmlSelectors.BIRTH_DATE,
+      );
+      // Then
+      expect(result).toBeNull();
+    });
+
+    it('should return null if the birthdate has correct birthdate size but invalid value', () => {
+      // Given
+      service['getXmlAttribute'] = jest.fn().mockReturnValueOnce('||||||||||');
+      // When
+      const result = service['getBirthdateAttribute'](
+        rnippCorrectResponseParsed as unknown as JSON,
+        RnippXmlSelectors.BIRTH_DATE,
+      );
+      // Then
+      expect(result).toBeNull();
+    });
+
+    it('should return null if the birthdate has correct birthmonth size but invalid value', () => {
+      // Given
+      service['getXmlAttribute'] = jest.fn().mockReturnValueOnce('|||||||');
+      // When
+      const result = service['getBirthdateAttribute'](
+        rnippCorrectResponseParsed as unknown as JSON,
+        RnippXmlSelectors.BIRTH_DATE,
+      );
+      // Then
+      expect(result).toBeNull();
+    });
+
+    it('should return null if the birthdate has correct birthyear size but invalid value', () => {
+      // Given
+      service['getXmlAttribute'] = jest.fn().mockReturnValueOnce('||||');
+      // When
+      const result = service['getBirthdateAttribute'](
+        rnippCorrectResponseParsed as unknown as JSON,
+        RnippXmlSelectors.BIRTH_DATE,
+      );
+      // Then
+      expect(result).toBeNull();
+    });
   });
 
   describe('getBirthplaceAttribute', () => {

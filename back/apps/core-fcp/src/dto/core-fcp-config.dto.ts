@@ -15,6 +15,7 @@ import { LoggerConfig } from '@fc/logger';
 import { LoggerConfig as LoggerLegacyConfig } from '@fc/logger-legacy';
 import { MailerConfig } from '@fc/mailer';
 import { MongooseConfig } from '@fc/mongoose';
+import { MongooseChangeStreamConfig } from '@fc/mongoose-change-stream';
 import { OidcAcrConfig } from '@fc/oidc-acr';
 import { OidcClientConfig } from '@fc/oidc-client';
 import { OidcProviderConfig } from '@fc/oidc-provider';
@@ -156,4 +157,9 @@ export class CoreFcpConfig {
   @ValidateNested()
   @Type(() => ExceptionsFcpConfig)
   readonly ExceptionsFcp: ExceptionsFcpConfig;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => MongooseChangeStreamConfig)
+  readonly MongooseChangeStream: MongooseChangeStreamConfig;
 }

@@ -17,6 +17,7 @@ export default {
   urlPrefix: '',
   passwordVerification: env.boolean('PASSWORD_VERIFICATION'),
   assetsPaths: env.json('ASSETS_PATHS'),
+  assetsUrlPrefix: env.string('ASSETS_URL_PREFIX'),
   viewsPaths: env.json('VIEWS_PATHS'),
   logo: '/img/logo-fc-plus.svg',
   title: "Fournisseur d'identité de démonstration - FCP-HIGH",

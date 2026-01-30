@@ -250,21 +250,25 @@ describe('DataProviderAdapterMongoService', () => {
       expect(result).toEqual(dataProviderListMock);
     });
 
-    it('should call findAll method if refreshCache is true', async () => {
+    it('should call findAllDataProvider method if refreshCache is true', async () => {
       // Given
       const refresh = true;
       const listMock = [
         {
           client_id: 'foo',
+          client_secret: 'client_secret_foo',
         },
         {
           client_id: 'bar',
+          client_secret: 'client_secret_bar',
         },
       ];
       validateDtoMock.mockResolvedValueOnce(dataProviderMock);
       service['decryptClientSecret'] = jest
         .fn()
+        .mockReturnValueOnce(dataProviderMock.client_secret)
         .mockReturnValueOnce(dataProviderMock.client_secret);
+
       service['findAllDataProvider'] = jest.fn().mockResolvedValue(listMock);
       // When
       const result = await service.getList(refresh);
@@ -272,6 +276,65 @@ describe('DataProviderAdapterMongoService', () => {
       expect(service['findAllDataProvider']).toHaveBeenCalledTimes(1);
       expect(service['findAllDataProvider']).toHaveBeenCalledWith();
       expect(result).toEqual(listMock);
+    });
+
+    it('should filter out any entry with a null client_secret', async () => {
+      // Given
+      const dp1 = {
+        client_id: 'foo',
+        client_secret: 'client_secret_foo',
+      };
+      const dp2 = {
+        client_id: 'bar',
+        client_secret: 'client_secret_bar',
+      };
+
+      const listMock = [dp1, dp2];
+      const expected = [dp1];
+
+      validateDtoMock.mockResolvedValueOnce(dataProviderMock);
+      service['decryptClientSecret'] = jest
+        .fn()
+        .mockReturnValueOnce(dataProviderMock.client_secret)
+        .mockReturnValueOnce(null);
+      service['findAllDataProvider'] = jest.fn().mockResolvedValue(listMock);
+
+      // When
+      const result = await service.getList();
+
+      // Then
+      expect(result).toEqual(expected);
+    });
+
+    it('should log an error if decrypt fails', async () => {
+      // Given
+      const dp1 = {
+        uid: 'foo',
+        client_id: 'foo',
+        client_secret: 'client_secret_foo',
+      };
+      const dp2 = {
+        uid: 'bar',
+        client_id: 'bar',
+        client_secret: 'client_secret_bar',
+      };
+
+      const listMock = [dp1, dp2];
+
+      validateDtoMock.mockResolvedValueOnce(dataProviderMock);
+      service['decryptClientSecret'] = jest
+        .fn()
+        .mockReturnValueOnce(dataProviderMock.client_secret)
+        .mockReturnValueOnce(null);
+      service['findAllDataProvider'] = jest.fn().mockResolvedValue(listMock);
+
+      // When
+      await service.getList();
+
+      // Then
+      expect(loggerMock.err).toHaveBeenCalledExactlyOnceWith({
+        msg: 'Failed to decrypt client secret for data provider bar',
+      });
     });
 
     it('should not call findAll method if refreshCache is not set and cache exists', async () => {
@@ -340,6 +403,27 @@ describe('DataProviderAdapterMongoService', () => {
       const result = service['decryptClientSecret'](clientSecretMock);
       // Then
       expect(result).toEqual('totoIsDecrypted');
+    });
+
+    it('should return null if decrypt fails', () => {
+      // Given
+      const clientSecretMock = 'some string';
+      const clientSecretEncryptKey = 'Key';
+      configMock.get.mockReturnValue({
+        clientSecretEncryptKey,
+      });
+      const errorMock = new Error('decrypt failed');
+      cryptographyMock.decryptSymetric = jest
+        .fn()
+        .mockImplementationOnce(() => {
+          throw errorMock;
+        });
+
+      // When
+      const result = service['decryptClientSecret'](clientSecretMock);
+
+      // Then
+      expect(result).toBeNull();
     });
   });
 

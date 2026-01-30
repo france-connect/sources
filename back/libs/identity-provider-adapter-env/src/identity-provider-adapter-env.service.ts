@@ -15,12 +15,11 @@ import {
   IdentityProviderAdapterEnvConfig,
   IdentityProviderAdapterEnvDTO,
 } from './dto';
+import { IdentityProviderAdapterEnvDecryptClientSecretFailedException } from './exceptions';
 import { IIdentityProviderAdapterEnv } from './interfaces';
 
 @Injectable()
-export class IdentityProviderAdapterEnvService
-  implements IIdentityProviderAdapter
-{
+export class IdentityProviderAdapterEnvService implements IIdentityProviderAdapter {
   private identityProviderCache: IdentityProviderMetadata[];
 
   constructor(
@@ -115,7 +114,7 @@ export class IdentityProviderAdapterEnvService
   async getById(
     id: string,
     refreshCache = false,
-  ): Promise<IdentityProviderMetadata> {
+  ): Promise<IdentityProviderMetadata | undefined> {
     const providers = cloneDeep(await this.getList(refreshCache));
     return providers.find(({ uid }) => uid === id);
   }
@@ -154,9 +153,16 @@ export class IdentityProviderAdapterEnvService
     clientSecret: string,
     clientSecretEncryptKey: string,
   ): string {
-    return this.cryptography.decrypt(
-      clientSecretEncryptKey,
-      Buffer.from(clientSecret, 'base64'),
-    );
+    try {
+      return this.cryptography.decrypt(
+        clientSecretEncryptKey,
+        Buffer.from(clientSecret, 'base64'),
+      );
+    } catch (error) {
+      this.logger.err(error);
+      throw new IdentityProviderAdapterEnvDecryptClientSecretFailedException(
+        'Failed to decrypt client_secret for identity provider',
+      );
+    }
   }
 }

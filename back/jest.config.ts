@@ -32,6 +32,7 @@ const config: Config = {
     '@entities/(.*)': '<rootDir>/entities/$1',
     '^@fc/access-control(|/.*)$': '<rootDir>/libs/access-control/src/$1',
     '^@fc/account(|/.*)$': '<rootDir>/libs/account/src/$1',
+    '^@fc/anonymizer(|/.*)$': '<rootDir>/libs/anonymizer/src/$1',
     '^@fc/apache-ignite(|/.*)$': '<rootDir>/libs/apache-ignite/src/$1',
     '^@fc/app(|/.*)$': '<rootDir>/libs/app/src/$1',
     '^@fc/async-local-storage(|/.*)$':
@@ -108,6 +109,7 @@ const config: Config = {
       '<rootDir>/libs/fraud-identity-theft/src/$1',
     '^@fc/hsm(|/.*)$': '<rootDir>/libs/hsm/src/$1',
     '^@fc/http-proxy(|/.*)$': '<rootDir>/libs/http-proxy/src/$1',
+    '^@fc/http-otrs-client(|/.*)$': '<rootDir>/libs/http-otrs-client/src/$1',
     '^@fc/i18n(|/.*)$': '<rootDir>/libs/i18n/src/$1',
     '^@fc/identity(|/.*)$': '<rootDir>/libs/identity/src/$1',
     '^@fc/identity-provider-adapter-env(|/.*)$':
@@ -117,7 +119,12 @@ const config: Config = {
     '^@fc/jwt(|/.*)$': '<rootDir>/libs/jwt/src/$1',
     '^@fc/logger(|/.*)$': '<rootDir>/libs/logger/src/$1',
     '^@fc/logger-legacy(|/.*)$': '<rootDir>/libs/logger-legacy/src$1',
-    '^@fc/logger-plugins(|/.*)$': '<rootDir>/libs/logger-plugins/src/$1',
+    '^@fc/logger-debug-plugin(|/.*)$':
+      '<rootDir>/libs/logger-debug-plugin/src/$1',
+    '^@fc/logger-request-plugin(|/.*)$':
+      '<rootDir>/libs/logger-request-plugin/src/$1',
+    '^@fc/logger-session-plugin(|/.*)$':
+      '<rootDir>/libs/logger-session-plugin/src/$1',
     '^@fc/mailer(|/.*)$': '<rootDir>/libs/mailer/src/$1',
     '^@fc/microservices(|/.*)$': '<rootDir>/libs/microservices/src/$1',
     '^@fc/microservices-rmq(|/.*)$': '<rootDir>/libs/microservices-rmq/src/$1',
@@ -155,6 +162,7 @@ const config: Config = {
       '<rootDir>/libs/partners-service-provider-instance/src/$1',
     '^@fc/partners-service-provider-instance-version(|/.*)$':
       '<rootDir>/libs/partners-service-provider-instance-version/src/$1',
+    '^@fc/plugins(|/.*)$': '<rootDir>/libs/plugins/src/$1',
     '^@fc/rabbitmq(|/.*)$': '<rootDir>/libs/rabbitmq/src$1',
     '^@fc/redis(|/.*)$': '<rootDir>/libs/redis/src$1',
     '^@fc/rnipp(|/.*)$': '<rootDir>/libs/rnipp/src$1',

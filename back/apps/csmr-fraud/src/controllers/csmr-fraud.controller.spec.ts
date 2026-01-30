@@ -129,14 +129,14 @@ describe('CsmrFraudController', () => {
       );
     });
 
-    it('should call support.createSecurityTicket with ticketData', async () => {
+    it('should call support.createSecurityTicket with ticketData without tracks export', async () => {
       // When
       await controller.processFraudCase(fraudCaseMessageMock);
 
       // Then
       expect(
         supportServiceMock.createSecurityTicket,
-      ).toHaveBeenCalledExactlyOnceWith(ticketDataMock);
+      ).toHaveBeenCalledExactlyOnceWith(ticketDataMock, false);
     });
 
     it('should call subscriber.response with trackingData', async () => {
@@ -169,14 +169,14 @@ describe('CsmrFraudController', () => {
       ).toHaveBeenCalledExactlyOnceWith(identityMock, fraudCaseMock);
     });
 
-    it('should call support.createSecurityTicket with ticketData', async () => {
+    it('should call support.createSecurityTicket with ticketData with tracks export', async () => {
       // When
       await controller.processUnverifiedFraudCase(fraudCaseMessageMock);
 
       // Then
       expect(
         supportServiceMock.createSecurityTicket,
-      ).toHaveBeenCalledExactlyOnceWith(ticketDataMock);
+      ).toHaveBeenCalledExactlyOnceWith(ticketDataMock, true);
     });
 
     it('should call subscriber.response with trackingData', async () => {

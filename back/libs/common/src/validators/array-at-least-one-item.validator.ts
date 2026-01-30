@@ -20,9 +20,7 @@ export function arrayAtLeastOneItem(items: object[]): boolean {
 }
 
 @ValidatorConstraint()
-export class ArrayAtLeastOneItemConstraint
-  implements ValidatorConstraintInterface
-{
+export class ArrayAtLeastOneItemConstraint implements ValidatorConstraintInterface {
   validate(items: object[], _args: ValidationArguments): boolean {
     return Array.isArray(items) && arrayAtLeastOneItem(items);
   }

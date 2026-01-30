@@ -1,31 +1,27 @@
 import { DynamicModule, Global, Module } from '@nestjs/common';
 
-import { LoggerPluginInterface } from './interfaces';
+import { PluggableModule, PluginInterface } from '@fc/plugins';
+
+import { LoggerPluginServiceInterface } from './interfaces';
 import { LoggerService, NestLoggerService } from './services';
 import { PLUGIN_SERVICES } from './tokens';
 
 @Global()
 @Module({})
-export class LoggerModule {
-  static forRoot(plugins: LoggerPluginInterface[] = []): DynamicModule {
-    const imports = [];
-
-    plugins.forEach((plugin) => {
-      imports.push(...plugin.imports);
-    });
-
-    const providers = plugins.map(({ service }) => service);
-
+export class LoggerModule extends PluggableModule {
+  static forRoot(
+    plugins: PluginInterface<LoggerPluginServiceInterface>[] = [],
+  ): DynamicModule {
     return {
       module: LoggerModule,
-      imports: [...new Set(imports)],
+      imports: [...this.getPluginsImports(plugins)],
       providers: [
         {
           provide: PLUGIN_SERVICES,
           useFactory: (...services) => {
             return services;
           },
-          inject: providers,
+          inject: this.getPluginsProviders(plugins),
         },
         {
           provide: LoggerService,

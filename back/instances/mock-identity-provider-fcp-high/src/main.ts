@@ -26,6 +26,7 @@ async function bootstrap() {
     schema: MockIdentityProviderConfig,
   });
   const {
+    assetsUrlPrefix,
     httpsOptions: { key, cert },
     viewsPaths,
   } = configService.get<AppConfig>('App');
@@ -100,7 +101,9 @@ async function bootstrap() {
     }),
   );
   app.setViewEngine('ejs');
-  app.useStaticAssets(join(__dirname, 'public'));
+  app.useStaticAssets(join(__dirname, 'public'), {
+    prefix: `${assetsUrlPrefix}`,
+  });
 
   const { cookieSecrets } = configService.get<SessionConfig>('Session');
   app.use(CookieParser(cookieSecrets));

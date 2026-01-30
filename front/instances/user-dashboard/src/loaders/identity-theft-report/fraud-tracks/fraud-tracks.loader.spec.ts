@@ -67,9 +67,7 @@ describe('loadFraudTracks', () => {
     jest.mocked(get).mockRejectedValueOnce(errorMock);
 
     // Then
-    await expect(() =>
-      // When
-      loadFraudTracks(),
-    ).rejects.toEqual(errorMock);
+    // When / Then
+    await expect(loadFraudTracks()).rejects.toEqual(errorMock);
   });
 });

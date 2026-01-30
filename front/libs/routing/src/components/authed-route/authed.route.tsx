@@ -15,7 +15,7 @@ export const AuthedRoute = React.memo(
 
     if (!connected || expired) {
       const navigateTo = typeof fallback === 'function' ? fallback(location) : fallback;
-      return <Navigate replace={!!replace} state={{ from: location }} to={navigateTo} />;
+      return <Navigate replace={replace} state={{ from: location }} to={navigateTo} />;
     }
 
     return <Outlet />;

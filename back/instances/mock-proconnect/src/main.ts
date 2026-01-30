@@ -28,6 +28,7 @@ async function bootstrap() {
   const {
     httpsOptions: { key, cert },
     viewsPaths,
+    assetsUrlPrefix,
   } = configService.get<AppConfig>('App');
 
   const appModule = AppModule.forRoot(configService);
@@ -100,7 +101,9 @@ async function bootstrap() {
     }),
   );
   app.setViewEngine('ejs');
-  app.useStaticAssets(join(__dirname, 'public'));
+  app.useStaticAssets(join(__dirname, 'public'), {
+    prefix: assetsUrlPrefix,
+  });
 
   const { cookieSecrets } = configService.get<SessionConfig>('Session');
   app.use(CookieParser(cookieSecrets));

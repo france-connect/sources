@@ -335,7 +335,7 @@ describe('UserPreferencesFormComponent', () => {
 
     // Then
     expect(container).toMatchSnapshot();
-    expect(AlertComponent).toHaveBeenCalledTimes(0);
+    expect(AlertComponent).not.toHaveBeenCalled();
     expect(container.querySelector('.fr-alert__title')).not.toBeInTheDocument();
     expect(
       queryByText(

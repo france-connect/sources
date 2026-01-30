@@ -20,11 +20,11 @@ export const LinkComponent = React.memo(
     href,
     icon,
     iconPlacement = IconPlacement.LEFT,
-    label = undefined,
+    label,
     rel,
     size = Sizes.MEDIUM,
     target,
-    title = undefined,
+    title,
   }: LinkComponentProps) => (
     <Link
       className={classnames(

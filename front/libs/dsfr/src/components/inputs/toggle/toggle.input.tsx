@@ -31,7 +31,7 @@ export const ToggleInput = React.memo(
     label,
     legend,
     name,
-    onUpdate = undefined,
+    onUpdate,
   }: ToggleInputProps) => (
     <Field initialValue={initialValue} name={name} type="checkbox">
       {({ input }) => (

@@ -34,7 +34,7 @@ export class CsmrFraudController {
       identity,
       fraudCase,
     );
-    await this.support.createSecurityTicket(ticketData);
+    await this.support.createSecurityTicket(ticketData, false);
 
     return this.subscriber.response<FraudCaseResponseDto>(trackingData);
   }
@@ -49,7 +49,7 @@ export class CsmrFraudController {
     const { ticketData, trackingData } =
       await this.data.enrichUnverifiedIdentityFraudData(identity, fraudCase);
 
-    await this.support.createSecurityTicket(ticketData);
+    await this.support.createSecurityTicket(ticketData, true);
 
     return this.subscriber.response<FraudCaseResponseDto>(trackingData);
   }

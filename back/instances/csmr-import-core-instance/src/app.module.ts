@@ -5,7 +5,7 @@ import { ConfigMongoAdapterProvider } from '@fc/config-mongo-adapter';
 import { CsmrHsmClientModule } from '@fc/csmr-hsm-client';
 import { CsmrImportCoreModule } from '@fc/csmr-import-core';
 import { LoggerModule } from '@fc/logger';
-import { LoggerDebugPlugin } from '@fc/logger-plugins';
+import { LoggerDebugPlugin } from '@fc/logger-debug-plugin';
 import { MongooseModule } from '@fc/mongoose';
 
 @Module({})

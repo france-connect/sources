@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ServiceProviderErrorPage should match snapshot 1`] = `
+<div>
+  <div
+    class="fr-col-12 fr-col-lg-10 fr-col-xl-8"
+  >
+    <div
+      class="fr-col-12"
+    >
+      <h1>
+        CorePartners.serviceProviderPage.noticeTitle
+      </h1>
+      <p
+        class="fr-text--lead"
+      >
+        CorePartners.serviceProvidersPage.noticeSubtitle
+      </p>
+      <ul>
+        <li>
+          CorePartners.serviceProvidersPage.noticeBullet1
+        </li>
+        <li>
+          CorePartners.serviceProvidersPage.noticeBullet2
+        </li>
+        <li>
+          CorePartners.serviceProvidersPage.noticeBullet3
+        </li>
+      </ul>
+      <div
+        class="fr-mt-5w"
+      >
+        <div>
+          LinkButton
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

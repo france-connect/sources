@@ -48,6 +48,7 @@ export function getSecurityTicketData(
     phoneNumber: '',
     fraudCaseId,
     ...fraudCaseWithoutId,
+    fraudTracks,
   };
 
   return ticketData;

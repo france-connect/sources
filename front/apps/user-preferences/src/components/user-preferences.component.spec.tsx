@@ -49,7 +49,7 @@ describe('UserPreferencesComponent', () => {
     render(<UserPreferencesComponent />);
 
     // Then
-    expect(Form).toHaveBeenCalledTimes(0);
+    expect(Form).not.toHaveBeenCalled();
   });
 
   it('should match the snapshot if showServicesList is false because userpreferences is empty', () => {
@@ -63,7 +63,7 @@ describe('UserPreferencesComponent', () => {
     render(<UserPreferencesComponent />);
 
     // Then
-    expect(Form).toHaveBeenCalledTimes(0);
+    expect(Form).not.toHaveBeenCalled();
   });
 
   it('should match the snapshot if showServicesList is false because idpList is missing', () => {
@@ -77,7 +77,7 @@ describe('UserPreferencesComponent', () => {
     render(<UserPreferencesComponent />);
 
     // Then
-    expect(Form).toHaveBeenCalledTimes(0);
+    expect(Form).not.toHaveBeenCalled();
   });
 
   it('should match the snapshot if showServicesList is false because idpList length is null', () => {
@@ -91,7 +91,7 @@ describe('UserPreferencesComponent', () => {
     render(<UserPreferencesComponent />);
 
     // Then
-    expect(Form).toHaveBeenCalledTimes(0);
+    expect(Form).not.toHaveBeenCalled();
   });
 
   it('should have called useUserPreferencesApi', () => {

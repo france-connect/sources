@@ -19,9 +19,7 @@ import { MongoRequestFilterArgument } from '../interfaces';
 import { ServiceProvider } from '../schemas';
 
 @Injectable()
-export class ServiceProviderAdapterMongoService
-  implements IServiceProviderAdapter
-{
+export class ServiceProviderAdapterMongoService implements IServiceProviderAdapter {
   private listCache: ServiceProviderMetadata[];
 
   // Dependency injection can require more than 4 parameters
@@ -103,6 +101,8 @@ export class ServiceProviderAdapterMongoService
         platform: true,
         rep_scope: true,
         signup_id: true,
+        allowedIdpHints: true,
+        allowedPrompts: true,
       })
       .lean();
 
@@ -141,7 +141,10 @@ export class ServiceProviderAdapterMongoService
       this.logger.debug('Refresh cache from DB');
 
       const list = await this.findAllServiceProvider();
-      this.listCache = list.map(this.legacyToOpenIdPropertyName.bind(this));
+
+      this.listCache = list
+        .map(this.legacyToOpenIdPropertyName.bind(this))
+        .filter(Boolean) as ServiceProviderMetadata[];
     }
 
     return this.listCache;
@@ -150,7 +153,7 @@ export class ServiceProviderAdapterMongoService
   async getById(
     spId: string,
     refreshCache = false,
-  ): Promise<ServiceProviderMetadata> {
+  ): Promise<ServiceProviderMetadata | undefined> {
     const list = await this.getList(refreshCache);
     const serviceProvider: ServiceProviderMetadata = list.find(
       ({ client_id: dbId }) => dbId === spId,
@@ -174,9 +177,18 @@ export class ServiceProviderAdapterMongoService
 
   private legacyToOpenIdPropertyName(
     source: ServiceProvider,
-  ): ServiceProviderMetadata {
-    const client_id = source.key;
+  ): ServiceProviderMetadata | null {
     const client_secret = this.decryptClientSecret(source.client_secret);
+
+    if (!client_secret) {
+      this.logger.err({
+        msg: `Failed to decrypt client secret for service provider ${source.name}`,
+      });
+
+      return null;
+    }
+
+    const client_id = source.key;
     const scope = source.scopes.join(' ');
     const signupId = source.signup_id;
 
@@ -200,10 +212,15 @@ export class ServiceProviderAdapterMongoService
       this.config.get<ServiceProviderAdapterMongoConfig>(
         'ServiceProviderAdapterMongo',
       );
-    return this.cryptography.decrypt(
-      clientSecretEncryptKey,
-      Buffer.from(clientSecret, 'base64'),
-    );
+
+    try {
+      return this.cryptography.decrypt(
+        clientSecretEncryptKey,
+        Buffer.from(clientSecret, 'base64'),
+      );
+    } catch {
+      return null;
+    }
   }
 
   consentRequired(type, identityConsent) {

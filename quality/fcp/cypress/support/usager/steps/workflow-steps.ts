@@ -292,6 +292,22 @@ When("l'usager ne peut pas se connecter à FranceConnect", function () {
     .checkError();
 });
 
+When("je me connecte à FranceConnect jusqu'au consentement", function () {
+  expect(this.env).to.exist;
+  expect(this.serviceProvider).to.exist;
+  expect(this.scopes).to.exist;
+  expect(this.identityProvider).to.exist;
+  expect(this.user).to.exist;
+  const scopes = this.requestedScope || getDefaultScope(this.scopes);
+  new ConnectionWorkflow(this.env, this.serviceProvider)
+    .init()
+    .withScope(scopes)
+    .start()
+    .selectIdentityProvider(this.identityProvider)
+    .login(this.user)
+    .consent();
+});
+
 When('je me connecte à FranceConnect avec Aidants Connect', function () {
   expect(this.env).to.exist;
   expect(this.serviceProvider).to.exist;

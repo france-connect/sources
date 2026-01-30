@@ -151,13 +151,13 @@ export class MockServiceProviderController {
     res.redirect(endSessionUrl);
   }
 
+  // eslint-disable-next-line complexity
   @Post(MockServiceProviderRoutes.REVOCATION)
   @UsePipes(new ValidationPipe({ whitelist: true }))
   @Render('success-revoke-token')
   /**
    * @todo FC-2184 ⚠️
    */
-  // eslint-disable-next-line complexity
   async revocationToken(
     @Res()
     res,
@@ -281,13 +281,13 @@ export class MockServiceProviderController {
     res.redirect(url);
   }
 
+  // eslint-disable-next-line complexity
   @Post(MockServiceProviderRoutes.USERINFO)
   @UseInterceptors(AuthRedirectInterceptor)
   @UsePipes(new ValidationPipe({ whitelist: true }))
   /**
    * @todo FC-2184 ⚠️
    */
-  // eslint-disable-next-line complexity
   async retrieveUserinfo(
     @Res() res,
     @Body() body: AccessTokenParamsDTO,

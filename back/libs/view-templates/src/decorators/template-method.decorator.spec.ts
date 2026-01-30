@@ -63,7 +63,7 @@ describe('@TemplateMethod', () => {
       const result = () => TemplateMethod.checkConflictingAliasName(aliasMock);
 
       // Then
-      expect(result).not.toThrowError();
+      expect(result).not.toThrow();
     });
   });
 

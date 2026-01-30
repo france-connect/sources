@@ -12,4 +12,5 @@ export const enum Providers {
   CNAF_MSA = 'CNAF_MSA',
   DSNJ = 'DSNJ',
   ANTS = 'ANTS',
+  ASC = 'ASC',
 }

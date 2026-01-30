@@ -12,9 +12,7 @@ import { ConfigService } from '@fc/config';
 
 @ValidatorConstraint()
 @Injectable()
-export class IsIncludedInConfigConstraint
-  implements ValidatorConstraintInterface
-{
+export class IsIncludedInConfigConstraint implements ValidatorConstraintInterface {
   constructor(private readonly config: ConfigService) {}
 
   validate(values: unknown, { constraints }: ValidationArguments): boolean {

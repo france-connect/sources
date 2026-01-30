@@ -22,15 +22,7 @@ interface ToggleComponentProps extends PropsWithClassName {
 }
 
 export const ToggleComponent = React.memo(
-  ({
-    className,
-    disabled = false,
-    hint,
-    input,
-    label,
-    legend,
-    onUpdate = undefined,
-  }: ToggleComponentProps) => (
+  ({ className, disabled = false, hint, input, label, legend, onUpdate }: ToggleComponentProps) => (
     <div className={classnames('fr-toggle', className)}>
       <ToggleInputComponent disabled={disabled} input={input} onUpdate={onUpdate} />
       <ToggleLabelComponent input={input} label={label} legend={legend} />

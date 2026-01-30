@@ -3,9 +3,4 @@ import { MicroservicesRmqBaseException } from './microservices-rmq-base.exceptio
 
 export class MicroservicesRmqCommunicationException extends MicroservicesRmqBaseException {
   static CODE = ErrorCode.COMMUNICATION_EXCEPTION;
-
-  constructor(error) {
-    super(error);
-    this.log = { error };
-  }
 }

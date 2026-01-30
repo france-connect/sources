@@ -4,6 +4,7 @@ import { Injectable } from '@nestjs/common';
 
 import { AsyncLocalStorageService } from '@fc/async-local-storage';
 
+import { SessionInvalidSetCallException } from '../exceptions';
 import {
   SessionStoreContentInterface,
   SessionStoreInterface,
@@ -58,6 +59,8 @@ export class SessionLocalStorageService {
       this.setByKey(moduleName, store.data, keyOrData, data);
     } else if (typeof keyOrData === 'object') {
       this.setModule(moduleName, store.data, keyOrData);
+    } else {
+      throw new SessionInvalidSetCallException(typeof keyOrData);
     }
 
     /**

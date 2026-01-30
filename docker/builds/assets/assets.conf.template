@@ -1,0 +1,16 @@
+server {
+  root /var/www;
+
+  location /assets/{CACHE_BUSTING} {
+    # Allow assets to be used from the core domain:
+    add_header Access-Control-Allow-Origin {APP_DOMAIN};
+
+    # Hide server informations 
+    server_tokens off;
+
+    # Allow clients to cache assets for a year
+    add_header Cache-Control "public, max-age=31536000, immutable";
+
+    alias /var/www;
+  }
+}

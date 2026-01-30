@@ -59,7 +59,7 @@
         "type": "public",
         "identityConsent": "false",
         "idpFilterExclude": "Blacklist",
-        "idpFilterList": ["2031310b-186e-4643-944a-00efb9d59e0f","ed928691-4697-44b4-9e56-df1853876610"],
+        "idpFilterList": ["0cbdf732-aaea-4566-a99e-4430f388ff18","a437f8aa-10b5-48bd-8931-78f2d055e3df"],
         "eidas": "2",
         "userinfo_encrypted_response_enc": "A256GCM",
         "userinfo_encrypted_response_alg": "ECDH-ES",

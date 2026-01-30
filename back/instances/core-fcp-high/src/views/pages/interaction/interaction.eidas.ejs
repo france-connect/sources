@@ -17,9 +17,9 @@ const eidasBridgeProvider = locals.providers
     class="fr-btn fr-btn--tertiary fc-text--left"
     id="idp-<%= eidasBridgeProvider.uid %>">
     <img
-      src="/img/fi/fi-europe.svg"
+      src="<%= $asset('/img/fi/fi-europe.svg') %>"
       class="fr-mr-6v"
-      alt="Logo de <%= eidasBridgeProvider.name %>" />
+      alt="" />
     <span lang="en">
       <%# This translation contains HTML markup so we use the unsafe ejs echo tag %>
       <%- $translate('eidas.sign_in_with_bridge', null, { language: 'en-GB'} ) %>

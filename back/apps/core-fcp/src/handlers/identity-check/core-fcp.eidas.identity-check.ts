@@ -12,9 +12,7 @@ import { IIdentityCheckFeatureHandler } from '../../interfaces';
 
 @Injectable()
 @FeatureHandler('core-fcp-eidas-identity-check')
-export class CoreFcpEidasIdentityCheckHandler
-  implements IIdentityCheckFeatureHandler
-{
+export class CoreFcpEidasIdentityCheckHandler implements IIdentityCheckFeatureHandler {
   constructor(private readonly logger: LoggerService) {}
 
   async handle(

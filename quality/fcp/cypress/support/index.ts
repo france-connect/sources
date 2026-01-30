@@ -36,6 +36,26 @@ Cypress.Commands.add(
   },
 );
 
+Cypress.Commands.addQuery(
+  'checkWithinViewport',
+  function (expectedWithinViewport: boolean) {
+    const innerFn = (subject) => {
+      const { bottom, left, right, top } = subject[0].getBoundingClientRect();
+      const viewportWidth = subject[0].ownerDocument.defaultView.innerWidth;
+      const viewportHeight = subject[0].ownerDocument.defaultView.innerHeight;
+
+      const isWithinViewport =
+        top < viewportHeight && bottom > 0 && left < viewportWidth && right > 0;
+
+      expect(
+        isWithinViewport,
+        `element: top=${top} left=${left} right=${right} bottom=${bottom}, viewport: width=${viewportWidth} height=${viewportHeight}`,
+      ).to.be.equal(expectedWithinViewport);
+    };
+    return innerFn;
+  },
+);
+
 addMatchImageSnapshotCommand({
   blackout: [], // We use a custom blackout in image-snapshot-steps.ts
   capture: 'fullPage',

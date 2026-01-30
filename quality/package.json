@@ -74,8 +74,8 @@
     "ts-jest": "^29.2.5"
   },
   "scripts": {
-    "prettier": "prettier -c \"{.,fca,fcp,partners}/{.,cypress,scripts}/**/*.ts\" --config .prettierrc",
-    "lint": "eslint 'scripts/**/*.ts'",
+    "prettier": "prettier --no-parallel --experimental-cli -c \"{.,fca,fcp,partners}/{.,cypress,scripts}/**/*.ts\" --config-path .prettierrc",
+    "lint": "eslint --concurrency=off 'scripts/**/*.ts'",
     "test": "jest"
   }
 }

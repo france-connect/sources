@@ -6,6 +6,7 @@ export enum PartnersBackRoutes {
   LOGOUT_CALLBACK = '/logout-callback',
 
   SERVICE_PROVIDERS = '/service-providers',
+  SERVICE_PROVIDER = '/service-providers/:serviceProviderId',
 
   SP_INSTANCES = '/instances',
   SP_INSTANCE = '/instances/:instanceId',

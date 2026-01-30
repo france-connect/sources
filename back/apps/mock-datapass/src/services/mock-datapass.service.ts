@@ -77,7 +77,7 @@ export class MockDatapassService {
         },
         data: {
           intitule: 'Ma demande',
-          scopes: ['identite_pivot', 'email'],
+          scopes: ['openid', 'family_name', 'given_name', 'email'],
           contact_technique_given_name: 'Tech',
           contact_technique_family_name: 'Os',
           contact_technique_phone_number: '08366666666',

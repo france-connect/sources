@@ -143,5 +143,3 @@ export class AppModule {
 
 A plugin is an object of type [LoggerPluginInterface](./src/interfaces/logger-plugin.interface.ts).
 It exposes a list of imports and a service.
-
-See [@fc/logger-plugins](../logger-plugins/) for some examples of plugins definition.

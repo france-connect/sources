@@ -137,6 +137,7 @@
 | [<b>190011</b>](../libs/session/src/exceptions/session-invalid-session-data.exception.ts) | La Session récupérée en base n&#39;est pas valide&#39;. Il faut recommencer la cinématique. Si le problème persiste, contacter le support N3 | Votre session est invalide, fermez l’onglet de votre navigateur et reconnectez-vous. | <b>Classe :</b> [SessionInvalidSessionDataException](../libs/session/src/exceptions/session-invalid-session-data.exception.ts) <br /><b>Code HTTP :</b> 409 <br /><b>error :</b> access_denied <br /> <b>error_description :</b> user authentication aborted |
 | [<b>190012</b>](../libs/session/src/exceptions/session-bad-cookie.exception.ts) | Cette erreur technique est émise lorsque le cookie de session contient une valeur anormale. Ne devrait pas se produire en dehors d&#39;une connexion malveillante. | Votre session a expiré ou est invalide, fermez l’onglet de votre navigateur et reconnectez-vous. | <b>Classe :</b> [SessionBadCookieException](../libs/session/src/exceptions/session-bad-cookie.exception.ts) <br /><b>Code HTTP :</b> 401 <br /><b>error :</b> access_denied <br /> <b>error_description :</b> user authentication aborted |
 | [<b>190013</b>](../libs/session/src/exceptions/session-cannot-commit-undefined-session.exception.ts) | La session n&#39;a pas été trouvé au moment ou elle aurait due être sauvegardée. Il faut recommencer la cinématique. Si le problème persiste, contacter le support N3 | Votre session a expiré, fermez l’onglet de votre navigateur et reconnectez-vous. | <b>Classe :</b> [SessionCannotCommitUndefinedSession](../libs/session/src/exceptions/session-cannot-commit-undefined-session.exception.ts) <br /><b>Code HTTP :</b> 500 <br /><b>error :</b> access_denied <br /> <b>error_description :</b> user authentication aborted |
+| [<b>190014</b>](../libs/session/src/exceptions/session-invalid-set-call.exception.ts) | Un appel à &#39;set&#39; de SessionLocalStorageService a été effectué avec des arguments invalides (autre qu&#39;une clé ou un objet). Remonter l&#39;erreur à l&#39;équipe de développement pour analyse. |  | <b>Classe :</b> [SessionInvalidSetCallException](../libs/session/src/exceptions/session-invalid-set-call.exception.ts) <br /><b>Code HTTP :</b> 500 <br /><b>error :</b> access_denied <br /> <b>error_description :</b> user authentication aborted |
 
 ## @fc/feature-handler
 | Code d'erreur | Description | Message utilisateur | Infos techniques |
@@ -306,6 +307,7 @@
 | Code d'erreur | Description | Message utilisateur | Infos techniques |
 |---|---|---|---|
 | [<b>580001</b>](../libs/partners-service-provider/src/exceptions/partners-service-provider-creation-failure.exception.ts) | Une erreur est survenue lors de la création du fournisseur de service. Contacter le support N3. |  | <b>Classe :</b> [PartnersServiceProviderCreationFailureException](../libs/partners-service-provider/src/exceptions/partners-service-provider-creation-failure.exception.ts) <br /><b>Code HTTP :</b> 500 <br /><b>error :</b>  <br /> <b>error_description :</b>  |
+| [<b>580002</b>](../libs/partners-service-provider/src/exceptions/partners-service-provider-not-found.exception.ts) | Le fournisseur de service n&#39;a pas été trouvé. |  | <b>Classe :</b> [PartnersServiceProviderNotFoundException](../libs/partners-service-provider/src/exceptions/partners-service-provider-not-found.exception.ts) <br /><b>Code HTTP :</b> 404 <br /><b>error :</b>  <br /> <b>error_description :</b>  |
 
 ## @fc/core-fcp
 | Code d'erreur | Description | Message utilisateur | Infos techniques |
@@ -334,3 +336,13 @@
 | [<b>630001</b>](../libs/typeorm/src/exceptions/typeorm-no-inserted-entity.exception.ts) |  |  | <b>Classe :</b> [TypeormNoInsertedEntityException](../libs/typeorm/src/exceptions/typeorm-no-inserted-entity.exception.ts) <br /><b>Code HTTP :</b> 500 <br /><b>error :</b>  <br /> <b>error_description :</b>  |
 | [<b>630002</b>](../libs/typeorm/src/exceptions/typeorm-transaction-failed.exception.ts) |  |  | <b>Classe :</b> [TypeormTransactionFailedException](../libs/typeorm/src/exceptions/typeorm-transaction-failed.exception.ts) <br /><b>Code HTTP :</b> 500 <br /><b>error :</b>  <br /> <b>error_description :</b>  |
 | [<b>630003</b>](../libs/typeorm/src/exceptions/typeorm-query-runner-failed.exception.ts) |  |  | <b>Classe :</b> [TypeormQueryRunnerFailedException](../libs/typeorm/src/exceptions/typeorm-query-runner-failed.exception.ts) <br /><b>Code HTTP :</b> 500 <br /><b>error :</b>  <br /> <b>error_description :</b>  |
+
+## @fc/redis
+| Code d'erreur | Description | Message utilisateur | Infos techniques |
+|---|---|---|---|
+| [<b>640001</b>](../libs/redis/src/exceptions/redis-error-event.exception.ts) |  |  | <b>Classe :</b> [RedisErrorEventException](../libs/redis/src/exceptions/redis-error-event.exception.ts) <br /><b>Code HTTP :</b> 500 <br /><b>error :</b>  <br /> <b>error_description :</b>  |
+
+## @fc/identity-provider-adapter-env
+| Code d'erreur | Description | Message utilisateur | Infos techniques |
+|---|---|---|---|
+| [<b>650001</b>](../libs/identity-provider-adapter-env/src/exceptions/identity-provider-adapter-env-decrypt-client-secret-failed.exception.ts) | Échec du déchiffrement du client_secret d&#39;un fournisseur d&#39;identité. Vérifier la configuration du chiffrement et la validité du client_secret. Si le problème persiste, contacter le support N3 |  | <b>Classe :</b> [IdentityProviderAdapterEnvDecryptClientSecretFailedException](../libs/identity-provider-adapter-env/src/exceptions/identity-provider-adapter-env-decrypt-client-secret-failed.exception.ts) <br /><b>Code HTTP :</b> 500 <br /><b>error :</b> server_error <br /> <b>error_description :</b> authentication aborted due to a technical error on the authorization server |

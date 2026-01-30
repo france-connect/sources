@@ -67,7 +67,7 @@ describe('FieldsetLegendElement', () => {
     const seeAlsoElt = getByTestId('SeeAlsoElement');
 
     // Then
-    expect(seeAlsoElt).toBeDefined();
+    expect(seeAlsoElt).toBeInTheDocument();
   });
 
   it('should match the snapshot', () => {

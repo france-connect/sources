@@ -21,9 +21,10 @@ export const validationOptions: ValidatorOptions = {
 };
 
 @Injectable()
-export class DatapassTransformationPipe
-  implements PipeTransform<unknown, Promise<SimplifiedDatapassPayload>>
-{
+export class DatapassTransformationPipe implements PipeTransform<
+  unknown,
+  Promise<SimplifiedDatapassPayload>
+> {
   constructor(private readonly logger: LoggerService) {}
 
   async transform(rawPayload: unknown): Promise<SimplifiedDatapassPayload> {

@@ -62,6 +62,9 @@ Fonctionnalité: Formulaire Usurpation non connecté
     Et le message d'erreur est "impossible de récupérer les account ids à partir de l’identité de l’usager" dans le mail "demande de support"
     Et le fichier "FSP - FSP1-HIGH_connexions.csv" est joint dans le mail "demande de support"
     Et le fichier "fip1-high_connexions.csv" est joint dans le mail "demande de support"
+    Et le fichier "support_connexions.csv" est joint dans le mail "demande de support"
+    Et je télécharge le fichier csv "support_connexions.csv" en pièce jointe
+    Et "accountId" est "test_TRACE_USER" pour la ligne 1 du fichier csv "support_connexions.csv"
 
   Scénario: Formulaire usurpation non connecté - cas passant FC v2 et changement de code
     Etant donné que je supprime les mails envoyés à "support.test@franceconnect.gouv.fr"
@@ -130,6 +133,7 @@ Fonctionnalité: Formulaire Usurpation non connecté
     Et le message d'erreur est "impossible de récupérer les account ids à partir de l’identité de l’usager" dans le mail "demande de support"
     Et le fichier "FSP - FSP1-LOW_connexions.csv" est joint dans le mail "demande de support"
     Et le fichier "fip1-low_connexions.csv" est joint dans le mail "demande de support"
+    Et le fichier "support_connexions.csv" est joint dans le mail "demande de support"
 
   Scénario: Formulaire usurpation non connecté - cas passant FC v1 et mauvais code
     Etant donné que je supprime les mails envoyés à "support.test@franceconnect.gouv.fr"
@@ -195,6 +199,7 @@ Fonctionnalité: Formulaire Usurpation non connecté
     Et le message d'erreur est "impossible de récupérer les account ids à partir de l’identité de l’usager" dans le mail "demande de support"
     Et le fichier "Service Provider Example_connexions.csv" est joint dans le mail "demande de support"
     Et le fichier "fip1-no-discovery_connexions.csv" est joint dans le mail "demande de support"
+    Et le fichier "support_connexions.csv" est joint dans le mail "demande de support"
 
   Scénario: Formulaire usurpation - identification de connexion - accordéon
     Etant donné que je navigue vers la page formulaire usurpation non connecté

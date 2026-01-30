@@ -15,6 +15,15 @@ Given(
   },
 );
 
+Given(
+  'je navigue sur la page fournisseurs de service introuvable',
+  function () {
+    cy.url().visit(
+      `/fournisseurs-de-service/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`,
+    );
+  },
+);
+
 Then(
   /^je suis (connecté|déconnecté) (?:à|de) l'espace partenaires$/,
   function (text: string) {

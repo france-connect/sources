@@ -810,6 +810,33 @@ describe('UserDashboardController', () => {
       );
     });
 
+    it('should not call tracking.track() for future idp change if there is no change', async () => {
+      //Given
+      const formattedIdpSettingNoFutureIdpChangeMock =
+        {} as unknown as FormattedIdpSettingDto;
+
+      const formatUserPreferenceChangeTrackLogReturnValueNoFutureIdpChange = {
+        list: [idpChangesmock1, idpChangesmock2],
+        futureAllowedNewValue: false,
+      };
+
+      userDashboardServiceMock.formatUserPreferenceChangeTrackLog
+        .mockReset()
+        .mockReturnValueOnce(
+          formatUserPreferenceChangeTrackLogReturnValueNoFutureIdpChange,
+        );
+
+      // When
+      await controller['trackUserPreferenceChange'](
+        reqMock,
+        formattedIdpSettingNoFutureIdpChangeMock,
+        identityMock,
+      );
+
+      // Then
+      expect(controller['tracking'].track).toHaveBeenCalledTimes(3);
+    });
+
     it('should call tracking.track() for future idp change', async () => {
       //Given
       const userPreferencesContextMock = {

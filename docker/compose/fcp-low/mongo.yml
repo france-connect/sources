@@ -6,8 +6,8 @@ services:
   mongo-fcp-low:
     hostname: mongo-fcp-low
     build:
-      context: "${WORKING_DIR}"
-      dockerfile: "${WORKING_DIR}/builds/mongodb/Dockerfile"
+      context: "${DOCKER_DIR}"
+      dockerfile: "${DOCKER_DIR}/builds/mongodb/Dockerfile"
     volumes:
       - "${VOLUMES_DIR}/mongo-fcp-low/scripts:/opt/scripts"
       - "${VOLUMES_DIR}/mongo-fcp-low/initdb.d:/docker-entrypoint-initdb.d"
@@ -27,8 +27,8 @@ services:
   mongo-fcp-low-replica-1:
     hostname: mongo-fcp-low1
     build:
-      context: "${WORKING_DIR}"
-      dockerfile: "${WORKING_DIR}/builds/mongodb/Dockerfile"
+      context: "${DOCKER_DIR}"
+      dockerfile: "${DOCKER_DIR}/builds/mongodb/Dockerfile"
     volumes:
       - "${VOLUMES_DIR}/mongo-fcp-low/scripts:/opt/scripts"
       - "${VOLUMES_DIR}/mongo-fcp-low/initdb.d:/docker-entrypoint-initdb.d"
@@ -42,8 +42,8 @@ services:
   mongo-fcp-low-replica-2:
     hostname: mongo-fcp-low2
     build:
-      context: "${WORKING_DIR}"
-      dockerfile: "${WORKING_DIR}/builds/mongodb/Dockerfile"
+      context: "${DOCKER_DIR}"
+      dockerfile: "${DOCKER_DIR}/builds/mongodb/Dockerfile"
     volumes:
       - "${VOLUMES_DIR}/mongo-fcp-low/scripts:/opt/scripts"
       - "${VOLUMES_DIR}/mongo-fcp-low/initdb.d:/docker-entrypoint-initdb.d"
@@ -56,8 +56,8 @@ services:
 
   mongo-fcp-low-replica-single-init:
     build:
-      context: "${WORKING_DIR}"
-      dockerfile: "${WORKING_DIR}/builds/mongodb/Dockerfile"
+      context: "${DOCKER_DIR}"
+      dockerfile: "${DOCKER_DIR}/builds/mongodb/Dockerfile"
     env_file:
       - "${COMPOSE_DIR}/fcp-low/.env/mongo-fcp-low.env"
     volumes:
@@ -72,8 +72,8 @@ services:
 
   mongo-fcp-low-replica-multi-init:
     build:
-      context: "${WORKING_DIR}"
-      dockerfile: "${WORKING_DIR}/builds/mongodb/Dockerfile"
+      context: "${DOCKER_DIR}"
+      dockerfile: "${DOCKER_DIR}/builds/mongodb/Dockerfile"
     env_file:
       - "${COMPOSE_DIR}/fcp-low/.env/mongo-fcp-low.env"
     depends_on:

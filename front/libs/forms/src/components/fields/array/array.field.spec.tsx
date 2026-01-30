@@ -27,7 +27,7 @@ describe('ArrayField', () => {
 
     jest
       .spyOn(React, 'useCallback')
-      .mockImplementationOnce(() => pushHandlerMock)
+      .mockReturnValueOnce(pushHandlerMock)
       .mockImplementationOnce(jest.fn());
 
     // When

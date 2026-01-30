@@ -1,4 +1,4 @@
-import { IsString, IsUUID } from 'class-validator';
+import { IsOptional, IsString, IsUUID } from 'class-validator';
 
 export class ConnectNotificationEmailParameters {
   @IsString()
@@ -15,6 +15,13 @@ export class ConnectNotificationEmailParameters {
 
   @IsString()
   readonly fqdn: string;
+
+  @IsString()
+  @IsOptional()
+  readonly assetsUrlDomain?: string;
+
+  @IsString()
+  readonly assetsUrlPrefix: string;
 
   @IsString()
   readonly udFqdn: string;

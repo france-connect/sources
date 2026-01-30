@@ -94,8 +94,8 @@ export class CoreOidcProviderMiddlewareService {
     const acrValues = stringToArray(dataAcrValues);
     data.acr_values = pickAcr(knownAcrValues, acrValues, defaultAcrValue);
 
-    this.logger.info(`Overriding "acr_values" with "${data.acr_values}"`);
     this.logger.debug({
+      message: `Overriding "acr_values" with "${data.acr_values}"`,
       originalAcrValues: dataAcrValues,
       overriddenAcrValues: data.acr_values,
     });
@@ -114,7 +114,7 @@ export class CoreOidcProviderMiddlewareService {
    * @param ctx
    * @param overrideValue
    */
-  protected overrideAuthorizePrompt(ctx: OidcCtx): void {
+  protected async overrideAuthorizePrompt(ctx: OidcCtx): Promise<void> {
     if (!['POST', 'GET'].includes(ctx.method)) {
       this.logger.warning(`Unsupported method "${ctx.method}".`);
       return;
@@ -131,12 +131,19 @@ export class CoreOidcProviderMiddlewareService {
      */
     const isPostMethod = ctx.method === 'POST';
     const data = isPostMethod ? ctx.req.body : ctx.query;
-    const { prompt: dataPrompt } = data as { prompt: string };
+    const { prompt: originalPrompt, client_id: clientId } = data as {
+      prompt: string;
+      client_id: string;
+    };
+
+    await this.persistAllowedPrompt(clientId, originalPrompt, ctx);
+
+    // IMPORTANT: Always override with forcedPrompt for panva compatibility
     data.prompt = overrideValue;
 
-    this.logger.info(`Overriding "prompt" with "${data.prompt}"`);
     this.logger.debug({
-      originalPrompt: dataPrompt,
+      message: `Overriding "prompt" with "${data.prompt}"`,
+      originalPrompt,
       overriddenPrompt: data.prompt,
     });
   }
@@ -182,9 +189,10 @@ export class CoreOidcProviderMiddlewareService {
     spType: string;
     isSso: boolean;
     stepRoute: string;
+    spPrompt?: string;
   }> {
     const { interactionId } = eventContext.fc;
-    const { isSso } = ctx;
+    const { isSso, spPrompt } = ctx;
 
     const {
       acr_values: spAcr,
@@ -210,6 +218,7 @@ export class CoreOidcProviderMiddlewareService {
       spState: state,
       spType,
       isSso,
+      spPrompt,
       /**
        * Explicit stepRoute set
        *
@@ -296,7 +305,7 @@ export class CoreOidcProviderMiddlewareService {
   protected async redirectToHintedIdpMiddleware(ctx: OidcCtx) {
     const { req, res } = ctx;
     const idpHint = req.query.idp_hint as string;
-    const { allowedIdpHints } = this.config.get<CoreConfig>('Core');
+    const allowedIdpHints = await this.getAllowedIdpHints();
     const acr_values = ctx.oidc.params.acr_values as string;
 
     if (this.shouldAbortIdpHint(ctx)) {
@@ -316,6 +325,23 @@ export class CoreOidcProviderMiddlewareService {
     } catch (error) {
       await throwException(error);
     }
+  }
+
+  private async getAllowedIdpHints(): Promise<string[]> {
+    const { spId } = this.sessionService.get<OidcSession>('OidcClient');
+    const sp = await this.serviceProvider.getById(spId);
+
+    if (sp.allowedIdpHints) {
+      /**
+       * We want to be able to fully override the global list of allowed idp hints
+       * for a given SP.
+       */
+      return sp.allowedIdpHints;
+    }
+
+    const { allowedIdpHints } = this.config.get<CoreConfig>('Core');
+
+    return allowedIdpHints;
   }
 
   protected isSsoAvailable(spAcr: string): boolean {
@@ -362,7 +388,7 @@ export class CoreOidcProviderMiddlewareService {
 
   protected async checkRedirectToSso(ctx: OidcCtx): Promise<void> {
     if (ctx.isSso) {
-      this.logger.info('SSO detected, skipping IdP authentication.');
+      this.logger.debug('SSO detected, skipping IdP authentication.');
       await this.redirectToSso(ctx);
     }
   }
@@ -384,5 +410,79 @@ export class CoreOidcProviderMiddlewareService {
     hasSpIdentity: boolean,
   ): boolean {
     return enableSso && hasAuthorizedAcr && hasSufficientAcr && hasSpIdentity;
+  }
+
+  /**
+   * Check if a prompt is allowed for a given SP
+   *
+   * The prompt parameter can contain multiple space-separated values (e.g., "login consent").
+   * This method validates that all prompt values are in the allowedPrompts list.
+   */
+  private isPromptAllowedForSp(
+    allowedPrompts: string[],
+    prompt: string,
+  ): boolean {
+    const hasValidPrompts = Boolean(allowedPrompts.length > 0 && prompt);
+    if (!hasValidPrompts) {
+      return false;
+    }
+
+    const promptValues = stringToArray(prompt);
+    const allPromptsAllowed = promptValues.every((value) =>
+      allowedPrompts.includes(value),
+    );
+
+    return allPromptsAllowed;
+  }
+
+  /**
+   * Persist prompt to session and log
+   */
+  private async persistPromptToSession(
+    clientId: string,
+    originalPrompt: string,
+    ctx: OidcCtx,
+  ): Promise<void> {
+    const sp = await this.serviceProvider.getById(clientId);
+
+    if (!sp) {
+      return;
+    }
+
+    const { allowedPrompts = [] } = sp;
+    const isPromptAllowed = this.isPromptAllowedForSp(
+      allowedPrompts,
+      originalPrompt,
+    );
+
+    if (!isPromptAllowed) {
+      return;
+    }
+
+    // Store directly in Koa context (ctx), not in ctx.oidc which doesn't exist yet
+    // This will be read later in buildSessionWithNewInteraction()
+    ctx['spPrompt'] = originalPrompt;
+    this.logger.debug(
+      `SP "${clientId}" is allowed to use prompt="${originalPrompt}". Persisting to context.`,
+    );
+  }
+
+  /**
+   * Check if SP is allowed to use a custom prompt and persist it in session
+   */
+  private async persistAllowedPrompt(
+    clientId: string,
+    originalPrompt: string,
+    ctx: OidcCtx,
+  ): Promise<void> {
+    if (!clientId) {
+      return;
+    }
+
+    if (!originalPrompt) {
+      return;
+    }
+
+    await this.persistPromptToSession(clientId, originalPrompt, ctx);
   }
 }

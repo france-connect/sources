@@ -114,6 +114,12 @@ export class ServiceProvider extends Document {
 
   @Prop({ type: String })
   secretUpdatedBy: string;
+
+  @Prop({ type: [String] })
+  allowedIdpHints: string[];
+
+  @Prop({ type: [String], default: [] })
+  allowedPrompts?: string[];
 }
 
 export const ServiceProviderSchema =

@@ -11,6 +11,8 @@ export interface CustomClientMetadata extends AllClientMetadata {
 
   claims?: string[];
   identityConsent?: boolean;
+  allowedIdpHints?: string[];
+  allowedPrompts?: string[];
 }
 
 /**

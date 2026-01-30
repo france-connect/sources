@@ -40,7 +40,7 @@ describe('MockDataProviderService', () => {
       // When / Then
       expect(() => {
         service.authenticateServiceProvider('invalid');
-      }).toThrowError('Invalid credentials');
+      }).toThrow('Invalid credentials');
     });
 
     it('should not throw an error if the secret is valid', () => {

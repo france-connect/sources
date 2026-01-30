@@ -5,7 +5,7 @@ import fcConfigReactApp from '@fc/eslint-config-react-app';
 export default [
   ...fcConfigReactApp,
   {
-    files: ['**/*.d.ts'],
+    files: ['**/*.d.ts', '**/*.d.scss.ts'],
     rules: { '@typescript-eslint/naming-convention': 0 },
   },
   {

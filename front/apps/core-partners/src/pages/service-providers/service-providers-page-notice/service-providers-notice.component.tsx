@@ -10,18 +10,21 @@ interface ServiceProvidersPageNoticeComponentProps {
 export const ServiceProvidersPageNoticeComponent = React.memo(
   ({ hasItems }: ServiceProvidersPageNoticeComponentProps) => {
     const Component = hasItems ? CalloutComponent : AlertComponent;
+    const dataTestId = hasItems
+      ? 'service-providers-page-notice-callout'
+      : 'service-providers-page-notice-alert';
     return (
       <Component
         className="fr-mt-5w"
-        dataTestId="service-providers-page-callout"
+        dataTestId={dataTestId}
         icon="info-line"
-        title={t('CorePartners.serviceProvidersPage.calloutTitle')}>
+        title={t('CorePartners.serviceProvidersPage.noticeTitle')}>
         <div>
-          <p>{t('CorePartners.serviceProvidersPage.calloutSubtitle')}</p>
+          <p>{t('CorePartners.serviceProvidersPage.noticeSubtitle')}</p>
           <ul>
-            <li>{t('CorePartners.serviceProvidersPage.calloutBullet1')}</li>
-            <li>{t('CorePartners.serviceProvidersPage.calloutBullet2')}</li>
-            <li>{t('CorePartners.serviceProvidersPage.calloutBullet3')}</li>
+            <li>{t('CorePartners.serviceProvidersPage.noticeBullet1')}</li>
+            <li>{t('CorePartners.serviceProvidersPage.noticeBullet2')}</li>
+            <li>{t('CorePartners.serviceProvidersPage.noticeBullet3')}</li>
           </ul>
         </div>
       </Component>

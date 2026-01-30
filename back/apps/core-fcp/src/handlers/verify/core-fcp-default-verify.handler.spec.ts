@@ -358,7 +358,7 @@ describe('CoreFcpDefaultVerifyHandler', () => {
       await service.handle(handleArgument);
       // Then
       expect(coreAccountServiceMock.computeFederation).toHaveBeenCalledTimes(1);
-      expect(coreAccountServiceMock.computeFederation).toBeCalledWith({
+      expect(coreAccountServiceMock.computeFederation).toHaveBeenCalledWith({
         key: spMock.entityId,
         sub: 'computedSubSp',
         identityHash: 'spIdentityHash',

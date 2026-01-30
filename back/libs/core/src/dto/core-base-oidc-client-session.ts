@@ -118,4 +118,9 @@ export class CoreBaseOidcClientSessionDto {
   @IsOptional()
   @Expose()
   readonly subs?: Record<string, string>;
+
+  @IsOptional()
+  @IsString()
+  @Expose()
+  readonly spPrompt?: string;
 }

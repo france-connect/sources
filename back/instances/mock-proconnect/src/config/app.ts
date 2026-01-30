@@ -18,6 +18,7 @@ export default {
   passwordVerification: env.boolean('PASSWORD_VERIFICATION'),
   assetsPaths: env.json('ASSETS_PATHS'),
   viewsPaths: env.json('VIEWS_PATHS'),
+  assetsUrlPrefix: env.string('ASSETS_URL_PREFIX'),
   logo: '/img/logo@3x.svg',
   title: "Fournisseur d'identité de démonstration - FCA-LOW",
   allowCustomIdentity: env.boolean('ALLOW_CUSTOM_IDENTITY'),

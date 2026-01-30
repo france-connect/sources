@@ -163,8 +163,11 @@ describe('EuIdentityToFrController', () => {
       );
 
       // Then
-      expect(oidcProviderServiceMock.getInteraction).toBeCalledTimes(1);
-      expect(oidcProviderServiceMock.getInteraction).toBeCalledWith(req, res);
+      expect(oidcProviderServiceMock.getInteraction).toHaveBeenCalledTimes(1);
+      expect(oidcProviderServiceMock.getInteraction).toHaveBeenCalledWith(
+        req,
+        res,
+      );
     });
 
     it('should call get the country list from the config', async () => {
@@ -177,8 +180,8 @@ describe('EuIdentityToFrController', () => {
       );
 
       // Then
-      expect(configServiceMock.get).toBeCalledTimes(1);
-      expect(configServiceMock.get).toBeCalledWith('App');
+      expect(configServiceMock.get).toHaveBeenCalledTimes(1);
+      expect(configServiceMock.get).toHaveBeenCalledWith('App');
     });
 
     it('should call session.get with interactionId', async () => {
@@ -191,8 +194,8 @@ describe('EuIdentityToFrController', () => {
       );
 
       // Then
-      expect(sessionServiceOidcMock.get).toBeCalledTimes(1);
-      expect(sessionServiceOidcMock.get).toBeCalledWith();
+      expect(sessionServiceOidcMock.get).toHaveBeenCalledTimes(1);
+      expect(sessionServiceOidcMock.get).toHaveBeenCalledWith();
     });
 
     it('should return an object with data from session and oidcProvider interaction', async () => {

@@ -60,16 +60,17 @@ describe('addAxiosCatcherInterceptors', () => {
     // Given
     const updateStateMock = jest.fn();
     const axiosInterceptorResponseUseMock = jest.spyOn(axios.interceptors.response, 'use');
+    const errorMock = { response: { status: 401 } } as AxiosError;
 
-    // When / then
+    // When
     addAxiosCatcherInterceptors(updateStateMock);
     const errorCallback = axiosInterceptorResponseUseMock.mock.calls[0][1];
 
-    await expect(() =>
-      errorCallback!({ response: { status: 401 } } as AxiosError),
-    ).rejects.toStrictEqual({ response: { status: 401 } } as AxiosError);
-
     // Then
+    const resultPromise = errorCallback!(errorMock) as Promise<unknown>;
+
+    await expect(resultPromise).rejects.toBe(errorMock);
+
     expect(updateStateMock).toHaveBeenCalled();
     expect(updateStateMock).toHaveBeenCalledWith(expect.any(Function));
 

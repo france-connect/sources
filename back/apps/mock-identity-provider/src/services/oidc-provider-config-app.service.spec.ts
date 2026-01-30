@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { AssetsService } from '@fc/app';
 import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger';
 import { stringToArray } from '@fc/oidc';
@@ -42,6 +43,10 @@ describe('OidcProviderConfigAppService', () => {
     deleteClaims: jest.fn(),
   };
 
+  const assetsServiceMock = {
+    getAssetFullPath: jest.fn(),
+  };
+
   const loggerServiceMock = getLoggerMock();
   const configMock = getConfigMock();
 
@@ -58,6 +63,7 @@ describe('OidcProviderConfigAppService', () => {
         OidcProviderGrantService,
         ScenariosService,
         ConfigService,
+        AssetsService,
       ],
     })
       .overrideProvider(LoggerService)
@@ -72,6 +78,8 @@ describe('OidcProviderConfigAppService', () => {
       .useValue(scenariosServiceMock)
       .overrideProvider(ConfigService)
       .useValue(configMock)
+      .overrideProvider(AssetsService)
+      .useValue(assetsServiceMock)
       .compile();
 
     service = module.get<OidcProviderConfigAppService>(
@@ -79,6 +87,10 @@ describe('OidcProviderConfigAppService', () => {
     );
 
     sessionServiceMock.get.mockReturnValue(sessionDataMock);
+
+    assetsServiceMock.getAssetFullPath.mockImplementation(
+      (assetPath: string) => assetPath,
+    );
   });
 
   it('should be defined', () => {

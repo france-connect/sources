@@ -10,13 +10,10 @@ import { CoreFcpAuthorizationParametersInterface } from '../../interfaces';
 
 @Injectable()
 @FeatureHandler('core-fcp-aidants-connect-authorization')
-export class CoreFcpAidantsConnectAuthorizationHandler
-  implements
-    IFeatureHandler<
-      CoreFcpAuthorizationParametersInterface,
-      CoreFcpAuthorizationParametersInterface
-    >
-{
+export class CoreFcpAidantsConnectAuthorizationHandler implements IFeatureHandler<
+  CoreFcpAuthorizationParametersInterface,
+  CoreFcpAuthorizationParametersInterface
+> {
   constructor(
     private readonly logger: LoggerService,
     private readonly serviceProvider: ServiceProviderAdapterMongoService,

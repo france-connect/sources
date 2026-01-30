@@ -1,0 +1,31 @@
+services:
+  znuny:
+    build:
+      context: "${DOCKER_DIR}"
+      dockerfile: "${DOCKER_DIR}/builds/znuny/Dockerfile"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rp-all:
+        condition: service_started
+    env_file:
+      - ${COMPOSE_DIR}/shared/.env/znuny/znuny.env
+    volumes:
+      - ${VOLUMES_DIR}/ssl/docker-stack-ca.crt:/etc/ssl/docker-stack-ca.crt:ro
+      - ${VOLUMES_DIR}/ssl/postgres.znuny.client.crt:/tmp/postgres.znuny.client.crt:ro
+      - ${VOLUMES_DIR}/ssl/postgres.znuny.client.key:/tmp/postgres.znuny.client.key:ro
+      # We need access to env in perl
+      - ${COMPOSE_DIR}/shared/.env/znuny/znuny.env:/etc/environment
+      # Init scripts
+      - ${VOLUMES_DIR}/znuny/scripts/start-znuny.sh:/usr/local/bin/start-znuny.sh
+      - ${VOLUMES_DIR}/znuny/scripts/start-znuny.d.sh:/usr/local/bin/start-znuny.d.sh
+      - ${VOLUMES_DIR}/znuny/scripts/init-apache-env.sh:/usr/local/bin/init-apache-env.sh
+      - ${VOLUMES_DIR}/znuny/scripts/init-database.sh:/usr/local/bin/init-database.sh
+      - ${VOLUMES_DIR}/znuny/scripts/inject-fixtures.sh:/usr/local/bin/inject-fixtures.sh
+      - ${VOLUMES_DIR}/znuny/scripts/fixtures.sql:/tmp/fixtures.sql
+      # Znuny will set permissions on these files, so we cannot mount the whole ssl directory as read-only
+      - ${COMPOSE_DIR}/shared/.env/znuny/znuny.env:/tmp/znuny.env
+      - ${VOLUMES_DIR}/znuny/Kernel/Config.pm:/tmp/Config.pm
+    networks:
+      - public
+      - data

@@ -13,14 +13,7 @@ interface GroupElementProps extends Required<PropsWithChildren> {
 }
 
 export const GroupElement = React.memo(
-  ({
-    children,
-    className = undefined,
-    disabled = false,
-    hasError = undefined,
-    isValid = undefined,
-    type,
-  }: GroupElementProps) => (
+  ({ children, className, disabled = false, hasError, isValid, type }: GroupElementProps) => (
     <div
       className={classnames(`fr-${type}-group`, className, {
         [`fr-${type}-group--disabled`]: disabled,

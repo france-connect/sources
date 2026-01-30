@@ -2,6 +2,7 @@ import { KoaContextWithOIDC, Provider } from 'oidc-provider';
 
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { AssetsService } from '@fc/app';
 import { ConfigService } from '@fc/config';
 import { throwException } from '@fc/exceptions/helpers';
 import { LoggerService } from '@fc/logger';
@@ -51,6 +52,10 @@ describe('OidcProviderAppConfigLibService', () => {
     interactionFinished: jest.fn(),
   };
 
+  const assetsServiceMock = {
+    getAssetFullPath: jest.fn(),
+  };
+
   const ctx = {
     request: {
       method: 'POST',
@@ -77,6 +82,7 @@ describe('OidcProviderAppConfigLibService', () => {
         OidcProviderErrorService,
         OidcProviderGrantService,
         ConfigService,
+        AssetsService,
       ],
     })
       .overrideProvider(LoggerService)
@@ -89,11 +95,21 @@ describe('OidcProviderAppConfigLibService', () => {
       .useValue(oidcProviderGrantServiceMock)
       .overrideProvider(ConfigService)
       .useValue(configMock)
+      .overrideProvider(AssetsService)
+      .useValue(assetsServiceMock)
       .compile();
 
     service = module.get<AppTest>(AppTest);
 
     service['provider'] = providerMock as any;
+
+    assetsServiceMock.getAssetFullPath.mockImplementation(
+      (assetPath: string) => assetPath,
+    );
+
+    configMock.get.mockReturnValue({
+      assetsUrlPrefix: 'https://example.com/assets/',
+    });
   });
 
   it('should be defined', () => {

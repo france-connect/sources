@@ -486,6 +486,26 @@ const scopeList = [
       "Statut Service National (Direction du Service National et de la Jeunesse)",
   },
   {
+    scope: "gip_mds_service_civique_statut_actuel",
+    fd: "ASC",
+    label: "Statut actuel service civique (Agence du service civique)",
+  },
+  {
+    scope: "gip_mds_service_civique_statut_passe",
+    fd: "ASC",
+    label: "Statut passé service civique (Agence du service civique)",
+  },
+  {
+    scope: "gip_mds_service_civique_organisme_accueil",
+    fd: "ASC",
+    label: "Organisme d’accueil (Agence du service civique)",
+  },
+  {
+    scope: "gip_mds_service_civique_dates",
+    fd: "ASC",
+    label: "Dates de contrat (Agence du service civique)",
+  },
+  {
     scope: "ants_extrait_immatriculation_vehicule_identite_particulier",
     fd: "ANTS",
     label: "Identité particulier (Agence Nationale des Titres Sécurisés)",

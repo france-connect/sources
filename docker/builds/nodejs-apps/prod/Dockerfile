@@ -149,3 +149,24 @@ RUN rm -rf /var/www/app/node_modules
 
 # Use the dev deps instead
 COPY --chown=node:node --from=dev-deps /tmp/dependencies/node_modules /var/www/app/node_modules
+
+########################################
+# Stage 4.4: Command pre-deploy app image
+########################################
+FROM command-runner-generic AS command-pre-deploy
+
+ARG TARGET_APP
+ARG NODE_ENV=production
+
+# Copy the target app's deploy scripts
+COPY --chown=node:node ./back/instances/${TARGET_APP}/deploy/${NODE_ENV} /var/www/app/deploy/${NODE_ENV}
+
+# Copy files required for TypeORM migrations
+COPY --chown=node:node ./back/tsconfig.json /var/www/app/tsconfig.json
+COPY --chown=node:node ./back/typeorm.migrations.config.ts /var/www/app/typeorm.migrations.config.ts
+COPY --chown=node:node ./back/migrations /var/www/app/migrations
+
+# Use node directly instead of pm2-runtime for one-shot commands
+# This ensures proper exit code propagation (pm2-runtime causes exit code 2)
+# Logs are redirected to match PM2 behavior, COMMAND_ARGS is used for the command name
+ENTRYPOINT ["/bin/sh", "-c", "node main.js $COMMAND_ARGS > /data/log/app/out.log 2> /data/log/app/error.log"]

@@ -155,6 +155,17 @@ describe('OidcProviderRedirectExceptionFilter', () => {
       expect(exceptionMock.originalError.caught).toBe(true);
     });
 
+    it('should not mark the original error as caught if there is no originalError', async () => {
+      // Given
+      exceptionMock.originalError = undefined;
+
+      // When
+      await filter.catch(exceptionMock, hostMock as unknown as ArgumentsHost);
+
+      // Then
+      expect(exceptionMock.originalError).toBeUndefined();
+    });
+
     it('should log then exception', async () => {
       // When
       await filter.catch(exceptionMock, hostMock as unknown as ArgumentsHost);

@@ -1,8 +1,8 @@
 import { readFileSync } from 'fs';
 
-import { DataSource } from 'typeorm';
+import { DataSource, DataSourceOptions } from 'typeorm';
 
-const AppDataSource = new DataSource({
+export const dataSourceOptions: DataSourceOptions = {
   type: 'postgres',
   host: process.env.Postgres_HOST,
   port: Number(process.env.Postgres_PORT),
@@ -18,6 +18,8 @@ const AppDataSource = new DataSource({
   entities: [`${__dirname}/entities/typeorm/**/*.entity.{ts,js}`],
   migrations: [`${__dirname}/migrations/${process.env.APP_NAME}/**/*{.ts,.js}`],
   synchronize: false, // do not set to true, we do not want schema automatic creation
-});
+};
+
+const AppDataSource = new DataSource(dataSourceOptions);
 
 module.exports = AppDataSource;

@@ -11,7 +11,7 @@
   "scripts": {
     "clean": "yarn clean:snapshots:diff && rm -rf cypress/reports && rm -rf cypress/screenshots && rm -rf cypress/videos",
     "clean:snapshots:diff": "rm -rf cypress/snapshots/diff",
-    "prettier": "prettier -c \"{.,cypress,scripts}/**/*.ts\" --config ../.prettierrc",
+    "prettier": "prettier --no-parallel --experimental-cli -c \"{.,cypress,scripts}/**/*.ts\" --config-path ../.prettierrc",
     "lint": "eslint '**/*.ts'",
     "test": "jest --config=../jest.config.js",
     "test:eidas:base": "cypress run --config-file cypress-eidas-bridge.config.ts",

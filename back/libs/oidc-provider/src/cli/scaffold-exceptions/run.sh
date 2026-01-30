@@ -166,10 +166,10 @@ import { ${className} } from './${relativeFileName}';"
   cd $FC_ROOT/fc/back
 
   echo "Auto lint generated files"
-  npx eslint $exceptionDir --fix
+  npx eslint --concurrency=off $exceptionDir --fix
 
   echo "Auto format generated files"
-  npx prettier --log-level=error -w $exceptionDir --config .prettierrc
+  npx prettier --no-parallel --experimental-cli --log-level=error -w $exceptionDir --config-path .prettierrc
 }
 
 _generate_oidc_provider_exceptions

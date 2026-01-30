@@ -18,9 +18,7 @@ import { OidcClientInterface } from '@fc/service-provider';
 import { TypeormService } from '@fc/typeorm';
 
 @Injectable()
-export class ConfigPostgresAdapterService
-  implements ConfigDatabaseServiceInterface
-{
+export class ConfigPostgresAdapterService implements ConfigDatabaseServiceInterface {
   constructor(
     private readonly instances: PartnersServiceProviderInstanceService,
     private readonly versions: PartnersServiceProviderInstanceVersionService,

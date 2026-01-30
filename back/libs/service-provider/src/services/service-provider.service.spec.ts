@@ -53,6 +53,8 @@ describe('ServiceProviderService', () => {
     createdVia: CreatedVia.EXPLOITATION_BULK_FORM,
     secretUpdatedBy: userMock,
     updatedBy: userMock,
+    allowedIdpHints: ['allowedIdpHints'],
+    allowedPrompts: ['allowedPrompts'],
   };
 
   const v2Client: Partial<ServiceProviderClientInterface> = {
@@ -87,6 +89,8 @@ describe('ServiceProviderService', () => {
     createdBy: userMock,
     createdVia: CreatedVia.EXPLOITATION_BULK_FORM,
     updatedBy: userMock,
+    allowedIdpHints: ['allowedIdpHints'],
+    allowedPrompts: ['allowedPrompts'],
   };
 
   beforeEach(async () => {

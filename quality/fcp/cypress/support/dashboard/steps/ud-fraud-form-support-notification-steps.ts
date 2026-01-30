@@ -169,9 +169,12 @@ Then(
 );
 
 Then(
-  'le fichier {string} est joint dans le mail "demande de support"',
-  function (fileName: string) {
-    expect(MaildevHelper.hasAttachment(this.mail, fileName)).to.be.true;
+  /^le fichier "([^"]+)" (est|n'est pas) joint dans le mail "demande de support"$/,
+  function (fileName: string, isAttachedValue: string) {
+    const isAttached = isAttachedValue === 'est';
+    expect(MaildevHelper.hasAttachment(this.mail, fileName)).to.equal(
+      isAttached,
+    );
   },
 );
 

@@ -215,13 +215,13 @@ describe('TracksListComponent', () => {
     // Given
     const indexMock = 20;
     const navigateFuncMock = jest.fn();
-    const useCallbackMock = jest.spyOn(React, 'useCallback').mockImplementation(() => jest.fn());
-    jest.spyOn(ReactRouterDom, 'useNavigate').mockImplementationOnce(() => navigateFuncMock);
-    jest.mocked(PaginationComponent).mockImplementation(() => (
+    const useCallbackMock = jest.spyOn(React, 'useCallback').mockReturnValue(jest.fn());
+    jest.spyOn(ReactRouterDom, 'useNavigate').mockReturnValueOnce(navigateFuncMock);
+    jest.mocked(PaginationComponent).mockReturnValue(
       <button type="button" onClick={() => useCallbackMock}>
         foo
-      </button>
-    ));
+      </button>,
+    );
 
     // When
     render(<TracksListComponent />);

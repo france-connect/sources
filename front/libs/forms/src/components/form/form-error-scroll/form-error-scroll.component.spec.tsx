@@ -10,7 +10,7 @@ describe('FormErrorScrollComponent', () => {
 
   beforeEach(() => {
     // Given
-    jest.mocked(useScrollToElement).mockImplementation(() => scrollToElementMock);
+    jest.mocked(useScrollToElement).mockReturnValue(scrollToElementMock);
   });
 
   it('should match its snapshot', () => {

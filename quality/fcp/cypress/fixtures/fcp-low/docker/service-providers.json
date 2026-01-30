@@ -6,7 +6,11 @@
       "public",
       "avec un entityId",
       "avec accès au FI par défaut (premier FS)",
-      "sans périmètre Aidants Connect"
+      "sans périmètre Aidants Connect", 
+      "avec prompt login uniquement", 
+      "avec prompt consent uniquement",
+      "avec prompt login et consent",
+      "avec signature ES256"
     ],
     "mocked": true,
     "url": "https://fsp1-low.docker.dev-franceconnect.fr",
@@ -29,7 +33,8 @@
       "avec une whitelist de FI",
       "avec le même entityId",
       "avec accès au FI par défaut (deuxième FS)",
-      "sans accès au FI Aidants Connect"
+      "sans accès au FI Aidants Connect",
+      "avec idp_hint personnalisé"
     ],
     "mocked": true,
     "url": "https://fsp2-low.docker.dev-franceconnect.fr",
@@ -51,7 +56,8 @@
       "avec un entityId différent",
       "avec un sub existant",
       "avec une blacklist de FI",
-      "avec les périmètres Famille-Scolarité et Travail-Formation"
+      "avec les périmètres Famille-Scolarité et Travail-Formation",
+      "avec signature RS256"
     ],
     "mocked": true,
     "url": "https://fsp3-low.docker.dev-franceconnect.fr",

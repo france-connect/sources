@@ -34,7 +34,7 @@ export const TableComponent = React.memo(
   <T extends TableDataSourceInterface>({
     bordered = false,
     caption,
-    columns = undefined,
+    columns,
     hideHeader = false,
     id,
     multiline = false,

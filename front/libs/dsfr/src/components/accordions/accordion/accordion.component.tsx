@@ -8,8 +8,7 @@ import { useAccordion } from '../../../hooks/accordion';
 import type { AccordionGroupItemInterface } from '../../../interfaces';
 
 interface AccordionComponentProps
-  extends Omit<AccordionGroupItemInterface, 'id' | 'element'>,
-    PropsWithChildren {
+  extends Omit<AccordionGroupItemInterface, 'id' | 'element'>, PropsWithChildren {
   onClick: (id: string) => void;
   opened?: boolean;
   id?: string;

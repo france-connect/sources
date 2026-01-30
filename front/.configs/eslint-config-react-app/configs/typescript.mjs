@@ -1,5 +1,3 @@
-// @NOTE unable to get it resolved into this file
-// eslint-disable-next-line import/no-unresolved
 import tseslint from 'typescript-eslint';
 
 export const typescriptConfig = tseslint.config([

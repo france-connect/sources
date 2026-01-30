@@ -25,9 +25,7 @@ import {
 import { QueryInterface } from '../interfaces';
 
 @Injectable()
-export class ConfigMongoAdapterService
-  implements ConfigDatabaseServiceInterface
-{
+export class ConfigMongoAdapterService implements ConfigDatabaseServiceInterface {
   constructor(
     private readonly config: ConfigService,
     private readonly cryptography: CryptographyService,

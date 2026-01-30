@@ -10,18 +10,18 @@ export interface SimpleButtonProps extends ButtonInterface {
 
 export const SimpleButton = React.memo(
   ({
-    children: label = undefined,
-    className = undefined,
-    dataTestId = undefined,
-    disabled = undefined,
+    children: label,
+    className,
+    dataTestId,
+    disabled,
     hideLabel = false,
-    icon = undefined,
+    icon,
     iconPlacement = IconPlacement.RIGHT,
     noOutline = false,
-    onClick = undefined,
+    onClick,
     priority = Priorities.PRIMARY,
     size = Sizes.MEDIUM,
-    title = undefined,
+    title,
     type: nativeButtonType = ButtonTypes.BUTTON,
   }: SimpleButtonProps) => (
     <button

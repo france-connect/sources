@@ -11,7 +11,7 @@
   "scripts": {
     "clean": "rm -rf cypress/fixtures.out && rm -rf cypress/reports && rm -rf cypress/screenshots && rm -rf cypress/videos",
     "clean:snapshots:diff": "rm -rf cypress/snapshots/diff",
-    "prettier": "prettier -c \"{.,cypress,scripts}/**/*.ts\" --config ../.prettierrc",
+    "prettier": "prettier --no-parallel --experimental-cli -c \"{.,cypress,scripts}/**/*.ts\" --config-path ../.prettierrc",
     "lint": "eslint \"{.,cypress,scripts}/**/*.ts\"",
     "test:base": "cypress run --config-file cypress-partners.config.ts",
     "test:chrome-desktop": "yarn test:base --browser chrome --headless",

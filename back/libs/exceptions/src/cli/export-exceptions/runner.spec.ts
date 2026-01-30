@@ -11,7 +11,6 @@ import MarkdownGenerator from './markdown-generator';
 import Runner from './runner';
 
 jest.mock('fs');
-jest.mock('console');
 jest.mock('ejs');
 jest.mock('glob');
 jest.mock('./markdown-generator');

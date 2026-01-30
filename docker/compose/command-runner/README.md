@@ -71,3 +71,21 @@ dks command command-import-sp-sandbox
 2025-08-12T09:28:39: PM2 log: 0 application online, retry = 0
 2025-08-12T09:28:39: PM2 log: PM2 successfully stopped
 ```
+
+## command-pre-deploy
+
+Execute pre-deployment PostgreSQL migrations as a one-shot command.
+
+### Usage
+
+```shell
+dks command command-pre-deploy
+```
+
+### Configuration
+
+Environment variables are configured in `.env/command-pre-deploy.env`:
+- PostgreSQL connection settings
+- Logger threshold
+
+See the detailed README in `back/instances/command-pre-deploy/README.md` for more information.
