@@ -7,14 +7,14 @@ enum ViewportType {
   TABLET_PORTRAIT = 'tablet portrait',
 }
 
-interface Viewport {
+interface ViewportDimensions {
   height: number;
   width: number;
 }
 
-type ViewportMap = Record<ViewportType, Viewport>;
+type ViewportMap = Record<ViewportType, ViewportDimensions>;
 
-const getViewport = (name: ViewportType): Viewport => {
+const getViewport = (name: ViewportType): ViewportDimensions => {
   const viewports: ViewportMap = {
     desktop: {
       height: 900,

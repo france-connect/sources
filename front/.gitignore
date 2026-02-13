@@ -329,6 +329,7 @@ temp/
 **/*.temp.*
 
 **/*.css.d.ts
+**/*.scss.d.ts
 **/*.d.scss.ts
 
 instances/**/dist

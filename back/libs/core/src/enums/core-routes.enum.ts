@@ -7,4 +7,5 @@ export enum CoreRoutes {
   INTERACTION_AUTO_LOGIN = '/auto-login',
   JWKS_URI = '/jwks',
   REDIRECT_TO_SP_WITH_ERROR = '/redirect-to-sp-with-error',
+  ACCESSIBILITY = '/accessibilite',
 }

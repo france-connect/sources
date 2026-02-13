@@ -4,6 +4,7 @@ export interface PartnersServiceProviderPayloadInterface {
   organizationName: string;
   datapassRequestId: string;
   datapassScopes: string[];
+  fcScopes: string[];
   createdAt: Date;
   updatedAt: Date;
 }

@@ -2,6 +2,10 @@ import { Result } from 'axe-core';
 
 import { type OperatorUser } from '../../exploitation/helpers';
 import { type User } from '../helpers';
+import {
+  ElasticsearchFilterInterface,
+  ElasticsearchResponseInterface,
+} from './elasticsearch';
 import { Email } from './email';
 import { Environment } from './environment';
 import { FraudFormValues } from './fraud-form-values';
@@ -61,9 +65,14 @@ declare module 'mocha' {
     spConfigs: ServiceProviderConfig[];
     users: UserData[];
     user: User;
+
+    // Elasticsearch context
+    esData?: ElasticsearchResponseInterface;
+    esFilter?: ElasticsearchFilterInterface;
   }
 }
 
+export * from './elasticsearch';
 export * from './email';
 export * from './environment';
 export * from './identity-provider';

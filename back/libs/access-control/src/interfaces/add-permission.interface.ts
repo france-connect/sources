@@ -1,10 +1,11 @@
 import { uuid } from '@fc/common';
 
-import { EntityType, PermissionsType } from '../enums';
-
-export interface AddPermissionInterface {
+export interface AddPermissionInterface<
+  EntityType extends string,
+  PermissionType extends string,
+> {
   accountId: uuid;
-  permissionType: PermissionsType;
+  permissionType: PermissionType;
   entity: EntityType;
   entityId?: uuid;
 }

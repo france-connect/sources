@@ -1,5 +1,7 @@
-export interface IdentityProviderConfig
-  extends Record<string, string | string[]> {
+export interface IdentityProviderConfig extends Record<
+  string,
+  string | string[]
+> {
   uid?: string;
   name?: string;
   jwksUrl?: string;

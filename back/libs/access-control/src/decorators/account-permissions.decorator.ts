@@ -8,11 +8,10 @@ import { AccountPermissionService } from '../services';
 export const AccountPermissionsDecorator = (
   _target: unknown,
   _ctx: ExecutionContext,
-): PermissionInterface[] => {
-  const accountPermissionsService =
-    NestJsDependencyInjectionWrapper.get<AccountPermissionService>(
-      AccountPermissionService,
-    );
+): PermissionInterface<string, string>[] => {
+  const accountPermissionsService = NestJsDependencyInjectionWrapper.get<
+    AccountPermissionService<string, string>
+  >(AccountPermissionService);
 
   const accountPermissions =
     accountPermissionsService.getPermissionsFromSession();

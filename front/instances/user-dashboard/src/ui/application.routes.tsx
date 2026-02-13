@@ -17,6 +17,7 @@ import { AuthedRoute, RouterErrorBoundaryComponent, UnauthedRoute } from '@fc/ro
 import { loadFraudTracks } from '../loaders';
 import { IdentityTheftReportLayout, StepperLayout } from './layouts';
 import {
+  AccessibilityPage,
   Error409Component,
   ErrorGenericComponent,
   ErrorPage,
@@ -90,6 +91,7 @@ export const ApplicationRoutes = React.memo(() => {
         <Route index element={<ErrorGenericComponent />} />
         <Route element={<Error409Component />} path="409" />
       </Route>
+      <Route element={<AccessibilityPage />} path="/accessibilite" />
       <Route element={<LegalNoticesPage />} path="/mentions-legales" />
       <Route element={<NotFoundPage />} path="*" />
     </Route>,

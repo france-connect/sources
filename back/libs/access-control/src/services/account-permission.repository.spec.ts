@@ -7,13 +7,20 @@ import { LoggerModule, LoggerService } from '@fc/logger';
 
 import { getLoggerMock } from '@mocks/logger';
 
-import { EntityType, PermissionsType } from '../enums';
 import { AccountPermissionRepository } from './account-permission.repository';
 
 jest.mock('../decorators');
 
 describe('AccountPermissionRepository', () => {
-  let repository: AccountPermissionRepository;
+  enum EntityType {
+    ENTITY_VALUE = 'entityValue',
+  }
+
+  enum PermissionsType {
+    PERMISSION_VALUE = 'permissionValue',
+  }
+
+  let repository: AccountPermissionRepository<EntityType, PermissionsType>;
 
   const accountPermissionRepositoryMock = {
     find: jest.fn(),
@@ -48,9 +55,9 @@ describe('AccountPermissionRepository', () => {
       .useValue(loggerMock)
       .compile();
 
-    repository = module.get<AccountPermissionRepository>(
-      AccountPermissionRepository,
-    );
+    repository = module.get<
+      AccountPermissionRepository<EntityType, PermissionsType>
+    >(AccountPermissionRepository<EntityType, PermissionsType>);
 
     accountPermissionRepositoryMock.find.mockResolvedValueOnce(dataMock);
     accountPermissionRepositoryMock.insert.mockReturnThis();
@@ -63,17 +70,17 @@ describe('AccountPermissionRepository', () => {
   describe('insert', () => {
     const dataMock = {
       accountId: accountIdMock,
-      entity: EntityType.SP_INSTANCE,
+      entity: EntityType.ENTITY_VALUE,
       entityId: idMock,
-      permissionType: PermissionsType.CREATE,
+      permissionType: PermissionsType.PERMISSION_VALUE,
     };
 
     it('should call accountPermission.insert() method with correct data', async () => {
       // When
       await repository.insert(
         accountIdMock,
-        PermissionsType.CREATE,
-        EntityType.SP_INSTANCE,
+        PermissionsType.PERMISSION_VALUE,
+        EntityType.ENTITY_VALUE,
         idMock,
       );
 
@@ -93,8 +100,8 @@ describe('AccountPermissionRepository', () => {
       // When
       await repository.insert(
         accountIdMock,
-        PermissionsType.CREATE,
-        EntityType.SP_INSTANCE,
+        PermissionsType.PERMISSION_VALUE,
+        EntityType.ENTITY_VALUE,
         idMock,
       );
 
@@ -103,8 +110,8 @@ describe('AccountPermissionRepository', () => {
       expect(loggerMock.warning).toHaveBeenCalledWith({
         msg: 'Tried to insert existing permission',
         accountId: accountIdMock,
-        permissionType: PermissionsType.CREATE,
-        entity: EntityType.SP_INSTANCE,
+        permissionType: PermissionsType.PERMISSION_VALUE,
+        entity: EntityType.ENTITY_VALUE,
         entityId: idMock,
         error: expect.any(Error),
       });
@@ -114,8 +121,8 @@ describe('AccountPermissionRepository', () => {
       // When
       await repository.insert(
         accountIdMock,
-        PermissionsType.CREATE,
-        EntityType.SP_INSTANCE,
+        PermissionsType.PERMISSION_VALUE,
+        EntityType.ENTITY_VALUE,
         idMock,
       );
 

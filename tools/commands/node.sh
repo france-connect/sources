@@ -91,10 +91,12 @@ _do_start() {
 }
 
 _do_command() {
-  local command=$1
+  local app=$1
+  local command=$2
+  local params=$3
 
   cd ${DOCKER_DIR}
-  $DOCKER_COMPOSE exec ${NO_TTY} "${command}" bash -c "yarn cmd:${command}"
+  $DOCKER_COMPOSE exec ${NO_TTY} "${app}" bash -c "yarn cmd:${command} ${params}"
 }
 
 _do_start_ci() {

@@ -4,18 +4,27 @@ import { Reflector } from '@nestjs/core';
 import { RequirePermissionDecoratorInterface } from '../interfaces';
 import { PERMISSION_METADATA_TOKEN } from '../tokens';
 
-export const RequirePermission = (
-  permissionData: RequirePermissionDecoratorInterface,
-) => SetMetadata(PERMISSION_METADATA_TOKEN, permissionData);
+export function RequirePermission<
+  EntityType extends string,
+  PermissionType extends string,
+>(
+  permissionData: RequirePermissionDecoratorInterface<
+    EntityType,
+    PermissionType
+  >,
+) {
+  return SetMetadata(PERMISSION_METADATA_TOKEN, permissionData);
+}
 
-RequirePermission.get = function (
+RequirePermission.get = function get<
+  EntityType extends string,
+  PermissionType extends string,
+>(
   reflector: Reflector,
   ctx: ExecutionContext,
-): RequirePermissionDecoratorInterface | null {
-  const value = reflector.get<RequirePermissionDecoratorInterface>(
-    PERMISSION_METADATA_TOKEN,
-    ctx.getHandler(),
-  );
-
+): RequirePermissionDecoratorInterface<EntityType, PermissionType> | null {
+  const value = reflector.get<
+    RequirePermissionDecoratorInterface<EntityType, PermissionType>
+  >(PERMISSION_METADATA_TOKEN, ctx.getHandler());
   return value || null;
 };

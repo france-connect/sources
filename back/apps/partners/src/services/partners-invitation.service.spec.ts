@@ -1,16 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import {
-  AccountPermissionService,
-  EntityType,
-  PermissionsType,
-} from '@fc/access-control';
+import { AccountPermissionService } from '@fc/access-control';
 import { CryptographyService } from '@fc/cryptography';
 import { PartnersAccountService } from '@fc/partners-account';
 import { TypeormService } from '@fc/typeorm';
 
 import { getQueryRunnerMock, getTypeormServiceMock } from '@mocks/typeorm';
 
+import { AccessControlEntity, AccessControlPermission } from '../enums';
 import { PartnersInvitationService } from './partners-invitation.service';
 
 describe('PartnersInvitationService', () => {
@@ -40,14 +37,16 @@ describe('PartnersInvitationService', () => {
       providers: [
         PartnersInvitationService,
         PartnersAccountService,
-        AccountPermissionService,
+        AccountPermissionService<AccessControlEntity, AccessControlPermission>,
         TypeormService,
         CryptographyService,
       ],
     })
       .overrideProvider(PartnersAccountService)
       .useValue(partnersAccountServiceMock)
-      .overrideProvider(AccountPermissionService)
+      .overrideProvider(
+        AccountPermissionService<AccessControlEntity, AccessControlPermission>,
+      )
       .useValue(accountPermissionServiceMock)
       .overrideProvider(TypeormService)
       .useValue(typeormServiceMock)
@@ -126,8 +125,8 @@ describe('PartnersInvitationService', () => {
         accountPermissionServiceMock.addPermissionTransactional,
       ).toHaveBeenCalledWith(queryRunnerMock, {
         accountId: accountIdMock,
-        permissionType: PermissionsType.LIST,
-        entity: EntityType.SP_INSTANCE,
+        permissionType: AccessControlPermission.LIST,
+        entity: AccessControlEntity.SP_INSTANCE,
       });
     });
 
@@ -164,16 +163,16 @@ describe('PartnersInvitationService', () => {
         accountPermissionServiceMock.addPermissionTransactional,
       ).toHaveBeenNthCalledWith(1, queryRunnerMock, {
         accountId: accountIdMock,
-        permissionType: PermissionsType.VIEW,
-        entity: EntityType.SP_INSTANCE,
+        permissionType: AccessControlPermission.VIEW,
+        entity: AccessControlEntity.SP_INSTANCE,
         entityId: instances[0],
       });
       expect(
         accountPermissionServiceMock.addPermissionTransactional,
       ).toHaveBeenNthCalledWith(2, queryRunnerMock, {
         accountId: accountIdMock,
-        permissionType: PermissionsType.VIEW,
-        entity: EntityType.SP_INSTANCE,
+        permissionType: AccessControlPermission.VIEW,
+        entity: AccessControlEntity.SP_INSTANCE,
         entityId: instances[1],
       });
     });

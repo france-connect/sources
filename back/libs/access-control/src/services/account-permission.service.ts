@@ -5,30 +5,42 @@ import { Injectable } from '@nestjs/common';
 import { NO_ENTITY_ID, PartnersAccountPermission } from '@entities/typeorm';
 
 import { LoggerService } from '@fc/logger';
-import { PartnersAccountSession } from '@fc/partners-account';
 import { SessionService } from '@fc/session';
 
+import { AccessControlAccountSession } from '../dto';
 import { AddPermissionInterface, PermissionInterface } from '../interfaces';
-import { ACCESS_CONTROL_TOKEN } from '../tokens';
 import { AccountPermissionRepository } from './account-permission.repository';
 
 @Injectable()
-export class AccountPermissionService {
+export class AccountPermissionService<
+  EntityType extends string,
+  PermissionType extends string,
+> {
   constructor(
     private readonly sessionService: SessionService,
-    private readonly accountPermission: AccountPermissionRepository,
+    private readonly accountPermission: AccountPermissionRepository<
+      EntityType,
+      PermissionType
+    >,
     private readonly logger: LoggerService,
   ) {}
 
-  getPermissionsFromSession(): PermissionInterface[] {
+  getPermissionsFromSession(): PermissionInterface<
+    EntityType,
+    PermissionType
+  >[] {
     const sessionData =
-      this.sessionService.get<PartnersAccountSession>('PartnersAccount');
+      this.sessionService.get<
+        AccessControlAccountSession<EntityType, PermissionType>
+      >('PartnersAccount');
 
-    const { userPermissions } = sessionData[ACCESS_CONTROL_TOKEN];
-    return userPermissions;
+    const { permissions } = sessionData;
+    return permissions;
   }
 
-  async addPermission(permission: AddPermissionInterface): Promise<void> {
+  async addPermission(
+    permission: AddPermissionInterface<EntityType, PermissionType>,
+  ): Promise<void> {
     const {
       accountId,
       permissionType,
@@ -46,7 +58,7 @@ export class AccountPermissionService {
 
   async addPermissionTransactional(
     queryRunner: QueryRunner,
-    permission: AddPermissionInterface,
+    permission: AddPermissionInterface<EntityType, PermissionType>,
   ): Promise<void> {
     const {
       accountId,

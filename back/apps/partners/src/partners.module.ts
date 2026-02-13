@@ -26,6 +26,7 @@ import { PartnersServiceProviderModule } from '@fc/partners-service-provider';
 import { PartnersServiceProviderInstanceModule } from '@fc/partners-service-provider-instance';
 import { PartnersServiceProviderInstanceVersionModule } from '@fc/partners-service-provider-instance-version';
 import { PostgresModule } from '@fc/postgres';
+import { ScopesModule } from '@fc/scopes';
 import {
   ServiceProviderAdapterEnvModule,
   ServiceProviderAdapterEnvService,
@@ -44,6 +45,7 @@ import {
   ServiceProviderController,
   VersionController,
 } from './controllers/';
+import { AccessControlEntity, AccessControlPermission } from './enums';
 import { AppPermissionsHandler } from './handlers';
 import {
   PartnerPublicationService,
@@ -61,9 +63,10 @@ const oidcClientModule = OidcClientModule.register(
   ServiceProviderAdapterEnvModule,
 );
 
-const accessControlModule = AccessControlModule.withRolesHandler(
-  AppPermissionsHandler,
-);
+const accessControlModule = AccessControlModule.withRolesHandler<
+  AccessControlEntity,
+  AccessControlPermission
+>(AppPermissionsHandler);
 
 @Module({
   imports: [
@@ -87,6 +90,7 @@ const accessControlModule = AccessControlModule.withRolesHandler(
     Dto2formModule,
     CsmrConfigClientModule.registerFor('SandboxLow'),
     HttpProxyModule,
+    ScopesModule,
     TypeormModule,
     WebhooksModule,
   ],

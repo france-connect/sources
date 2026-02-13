@@ -9,18 +9,20 @@ import {
 } from '@nestjs/common';
 
 import { LoggerService } from '@fc/logger';
-import { PartnersAccountSession } from '@fc/partners-account';
 import { SessionService } from '@fc/session';
 
+import { AccessControlAccountSession } from '../dto';
 import { AccountPermissionRepository } from '../services';
-import { ACCESS_CONTROL_TOKEN } from '../tokens';
 
 @Injectable()
 export class AccessControlSessionInterceptor implements NestInterceptor {
   constructor(
     private readonly logger: LoggerService,
     private readonly sessionService: SessionService,
-    private readonly accountPermission: AccountPermissionRepository,
+    private readonly accountPermission: AccountPermissionRepository<
+      string,
+      string
+    >,
   ) {
     this.logger.debug(this.constructor.name);
   }
@@ -30,7 +32,9 @@ export class AccessControlSessionInterceptor implements NestInterceptor {
     next: CallHandler,
   ): Promise<Observable<unknown>> {
     const sessionData =
-      this.sessionService.get<PartnersAccountSession>('PartnersAccount');
+      this.sessionService.get<AccessControlAccountSession<string, string>>(
+        'PartnersAccount',
+      );
 
     if (sessionData?.identity?.email) {
       const permissions = await this.accountPermission.getByEmail(
@@ -38,9 +42,7 @@ export class AccessControlSessionInterceptor implements NestInterceptor {
       );
 
       this.sessionService.set('PartnersAccount', {
-        [ACCESS_CONTROL_TOKEN]: {
-          userPermissions: deepFreeze(permissions),
-        },
+        permissions: deepFreeze(permissions),
       });
     }
 

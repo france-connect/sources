@@ -1,10 +1,8 @@
 import type { RequireAtLeastOne } from 'type-fest';
 
-import { EntityType, PermissionsType } from '../enums';
-
 interface EntityOrPermissionOptionInterface {
-  entityTypes?: EntityType[];
-  permissionTypes?: PermissionsType[];
+  entityTypes?: string[];
+  permissionTypes?: string[];
 }
 
 export type RelatedEntitiesHelperGetOptionsInterface =

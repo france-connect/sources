@@ -12,7 +12,7 @@ export const useServiceProvider = () => {
   const response = useLoaderData();
   const { payload } = response as Required<FSAInterface<ServiceProviderInterface>>;
 
-  const { datapassRequestId, datapassScopes, id, name, organizationName } = payload;
+  const { datapassRequestId, datapassScopes, fcScopes, id, name, organizationName } = payload;
   const pathname = generatePath(datapassHabilitationPathname, {
     id: datapassRequestId,
   });
@@ -21,6 +21,7 @@ export const useServiceProvider = () => {
   return {
     datapassRequestId,
     datapassScopes,
+    fcScopes,
     habilitationLink,
     id,
     name,

@@ -8,6 +8,7 @@ Fonctionnalité: Fournisseur Identité - Eidas Bridge
   @ci
   Plan du Scénario: FI Eidas Bridge - <display> <active>
     Etant donné que je configure le fournisseur d'identité "eidas-bridge" <display> et <active> sur le site d'exploitation
+    Et que j'attend le rechargement déférré du cache des fournisseurs d'identité
     Et que je navigue sur la page fournisseur de service
     Quand je clique sur le bouton FranceConnect
     Alors je suis redirigé vers la page sélection du fournisseur d'identité
@@ -23,6 +24,7 @@ Fonctionnalité: Fournisseur Identité - Eidas Bridge
 
   Scénario: FI Eidas Bridge - Invisible si blacklisté
     Etant donné que j'ajoute "eidas-bridge" à la "Blacklist" du fournisseur de service "fsp1-high" sur le site d'exploitation
+    Et que j'attend le rechargement déférré du cache des fournisseurs de service
     Et que je navigue sur la page fournisseur de service
     Quand je clique sur le bouton FranceConnect
     Alors je suis redirigé vers la page sélection du fournisseur d'identité
@@ -31,6 +33,7 @@ Fonctionnalité: Fournisseur Identité - Eidas Bridge
 
   Scénario: FI Eidas Bridge - Visible si non blacklisté
     Etant donné que je retire les restrictions de FI du fournisseur de service "fsp1-high" sur le site d'exploitation
+    Et que j'attend le rechargement déférré du cache des fournisseurs de service
     Et que je navigue sur la page fournisseur de service
     Quand je clique sur le bouton FranceConnect
     Alors je suis redirigé vers la page sélection du fournisseur d'identité

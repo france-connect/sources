@@ -24,4 +24,5 @@ export default {
   fapi: env.boolean('FAPI'),
   postLogoutRedirectUri: `https://${app.fqdn}${app.urlPrefix}${OidcClientRoutes.CLIENT_LOGOUT_CALLBACK}`,
   redirectUri: `https://${app.fqdn}${app.urlPrefix}${EidasBridgeRoutes.BASE}${EidasBridgeRoutes.REDIRECT_TO_EIDAS_RESPONSE_PROXY}`,
+  disableClientIdInEndSessionUrl: false,
 } as OidcClientConfig;

@@ -12,13 +12,19 @@ import { SessionService } from '@fc/session';
 import { getLoggerMock } from '@mocks/logger';
 import { getSessionServiceMock } from '@mocks/session';
 
-import { EntityType, PermissionsType } from '../enums';
-import { ACCESS_CONTROL_TOKEN } from '../tokens';
 import { AccountPermissionRepository } from './account-permission.repository';
 import { AccountPermissionService } from './account-permission.service';
 
 describe('AccountPermissionService', () => {
-  let service: AccountPermissionService;
+  enum EntityType {
+    ENTITY_VALUE = 'entityValue',
+  }
+
+  enum PermissionsType {
+    PERMISSION_VALUE = 'permissionValue',
+  }
+
+  let service: AccountPermissionService<EntityType, PermissionsType>;
 
   const sessionServiceMock = getSessionServiceMock();
   const accountPermissionRepositoryMock = {
@@ -29,10 +35,8 @@ describe('AccountPermissionService', () => {
   const userPermissionsMock = Symbol('userPermissions');
 
   const sessionPartnersAccountDataMock = {
-    [ACCESS_CONTROL_TOKEN]: {
-      userPermissions: userPermissionsMock,
-    },
-  } as unknown as PartnersAccountSession;
+    permissions: userPermissionsMock,
+  } as unknown as PartnersAccountSession<EntityType, PermissionsType>;
 
   beforeEach(async () => {
     jest.resetAllMocks();
@@ -54,7 +58,9 @@ describe('AccountPermissionService', () => {
       .useValue(loggerMock)
       .compile();
 
-    service = module.get<AccountPermissionService>(AccountPermissionService);
+    service = module.get<AccountPermissionService<EntityType, PermissionsType>>(
+      AccountPermissionService,
+    );
 
     sessionServiceMock.get.mockReturnValueOnce(sessionPartnersAccountDataMock);
   });

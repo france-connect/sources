@@ -66,11 +66,15 @@
   "Partners.loginpage.title": "Mon espace partenaires",
   "Partners.page.noticeDescription": "L’espace partenaire sera prochainement disponible pour les fournisseurs de service FranceConnect+",
   "Partners.page.noticeTitle": "Disponible pour les fournisseurs de service FranceConnect uniquement.",
-  "Partners.serviceProviderPage.authorizedData.description": "Les données d’identité autorisées sont les suivantes{NBSP_UNICODE}:",
-  "Partners.serviceProviderPage.authorizedData.title": "Données autorisées",
+  "Partners.serviceProviderPage.datapassDocumentation.introduction": "Toute modification des données autorisées doit se faire dans la demande d’habilitation. En savoir plus sur",
+  "Partners.serviceProviderPage.datapassDocumentation.introduction.link": "la documentation partenaires",
+  "Partners.serviceProviderPage.datapassScopes.title": "Données autorisées",
+  "Partners.serviceProviderPage.fcScopes.title": "Scopes autorisés",
   "Partners.serviceProviderPage.habilitation.number": "Numéro de demande d’habilitation{NBSP_UNICODE}:",
   "Partners.serviceProviderPage.habilitation.requestLabel": "la demande d’habilitation",
   "Partners.serviceProviderPage.habilitation.title": "Habilitation FranceConnect",
-  "Partners.serviceProviderPage.mention": "Toute modification des données autorisées doit se faire dans",
+  "Partners.serviceProviderPage.scopeSection.description": "Vous trouverez l’ensemble des scopes en fonction des données utilisées dans le tableau ci-dessous. Pour plus d'informations sur l’accès aux données à l’aide des scopes, consultez notre",
+  "Partners.serviceProviderPage.scopeSection.description.link": "documentation partenaires",
+  "Partners.serviceProviderPage.scopeSection.title": "Données et scopes autorisés",
   "Partners.updatepage.title": "Modification d’un bac à sable"
 }

@@ -1,5 +1,3 @@
-/// <reference types="cypress" />
-
 import { Environment } from './environment';
 import { Instance } from './instance';
 import { RmqMessage } from './rmq-message';

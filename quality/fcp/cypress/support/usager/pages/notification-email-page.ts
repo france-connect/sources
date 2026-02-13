@@ -30,7 +30,7 @@ export default class UsagerNotificationConnection {
         updateMessage,
         `No emails sent to '${userEmail}' concerning an usager connection`,
       ).to.exist;
-      cy.maildevVisitMessageById(updateMessage.id);
+      MaildevHelper.visitMessageById(updateMessage.id);
     });
   }
 

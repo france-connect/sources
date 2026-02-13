@@ -10,6 +10,7 @@ describe('useServiceProvider', () => {
   const dataMock = {
     datapassRequestId: 'ABCDEF',
     datapassScopes: ['openid', 'email'],
+    fcScopes: ['openid', 'email'],
     id: '123456',
     name: 'Service Provider Name',
     organizationName: 'Organization Name',
@@ -38,6 +39,7 @@ describe('useServiceProvider', () => {
     expect(result.current).toStrictEqual({
       datapassRequestId: 'ABCDEF',
       datapassScopes: ['openid', 'email'],
+      fcScopes: ['openid', 'email'],
       habilitationLink: 'https://acme.com/demande/ABCDEF',
       id: '123456',
       name: 'Service Provider Name',

@@ -96,4 +96,7 @@ export class OidcClientConfig {
     { each: true },
   )
   readonly additionalRedirectUris?: string[];
+
+  @IsBoolean()
+  readonly disableClientIdInEndSessionUrl: boolean;
 }

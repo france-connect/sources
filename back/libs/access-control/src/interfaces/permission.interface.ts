@@ -1,9 +1,7 @@
 import { uuid } from '@fc/common';
 
-import { EntityType, PermissionsType } from '../enums';
-
-export interface PermissionInterface {
+export interface PermissionInterface<EntityType, PermissionType> {
   readonly entityId: uuid | null;
   readonly entity: EntityType | null;
-  readonly permissionType: PermissionsType;
+  readonly permissionType: PermissionType;
 }

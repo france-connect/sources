@@ -10,6 +10,7 @@ import { OidcAcrConfig } from '@fc/oidc-acr';
 import { OidcClientConfig } from '@fc/oidc-client';
 import { PostgresConfig } from '@fc/postgres';
 import { RedisConfig } from '@fc/redis';
+import { ScopesConfig } from '@fc/scopes';
 import { SessionConfig } from '@fc/session';
 import { WebhooksConfig } from '@fc/webhooks';
 
@@ -51,6 +52,11 @@ export class PartnersConfig {
   @ValidateNested()
   @Type(() => RedisConfig)
   readonly Redis: RedisConfig;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => ScopesConfig)
+  readonly Scopes: ScopesConfig;
 
   @IsObject()
   @ValidateNested()

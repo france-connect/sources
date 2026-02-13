@@ -3,10 +3,8 @@ import { Reflector } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import {
-  EntityType,
   PermissionInterface,
   PermissionsRequestInformationsInterface,
-  PermissionsType,
   RequirePermissionDecoratorInterface,
   UnknownPermissionException,
 } from '@fc/access-control';
@@ -15,6 +13,7 @@ import { SessionService } from '@fc/session';
 
 import { getSessionServiceMock } from '@mocks/session';
 
+import { AccessControlEntity, AccessControlPermission } from '../enums';
 import { AppPermissionsHandler } from './app-permissions.handler';
 
 describe('AppPermissionsHandler', () => {
@@ -48,21 +47,30 @@ describe('AppPermissionsHandler', () => {
     const contextMock = {} as ExecutionContext;
     const entityIdMock = Symbol('entityId') as unknown as uuid;
 
-    const permissionMock: RequirePermissionDecoratorInterface = {
-      entity: EntityType.SERVICE_PROVIDER,
-      permissionType: PermissionsType.VIEW,
+    const permissionMock: RequirePermissionDecoratorInterface<
+      AccessControlEntity,
+      AccessControlPermission
+    > = {
+      entity: AccessControlEntity.SERVICE_PROVIDER,
+      permissionType: AccessControlPermission.VIEW,
       entityIdLocation: { src: 'params', key: 'instanceId' },
     };
 
-    const userPermissionsMock: PermissionInterface[] = [
+    const userPermissionsMock: PermissionInterface<
+      AccessControlEntity,
+      AccessControlPermission
+    >[] = [
       {
-        permissionType: PermissionsType.VIEW,
-        entity: EntityType.SERVICE_PROVIDER,
+        permissionType: AccessControlPermission.VIEW,
+        entity: AccessControlEntity.SERVICE_PROVIDER,
         entityId: 'entityIdValue',
       },
     ];
 
-    const infoMock: PermissionsRequestInformationsInterface = {
+    const infoMock: PermissionsRequestInformationsInterface<
+      AccessControlEntity,
+      AccessControlPermission
+    > = {
       entityId: entityIdMock,
       userPermissions: userPermissionsMock,
     };
@@ -82,7 +90,10 @@ describe('AppPermissionsHandler', () => {
       const invalidPermission = {
         ...permissionMock,
         permissionType: 'INVALID',
-      } as unknown as RequirePermissionDecoratorInterface;
+      } as unknown as RequirePermissionDecoratorInterface<
+        AccessControlEntity,
+        AccessControlPermission
+      >;
 
       // Then
       expect(() =>

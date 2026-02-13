@@ -8,4 +8,10 @@ export interface ServiceProviderInterface {
   datapassScopes: string[];
   createdAt: ISODate;
   updatedAt: ISODate;
+  fcScopes: string[];
 }
+
+export type ServiceProviderItemInterface = Pick<
+  ServiceProviderInterface,
+  'id' | 'name' | 'organizationName' | 'datapassRequestId' | 'createdAt' | 'updatedAt'
+>;

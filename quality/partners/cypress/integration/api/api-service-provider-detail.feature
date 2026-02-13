@@ -11,10 +11,10 @@ Fonctionnalité: API - Service Provider détail
     Et l'entête de la réponse a une propriété "content-type" contenant "application/json"
     Et le corps de la réponse a une propriété "type" égale à "SERVICE_PROVIDER"
     Et le corps de la réponse a une propriété "payload"
-    Et le corps de la réponse a une propriété "payload.id"
-    Et le corps de la réponse a une propriété "payload.name"
-    Et le corps de la réponse a une propriété "payload.organizationName"
-    Et le corps de la réponse a une propriété "payload.datapassRequestId"
+    Et le corps de la réponse a une propriété "payload.id" égale à "25c4e41c-a97d-4bc9-8e05-e353c91eaef5"
+    Et le corps de la réponse a une propriété "payload.name" égale à "Service Provider 2"
+    Et le corps de la réponse a une propriété "payload.organizationName" égale à "Ministère de l'Intérieur"
+    Et le corps de la réponse a une propriété "payload.datapassRequestId" égale à "13245"
     Et le corps de la réponse a une propriété "payload.datapassScopes"
     Et le corps de la réponse a une propriété "payload.datapassScopes[0]" égale à "Identifiant technique"
     Et le corps de la réponse a une propriété "payload.datapassScopes[1]" égale à "Prénoms"
@@ -26,10 +26,24 @@ Fonctionnalité: API - Service Provider détail
     Et le corps de la réponse a une propriété "payload.datapassScopes[7]" égale à "Pays de naissance"
     Et le corps de la réponse a une propriété "payload.datapassScopes[8]" égale à "Nom d'usage"
     Et le corps de la réponse a une propriété "payload.datapassScopes" avec 9 éléments
+    Et le corps de la réponse a une propriété "payload.fcScopes"
+    Et le corps de la réponse a une propriété "payload.fcScopes[0]" égale à "profile"
+    Et le corps de la réponse a une propriété "payload.fcScopes[1]" égale à "birth"
+    Et le corps de la réponse a une propriété "payload.fcScopes[2]" égale à "identite_pivot"
+    Et le corps de la réponse a une propriété "payload.fcScopes[3]" égale à "openid"
+    Et le corps de la réponse a une propriété "payload.fcScopes[4]" égale à "gender"
+    Et le corps de la réponse a une propriété "payload.fcScopes[5]" égale à "birthdate"
+    Et le corps de la réponse a une propriété "payload.fcScopes[6]" égale à "birthcountry"
+    Et le corps de la réponse a une propriété "payload.fcScopes[7]" égale à "birthplace"
+    Et le corps de la réponse a une propriété "payload.fcScopes[8]" égale à "given_name"
+    Et le corps de la réponse a une propriété "payload.fcScopes[9]" égale à "family_name"
+    Et le corps de la réponse a une propriété "payload.fcScopes[10]" égale à "email"
+    Et le corps de la réponse a une propriété "payload.fcScopes[11]" égale à "preferred_username"
+    Et le corps de la réponse a une propriété "payload.fcScopes" avec 12 éléments
     Et le corps de la réponse a une propriété "payload.createdAt"
     Et le corps de la réponse a une propriété "payload.updatedAt"
     Et le corps de la réponse a 2 propriétés
-    Et le corps de la réponse a une propriété "payload" avec 7 attributs
+    Et le corps de la réponse a une propriété "payload" avec 8 attributs
 
   Scénario: API service-provider - erreur utilisateur non authentifié (401)
     Etant donné que je prépare une requête "service-provider-get"

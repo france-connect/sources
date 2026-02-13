@@ -17,8 +17,11 @@ import { APP_ACCESS_CONTROL_HANDLER } from './tokens';
 
 @Module({})
 export class AccessControlModule {
-  static withRolesHandler(
-    handler: Type<BasePermissionsHandlerService>,
+  static withRolesHandler<
+    EntityType extends string,
+    PermissionType extends string,
+  >(
+    handler: Type<BasePermissionsHandlerService<EntityType, PermissionType>>,
   ): DynamicModule {
     const accountRole = TypeOrmModule.forFeature([PartnersAccountPermission]);
 
@@ -28,16 +31,16 @@ export class AccessControlModule {
       exports: [
         { provide: APP_ACCESS_CONTROL_HANDLER, useClass: handler },
         AccessControlGuard,
-        AccountPermissionRepository,
+        AccountPermissionRepository<EntityType, PermissionType>,
         accountRole,
-        AccountPermissionService,
+        AccountPermissionService<EntityType, PermissionType>,
       ],
       providers: [
         { provide: APP_ACCESS_CONTROL_HANDLER, useClass: handler },
         AccessControlGuard,
         Repository<PartnersAccountPermission>,
-        AccountPermissionRepository,
-        AccountPermissionService,
+        AccountPermissionRepository<EntityType, PermissionType>,
+        AccountPermissionService<EntityType, PermissionType>,
         {
           provide: APP_INTERCEPTOR,
           useClass: AccessControlSessionInterceptor,

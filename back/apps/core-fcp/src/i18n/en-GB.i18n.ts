@@ -13,7 +13,7 @@ export const enGB: I18nTranslationsMapType = {
   'common.new_window': 'Open a new window',
 
   // Footer
-  'footer.a11y_conformity': 'Accessibility: non-compliant',
+  'footer.a11y_conformity': 'Accessibility : non-compliant',
   'footer.more_info': 'Learn more about {platform}',
   'footer.tos': 'TOS',
   'footer.faq': 'Frequently Asked Questions',

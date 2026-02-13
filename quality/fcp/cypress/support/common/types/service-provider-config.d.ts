@@ -1,5 +1,7 @@
-export interface ServiceProviderConfig
-  extends Record<string, string | string[]> {
+export interface ServiceProviderConfig extends Record<
+  string,
+  string | string[]
+> {
   name: string;
   signupId: string;
   // platform used only for fc-exploitation legacy

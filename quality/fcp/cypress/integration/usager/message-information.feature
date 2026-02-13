@@ -14,7 +14,7 @@ Fonctionnalité: Message Information
     Et que j'entre les valeurs par défaut pour mon message d'information
     Quand je valide le formulaire de création du message d'information
     Alors la confirmation de modification d'un message d'information est affichée
-    Et j'utilise le fournisseur de service "par défaut"
+    Et j'attend le rechargement déférré du cache des messages d'information
     Et je navigue sur la page fournisseur de service
     Et je clique sur le bouton FranceConnect
     Et je suis redirigé vers la page sélection du fournisseur d'identité

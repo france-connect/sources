@@ -10,9 +10,7 @@ import { SessionService } from '@fc/session';
 
 import { getSessionServiceMock } from '@mocks/session';
 
-import { EntityType, PermissionsType } from '../enums';
 import { AccountPermissionRepository } from '../services';
-import { ACCESS_CONTROL_TOKEN } from '../tokens';
 import { AccessControlSessionInterceptor } from './access-control-session.interceptor';
 
 describe('AccessControlSessionInterceptor', () => {
@@ -24,21 +22,29 @@ describe('AccessControlSessionInterceptor', () => {
     debug: jest.fn(),
   };
 
+  enum EntityType {
+    ENTITY_VALUE = 'entityValue',
+  }
+
+  enum PermissionsType {
+    PERMISSION_VALUE = 'permissionValue',
+  }
+
   const permissionsMock: PartnersAccountPermission[] = [
     {
       accountId: undefined,
       id: 'hello',
       account: undefined,
-      permissionType: PermissionsType.VIEW,
-      entity: EntityType.SERVICE_PROVIDER,
+      permissionType: PermissionsType.PERMISSION_VALUE,
+      entity: EntityType.ENTITY_VALUE,
       entityId: 'entityIdValue1',
     },
     {
       accountId: undefined,
       id: 'hello',
       account: undefined,
-      permissionType: PermissionsType.EDIT,
-      entity: EntityType.SERVICE_PROVIDER,
+      permissionType: PermissionsType.PERMISSION_VALUE,
+      entity: EntityType.ENTITY_VALUE,
       entityId: 'entityIdValue2',
     },
   ];
@@ -166,9 +172,7 @@ describe('AccessControlSessionInterceptor', () => {
     it('should add permissions to partner account session', async () => {
       // Given
       const expected = {
-        [ACCESS_CONTROL_TOKEN]: {
-          userPermissions: deepFreeze(permissionsMock),
-        },
+        permissions: deepFreeze(permissionsMock),
       };
       // When
       await interceptor.intercept(ctxMock, nextMock);

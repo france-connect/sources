@@ -24,6 +24,7 @@ sans_telephone,123,MEUNIER,MEUNIER,Hugo,male,sans_tel@test.fr,1990-12-19,75119,9
 sans_mail_sans_tel,123,DUPAIN,DUPAIN,Eva,female,,1990-12-06,75119,99100
 sans_genre,123,ARTOIS,,Dominique,,beitezeiteitou-9917@yopmail.com,1984-01-06,75119,99100
 sans_birthplace,123,SAVIGNY,,Rémi,male,coimmettawawo-7344@yopmail.com,1975-11-16,,99100
+mois_00,123,MARTIN,,Yasser,male,yasser-martin@yopmail.com,1977-00-03,75010,99100
 
 test_CORSE_2A,123,Brosse,Mario,Mario,male,mario.brosse@france.fr,1981-02-03,2A004,99100
 test_CORSE_2B,123,Brosse,Luigi,Luigi,male,luigi.brosse@france.fr,1981-02-03,2B050,99100

@@ -8,10 +8,11 @@ import { PartnersAccountPermission } from '@entities/typeorm';
 import { uuid } from '@fc/common';
 import { LoggerService } from '@fc/logger';
 
-import { EntityType, PermissionsType } from '../enums';
-
 @Injectable()
-export class AccountPermissionRepository {
+export class AccountPermissionRepository<
+  EntityType extends string,
+  PermissionType extends string,
+> {
   constructor(
     @InjectRepository(PartnersAccountPermission)
     private readonly accountPermission: Repository<PartnersAccountPermission>,
@@ -20,7 +21,7 @@ export class AccountPermissionRepository {
 
   async insert(
     accountId: uuid,
-    permissionType: PermissionsType,
+    permissionType: PermissionType,
     entity: EntityType,
     entityId: uuid,
   ): Promise<void> {

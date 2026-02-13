@@ -33,10 +33,13 @@ _add_node_app() {
 }
 
 _run_command() {
+  local app=$1
+  local command="${2:-$1}"
+  local params="${@:3}"
   task " * Run command in containers" \
-    "_do_up" "${@}"
+    "_do_up" "${app}"
 
-  _do_command "${@}"
+  _do_command "${app}" "${command}" "${params}"
 }
 
 _do_up() {

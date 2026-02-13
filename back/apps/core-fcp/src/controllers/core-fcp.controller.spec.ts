@@ -281,6 +281,24 @@ describe('CoreFcpController', () => {
     });
   });
 
+  describe('getAccessibility()', () => {
+    it('should render the accessibility view', () => {
+      // Given
+      const resMock = {
+        render: jest.fn(),
+      };
+      const renderResult = Symbol('renderResult');
+      resMock.render.mockReturnValue(renderResult);
+
+      // When
+      const result = coreController.getAccessibility(resMock);
+
+      // Then
+      expect(resMock.render).toHaveBeenCalledExactlyOnceWith('accessibility');
+      expect(result).toBe(renderResult);
+    });
+  });
+
   describe('getInteraction()', () => {
     const req = {
       fc: { interactionId: interactionIdMock },

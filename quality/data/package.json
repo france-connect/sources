@@ -1,0 +1,20 @@
+{
+  "name": "quality-data",
+  "version": "1.0.0",
+  "description": "Quality - Data",
+  "type":"module",
+  "keywords": [
+    "Data",
+    "QA",
+    "Statistics"
+  ],
+  "scripts": {
+    "prettier": "prettier --no-parallel --experimental-cli -c \"./**/*.ts\" --config-path ../.prettierrc",
+    "lint": "eslint '**/*.ts'",
+    "test": "jest --config=../jest.config.js",
+    "traces": "tsx ./log-generator/src/populate-account-traces.ts",
+    "connection:metadata": "tsx ./statistics/src/generate-connection-metadata.ts",
+    "connection:logs": "tsx ./statistics/src/generate-connection-logs.ts",
+    "stats:run": "./statistics/scripts/launch-elastic-commands.sh"
+  }
+}

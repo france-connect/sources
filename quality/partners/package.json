@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Partners - System Testing using Cypress/Cucumber",
   "private": true,
+  "type":"module",
   "keywords": [
     "Cypress",
     "QA",
@@ -19,6 +20,6 @@
     "test:snapshot": "yarn clean:snapshots:diff && cypress run --headless --config-file cypress-partners-visual.config.ts",
     "test": "yarn clean && yarn test:chrome-desktop",
     "start": "cypress open --e2e --config-file cypress-partners.config.ts",
-    "report": "ts-node ../scripts/multiple-cucumber-html-reporter"
+    "report": "tsx ../scripts/multiple-cucumber-html-reporter"
   }
 }

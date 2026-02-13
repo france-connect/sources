@@ -5,12 +5,12 @@ import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 
 import { PartnersOrganisation } from '@entities/typeorm';
 
-import {
-  EntityType,
-  PermissionInterface,
-  RelatedEntitiesHelper,
-} from '@fc/access-control';
+import { PermissionInterface, RelatedEntitiesHelper } from '@fc/access-control';
 import { LoggerService } from '@fc/logger';
+import {
+  AccessControlEntity,
+  AccessControlPermission,
+} from '@fc/partners/enums';
 import { PostgresOperationFailure } from '@fc/postgres';
 
 import { getLoggerMock } from '@mocks/logger';
@@ -29,7 +29,10 @@ describe('PartnersOrganisationService', () => {
 
   const RelatedEntitiesHelperGetMock = jest.spyOn(RelatedEntitiesHelper, 'get');
 
-  const permissionsMock = [] as PermissionInterface[];
+  const permissionsMock = [] as PermissionInterface<
+    AccessControlEntity,
+    AccessControlPermission
+  >[];
 
   const idMock = 'id';
   const organisationIds = ['org1', 'org2'];
@@ -83,7 +86,7 @@ describe('PartnersOrganisationService', () => {
       expect(RelatedEntitiesHelperGetMock).toHaveBeenCalledWith(
         permissionsMock,
         {
-          entityTypes: [EntityType.ORGANISATION],
+          entityTypes: [AccessControlEntity.ORGANISATION],
         },
       );
     });
@@ -162,7 +165,7 @@ describe('PartnersOrganisationService', () => {
       expect(RelatedEntitiesHelperGetMock).toHaveBeenCalledWith(
         permissionsMock,
         {
-          entityTypes: [EntityType.SERVICE_PROVIDER],
+          entityTypes: [AccessControlEntity.SERVICE_PROVIDER],
         },
       );
     });

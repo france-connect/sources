@@ -1,6 +1,6 @@
 import { defineConfig } from 'cypress';
 
-import pluginConfig from './cypress/plugins';
+import pluginConfig from '../plugins';
 import baseConfig from './cypress-base.config';
 
 export default defineConfig({
@@ -14,6 +14,7 @@ export default defineConfig({
   },
   env: {
     ...baseConfig.env,
+    APP_LABEL: 'Tableau de bord FC',
     // Base Configuration
     PLATFORM: 'fcp-low',
     TAGS: '@userDashboard and not @ignore',

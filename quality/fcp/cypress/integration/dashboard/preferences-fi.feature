@@ -106,6 +106,7 @@ Fonctionnalité: Préférences FI
     Et que je me déconnecte du tableau de bord usager
     Et que je crée le fournisseur d'identité "bdd-idp-fip1-future-allowed" avec la configuration "idpSignedUserinfo" sur le site d'exploitation
     Et que j'utilise le dernier fournisseur d'identité créé
+    Et que j'attend le rechargement déférré du cache des fournisseurs d'identité
     Quand je me connecte à FranceConnect
     Alors je suis connecté au fournisseur de service
 
@@ -122,6 +123,7 @@ Fonctionnalité: Préférences FI
     Et que je me déconnecte du tableau de bord usager
     Et que je crée le fournisseur d'identité "bdd-idp-fip1-future-blocked" avec la configuration "idpSignedUserinfo" sur le site d'exploitation
     Et que j'utilise le dernier fournisseur d'identité créé
+    Et que j'attend le rechargement déférré du cache des fournisseurs d'identité
     Quand je me connecte au fournisseur d'identité via FranceConnect
     Alors je suis redirigé vers la page erreur technique FranceConnect
     Et le code d'erreur FranceConnect est "Y100011"

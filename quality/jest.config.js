@@ -8,7 +8,7 @@ module.exports = {
     '^.+\\.(t|j)s$': [
       'ts-jest',
       {
-        tsconfig: '<rootDir>/tsconfig.jest.json',
+        tsconfig: '<rootDir>/tsconfig.json',
       },
     ],
   },

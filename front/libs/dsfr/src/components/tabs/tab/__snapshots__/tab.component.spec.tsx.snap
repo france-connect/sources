@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TabComponent should match the snapshot when tab is not selected 1`] = `
+<div>
+  <li
+    role="presentation"
+  >
+    <button
+      aria-controls="panel-2"
+      aria-selected="false"
+      class="fr-tabs__tab"
+      data-testid="tab-2"
+      role="tab"
+      tabindex="-1"
+      type="button"
+    >
+      Tab 2
+    </button>
+  </li>
+</div>
+`;
+
+exports[`TabComponent should match the snapshot when tab is selected 1`] = `
+<div>
+  <li
+    role="presentation"
+  >
+    <button
+      aria-controls="panel-1"
+      aria-selected="true"
+      class="fr-tabs__tab"
+      data-testid="tab-1"
+      role="tab"
+      tabindex="0"
+      type="button"
+    >
+      Tab 1
+    </button>
+  </li>
+</div>
+`;

@@ -39,6 +39,7 @@ const config: Config = {
       '<rootDir>/libs/async-local-storage/src/$1',
     '^@fc/cog(|/.*)$': '<rootDir>/libs/cog/src/$1',
     '^@fc/command-runner(|/.*)$': '<rootDir>/apps/command-runner/src/$1',
+    '^@fc/command-elastic(|/.*)$': '<rootDir>/apps/command-elastic/src/$1',
     '^@fc/common(|/.*)$': '<rootDir>/libs/common/src/$1',
     '^@fc/config(|/.*)$': '<rootDir>/libs/config/src/$1',
     '^@fc/config-abstract-adapter(|/.*)$':

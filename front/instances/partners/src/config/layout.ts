@@ -43,7 +43,7 @@ export const Layout: LayoutConfig = {
       },
       {
         external: true,
-        href: 'https://franceconnect.gouv.fr/accessibilite',
+        href: 'https://franceconnect.gouv.fr/accessibilite/',
         label: 'Accessibilité : non conforme',
       },
       {
@@ -53,12 +53,12 @@ export const Layout: LayoutConfig = {
       },
       {
         external: true,
-        href: 'https://franceconnect.gouv.fr/cgu',
+        href: 'https://franceconnect.gouv.fr/cgu/',
         label: 'Données personnelles',
       },
       {
         external: true,
-        href: 'https://franceconnect.gouv.fr/cgu',
+        href: 'https://franceconnect.gouv.fr/cgu/',
         label: 'Gestion des cookies',
       },
     ],
@@ -80,12 +80,12 @@ export const Layout: LayoutConfig = {
     },
     {
       external: true,
-      href: 'https://franceconnect.gouv.fr/licence',
+      href: 'https://franceconnect.gouv.fr/licence/',
       label: 'Licence',
     },
     {
       external: true,
-      href: 'https://franceconnect.gouv.fr/accessibilite',
+      href: 'https://franceconnect.gouv.fr/accessibilite/',
       label: 'Accessibilité',
     },
   ],

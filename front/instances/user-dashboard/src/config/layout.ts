@@ -37,11 +37,11 @@ export const Layout: LayoutConfig = {
     ],
     navigation: [
       {
-        href: 'https://franceconnect.gouv.fr/plan-site',
+        href: 'https://franceconnect.gouv.fr/plan-du-site.html',
         label: 'Plan du site',
       },
       {
-        href: 'https://franceconnect.gouv.fr/accessibilite',
+        href: '/accessibilite',
         label: 'Accessibilité : non conforme',
       },
       {
@@ -49,11 +49,11 @@ export const Layout: LayoutConfig = {
         label: 'Mentions légales',
       },
       {
-        href: 'https://franceconnect.gouv.fr/cgu',
+        href: 'https://franceconnect.gouv.fr/cgu/',
         label: 'Données personnelles',
       },
       {
-        href: 'https://franceconnect.gouv.fr/cgu',
+        href: 'https://franceconnect.gouv.fr/cgu/',
         label: 'Gestion des cookies',
       },
     ],

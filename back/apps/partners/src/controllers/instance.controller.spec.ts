@@ -5,8 +5,6 @@ import { EnvironmentEnum, PublicationStatusEnum } from '@entities/typeorm';
 import {
   AccessControlGuard,
   AccountPermissionService,
-  EntityType,
-  PermissionsType,
 } from '@fc/access-control';
 import { CreatedVia } from '@fc/csmr-config-client';
 import { CsrfTokenGuard } from '@fc/csrf';
@@ -22,6 +20,7 @@ import { TypeormService } from '@fc/typeorm';
 import { getSessionServiceMock } from '@mocks/session';
 import { getQueryRunnerMock, getTypeormServiceMock } from '@mocks/typeorm';
 
+import { AccessControlEntity, AccessControlPermission } from '../enums';
 import {
   PartnerPublicationService,
   PartnersInstanceVersionFormService,
@@ -105,7 +104,7 @@ describe('InstanceController', () => {
       providers: [
         PartnersServiceProviderInstanceService,
         PartnersServiceProviderInstanceVersionService,
-        AccountPermissionService,
+        AccountPermissionService<AccessControlEntity, AccessControlPermission>,
         PartnerPublicationService,
         PartnersInstanceVersionFormService,
         TypeormService,
@@ -115,7 +114,9 @@ describe('InstanceController', () => {
       .useValue(instanceMock)
       .overrideProvider(PartnersServiceProviderInstanceVersionService)
       .useValue(versionMock)
-      .overrideProvider(AccountPermissionService)
+      .overrideProvider(
+        AccountPermissionService<AccessControlEntity, AccessControlPermission>,
+      )
       .useValue(accountPermissionServiceMock)
       .overrideProvider(PartnersInstanceVersionFormService)
       .useValue(partnersServiceMock)
@@ -310,8 +311,8 @@ describe('InstanceController', () => {
       ).toHaveBeenCalledExactlyOnceWith(queryRunnerMock, {
         accountId: accountId,
         entityId: instanceIdMock,
-        entity: EntityType.SP_INSTANCE,
-        permissionType: PermissionsType.VIEW,
+        entity: AccessControlEntity.SP_INSTANCE,
+        permissionType: AccessControlPermission.VIEW,
       });
     });
   });

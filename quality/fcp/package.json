@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "FCP - System Testing using Cypress/Cucumber",
   "private": true,
+  "type":"module",
   "keywords": [
     "Cypress",
     "QA",
@@ -36,7 +37,10 @@
     "start:low": "cypress open --e2e --config-file cypress-fcp-low.config.ts",
     "start:ud": "cypress open --e2e --config-file cypress-ud.config.ts",
     "start:eidas": "cypress open --e2e --config-file cypress-eidas-bridge.config.ts",
-    "report": "ts-node ../scripts/multiple-cucumber-html-reporter",
-    "traces": "ts-node ./data/log-generator/src/populate-account-traces.ts"
+    "report": "tsx ../scripts/multiple-cucumber-html-reporter",
+    "traces": "tsx ../data/log-generator/src/populate-account-traces.ts",
+    "connection:metadata": "tsx ../data/statistics/src/generate-connection-metadata.ts",
+    "connection:logs": "tsx ../data/statistics/src/generate-connection-logs.ts",
+    "stats:run": "../data/statistics/scripts/launch-elastic-commands.sh"
   }
 }

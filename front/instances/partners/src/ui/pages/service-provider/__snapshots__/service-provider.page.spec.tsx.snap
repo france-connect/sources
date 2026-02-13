@@ -13,6 +13,7 @@ exports[`ServiceProviderPage should match snapshot 1`] = `
       </h1>
       <p
         class="is-uppercase"
+        data-testid="service-provider-details-page-organization-name"
       >
         any-organizationName-mock
       </p>
@@ -36,27 +37,23 @@ exports[`ServiceProviderPage should match snapshot 1`] = `
       <h2
         class="fr-mt-5w"
       >
-        Partners.serviceProviderPage.authorizedData.title
+        Partners.serviceProviderPage.scopeSection.title
       </h2>
       <hr />
       <p>
-        Partners.serviceProviderPage.authorizedData.description
+        Partners.serviceProviderPage.scopeSection.description
+         
+        <span
+          data-mockid="LinkComponent"
+        />
       </p>
-      <ul
-        class="fr-mb-3w"
+      <div
+        data-mockid="TabsGroupComponent"
+      />
+      <p
+        class="fr-mt-5w"
       >
-        <li>
-          any-scope-mock1
-        </li>
-        <li>
-          any-scope-mock2
-        </li>
-        <li>
-          any-scope-mock3
-        </li>
-      </ul>
-      <p>
-        Partners.serviceProviderPage.mention
+        Partners.serviceProviderPage.datapassDocumentation.introduction
          
         <span
           data-mockid="LinkComponent"

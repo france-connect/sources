@@ -1,3 +1,4 @@
+export * from './error-code.enum';
 export * from './exception-key.enum';
 export * from './mock-rnipp-routes.enum';
 export * from './rnipp-code.enum';

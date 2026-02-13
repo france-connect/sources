@@ -25,4 +25,5 @@ export interface TracksV2FieldsInterface {
   interactionId: string;
   scope?: string;
   accountId: string;
+  spType?: string;
 }

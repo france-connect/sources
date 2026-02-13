@@ -5,11 +5,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { PartnersServiceProviderInstance } from '@entities/typeorm';
 
+import { PermissionInterface, RelatedEntitiesHelper } from '@fc/access-control';
 import {
-  EntityType,
-  PermissionInterface,
-  RelatedEntitiesHelper,
-} from '@fc/access-control';
+  AccessControlEntity,
+  AccessControlPermission,
+} from '@fc/partners/enums';
 import { getInsertedEntity } from '@fc/typeorm';
 
 @Injectable()
@@ -20,10 +20,13 @@ export class PartnersServiceProviderInstanceService {
   ) {}
 
   async getAllowedInstances(
-    permissions: PermissionInterface[],
+    permissions: PermissionInterface<
+      AccessControlEntity,
+      AccessControlPermission
+    >[],
   ): Promise<PartnersServiceProviderInstance[]> {
     const relatedEntitiesOptions = {
-      entityTypes: [EntityType.SP_INSTANCE],
+      entityTypes: [AccessControlEntity.SP_INSTANCE],
     };
 
     const instanceIds = RelatedEntitiesHelper.get(

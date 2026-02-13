@@ -1,6 +1,7 @@
 export * from './accessibility-helper';
 export * from './basic-authorization-helper';
 export * from './cookie-helper';
+export * from './elasticsearch-helper';
 export * from './idp-provider';
 export * from './intercept-helper';
 export * from './log-helper';

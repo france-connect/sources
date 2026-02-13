@@ -3,11 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { PartnersServiceProvider } from '@entities/typeorm';
 
-import {
-  AccountPermissionService,
-  EntityType,
-  PermissionsType,
-} from '@fc/access-control';
+import { AccountPermissionService } from '@fc/access-control';
 import { validateDto } from '@fc/common';
 import { CryptographyService } from '@fc/cryptography';
 import { DatapassEvents, SimplifiedDatapassPayload } from '@fc/datapass';
@@ -22,6 +18,7 @@ import { TypeormService } from '@fc/typeorm';
 import { getLoggerMock } from '@mocks/logger';
 import { getQueryRunnerMock, getTypeormServiceMock } from '@mocks/typeorm';
 
+import { AccessControlEntity, AccessControlPermission } from '../enums';
 import { ServiceProviderCreationResultInterface } from '../interfaces';
 import { PartnersDatapassService } from './partners-datapass.service';
 
@@ -77,7 +74,7 @@ describe('PartnersDatapassService', () => {
     name: 'Test Service Provider',
     organizationName: 'Test Organization',
     datapassRequestId: '12345',
-    authorizedScopes: ['openid', 'given_name', 'family_name', 'email'],
+    datapassScopes: ['openid', 'given_name', 'family_name', 'email'],
     platform: null,
     organisation: null,
     createdAt: new Date(),
@@ -112,7 +109,10 @@ describe('PartnersDatapassService', () => {
           useValue: serviceProviderServiceMock,
         },
         {
-          provide: AccountPermissionService,
+          provide: AccountPermissionService<
+            AccessControlEntity,
+            AccessControlPermission
+          >,
           useValue: accessControlServiceMock,
         },
         {
@@ -375,7 +375,7 @@ describe('PartnersDatapassService', () => {
           name: simplifiedDatapassPayloadMock.datapassName,
           organizationName: simplifiedDatapassPayloadMock.organizationName,
           datapassRequestId: simplifiedDatapassPayloadMock.datapassRequestId,
-          authorizedScopes: simplifiedDatapassPayloadMock.scopes,
+          datapassScopes: simplifiedDatapassPayloadMock.scopes,
         },
       );
     });
@@ -554,8 +554,8 @@ describe('PartnersDatapassService', () => {
         accessControlServiceMock.addPermissionTransactional,
       ).toHaveBeenCalledWith(queryRunnerMock, {
         accountId,
-        permissionType: PermissionsType.LIST,
-        entity: EntityType.SERVICE_PROVIDER,
+        permissionType: AccessControlPermission.LIST,
+        entity: AccessControlEntity.SERVICE_PROVIDER,
       });
     });
 
@@ -572,8 +572,8 @@ describe('PartnersDatapassService', () => {
         accessControlServiceMock.addPermissionTransactional,
       ).toHaveBeenCalledWith(queryRunnerMock, {
         accountId,
-        permissionType: PermissionsType.VIEW,
-        entity: EntityType.SERVICE_PROVIDER,
+        permissionType: AccessControlPermission.VIEW,
+        entity: AccessControlEntity.SERVICE_PROVIDER,
         entityId: serviceProviderId,
       });
     });
@@ -591,8 +591,8 @@ describe('PartnersDatapassService', () => {
         accessControlServiceMock.addPermissionTransactional,
       ).toHaveBeenCalledWith(queryRunnerMock, {
         accountId,
-        permissionType: PermissionsType.LIST,
-        entity: EntityType.SP_INSTANCE,
+        permissionType: AccessControlPermission.LIST,
+        entity: AccessControlEntity.SP_INSTANCE,
       });
     });
 

@@ -68,6 +68,12 @@ export class CoreFcpController {
     res.redirect(301, defaultRedirectUri);
   }
 
+  @Get(CoreRoutes.ACCESSIBILITY)
+  @Header('cache-control', 'no-store')
+  getAccessibility(@Res() res) {
+    return res.render('accessibility');
+  }
+
   // More than 4 parameters authorized for dependency injection
   // eslint-disable-next-line max-params
   @Get(CoreRoutes.INTERACTION)

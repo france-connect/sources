@@ -24,6 +24,8 @@
       "@fc/cog/*": ["libs/cog/src/*"],
       "@fc/command-runner": ["apps/command-runner/src"],
       "@fc/command-runner/*": ["apps/command-runner/src/*"],
+      "@fc/command-elastic": ["apps/command-elastic/src"],
+      "@fc/command-elastic/*": ["apps/command-elastic/src/*"],
       "@fc/common": ["libs/common/src"],
       "@fc/common/*": ["libs/common/src/*"],
       "@fc/config": ["libs/config/src"],

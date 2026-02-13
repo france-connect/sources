@@ -18,4 +18,5 @@ export default {
   fapi: env.boolean('FAPI'),
   postLogoutRedirectUri: env.string('POST_LOGOUT_REDIRECT_URI'),
   redirectUri: env.string('REDIRECT_URI'),
+  disableClientIdInEndSessionUrl: false,
 } as OidcClientConfig;

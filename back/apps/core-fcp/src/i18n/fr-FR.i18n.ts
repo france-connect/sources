@@ -68,7 +68,7 @@ export const frFR: I18nTranslationsMapType = {
   'common.close': 'Fermer',
   'common.new_window': 'Ouvre une nouvelle fenêtre',
 
-  'footer.a11y_conformity': 'Accessibilité : non conforme',
+  'footer.a11y_conformity': 'Accessibilité : non conforme',
   'footer.more_info': 'En savoir plus sur {platform}',
   'footer.tos': 'CGU',
   'footer.faq': 'Foire aux questions',

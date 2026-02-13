@@ -86,9 +86,8 @@ Fonctionnalité: Connexion Usager - session fcp-high
     Et la valeur du cookie "fc_session_id" est différente
     Et je mémorise la valeur du cookie "fc_session_id"
     # Evènement FC_AUTHORIZE_INITIATED: cinématique SSO initialisée avec nouveau sessionId
-    Et l'événement "FC_AUTHORIZE_INITIATED" est journalisé avec "accountId" "non null" et "isSso" "false"
+    Et l'événement "FC_AUTHORIZE_INITIATED" est journalisé avec "accountId" "null" et "isSso" "false"
     Et la valeur "browsingSessionId" est différente dans l'événement "FC_AUTHORIZE_INITIATED"
-    Et la valeur "accountId" est différente dans l'événement "FC_AUTHORIZE_INITIATED"
     Et la valeur "sessionId" est différente dans l'événement "FC_AUTHORIZE_INITIATED"
     Et je mémorise la valeur "sessionId" de l'événement "FC_AUTHORIZE_INITIATED"
     Et je continue sur le fournisseur de service

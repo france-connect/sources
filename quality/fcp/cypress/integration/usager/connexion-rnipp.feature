@@ -91,6 +91,7 @@ Fonctionnalité: Connexion Usager - RNIPP
       | sans_mail        | sans adresse e-mail                    |
       | test_INVALID_COG | avec lieu de naissance non valide      |
       | sans_birthplace  | né en France et sans lieu de naissance |
+      | mois_00          | avec date de naissance invalide        |
 
   Plan du Scénario: Connexion avec erreur RNIPP <errorCode> <scenario>
     Etant donné que je navigue sur la page fournisseur de service

@@ -1,6 +1,6 @@
 import { defineConfig } from 'cypress';
 
-import pluginConfig from './cypress/plugins';
+import pluginConfig from '../plugins';
 import baseConfig from './cypress-base.config';
 
 export default defineConfig({
@@ -15,6 +15,7 @@ export default defineConfig({
   },
   env: {
     ...baseConfig.env,
+    APP_LABEL: 'FranceConnect',
     // Base Configuration
     PLATFORM: 'fcp-low',
     TAGS: '@fcpLow and not @ignoreLow',

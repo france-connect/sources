@@ -5,12 +5,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { PartnersServiceProvider } from '@entities/typeorm';
 
-import {
-  EntityType,
-  PermissionInterface,
-  RelatedEntitiesHelper,
-} from '@fc/access-control';
+import { PermissionInterface, RelatedEntitiesHelper } from '@fc/access-control';
 import { LoggerService } from '@fc/logger';
+import {
+  AccessControlEntity,
+  AccessControlPermission,
+} from '@fc/partners/enums';
 
 import { PartnersServiceProviderNotFoundException } from '../exceptions';
 
@@ -23,10 +23,13 @@ export class PartnersServiceProviderService {
   ) {}
 
   async getAllowedServiceProviders(
-    permissions: PermissionInterface[],
+    permissions: PermissionInterface<
+      AccessControlEntity,
+      AccessControlPermission
+    >[],
   ): Promise<PartnersServiceProvider[]> {
     const relatedEntitiesOptions = {
-      entityTypes: [EntityType.SERVICE_PROVIDER],
+      entityTypes: [AccessControlEntity.SERVICE_PROVIDER],
     };
     const serviceProviderIds = RelatedEntitiesHelper.get(
       permissions,
@@ -75,7 +78,7 @@ export class PartnersServiceProviderService {
       .into(PartnersServiceProvider)
       .values(data)
       .orUpdate(
-        ['name', 'organizationName', 'authorizedScopes'],
+        ['name', 'organizationName', 'datapassScopes'],
         ['datapassRequestId'],
       )
       .returning('*')

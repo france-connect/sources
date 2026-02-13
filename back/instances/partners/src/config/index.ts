@@ -11,6 +11,7 @@ import OidcAcr from './oidc-acr';
 import OidcClient from './oidc-client';
 import Postgres from './postgres';
 import Redis from './redis';
+import Scopes from './scopes';
 import Session from './session';
 import WebhooksDatapass from './webhooks-datapass';
 import WebhooksInvitation from './webhooks-invitation';
@@ -24,6 +25,7 @@ export default {
   OidcClient,
   Postgres,
   Redis,
+  Scopes,
   Session,
   I18n,
   ConfigSandboxLowMicroService,

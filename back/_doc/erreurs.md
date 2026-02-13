@@ -342,7 +342,22 @@
 |---|---|---|---|
 | [<b>640001</b>](../libs/redis/src/exceptions/redis-error-event.exception.ts) |  |  | <b>Classe :</b> [RedisErrorEventException](../libs/redis/src/exceptions/redis-error-event.exception.ts) <br /><b>Code HTTP :</b> 500 <br /><b>error :</b>  <br /> <b>error_description :</b>  |
 
+## @fc/elasticsearch
+| Code d'erreur | Description | Message utilisateur | Infos techniques |
+|---|---|---|---|
+| [<b>650001</b>](../libs/elasticsearch/src/exceptions/elastic-control-invalid-request.exception.ts) | La requête au serveur elastic a échoué |  | <b>Classe :</b> [ElasticControlInvalidRequestException](../libs/elasticsearch/src/exceptions/elastic-control-invalid-request.exception.ts) <br /><b>Code HTTP :</b> 500 <br /><b>error :</b> server_error <br /> <b>error_description :</b> The Elasticsearch request failed due to a technical error |
+
+## @fc/command-elastic
+| Code d'erreur | Description | Message utilisateur | Infos techniques |
+|---|---|---|---|
+| [<b>660001</b>](../apps/command-elastic/src/exceptions/command-elastic-invalid-options.exception.ts) | Les options passées à la commande ne passent pas la validation DTO |  | <b>Classe :</b> [CommandElasticInvalidOptionsException](../apps/command-elastic/src/exceptions/command-elastic-invalid-options.exception.ts) <br /><b>Code HTTP :</b> 500 <br /><b>error :</b> server_error <br /> <b>error_description :</b> Command Elasticsearch options validation failed |
+
 ## @fc/identity-provider-adapter-env
 | Code d'erreur | Description | Message utilisateur | Infos techniques |
 |---|---|---|---|
-| [<b>650001</b>](../libs/identity-provider-adapter-env/src/exceptions/identity-provider-adapter-env-decrypt-client-secret-failed.exception.ts) | Échec du déchiffrement du client_secret d&#39;un fournisseur d&#39;identité. Vérifier la configuration du chiffrement et la validité du client_secret. Si le problème persiste, contacter le support N3 |  | <b>Classe :</b> [IdentityProviderAdapterEnvDecryptClientSecretFailedException](../libs/identity-provider-adapter-env/src/exceptions/identity-provider-adapter-env-decrypt-client-secret-failed.exception.ts) <br /><b>Code HTTP :</b> 500 <br /><b>error :</b> server_error <br /> <b>error_description :</b> authentication aborted due to a technical error on the authorization server |
+| [<b>670001</b>](../libs/identity-provider-adapter-env/src/exceptions/identity-provider-adapter-env-decrypt-client-secret-failed.exception.ts) | Échec du déchiffrement du client_secret d&#39;un fournisseur d&#39;identité. Vérifier la configuration du chiffrement et la validité du client_secret. Si le problème persiste, contacter le support N3 |  | <b>Classe :</b> [IdentityProviderAdapterEnvDecryptClientSecretFailedException](../libs/identity-provider-adapter-env/src/exceptions/identity-provider-adapter-env-decrypt-client-secret-failed.exception.ts) <br /><b>Code HTTP :</b> 500 <br /><b>error :</b> server_error <br /> <b>error_description :</b> authentication aborted due to a technical error on the authorization server |
+
+## @fc/mock-rnipp
+| Code d'erreur | Description | Message utilisateur | Infos techniques |
+|---|---|---|---|
+| [<b>680001</b>](../apps/mock-rnipp/src/exceptions/mock-rnipp-invalid-date-format.exception.ts) | Invalid date format provided. |  | <b>Classe :</b> [MockRnippInvalidDateFormatException](../apps/mock-rnipp/src/exceptions/mock-rnipp-invalid-date-format.exception.ts) <br /><b>Code HTTP :</b> 400 <br /><b>error :</b> invalid_request <br /> <b>error_description :</b> The date format is invalid. |

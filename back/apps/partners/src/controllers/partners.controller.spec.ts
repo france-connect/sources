@@ -28,7 +28,7 @@ describe('PartnersController', () => {
       sub: 'identityMock.sub value',
       id: 'id mock',
     },
-    accessControl: [],
+    permissions: [],
   };
 
   const response = {
@@ -38,7 +38,7 @@ describe('PartnersController', () => {
     siret: 'siret',
     sub: 'identityMock.sub value',
     accountId: 'id mock',
-    accessControl: [],
+    permissions: [],
     id: undefined,
   };
 

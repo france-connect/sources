@@ -2,12 +2,14 @@
  * Generate a HTML report
  * @link https://github.com/WasiqB/multiple-cucumber-html-reporter
  */
+import * as fs from 'fs';
+
 import * as reporter from 'multiple-cucumber-html-reporter';
 
-const gitLabProjectUrl =
+const GITLAB_PROJECT_URL =
   'https://gitlab.dev-franceconnect.fr/france-connect/fc';
-const gitLabJobUrl = `${gitLabProjectUrl}/-/jobs/`;
-const gitLabMergeRequestUrl = `${gitLabProjectUrl}/-/merge_requests/`;
+const GITLAB_JOB_URL = `${GITLAB_PROJECT_URL}/-/jobs/`;
+const GITLAB_MERGE_REQUEST_URL = `${GITLAB_PROJECT_URL}/-/merge_requests/`;
 
 // Fetch Arguments
 const [
@@ -17,63 +19,42 @@ const [
   reportPath = `${projectDir}/cypress/reports/cucumber/html-report`,
 ] = process.argv;
 
-// Fetch Test Run Context
+// Retrieve test metadata
 
-const platformName = {
-  'fcp-high': 'FranceConnect+',
-  'fcp-legacy': 'User-Dashboard FC Legacy',
-  'fcp-low': 'FranceConnect',
-  partners: 'Espace Partenaires',
+const metadataPath = `${projectDir}/cypress/reports/run-metadata.json`;
+const { browser, ci, custom, platform } = JSON.parse(
+  fs.readFileSync(metadataPath, 'utf8'),
+);
+
+const metadata = {
+  browser,
+  device: custom.runner,
+  platform,
 };
-
-const platform = platformName[process.env.CYPRESS_PLATFORM] || 'N/A';
-const testEnv = process.env.CYPRESS_TEST_ENV || 'docker';
-const gitBranch = process.env.CI_COMMIT_REF_NAME || '';
-const gitCommit = process.env.CI_COMMIT_SHORT_SHA || '';
-const gitMergeRequest = process.env.CI_OPEN_MERGE_REQUESTS || 'N/A';
-const gitBuild = process.env.CI_JOB_ID || 'local';
-const device = gitBuild === 'local' ? 'Docker Local' : 'Docker GitLab';
 
 // Add metadata
 
-const reportName = `${platform} ${gitBranch} (${testEnv})`;
+const reportName = `${custom.app} ${ci.branch} (${custom.testEnv})`;
 
-const gitMergeRequestId = gitMergeRequest.split('!').pop();
-const gitMergeRequestLink =
-  gitMergeRequest === 'N/A'
-    ? 'N/A'
-    : `<a href="${gitLabMergeRequestUrl}${gitMergeRequestId}">${gitMergeRequest}</a>`;
-const gitBuildLink =
-  gitBuild === 'local'
-    ? gitBuild
-    : `<a href="${gitLabJobUrl}${gitBuild}">${gitBuild}</a>`;
+const gitMergeRequestId = ci.mergeRequest.split('!').pop();
+const gitMergeRequestLink = ci.mergeRequest
+  ? `<a href="${GITLAB_MERGE_REQUEST_URL}${gitMergeRequestId}">${ci.mergeRequest}</a>`
+  : 'N/A';
+const gitBuildLink = ci.buildId
+  ? `<a href="${GITLAB_JOB_URL}${ci.buildId}">${ci.buildId}</a>`
+  : 'local';
+
 const customData = {
   data: [
-    { label: 'Project', value: platform },
-    { label: 'Environment', value: testEnv },
-    { label: 'Branch', value: gitBranch },
-    { label: 'Commit', value: gitCommit },
+    { label: 'Application', value: custom.app },
+    { label: 'Environment', value: custom.testEnv },
+    { label: 'Tag', value: ci.tag },
+    { label: 'Branch', value: ci.branch },
+    { label: 'Commit', value: ci.commit },
     { label: 'Merge Request', value: gitMergeRequestLink },
     { label: 'Build', value: gitBuildLink },
   ],
   title: 'Run info',
-};
-
-/**
- * @todo Make browser metadata dynamic
- * @author: Nicolas
- * @date: 11/06/2021
- */
-const metadata = {
-  browser: {
-    name: 'chrome',
-    version: '132',
-  },
-  device,
-  platform: {
-    name: 'linux',
-    version: 'Debian 12',
-  },
 };
 
 // Report options

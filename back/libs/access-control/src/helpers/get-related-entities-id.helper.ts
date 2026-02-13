@@ -2,15 +2,14 @@ import { NO_ENTITY_ID } from '@entities/typeorm';
 
 import { uuid } from '@fc/common';
 
-import { EntityType, PermissionsType } from '../enums';
 import {
   PermissionInterface,
   RelatedEntitiesHelperGetOptionsInterface,
 } from '../interfaces';
 
 export class RelatedEntitiesHelper {
-  static get(
-    permissions: PermissionInterface[],
+  static get<EntityType, PermissionType>(
+    permissions: PermissionInterface<EntityType, PermissionType>[],
     options: RelatedEntitiesHelperGetOptionsInterface,
   ): uuid[] {
     const ids = permissions
@@ -21,18 +20,20 @@ export class RelatedEntitiesHelper {
     return ids;
   }
 
-  static permissionFilter(
+  static permissionFilter<EntityType, PermissionType>(
     options: RelatedEntitiesHelperGetOptionsInterface,
-  ): (permission: PermissionInterface) => boolean {
+  ): (permission: PermissionInterface<EntityType, PermissionType>) => boolean {
     const { entityTypes, permissionTypes } = options;
 
-    return (permission: PermissionInterface): boolean => {
+    return (
+      permission: PermissionInterface<EntityType, PermissionType>,
+    ): boolean => {
       const matchEntity = RelatedEntitiesHelper.matchesOptions(
-        permission.entity,
+        permission.entity as string,
         entityTypes,
       );
       const matchPermission = RelatedEntitiesHelper.matchesOptions(
-        permission.permissionType,
+        permission.permissionType as string,
         permissionTypes,
       );
 
@@ -40,14 +41,14 @@ export class RelatedEntitiesHelper {
     };
   }
 
-  static matchesOptions(
-    option: PermissionsType | EntityType,
+  static matchesOptions<EntityType, PermissionType>(
+    option: EntityType | PermissionType,
     optionsValue: string[],
   ): boolean {
     if (!optionsValue) {
       return true;
     }
 
-    return optionsValue.includes(option);
+    return optionsValue.includes(option as string);
   }
 }

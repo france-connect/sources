@@ -250,13 +250,19 @@ export class OidcClientUtilsService {
      * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1449
      *
      */
+    const { disableClientIdInEndSessionUrl } =
+      await this.oidcClientConfig.get();
 
-    const temporaryWorkAroundUrl = endSessionUrl.replace(
-      /(&|\?)client_id=[^&]+/,
-      '',
-    );
+    if (disableClientIdInEndSessionUrl) {
+      const temporaryWorkAroundUrl = endSessionUrl.replace(
+        /(&|\?)client_id=[^&]+/,
+        '',
+      );
 
-    return temporaryWorkAroundUrl;
+      return temporaryWorkAroundUrl;
+    }
+
+    return endSessionUrl;
   }
 
   async hasEndSessionUrl(idpId: string): Promise<boolean> {

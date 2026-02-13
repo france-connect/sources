@@ -26,4 +26,7 @@ export default {
   fapi: env.boolean('FAPI'),
   postLogoutRedirectUri: `https://${app.fqdn}${app.urlPrefix}${OidcClientRoutes.CLIENT_LOGOUT_CALLBACK}`,
   redirectUri: `https://${app.fqdn}${app.urlPrefix}${OidcClientRoutes.OIDC_CALLBACK}`,
+  disableClientIdInEndSessionUrl: env.boolean(
+    'DISABLE_CLIENT_ID_IN_END_SESSION_URL',
+  ),
 } as OidcClientConfig;

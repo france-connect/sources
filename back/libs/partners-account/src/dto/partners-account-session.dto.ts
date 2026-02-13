@@ -10,11 +10,11 @@ import {
 } from 'class-validator';
 
 import {
-  ACCESS_CONTROL_TOKEN,
-  PermissionsRequestInformationsInterface,
+  AccessControlAccountSession,
+  AccessControlIdentityDto,
 } from '@fc/access-control';
 
-export class PartnersAccountIdentity {
+export class PartnersAccountIdentity extends AccessControlIdentityDto {
   @IsString()
   @IsNotEmpty()
   readonly sub: string;
@@ -28,9 +28,8 @@ export class PartnersAccountIdentity {
   @IsString()
   readonly lastname: string;
 
-  @IsOptional()
   @IsUUID()
-  readonly id?: string;
+  readonly id: string;
 
   @IsOptional()
   @IsDate()
@@ -43,15 +42,12 @@ export class PartnersAccountIdentity {
   readonly updatedAt?: Date;
 }
 
-export class PartnersAccountSession {
+export class PartnersAccountSession<
+  EntityType extends string,
+  PermissionType extends string,
+> extends AccessControlAccountSession<EntityType, PermissionType> {
   @IsObject()
   @ValidateNested()
   @Type(() => PartnersAccountIdentity)
   readonly identity: PartnersAccountIdentity;
-
-  @IsObject()
-  readonly [ACCESS_CONTROL_TOKEN]: Pick<
-    PermissionsRequestInformationsInterface,
-    'userPermissions'
-  >;
 }

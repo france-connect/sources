@@ -1,4 +1,3 @@
-import { PermissionsType } from '../enums';
 import {
   PermissionInterface,
   RelatedEntitiesHelperGetOptionsInterface,
@@ -6,6 +5,16 @@ import {
 import { RelatedEntitiesHelper } from './get-related-entities-id.helper';
 
 describe('RelatedEntitiesHelper', () => {
+  enum PermissionsType {
+    FOO = 'foo',
+    BAR = 'bar',
+    NOT_IN_VALUES = 'notInValues',
+  }
+
+  enum EntityType {
+    ENTITY_VALUE = 'entityValue',
+  }
+
   beforeEach(() => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
@@ -14,7 +23,7 @@ describe('RelatedEntitiesHelper', () => {
   describe('matchesOptions', () => {
     it('should return true if value is falsy', () => {
       // Given
-      const optionName = 'foo' as PermissionsType;
+      const optionName = PermissionsType.FOO;
       const optionValue = undefined;
       // When
       const result = RelatedEntitiesHelper['matchesOptions'](
@@ -27,7 +36,7 @@ describe('RelatedEntitiesHelper', () => {
 
     it('should return true if entry has a value in optionValue', () => {
       // Given
-      const optionName = 'foo' as PermissionsType;
+      const optionName = PermissionsType.FOO;
       const optionValue = ['foo', 'bar'];
 
       // When
@@ -41,7 +50,7 @@ describe('RelatedEntitiesHelper', () => {
 
     it('should return false if entry has a value NOT in optionValue', () => {
       // Given
-      const optionName = 'notInValues' as PermissionsType;
+      const optionName = PermissionsType.NOT_IN_VALUES;
       const optionValue = ['foo', 'bar'];
 
       // When
@@ -77,7 +86,7 @@ describe('RelatedEntitiesHelper', () => {
       const permission = {
         entity: 'entityValue',
         permissionType: 'permissionTypeValue',
-      } as unknown as PermissionInterface;
+      } as unknown as PermissionInterface<EntityType, PermissionsType>;
 
       const filter = RelatedEntitiesHelper['permissionFilter'](options);
       // When
@@ -116,9 +125,15 @@ describe('RelatedEntitiesHelper', () => {
         const options = {
           entityType: ['foo'],
         } as unknown as RelatedEntitiesHelperGetOptionsInterface;
-        const permission = {} as PermissionInterface;
+        const permission = {} as PermissionInterface<
+          EntityType,
+          PermissionsType
+        >;
 
-        const filter = RelatedEntitiesHelper['permissionFilter'](options);
+        const filter = RelatedEntitiesHelper['permissionFilter']<
+          EntityType,
+          PermissionsType
+        >(options);
         // When
         const result = filter(permission);
         // Then
@@ -128,7 +143,7 @@ describe('RelatedEntitiesHelper', () => {
   });
 
   describe('get', () => {
-    let permissions: PermissionInterface[];
+    let permissions: PermissionInterface<EntityType, PermissionsType>[];
 
     const options = {} as RelatedEntitiesHelperGetOptionsInterface;
     const arrayFilterReturn = [{ entityId: 'entityIdValue' }];
@@ -141,7 +156,7 @@ describe('RelatedEntitiesHelper', () => {
     beforeEach(() => {
       permissions = [
         { entityId: 'entityIdValue' },
-      ] as unknown as PermissionInterface[];
+      ] as unknown as PermissionInterface<EntityType, PermissionsType>[];
 
       permissionsFilterSpy = jest
         .spyOn(permissions['__proto__'], 'filter')

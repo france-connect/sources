@@ -4,4 +4,4 @@
 [ $CI ] && NO_TTY=" -T" || NO_TTY=""
 
 # Define current Cypress image version
-export CYPRESS_IMAGE_VERSION=${CYPRESS_IMAGE_VERSION:-14.0.3}
+export CYPRESS_IMAGE_VERSION=${CYPRESS_IMAGE_VERSION:-15.8.2}

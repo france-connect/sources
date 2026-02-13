@@ -89,6 +89,15 @@
         "tsConfigPath": "instances/command-pre-deploy/tsconfig.app.json"
       }
     },
+    "command-elastic-instance": {
+      "type": "application",
+      "root": "instances/command-elastic-instance",
+      "entryFile": "main",
+      "sourceRoot": "instances/command-elastic-instance/src",
+      "compilerOptions": {
+        "tsConfigPath": "instances/command-elastic-instance/tsconfig.app.json"
+      }
+    },
     "command-runner": {
       "type": "library",
       "root": "apps/command-runner",
@@ -572,7 +581,12 @@
           "../../../apps/eidas-bridge/**/*.woff2",
           "../../../apps/eidas-bridge/**/*.webmanifest",
           "../../../apps/eidas-bridge/**/robots.txt",
-          "../../../libs/eidas-country/src/public/**/*.svg"
+          "../../../libs/eidas-country/src/public/**/*.svg",
+          {
+            "include": "../../../node_modules/@gouvfr/dsfr/dist/",
+            "outDir": "dist/instances/eidas-bridge/public/gouvfr/.",
+            "watchAssets": false
+          }
         ]
       }
     },
@@ -862,7 +876,12 @@
           "../../../instances/mock-datapass-instance/src/**/*.png",
           "../../../instances/mock-datapass-instance/src/**/*.woff2",
           "../../../instances/mock-datapass-instance/src/**/*.webmanifest",
-          "../../../instances/mock-datapass-instance/src/**/robots.txt"
+          "../../../instances/mock-datapass-instance/src/**/robots.txt",
+          {
+            "include": "../../../node_modules/@gouvfr/dsfr/dist/",
+            "outDir": "dist/instances/mock-datapass-instance/public/gouvfr/.",
+            "watchAssets": false
+          }
         ]
       }
     },

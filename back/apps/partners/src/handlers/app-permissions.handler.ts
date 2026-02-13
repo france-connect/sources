@@ -4,14 +4,18 @@ import { Reflector } from '@nestjs/core';
 import {
   BasePermissionsHandlerService,
   PermissionInterface,
-  PermissionsType,
   RequirePermissionDecoratorInterface,
   UnknownPermissionException,
 } from '@fc/access-control';
 import { SessionService } from '@fc/session';
 
+import { AccessControlEntity, AccessControlPermission } from '../enums';
+
 @Injectable()
-export class AppPermissionsHandler extends BasePermissionsHandlerService {
+export class AppPermissionsHandler extends BasePermissionsHandlerService<
+  AccessControlEntity,
+  AccessControlPermission
+> {
   constructor(
     protected readonly reflector: Reflector,
     protected readonly sessionService: SessionService,
@@ -28,10 +32,17 @@ export class AppPermissionsHandler extends BasePermissionsHandlerService {
       entity,
       permissionType,
       entityIdLocation,
-    }: RequirePermissionDecoratorInterface,
+    }: RequirePermissionDecoratorInterface<
+      AccessControlEntity,
+      AccessControlPermission
+    >,
     context: ExecutionContext,
   ): boolean {
-    if (!Object.values(PermissionsType).includes(permissionType)) {
+    if (
+      !Object.values(AccessControlPermission).includes(
+        permissionType as AccessControlPermission,
+      )
+    ) {
       throw new UnknownPermissionException();
     }
 
@@ -40,7 +51,10 @@ export class AppPermissionsHandler extends BasePermissionsHandlerService {
       entityIdLocation,
     );
 
-    const permission: PermissionInterface = {
+    const permission: PermissionInterface<
+      AccessControlEntity,
+      AccessControlPermission
+    > = {
       permissionType,
       entity,
       entityId,

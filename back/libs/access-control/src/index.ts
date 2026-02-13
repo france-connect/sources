@@ -1,5 +1,6 @@
 export * from './access-control.module';
 export * from './decorators';
+export * from './dto';
 export * from './enums';
 export * from './exceptions';
 export * from './guards';

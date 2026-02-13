@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ExceptionKey, RnippCode, Scenario } from '../enums';
+import { MockRnippInvalidDateFormatException } from '../exceptions';
 import { MockRnippService } from '../services';
 
 describe('MockRnippService', () => {
@@ -192,35 +193,82 @@ describe('MockRnippService', () => {
   });
 
   describe('formatDate', () => {
-    it('should format empty date', () => {
+    it('should throw MockRnippInvalidDateFormatException when date is empty', () => {
       // Given
-      const date = '';
+      const dateMock = '';
 
       // When / Then
-      expect(service.formatDate(date)).toEqual('');
-    });
-    it('should format full date', () => {
-      // Given
-      const date = '19950308';
-
-      // When / Then
-      expect(service.formatDate(date)).toEqual('1995-03-08');
+      expect(() => service.formatDate(dateMock)).toThrow(
+        MockRnippInvalidDateFormatException,
+      );
     });
 
-    it('should format date without day', () => {
+    it('should throw MockRnippInvalidDateFormatException when month is 00 but day is not', () => {
       // Given
-      const date = '19950300';
+      const dateMock = '19770003';
 
       // When / Then
-      expect(service.formatDate(date)).toEqual('1995-03');
+      expect(() => service.formatDate(dateMock)).toThrow(
+        MockRnippInvalidDateFormatException,
+      );
     });
 
-    it('should format date without month and day', () => {
+    it('should call formatDateParts with data params', () => {
       // Given
-      const date = '19950000';
+      const dateMock = '19950308';
+      service['formatDateParts'] = jest.fn();
 
-      // When / Then
-      expect(service.formatDate(date)).toEqual('1995');
+      // When
+
+      service.formatDate(dateMock);
+
+      // Then
+      expect(service['formatDateParts']).toHaveBeenCalledExactlyOnceWith(
+        '1995',
+        '03',
+        '08',
+      );
+    });
+  });
+
+  describe('formatDateParts', () => {
+    it('should return only year when month is 00', () => {
+      // Given
+      const yearMock = '1995';
+      const monthMock = '00';
+      const dayMock = '00';
+
+      // When
+      const result = service['formatDateParts'](yearMock, monthMock, dayMock);
+
+      // Then
+      expect(result).toEqual('1995');
+    });
+
+    it('should return year and month when only day is 00', () => {
+      // Given
+      const yearMock = '1995';
+      const monthMock = '03';
+      const dayMock = '00';
+
+      // When
+      const result = service['formatDateParts'](yearMock, monthMock, dayMock);
+
+      // Then
+      expect(result).toEqual('1995-03');
+    });
+
+    it('should return complete date when all parts are specified', () => {
+      // Given
+      const yearMock = '1995';
+      const monthMock = '03';
+      const dayMock = '08';
+
+      // When
+      const result = service['formatDateParts'](yearMock, monthMock, dayMock);
+
+      // Then
+      expect(result).toEqual('1995-03-08');
     });
   });
 

@@ -6,6 +6,8 @@ import { I18nSession } from '@fc/i18n';
 import { OidcClientSession } from '@fc/oidc-client';
 import { PartnersAccountSession } from '@fc/partners-account';
 
+import { AccessControlEntity, AccessControlPermission } from '../enums';
+
 export class PartnersSession {
   @IsObject()
   @ValidateNested()
@@ -26,7 +28,12 @@ export class PartnersSession {
 
   @IsObject()
   @ValidateNested()
-  @Type(() => PartnersAccountSession)
+  @Type(
+    () => PartnersAccountSession<AccessControlEntity, AccessControlPermission>,
+  )
   @IsOptional()
-  readonly PartnersAccount?: PartnersAccountSession;
+  readonly PartnersAccount?: PartnersAccountSession<
+    AccessControlEntity,
+    AccessControlPermission
+  >;
 }

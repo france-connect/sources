@@ -19,7 +19,7 @@ export interface ICoreTrackingContext {
   readonly spId?: string;
   readonly spAcr?: string;
   readonly spName?: string;
-  readonly spType?: undefined;
+  readonly spType?: string;
 
   readonly idpId?: string;
   readonly idpAcr?: string;

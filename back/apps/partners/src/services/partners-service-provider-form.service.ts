@@ -4,6 +4,7 @@ import { PartnersServiceProvider } from '@entities/typeorm';
 
 import { I18nService } from '@fc/i18n';
 import { LoggerService } from '@fc/logger';
+import { ScopesService } from '@fc/scopes';
 
 import { PartnersServiceProviderPayloadInterface } from '../interfaces';
 
@@ -12,14 +13,15 @@ export class PartnersServiceProviderFormService {
   constructor(
     private readonly i18n: I18nService,
     private readonly logger: LoggerService,
+    private readonly scopesService: ScopesService,
   ) {}
 
   toDisplayValue(
     serviceProvider: PartnersServiceProvider,
   ): PartnersServiceProviderPayloadInterface {
-    const authorizedScopes = serviceProvider.authorizedScopes || [];
+    const datapassClaims = serviceProvider.datapassScopes || [];
 
-    const datapassScopes = authorizedScopes
+    const datapassClaimLabels = datapassClaims
       .map((claim) => {
         try {
           return this.i18n.translate(`datapassScope.${claim}`);
@@ -28,14 +30,20 @@ export class PartnersServiceProviderFormService {
           return claim;
         }
       })
-      .filter((label) => label);
+      .filter(Boolean);
+
+    const baseClaims =
+      this.scopesService.getRawClaimsFromScopes(datapassClaims);
+
+    const fcScopes = this.scopesService.getScopesFromClaims(baseClaims);
 
     return {
       id: serviceProvider.id,
       name: serviceProvider.name,
       organizationName: serviceProvider.organizationName,
       datapassRequestId: serviceProvider.datapassRequestId,
-      datapassScopes,
+      datapassScopes: datapassClaimLabels,
+      fcScopes: fcScopes,
       createdAt: serviceProvider.createdAt,
       updatedAt: serviceProvider.updatedAt,
     };

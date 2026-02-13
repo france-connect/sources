@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { ExceptionKey, RnippCode, Scenario } from '../enums';
+import { MockRnippInvalidDateFormatException } from '../exceptions';
 
 @Injectable()
 export class MockRnippService {
@@ -78,7 +79,36 @@ export class MockRnippService {
    * @returns A formatted date string
    */
   formatDate(date: string): string {
-    return date.replace(/^(.{4})(.{2})(.{2})$/, '$1-$2-$3').replace(/-00/g, '');
+    const dateSanityCheck = /^\d{8}$/.test(date);
+
+    if (!dateSanityCheck) {
+      throw new MockRnippInvalidDateFormatException();
+    }
+
+    const [, year, month, day] = date.match(/(\d{4})(\d{2})(\d{2})/);
+
+    if (month === '00' && day !== '00') {
+      throw new MockRnippInvalidDateFormatException();
+    }
+
+    return this.formatDateParts(year, month, day);
+  }
+
+  /**
+   * Formats date parts based on presumed values (00 for unknown parts).
+   * @param year The year part
+   * @param month The month part
+   * @param day The day part
+   * @returns A formatted date string
+   */
+  private formatDateParts(year: string, month: string, day: string): string {
+    if (month === '00') {
+      return year;
+    } else if (day === '00') {
+      return `${year}-${month}`;
+    }
+
+    return `${year}-${month}-${day}`;
   }
 
   /**

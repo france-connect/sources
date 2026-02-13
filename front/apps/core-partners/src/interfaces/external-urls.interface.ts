@@ -3,4 +3,6 @@ export interface ExternalUrlsInterface {
   configurationSandboxAddressDocUrl: string;
   datapassHabilitationPathname: string;
   datapassBaseUrl: string;
+  datapassDocUrl: string;
+  scopeDocUrl: string;
 }

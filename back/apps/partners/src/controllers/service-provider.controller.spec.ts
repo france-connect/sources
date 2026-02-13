@@ -2,17 +2,13 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { PartnersServiceProvider } from '@entities/typeorm';
 
-import {
-  AccessControlGuard,
-  EntityType,
-  PermissionInterface,
-  PermissionsType,
-} from '@fc/access-control';
+import { AccessControlGuard, PermissionInterface } from '@fc/access-control';
 import {
   PartnersServiceProviderNotFoundException,
   PartnersServiceProviderService,
 } from '@fc/partners-service-provider';
 
+import { AccessControlEntity, AccessControlPermission } from '../enums';
 import { PartnersServiceProviderPayloadInterface } from '../interfaces';
 import { PartnersServiceProviderFormService } from '../services';
 import { ServiceProviderController } from './service-provider.controller';
@@ -29,15 +25,18 @@ describe('ServiceProviderController', () => {
     toDisplayValue: jest.fn(),
   };
 
-  const permissionsMock: PermissionInterface[] = [
+  const permissionsMock: PermissionInterface<
+    AccessControlEntity,
+    AccessControlPermission
+  >[] = [
     {
-      permissionType: PermissionsType.LIST,
-      entity: EntityType.SERVICE_PROVIDER,
+      permissionType: AccessControlPermission.LIST,
+      entity: AccessControlEntity.SERVICE_PROVIDER,
       entityId: null,
     },
     {
-      permissionType: PermissionsType.VIEW,
-      entity: EntityType.SERVICE_PROVIDER,
+      permissionType: AccessControlPermission.VIEW,
+      entity: AccessControlEntity.SERVICE_PROVIDER,
       entityId: 'service-provider-id',
     },
   ];
@@ -47,7 +46,7 @@ describe('ServiceProviderController', () => {
     name: 'Test Service Provider',
     organizationName: 'Test Organization',
     datapassRequestId: '12345',
-    authorizedScopes: ['openid', 'given_name', 'family_name', 'email'],
+    datapassScopes: ['openid', 'given_name', 'family_name', 'email'],
     platform: null,
     organisation: null,
     createdAt: new Date('2024-01-01'),
@@ -66,6 +65,7 @@ describe('ServiceProviderController', () => {
         'Nom de naissance',
         'Adresse électronique',
       ],
+      fcScopes: ['openid', 'profile', 'email'],
       createdAt: new Date('2024-01-01'),
       updatedAt: new Date('2024-01-01'),
     };
@@ -123,7 +123,33 @@ describe('ServiceProviderController', () => {
       ).toHaveBeenCalledExactlyOnceWith(permissionsMock);
     });
 
-    it('should return FSA format with service providers', async () => {
+    it('should transform each service provider using form service', async () => {
+      // Given
+      const secondServiceProviderMock = {
+        ...serviceProviderMock,
+        id: 'service-provider-id-2',
+      };
+      serviceProviderServiceMock.getAllowedServiceProviders.mockResolvedValue([
+        serviceProviderMock,
+        secondServiceProviderMock,
+      ]);
+
+      // When
+      await controller.getServiceProviders(permissionsMock);
+
+      // Then
+      expect(formServiceMock.toDisplayValue).toHaveBeenCalledTimes(2);
+      expect(formServiceMock.toDisplayValue).toHaveBeenNthCalledWith(
+        1,
+        serviceProviderMock,
+      );
+      expect(formServiceMock.toDisplayValue).toHaveBeenNthCalledWith(
+        2,
+        secondServiceProviderMock,
+      );
+    });
+
+    it('should return FSA format with transformed service providers without fcScopes', async () => {
       // Given
       serviceProviderServiceMock.getAllowedServiceProviders.mockResolvedValue([
         serviceProviderMock,
@@ -133,9 +159,11 @@ describe('ServiceProviderController', () => {
       const result = await controller.getServiceProviders(permissionsMock);
 
       // Then
+      const { fcScopes: _fcScopes, ...expectedPayload } =
+        serviceProviderResponseDtoMock;
       expect(result).toEqual({
         type: 'SERVICE_PROVIDER',
-        payload: [serviceProviderMock],
+        payload: [expectedPayload],
       });
     });
 
@@ -194,19 +222,6 @@ describe('ServiceProviderController', () => {
         type: 'SERVICE_PROVIDER',
         payload: serviceProviderResponseDtoMock,
       });
-    });
-
-    it('should return payload with mapped scopes', async () => {
-      // When
-      const result = await controller.getServiceProvider(serviceProviderIdMock);
-
-      // Then
-      expect(result.payload.datapassScopes).toEqual([
-        'Identifiant technique',
-        'Prénoms',
-        'Nom de naissance',
-        'Adresse électronique',
-      ]);
     });
 
     it('should not expose platform and organisation fields', async () => {

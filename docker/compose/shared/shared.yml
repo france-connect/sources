@@ -349,8 +349,11 @@ services:
 
   cypress:
     build:
-      context: "${VOLUMES_DIR}/src/fc/quality"
+      context: "${VOLUMES_DIR}/src/fc/"
       dockerfile: "${DOCKER_DIR}/builds/cypress/Dockerfile"
+      args:
+        INTERNET_PROXY: ${PROXY_EXPLOITATION:-}
+        NODE_IGNORE_ENGINE: ${NODE_IGNORE_ENGINE:-false}
     image: ${FC_DOCKER_REGISTRY}/cypress:${IMAGE_VERSION:-${CYPRESS_IMAGE_VERSION}}
 
   cypress-fcp:
@@ -359,7 +362,8 @@ services:
     working_dir: /var/www/quality/fcp
     entrypoint: [""]
     volumes:
-      - "${VOLUMES_DIR}/src/fc/quality/fcp:/var/www/quality/fcp"
+      - "${VOLUMES_DIR}/src/fc/quality:/var/www/quality"
+      - /var/www/quality/node_modules
       - "${VOLUMES_DIR}/.home:/home"
       - "${VOLUMES_DIR}/log:/var/log/app"
       - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
@@ -396,7 +400,8 @@ services:
     working_dir: /var/www/quality/partners
     entrypoint: [""]
     volumes:
-      - "${VOLUMES_DIR}/src/fc/quality/partners:/var/www/quality/partners"
+      - "${VOLUMES_DIR}/src/fc/quality:/var/www/quality"
+      - /var/www/quality/node_modules
       - "${VOLUMES_DIR}/.home:/home"
       - "${VOLUMES_DIR}/log:/var/log/app"
       - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"

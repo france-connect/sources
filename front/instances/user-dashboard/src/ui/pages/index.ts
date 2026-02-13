@@ -1,3 +1,4 @@
+export * from './accessibility';
 export * from './error';
 export * from './fraud';
 export * from './home-page';

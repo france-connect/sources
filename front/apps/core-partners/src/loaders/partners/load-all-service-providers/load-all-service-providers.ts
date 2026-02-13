@@ -3,7 +3,7 @@ import { ConfigService } from '@fc/config';
 import { fetchWithAuthHandling } from '@fc/http-client';
 
 import { CorePartnersOptions } from '../../../enums';
-import type { PartnersConfig, ServiceProviderInterface } from '../../../interfaces';
+import type { PartnersConfig, ServiceProviderItemInterface } from '../../../interfaces';
 
 // @TODO #2356
 // Implementing a DTO2Form config like
@@ -14,6 +14,6 @@ export const loadAllServiceProviders = async () => {
   const { serviceProviders } = endpoints;
 
   const data =
-    await fetchWithAuthHandling<FSAInterface<ServiceProviderInterface[]>>(serviceProviders);
+    await fetchWithAuthHandling<FSAInterface<ServiceProviderItemInterface[]>>(serviceProviders);
   return data;
 };

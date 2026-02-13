@@ -37,7 +37,7 @@ export class PartnersServiceProvider {
     type: 'json',
     nullable: true,
   })
-  authorizedScopes: string[];
+  datapassScopes: string[];
 
   @ManyToOne(() => PartnersPlatform)
   platform: PartnersPlatform;

@@ -4,11 +4,7 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 
 import { PartnersServiceProvider } from '@entities/typeorm';
 
-import {
-  AccountPermissionService,
-  EntityType,
-  PermissionsType,
-} from '@fc/access-control';
+import { AccountPermissionService } from '@fc/access-control';
 import { CryptographyService } from '@fc/cryptography';
 import { DatapassEvents, SimplifiedDatapassPayload } from '@fc/datapass';
 import { LoggerService } from '@fc/logger';
@@ -19,6 +15,7 @@ import {
 } from '@fc/partners-service-provider';
 import { TypeormService } from '@fc/typeorm';
 
+import { AccessControlEntity, AccessControlPermission } from '../enums';
 import {
   ServiceProviderCreationResultInterface,
   WebhookResponseInterface,
@@ -33,7 +30,10 @@ export class PartnersDatapassService {
     private readonly typeorm: TypeormService,
     private readonly accountService: PartnersAccountService,
     private readonly serviceProviderService: PartnersServiceProviderService,
-    private readonly accessControlService: AccountPermissionService,
+    private readonly accessControlService: AccountPermissionService<
+      AccessControlEntity,
+      AccessControlPermission
+    >,
     private readonly crypto: CryptographyService,
   ) {}
 
@@ -145,7 +145,7 @@ export class PartnersDatapassService {
     serviceProviderEntity.name = payload.datapassName;
     serviceProviderEntity.organizationName = payload.organizationName;
     serviceProviderEntity.datapassRequestId = payload.datapassRequestId;
-    serviceProviderEntity.authorizedScopes = payload.scopes;
+    serviceProviderEntity.datapassScopes = payload.scopes;
 
     return await this.serviceProviderService.upsert(
       queryRunner,
@@ -202,21 +202,21 @@ export class PartnersDatapassService {
   ): Promise<void> {
     await this.accessControlService.addPermissionTransactional(queryRunner, {
       accountId,
-      permissionType: PermissionsType.LIST,
-      entity: EntityType.SERVICE_PROVIDER,
+      permissionType: AccessControlPermission.LIST,
+      entity: AccessControlEntity.SERVICE_PROVIDER,
     });
 
     await this.accessControlService.addPermissionTransactional(queryRunner, {
       accountId,
-      permissionType: PermissionsType.VIEW,
-      entity: EntityType.SERVICE_PROVIDER,
+      permissionType: AccessControlPermission.VIEW,
+      entity: AccessControlEntity.SERVICE_PROVIDER,
       entityId: serviceProviderId,
     });
 
     await this.accessControlService.addPermissionTransactional(queryRunner, {
       accountId,
-      permissionType: PermissionsType.LIST,
-      entity: EntityType.SP_INSTANCE,
+      permissionType: AccessControlPermission.LIST,
+      entity: AccessControlEntity.SP_INSTANCE,
     });
   }
 }

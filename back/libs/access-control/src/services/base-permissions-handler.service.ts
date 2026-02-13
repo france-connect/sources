@@ -4,10 +4,10 @@ import { Reflector } from '@nestjs/core';
 import { NO_ENTITY_ID } from '@entities/typeorm';
 
 import { uuid } from '@fc/common';
-import { PartnersAccountSession } from '@fc/partners-account';
 import { SessionNotFoundException, SessionService } from '@fc/session';
 
 import { RequirePermission } from '../decorators';
+import { AccessControlAccountSession } from '../dto';
 import {
   EntityIdInterface,
   PermissionInterface,
@@ -15,20 +15,22 @@ import {
   RequestInformationsInterface,
   RequirePermissionDecoratorInterface,
 } from '../interfaces';
-import { ACCESS_CONTROL_TOKEN } from '../tokens';
 
 @Injectable()
-export abstract class BasePermissionsHandlerService {
+export abstract class BasePermissionsHandlerService<
+  EntityType extends string,
+  PermissionType extends string,
+> {
   constructor(
     protected readonly reflector: Reflector,
     protected readonly sessionService: SessionService,
   ) {}
 
   public checkAllPermissions(context: ExecutionContext): boolean {
-    const controllerPermissions = RequirePermission.get(
-      this.reflector,
-      context,
-    );
+    const controllerPermissions = RequirePermission.get<
+      EntityType,
+      PermissionType
+    >(this.reflector, context);
 
     if (!controllerPermissions) {
       return true;
@@ -38,13 +40,13 @@ export abstract class BasePermissionsHandlerService {
   }
 
   protected abstract checkPermissions(
-    roleName: RequirePermissionDecoratorInterface,
+    roleName: RequirePermissionDecoratorInterface<EntityType, PermissionType>,
     context: ExecutionContext,
   ): boolean;
 
   protected standardMatchPermission(
-    userPermissions: PermissionInterface[],
-    controllerPermission: PermissionInterface,
+    userPermissions: PermissionInterface<EntityType, PermissionType>[],
+    controllerPermission: PermissionInterface<EntityType, PermissionType>,
   ): boolean {
     return userPermissions.some(
       (userPermission) =>
@@ -57,19 +59,21 @@ export abstract class BasePermissionsHandlerService {
   protected extractContextInfo(
     context: ExecutionContext,
     entityIdLocation: EntityIdInterface | null,
-  ): PermissionsRequestInformationsInterface {
+  ): PermissionsRequestInformationsInterface<EntityType, PermissionType> {
     const request = context
       .switchToHttp()
       .getRequest<RequestInformationsInterface>();
 
     const sessionData =
-      this.sessionService.get<PartnersAccountSession>('PartnersAccount');
+      this.sessionService.get<
+        AccessControlAccountSession<EntityType, PermissionType>
+      >('PartnersAccount');
 
     if (!sessionData) {
       throw new SessionNotFoundException('PartnersAccount');
     }
 
-    const { userPermissions } = sessionData[ACCESS_CONTROL_TOKEN];
+    const { permissions: userPermissions } = sessionData;
 
     let entityId: uuid = NO_ENTITY_ID;
 

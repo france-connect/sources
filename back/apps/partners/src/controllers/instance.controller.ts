@@ -22,9 +22,7 @@ import {
   AccessControlGuard,
   AccountPermissions,
   AccountPermissionService,
-  EntityType,
   PermissionInterface,
-  PermissionsType,
   RequirePermission,
 } from '@fc/access-control';
 import { FSA, FSAMeta } from '@fc/common';
@@ -45,7 +43,11 @@ import { OidcClientInterface } from '@fc/service-provider';
 import { ISessionService, Session } from '@fc/session';
 import { TypeormService } from '@fc/typeorm';
 
-import { PartnersBackRoutes } from '../enums';
+import {
+  AccessControlEntity,
+  AccessControlPermission,
+  PartnersBackRoutes,
+} from '../enums';
 import {
   PartnerPublicationService,
   PartnersInstanceVersionFormService,
@@ -61,18 +63,25 @@ export class InstanceController {
     private readonly version: PartnersServiceProviderInstanceVersionService,
     private readonly publication: PartnerPublicationService,
     private readonly form: PartnersInstanceVersionFormService,
-    private readonly accessControl: AccountPermissionService,
+    private readonly accessControl: AccountPermissionService<
+      AccessControlEntity,
+      AccessControlPermission
+    >,
     private readonly typeorm: TypeormService,
   ) {}
 
   @Get(PartnersBackRoutes.SP_INSTANCES)
   @RequirePermission({
-    permissionType: PermissionsType.LIST,
-    entity: EntityType.SP_INSTANCE,
+    permissionType: AccessControlPermission.LIST,
+    entity: AccessControlEntity.SP_INSTANCE,
   })
   @UseGuards(AccessControlGuard)
   async retrieveVersions(
-    @AccountPermissions() permissions: PermissionInterface[],
+    @AccountPermissions()
+    permissions: PermissionInterface<
+      AccessControlEntity,
+      AccessControlPermission
+    >[],
   ): Promise<FSA<FSAMeta, PartnersServiceProviderInstance[]>> {
     const instances = await this.instance.getAllowedInstances(permissions);
 
@@ -84,8 +93,8 @@ export class InstanceController {
 
   @Get(PartnersBackRoutes.SP_INSTANCE)
   @RequirePermission({
-    permissionType: PermissionsType.VIEW,
-    entity: EntityType.SP_INSTANCE,
+    permissionType: AccessControlPermission.VIEW,
+    entity: AccessControlEntity.SP_INSTANCE,
     entityIdLocation: { src: 'params', key: 'instanceId' },
   })
   @UseGuards(AccessControlGuard)
@@ -103,8 +112,8 @@ export class InstanceController {
 
   @Post(PartnersBackRoutes.SP_INSTANCES)
   @RequirePermission({
-    permissionType: PermissionsType.LIST,
-    entity: EntityType.SP_INSTANCE,
+    permissionType: AccessControlPermission.LIST,
+    entity: AccessControlEntity.SP_INSTANCE,
   })
   @UseGuards(AccessControlGuard)
   @UseGuards(CsrfTokenGuard)
@@ -112,7 +121,9 @@ export class InstanceController {
   async createInstance(
     @Body() values: ServiceProviderInstanceVersionDto,
     @Session('PartnersAccount', PartnersAccountSession)
-    sessionPartnersAccount: ISessionService<PartnersAccountSession>,
+    sessionPartnersAccount: ISessionService<
+      PartnersAccountSession<AccessControlEntity, AccessControlPermission>
+    >,
   ): Promise<FSA<FSAMeta, unknown>> {
     const {
       identity: { id: accountId, email },
@@ -165,8 +176,8 @@ export class InstanceController {
 
     await this.accessControl.addPermissionTransactional(queryRunner, {
       accountId,
-      permissionType: PermissionsType.VIEW,
-      entity: EntityType.SP_INSTANCE,
+      permissionType: AccessControlPermission.VIEW,
+      entity: AccessControlEntity.SP_INSTANCE,
       entityId: instanceId,
     });
 
@@ -175,8 +186,8 @@ export class InstanceController {
 
   @Put(PartnersBackRoutes.SP_INSTANCE)
   @RequirePermission({
-    permissionType: PermissionsType.VIEW,
-    entity: EntityType.SP_INSTANCE,
+    permissionType: AccessControlPermission.VIEW,
+    entity: AccessControlEntity.SP_INSTANCE,
     entityIdLocation: { src: 'params', key: 'instanceId' },
   })
   @UseGuards(AccessControlGuard)
@@ -186,7 +197,9 @@ export class InstanceController {
     @Body() data: ServiceProviderInstanceVersionDto,
     @Param('instanceId') instanceId: string,
     @Session('PartnersAccount', PartnersAccountSession)
-    sessionPartnersAccount: ISessionService<PartnersAccountSession>,
+    sessionPartnersAccount: ISessionService<
+      PartnersAccountSession<AccessControlEntity, AccessControlPermission>
+    >,
   ): Promise<FSA<FSAMeta, unknown>> {
     const fullData = await this.form.fromFormValues(data, instanceId);
 

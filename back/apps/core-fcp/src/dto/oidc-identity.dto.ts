@@ -10,7 +10,7 @@ import {
 } from 'class-validator';
 
 import { COG_FRANCE, IsCog } from '@fc/cog';
-import { MinIdentityDto } from '@fc/oidc-client';
+import { IsIdpBirthdate, MinIdentityDto } from '@fc/oidc-client';
 import { Genders } from '@fc/rnipp';
 
 export class OidcIdentityDto extends MinIdentityDto {
@@ -27,6 +27,7 @@ export class OidcIdentityDto extends MinIdentityDto {
   readonly family_name: string;
 
   @IsString()
+  @IsIdpBirthdate()
   @Expose()
   readonly birthdate: string;
 

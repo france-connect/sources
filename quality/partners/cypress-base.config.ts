@@ -11,6 +11,7 @@ const config: Partial<Cypress.ResolvedConfigOptions<never>> = {
     experimentalMemoryManagement: true,
   },
   env: {
+    APP_LABEL: 'Espace Partenaires',
     // Base Configuration
     PLATFORM: 'partners',
     TEST_ENV: 'docker',

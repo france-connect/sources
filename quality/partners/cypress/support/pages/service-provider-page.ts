@@ -16,4 +16,30 @@ export default class ServiceProviderPage {
       'be.visible',
     );
   }
+
+  getOrganizationName(): ChainableElement {
+    return cy.get(
+      '[data-testid="service-provider-details-page-organization-name"]',
+    );
+  }
+
+  getDatapassScopesList(): ChainableElement {
+    return cy.get(
+      '[data-testid="service-provider-scopes-tabs-datapass-scope"]',
+    );
+  }
+
+  getFcScopesList(): ChainableElement {
+    return cy.get('[data-testid="service-provider-scopes-tabs-fc-scope"]');
+  }
+
+  getFcScopesTabButton(): ChainableElement {
+    return cy.get('[data-testid="fc-scopes-tab-button"]');
+  }
+
+  checkTabPanelVisible(tabId: string): void {
+    cy.get(
+      `[data-testid="service-provider-scopes-tabs-panel-${tabId}"]`,
+    ).should('be.visible');
+  }
 }

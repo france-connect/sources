@@ -48,7 +48,8 @@ describe('OidcClientUtilsService', () => {
   const providerUidMock = 'providerUidMockValue';
   const stateMock = 'stateMockValue';
   const idTokenMock = 'idTokenMockValue';
-  const endSessionUrlWithParamsMock = `https://endSessionUrlMockMock?id_token_hint=${idTokenMock}&post_logout_redirect_uri=${postLogoutRedirectUriMock}&state=${stateMock}`;
+  const endSessionUrlWithParamsMock = `https://endSessionUrlMockMock?id_token_hint=${idTokenMock}&post_logout_redirect_uri=${postLogoutRedirectUriMock}&state=${stateMock}&client_id=clientIdMockValue`;
+  const endSessionUrlWithParamsMockNoClientId = `https://endSessionUrlMockMock?id_token_hint=${idTokenMock}&post_logout_redirect_uri=${postLogoutRedirectUriMock}&state=${stateMock}`;
 
   const loggerServiceMock = getLoggerMock();
 
@@ -164,6 +165,7 @@ describe('OidcClientUtilsService', () => {
       issuer: 'http://foo.bar',
       configuration: {},
       jwks: { keys: [] },
+      disableClientIdInEndSessionUrl: false,
     });
 
     cryptoServiceMock.genRandomString.mockReturnValue(randomStringMock);
@@ -573,6 +575,37 @@ describe('OidcClientUtilsService', () => {
         ),
       ).rejects.toThrow(expectedError);
     });
+
+    it('should return the endSessionUrl without client_id if disableClientIdInEndSessionUrl is true', async () => {
+      // Given
+      oidcClientConfigServiceMock.get.mockResolvedValueOnce({
+        disableClientIdInEndSessionUrl: true,
+      });
+
+      // When
+      const result = await service.getEndSessionUrl(
+        providerUidMock,
+        stateMock,
+        idTokenMock,
+        postLogoutRedirectUriMock,
+      );
+
+      // Then
+      expect(result).toBe(endSessionUrlWithParamsMockNoClientId);
+    });
+
+    it('should return the endSessionUrl with client_id if disableClientIdInEndSessionUrl is false', async () => {
+      // When
+      const result = await service.getEndSessionUrl(
+        providerUidMock,
+        stateMock,
+        idTokenMock,
+        postLogoutRedirectUriMock,
+      );
+
+      // Then
+      expect(result).toBe(endSessionUrlWithParamsMock);
+    });
   });
 
   describe('checkIdpBlacklisted()', () => {
@@ -678,15 +711,12 @@ describe('OidcClientUtilsService', () => {
 
       // Then
       expect(isURLMock).toHaveBeenCalledTimes(1);
-      expect(isURLMock).toHaveBeenCalledWith(
-        'https://endSessionUrlMockMock?id_token_hint=idTokenMockValue&post_logout_redirect_uri=https://postLogoutRedirectUriMock&state=stateMockValue',
-        {
-          protocols: ['https'],
-          // Validator.js defined property
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          require_protocol: true,
-        },
-      );
+      expect(isURLMock).toHaveBeenCalledWith(endSessionUrlWithParamsMock, {
+        protocols: ['https'],
+        // Validator.js defined property
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        require_protocol: true,
+      });
       expect(result).toBeTrue();
     });
 

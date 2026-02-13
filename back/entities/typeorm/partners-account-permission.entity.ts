@@ -7,14 +7,6 @@ import {
   Unique,
 } from 'typeorm';
 
-/**
- * typescripts paths are not working while using migration tool
- * @todo Find out why and fix to use aliases
- */
-import {
-  EntityType,
-  PermissionsType,
-} from '../../libs/access-control/src/enums';
 import { PartnersAccount } from './partners-account.entity';
 
 /**
@@ -47,16 +39,14 @@ export class PartnersAccountPermission {
   entityId: string;
 
   @Column({
-    type: 'enum',
-    enum: EntityType,
+    type: 'varchar',
     nullable: true,
     default: null,
   })
-  entity: EntityType;
+  entity: string;
 
   @Column({
-    type: 'enum',
-    enum: PermissionsType,
+    type: 'varchar',
   })
-  permissionType: PermissionsType;
+  permissionType: string;
 }

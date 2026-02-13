@@ -80,6 +80,8 @@ export const AccordionGroupComponent = jest.fn(({ children }) => (
   </div>
 ));
 
+export const TabsGroupComponent = jest.fn(() => <div data-mockid="TabsGroupComponent" />);
+
 export const LoginConnectComponent = jest.fn(({ type }) => (
   <div data-mockid="LoginConnectComponent">
     <div>{type}</div>

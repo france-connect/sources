@@ -2,20 +2,21 @@ import { QueryRunner } from 'typeorm';
 
 import { Injectable } from '@nestjs/common';
 
-import {
-  AccountPermissionService,
-  EntityType,
-  PermissionsType,
-} from '@fc/access-control';
+import { AccountPermissionService } from '@fc/access-control';
 import { CryptographyService } from '@fc/cryptography';
 import { PartnersAccountService } from '@fc/partners-account';
 import { TypeormService } from '@fc/typeorm';
+
+import { AccessControlEntity, AccessControlPermission } from '../enums';
 
 @Injectable()
 export class PartnersInvitationService {
   constructor(
     private readonly partnersAccount: PartnersAccountService,
-    private readonly accessControl: AccountPermissionService,
+    private readonly accessControl: AccountPermissionService<
+      AccessControlEntity,
+      AccessControlPermission
+    >,
     private readonly typeorm: TypeormService,
     private readonly crypto: CryptographyService,
   ) {}
@@ -48,8 +49,8 @@ export class PartnersInvitationService {
 
       await this.accessControl.addPermissionTransactional(queryRunner, {
         accountId,
-        permissionType: PermissionsType.LIST,
-        entity: EntityType.SP_INSTANCE,
+        permissionType: AccessControlPermission.LIST,
+        entity: AccessControlEntity.SP_INSTANCE,
       });
 
       await this.addInstancesPermissions(queryRunner, accountId, instances);
@@ -64,8 +65,8 @@ export class PartnersInvitationService {
     for (const instanceId of instances) {
       await this.accessControl.addPermissionTransactional(queryRunner, {
         accountId,
-        permissionType: PermissionsType.VIEW,
-        entity: EntityType.SP_INSTANCE,
+        permissionType: AccessControlPermission.VIEW,
+        entity: AccessControlEntity.SP_INSTANCE,
         entityId: instanceId,
       });
     }

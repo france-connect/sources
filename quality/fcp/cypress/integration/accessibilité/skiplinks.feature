@@ -129,7 +129,7 @@ Fonctionnalité: Liens d'évitements (Skiplinks)
   @exceptions
   Plan du scénario: Liens d'évitements - page d'erreur
     Etant donné que j'utilise un navigateur web sur "<device>"
-    Et que j'utilise un compte usager "désactivé"
+    Et que j'utilise un compte usager "sans lieu de naissance"
     Et que je navigue sur la page fournisseur de service
     Et que je clique sur le bouton FranceConnect
     Et que je suis redirigé vers la page sélection du fournisseur d'identité

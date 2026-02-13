@@ -7,18 +7,15 @@
     <div class="fr-footer__bottom fr-mt-0">
       <ul class="fr-footer__bottom-list">
         <li class="fr-footer__bottom-item">
-          <a
-            class="fr-footer__bottom-link"
-            href="https://franceconnect.gouv.fr/accessibilite"
+          <a class="fr-footer__bottom-link" href="/api/v2/accessibilite"
+            ><%= $translate('footer.a11y_conformity') %></a
           >
-            <%= $translate('footer.a11y_conformity') %>
-          </a>
         </li>
         <%- include('includes/footer/footer.learn-more.ejs') %>
         <li class="fr-footer__bottom-item">
           <a
             class="fr-footer__bottom-link"
-            href="https://franceconnect.gouv.fr/cgu"
+            href="https://franceconnect.gouv.fr/cgu/"
           >
             <%= $translate('footer.tos') %>
           </a>
@@ -26,7 +23,7 @@
         <li class="fr-footer__bottom-item">
           <a
             class="fr-footer__bottom-link"
-            href="https://franceconnect.gouv.fr/faq"
+            href="https://aide.franceconnect.gouv.fr/"
           >
             <%= $translate('footer.faq') %>
           </a>

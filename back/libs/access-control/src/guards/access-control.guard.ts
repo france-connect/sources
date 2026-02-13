@@ -11,10 +11,16 @@ import { BasePermissionsHandlerService } from '../services';
 import { APP_ACCESS_CONTROL_HANDLER } from '../tokens';
 
 @Injectable()
-export class AccessControlGuard implements CanActivate {
+export class AccessControlGuard<
+  EntityType extends string,
+  PermissionType extends string,
+> implements CanActivate {
   constructor(
     @Inject(APP_ACCESS_CONTROL_HANDLER)
-    private readonly permissionHandler: BasePermissionsHandlerService,
+    private readonly permissionHandler: BasePermissionsHandlerService<
+      EntityType,
+      PermissionType
+    >,
   ) {}
 
   canActivate(context: ExecutionContext): Observable<boolean> {

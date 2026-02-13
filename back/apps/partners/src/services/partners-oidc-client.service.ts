@@ -111,7 +111,7 @@ export class PartnersOidcClientService {
   async retrieveOrCreateAccount(
     identity: AgentIdentityInterface,
   ): Promise<void> {
-    const partnersAccount: PartnersAccountIdentity = {
+    const partnersAccount: Omit<PartnersAccountIdentity, 'id'> = {
       sub: identity.sub,
       firstname: identity.given_name,
       lastname: identity.usual_name,

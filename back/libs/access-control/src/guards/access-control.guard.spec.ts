@@ -5,7 +5,7 @@ import { APP_ACCESS_CONTROL_HANDLER } from '../tokens';
 import { AccessControlGuard } from './access-control.guard';
 
 describe('AccessControlGuard', () => {
-  let guard: AccessControlGuard;
+  let guard: AccessControlGuard<string, string>;
 
   const appRoleHandler = {
     checkAllPermissions: jest.fn(),
@@ -17,12 +17,14 @@ describe('AccessControlGuard', () => {
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        AccessControlGuard,
+        AccessControlGuard<string, string>,
         { provide: APP_ACCESS_CONTROL_HANDLER, useValue: appRoleHandler },
       ],
     }).compile();
 
-    guard = module.get<AccessControlGuard>(AccessControlGuard);
+    guard = module.get<AccessControlGuard<string, string>>(
+      AccessControlGuard<string, string>,
+    );
   });
 
   it('should be defined', () => {

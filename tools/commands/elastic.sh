@@ -112,6 +112,22 @@ _generate_events() {
   $DOCKER_COMPOSE exec $NO_TTY fc-workers ./run IndexElasticLogs --start=$START --stop=$STOP
 }
 
+_index_events() {
+  VERSION=$1
+  START=$2
+  STOP=$3
+  if [ -z "$VERSION" ] || [ -z "$START" ] || [ -z "$STOP" ]; then
+    echo "Usage: index-events <version> <start> <stop>"
+    echo "  <version>: cl or v2"
+    echo "  <start>: start date in format YYYY-MM-DD"
+    echo "  <stop>: stop date in format YYYY-MM-DD"
+    exit 1
+  fi
+  cd $FC_ROOT/fc-apps/fc-workers
+  echo "Index events in version $VERSION"
+  . ./bash/test.sh IndexElasticLogs --version=$VERSION --start=$START --stop=$STOP
+}
+
 _generate_metrics() {
   echo "Generate metrics stats"
   cd ${DOCKER_DIR}

@@ -5,13 +5,12 @@ import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 
 import { PartnersServiceProvider } from '@entities/typeorm';
 
-import {
-  EntityType,
-  PermissionInterface,
-  PermissionsType,
-  RelatedEntitiesHelper,
-} from '@fc/access-control';
+import { PermissionInterface, RelatedEntitiesHelper } from '@fc/access-control';
 import { LoggerService } from '@fc/logger';
+import {
+  AccessControlEntity,
+  AccessControlPermission,
+} from '@fc/partners/enums';
 
 import { getLoggerMock } from '@mocks/logger';
 import { getRepositoryMock, resetRepositoryMock } from '@mocks/typeorm';
@@ -30,18 +29,18 @@ describe('PartnersServiceProviderService', () => {
 
   const permissionsMock = [
     {
-      permissionType: PermissionsType.VIEW,
-      entity: EntityType.SERVICE_PROVIDER,
+      permissionType: AccessControlPermission.VIEW,
+      entity: AccessControlEntity.SERVICE_PROVIDER,
       entityId: 'service-provider-id',
     },
-  ] as PermissionInterface[];
+  ] as PermissionInterface<AccessControlEntity, AccessControlPermission>[];
 
   const serviceProviderMock: PartnersServiceProvider = {
     id: 'service-provider-id',
     name: 'Test Service Provider',
     organizationName: 'Test Organization',
     datapassRequestId: '12345',
-    authorizedScopes: ['openid', 'given_name', 'family_name', 'email'],
+    datapassScopes: ['openid', 'given_name', 'family_name', 'email'],
     platform: null,
     organisation: null,
     createdAt: new Date('2024-01-01'),
@@ -95,7 +94,7 @@ describe('PartnersServiceProviderService', () => {
       expect(RelatedEntitiesHelperGetMock).toHaveBeenCalledExactlyOnceWith(
         permissionsMock,
         {
-          entityTypes: [EntityType.SERVICE_PROVIDER],
+          entityTypes: [AccessControlEntity.SERVICE_PROVIDER],
         },
       );
     });
@@ -226,7 +225,7 @@ describe('PartnersServiceProviderService', () => {
         serviceProviderMock,
       );
       expect(queryRunnerMock.manager.orUpdate).toHaveBeenCalledWith(
-        ['name', 'organizationName', 'authorizedScopes'],
+        ['name', 'organizationName', 'datapassScopes'],
         ['datapassRequestId'],
       );
       expect(queryRunnerMock.manager.returning).toHaveBeenCalledWith('*');

@@ -32,6 +32,10 @@ const config: Partial<Cypress.ResolvedConfigOptions<never>> = {
     MAILDEV_HOST: 'maildev.docker.dev-franceconnect.fr',
     MAILDEV_SMTP_PORT: '1025',
     MAILDEV_API_PORT: '443',
+    // Elasticsearch Configuration
+    ELASTICSEARCH_URL: 'https://elasticsearch:9200',
+    ELASTICSEARCH_USERNAME: 'docker-stack',
+    ELASTICSEARCH_PASSWORD: 'docker-stack',
     // Other Configuration
     LOG_FILE_PATH: `${process.env.LOG_VOLUMES_DIR}/core-fcp-low.log`,
     EIDAS_LOG_FILE_PATH: `${process.env.LOG_VOLUMES_DIR}/eidas-bridge.log`,
@@ -49,7 +53,7 @@ const config: Partial<Cypress.ResolvedConfigOptions<never>> = {
       dq: 'DnK926x960sLmJJE_dlpmMicOLtc7rOhjdCL0mVqpjMlrU7fc1Bx_scrg7HioVQZdC-xWtVUvjk70C3nMO10bvYR6Ix0yllI5OTM4LdwGXABPUWT3xSxIG8NsOAnyUlPTCJlHWD5Elv9513Q4SHo09flpj6beYhoffPP9aLddUE',
       qi: 'jjbChoLdsQKinsDnichWtwyQ_M3F8ygncwVBBvbmHGUFCxZCDUc-zOA-Wipb9DxYCyu65FUpUGnxXo4yYLwtibd9ler1_7rLyZxtpAspuFvBRrScJh0x_lMvyhhf_YsNTWsOgM7YPBwU-Fis44kapNX1-AXIacgSfyspzGf-EEA',
       kty: 'RSA',
-      alg: 'RSA-OAEP',
+      alg: 'RSA-OAEP-256',
       kid: 'oidc-client:locale',
       use: 'enc',
     },

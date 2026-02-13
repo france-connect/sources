@@ -23,7 +23,7 @@ export default class UdIdpSettingsUpdateMessage {
         updateMessage,
         `No emails sent to '${userEmail}' concerning idp settings update`,
       ).to.exist;
-      cy.maildevVisitMessageById(updateMessage.id);
+      MaildevHelper.visitMessageById(updateMessage.id);
     });
   }
 

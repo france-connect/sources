@@ -5,11 +5,8 @@ import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 
 import { PartnersAccount } from '@entities/typeorm';
 
-import {
-  AccountPermissionService,
-  EntityType,
-  PermissionsType,
-} from '@fc/access-control';
+import { AccountPermissionService } from '@fc/access-control';
+import { AccessControlEntity, AccessControlPermission } from '@fc/partners';
 import { TypeormService } from '@fc/typeorm';
 
 import { getQueryRunnerMock, getTypeormServiceMock } from '@mocks/typeorm';
@@ -234,15 +231,15 @@ describe('PartnersAccountService', () => {
         accountPermissionMock.addPermissionTransactional,
       ).toHaveBeenCalledWith(queryRunnerMock, {
         accountId,
-        permissionType: PermissionsType.LIST,
-        entity: EntityType.SP_INSTANCE,
+        permissionType: AccessControlPermission.LIST,
+        entity: AccessControlEntity.SP_INSTANCE,
       });
       expect(
         accountPermissionMock.addPermissionTransactional,
       ).toHaveBeenCalledWith(queryRunnerMock, {
         accountId,
-        permissionType: PermissionsType.LIST,
-        entity: EntityType.SERVICE_PROVIDER,
+        permissionType: AccessControlPermission.LIST,
+        entity: AccessControlEntity.SERVICE_PROVIDER,
       });
     });
   });

@@ -1,9 +1,7 @@
 import { Email } from '../types';
 
 export class MaildevHelper {
-  public baseUrl: string;
-
-  static getBaseUrl(): string {
+  static get baseUrl(): string {
     let baseUrl = `${Cypress.env('MAILDEV_PROTOCOL')}://${Cypress.env(
       'MAILDEV_HOST',
     )}`;
@@ -12,6 +10,11 @@ export class MaildevHelper {
       baseUrl += `:${Cypress.env('MAILDEV_API_PORT')}`;
     }
     return baseUrl;
+  }
+
+  static visitMessageById(id: string): void {
+    const url = `${MaildevHelper.baseUrl}/email/${id}/html`;
+    cy.visit(url);
   }
 
   static isUserMessage(message: Email, userEmail: string): boolean {
@@ -49,7 +52,7 @@ export class MaildevHelper {
     return cy
       .request({
         encoding: 'utf8',
-        url: `${MaildevHelper.getBaseUrl()}/email/${emailId}/attachment/${fileName}`,
+        url: `${MaildevHelper.baseUrl}/email/${emailId}/attachment/${fileName}`,
       })
       .then((response) => {
         return response.body;

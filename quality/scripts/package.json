@@ -1,0 +1,14 @@
+{
+  "name": "quality-scripts",
+  "version": "1.0.0",
+  "description": "Quality - Scripts",
+  "type":"module",
+  "keywords": [
+    "Scripts",
+    "QA"
+  ],
+  "scripts": {
+    "prettier": "prettier --no-parallel --experimental-cli -c \"./**/*.ts\" --config-path ../.prettierrc",
+    "lint": "eslint '**/*.ts'"
+  }
+}

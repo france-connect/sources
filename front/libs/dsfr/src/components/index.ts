@@ -16,4 +16,5 @@ export * from './pagination';
 export * from './searchbar';
 export * from './stepper';
 export * from './table';
+export * from './tabs';
 export * from './tile';

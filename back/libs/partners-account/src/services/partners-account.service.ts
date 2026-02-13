@@ -7,11 +7,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { PartnersAccount } from '@entities/typeorm';
 
+import { AccountPermissionService } from '@fc/access-control';
 import {
-  AccountPermissionService,
-  EntityType,
-  PermissionsType,
-} from '@fc/access-control';
+  AccessControlEntity,
+  AccessControlPermission,
+} from '@fc/partners/enums';
 import { queryBuilderGetCurrentTimestamp, TypeormService } from '@fc/typeorm';
 
 import { PartnersAccountInitException } from '../exceptions';
@@ -22,7 +22,10 @@ export class PartnersAccountService {
   constructor(
     @InjectRepository(PartnersAccount)
     private readonly repository: Repository<PartnersAccount>,
-    private readonly accessControl: AccountPermissionService,
+    private readonly accessControl: AccountPermissionService<
+      AccessControlEntity,
+      AccessControlPermission
+    >,
     private readonly typeorm: TypeormService,
   ) {}
 
@@ -86,14 +89,14 @@ export class PartnersAccountService {
   ): Promise<void> {
     await this.accessControl.addPermissionTransactional(queryRunner, {
       accountId,
-      permissionType: PermissionsType.LIST,
-      entity: EntityType.SP_INSTANCE,
+      permissionType: AccessControlPermission.LIST,
+      entity: AccessControlEntity.SP_INSTANCE,
     });
 
     await this.accessControl.addPermissionTransactional(queryRunner, {
       accountId,
-      permissionType: PermissionsType.LIST,
-      entity: EntityType.SERVICE_PROVIDER,
+      permissionType: AccessControlPermission.LIST,
+      entity: AccessControlEntity.SERVICE_PROVIDER,
     });
   }
 

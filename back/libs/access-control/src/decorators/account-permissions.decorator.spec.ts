@@ -2,7 +2,6 @@ import { ExecutionContext } from '@nestjs/common';
 
 import { NestJsDependencyInjectionWrapper } from '@fc/common';
 
-import { EntityType, PermissionsType } from '../enums';
 import { AccountPermissionService } from '../services';
 import { AccountPermissionsDecorator } from './account-permissions.decorator';
 
@@ -19,6 +18,14 @@ describe('AccountPermissionsDecorator', () => {
   };
 
   const ctxMock = {} as ExecutionContext;
+
+  enum PermissionsType {
+    FOO = 'foo',
+  }
+
+  enum EntityType {
+    ENTITY_VALUE = 'entityValue',
+  }
 
   beforeEach(() => {
     jest.resetAllMocks();
@@ -51,8 +58,8 @@ describe('AccountPermissionsDecorator', () => {
     // Given
     const expected = {
       entityId: Symbol('entityId'),
-      entity: EntityType.ORGANISATION,
-      permissionType: PermissionsType.VIEW,
+      entity: EntityType.ENTITY_VALUE,
+      permissionType: PermissionsType.FOO,
     };
     accountPermissionsServiceMock.getPermissionsFromSession.mockReturnValue(
       expected,

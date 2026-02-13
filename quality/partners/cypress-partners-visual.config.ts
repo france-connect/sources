@@ -1,7 +1,7 @@
 import { defineConfig } from 'cypress';
 
-import pluginConfig from './cypress/plugins';
 import baseConfig from './cypress-base.config';
+import pluginConfig from './plugin-config';
 
 export default defineConfig({
   ...baseConfig,

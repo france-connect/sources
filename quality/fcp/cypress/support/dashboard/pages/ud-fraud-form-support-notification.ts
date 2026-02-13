@@ -45,7 +45,7 @@ export default class UdFraudFormSupportNotificationPage {
         supportRequestMessage,
         `No emails sent from '${contactEmail}' concerning support request`,
       ).to.exist;
-      cy.maildevVisitMessageById(supportRequestMessage.id);
+      MaildevHelper.visitMessageById(supportRequestMessage.id);
 
       return cy.wrap(supportRequestMessage);
     });

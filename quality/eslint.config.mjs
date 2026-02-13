@@ -14,6 +14,32 @@ import globals from 'globals';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+const tsProjectEntries = [
+  { files: ['data/**/*.ts'], tsconfigPath: './data/tsconfig.json' },
+  { files: ['fcp/**/*.ts'], tsconfigPath: './fcp/tsconfig.json' },
+  {
+    files: ['partners/**/*.ts'],
+    tsconfigPath: './partners/tsconfig.json',
+  },
+  {
+    files: ['plugins/**/*.ts'],
+    tsconfigPath: './plugins/tsconfig.json',
+  },
+  { files: ['scripts/**/*.ts'], tsconfigPath: './scripts/tsconfig.json' },
+];
+
+const makeTsConfigOverrides = (entries) =>
+  entries.map(({ files, tsconfigPath }) => ({
+    files,
+    languageOptions: {
+      parser: tsParser,
+      parserOptions: {
+        tsconfigRootDir: __dirname, // base = quality/
+        project: path.resolve(__dirname, tsconfigPath),
+      },
+    },
+  }));
+
 // eslint-disable-next-line no-redeclare, @typescript-eslint/naming-convention
 const __filename = fileURLToPath(import.meta.url);
 // eslint-disable-next-line no-redeclare, @typescript-eslint/naming-convention
@@ -117,13 +143,15 @@ const allowedSnakeCaseParametersRegexPattern = `^(${allowedSnakeCaseParameters.j
 
 export default defineConfig([
   {
-    extends: compat.extends(
-      'plugin:@eslint-community/eslint-comments/recommended',
-      'plugin:@typescript-eslint/recommended',
-      'plugin:cypress/recommended',
-      'eslint:recommended',
-      'prettier',
-    ),
+    extends: [
+      ...compat.extends(
+        'plugin:@eslint-community/eslint-comments/recommended',
+        'plugin:@typescript-eslint/recommended',
+        'eslint:recommended',
+        'prettier',
+      ),
+      cypress.configs.recommended,
+    ],
 
     languageOptions: {
       ecmaVersion: 5,
@@ -132,6 +160,8 @@ export default defineConfig([
         ...globals.browser,
         ...globals.node,
         ...globals.jest,
+        // Add CypressCommandLine namespace as it not included in Cypress globals
+        CypressCommandLine: 'readonly',
       },
       parser: tsParser,
       parserOptions: {
@@ -256,4 +286,5 @@ export default defineConfig([
       'sort-keys-fix/sort-keys-fix': 2,
     },
   },
+  ...makeTsConfigOverrides(tsProjectEntries),
 ]);

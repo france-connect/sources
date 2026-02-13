@@ -1,0 +1,195 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TabsGroupComponent should match the snapshot with custom className and dataTestId 1`] = `
+<div>
+  <div
+    class="fr-tabs custom-tabs-class"
+    data-testid="custom-test-id"
+  >
+    <ul
+      aria-label="Custom tabs"
+      class="fr-tabs__list"
+      role="tablist"
+    >
+      <li
+        role="presentation"
+      >
+        <button
+          aria-controls="tab-1-panel"
+          aria-selected="true"
+          class="fr-tabs__tab"
+          data-testid="tab-1"
+          role="tab"
+          tabindex="0"
+          type="button"
+        >
+          Tab 1
+        </button>
+      </li>
+      <li
+        role="presentation"
+      >
+        <button
+          aria-controls="tab-2-panel"
+          aria-selected="false"
+          class="fr-tabs__tab"
+          data-testid="tab-2"
+          role="tab"
+          tabindex="-1"
+          type="button"
+        >
+          Tab 2
+        </button>
+      </li>
+      <li
+        role="presentation"
+      >
+        <button
+          aria-controls="tab-3-panel"
+          aria-selected="false"
+          class="fr-tabs__tab"
+          data-testid="tab-3"
+          role="tab"
+          tabindex="-1"
+          type="button"
+        >
+          Tab 3
+        </button>
+      </li>
+    </ul>
+    <div
+      aria-labelledby="tab-1"
+      class="fr-tabs__panel fr-tabs__panel--selected"
+      data-testid="custom-test-id-panel-tab-1"
+      id="tab-1-panel"
+      role="tabpanel"
+      tabindex="0"
+    >
+      <p>
+        Content 1
+      </p>
+    </div>
+    <div
+      aria-labelledby="tab-2"
+      class="fr-tabs__panel fr-tabs__panel--direction-end"
+      data-testid="custom-test-id-panel-tab-2"
+      id="tab-2-panel"
+      role="tabpanel"
+      tabindex="0"
+    >
+      <p>
+        Content 2
+      </p>
+    </div>
+    <div
+      aria-labelledby="tab-3"
+      class="fr-tabs__panel fr-tabs__panel--direction-end"
+      data-testid="custom-test-id-panel-tab-3"
+      id="tab-3-panel"
+      role="tabpanel"
+      tabindex="0"
+    >
+      <p>
+        Content 3
+      </p>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`TabsGroupComponent should match the snapshot with default values 1`] = `
+<div>
+  <div
+    class="fr-tabs"
+    data-testid="TabsGroupComponent"
+  >
+    <ul
+      aria-label="Test tabs system"
+      class="fr-tabs__list"
+      role="tablist"
+    >
+      <li
+        role="presentation"
+      >
+        <button
+          aria-controls="tab-1-panel"
+          aria-selected="true"
+          class="fr-tabs__tab"
+          data-testid="tab-1"
+          role="tab"
+          tabindex="0"
+          type="button"
+        >
+          Tab 1
+        </button>
+      </li>
+      <li
+        role="presentation"
+      >
+        <button
+          aria-controls="tab-2-panel"
+          aria-selected="false"
+          class="fr-tabs__tab"
+          data-testid="tab-2"
+          role="tab"
+          tabindex="-1"
+          type="button"
+        >
+          Tab 2
+        </button>
+      </li>
+      <li
+        role="presentation"
+      >
+        <button
+          aria-controls="tab-3-panel"
+          aria-selected="false"
+          class="fr-tabs__tab"
+          data-testid="tab-3"
+          role="tab"
+          tabindex="-1"
+          type="button"
+        >
+          Tab 3
+        </button>
+      </li>
+    </ul>
+    <div
+      aria-labelledby="tab-1"
+      class="fr-tabs__panel fr-tabs__panel--selected"
+      data-testid="TabsGroupComponent-panel-tab-1"
+      id="tab-1-panel"
+      role="tabpanel"
+      tabindex="0"
+    >
+      <p>
+        Content 1
+      </p>
+    </div>
+    <div
+      aria-labelledby="tab-2"
+      class="fr-tabs__panel fr-tabs__panel--direction-end"
+      data-testid="TabsGroupComponent-panel-tab-2"
+      id="tab-2-panel"
+      role="tabpanel"
+      tabindex="0"
+    >
+      <p>
+        Content 2
+      </p>
+    </div>
+    <div
+      aria-labelledby="tab-3"
+      class="fr-tabs__panel fr-tabs__panel--direction-end"
+      data-testid="TabsGroupComponent-panel-tab-3"
+      id="tab-3-panel"
+      role="tabpanel"
+      tabindex="0"
+    >
+      <p>
+        Content 3
+      </p>
+    </div>
+  </div>
+</div>
+`;

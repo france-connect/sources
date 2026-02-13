@@ -4,7 +4,12 @@ import { CsrfToken } from '@fc/csrf';
 import { PartnersAccountSession } from '@fc/partners-account';
 import { ISessionService, Session } from '@fc/session';
 
-import { PartnersBackRoutes, PartnersFrontRoutes } from '../enums';
+import {
+  AccessControlEntity,
+  AccessControlPermission,
+  PartnersBackRoutes,
+  PartnersFrontRoutes,
+} from '../enums';
 import { HttpErrorResponse, UserInfosInterface } from '../interfaces';
 
 @Controller()
@@ -23,7 +28,9 @@ export class PartnersController {
   getUserInfo(
     @Res() res,
     @Session('PartnersAccount', PartnersAccountSession)
-    sessionPartnersAccount: ISessionService<PartnersAccountSession>,
+    sessionPartnersAccount: ISessionService<
+      PartnersAccountSession<AccessControlEntity, AccessControlPermission>
+    >,
   ): Promise<UserInfosInterface | HttpErrorResponse> {
     const userInfo = sessionPartnersAccount.get();
 
@@ -31,7 +38,7 @@ export class PartnersController {
       ...userInfo?.identity,
       id: undefined,
       accountId: userInfo?.identity?.id,
-      accessControl: userInfo?.accessControl,
+      permissions: userInfo?.permissions,
     };
 
     return res.json(data);

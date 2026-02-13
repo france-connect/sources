@@ -3,3 +3,4 @@ export { Genders, RnippResponseCodes } from './enums';
 export * from './exceptions';
 export * from './rnipp.module';
 export * from './services';
+export * from './validators';

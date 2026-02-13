@@ -1,5 +1,59 @@
 # Commands
 
+## command-elastic
+
+### 1. Up Kibana stack
+
+```shell
+dks switch kibana
+```
+
+you can then access kibana here http://localhost:5601
+
+### 2. Up and run command container
+
+The `command-elastic` service provides four subcommands:
+- `elastic-transform` - Initialize and start an Elasticsearch data aggregation transform
+- `elastic-transform-watcher` - Update transform state (synchronize with running transforms)
+- `elastic-reindex` - Reindex transform results into the metrics index
+- `elastic-reindex-watcher` - Update reindex state
+
+#### Running elastic-transform
+
+```shell
+dks command command-elastic command-elastic elastic-transform --product=franceconnect_plus --range=year --pivot=sp
+```
+
+#### Running elastic-transform-watcher
+
+```shell
+dks command command-elastic command-elastic elastic-transform-watcher --product=franceconnect_plus --range=year --pivot=sp
+```
+
+#### Running elastic-reindex
+
+```shell
+dks command command-elastic command-elastic elastic-reindex --product=franceconnect_plus --range=year --pivot=sp --key=nbOfConnections
+```
+
+#### Running elastic-reindex-watcher
+
+```shell
+dks command command-elastic command-elastic elastic-reindex-watcher --product=franceconnect_plus --range=year --pivot=sp --key=nbOfConnections
+```
+
+### Command Options
+
+- `--product` - The product for which the transform/reindex will run (`franceconnect`, `franceconnect_plus`)
+- `--range` - Time range selector (`month`, `semester`, `year`)
+- `--pivot` - Which pivot shape/aggregation to build (`sp`, `idp`, `sp_idp_pair`, `idp_public_sp`, `idp_private_sp`)
+- `--key` - Metric key to reindex (for reindex operations: `nbOfIdentities`, `nbOfConnections`)
+- `--period` - Target period in `YYYY-MM` format (optional, defaults to previous month)
+- `-d, --dry-run` - Preview without modifications
+- `-f, --force` - Force manual reset/restart
+
+For more details, see the [FC-2328 README](/../../../.claude/FC-2328/README.md).
+
 ## command-import-sandbox
 
 As of now (2025/07/10), this is still a work in progress

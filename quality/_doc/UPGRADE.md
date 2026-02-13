@@ -64,46 +64,37 @@ export FC_DOCKER_REGISTRY_PASS=<access token>
 
 ##### 3. Build and push a new Cypress docker image
 
-- Update the Cypress Dockerfile: `docker/builds/cypress/Dockerfile`
-- Update the quality dependencies: `quality/package.json`
+- Update the Cypress Dockerfile: [docker/builds/cypress/Dockerfile]
+- Update the quality dependencies: [quality/package.json]
 - Open a bash terminal, and run the build and push command
 
 ```bash
 # docker-stack build-push cypress <version>
-docker-stack build-push cypress 14.0.3
+docker-stack build-push cypress 15.8.2
 ```
 
 ##### 4. Update the CYPRESS_IMAGE_VERSION environment variable
 
-Edit the docker-stack config `docker/bash/config/ci.sh`, in order to set the default value.
+Edit the docker-stack config [tools/config/ci.sh], in order to set the default value.
 
 ```bash
-export CYPRESS_IMAGE_VERSION=${CYPRESS_IMAGE_VERSION:-14.0.3}
+export CYPRESS_IMAGE_VERSION=${CYPRESS_IMAGE_VERSION:-15.8.2}
 ```
 
-### Known issues when upgrading to Cypress v14.0.3
+### Known issues when upgrading to Cypress v15.8.2
 
-#### 1. `cypress-maildev`
+#### 1. `oqtlib`
 
-The `v1.3.2` changed the navigation to the mail content. `maildevVisitMessageById` uses a `cy.origin` call which prevents its usage on our local stack.
+The v13.0.0 is a total rewrite of the library. It is not compatible with the version used in the fc-apps E2E tests.
 
-see https://github.com/Clebiez/cypress-maildev/pull/12/files
+We will keep using v12.0.1, until we implement the new fc-apps.
 
-#### 2. `@badeball/cypress-cucumber-preprocessor`
+see https://github.com/yeojz/otplib/releases/tag/v13.0.0
 
-The `v22.0.1` doesn't work with our tests, as we get the error:
+#### 2. `@types/node`
 
-`Reflect.getMetadata is not a function`
+We keep v22.19.7 to match current version of `node` used by the applications.
 
-It is due to the missing dependencie "reflect-metadata". It has been removed after this fix:
-https://github.com/badeball/cypress-cucumber-preprocessor/issues/1273
+#### 3. `mongodb`
 
-During the next Cypress upgrade, we can reassess whether it gets corrected or whether we should include the missing dependencies ourselves.
-
-#### 3. `multiple-cucumber-html-reporter`
-
-The `v3.9.0` and `v3.9.1` have issues with the bootstrap dependency and the rendering.
-
-`Uncaught TypeError: i.createPopper is not a function`
-
-We keep the version `v3.8.0` for the time being.
+We keep v6.21.0 to match current version of `mongodb` used by the applications.

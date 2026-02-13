@@ -34,17 +34,19 @@ _command_register "reset-mongo-as-prod" "_reset_mongodb_as_prod" "reset-mongo-as
 _command_register "redis" "_redis_cli" "Connect to redis cli: redis <db>"
 
 ### Elastic
+_command_register "init-stats" "_init_stats" "Initialize statistics stack: clean ES data, switch to kibana, init ES indices"
 _command_register "init-ud" "_init_ud" "init-ud => Initialize data for user dashboard"
 _command_register "reset-stats" "_reset_stats" "reset-stats => drop stats index"
 _command_register "es-create-ingest-pipeline" "_create_es_ingest_pipeline" "" # Description to be defined
 _command_register "generate-legacy-traces" "_generate_legacy_traces" "Generate FC legacy connection logs and inject them into Elasticsearch"
-_command_register "generate-v2-traces" "_generate_v2_traces" "Generate FC+ connection logs and inject them into Elasticsearch from '/quality/fcp/data/userdashboard/quality/fcp/data/userdashboard/populate-account-traces.script.js'"
+_command_register "generate-v2-traces" "_generate_v2_traces" "Generate FC+ connection logs and inject them into Elasticsearch"
 _command_register "create-es-alias" "_create_es_alias" "create automatic es alias for FC legacy & FC v2 during _init_ud"
 _command_register "create-es-alias-legacy" "_create_es_alias_legacy" "create manual es alias for FC legacy"
 _command_register "create-es-alias-v2" "_create_es_alias_v2" "create manual es alias for FC v2"
 _command_register "generate-metrics" "_generate_metrics" "" # Description to be defined
 _command_register "generate-stats" "_generate_stats" "generate-stats => restore all stats (logs, event and metrics) index"
 _command_register "generate-events" "_generate_events" "restore logs and events index"
+_command_register "index-events" "_index_events" "index-events <version> <start> <stop> => index events of given version (cl|v2) between start and stop dates (YYYY-MM-DD)"
 _command_register "delete-indices" "_delete_indices" "Deletes elasticsearch indices"
 _command_register "restore-snapshot" "_es_restore_snapshot" "" # Description to be defined # Deprecated
 

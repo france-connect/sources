@@ -8,6 +8,7 @@ export class ICoreTrackingLog extends TrackingLogInterface {
   readonly spId: string;
   readonly spAcr: string;
   readonly spName: string;
+  readonly spType?: string;
 
   /** Identity provider informations */
   readonly idpId?: string;

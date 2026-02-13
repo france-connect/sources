@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="<%= $translate('meta.lang') %>" data-fr-scheme="light">
+  <head>
+    <%- include('includes/head.ejs') %>
+    <title>Déclaration d'accessibilité - <%= $config('App.platform') %></title>
+    <meta
+      name="description"
+      content="Déclaration d'accessibilité de <%= $config('App.platform') %> - Conformité RGAA et engagement de la DINUM"
+    />
+  </head>
+  <body>
+    <div class="fc-sticky-wrapper">
+      <div class="fc-sticky-body">
+        <%- include('includes/header.ejs') %>
+        <main role="main" id="content">
+          <div class="fr-container fr-mt-8w">
+            <div class="fr-grid-row fr-grid-row--center">
+              <div class="fr-col-12 fr-col-md-10 fr-col-lg-8">
+                <h1>Déclaration d’accessibilité</h1>
+
+                <section class="fr-my-6w">
+                  <p>
+                    La Direction Interministérielle du Numérique (DINUM)
+                    s’engage à rendre ses services accessibles conformément à
+                    l’article 47 de la loi n°2005-102 du 11 février 2005.
+                  </p>
+                  <p>
+                    Cette déclaration d’accessibilité s’applique à FranceConnect
+                    et FranceConnect+.
+                  </p>
+                </section>
+
+                <section class="fr-my-6w">
+                  <h2>État de conformité</h2>
+                  <p>
+                    Les services FranceConnect et FranceConnect+ sont
+                    <b>non conformes</b> avec le référentiel général
+                    d’amélioration de l’accessibilité (RGAA), version 4 en
+                    raison de l’absence de réalisation d’audit de conformité.
+                  </p>
+                </section>
+
+                <section class="fr-my-6w">
+                  <h2>Établissement de cette déclaration d’accessibilité</h2>
+                  <p>Cette déclaration a été établie le 13/10/2025.</p>
+                </section>
+
+                <section class="fr-my-6w">
+                  <h2>Technologies utilisées pour la réalisation du site</h2>
+                  <ul>
+                    <li>HTML5</li>
+                    <li>CSS3</li>
+                    <li>JavaScript</li>
+                  </ul>
+                </section>
+
+                <section class="fr-my-6w">
+                  <h2>Retour d’information et contact</h2>
+                  <p>
+                    Si vous n’arrivez pas à accéder à un contenu ou à un
+                    service, vous pouvez contacter le responsable de
+                    FranceConnect et de FranceConnect+ pour être orienté vers
+                    une alternative accessible ou obtenir le contenu sous une
+                    autre forme.
+                  </p>
+                  <p>
+                    Envoyer un message à
+                    <a
+                      href="mailto:accessibilite@franceconnect.gouv.fr"
+                      rel="noopener noreferrer"
+                      target="_blank"
+                      >accessibilite@franceconnect.gouv.fr</a
+                    >
+                  </p>
+                </section>
+
+                <section class="fr-mt-6w">
+                  <h2>Voies de recours</h2>
+                  <p>
+                    Si vous constatez un défaut d’accessibilité vous empêchant
+                    d’accéder à un contenu ou une fonctionnalité du site, que
+                    vous nous le signalez et que vous ne parvenez pas à obtenir
+                    une réponse de notre part, vous êtes en droit de faire
+                    parvenir vos doléances ou une demande de saisine au
+                    Défenseur des droits.
+                  </p>
+                  <p>Plusieurs moyens sont à votre disposition&nbsp;:</p>
+                  <ul>
+                    <li>Écrire un message au Défenseur des droits</li>
+                    <li>
+                      Contacter le délégué du Défenseur des droits dans votre
+                      région
+                    </li>
+                    <li>
+                      <p>
+                        Envoyer un courrier par la poste (gratuit, ne pas mettre
+                        de timbre)&nbsp;:<br />
+                        Défenseur des droits<br />
+                        Libre réponse 71120<br />
+                        75342 Paris CEDEX 07
+                      </p>
+                    </li>
+                  </ul>
+                </section>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+      <%- include('includes/footer.ejs') %>
+    </div>
+    <%- include('includes/scripts.ejs') %>
+  </body>
+</html>

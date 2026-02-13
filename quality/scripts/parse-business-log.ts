@@ -13,19 +13,17 @@
  *
  * Usage:
  *
- * > ts-node parse-business-log.ts '/path/to/file.log' '{"JSON": "string", "test": "object"}'
+ * > tsx parse-business-log.ts '/path/to/file.log' '{"JSON": "string", "test": "object"}'
  */
 
 import { promises as fs } from 'fs';
-
-import { pick } from 'lodash';
 
 type LogEvent = {
   entity?: string;
   event?: string;
   action?: string;
   type_action?: string;
-  [key: string]: string;
+  [key: string]: unknown;
 };
 
 const loadLog = async (path: string): Promise<LogEvent[]> => {
@@ -91,6 +89,22 @@ const interactionHasEvent = async ([
   }
 };
 
+/**
+ * Pick specified keys from an object
+ */
+const pick = <T extends Record<string, unknown>>(
+  obj: T,
+  keys: string[],
+): Partial<T> => {
+  return keys.reduce((result, key) => {
+    if (key in obj) {
+      const objKey = key as keyof T;
+      result[objKey] = obj[objKey];
+    }
+    return result;
+  }, {} as Partial<T>);
+};
+
 const EVENT_KEYS = ['action', 'entity', 'event', 'type_action'];
 const findEvent = (
   logs: LogEvent[],
@@ -118,19 +132,32 @@ const findEvent = (
 const getDifferences = (
   test: LogEvent,
   source: LogEvent,
-): [string, string][] => {
+): [string, unknown][] => {
   const REG_EXP_PREFIX = 'RegExp:';
-  const isRegExpPattern = (value) =>
-    typeof value === 'string' && value.startsWith(REG_EXP_PREFIX);
-  const assertions = Object.entries(test).filter(([key, value]) => {
-    if (isRegExpPattern(value)) {
-      const regExp = new RegExp(value.replace(REG_EXP_PREFIX, ''));
-      return !regExp.test(source[key]);
-    }
-    return source[key] !== value;
-  });
 
-  return assertions;
+  const isRegExpPattern = (value: unknown): value is string =>
+    typeof value === 'string' && value.startsWith(REG_EXP_PREFIX);
+
+  const matchesRegExpPattern = (pattern: string, value: unknown): boolean => {
+    if (typeof value !== 'string') return false;
+
+    try {
+      return new RegExp(pattern).test(value);
+    } catch {
+      return false;
+    }
+  };
+
+  return Object.entries(test).filter(([key, expected]) => {
+    const actual = source[key];
+
+    if (isRegExpPattern(expected)) {
+      const pattern = expected.slice(REG_EXP_PREFIX.length);
+      return !matchesRegExpPattern(pattern, actual);
+    }
+
+    return actual !== expected;
+  });
 };
 
 interactionHasEvent(process.argv.slice(2));

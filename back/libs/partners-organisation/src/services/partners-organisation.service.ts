@@ -5,11 +5,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { PartnersOrganisation } from '@entities/typeorm';
 
+import { PermissionInterface, RelatedEntitiesHelper } from '@fc/access-control';
 import {
-  EntityType,
-  PermissionInterface,
-  RelatedEntitiesHelper,
-} from '@fc/access-control';
+  AccessControlEntity,
+  AccessControlPermission,
+} from '@fc/partners/enums';
 import { PostgresOperationFailure } from '@fc/postgres';
 
 @Injectable()
@@ -20,10 +20,13 @@ export class PartnersOrganisationService {
   ) {}
 
   async getOrganisationsFromPermission(
-    permissions: PermissionInterface[],
+    permissions: PermissionInterface<
+      AccessControlEntity,
+      AccessControlPermission
+    >[],
   ): Promise<PartnersOrganisation[]> {
     const relatedEntitiesOptions = {
-      entityTypes: [EntityType.ORGANISATION],
+      entityTypes: [AccessControlEntity.ORGANISATION],
     };
     const organisationIds = RelatedEntitiesHelper.get(
       permissions,
@@ -49,10 +52,13 @@ export class PartnersOrganisationService {
 
   async getServiceProvidersFromOrganisation(
     organisationId: string,
-    permissions: PermissionInterface[],
+    permissions: PermissionInterface<
+      AccessControlEntity,
+      AccessControlPermission
+    >[],
   ): Promise<PartnersOrganisation> {
     const relatedEntitiesOptions = {
-      entityTypes: [EntityType.SERVICE_PROVIDER],
+      entityTypes: [AccessControlEntity.SERVICE_PROVIDER],
     };
     const serviceProviderIds = RelatedEntitiesHelper.get(
       permissions,

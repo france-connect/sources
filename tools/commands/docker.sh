@@ -150,6 +150,30 @@ _get_env() {
   docker exec ${containerName} bash -c "echo ${expression}"
 }
 
+_init_stats() {
+  echo "========================================="
+  echo "  Initializing Statistics Stack"
+  echo "========================================="
+
+  # Step 1: Initialize Kibana stack
+  echo ""
+  echo "Step 1/2: Switching to Kibana stack..."
+  _switch "kibana"
+
+  # Step 2: Reset or clears statistics related to Elasticsearch
+  echo ""
+  echo "Step 2/2: Resets or clears statistics related to Elasticsearch."
+  _reset_stats
+
+  echo ""
+  echo "========================================="
+  echo "  ✓ Statistic Stack Ready!"
+  echo "========================================="
+  echo "  Kibana: http://localhost:5601"
+  echo "  Elasticsearch: http://localhost:9200"
+  echo "========================================="
+}
+
 _switch() {
   _prune
   _logs "--bg"

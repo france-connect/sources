@@ -4,6 +4,7 @@ import { PartnersServiceProvider } from '@entities/typeorm';
 
 import { I18nService } from '@fc/i18n';
 import { LoggerService } from '@fc/logger';
+import { ScopesService } from '@fc/scopes';
 
 import { PartnersServiceProviderFormService } from './partners-service-provider-form.service';
 
@@ -18,12 +19,20 @@ describe('PartnersServiceProviderFormService', () => {
     warning: jest.fn(),
   };
 
+  const scopesServiceMock = {
+    getScopesFromClaims: jest.fn(),
+    getRawClaimsFromScopes: jest.fn(),
+  };
+
+  const defaultScopesFromClaimsReturnValue = ['openid', 'profile', 'email'];
+  const defaultRawClaimsFromScopesReturnValue = ['sub'];
+
   const serviceProviderMock: PartnersServiceProvider = {
     id: 'service-provider-id',
     name: 'Test Service Provider',
     organizationName: 'Test Organization',
     datapassRequestId: '12345',
-    authorizedScopes: ['openid', 'given_name', 'family_name', 'email'],
+    datapassScopes: ['openid', 'given_name', 'family_name', 'email'],
     platform: null,
     organisation: null,
     createdAt: new Date('2024-01-01'),
@@ -37,19 +46,29 @@ describe('PartnersServiceProviderFormService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         PartnersServiceProviderFormService,
-        {
-          provide: I18nService,
-          useValue: i18nMock,
-        },
-        {
-          provide: LoggerService,
-          useValue: loggerMock,
-        },
+        I18nService,
+        LoggerService,
+        ScopesService,
       ],
-    }).compile();
+    })
+      .overrideProvider(I18nService)
+      .useValue(i18nMock)
+      .overrideProvider(LoggerService)
+      .useValue(loggerMock)
+      .overrideProvider(ScopesService)
+      .useValue(scopesServiceMock)
+      .compile();
 
     service = module.get<PartnersServiceProviderFormService>(
       PartnersServiceProviderFormService,
+    );
+
+    i18nMock.translate.mockReturnValue('Label');
+    scopesServiceMock.getScopesFromClaims.mockReturnValue(
+      defaultScopesFromClaimsReturnValue,
+    );
+    scopesServiceMock.getRawClaimsFromScopes.mockReturnValue(
+      defaultRawClaimsFromScopesReturnValue,
     );
   });
 
@@ -81,15 +100,13 @@ describe('PartnersServiceProviderFormService', () => {
           'Nom de naissance',
           'Adresse électronique',
         ],
+        fcScopes: ['openid', 'profile', 'email'],
         createdAt: new Date('2024-01-01'),
         updatedAt: new Date('2024-01-01'),
       });
     });
 
     it('should call i18n.translate for each claim', () => {
-      // Given
-      i18nMock.translate.mockReturnValue('Label');
-
       // When
       service.toDisplayValue(serviceProviderMock);
 
@@ -113,60 +130,148 @@ describe('PartnersServiceProviderFormService', () => {
         }
         return 'Label';
       });
+      scopesServiceMock.getScopesFromClaims.mockReturnValue(['profile']);
 
       const serviceProviderWithUnknownClaim = {
         ...serviceProviderMock,
-        authorizedScopes: ['given_name', 'unknown_claim'],
+        datapassScopes: ['given_name', 'unknown_claim'],
       };
 
       // When
       const result = service.toDisplayValue(serviceProviderWithUnknownClaim);
 
       // Then
-      expect(result.datapassScopes).toEqual(['Label', 'unknown_claim']);
+      expect(result).toEqual({
+        id: 'service-provider-id',
+        name: 'Test Service Provider',
+        organizationName: 'Test Organization',
+        datapassRequestId: '12345',
+        datapassScopes: ['Label', 'unknown_claim'],
+        fcScopes: ['profile'],
+        createdAt: new Date('2024-01-01'),
+        updatedAt: new Date('2024-01-01'),
+      });
       expect(loggerMock.warning).toHaveBeenCalledExactlyOnceWith(
         'Missing translation for datapassScope.unknown_claim',
       );
     });
 
     it('should not include platform and organisation fields in response', () => {
-      // Given
-      i18nMock.translate.mockReturnValue('Label');
-
       // When
       const result = service.toDisplayValue(serviceProviderMock);
 
       // Then
-      expect(result).not.toHaveProperty('platform');
-      expect(result).not.toHaveProperty('organisation');
+      expect(result).toEqual({
+        id: 'service-provider-id',
+        name: 'Test Service Provider',
+        organizationName: 'Test Organization',
+        datapassRequestId: '12345',
+        datapassScopes: ['Label', 'Label', 'Label', 'Label'],
+        fcScopes: ['openid', 'profile', 'email'],
+        createdAt: new Date('2024-01-01'),
+        updatedAt: new Date('2024-01-01'),
+      });
     });
 
-    it('should handle empty authorizedScopes array', () => {
+    it('should handle empty datapassScopes array', () => {
       // Given
+      scopesServiceMock.getScopesFromClaims.mockReturnValue([]);
       const serviceProviderWithoutScopes = {
         ...serviceProviderMock,
-        authorizedScopes: [],
+        datapassScopes: [],
       };
 
       // When
       const result = service.toDisplayValue(serviceProviderWithoutScopes);
 
       // Then
-      expect(result.datapassScopes).toEqual([]);
+      expect(result).toEqual({
+        id: 'service-provider-id',
+        name: 'Test Service Provider',
+        organizationName: 'Test Organization',
+        datapassRequestId: '12345',
+        datapassScopes: [],
+        fcScopes: [],
+        createdAt: new Date('2024-01-01'),
+        updatedAt: new Date('2024-01-01'),
+      });
     });
 
-    it('should handle null authorizedScopes', () => {
+    it('should handle null datapassScopes', () => {
       // Given
+      scopesServiceMock.getScopesFromClaims.mockReturnValue([]);
       const serviceProviderWithNullScopes = {
         ...serviceProviderMock,
-        authorizedScopes: null,
+        datapassScopes: null,
       };
 
       // When
       const result = service.toDisplayValue(serviceProviderWithNullScopes);
 
       // Then
-      expect(result.datapassScopes).toEqual([]);
+      expect(result).toEqual({
+        id: 'service-provider-id',
+        name: 'Test Service Provider',
+        organizationName: 'Test Organization',
+        datapassRequestId: '12345',
+        datapassScopes: [],
+        fcScopes: [],
+        createdAt: new Date('2024-01-01'),
+        updatedAt: new Date('2024-01-01'),
+      });
+    });
+
+    it('should call scopesService.getRawClaimsFromScopes with datapass scopes', () => {
+      // When
+      service.toDisplayValue(serviceProviderMock);
+
+      // Then
+      expect(
+        scopesServiceMock.getRawClaimsFromScopes,
+      ).toHaveBeenCalledExactlyOnceWith([
+        'openid',
+        'given_name',
+        'family_name',
+        'email',
+      ]);
+    });
+
+    it('should call scopesService.getScopesFromClaims with base claims', () => {
+      // Given
+      scopesServiceMock.getRawClaimsFromScopes.mockReturnValue(['sub']);
+
+      // When
+      service.toDisplayValue(serviceProviderMock);
+
+      // Then
+      expect(
+        scopesServiceMock.getScopesFromClaims,
+      ).toHaveBeenCalledExactlyOnceWith(['sub']);
+    });
+
+    it('should convert datapass claims to base claims then to FC scopes', () => {
+      // Given
+      scopesServiceMock.getRawClaimsFromScopes.mockReturnValue([
+        'openid',
+        'sub',
+      ]);
+      const serviceProviderWithOpenid = {
+        ...serviceProviderMock,
+        datapassScopes: ['openid', 'given_name'],
+      };
+
+      // When
+      service.toDisplayValue(serviceProviderWithOpenid);
+
+      // Then
+      expect(scopesServiceMock.getRawClaimsFromScopes).toHaveBeenCalledWith([
+        'openid',
+        'given_name',
+      ]);
+      expect(scopesServiceMock.getScopesFromClaims).toHaveBeenCalledWith([
+        'openid',
+        'sub',
+      ]);
     });
   });
 });

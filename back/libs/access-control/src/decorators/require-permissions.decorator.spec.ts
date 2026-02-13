@@ -3,7 +3,6 @@ import { Reflector } from '@nestjs/core';
 
 import { FunctionSafe } from '@fc/common';
 
-import { EntityType, PermissionsType } from '../enums';
 import { RequirePermissionDecoratorInterface } from '../interfaces';
 import { PERMISSION_METADATA_TOKEN } from '../tokens';
 import { RequirePermission } from './require-permissions.decorator';
@@ -18,6 +17,14 @@ jest.mock('@nestjs/common', () => {
 describe('RequirePermission', () => {
   let setMetadataMock;
 
+  enum PermissionsType {
+    FOO = 'foo',
+  }
+
+  enum EntityType {
+    ENTITY_VALUE = 'entityValue',
+  }
+
   beforeEach(() => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
@@ -27,9 +34,12 @@ describe('RequirePermission', () => {
 
   it('set the given permissions as metadata', () => {
     // Given
-    const permissionsMock: RequirePermissionDecoratorInterface = {
-      permissionType: PermissionsType.EDIT,
-      entity: EntityType.SERVICE_PROVIDER,
+    const permissionsMock: RequirePermissionDecoratorInterface<
+      EntityType,
+      PermissionsType
+    > = {
+      permissionType: PermissionsType.FOO,
+      entity: EntityType.ENTITY_VALUE,
       entityIdLocation: {
         src: 'body',
         key: 'ServiceProviderId',

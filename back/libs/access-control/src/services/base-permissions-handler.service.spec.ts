@@ -11,19 +11,32 @@ import { SessionNotFoundException, SessionService } from '@fc/session';
 import { getSessionServiceMock } from '@mocks/session';
 
 import { RequirePermission } from '../decorators';
-import { EntityType, PermissionsType } from '../enums';
 import { RequirePermissionDecoratorInterface } from '../interfaces';
-import { ACCESS_CONTROL_TOKEN } from '../tokens';
 import { BasePermissionsHandlerService } from './base-permissions-handler.service';
 
 jest.mock('../decorators');
 
 describe('BasePermissionsHandlerService', () => {
-  let service: BasePermissionsHandlerService;
+  enum EntityType {
+    ENTITY_VALUE = 'entityValue',
+  }
 
-  class AppTest extends BasePermissionsHandlerService {
+  enum PermissionsType {
+    PERMISSION_VALUE = 'permissionValue',
+    PERMISSION_VALUE_2 = 'permissionValue2',
+  }
+
+  let service: BasePermissionsHandlerService<EntityType, PermissionsType>;
+
+  class AppTest extends BasePermissionsHandlerService<
+    EntityType,
+    PermissionsType
+  > {
     protected checkPermissions(
-      _permissionType: RequirePermissionDecoratorInterface,
+      _permissionType: RequirePermissionDecoratorInterface<
+        EntityType,
+        PermissionsType
+      >,
       _context: ExecutionContext,
     ): boolean {
       return true;
@@ -33,9 +46,12 @@ describe('BasePermissionsHandlerService', () => {
   const reflectorMock = {};
   const sessionServiceMock = getSessionServiceMock();
 
-  const controllerPermissionsMock: RequirePermissionDecoratorInterface = {
-    permissionType: PermissionsType.VIEW,
-    entity: EntityType.SP_INSTANCE,
+  const controllerPermissionsMock: RequirePermissionDecoratorInterface<
+    EntityType,
+    PermissionsType
+  > = {
+    permissionType: PermissionsType.PERMISSION_VALUE,
+    entity: EntityType.ENTITY_VALUE,
     entityIdLocation: { src: 'params', key: 'instanceId' },
   };
 
@@ -140,21 +156,21 @@ describe('BasePermissionsHandlerService', () => {
   describe('standardMatchPermission', () => {
     const userPermissions = [
       {
-        permissionType: PermissionsType.LIST,
-        entity: EntityType.SERVICE_PROVIDER,
+        permissionType: PermissionsType.PERMISSION_VALUE,
+        entity: EntityType.ENTITY_VALUE,
         entityId: 'entityIdValue1',
       },
       {
-        permissionType: PermissionsType.CREATE,
-        entity: EntityType.SERVICE_PROVIDER,
+        permissionType: PermissionsType.PERMISSION_VALUE_2,
+        entity: EntityType.ENTITY_VALUE,
         entityId: 'entityIdValue2',
       },
     ];
 
     it('should match permission', () => {
       const controllerMock = {
-        permissionType: PermissionsType.LIST,
-        entity: EntityType.SERVICE_PROVIDER,
+        permissionType: PermissionsType.PERMISSION_VALUE,
+        entity: EntityType.ENTITY_VALUE,
         entityId: 'entityIdValue1',
       };
       const result = service['standardMatchPermission'](
@@ -166,8 +182,8 @@ describe('BasePermissionsHandlerService', () => {
 
     it('should not match permission', () => {
       const controllerMock = {
-        permissionType: PermissionsType.EDIT,
-        entity: EntityType.SERVICE_PROVIDER,
+        permissionType: PermissionsType.PERMISSION_VALUE_2,
+        entity: EntityType.ENTITY_VALUE,
         entityId: 'entityIdValue1',
       };
       const result = service['standardMatchPermission'](
@@ -194,11 +210,9 @@ describe('BasePermissionsHandlerService', () => {
     const userPermissionsMock = Symbol('userPermissions');
 
     const sessionPartnersAccountDataMock = {
-      [ACCESS_CONTROL_TOKEN]: {
-        userPermissions: userPermissionsMock,
-      },
+      permissions: userPermissionsMock,
       identity: Symbol('identity'),
-    } as unknown as PartnersAccountSession;
+    } as unknown as PartnersAccountSession<EntityType, PermissionsType>;
 
     beforeEach(() => {
       jest.mocked(httpArgMock).getRequest.mockReturnValueOnce(reqMock);
