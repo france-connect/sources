@@ -1,6 +1,6 @@
 login,password,family_name,preferred_username,given_name,gender,email,phone_number,birthdate,birthplace,birthcountry,country,locality,postal_code,street_address
 
-test,123,DUBOIS,,Angela Claire Louise,female,wossewodda-3728@yopmail.com,123456789,1962-08-24,75107,99100,France,Paris,75107,20 avenue de Ségur
+test,123,DUBOIS,,Angela Claire Louise,female,wossewodda-3728@gmail.com,123456789,1962-08-24,75107,99100,France,Paris,75107,20 avenue de Ségur
 avec_nom_dusage,123,MERCIER,DUBOIS,Pierre,male,ymmyffarapp-1777@yopmail.com,623456789,1969-03-17,95277,99100,France,Paris,75107,20 avenue de Ségur
 nom_composé,123,TROIS-DUPRE,,Melissandre Juliette,female,imyllommo-2736@yopmail.com,723456789,1981-07-27,13012,99100,France,Paris,75107,20 avenue de Ségur
 nom_50+_caractères,123,AZERTYUIOPMLKJHGFDSQWXCVBNAZERTYUIOPMLKJHGFDSQWXCVBN,,Bertrand Cyril,male,cyxoxudaj-2393@yopmail.com,123456789,2000-03-01,75119,99100,France,Paris,75107,20 avenue de Ségur
