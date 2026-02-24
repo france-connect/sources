@@ -5,7 +5,7 @@ Fonctionnalité: Connexion eIDAS - FS Européen
   # je veux utiliser mon identité vérifiée par un fournisseur d'identité français
   # afin d'accéder à mon fournisseur de service européen
 
-  @ci
+  @ci @ignoreInteg01
   Scénario: Connexion FS Européen - FS eidas-be
     Etant donné que j'utilise un compte usager "par défaut"
     Et que j'utilise le fournisseur de service "eidas-be"

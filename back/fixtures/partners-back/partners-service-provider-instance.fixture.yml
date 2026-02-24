@@ -6,6 +6,7 @@ items:
     createdAt: '2022-02-22'
     updatedAt: '2022-05-02'
     environment: 'SANDBOX'
+    creator: '@user-angela-dubois'
 
   # instance with 1 version
   sp2-i1-sandbox:
@@ -13,6 +14,7 @@ items:
     createdAt: '2022-02-22T23:00:00.000Z'
     updatedAt: '2022-05-02T22:00:00.000Z'
     environment: 'SANDBOX'
+    creator: '@user-bernard-martinot'
 
   # instance for bdd_default
   sp3-i1-sandbox:
@@ -20,6 +22,7 @@ items:
     createdAt: '2022-02-22T23:00:00.000Z'
     updatedAt: '2022-05-02T22:00:00.000Z'
     environment: 'SANDBOX'
+    creator: '@user-bdd-default'
 
   # instance for bdd_one_instance
   sp4-i1-sandbox:
@@ -27,3 +30,4 @@ items:
     createdAt: '2022-02-22T23:00:00.000Z'
     updatedAt: '2022-05-02T22:00:00.000Z'
     environment: 'SANDBOX'
+    creator: '@user-bdd-one-instance'

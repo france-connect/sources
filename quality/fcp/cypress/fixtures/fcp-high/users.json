@@ -25,8 +25,9 @@
       "email": "x1_bdd_default@yopmail.com"
     },
     "eidasClaims": {
-      "PersonIdentifier-eidas-mock": "FR/CB/954ad0d34787a2616211a192741aa524aee08166185c36cc4cee035ab529df38v1",
-      "PersonIdentifier-eidas-be": "FR/BE/d0c1ba904bee63e5bfad3b0f60d049479e2c9dd5d6e9c9941e069887af733aefv1",
+      "PersonIdentifier-docker-eidas-mock": "FR/CB/954ad0d34787a2616211a192741aa524aee08166185c36cc4cee035ab529df38v1",
+      "PersonIdentifier-docker-eidas-be": "FR/BE/d0c1ba904bee63e5bfad3b0f60d049479e2c9dd5d6e9c9941e069887af733aefv1",
+      "PersonIdentifier-integ01-eidas-mock": "FR/CB/812873d9d8491ff8cd11d99557ee84cbca1e38bb02152b10d4ab706f8450eac0v1",
       "PlaceOfBirth": "Paris 7e Arrondissement - 75107, FRANCE (FR)"
     }
   },
@@ -245,7 +246,8 @@
       "email": "baterollu-5399@yopmail.com"
     },
     "eidasClaims": {
-      "PersonIdentifier-eidas-mock": "FR/CB/daf9886e69abe670453e816c6f40af507dd4e7e83af696de277ef6e1f3449d82v1",
+      "PersonIdentifier-docker-eidas-mock": "FR/CB/daf9886e69abe670453e816c6f40af507dd4e7e83af696de277ef6e1f3449d82v1",
+      "PersonIdentifier-integ01-eidas-mock": "FR/CB/70435e430b0c769b65a27dad7ecd0b5a930ce8acf3e9ad6ebcbffe21592d90d4v1",
       "PlaceOfBirth": "Foce - 2A115, FRANCE (FR)"
     }
   },
@@ -270,7 +272,8 @@
       "email": "jean-fleuret@yopmail.com"
     },
     "eidasClaims": {
-      "PersonIdentifier-eidas-mock": "FR/CB/a88de297f2f190ded0bbd17075d9d65d314ee9048ebb51e50b53e29b3372bc91v1",
+      "PersonIdentifier-docker-eidas-mock": "FR/CB/a88de297f2f190ded0bbd17075d9d65d314ee9048ebb51e50b53e29b3372bc91v1",
+      "PersonIdentifier-integ01-eidas-mock": "FR/CB/55314326fb7e1a982ed7b3b0be8e84f9f33a01b9064b9c3d747afe292ab06ddev1",
       "PlaceOfBirth": "Japon (JP)",
       "birthdate": "1992-11-01"
     }
@@ -296,7 +299,8 @@
       "email": "jean-targe@yopmail.com"
     },
     "eidasClaims": {
-      "PersonIdentifier-eidas-mock": "FR/CB/0a25f79fb531da2a6ef5eb8e2c3395d2de10d5d9c1dd04aaafdad84b5451b01fv1",
+      "PersonIdentifier-docker-eidas-mock": "FR/CB/0a25f79fb531da2a6ef5eb8e2c3395d2de10d5d9c1dd04aaafdad84b5451b01fv1",
+      "PersonIdentifier-integ01-eidas-mock": "FR/CB/945734793e0f5776e6e45a40774a9b3e97ff617c46c8f6cfebc1bc0458c1ad31v1",
       "PlaceOfBirth": "Japon (JP)",
       "birthdate": "1992-01-01"
     }
@@ -490,12 +494,12 @@
       }
     ],
     "claims": {
-      "given_name": "javier",
-      "family_name": "Garcia",
-      "preferred_username": "Garcia",
-      "birthdate": "1964-12-31",
+      "given_name": "javiér",
+      "family_name": "Garçia",
+      "preferred_username": "Garçia",
+      "birthdate": "1965-01-01",
       "gender": "male",
-      "birthplace": "Place of Birth"
+      "birthplace": "Paris 10"
     }
   },
   {
@@ -518,7 +522,8 @@
       "email": "effannopiq-4009@yopmail.com"
     },
     "eidasClaims": {
-      "PersonIdentifier-eidas-mock": "FR/CB/4c48ec450b43404aa190ceae188831c2a5bb277c7a57debe07646b0d1c857d11v1",
+      "PersonIdentifier-docker-eidas-mock": "FR/CB/4c48ec450b43404aa190ceae188831c2a5bb277c7a57debe07646b0d1c857d11v1",
+      "PersonIdentifier-integ01-eidas-mock": "FR/CB/2371d303ae897dd6ea399b641d5206e2db728957500699b841d04eeea5d39f12v1",
       "PlaceOfBirth": "Paris 17e Arrondissement - 75117, FRANCE (FR)"
     }
   },
@@ -542,7 +547,8 @@
       "email": "owallottim-1136@yopmail.com"
     },
     "eidasClaims": {
-      "PersonIdentifier-eidas-mock": "FR/CB/8f63b4639d8b1a72c35d99e7fe4d888c262d58dcf5c2a1ace568303560290ad8v1",
+      "PersonIdentifier-docker-eidas-mock": "FR/CB/8f63b4639d8b1a72c35d99e7fe4d888c262d58dcf5c2a1ace568303560290ad8v1",
+      "PersonIdentifier-integ01-eidas-mock": "FR/CB/3afe62051f8c4e452409ec425493494bbb9e71cb2f7ebec066a17ad302a89257v1",
       "PlaceOfBirth": "Toulouse - 31555, FRANCE (FR)"
     }
   },
@@ -566,7 +572,8 @@
       "email": "cyxoxudaj-2393@yopmail.com"
     },
     "eidasClaims": {
-      "PersonIdentifier-eidas-mock": "FR/CB/281ca116a31836f14ca477289cad82c6e02e6815a50cf7a8a932dcd1ce69fb6dv1",
+      "PersonIdentifier-docker-eidas-mock": "FR/CB/281ca116a31836f14ca477289cad82c6e02e6815a50cf7a8a932dcd1ce69fb6dv1",
+      "PersonIdentifier-integ01-eidas-mock": "FR/CB/50aa1432ad2521982dde0aaeb2ff68685f63b924b94037803a3566b9e242abb4v1",
       "PlaceOfBirth": "Paris 19e Arrondissement - 75119, FRANCE (FR)"
     }
   },

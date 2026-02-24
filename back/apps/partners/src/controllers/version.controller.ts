@@ -1,6 +1,6 @@
 import { Controller, Get, Injectable, UseGuards } from '@nestjs/common';
 
-import { AccessControlGuard, RequirePermission } from '@fc/access-control';
+import { AccessControl, AccessControlGuard } from '@fc/access-control';
 import {
   Dto2FormI18nService,
   MetadataDtoTranslationInterface,
@@ -9,7 +9,7 @@ import {
 import { ServiceProviderInstanceVersionDto } from '@fc/partners-service-provider-instance-version';
 
 import {
-  AccessControlEntity,
+  AccessControlHandler,
   AccessControlPermission,
   PartnersBackRoutes,
 } from '../enums';
@@ -23,10 +23,14 @@ export class VersionController {
   ) {}
 
   @Get(PartnersBackRoutes.SP_VERSION_FORM_METADATA)
-  @RequirePermission({
-    permissionType: AccessControlPermission.LIST,
-    entity: AccessControlEntity.SP_INSTANCE,
-  })
+  @AccessControl([
+    {
+      permission: AccessControlPermission.INSTANCE_CONTRIBUTOR,
+      handler: {
+        method: AccessControlHandler.GLOBAL_PERMISSION,
+      },
+    },
+  ])
   @UseGuards(AccessControlGuard)
   getFormMetadata(): MetadataDtoTranslationInterface[] {
     const payload = this.metadataFormService.getDtoMetadata(

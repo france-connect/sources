@@ -7,23 +7,25 @@ import {
   Injectable,
 } from '@nestjs/common';
 
-import { BasePermissionsHandlerService } from '../services';
+import { BaseAccessControlHandler } from '../handlers';
 import { APP_ACCESS_CONTROL_HANDLER } from '../tokens';
 
 @Injectable()
 export class AccessControlGuard<
   EntityType extends string,
   PermissionType extends string,
+  PermissionHandlerType extends string,
 > implements CanActivate {
   constructor(
     @Inject(APP_ACCESS_CONTROL_HANDLER)
-    private readonly permissionHandler: BasePermissionsHandlerService<
+    private readonly permissionHandler: BaseAccessControlHandler<
       EntityType,
-      PermissionType
+      PermissionType,
+      PermissionHandlerType
     >,
   ) {}
 
   canActivate(context: ExecutionContext): Observable<boolean> {
-    return of(this.permissionHandler.checkAllPermissions(context));
+    return of(this.permissionHandler.handle(context));
   }
 }

@@ -202,20 +202,20 @@ export class PartnersDatapassService {
   ): Promise<void> {
     await this.accessControlService.addPermissionTransactional(queryRunner, {
       accountId,
-      permissionType: AccessControlPermission.LIST,
+      permissionType: AccessControlPermission.SP_ADMIN,
       entity: AccessControlEntity.SERVICE_PROVIDER,
     });
 
     await this.accessControlService.addPermissionTransactional(queryRunner, {
       accountId,
-      permissionType: AccessControlPermission.VIEW,
+      permissionType: AccessControlPermission.SP_ADMIN,
       entity: AccessControlEntity.SERVICE_PROVIDER,
       entityId: serviceProviderId,
     });
 
     await this.accessControlService.addPermissionTransactional(queryRunner, {
       accountId,
-      permissionType: AccessControlPermission.LIST,
+      permissionType: AccessControlPermission.SP_ADMIN,
       entity: AccessControlEntity.SP_INSTANCE,
     });
   }

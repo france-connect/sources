@@ -8,7 +8,7 @@ Fonctionnalité: Connexion eIDAS - Validation des claims renvoyés par le fourni
   @exceptions
   Scénario: Connexion FS Européen - Erreur quand FI FR ne renvoit pas un claim obligatoire
     Etant donné que j'utilise un compte usager "par défaut"
-    Et que j'utilise le fournisseur de service "eidas-be"
+    Et que j'utilise le fournisseur de service "eidas-mock"
     Et que je navigue sur la page fournisseur de service eidas
     Et que le fournisseur de service requiert l'accès aux informations des scopes "eidas"
     Et que je configure un fournisseur de service sur eidas mock
@@ -24,7 +24,7 @@ Fonctionnalité: Connexion eIDAS - Validation des claims renvoyés par le fourni
 
   Scénario: Connexion FS Européen - Pas d'erreur si FI FR ne renvoit pas un claim optionnel
     Etant donné que j'utilise un compte usager "par défaut"
-    Et que j'utilise le fournisseur de service "eidas-be"
+    Et que j'utilise le fournisseur de service "eidas-mock"
     Et que je navigue sur la page fournisseur de service eidas
     Et que le fournisseur de service requiert l'accès aux informations des scopes "eidas"
     Et que je configure un fournisseur de service sur eidas mock
@@ -38,11 +38,11 @@ Fonctionnalité: Connexion eIDAS - Validation des claims renvoyés par le fourni
     Et je continue sur le fournisseur de service
     Et je suis redirigé vers la page fournisseur de service eidas mock
     Et le fournisseur de service eidas mock a accès aux informations des scopes "eidas sans preferred_username"
-    Et le sub transmis au fournisseur de service eidas commence par "FR/BE"
+    Et le sub transmis au fournisseur de service eidas commence par "FR/CB"
 
   Scénario: Connexion FS Européen - Pas d'erreur si FI FR ne renvoit pas un claim inconnu
     Etant donné que j'utilise un compte usager "par défaut"
-    Et que j'utilise le fournisseur de service "eidas-be"
+    Et que j'utilise le fournisseur de service "eidas-mock"
     Et que je navigue sur la page fournisseur de service eidas
     Et que le fournisseur de service requiert l'accès aux informations des scopes "eidas"
     Et que je configure un fournisseur de service sur eidas mock
@@ -56,7 +56,7 @@ Fonctionnalité: Connexion eIDAS - Validation des claims renvoyés par le fourni
     Et je continue sur le fournisseur de service
     Et je suis redirigé vers la page fournisseur de service eidas mock
     Et le fournisseur de service eidas mock a accès aux informations des scopes "eidas"
-    Et le sub transmis au fournisseur de service eidas commence par "FR/BE"
+    Et le sub transmis au fournisseur de service eidas commence par "FR/CB"
 
   @exceptions
   Scénario: Connexion FS français - Erreur si FI EU ne renvoit pas un claim obligatoire

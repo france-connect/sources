@@ -3,10 +3,13 @@ import { ChainableElement, UserClaims } from '../../common/types';
 import { EidasAssuranceLevelEnum } from '../enums';
 
 interface EidasMockConfigurationInterface {
+  citizenCountry?: string;
   loa?: EidasAssuranceLevelEnum;
   loaCompareType?: 'minimum';
   nameId?: 'unspecified' | 'transient' | 'persistent';
+  optionalScopes?: string[];
   scopes?: string[];
+  spCountry?: string;
   spType?: 'not provided' | 'public' | 'private';
 }
 
@@ -76,21 +79,27 @@ const scopeOptionalEidasAttributesMap = {
 
 export default class SpEidasMockPage {
   configureEidasSpMock(params: EidasMockConfigurationInterface): void {
-    const config = {
+    const config: EidasMockConfigurationInterface = {
+      citizenCountry: 'FR',
       loa: EidasAssuranceLevelEnum.D,
       loaCompareType: 'minimum',
       nameId: 'unspecified',
       optionalScopes: ['family_name'],
       scopes: ['openid'],
+      spCountry: 'CB',
       spType: 'public',
       ...params,
     };
 
     cy.get('#eidasconnector_msdd').click();
-    cy.get('#eidasconnector_msdd .enabled._msddli_').siblings().last().click();
+    cy.get('#eidasconnector_msdd .enabled._msddli_')
+      .contains(config.spCountry)
+      .click();
 
     cy.get('#citizeneidas_msdd').click();
-    cy.get('#citizeneidas_msdd .enabled._msddli_').contains('FR').click();
+    cy.get('#citizeneidas_msdd .enabled._msddli_')
+      .contains(config.citizenCountry)
+      .click();
 
     cy.get('#eidasNameIdentifier').select(config.nameId);
     cy.get('#eidasloa').select(EidasAssuranceLevelEnum[config.loa]);
@@ -142,13 +151,14 @@ export default class SpEidasMockPage {
     scopes: string[],
     userClaims: UserClaims,
     eidasClaims: UserClaims,
+    testEnv: string,
     spName: string,
   ): void {
     const allClaims = {
       ...userClaims,
       ...eidasClaims,
       // Force PersonIdentifier claim for the current sp
-      PersonIdentifier: eidasClaims[`PersonIdentifier-${spName}`],
+      PersonIdentifier: eidasClaims[`PersonIdentifier-${testEnv}-${spName}`],
     } as UserEidasClaimsInterface;
 
     const expectedIdentity = this.getExpectedIdentity(scopes, allClaims);

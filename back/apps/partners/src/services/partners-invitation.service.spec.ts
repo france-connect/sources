@@ -125,7 +125,7 @@ describe('PartnersInvitationService', () => {
         accountPermissionServiceMock.addPermissionTransactional,
       ).toHaveBeenCalledWith(queryRunnerMock, {
         accountId: accountIdMock,
-        permissionType: AccessControlPermission.LIST,
+        permissionType: AccessControlPermission.INSTANCE_CONTRIBUTOR,
         entity: AccessControlEntity.SP_INSTANCE,
       });
     });
@@ -163,7 +163,7 @@ describe('PartnersInvitationService', () => {
         accountPermissionServiceMock.addPermissionTransactional,
       ).toHaveBeenNthCalledWith(1, queryRunnerMock, {
         accountId: accountIdMock,
-        permissionType: AccessControlPermission.VIEW,
+        permissionType: AccessControlPermission.INSTANCE_CONTRIBUTOR,
         entity: AccessControlEntity.SP_INSTANCE,
         entityId: instances[0],
       });
@@ -171,7 +171,7 @@ describe('PartnersInvitationService', () => {
         accountPermissionServiceMock.addPermissionTransactional,
       ).toHaveBeenNthCalledWith(2, queryRunnerMock, {
         accountId: accountIdMock,
-        permissionType: AccessControlPermission.VIEW,
+        permissionType: AccessControlPermission.INSTANCE_CONTRIBUTOR,
         entity: AccessControlEntity.SP_INSTANCE,
         entityId: instances[1],
       });

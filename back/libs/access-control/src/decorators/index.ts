@@ -1,2 +1,2 @@
+export * from './access-control.decorator';
 export * from './account-permissions.decorator';
-export * from './require-permissions.decorator';

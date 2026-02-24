@@ -2,13 +2,12 @@ entity: PartnersAccountPermission
 items:
   permissions-spi-list-1:
     id: '2b430fa9-bdc4-47f4-a0b0-4747f7f32fb7'
-    permissionType: 'LIST'
-    entity: 'SP_INSTANCE'
+    permissionType: 'INSTANCE_CONTRIBUTOR'
     account: '@user-angela-dubois'
 
   permissions-spi-1:
     id: '0f2e2074-7415-4509-9a53-150873dc59ed'
-    permissionType: 'VIEW'
+    permissionType: 'INSTANCE_CONTRIBUTOR'
     entity: 'SP_INSTANCE'
     # @sp1-i1-sandbox
     entityId: '997abfe2-a19a-49c9-a2c2-138798dde859'
@@ -16,13 +15,12 @@ items:
 
   permissions-spi-list-2:
     id: '3fac4288-0a56-48a4-b0ec-b9f9af6cf60a'
-    permissionType: 'LIST'
-    entity: 'SP_INSTANCE'
+    permissionType: 'INSTANCE_CONTRIBUTOR'
     account: '@user-bernard-martinot'
 
   permissions-spi-2:
     id: 'f6d98b6d-9d84-44b7-84b4-2ac2829e2333'
-    permissionType: 'VIEW'
+    permissionType: 'INSTANCE_CONTRIBUTOR'
     entity: 'SP_INSTANCE'
     # @sp2-i1-sandbox
     entityId: 'efa51522-26e9-4d03-8958-816ff59a74bd'
@@ -30,13 +28,12 @@ items:
 
   permissions-sp-list-default:
     id: 'c8568083-f5a7-4535-9fe9-f96059f43642'
-    permissionType: 'LIST'
-    entity: 'SERVICE_PROVIDER'
+    permissionType: 'SP_ADMIN'
     account: '@user-bdd-default'
 
   permissions-sp-view-sp2-default:
     id: '70721fc1-e2f4-455a-ae0c-149b77443245'
-    permissionType: 'VIEW'
+    permissionType: 'SP_ADMIN'
     entity: 'SERVICE_PROVIDER'
     # @sp2-sandbox
     entityId: '25c4e41c-a97d-4bc9-8e05-e353c91eaef5'
@@ -44,7 +41,7 @@ items:
 
   permissions-sp-view-sp3-default:
     id: 'f4638975-6443-4645-b430-a46fa1cd55cb'
-    permissionType: 'VIEW'
+    permissionType: 'SP_ADMIN'
     entity: 'SERVICE_PROVIDER'
     # @sp3-sandbox
     entityId: 'b66afba8-58b2-4465-a868-6a187ea67f5a'
@@ -52,13 +49,12 @@ items:
 
   permissions-spi-list-3:
     id: '049e6bbc-13cf-4202-8ada-a065d0703f03'
-    permissionType: 'LIST'
-    entity: 'SP_INSTANCE'
+    permissionType: 'INSTANCE_CONTRIBUTOR'
     account: '@user-bdd-default'
 
   permissions-spi-3:
     id: 'b0b5dc53-1f51-45e9-aab4-e9be58973a85'
-    permissionType: 'VIEW'
+    permissionType: 'INSTANCE_CONTRIBUTOR'
     entity: 'SP_INSTANCE'
     # @sp3-i1-sandbox
     entityId: 'acfacfcf-291b-43bd-abe7-fb234b3d879e'
@@ -66,13 +62,12 @@ items:
 
   permissions-spi-list-4:
     id: 'cf24e90b-2d42-468f-af23-7612f64cacbe'
-    permissionType: 'LIST'
-    entity: 'SP_INSTANCE'
+    permissionType: 'INSTANCE_CONTRIBUTOR'
     account: '@user-bdd-one-instance'
 
   permissions-spi-4:
     id: 'fdcad688-eb6f-40a4-a52b-b4de8948d5f9'
-    permissionType: 'VIEW'
+    permissionType: 'INSTANCE_CONTRIBUTOR'
     entity: 'SP_INSTANCE'
     # @sp4-i1-sandbox
     entityId: '50b70101-0e1f-419a-9365-81754c2de689'
@@ -80,13 +75,12 @@ items:
 
   permissions-sp-list-angela:
     id: '8a9c4d2e-1b5f-4a7c-9e3d-2f8b1c6a9e4d'
-    permissionType: 'LIST'
-    entity: 'SERVICE_PROVIDER'
+    permissionType: 'SP_ADMIN'
     account: '@user-angela-dubois'
 
   permissions-sp-view-sp1-angela:
     id: '7b8e5f3a-2c6d-4e9f-8a1b-5c4e7d9f2a6b'
-    permissionType: 'VIEW'
+    permissionType: 'SP_ADMIN'
     entity: 'SERVICE_PROVIDER'
     # @sp1-sandbox
     entityId: 'd7d36b81-0b68-4c26-a399-854848164f29'

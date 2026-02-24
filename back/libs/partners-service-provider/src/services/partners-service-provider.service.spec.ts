@@ -29,7 +29,7 @@ describe('PartnersServiceProviderService', () => {
 
   const permissionsMock = [
     {
-      permissionType: AccessControlPermission.VIEW,
+      permissionType: AccessControlPermission.SP_ADMIN,
       entity: AccessControlEntity.SERVICE_PROVIDER,
       entityId: 'service-provider-id',
     },

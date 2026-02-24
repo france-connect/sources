@@ -39,14 +39,14 @@ export class PartnersAccountPermission {
   entityId: string;
 
   @Column({
-    type: 'varchar',
+    type: 'text',
     nullable: true,
     default: null,
   })
   entity: string;
 
   @Column({
-    type: 'varchar',
+    type: 'text',
   })
   permissionType: string;
 }

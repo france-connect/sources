@@ -151,10 +151,6 @@ _ci_job_relevant_for_back_apps() {
   # Build the apps to obtain the stats file
   cd "${CI_PROJECT_DIR}/back"
 
-  # Temp addition to build
-  apt update
-  apt install -y make g++
-
   if [[ ${CI_MERGE_REQUEST_LABELS} == *"CI Refresh Cache"* ]]; then
     echo "Refreshing cache (rm -rf node_modules/)"
     rm -rf node_modules

@@ -231,14 +231,14 @@ describe('PartnersAccountService', () => {
         accountPermissionMock.addPermissionTransactional,
       ).toHaveBeenCalledWith(queryRunnerMock, {
         accountId,
-        permissionType: AccessControlPermission.LIST,
+        permissionType: AccessControlPermission.INSTANCE_CONTRIBUTOR,
         entity: AccessControlEntity.SP_INSTANCE,
       });
       expect(
         accountPermissionMock.addPermissionTransactional,
       ).toHaveBeenCalledWith(queryRunnerMock, {
         accountId,
-        permissionType: AccessControlPermission.LIST,
+        permissionType: AccessControlPermission.SP_ADMIN,
         entity: AccessControlEntity.SERVICE_PROVIDER,
       });
     });

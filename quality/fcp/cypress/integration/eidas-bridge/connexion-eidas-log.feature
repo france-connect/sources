@@ -1,5 +1,5 @@
 #language: fr
-@eidasBridge @connexionEidasLog
+@eidasBridge @connexionEidasLog @ignoreInteg01
 Fonctionnalité: Connexion eIDAS - Log
   # En tant que PO,
   # je veux tracer les cinématiques via eidas-bridge

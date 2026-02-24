@@ -13,7 +13,12 @@ When('je navigue sur la page fournisseur de service eidas', function () {
 
 When('je configure un fournisseur de service sur eidas mock', function () {
   const { scopes } = this.requestedScope;
-  spEidasMockPage.configureEidasSpMock({ scopes });
+  const { name: spName } = this.serviceProvider;
+  const params = {
+    scopes,
+    spCountry: spName === 'eidas-be' ? 'BE' : 'CB',
+  };
+  spEidasMockPage.configureEidasSpMock(params);
 });
 
 Then(
@@ -27,11 +32,12 @@ Then(
 Then(
   'le fournisseur de service eidas mock a accès aux informations des scopes {string}',
   function (scopeType: string) {
+    const { name: testEnv } = this.env;
     const { name: spName } = this.serviceProvider;
     const { claims, eidasClaims } = this.user;
     const { scopes } = getScopeByType(this.scopes, scopeType);
 
-    spEidasMockPage.checkClaims(scopes, claims, eidasClaims, spName);
+    spEidasMockPage.checkClaims(scopes, claims, eidasClaims, testEnv, spName);
   },
 );
 

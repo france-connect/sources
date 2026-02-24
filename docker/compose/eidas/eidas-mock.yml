@@ -18,7 +18,7 @@ services:
       - "VIRTUAL_HOST=eidas-mock.docker.dev-franceconnect.fr"
       - "VIRTUAL_PORT=443"
       - "App_PROTOCOL=https"
-      - "TZ=Europe/Paris"
+      - "TZ=UTC"
       - "JAVA_OPTS=-Xms512m  -Xmx512m"
       - "LOG_LEVEL=INFO"
     networks:

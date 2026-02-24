@@ -159,6 +159,7 @@
 | Code d'erreur | Description | Message utilisateur | Infos techniques |
 |---|---|---|---|
 | [<b>240001</b>](../libs/access-control/src/exceptions/access-control-unknown-permission.exception.ts) | le rôle demandé est inconnu. Merci de vérifier la liste des droits de l&#39;utilisateur |  | <b>Classe :</b> [UnknownPermissionException](../libs/access-control/src/exceptions/access-control-unknown-permission.exception.ts) <br /><b>Code HTTP :</b> 401 <br /><b>error :</b>  <br /> <b>error_description :</b>  |
+| [<b>240002</b>](../libs/access-control/src/exceptions/access-control-unknown-handler.exception.ts) | Le gestionnaire de permissions demandé est inconnu (erreur dans le code). |  | <b>Classe :</b> [AccessControlUnknownHandlerException](../libs/access-control/src/exceptions/access-control-unknown-handler.exception.ts) <br /><b>Code HTTP :</b> 500 <br /><b>error :</b>  <br /> <b>error_description :</b>  |
 
 ## @fc/csv
 | Code d'erreur | Description | Message utilisateur | Infos techniques |

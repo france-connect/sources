@@ -137,10 +137,18 @@ describe('PartnersServiceProviderInstanceService', () => {
       expect(repositoryMock.findOne).toHaveBeenCalledTimes(1);
       expect(repositoryMock.findOne).toHaveBeenCalledWith({
         where: { id: idMock },
-        relations: ['versions'],
+        relations: ['versions', 'creator'],
         order: {
           versions: {
             createdAt: 'DESC',
+          },
+        },
+        select: {
+          creator: {
+            id: true,
+            email: true,
+            firstname: true,
+            lastname: true,
           },
         },
       });
@@ -185,10 +193,18 @@ describe('PartnersServiceProviderInstanceService', () => {
         PartnersServiceProviderInstance,
         {
           where: { id: idMock },
-          relations: ['versions'],
+          relations: ['versions', 'creator'],
           order: {
             versions: {
               createdAt: 'DESC',
+            },
+          },
+          select: {
+            creator: {
+              id: true,
+              email: true,
+              firstname: true,
+              lastname: true,
             },
           },
         },

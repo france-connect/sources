@@ -2,11 +2,13 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
+import { PartnersAccount } from './partners-account.entity';
 import { PartnersServiceProviderInstanceVersion } from './partners-service-provider-instance-version.entity';
 
 export enum EnvironmentEnum {
@@ -43,4 +45,9 @@ export class PartnersServiceProviderInstance {
     nullable: false,
   })
   updatedAt: Date;
+
+  @ManyToOne(() => PartnersAccount, {
+    onDelete: 'CASCADE',
+  })
+  creator: PartnersAccount;
 }

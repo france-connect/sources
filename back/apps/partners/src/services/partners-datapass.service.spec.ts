@@ -554,7 +554,7 @@ describe('PartnersDatapassService', () => {
         accessControlServiceMock.addPermissionTransactional,
       ).toHaveBeenCalledWith(queryRunnerMock, {
         accountId,
-        permissionType: AccessControlPermission.LIST,
+        permissionType: AccessControlPermission.SP_ADMIN,
         entity: AccessControlEntity.SERVICE_PROVIDER,
       });
     });
@@ -572,7 +572,7 @@ describe('PartnersDatapassService', () => {
         accessControlServiceMock.addPermissionTransactional,
       ).toHaveBeenCalledWith(queryRunnerMock, {
         accountId,
-        permissionType: AccessControlPermission.VIEW,
+        permissionType: AccessControlPermission.SP_ADMIN,
         entity: AccessControlEntity.SERVICE_PROVIDER,
         entityId: serviceProviderId,
       });
@@ -591,7 +591,7 @@ describe('PartnersDatapassService', () => {
         accessControlServiceMock.addPermissionTransactional,
       ).toHaveBeenCalledWith(queryRunnerMock, {
         accountId,
-        permissionType: AccessControlPermission.LIST,
+        permissionType: AccessControlPermission.SP_ADMIN,
         entity: AccessControlEntity.SP_INSTANCE,
       });
     });

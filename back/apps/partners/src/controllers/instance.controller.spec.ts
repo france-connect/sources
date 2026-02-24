@@ -1,6 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { EnvironmentEnum, PublicationStatusEnum } from '@entities/typeorm';
+import {
+  EnvironmentEnum,
+  PartnersAccount,
+  PublicationStatusEnum,
+} from '@entities/typeorm';
 
 import {
   AccessControlGuard,
@@ -263,6 +267,7 @@ describe('InstanceController', () => {
       // Given
       const expected = {
         environment: EnvironmentEnum.SANDBOX,
+        creator: { id: accountId } as PartnersAccount,
       };
 
       // When
@@ -312,7 +317,7 @@ describe('InstanceController', () => {
         accountId: accountId,
         entityId: instanceIdMock,
         entity: AccessControlEntity.SP_INSTANCE,
-        permissionType: AccessControlPermission.VIEW,
+        permissionType: AccessControlPermission.INSTANCE_CONTRIBUTOR,
       });
     });
   });

@@ -5,10 +5,10 @@ import { APP_ACCESS_CONTROL_HANDLER } from '../tokens';
 import { AccessControlGuard } from './access-control.guard';
 
 describe('AccessControlGuard', () => {
-  let guard: AccessControlGuard<string, string>;
+  let guard: AccessControlGuard<string, string, string>;
 
   const appRoleHandler = {
-    checkAllPermissions: jest.fn(),
+    handle: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -17,14 +17,12 @@ describe('AccessControlGuard', () => {
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        AccessControlGuard<string, string>,
+        AccessControlGuard,
         { provide: APP_ACCESS_CONTROL_HANDLER, useValue: appRoleHandler },
       ],
     }).compile();
 
-    guard = module.get<AccessControlGuard<string, string>>(
-      AccessControlGuard<string, string>,
-    );
+    guard = module.get(AccessControlGuard);
   });
 
   it('should be defined', () => {
@@ -36,7 +34,7 @@ describe('AccessControlGuard', () => {
 
     it("should return 'true' if the role's check succeed", (done) => {
       // Given
-      appRoleHandler.checkAllPermissions.mockReturnValueOnce(true);
+      appRoleHandler.handle.mockReturnValueOnce(true);
 
       // When
       const result$ = guard.canActivate(ctxMock);
@@ -52,7 +50,7 @@ describe('AccessControlGuard', () => {
 
     it("should return 'false' if the role's check did not succeed", (done) => {
       // Given
-      appRoleHandler.checkAllPermissions.mockReturnValueOnce(false);
+      appRoleHandler.handle.mockReturnValueOnce(false);
 
       // When
       const result$ = guard.canActivate(ctxMock);

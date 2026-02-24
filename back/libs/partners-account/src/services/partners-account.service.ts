@@ -89,13 +89,13 @@ export class PartnersAccountService {
   ): Promise<void> {
     await this.accessControl.addPermissionTransactional(queryRunner, {
       accountId,
-      permissionType: AccessControlPermission.LIST,
+      permissionType: AccessControlPermission.INSTANCE_CONTRIBUTOR,
       entity: AccessControlEntity.SP_INSTANCE,
     });
 
     await this.accessControl.addPermissionTransactional(queryRunner, {
       accountId,
-      permissionType: AccessControlPermission.LIST,
+      permissionType: AccessControlPermission.SP_ADMIN,
       entity: AccessControlEntity.SERVICE_PROVIDER,
     });
   }

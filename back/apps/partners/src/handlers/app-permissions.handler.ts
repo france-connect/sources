@@ -1,65 +1,58 @@
-import { ExecutionContext, Injectable } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
+import { Injectable } from '@nestjs/common';
 
 import {
-  BasePermissionsHandlerService,
+  AccessControlPermissionDataInterface,
+  BaseAccessControlHandler,
   PermissionInterface,
-  RequirePermissionDecoratorInterface,
-  UnknownPermissionException,
 } from '@fc/access-control';
-import { SessionService } from '@fc/session';
 
-import { AccessControlEntity, AccessControlPermission } from '../enums';
+import {
+  AccessControlEntity,
+  AccessControlHandler,
+  AccessControlPermission,
+} from '../enums';
 
 @Injectable()
-export class AppPermissionsHandler extends BasePermissionsHandlerService<
+export class AppPermissionsHandler extends BaseAccessControlHandler<
   AccessControlEntity,
-  AccessControlPermission
+  AccessControlPermission,
+  AccessControlHandler
 > {
-  constructor(
-    protected readonly reflector: Reflector,
-    protected readonly sessionService: SessionService,
-  ) {
-    super(reflector, sessionService);
+  private [AccessControlHandler.DIRECT_ENTITY](
+    permission: AccessControlPermissionDataInterface<
+      AccessControlEntity,
+      AccessControlPermission,
+      AccessControlHandler
+    >,
+    entityId: string,
+    userPermissions: PermissionInterface<
+      AccessControlEntity,
+      AccessControlPermission
+    >[],
+  ): boolean {
+    return userPermissions.some(
+      (userPermission) =>
+        userPermission.permissionType === permission.permission &&
+        userPermission.entity === permission.entity &&
+        userPermission.entityId === entityId,
+    );
   }
 
-  /**
-   * The role of the fonction is to map the given permission to the right handler.
-   * That does not impact readability.
-   */
-  protected checkPermissions(
-    {
-      entity,
-      permissionType,
-      entityIdLocation,
-    }: RequirePermissionDecoratorInterface<
+  private [AccessControlHandler.GLOBAL_PERMISSION](
+    permission: AccessControlPermissionDataInterface<
       AccessControlEntity,
-      AccessControlPermission
+      AccessControlPermission,
+      AccessControlHandler
     >,
-    context: ExecutionContext,
-  ): boolean {
-    if (
-      !Object.values(AccessControlPermission).includes(
-        permissionType as AccessControlPermission,
-      )
-    ) {
-      throw new UnknownPermissionException();
-    }
-
-    const { entityId, userPermissions } = this.extractContextInfo(
-      context,
-      entityIdLocation,
-    );
-
-    const permission: PermissionInterface<
+    _entityId: string,
+    userPermissions: PermissionInterface<
       AccessControlEntity,
       AccessControlPermission
-    > = {
-      permissionType,
-      entity,
-      entityId,
-    };
-
-    return this.standardMatchPermission(userPermissions, permission);
+    >[],
+  ): boolean {
+    return userPermissions.some(
+      (userPermission) =>
+        userPermission.permissionType === permission.permission,
+    );
   }
 }

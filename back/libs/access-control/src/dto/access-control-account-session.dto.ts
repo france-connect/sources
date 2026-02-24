@@ -2,6 +2,7 @@ import { Type } from 'class-transformer';
 import {
   IsArray,
   IsObject,
+  IsOptional,
   IsString,
   IsUUID,
   ValidateNested,
@@ -15,11 +16,13 @@ export class PermissionDto<
   EntityType extends string,
   PermissionType extends string,
 > implements PermissionInterface<EntityType, PermissionType> {
+  @IsOptional()
   @IsUUID()
-  readonly entityId: uuid | null;
+  readonly entityId?: uuid;
 
   @IsString()
-  readonly entity: EntityType;
+  @IsOptional()
+  readonly entity?: EntityType;
 
   @IsString()
   readonly permissionType: PermissionType;

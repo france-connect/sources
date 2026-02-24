@@ -1,16 +1,17 @@
 import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 
 import {
+  AccessControl,
   AccessControlGuard,
   AccountPermissions,
   PermissionInterface,
-  RequirePermission,
 } from '@fc/access-control';
 import { FSA, FSAMeta } from '@fc/common';
 import { PartnersServiceProviderService } from '@fc/partners-service-provider';
 
 import {
   AccessControlEntity,
+  AccessControlHandler,
   AccessControlPermission,
   PartnersBackRoutes,
 } from '../enums';
@@ -25,10 +26,14 @@ export class ServiceProviderController {
   ) {}
 
   @Get(PartnersBackRoutes.SERVICE_PROVIDERS)
-  @RequirePermission({
-    permissionType: AccessControlPermission.LIST,
-    entity: AccessControlEntity.SERVICE_PROVIDER,
-  })
+  @AccessControl([
+    {
+      permission: AccessControlPermission.SP_ADMIN,
+      handler: {
+        method: AccessControlHandler.GLOBAL_PERMISSION,
+      },
+    },
+  ])
   @UseGuards(AccessControlGuard)
   async getServiceProviders(
     @AccountPermissions()
@@ -55,11 +60,16 @@ export class ServiceProviderController {
   }
 
   @Get(PartnersBackRoutes.SERVICE_PROVIDER)
-  @RequirePermission({
-    permissionType: AccessControlPermission.VIEW,
-    entity: AccessControlEntity.SERVICE_PROVIDER,
-    entityIdLocation: { src: 'params', key: 'serviceProviderId' },
-  })
+  @AccessControl([
+    {
+      permission: AccessControlPermission.SP_ADMIN,
+      entity: AccessControlEntity.SERVICE_PROVIDER,
+      handler: {
+        method: AccessControlHandler.DIRECT_ENTITY,
+      },
+      entityIdLocation: { src: 'params', key: 'serviceProviderId' },
+    },
+  ])
   @UseGuards(AccessControlGuard)
   async getServiceProvider(
     @Param('serviceProviderId') serviceProviderId: string,

@@ -48,10 +48,18 @@ export class PartnersServiceProviderInstanceService {
   ): Promise<PartnersServiceProviderInstance | null> {
     const instance = await this.repository.findOne({
       where: { id: instanceId },
-      relations: ['versions'],
+      relations: ['versions', 'creator'],
       order: {
         versions: {
           createdAt: 'DESC',
+        },
+      },
+      select: {
+        creator: {
+          id: true,
+          email: true,
+          firstname: true,
+          lastname: true,
         },
       },
     });
@@ -72,10 +80,18 @@ export class PartnersServiceProviderInstanceService {
       PartnersServiceProviderInstance,
       {
         where: { id: instanceId },
-        relations: ['versions'],
+        relations: ['versions', 'creator'],
         order: {
           versions: {
             createdAt: 'DESC',
+          },
+        },
+        select: {
+          creator: {
+            id: true,
+            email: true,
+            firstname: true,
+            lastname: true,
           },
         },
       },

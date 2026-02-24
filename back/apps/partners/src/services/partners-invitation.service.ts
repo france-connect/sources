@@ -49,7 +49,7 @@ export class PartnersInvitationService {
 
       await this.accessControl.addPermissionTransactional(queryRunner, {
         accountId,
-        permissionType: AccessControlPermission.LIST,
+        permissionType: AccessControlPermission.INSTANCE_CONTRIBUTOR,
         entity: AccessControlEntity.SP_INSTANCE,
       });
 
@@ -65,7 +65,7 @@ export class PartnersInvitationService {
     for (const instanceId of instances) {
       await this.accessControl.addPermissionTransactional(queryRunner, {
         accountId,
-        permissionType: AccessControlPermission.VIEW,
+        permissionType: AccessControlPermission.INSTANCE_CONTRIBUTOR,
         entity: AccessControlEntity.SP_INSTANCE,
         entityId: instanceId,
       });

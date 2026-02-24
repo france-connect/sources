@@ -30,12 +30,12 @@ describe('ServiceProviderController', () => {
     AccessControlPermission
   >[] = [
     {
-      permissionType: AccessControlPermission.LIST,
+      permissionType: AccessControlPermission.SP_ADMIN,
       entity: AccessControlEntity.SERVICE_PROVIDER,
       entityId: null,
     },
     {
-      permissionType: AccessControlPermission.VIEW,
+      permissionType: AccessControlPermission.SP_ADMIN,
       entity: AccessControlEntity.SERVICE_PROVIDER,
       entityId: 'service-provider-id',
     },

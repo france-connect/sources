@@ -14,16 +14,17 @@ import {
 
 import {
   EnvironmentEnum,
+  PartnersAccount,
   PartnersServiceProviderInstance,
   PublicationStatusEnum,
 } from '@entities/typeorm';
 
 import {
+  AccessControl,
   AccessControlGuard,
   AccountPermissions,
   AccountPermissionService,
   PermissionInterface,
-  RequirePermission,
 } from '@fc/access-control';
 import { FSA, FSAMeta } from '@fc/common';
 import {
@@ -45,6 +46,7 @@ import { TypeormService } from '@fc/typeorm';
 
 import {
   AccessControlEntity,
+  AccessControlHandler,
   AccessControlPermission,
   PartnersBackRoutes,
 } from '../enums';
@@ -71,10 +73,14 @@ export class InstanceController {
   ) {}
 
   @Get(PartnersBackRoutes.SP_INSTANCES)
-  @RequirePermission({
-    permissionType: AccessControlPermission.LIST,
-    entity: AccessControlEntity.SP_INSTANCE,
-  })
+  @AccessControl([
+    {
+      permission: AccessControlPermission.INSTANCE_CONTRIBUTOR,
+      handler: {
+        method: AccessControlHandler.GLOBAL_PERMISSION,
+      },
+    },
+  ])
   @UseGuards(AccessControlGuard)
   async retrieveVersions(
     @AccountPermissions()
@@ -92,11 +98,16 @@ export class InstanceController {
   }
 
   @Get(PartnersBackRoutes.SP_INSTANCE)
-  @RequirePermission({
-    permissionType: AccessControlPermission.VIEW,
-    entity: AccessControlEntity.SP_INSTANCE,
-    entityIdLocation: { src: 'params', key: 'instanceId' },
-  })
+  @AccessControl([
+    {
+      permission: AccessControlPermission.INSTANCE_CONTRIBUTOR,
+      entity: AccessControlEntity.SP_INSTANCE,
+      handler: {
+        method: AccessControlHandler.DIRECT_ENTITY,
+      },
+      entityIdLocation: { src: 'params', key: 'instanceId' },
+    },
+  ])
   @UseGuards(AccessControlGuard)
   async retrieveInstance(
     @Param('instanceId') instanceId: string,
@@ -111,10 +122,14 @@ export class InstanceController {
   }
 
   @Post(PartnersBackRoutes.SP_INSTANCES)
-  @RequirePermission({
-    permissionType: AccessControlPermission.LIST,
-    entity: AccessControlEntity.SP_INSTANCE,
-  })
+  @AccessControl([
+    {
+      permission: AccessControlPermission.INSTANCE_CONTRIBUTOR,
+      handler: {
+        method: AccessControlHandler.GLOBAL_PERMISSION,
+      },
+    },
+  ])
   @UseGuards(AccessControlGuard)
   @UseGuards(CsrfTokenGuard)
   @UsePipes(FormValidationPipe)
@@ -163,6 +178,7 @@ export class InstanceController {
   ): Promise<{ instanceId: string; versionId: string }> {
     const { id: instanceId } = await this.instance.save(queryRunner, {
       environment: EnvironmentEnum.SANDBOX,
+      creator: { id: accountId } as PartnersAccount,
     });
 
     // Skip "DRAFT" for sandbox since there is no point to update right after creation
@@ -176,7 +192,7 @@ export class InstanceController {
 
     await this.accessControl.addPermissionTransactional(queryRunner, {
       accountId,
-      permissionType: AccessControlPermission.VIEW,
+      permissionType: AccessControlPermission.INSTANCE_CONTRIBUTOR,
       entity: AccessControlEntity.SP_INSTANCE,
       entityId: instanceId,
     });
@@ -185,11 +201,16 @@ export class InstanceController {
   }
 
   @Put(PartnersBackRoutes.SP_INSTANCE)
-  @RequirePermission({
-    permissionType: AccessControlPermission.VIEW,
-    entity: AccessControlEntity.SP_INSTANCE,
-    entityIdLocation: { src: 'params', key: 'instanceId' },
-  })
+  @AccessControl([
+    {
+      permission: AccessControlPermission.INSTANCE_CONTRIBUTOR,
+      entity: AccessControlEntity.SP_INSTANCE,
+      handler: {
+        method: AccessControlHandler.DIRECT_ENTITY,
+      },
+      entityIdLocation: { src: 'params', key: 'instanceId' },
+    },
+  ])
   @UseGuards(AccessControlGuard)
   @UseGuards(CsrfTokenGuard)
   @UsePipes(FormValidationPipe)

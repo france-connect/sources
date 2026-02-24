@@ -7,11 +7,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PartnersAccountPermission } from '@entities/typeorm';
 
 import { AccessControlGuard } from './guards';
+import { BaseAccessControlHandler } from './handlers';
 import { AccessControlSessionInterceptor } from './interceptors/access-control-session.interceptor';
 import {
   AccountPermissionRepository,
   AccountPermissionService,
-  BasePermissionsHandlerService,
 } from './services';
 import { APP_ACCESS_CONTROL_HANDLER } from './tokens';
 
@@ -20,8 +20,15 @@ export class AccessControlModule {
   static withRolesHandler<
     EntityType extends string,
     PermissionType extends string,
+    PermissionHandlerType extends string,
   >(
-    handler: Type<BasePermissionsHandlerService<EntityType, PermissionType>>,
+    handler: Type<
+      BaseAccessControlHandler<
+        EntityType,
+        PermissionType,
+        PermissionHandlerType
+      >
+    >,
   ): DynamicModule {
     const accountRole = TypeOrmModule.forFeature([PartnersAccountPermission]);
 

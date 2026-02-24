@@ -45,7 +45,11 @@ import {
   ServiceProviderController,
   VersionController,
 } from './controllers/';
-import { AccessControlEntity, AccessControlPermission } from './enums';
+import {
+  AccessControlEntity,
+  AccessControlHandler,
+  AccessControlPermission,
+} from './enums';
 import { AppPermissionsHandler } from './handlers';
 import {
   PartnerPublicationService,
@@ -65,7 +69,8 @@ const oidcClientModule = OidcClientModule.register(
 
 const accessControlModule = AccessControlModule.withRolesHandler<
   AccessControlEntity,
-  AccessControlPermission
+  AccessControlPermission,
+  AccessControlHandler
 >(AppPermissionsHandler);
 
 @Module({

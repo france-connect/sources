@@ -4,6 +4,7 @@ export * from './dto';
 export * from './enums';
 export * from './exceptions';
 export * from './guards';
+export * from './handlers';
 export * from './helpers';
 export * from './interceptors';
 export * from './interfaces';
