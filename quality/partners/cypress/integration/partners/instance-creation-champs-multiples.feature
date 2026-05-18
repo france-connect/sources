@@ -4,6 +4,7 @@ Fonctionnalité: Instance - Champs multiples
 
   Scénario: Champs multiples - Etat initial
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Quand je clique sur le lien d'ajout d'une instance
     Alors je suis redirigé vers la page création d'instance
@@ -22,7 +23,7 @@ Fonctionnalité: Instance - Champs multiples
 
   Scénario: Champs multiples - Ajout / Suppression d'un champ
     Etant donné que je me connecte à l'espace partenaires
-    Et que je suis sur la page liste des instances
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je clique sur le lien d'ajout d'une instance
     Et que je suis redirigé vers la page création d'instance
     Et que j'ajoute un champ "site" dans le formulaire de création d'instance
@@ -36,6 +37,7 @@ Fonctionnalité: Instance - Champs multiples
 
   Scénario: Champs multiples - Enregistrement de plusieurs valeurs
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je clique sur le lien d'ajout d'une instance
     Et que je suis redirigé vers la page création d'instance
@@ -96,6 +98,7 @@ Fonctionnalité: Instance - Champs multiples
 
   Scénario: Champs multiples - Suppresssion de plusieurs valeurs
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je clique sur l'instance "bdd création champs multiples"
     Et que je suis redirigé vers la page modification d'instance
@@ -139,6 +142,7 @@ Fonctionnalité: Instance - Champs multiples
 
   Scénario: Champs multiples - Erreur après ajout de champ vide
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je clique sur le lien d'ajout d'une instance
     Et que je suis redirigé vers la page création d'instance
@@ -164,6 +168,7 @@ Fonctionnalité: Instance - Champs multiples
 
   Scénario: Champs multiples - Erreur après ajout de champ au mauvais format
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je clique sur le lien d'ajout d'une instance
     Et que je suis redirigé vers la page création d'instance
@@ -195,6 +200,7 @@ Fonctionnalité: Instance - Champs multiples
 
   Scénario: Champs multiples - Création domaines de callback hétérogènes
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je clique sur le lien d'ajout d'une instance
     Et que je suis redirigé vers la page création d'instance
@@ -209,6 +215,7 @@ Fonctionnalité: Instance - Champs multiples
 
   Scénario: Champs multiples - Modification domaines de callback hétérogènes
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je clique sur l'instance "bdd création champs multiples"
     Et que je suis redirigé vers la page modification d'instance
@@ -221,6 +228,7 @@ Fonctionnalité: Instance - Champs multiples
 
   Scénario: Champs multiples - Création domaines de callback hétérogènes avec sector_identifier_uri
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je clique sur le lien d'ajout d'une instance
     Et que je suis redirigé vers la page création d'instance
@@ -244,6 +252,7 @@ Fonctionnalité: Instance - Champs multiples
 
   Scénario: Champs multiples - Modification domaines de callback hétérogènes avec sector_identifier_uri
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je clique sur l'instance "création avec sector_identifier_uri"
     Et que je suis redirigé vers la page modification d'instance
@@ -263,6 +272,7 @@ Fonctionnalité: Instance - Champs multiples
 
   Scénario: Champs multiples - Erreur entre deux valeurs valides
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je clique sur le lien d'ajout d'une instance
     Et que je suis redirigé vers la page création d'instance
@@ -279,6 +289,7 @@ Fonctionnalité: Instance - Champs multiples
 
   Scénario: Champs multiples - Erreur entre trois valeurs valides avec un localhost et sans sector_identifier_uri
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je clique sur le lien d'ajout d'une instance
     Et que je suis redirigé vers la page création d'instance
@@ -294,6 +305,7 @@ Fonctionnalité: Instance - Champs multiples
 
   Scénario: Champs multiples - Erreur entre 2 valeurs valides dont un localhost et une valeur invalide et sans sector_identifier_uri
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je clique sur le lien d'ajout d'une instance
     Et que je suis redirigé vers la page création d'instance
@@ -310,6 +322,7 @@ Fonctionnalité: Instance - Champs multiples
 
   Scénario: Champs multiples - Erreur entre une valeur valide et une valeur invalide et sans sector_identifier_uri
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je clique sur le lien d'ajout d'une instance
     Et que je suis redirigé vers la page création d'instance
@@ -325,6 +338,7 @@ Fonctionnalité: Instance - Champs multiples
 
   Scénario: Champs multiples - Suppression d'un champ en erreur
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je clique sur le lien d'ajout d'une instance
     Et que je suis redirigé vers la page création d'instance

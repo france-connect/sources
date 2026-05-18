@@ -38,10 +38,10 @@ describe('StylesProvider', () => {
     // Given
     const useStylesVariablesMock = new CSSStyleDeclaration();
     useStylesVariablesMock.setProperty('--color-primary', 'red');
-    jest.spyOn(window, 'getComputedStyle').mockReturnValue(useStylesVariablesMock);
+    jest.spyOn(window, 'getComputedStyle').mockReturnValueOnce(useStylesVariablesMock);
 
     const setStateMock = jest.fn();
-    jest.spyOn(React, 'useState').mockReturnValue([expect.any(Object), setStateMock]);
+    jest.spyOn(React, 'useState').mockReturnValueOnce([expect.any(Object), setStateMock]);
 
     // When
     render(

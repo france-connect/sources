@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+set -e
+
+export REPOSITORY_MAIN_BRANCH="staging"
+
 # Disable TTY on CI env
 [ $CI ] && NO_TTY=" -T" || NO_TTY=""
 

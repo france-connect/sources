@@ -1,10 +1,14 @@
+import { readdirSync, readFileSync } from 'fs';
+import { join } from 'path';
+
+import { AxiosError } from 'axios';
+import { mocked } from 'jest-mock';
 import { lastValueFrom } from 'rxjs';
 
 import { HttpService } from '@nestjs/axios';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
-import { DatapassEvents, DatapassPayloadInterface } from '@fc/datapass';
 import { HUB_SIGN_HEADER, WebhooksService } from '@fc/webhooks';
 
 import { getConfigMock } from '@mocks/config';
@@ -12,6 +16,7 @@ import { getWebhooksServiceMock } from '@mocks/webhooks';
 
 import { MockDatapassService } from './mock-datapass.service';
 
+jest.mock('fs');
 jest.mock('rxjs', () => ({
   ...jest.requireActual('rxjs'),
   lastValueFrom: jest.fn(),
@@ -28,8 +33,26 @@ describe('MockDatapassService', () => {
   };
 
   const webhookUrl = 'http://example.com/webhook';
+  const payloadsPath = '/var/mock-datapass/payloads';
+  const successFixture = {
+    label: 'Payload Succès',
+    payload: {
+      event: 'approve',
+      fired_at: 1753704929,
+    },
+  };
+  const failureFixture = {
+    label: 'Payload Échec (DTO invalide)',
+    payload: {
+      event: 'approve',
+      fired_at: 'not_a_number',
+    },
+  };
 
   beforeEach(async () => {
+    jest.resetAllMocks();
+    jest.restoreAllMocks();
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         MockDatapassService,
@@ -50,6 +73,7 @@ describe('MockDatapassService', () => {
 
     configMock.get.mockReturnValue({
       webhookUrl,
+      payloadsPath,
     });
   });
 
@@ -57,29 +81,160 @@ describe('MockDatapassService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('handleWebhook', () => {
-    const payloadMock = '{ stringified payload }';
-    const signatureMock = 'signatureMock';
-    const event = DatapassEvents.APPROVE;
-    const callResult = { data: 'response data' };
-
+  describe('onModuleInit', () => {
     beforeEach(() => {
-      service['generatePayload'] = jest.fn().mockReturnValue(payloadMock);
-      service['callWebhook'] = jest.fn().mockResolvedValue(callResult);
-      webhooksMock.sign.mockReturnValue(signatureMock);
+      mocked(readdirSync).mockReturnValue([
+        '02-failure-invalid-dto.json',
+        '01-success.json',
+      ] as never);
+      mocked(readFileSync).mockImplementation((filePath) => {
+        const fixturesByPath = {
+          [join(payloadsPath, '01-success.json')]:
+            JSON.stringify(successFixture),
+          [join(payloadsPath, '02-failure-invalid-dto.json')]:
+            JSON.stringify(failureFixture),
+        };
+
+        return fixturesByPath[String(filePath)] as never;
+      });
     });
 
-    it('should generate payload with the correct event', async () => {
+    it('should retrieve payloads path from config', () => {
       // When
-      await service.handleWebhook(event);
+      service.onModuleInit();
 
       // Then
-      expect(service['generatePayload']).toHaveBeenCalledWith(event);
+      expect(configMock.get).toHaveBeenCalledWith('App');
+    });
+
+    it('should read the payload fixtures directory', () => {
+      // When
+      service.onModuleInit();
+
+      // Then
+      expect(readdirSync).toHaveBeenCalledTimes(1);
+      expect(readdirSync).toHaveBeenCalledWith(payloadsPath);
+    });
+
+    it('should read each payload fixture file', () => {
+      // When
+      service.onModuleInit();
+
+      // Then
+      expect(readFileSync).toHaveBeenCalledTimes(2);
+      expect(readFileSync).toHaveBeenNthCalledWith(
+        1,
+        join(payloadsPath, '01-success.json'),
+        {
+          encoding: 'utf-8',
+        },
+      );
+      expect(readFileSync).toHaveBeenNthCalledWith(
+        2,
+        join(payloadsPath, '02-failure-invalid-dto.json'),
+        {
+          encoding: 'utf-8',
+        },
+      );
+    });
+
+    it('should load payload presets from fixtures', () => {
+      // When
+      service.onModuleInit();
+
+      // Then
+      expect(service.getPayloadPresets()).toEqual([
+        {
+          id: '01-success.json',
+          label: 'Payload Succès',
+          payload: JSON.stringify(successFixture.payload, null, 2),
+        },
+        {
+          id: '02-failure-invalid-dto.json',
+          label: 'Payload Échec (DTO invalide)',
+          payload: JSON.stringify(failureFixture.payload, null, 2),
+        },
+      ]);
+    });
+
+    it('should sort payloads using filename order', () => {
+      // Given
+      mocked(readdirSync).mockReturnValue([
+        '02-failure-invalid-dto.json',
+        '01-success.json',
+        '03-another-failure.json',
+      ] as never);
+
+      mocked(readFileSync).mockImplementation((filePath) => {
+        const fixturesByPath = {
+          [join(payloadsPath, '01-success.json')]:
+            JSON.stringify(successFixture),
+          [join(payloadsPath, '02-failure-invalid-dto.json')]:
+            JSON.stringify(failureFixture),
+          [join(payloadsPath, '03-another-failure.json')]: JSON.stringify({
+            label: 'Payload Échec (autre)',
+            payload: {
+              event: 'reject',
+            },
+          }),
+        };
+
+        return fixturesByPath[String(filePath)] as never;
+      });
+
+      // When
+      service.onModuleInit();
+
+      // Then
+      expect(service.getPayloadPresets()[0].id).toBe('01-success.json');
+    });
+
+    it('should sort filenames alphabetically when none is success', () => {
+      // Given
+      mocked(readdirSync).mockReturnValue([
+        '02-z-last.json',
+        '01-a-first.json',
+      ] as never);
+
+      mocked(readFileSync).mockImplementation((filePath) => {
+        const fixturesByPath = {
+          [join(payloadsPath, '01-a-first.json')]: JSON.stringify({
+            label: 'A',
+            payload: { event: 'a' },
+          }),
+          [join(payloadsPath, '02-z-last.json')]: JSON.stringify({
+            label: 'Z',
+            payload: { event: 'z' },
+          }),
+        };
+
+        return fixturesByPath[String(filePath)] as never;
+      });
+
+      // When
+      service.onModuleInit();
+
+      // Then
+      expect(service.getPayloadPresets().map(({ id }) => id)).toEqual([
+        '01-a-first.json',
+        '02-z-last.json',
+      ]);
+    });
+  });
+
+  describe('handleWebhook', () => {
+    const payloadMock = '{ "event": "approve" }';
+    const signatureMock = 'signatureMock';
+    const expectedResponse = { data: 'response data' };
+
+    beforeEach(() => {
+      service['callWebhook'] = jest.fn().mockResolvedValue(expectedResponse);
+      webhooksMock.sign.mockReturnValue(signatureMock);
     });
 
     it('should sign payload with WebhooksService', async () => {
       // When
-      await service.handleWebhook(event);
+      await service.handleWebhook(payloadMock);
 
       // Then
       expect(webhooksMock.sign).toHaveBeenCalledWith(
@@ -90,7 +245,7 @@ describe('MockDatapassService', () => {
 
     it('should call webhook with payload and signature', async () => {
       // When
-      await service.handleWebhook(event);
+      await service.handleWebhook(payloadMock);
 
       // Then
       expect(service['callWebhook']).toHaveBeenCalledWith(
@@ -99,17 +254,30 @@ describe('MockDatapassService', () => {
       );
     });
 
-    it('should return the result of callWebhook', async () => {
+    it('should return the response from callWebhook', async () => {
       // When
-      const result = await service.handleWebhook(event);
+      const response = await service.handleWebhook(payloadMock);
 
       // Then
-      expect(result).toBe(callResult);
+      expect(response).toBe(expectedResponse);
+    });
+
+    it('should return handled response when callWebhook throws', async () => {
+      // Given
+      const errorResponse = { status: 400, data: { message: 'Bad Request' } };
+      const axiosError = new AxiosError('Request failed');
+      axiosError.response = errorResponse as never;
+      service['callWebhook'] = jest.fn().mockRejectedValueOnce(axiosError);
+
+      // When
+      const response = await service.handleWebhook(payloadMock);
+
+      // Then
+      expect(response).toBe(errorResponse);
     });
   });
 
   describe('callWebhook', () => {
-    // Given
     const expectedResponse = { data: 'response data' };
 
     beforeEach(() => {
@@ -135,72 +303,35 @@ describe('MockDatapassService', () => {
 
     it('should return the response data from HttpService', async () => {
       // When
-      const result = await service['callWebhook']('payload', 'signature');
+      const response = await service['callWebhook']('payload', 'signature');
 
       // Then
-      expect(result).toBe(expectedResponse);
+      expect(response).toBe(expectedResponse);
     });
   });
 
-  describe('generatePayload', () => {
-    it('should return a stringified payload with the correct event', () => {
+  describe('handleWebhookError', () => {
+    it('should return the error response when AxiosError has a response', () => {
       // Given
-      const timestampMock = 1753704929;
-      service['getTimestamp'] = jest.fn().mockReturnValue(timestampMock);
-      const event = DatapassEvents.APPROVE;
+      const errorResponse = { status: 400, data: { message: 'Bad Request' } };
+      const axiosError = new AxiosError('Request failed');
+      axiosError.response = errorResponse as never;
 
-      const payload: DatapassPayloadInterface = {
-        event,
-        fired_at: timestampMock,
-        model_type: 'authorization_request/franceconnect',
-        data: {
-          id: 9001,
-          public_id: 'a90939e8-f906-4343-8996-5955257f161d',
-          state: 'approve',
-          form_uid: 'franceconnect-demande-libre',
-          organization: {
-            id: 9002,
-            name: 'UMAD CORP',
-            siret: '98043033400022',
-          },
-          applicant: {
-            id: 9003,
-            email: 'jean.dupont@beta.gouv.fr',
-            given_name: 'Jean',
-            family_name: 'Dupont',
-            phone_number: '0836656565',
-            job_title: 'Rockstar',
-          },
-          data: {
-            intitule: 'Ma demande',
-            scopes: ['openid', 'family_name', 'given_name', 'email'],
-            contact_technique_given_name: 'Tech',
-            contact_technique_family_name: 'Os',
-            contact_technique_phone_number: '08366666666',
-            contact_technique_job_title: 'DSI',
-            contact_technique_email: 'tech@beta.gouv.fr',
-          },
-        },
-      };
       // When
-      const result = service['generatePayload'](event);
+      const response = service['handleWebhookError'](axiosError);
 
       // Then
-      expect(result).toBe(JSON.stringify(payload));
+      expect(response).toBe(errorResponse);
     });
-  });
 
-  describe('getTimestamp', () => {
-    it('should return the current timestamp in seconds', () => {
+    it('should rethrow non-Axios errors', () => {
       // Given
-      const now = 1753704929123;
-      jest.spyOn(Date, 'now').mockReturnValue(now);
+      const genericError = new Error('Network error');
 
-      // When
-      const result = service['getTimestamp']();
-
-      // Then
-      expect(result).toBe(1753704929);
+      // When / Then
+      expect(() => service['handleWebhookError'](genericError)).toThrow(
+        'Network error',
+      );
     });
   });
 });

@@ -29,6 +29,7 @@ describe('AccountPermissionService', () => {
   const sessionServiceMock = getSessionServiceMock();
   const accountPermissionRepositoryMock = {
     insert: jest.fn(),
+    getAccountsByPermissions: jest.fn(),
   };
 
   const loggerMock = getLoggerMock();
@@ -137,11 +138,11 @@ describe('AccountPermissionService', () => {
     // Given
     const queryRunnerMock = {
       manager: {
-        createQueryBuilder: jest.fn().mockReturnThis(),
-        insert: jest.fn().mockReturnThis(),
-        into: jest.fn().mockReturnThis(),
-        values: jest.fn().mockReturnThis(),
-        orIgnore: jest.fn().mockReturnThis(),
+        createQueryBuilder: jest.fn(),
+        insert: jest.fn(),
+        into: jest.fn(),
+        values: jest.fn(),
+        orIgnore: jest.fn(),
         execute: jest.fn(),
       },
     };
@@ -200,6 +201,119 @@ describe('AccountPermissionService', () => {
         ...permissionMockWithoutEntityId,
         entityId: NO_ENTITY_ID,
       });
+    });
+  });
+
+  describe('removePermissionTransactional', () => {
+    // Given
+    const queryRunnerMock = {
+      manager: {
+        createQueryBuilder: jest.fn(),
+        delete: jest.fn(),
+        from: jest.fn(),
+        where: jest.fn(),
+        andWhere: jest.fn(),
+        execute: jest.fn(),
+      },
+    };
+
+    const permissionMock = {
+      accountId: Symbol('accountId') as unknown as uuid,
+      entityId: Symbol('entityId') as unknown as uuid,
+      entity: Symbol('entity') as unknown as EntityType,
+      permissionType: Symbol('permissionType') as unknown as PermissionsType,
+    };
+
+    beforeEach(() => {
+      queryRunnerMock.manager.createQueryBuilder.mockReturnThis();
+      queryRunnerMock.manager.delete.mockReturnThis();
+      queryRunnerMock.manager.from.mockReturnThis();
+      queryRunnerMock.manager.where.mockReturnThis();
+      queryRunnerMock.manager.andWhere.mockReturnThis();
+    });
+
+    it('should delete the permission with the queryRunner manager', async () => {
+      // When
+      await service.removePermissionTransactional(
+        queryRunnerMock as unknown as QueryRunner,
+        permissionMock,
+      );
+
+      // Then
+      expect(queryRunnerMock.manager.createQueryBuilder).toHaveBeenCalledTimes(
+        1,
+      );
+      expect(queryRunnerMock.manager.delete).toHaveBeenCalledTimes(1);
+      expect(queryRunnerMock.manager.from).toHaveBeenCalledTimes(1);
+      expect(queryRunnerMock.manager.where).toHaveBeenCalledWith(
+        'accountId = :accountId',
+        { accountId: permissionMock.accountId },
+      );
+      expect(queryRunnerMock.manager.andWhere).toHaveBeenCalledWith(
+        'permissionType = :permissionType',
+        { permissionType: permissionMock.permissionType },
+      );
+      expect(queryRunnerMock.manager.andWhere).toHaveBeenCalledWith(
+        'entity = :entity',
+        { entity: permissionMock.entity },
+      );
+      expect(queryRunnerMock.manager.andWhere).toHaveBeenCalledWith(
+        'entityId = :entityId',
+        { entityId: permissionMock.entityId },
+      );
+      expect(queryRunnerMock.manager.execute).toHaveBeenCalledTimes(1);
+    });
+
+    it('should default entityId to NO_ENTITY_ID when not provided', async () => {
+      // Given
+      const permissionMockWithoutEntityId = {
+        ...permissionMock,
+        entityId: undefined,
+      };
+
+      // When
+      await service.removePermissionTransactional(
+        queryRunnerMock as unknown as QueryRunner,
+        permissionMockWithoutEntityId,
+      );
+
+      // Then
+      expect(queryRunnerMock.manager.andWhere).toHaveBeenCalledWith(
+        'entityId = :entityId',
+        { entityId: NO_ENTITY_ID },
+      );
+    });
+  });
+
+  describe('getAccountsByPermissions', () => {
+    it('should delegate to accountPermission repository', async () => {
+      // Given
+      const resultMock = [
+        {
+          account: { id: 'account-id' },
+          permissionType: PermissionsType.PERMISSION_VALUE,
+        },
+      ];
+      accountPermissionRepositoryMock.getAccountsByPermissions.mockResolvedValue(
+        resultMock,
+      );
+
+      // When
+      const result = await service.getAccountsByPermissions(
+        [PermissionsType.PERMISSION_VALUE],
+        EntityType.ENTITY_VALUE,
+        'entity-id',
+      );
+
+      // Then
+      expect(
+        accountPermissionRepositoryMock.getAccountsByPermissions,
+      ).toHaveBeenCalledExactlyOnceWith(
+        [PermissionsType.PERMISSION_VALUE],
+        EntityType.ENTITY_VALUE,
+        'entity-id',
+      );
+      expect(result).toBe(resultMock);
     });
   });
 });

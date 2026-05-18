@@ -16,6 +16,9 @@ Then(
 );
 
 When("j'entre les valeurs par défaut pour mon instance", function () {
+  // Wait for the form to adjust before fetching the inputs
+  // eslint-disable-next-line cypress/no-unnecessary-waiting
+  cy.wait(300);
   instanceFormPage.fillDefaultValues(this.instance);
 });
 

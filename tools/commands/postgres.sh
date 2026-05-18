@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 _migrations-postgres() {
   cd ${DOCKER_DIR}
   $DOCKER_COMPOSE exec ${NO_TTY} "${1}" yarn typeorm:migrations-run

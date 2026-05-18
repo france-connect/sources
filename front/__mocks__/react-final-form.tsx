@@ -11,6 +11,5 @@ module.exports = {
   Form: jest.fn(({ children, ...rest }) => children(rest)),
   FormSpy: jest.fn(),
   useField: jest.fn(),
+  useFormState: jest.fn(),
 };
-
-export {};

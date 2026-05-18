@@ -63,10 +63,21 @@ export const Layout: LayoutConfig = {
       },
     ],
   },
+  navigation: [
+    {
+      href: '/fournisseurs-de-service',
+      label: 'Mes fournisseurs de service',
+    },
+    {
+      href: '/instances',
+      label: 'Mes accès au bac à sable',
+    },
+  ],
   service: {
     baseline: 'Espace Partenaires',
     homepage: '/',
     logo: LogoFranceConnect10Ans,
+    logoTitle: 'FranceConnect, 10 ans de simplification de l’accès aux démarches',
     name: 'FranceConnect',
   },
   sitemap: [

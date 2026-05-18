@@ -1,18 +1,26 @@
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   IsArray,
+  IsBoolean,
   IsEmail,
   IsEnum,
+  IsIn,
   IsInt,
   IsNotEmpty,
   IsObject,
+  IsOptional,
   IsString,
   ValidateNested,
 } from 'class-validator';
 
 import { IsSiret } from '@fc/common';
 
-import { DatapassEvents } from '../enums';
+import {
+  DatapassAuthorizationRequestClass,
+  DatapassEidasLevels,
+  DatapassEvents,
+  DatapassScopes,
+} from '../enums';
 import { DatapassPayloadInterface } from '../interfaces';
 
 export class OrganizationDto {
@@ -28,9 +36,6 @@ export class OrganizationDto {
 }
 
 export class ApplicantDto {
-  @IsInt()
-  readonly id: number;
-
   @IsEmail()
   readonly email: string;
 
@@ -42,13 +47,10 @@ export class ApplicantDto {
   @IsNotEmpty()
   readonly family_name: string;
 
+  @Transform(({ value }) => value ?? undefined)
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
-  readonly phone_number: string;
-
-  @IsString()
-  @IsNotEmpty()
-  readonly job_title: string;
+  readonly phone_number?: string;
 }
 
 export class TechnicalContactDto {
@@ -64,10 +66,6 @@ export class TechnicalContactDto {
   @IsNotEmpty()
   readonly contact_technique_phone_number: string;
 
-  @IsString()
-  @IsNotEmpty()
-  readonly contact_technique_job_title: string;
-
   @IsEmail()
   readonly contact_technique_email: string;
 }
@@ -77,9 +75,32 @@ export class DatapassDataDto extends TechnicalContactDto {
   @IsNotEmpty()
   readonly intitule: string;
 
+  /**
+   * We only support EIDAS level 1 for now
+   */
+  @IsIn([DatapassEidasLevels.EIDAS_1])
+  readonly france_connect_eidas: DatapassEidasLevels;
+
   @IsArray()
-  @IsString({ each: true })
-  readonly scopes: string[];
+  @IsEnum(DatapassScopes, { each: true })
+  readonly scopes: DatapassScopes[];
+}
+
+export class AuthorizationDto {
+  @IsString()
+  @IsNotEmpty()
+  readonly id: string;
+
+  @IsString()
+  @IsNotEmpty()
+  readonly state: string;
+
+  @IsString()
+  @IsIn([DatapassAuthorizationRequestClass.FRANCE_CONNECT])
+  readonly authorization_request_class: string;
+
+  @IsBoolean()
+  readonly revoked: boolean;
 }
 
 export class DatapassPayloadDataDto {
@@ -112,6 +133,11 @@ export class DatapassPayloadDataDto {
   @ValidateNested()
   @Type(() => DatapassDataDto)
   readonly data: DatapassDataDto;
+
+  @IsArray()
+  @ValidateNested()
+  @Type(() => AuthorizationDto)
+  readonly authorizations: AuthorizationDto[];
 }
 
 /**
@@ -128,6 +154,10 @@ export class DatapassWebhookPayloadDto implements DatapassPayloadInterface {
   @IsString()
   @IsNotEmpty()
   readonly model_type: string;
+
+  @IsString()
+  @IsOptional()
+  readonly last_validated_at?: string | null;
 
   @IsObject()
   @ValidateNested()

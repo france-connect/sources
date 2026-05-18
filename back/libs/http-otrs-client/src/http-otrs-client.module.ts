@@ -1,8 +1,10 @@
+import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 
-import { HttpOtrsClientService } from './http-otrs-client.service';
+import { HttpOtrsClientService } from './services';
 
 @Module({
+  imports: [HttpModule],
   providers: [HttpOtrsClientService],
   exports: [HttpOtrsClientService],
 })

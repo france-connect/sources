@@ -1,5 +1,8 @@
 export interface Environment {
   name: string;
-  partnersUrl: string;
-  platformName: string;
+  allAppsUrl: string;
+  mockDatapassAppId: string;
+  mockDatapassRootUrl: string;
+  partnersAppId: string;
+  partnersRootUrl: string;
 }

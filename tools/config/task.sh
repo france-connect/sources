@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 __DKS_LAST_LOG_FILE="${LOGS_PATH}/docker_stack_last.log"
 
 # Exit code reserved to return data to the be displayed by `task` instead of simple success/failure

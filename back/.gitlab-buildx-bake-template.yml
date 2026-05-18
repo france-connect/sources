@@ -1,10 +1,12 @@
 .base-buildx-bake:
   stage: 'Build Back'
-  image: docker:28-cli
+  image: ${FC_DOCKER_REGISTRY}/ci-cd-slim:latest
   services:
     - name: docker:28-dind
+      alias: docker
+      command: ['--storage-driver=overlay2']
   tags:
-    - build-fc
+    - build-fc-nubo
 
   allow_failure: true
 
@@ -19,14 +21,17 @@
   variables:
     DOCKER_HOST: tcp://docker:2375
     DOCKER_TLS_CERTDIR: ''
+    RELEASE_VERSION: ${CI_COMMIT_REF_NAME}
+    PROXY_EXPLOITATION: ${HTTPS_PROXY}
     INTERNET_PROXY: ${PROXY_EXPLOITATION}
     APP_VERSION: ${CI_COMMIT_REF_NAME}
 
   before_script:
-    - echo "$FC_DOCKER_REGISTRY_PASS" | docker login -u "$FC_DOCKER_REGISTRY_USER" --password-stdin "$FC_DOCKER_REGISTRY"
-
+    - export PATH="${PATH}:${FC_ROOT}/fc/tools/bin"
+    - echo "$CI_DEPENDENCY_PROXY_PASSWORD" | docker login "$CI_DEPENDENCY_PROXY_SERVER" -u "$CI_DEPENDENCY_PROXY_USER" --password-stdin
+    - echo $FC_DOCKER_REGISTRY_PASS | docker login -u $FC_DOCKER_REGISTRY_USER --password-stdin $FC_DOCKER_REGISTRY
   script:
-    - ./docker/builds/cd/buildx-bake.sh $APP
+    - docker-stack bake-nodejs-app $APP
     - echo -e "\e[1;34m$MSG $APP_VERSION\e[0m"
 
   interruptible: true

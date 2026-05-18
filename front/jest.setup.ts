@@ -9,6 +9,7 @@
 // expect(element).toHaveTextContent(/react/i)
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom';
+import 'jest-location-mock';
 
 import { expect } from '@jest/globals';
 // @NOTE are we still using more than this one into tests ?
@@ -22,6 +23,11 @@ import {
 import { TextEncoder } from 'node:util';
 
 global.TextEncoder = TextEncoder;
+
+const originalGetComputedStyle = window.getComputedStyle;
+window.getComputedStyle = (elt: Element, _pseudoElt?: string | null) =>
+  originalGetComputedStyle(elt);
+
 expect.extend({
   toBeFalse,
   toBeTrue,

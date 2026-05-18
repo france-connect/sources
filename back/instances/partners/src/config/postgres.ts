@@ -1,7 +1,7 @@
 import {
   PartnersAccount,
   PartnersAccountPermission,
-  PartnersOrganisation,
+  PartnersOrganization,
   PartnersPlatform,
   PartnersServiceProvider,
   PartnersServiceProviderInstance,
@@ -23,7 +23,7 @@ export default {
   entities: [
     PartnersAccount,
     PartnersAccountPermission,
-    PartnersOrganisation,
+    PartnersOrganization,
     PartnersPlatform,
     PartnersServiceProvider,
     PartnersServiceProviderInstance,

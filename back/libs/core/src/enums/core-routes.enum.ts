@@ -8,4 +8,5 @@ export enum CoreRoutes {
   JWKS_URI = '/jwks',
   REDIRECT_TO_SP_WITH_ERROR = '/redirect-to-sp-with-error',
   ACCESSIBILITY = '/accessibilite',
+  LEGAL_NOTICE = '/mentions-legales',
 }

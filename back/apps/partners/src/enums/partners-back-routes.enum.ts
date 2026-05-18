@@ -11,6 +11,9 @@ export enum PartnersBackRoutes {
   SP_INSTANCES = '/instances',
   SP_INSTANCE = '/instances/:instanceId',
 
+  LINKABLE_INSTANCES = '/linkable-instances/:serviceProviderId',
+  LINK_INSTANCES = '/link-instances',
+
   SP_VERSION_FORM_METADATA = '/versions/form-metadata',
 
   DATAPASS_WEBHOOK = '/datapass/webhook',

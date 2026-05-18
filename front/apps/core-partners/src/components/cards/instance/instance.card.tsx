@@ -12,12 +12,12 @@ interface InstanceCardComponentProps extends PropsWithClassName {
 
 export const InstanceCardComponent = React.memo(
   ({ className, data }: InstanceCardComponentProps) => {
-    const { createdAt, id, versions } = data;
+    const { createdAt, currentVersion, id } = data;
 
     const formattedDate = isoToDate(createdAt);
     const date = t('FC.Common.createdAt.female', { date: formattedDate });
 
-    const { client_id: clientId, client_secret: clientSecret, name } = versions[0].data;
+    const { client_id: clientId, client_secret: clientSecret, name } = currentVersion.data;
 
     return (
       <CardComponent

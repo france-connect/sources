@@ -2,6 +2,7 @@ import { Request } from 'express';
 
 import { Injectable } from '@nestjs/common';
 
+import { normalizeEmail } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { IdentityProviderAdapterEnvService } from '@fc/identity-provider-adapter-env';
 import { OidcSession } from '@fc/oidc';
@@ -115,7 +116,7 @@ export class PartnersOidcClientService {
       sub: identity.sub,
       firstname: identity.given_name,
       lastname: identity.usual_name,
-      email: identity.email,
+      email: normalizeEmail(identity.email),
     };
 
     let accountId = await this.partnersAccount.updateAccount(partnersAccount);

@@ -1,0 +1,1 @@
+export const ENTITIES_MAP_TOKEN = Symbol('ENTITIES_MAP_TOKEN');

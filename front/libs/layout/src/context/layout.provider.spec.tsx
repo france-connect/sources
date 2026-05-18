@@ -1,17 +1,19 @@
 import { render } from '@testing-library/react';
 import { useToggle } from 'usehooks-ts';
 
-import { useSafeContext } from '@fc/common';
+import { useAccountContext } from '@fc/account';
 
 import { LayoutProvider } from './layout.provider';
 
 describe('LayoutProvider', () => {
   beforeEach(() => {
     // Given
-    jest.mocked(useSafeContext).mockReturnValue({
+    jest.mocked(useAccountContext).mockReturnValue({
       connected: true,
+      expired: false,
       ready: true,
       userinfos: {
+        email: 'any email mock',
         firstname: 'any firstname mock',
         lastname: 'any lastname mock',
       },

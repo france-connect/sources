@@ -75,5 +75,6 @@ export const Layout: LayoutConfig = {
   service: {
     homepage: '/',
     logo: LogoFranceConnect10Ans,
+    logoTitle: 'FranceConnect, 10 ans de simplification de l’accès aux démarches',
   },
 };

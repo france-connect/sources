@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import type { FieldMetaState } from 'react-final-form';
+import type { FieldRenderProps } from 'react-final-form';
 
 import { useFieldMessages, useFieldMeta } from '../../../hooks';
 import type { FieldMessage } from '../../../interfaces';
@@ -16,7 +16,7 @@ jest.mock('../../../hooks/field-messages/field-messages.hook');
 
 describe('TextAreaInput', () => {
   // Given
-  const metaMock = Symbol('meta mock') as unknown as FieldMetaState<string>;
+  const metaMock = Symbol('meta mock') as unknown as FieldRenderProps<string>['meta'];
 
   const inputMock = {
     onBlur: jest.fn(),

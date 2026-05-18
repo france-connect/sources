@@ -299,6 +299,24 @@ describe('CoreFcpController', () => {
     });
   });
 
+  describe('getLegalNotice()', () => {
+    it('should render the legal-notice view', () => {
+      // Given
+      const resMock = {
+        render: jest.fn(),
+      };
+      const renderResult = Symbol('renderResult');
+      resMock.render.mockReturnValue(renderResult);
+
+      // When
+      const result = coreController.getLegalNotice(resMock);
+
+      // Then
+      expect(resMock.render).toHaveBeenCalledExactlyOnceWith('legal-notice');
+      expect(result).toBe(renderResult);
+    });
+  });
+
   describe('getInteraction()', () => {
     const req = {
       fc: { interactionId: interactionIdMock },

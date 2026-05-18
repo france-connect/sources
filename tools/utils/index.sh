@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 source "${INCLUDE_DIR}/utils/commands.sh"
 source "${INCLUDE_DIR}/utils/format.sh"
 source "${INCLUDE_DIR}/utils/join-by.sh"

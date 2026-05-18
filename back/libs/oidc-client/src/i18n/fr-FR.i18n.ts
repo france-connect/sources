@@ -16,13 +16,13 @@ export const frFR: I18nTranslationsMapType = {
   'OidcClient.exceptions.oidcClientMissingCode':
     'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.',
   'OidcClient.exceptions.oidcClientMissingIdentitySub':
-    'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.',
+    'Une erreur technique est survenue. Veuillez vous reconnecter ultérieurement.',
   'OidcClient.exceptions.oidcClientMissingState':
     'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.',
   'OidcClient.exceptions.oidcClientTokenFailed':
-    'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.',
+    'Une erreur technique est survenue. Veuillez vous reconnecter ultérieurement.',
   'OidcClient.exceptions.oidcClientTokenResultFailed':
     'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.',
   'OidcClient.exceptions.oidcClientUserinfosFailed':
-    'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.',
+    'Une erreur technique est survenue. Veuillez vous reconnecter ultérieurement.',
 };

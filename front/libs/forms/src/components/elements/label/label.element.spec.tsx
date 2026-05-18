@@ -41,7 +41,7 @@ describe('LabelElement', () => {
     // Given
     const hintMock = undefined;
     const seeAlsoMock = 'http://foo.bar/test';
-    jest.mocked(useFieldLabel).mockReturnValue({
+    jest.mocked(useFieldLabel).mockReturnValueOnce({
       hint: undefined,
       label: 'hook-label-mock',
       required: expect.any(Boolean),

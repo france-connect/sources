@@ -336,6 +336,23 @@ describe('PartnersOidcClientService', () => {
         },
       });
     });
+
+    it('should normalize the email from the identity before using it', async () => {
+      // Given
+      const mixedCaseIdentity = {
+        ...identityMock,
+        email: 'Email@DOMAIN.FR',
+      };
+      partnersAccountServiceMock.updateAccount.mockResolvedValue(idMock);
+
+      // When
+      await service.retrieveOrCreateAccount(mixedCaseIdentity);
+
+      // Then
+      expect(partnersAccountServiceMock.updateAccount).toHaveBeenCalledWith(
+        expect.objectContaining({ email: 'email@domain.fr' }),
+      );
+    });
   });
 
   describe('getLogoutUrl()', () => {

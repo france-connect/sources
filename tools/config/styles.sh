@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 #### Formating helpers
 STYLE_SUCCESS="\e[1;36m"
 STYLE_FAILURE="\e[1;41m"

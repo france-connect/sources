@@ -14,27 +14,21 @@ const mandatoryData = {
 };
 
 export default class ServiceProviderPage {
-  clientId: string;
   fcButtonSelector: string;
   logoutButtonSelector: string;
   mocked: boolean;
   originUrl: string;
-  redirectUri: string;
 
   constructor(args: ServiceProviderBase) {
     const {
-      clientId,
       mocked,
-      redirectUri,
       selectors: { fcButton, logoutButton },
       url,
     } = args;
-    this.clientId = clientId;
     this.fcButtonSelector = fcButton;
     this.logoutButtonSelector = logoutButton;
     this.mocked = mocked;
     this.originUrl = url;
-    this.redirectUri = redirectUri;
   }
 
   getFcButton(): ChainableElement {
@@ -68,30 +62,6 @@ export default class ServiceProviderPage {
   checkIsUserConnected(isConnected = true): void {
     const state = isConnected ? 'be.visible' : 'not.exist';
     this.getLogoutButton().should(state);
-  }
-
-  // Initiate FC connection using Legacy SP mock
-  callAuthorize(
-    fcRootUrl: string,
-    scopeContext: ScopeContext,
-    acrValues = 'eidas1',
-  ): void {
-    const { scopes = [] } = scopeContext;
-
-    const qs = {
-      acr_values: acrValues,
-      client_id: this.clientId,
-      nonce: 'noncefortestsBDD',
-      redirect_uri: this.redirectUri,
-      response_type: 'code',
-      scope: Array.isArray(scopes) ? scopes.join(' ') : scopes,
-      state: 'testsBDD',
-    };
-
-    cy.visit(`${fcRootUrl}/api/v1/authorize`, {
-      failOnStatusCode: false,
-      qs,
-    });
   }
 
   // Setup and initiate FC connection using core v2 SP mock

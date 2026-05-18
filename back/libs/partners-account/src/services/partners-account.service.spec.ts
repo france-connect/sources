@@ -6,7 +6,7 @@ import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 import { PartnersAccount } from '@entities/typeorm';
 
 import { AccountPermissionService } from '@fc/access-control';
-import { AccessControlEntity, AccessControlPermission } from '@fc/partners';
+import { AccessControlPermission } from '@fc/partners';
 import { TypeormService } from '@fc/typeorm';
 
 import { getQueryRunnerMock, getTypeormServiceMock } from '@mocks/typeorm';
@@ -86,9 +86,8 @@ describe('PartnersAccountService', () => {
     const initResultMock = Symbol('initResultMock');
 
     beforeEach(() => {
-      service['create'] = jest.fn().mockResolvedValue(initResultMock);
+      service['upsert'] = jest.fn().mockResolvedValue(initResultMock);
       service['addPermissions'] = jest.fn();
-      service['handleException'] = jest.fn();
       typeormServiceMock.withTransaction.mockImplementationOnce((callback) =>
         callback(queryRunnerMock),
       );
@@ -99,7 +98,7 @@ describe('PartnersAccountService', () => {
       await service.init(accountMock);
 
       // Then
-      expect(service['create']).toHaveBeenCalledExactlyOnceWith(
+      expect(service['upsert']).toHaveBeenCalledExactlyOnceWith(
         queryRunnerMock,
         accountMock,
       );
@@ -127,7 +126,7 @@ describe('PartnersAccountService', () => {
     it('should throw PartnersAccountInitException on error', async () => {
       // Given
       const error = new Error('error');
-      service['create'] = jest.fn().mockRejectedValue(error);
+      service['upsert'] = jest.fn().mockRejectedValue(error);
 
       // Then / When
       await expect(() => service.init(accountMock)).rejects.toThrow(
@@ -139,39 +138,68 @@ describe('PartnersAccountService', () => {
   describe('getOrCreateByEmail', () => {
     // Given
     const account = { email: 'name@provider.fr' } as AccountInitInputInterface;
-    const existingAccount = {
-      id: 'existingAccountId',
-    };
     const createdAccountId = 'createdAccountId';
 
     beforeEach(() => {
-      service['create'] = jest.fn().mockResolvedValue(createdAccountId);
+      service['upsert'] = jest.fn().mockResolvedValue(createdAccountId);
     });
 
     it('should return an accountId if it exists', async () => {
-      // Given
-      repositoryMock.findOne = jest.fn().mockResolvedValue(existingAccount);
-
-      // When
-      const result = await service.getOrCreateByEmail(queryRunnerMock, account);
-
-      // Then
-      expect(result).toBe(existingAccount.id);
-    });
-
-    it('should create an account if it does not exist', async () => {
-      // Given
-      repositoryMock.findOne = jest.fn().mockResolvedValue(undefined);
-
       // When
       const result = await service.getOrCreateByEmail(queryRunnerMock, account);
 
       // Then
       expect(result).toBe(createdAccountId);
+      expect(service['upsert']).toHaveBeenCalledExactlyOnceWith(
+        queryRunnerMock,
+        account,
+        {
+          upsertFields: ['firstname', 'lastname'],
+        },
+      );
+    });
+
+    it('should create an account if it does not exist', async () => {
+      // Given
+      const customOptions = { upsertFields: ['phone'] };
+
+      // When
+      const result = await service.getOrCreateByEmail(
+        queryRunnerMock,
+        account,
+        customOptions,
+      );
+
+      // Then
+      expect(result).toBe(createdAccountId);
+      expect(service['upsert']).toHaveBeenCalledExactlyOnceWith(
+        queryRunnerMock,
+        account,
+        customOptions,
+      );
+    });
+
+    it('should create the account with the normalized email', async () => {
+      // Given
+      const mixedCaseAccount = {
+        ...account,
+        email: 'Name@Provider.FR',
+      } as AccountInitInputInterface;
+      repositoryMock.findOne = jest.fn().mockResolvedValue(undefined);
+
+      // When
+      await service.getOrCreateByEmail(queryRunnerMock, mixedCaseAccount);
+
+      // Then
+      expect(service['upsert']).toHaveBeenCalledWith(
+        queryRunnerMock,
+        expect.objectContaining({ email: 'name@provider.fr' }),
+        { upsertFields: ['firstname', 'lastname'] },
+      );
     });
   });
 
-  describe('create', () => {
+  describe('upsert', () => {
     beforeEach(() => {
       service['executeInsertAccount'] = jest.fn();
       service['extractAccountIdAndStatus'] = jest.fn();
@@ -192,7 +220,7 @@ describe('PartnersAccountService', () => {
         .mockReturnValue(queryBuilderMock);
 
       // When
-      await service['create'](
+      await service['upsert'](
         queryRunnerMock as unknown as QueryRunner,
         accountMock,
       );
@@ -232,19 +260,17 @@ describe('PartnersAccountService', () => {
       ).toHaveBeenCalledWith(queryRunnerMock, {
         accountId,
         permissionType: AccessControlPermission.INSTANCE_CONTRIBUTOR,
-        entity: AccessControlEntity.SP_INSTANCE,
       });
       expect(
         accountPermissionMock.addPermissionTransactional,
       ).toHaveBeenCalledWith(queryRunnerMock, {
         accountId,
-        permissionType: AccessControlPermission.SP_ADMIN,
-        entity: AccessControlEntity.SERVICE_PROVIDER,
+        permissionType: AccessControlPermission.SP_CONTRIBUTOR,
       });
     });
   });
 
-  describe('updateLastConnection', () => {
+  describe('updateAccount', () => {
     // Given
     const queryBuilderMock = {
       update: jest.fn().mockReturnThis(),
@@ -256,7 +282,7 @@ describe('PartnersAccountService', () => {
     };
 
     const data = {
-      email: 'emailMock',
+      email: 'Test@Example.COM',
     } as unknown as AccountInitInputInterface;
 
     beforeEach(() => {
@@ -291,12 +317,107 @@ describe('PartnersAccountService', () => {
         lastConnection: expect.any(Function),
       });
       expect(queryBuilderMock.where).toHaveBeenCalledExactlyOnceWith({
-        email: data.email,
+        email: 'test@example.com',
       });
       expect(queryBuilderMock.returning).toHaveBeenCalledExactlyOnceWith([
         'id',
       ]);
       expect(queryBuilderMock.execute).toHaveBeenCalledOnce();
+    });
+
+    it('should normalize the email before lookup and update', async () => {
+      // When
+      await service.updateAccount(data);
+
+      // Then
+      expect(repositoryMock.findOne).toHaveBeenCalledWith({
+        where: { email: 'test@example.com' },
+      });
+    });
+  });
+
+  describe('updateAccountTransactional', () => {
+    const email = 'email@example.fr';
+    const data = {
+      email,
+      phone: '0102030405',
+    } as AccountInitInputInterface;
+
+    it('should update account and return id with queryRunner', async () => {
+      // Given
+      const queryBuilderMock = {
+        update: jest.fn().mockReturnThis(),
+        set: jest.fn().mockReturnThis(),
+        where: jest.fn().mockReturnThis(),
+        returning: jest.fn().mockReturnThis(),
+        execute: jest.fn().mockResolvedValue(insertResult),
+      };
+      queryRunnerMock.manager.createQueryBuilder = jest
+        .fn()
+        .mockReturnValue(queryBuilderMock);
+
+      // When
+      const result = await service.updateAccountTransactional(
+        queryRunnerMock,
+        data,
+      );
+
+      // Then
+      expect(queryBuilderMock.update).toHaveBeenCalledExactlyOnceWith(
+        PartnersAccount,
+      );
+      expect(queryBuilderMock.set).toHaveBeenCalledExactlyOnceWith(data);
+      expect(queryBuilderMock.where).toHaveBeenCalledExactlyOnceWith({ email });
+      expect(queryBuilderMock.returning).toHaveBeenCalledExactlyOnceWith([
+        'id',
+      ]);
+      expect(queryBuilderMock.execute).toHaveBeenCalledOnce();
+      expect(result).toBe(insertResult.raw[0].id);
+    });
+
+    it('should use custom where clause when provided', async () => {
+      // Given
+      const queryBuilderMock = {
+        update: jest.fn().mockReturnThis(),
+        set: jest.fn().mockReturnThis(),
+        where: jest.fn().mockReturnThis(),
+        returning: jest.fn().mockReturnThis(),
+        execute: jest.fn().mockResolvedValue(insertResult),
+      };
+      const where = { email, lastConnection: null };
+
+      queryRunnerMock.manager.createQueryBuilder = jest
+        .fn()
+        .mockReturnValue(queryBuilderMock);
+
+      // When
+      await service.updateAccountTransactional(queryRunnerMock, data, where);
+
+      // Then
+      expect(queryBuilderMock.where).toHaveBeenCalledExactlyOnceWith(where);
+    });
+  });
+
+  describe('getTransactionalByEmail', () => {
+    const email = 'email@example.fr';
+
+    it('should return account found by email with queryRunner', async () => {
+      // Given
+      const account = { id: 'account-id', email } as PartnersAccount;
+      queryRunnerMock.manager.findOne = jest.fn().mockResolvedValue(account);
+
+      // When
+      const result = await service.getTransactionalByEmail(
+        queryRunnerMock,
+        email,
+      );
+
+      // Then
+      expect(queryRunnerMock.manager.findOne).toHaveBeenCalledExactlyOnceWith(
+        PartnersAccount,
+        { where: { email } },
+      );
+      expect(result).toBe(account);
     });
   });
 

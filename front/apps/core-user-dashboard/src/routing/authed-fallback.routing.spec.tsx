@@ -1,3 +1,5 @@
+import type { Location } from 'react-router';
+
 import { authedFallback } from './authed-fallback.routing';
 
 describe('authedFallback', () => {
@@ -9,7 +11,7 @@ describe('authedFallback', () => {
       pathname: '/fraud/form',
       search: expect.any(String),
       state: expect.any(Object),
-    });
+    } as unknown as Location);
 
     // Then
     expect(result).toBe('/fraud');
@@ -23,7 +25,7 @@ describe('authedFallback', () => {
       pathname: expect.any(String),
       search: expect.any(String),
       state: expect.any(Object),
-    });
+    } as unknown as Location);
 
     // Then
     expect(result).toBe('/');

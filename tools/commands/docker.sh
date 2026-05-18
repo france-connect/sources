@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 # Find which nodejs containers are running and store it into $NODEJS_CONTAINERS
 _get_running_containers() {
   local raw_nodejs_containers=$(docker ps --format '{{.Names}}' -f ancestor=${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev)
@@ -175,13 +177,88 @@ _init_stats() {
 }
 
 _switch() {
-  _prune
-  _logs "--bg"
-  _up "${@}"
-
   if [ -z "${CI:-}" ]; then
+    _prune
+    _logs "--bg"
+    _up "${@}"
     _start_all
   else
+    _prune_ci
+    _logs "--bg"
+    _up "${@}"
     _start_all_ci
   fi
+}
+
+_run_once() {
+  if [ -z "$1" ]; then
+    echo "Usage: docker-stack run-once <service>"
+    exit 1
+  fi
+
+  _compose run --rm "${@}"
+}
+
+_grab_logs() {
+  if [ -z "$1" ]; then
+    echo "Usage: docker-stack grab-logs <output_dir>"
+    exit 1
+  fi
+
+  local output_dir="$1"
+
+  mkdir -p "${output_dir}"
+
+  _compose ps --all -q | while read -r cid; do
+    [ -n "$cid" ] || continue
+
+    local name="$(docker inspect -f '{{.Name}}' "$cid")"
+    name="${name#/}"
+    safe="$(printf '%s' "$name" | tr '/: ' '___')"
+
+    docker logs --timestamps "$cid" >"${output_dir}/${safe}.log" 2>&1 || true
+  done
+}
+
+_docker_image_exists() {
+  local image="$1"
+  local tag="$2"
+
+  docker manifest inspect "${image}:${tag}" > /dev/null 2>&1
+}
+
+_docker_image_retag() {
+  local overwrite=false
+
+  if [[ "$1" == "--overwrite" ]]; then
+    overwrite=true
+    shift
+  fi
+
+  local image="$1"
+  local source_tag="$2"
+  local target_tag="$3"
+
+  if [[ -z "$image" || -z "$source_tag" || -z "$target_tag" ]]; then
+    echo "Usage: _docker_image_retag [--overwrite] <image> <source_tag> <target_tag>"
+    return 1
+  fi
+
+  if _docker_image_exists "$image" "$target_tag"; then
+    if [[ "$overwrite" == false ]]; then
+      echo "🟢 Target already exists → skip (${target_tag})"
+      return 0
+    fi
+
+    echo "🟠 Overwriting existing tag → ${target_tag}"
+  fi
+
+  echo "⬇️ Pull ${source_tag}"
+  docker pull --quiet "${image}:${source_tag}" || return 1
+
+  echo "🏷️ Tag -> ${target_tag}"
+  docker tag "${image}:${source_tag}" "${image}:${target_tag}" || return 1
+
+  echo "⬆️ Push ${target_tag}"
+  docker push --quiet "${image}:${target_tag}" || return 1
 }

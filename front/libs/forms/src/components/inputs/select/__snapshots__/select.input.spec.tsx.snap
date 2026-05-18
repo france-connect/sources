@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`SelectInput should match the snapshot, without messages 1`] = `
+exports[`SelectInput should match the snapshot, with config messages 1`] = `
 <div>
   <div
     data-mockid="GroupElement"
@@ -30,6 +30,9 @@ exports[`SelectInput should match the snapshot, without messages 1`] = `
         mock-label-2
       </option>
     </select>
+    <div
+      data-mockid="MessagesElement"
+    />
   </div>
 </div>
 `;
@@ -71,7 +74,7 @@ exports[`SelectInput should match the snapshot, with error messages 1`] = `
 </div>
 `;
 
-exports[`SelectInput should match the snapshot, with config messages 1`] = `
+exports[`SelectInput should match the snapshot, without messages 1`] = `
 <div>
   <div
     data-mockid="GroupElement"
@@ -101,10 +104,6 @@ exports[`SelectInput should match the snapshot, with config messages 1`] = `
         mock-label-2
       </option>
     </select>
-    <div
-      data-mockid="MessagesElement"
-    />
   </div>
 </div>
 `;
-

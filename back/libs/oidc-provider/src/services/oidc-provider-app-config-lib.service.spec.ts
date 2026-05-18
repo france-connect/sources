@@ -3,6 +3,7 @@ import { KoaContextWithOIDC, Provider } from 'oidc-provider';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { AssetsService } from '@fc/app';
+import { nowInSeconds } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { throwException } from '@fc/exceptions/helpers';
 import { LoggerService } from '@fc/logger';
@@ -22,6 +23,10 @@ import { OidcProviderAppConfigLibService } from './oidc-provider-app-config-lib.
 import { OidcProviderErrorService } from './oidc-provider-error.service';
 import { OidcProviderGrantService } from './oidc-provider-grant.service';
 
+jest.mock('@fc/common', () => ({
+  ...jest.requireActual('@fc/common'),
+  nowInSeconds: jest.fn(),
+}));
 jest.mock('@fc/exceptions/helpers', () => ({
   ...jest.requireActual('@fc/exceptions/helpers'),
   throwException: jest.fn(),
@@ -70,9 +75,13 @@ describe('OidcProviderAppConfigLibService', () => {
   const form =
     '<form id="logoutId" method="post" action="https://redirect/me/there"><input type="hidden" name="xsrf" value="123456azerty"/></form>';
 
+  const nowInSecondsMock = jest.mocked(nowInSeconds);
+  const nowMock = 1000;
+
   beforeEach(async () => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
+    nowInSecondsMock.mockReturnValue(nowMock);
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -353,7 +362,7 @@ describe('OidcProviderAppConfigLibService', () => {
           accountId: sessionIdAsArg,
           acr: interactionAcrMock,
           amr: amrValueMock,
-          ts: expect.any(Number),
+          ts: nowMock,
           remember: false,
         },
       };

@@ -1,7 +1,6 @@
 import { render } from '@testing-library/react';
 
-import { AccountContext } from '@fc/account';
-import { useSafeContext } from '@fc/common';
+import { useAccountContext } from '@fc/account';
 import { AlertComponent, NoticeComponent } from '@fc/dsfr';
 import { t } from '@fc/i18n';
 import { LoginFormComponent } from '@fc/login-form';
@@ -10,8 +9,15 @@ import { useStylesQuery, useStylesVariables } from '@fc/styles';
 import { LoginPage } from './login.page';
 
 describe('Login Page', () => {
+  const accountContextState = {
+    connected: true,
+    expired: false,
+    ready: true,
+    userinfos: undefined,
+  };
+
   beforeEach(() => {
-    jest.mocked(useSafeContext).mockReturnValue({ expired: false });
+    jest.mocked(useAccountContext).mockReturnValue(accountContextState);
     // @NOTE used to prevent useStylesVariables.useStylesContext to throw
     // useStylesContext requires to be into a StylesProvider context
     jest.mocked(useStylesVariables).mockReturnValue([expect.any(Number)]);
@@ -24,11 +30,11 @@ describe('Login Page', () => {
     const breakpointMock = Symbol(1234) as unknown as string;
     jest.mocked(useStylesVariables).mockReturnValueOnce([breakpointMock]);
     jest.mocked(useStylesQuery).mockReturnValueOnce(true);
-    jest.mocked(useSafeContext).mockReturnValueOnce({ expired: false });
+    jest.mocked(useAccountContext).mockReturnValueOnce(accountContextState);
     jest
       .mocked(t)
-      .mockReturnValueOnce('Partners.page.noticeDescription-mock')
-      .mockReturnValueOnce('Partners.page.noticeTitle-mock')
+      .mockReturnValueOnce('Partners.layout.noticeDescription-mock')
+      .mockReturnValueOnce('Partners.layout.noticeTitle-mock')
       .mockReturnValueOnce('Partners.loginpage.title-mock')
       .mockReturnValueOnce('Partners.loginpage.description-mock');
 
@@ -39,22 +45,22 @@ describe('Login Page', () => {
 
     // Then
     expect(container).toMatchSnapshot();
-    expect(useSafeContext).toHaveBeenCalledOnce();
-    expect(useSafeContext).toHaveBeenCalledWith(AccountContext);
+    expect(useAccountContext).toHaveBeenCalledOnce();
+    expect(useAccountContext).toHaveBeenCalledWith();
     expect(useStylesVariables).toHaveBeenCalledOnce();
     expect(useStylesVariables).toHaveBeenCalledWith(['breakpoint-lg']);
     expect(useStylesQuery).toHaveBeenCalledOnce();
     expect(useStylesQuery).toHaveBeenCalledWith({ minWidth: breakpointMock });
     expect(t).toHaveBeenCalledTimes(4);
-    expect(t).toHaveBeenNthCalledWith(1, 'Partners.page.noticeDescription');
-    expect(t).toHaveBeenNthCalledWith(2, 'Partners.page.noticeTitle');
+    expect(t).toHaveBeenNthCalledWith(1, 'Partners.layout.noticeDescription');
+    expect(t).toHaveBeenNthCalledWith(2, 'Partners.layout.noticeTitle');
     expect(t).toHaveBeenNthCalledWith(3, 'Partners.loginpage.title');
     expect(t).toHaveBeenNthCalledWith(4, 'Partners.loginpage.description');
     expect(NoticeComponent).toHaveBeenCalledOnce();
     expect(NoticeComponent).toHaveBeenCalledWith(
       {
-        description: 'Partners.page.noticeDescription-mock',
-        title: 'Partners.page.noticeTitle-mock',
+        description: 'Partners.layout.noticeDescription-mock',
+        title: 'Partners.layout.noticeTitle-mock',
       },
       undefined,
     );
@@ -108,11 +114,11 @@ describe('Login Page', () => {
 
   it('shoud match the snapshot, when user session has expired', () => {
     // Given
-    jest.mocked(useSafeContext).mockReturnValueOnce({ expired: true });
+    jest.mocked(useAccountContext).mockReturnValueOnce({ ...accountContextState, expired: true });
     jest
       .mocked(t)
-      .mockReturnValueOnce('Partners.page.noticeDescription-mock')
-      .mockReturnValueOnce('Partners.page.noticeTitle-mock')
+      .mockReturnValueOnce('Partners.layout.noticeDescription-mock')
+      .mockReturnValueOnce('Partners.layout.noticeTitle-mock')
       .mockReturnValueOnce('FC.session.expired-mock')
       .mockReturnValueOnce('Partners.loginpage.title-mock')
       .mockReturnValueOnce('Partners.loginpage.description-mock');

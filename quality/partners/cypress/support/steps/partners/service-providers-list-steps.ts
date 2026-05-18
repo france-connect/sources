@@ -4,6 +4,13 @@ import ServiceProvidersListPage from '../../pages/service-providers-list-page';
 
 const serviceProvidersListPage = new ServiceProvidersListPage();
 
+Then(
+  /^je suis (?:redirigé vers|sur) la page fournisseurs de service$/,
+  function () {
+    serviceProvidersListPage.checkIsVisible();
+  },
+);
+
 When(
   /^je clique sur le fournisseur de service "([^"]+)"$/,
   function (title: string) {
@@ -11,13 +18,15 @@ When(
   },
 );
 
-Then('je suis redirigé vers la liste des fournisseurs de service', function () {
-  cy.url().should('include', '/fournisseurs-de-service');
-});
-
-Then('la page fournisseurs de service est affichée', function () {
-  serviceProvidersListPage.checkIsVisible();
-});
+When(
+  /^je clique sur le fournisseur de service (créé|modifié) par datapass$/,
+  function () {
+    const { datapassRequestId } = this.serviceProvider;
+    serviceProvidersListPage
+      .getServiceProviderCardByRequestId(datapassRequestId)
+      .click();
+  },
+);
 
 Then("aucun fournisseur de service n'est affiché", function () {
   serviceProvidersListPage.getServiceProvidersCardList().should('not.exist');

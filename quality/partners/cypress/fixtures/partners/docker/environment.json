@@ -1,5 +1,8 @@
 {
   "name": "docker",
-  "partnersUrl": "https://partners.docker.dev-franceconnect.fr",
-  "platformName": "Espace partenaires"
+  "allAppsUrl": "https://docker.dev-franceconnect.fr/partners.html",
+  "mockDatapassAppId": "mock-datapass",
+  "mockDatapassRootUrl": "https://mock-datapass.docker.dev-franceconnect.fr",
+  "partnersAppId": "partners",
+  "partnersRootUrl": "https://partners.docker.dev-franceconnect.fr"
 }

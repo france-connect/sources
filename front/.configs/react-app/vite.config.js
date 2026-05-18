@@ -20,15 +20,15 @@ const fileDirname = path.dirname(url.fileURLToPath(import.meta.url));
 export default {
   build: {
     outDir: 'build',
-    rollupOptions: {
+    rolldownOptions: {
       output: {
-        manualChunks(id) {
-          // @NOTE code splitting : https://rollupjs.org/guide/en/#outputmanualchunks
-          // Split vendor packages into a separate chunk
-          if (id.includes('node_modules')) {
-            return 'vendor';
-          }
-          return undefined;
+        codeSplitting: {
+          groups: [
+            {
+              name: 'vendor',
+              test: /node_modules/,
+            },
+          ],
         },
       },
     },

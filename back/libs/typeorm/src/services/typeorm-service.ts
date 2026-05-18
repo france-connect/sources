@@ -1,4 +1,4 @@
-import { DataSource, QueryRunner } from 'typeorm';
+import { DataSource, EntityTarget, QueryRunner, Repository } from 'typeorm';
 
 import { Injectable } from '@nestjs/common';
 
@@ -10,6 +10,10 @@ import {
 @Injectable()
 export class TypeormService {
   constructor(private readonly dataSource: DataSource) {}
+
+  getRepository<T>(entity: EntityTarget<T>): Repository<T> {
+    return this.dataSource.getRepository(entity);
+  }
 
   async withTransaction<T>(
     callback: (queryRunner: QueryRunner) => Promise<T>,

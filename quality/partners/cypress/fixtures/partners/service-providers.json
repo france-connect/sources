@@ -1,0 +1,48 @@
+[
+  {
+    "name": "SP4 - Fournisseur de service par défaut",
+    "descriptions": ["par défaut"],
+    "datapassRequestId": "9900004",
+    "datapassAuthorizationId": "10004",
+    "datapassEidasLevel": "eidas_1",
+    "datapassScopes": [
+      "openid",
+      "given_name",
+      "family_name",
+      "email",
+      "gender",
+      "birthdate",
+      "birthplace",
+      "birthcountry",
+      "preferred_username"
+    ],
+    "platform": "fcp-low",
+    "organizationName": "Direction Interministerielle du Numérique",
+    "organizationSiret": "13002526500013",
+    "applicantUserDescription": "demandeur datapass par défaut",
+    "technicalUserDescription": "contact technique datapass par défaut"
+  },
+  {
+    "name": "SP50 - FS pour la modification des contacts",
+    "descriptions": ["pour la modification des contacts"],
+    "datapassRequestId": "9900050",
+    "datapassAuthorizationId": "10050",
+    "datapassEidasLevel": "eidas_1",
+    "datapassScopes": [
+      "openid",
+      "given_name",
+      "family_name",
+      "email",
+      "gender",
+      "birthdate",
+      "birthplace",
+      "birthcountry",
+      "preferred_username"
+    ],
+    "platform": "fcp-low",
+    "organizationName": "Direction Interministerielle du Numérique",
+    "organizationSiret": "13002526500013",
+    "applicantUserDescription": "demandeur datapass",
+    "technicalUserDescription": "contact technique datapass"
+  }
+]

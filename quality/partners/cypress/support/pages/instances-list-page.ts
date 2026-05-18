@@ -31,10 +31,7 @@ export default class InstancesListPage {
   }
 
   checkIsVisible(): void {
-    cy.contains(
-      '[data-testid="instances-page-title"]',
-      'Accès au bac à sable',
-    ).should('be.visible');
+    cy.get('[data-testid="instances-page-title"]').should('be.visible');
   }
 
   checkIsInstanceCreationConfirmationVisible(isVisible: boolean): void {

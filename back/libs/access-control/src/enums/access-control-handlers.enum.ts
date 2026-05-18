@@ -1,0 +1,5 @@
+export enum CommonAccessControlHandlerEnum {
+  GLOBAL_PERMISSION = 'GLOBAL_PERMISSION',
+  DIRECT_ENTITY = 'DIRECT_ENTITY',
+  RELATED_ENTITY = 'RELATED_ENTITY',
+}

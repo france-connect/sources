@@ -3,6 +3,8 @@ services:
     build:
       context: "${DOCKER_DIR}"
       dockerfile: "${DOCKER_DIR}/builds/znuny/Dockerfile"
+      args:
+        DOCKER_HUB_PROXY: ${DOCKER_HUB_PROXY}
     depends_on:
       postgres:
         condition: service_healthy
@@ -23,6 +25,7 @@ services:
       - ${VOLUMES_DIR}/znuny/scripts/init-database.sh:/usr/local/bin/init-database.sh
       - ${VOLUMES_DIR}/znuny/scripts/inject-fixtures.sh:/usr/local/bin/inject-fixtures.sh
       - ${VOLUMES_DIR}/znuny/scripts/fixtures.sql:/tmp/fixtures.sql
+      - ${VOLUMES_DIR}/znuny/scripts/webservice-franceconnect.yml:/tmp/webservice-franceconnect.yml
       # Znuny will set permissions on these files, so we cannot mount the whole ssl directory as read-only
       - ${COMPOSE_DIR}/shared/.env/znuny/znuny.env:/tmp/znuny.env
       - ${VOLUMES_DIR}/znuny/Kernel/Config.pm:/tmp/Config.pm

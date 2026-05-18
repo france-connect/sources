@@ -1,16 +1,21 @@
 import classnames from 'classnames';
 import React from 'react';
 
-import { AccountContext, type AccountContextState } from '@fc/account';
-import { MessageTypes, useSafeContext } from '@fc/common';
+import { useAccountContext } from '@fc/account';
+import { MessageTypes } from '@fc/common';
 import { AlertComponent, ConnectTypes, NoticeComponent, Sizes } from '@fc/dsfr';
 import { t } from '@fc/i18n';
 import { LoginFormComponent } from '@fc/login-form';
 import { useStylesQuery, useStylesVariables } from '@fc/styles';
 
 export const LoginPage = React.memo(() => {
-  const { expired } = useSafeContext<AccountContextState>(AccountContext);
+  // @NOTE create a custom hook to handle the logic
+  // keep homogeneous code with other pages
+  const { expired } = useAccountContext();
 
+  // @NOTE useless hook
+  // instead use DSFR CSS Breakpoints classes
+  // @SEE https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/2396
   const [breakpointLg] = useStylesVariables(['breakpoint-lg']);
 
   const gtDesktop = useStylesQuery({ minWidth: breakpointLg });
@@ -18,8 +23,8 @@ export const LoginPage = React.memo(() => {
   return (
     <React.Fragment>
       <NoticeComponent
-        description={t('Partners.page.noticeDescription')}
-        title={t('Partners.page.noticeTitle')}
+        description={t('Partners.layout.noticeDescription')}
+        title={t('Partners.layout.noticeTitle')}
       />
       <main className="fr-container fr-py-8v">
         {expired && (

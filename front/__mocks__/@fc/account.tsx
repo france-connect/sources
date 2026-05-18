@@ -20,3 +20,5 @@ export const ConnectValidator = {
 export const AccountOptions = {
   CONFIG_NAME: 'Account',
 };
+
+export const useAccountContext = jest.fn();

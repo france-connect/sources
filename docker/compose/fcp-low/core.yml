@@ -9,6 +9,8 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
+      node-modules-back:
+        condition: service_completed_successfully
       mongo-fcp-low-replica-single-init:
         condition: service_completed_successfully
       mock-rnipp:

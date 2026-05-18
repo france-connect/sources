@@ -54,9 +54,20 @@
     "method": "GET",
     "url": "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/authorize"
   },
+  "initialisation webhook datapass": {
+    "headers": {
+      "X-Hub-Signature-256": "sha256=29ac3c337106f475f6cb2be5aef9f5b18eae8ec6b6a74e4dfe3c74d935da7360"
+    },
+    "body": {
+      "test": true,
+      "timestamp": "2026-04-15T10:30:00+02:00"
+    },
+    "method": "POST",
+    "url": "https://partners.docker.dev-franceconnect.fr/api/datapass/webhook"
+  },
   "datapass": {
     "headers": {
-      "X-Hub-Signature-256": "sha256=1350813c4ea46c94aff4d067700eaeea03ce7af39bb6696e727ce1a4fff21f20"
+      "X-Hub-Signature-256": "sha256=fcb545a134f6404cb770b995e19f9ab1c2c2353f1242e2caf28402cdbe9253be"
     },
     "body": {
       "event": "approve",
@@ -82,35 +93,32 @@
         },
         "data": {
           "intitule": "Ma demande",
-          "scopes": ["identite_pivot", "email"],
+          "scopes": ["given_name", "family_name", "email"],
+          "france_connect_eidas": "eidas_1",
           "contact_technique_given_name": "Tech",
           "contact_technique_family_name": "Os",
           "contact_technique_phone_number": "08366666666",
           "contact_technique_job_title": "DSI",
           "contact_technique_email": "tech@beta.gouv.fr"
-        }
+        },
+        "authorizations": [
+          {
+            "id": "123",
+            "state": "active",
+            "authorization_request_class": "AuthorizationRequest::FranceConnect",
+            "revoked": false
+          },
+          {
+            "id": "456",
+            "state": "obsolete",
+            "authorization_request_class": "AuthorizationRequest::FranceConnect",
+            "revoked": false
+          }
+        ]
       }
     },
     "method": "POST",
     "url": "https://partners.docker.dev-franceconnect.fr/api/datapass/webhook"
-  },
-  "invitation-new-user": {
-    "headers": {
-      "X-Hub-Signature-256": "sha256=a096d5968730db474a625c474d1dd0da2038ef03cd9a4bb5d57d97dd226cda23"
-    },
-    "body": "emails[]=bdd2@yopmail.com&instances[]=50b70101-0e1f-419a-9365-81754c2de689",
-    "form": true,
-    "method": "POST",
-    "url": "https://partners.docker.dev-franceconnect.fr/api/invitation"
-  },
-  "invitation-default-user": {
-    "headers": {
-      "X-Hub-Signature-256": "sha256=2ee61e9b586c5803577c53c66df69ba2b601b543c4013fad3a4b3735757efd44"
-    },
-    "body": "emails[]=hdubois@yopmail.com&instances[]=50b70101-0e1f-419a-9365-81754c2de689",
-    "form": true,
-    "method": "POST",
-    "url": "https://partners.docker.dev-franceconnect.fr/api/invitation"
   },
   "service-providers-list": {
     "method": "GET",
@@ -119,5 +127,13 @@
   "service-provider-get": {
     "method": "GET",
     "url": "https://partners.docker.dev-franceconnect.fr/api/service-providers/25c4e41c-a97d-4bc9-8e05-e353c91eaef5"
+  },
+  "instance-get": {
+    "method": "GET",
+    "url": "https://partners.docker.dev-franceconnect.fr/api/instances/acfacfcf-291b-43bd-abe7-fb234b3d879e"
+  },
+  "linkable-instances-get": {
+    "method": "GET",
+    "url": "https://partners.docker.dev-franceconnect.fr/api/linkable-instances/25c4e41c-a97d-4bc9-8e05-e353c91eaef5"
   }
 }

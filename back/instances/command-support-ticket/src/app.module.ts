@@ -2,6 +2,7 @@ import { DynamicModule, Module } from '@nestjs/common';
 
 import { CommandRunnerModule } from '@fc/command-runner';
 import { ConfigModule, ConfigService } from '@fc/config';
+import { HttpOtrsClientModule } from '@fc/http-otrs-client';
 import { LoggerModule } from '@fc/logger';
 
 @Module({})
@@ -16,6 +17,7 @@ export class AppModule {
         LoggerModule.forRoot(),
         // 3. Load other modules
         CommandRunnerModule,
+        HttpOtrsClientModule,
       ],
     };
   }

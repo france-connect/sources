@@ -12,9 +12,11 @@ When('je navigue sur la page fournisseur de service eidas', function () {
 });
 
 When('je configure un fournisseur de service sur eidas mock', function () {
+  const { name: testEnvName } = this.env;
   const { scopes } = this.requestedScope;
   const { name: spName } = this.serviceProvider;
   const params = {
+    citizenCountry: testEnvName === 'integ01' ? 'FR-INTEG' : 'FR',
     scopes,
     spCountry: spName === 'eidas-be' ? 'BE' : 'CB',
   };

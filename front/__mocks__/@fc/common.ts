@@ -6,7 +6,25 @@ export const sortByKey = jest.fn(() => jest.fn());
 
 export const isoToDate = jest.fn();
 
+export const isErrorLike = jest.fn();
+
 export const getAccessibleTitle = jest.fn();
+
+export const truncateMiddle = jest.fn((v: string, visibleChars = 8) => {
+  const minLength = visibleChars * 2 + 3;
+  if (v.length <= minLength) return v;
+  return `${v.slice(0, visibleChars)}...${v.slice(-visibleChars)}`;
+});
+
+export const formatFullName = jest.fn((person?: { firstname?: string; lastname?: string }) => {
+  if (!person) {
+    return '-';
+  }
+
+  const parts = [person.firstname, person.lastname].filter(Boolean);
+
+  return parts.length > 0 ? parts.join(' ') : '-';
+});
 
 /* ----------------------
  Hooks
@@ -53,6 +71,7 @@ export enum Strings {
   DASH = '-',
   SLASH = '/',
   NBSP_UNICODE = '\u00A0',
+  NEW_LINE = '\n',
 }
 
 export enum ContentType {

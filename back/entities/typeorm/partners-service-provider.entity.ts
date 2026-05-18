@@ -3,12 +3,14 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
-import { PartnersOrganisation } from './partners-organisation.entity';
+import { PartnersOrganization } from './partners-organization.entity';
 import { PartnersPlatform } from './partners-platform.entity';
+import { PartnersServiceProviderInstance } from './partners-service-provider-instance.entity';
 
 @Entity()
 export class PartnersServiceProvider {
@@ -23,15 +25,22 @@ export class PartnersServiceProvider {
 
   @Column({
     type: 'text',
-    nullable: true,
+    nullable: false,
+    unique: true,
   })
-  organizationName: string;
+  datapassRequestId: string;
 
   @Column({
     type: 'text',
-    nullable: true,
+    nullable: false,
   })
-  datapassRequestId: string;
+  datapassAuthorizationId: string;
+
+  @Column({
+    type: 'text',
+    nullable: false,
+  })
+  datapassEidasLevel: string;
 
   @Column({
     type: 'json',
@@ -43,11 +52,18 @@ export class PartnersServiceProvider {
   platform: PartnersPlatform;
 
   @ManyToOne(
-    () => PartnersOrganisation,
-    (organisation) => organisation.serviceProviders,
+    () => PartnersOrganization,
+    (organization) => organization.serviceProviders,
     { onDelete: 'CASCADE' },
   )
-  organisation: PartnersOrganisation;
+  organization: PartnersOrganization;
+
+  @OneToMany(
+    () => PartnersServiceProviderInstance,
+    (instance: PartnersServiceProviderInstance) => instance.serviceProvider,
+    { onDelete: 'CASCADE' },
+  )
+  instances: PartnersServiceProviderInstance[];
 
   @CreateDateColumn({
     default: () => 'NOW()',

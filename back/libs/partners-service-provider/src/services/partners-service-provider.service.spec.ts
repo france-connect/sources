@@ -3,7 +3,13 @@ import { In, QueryRunner, Repository } from 'typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 
-import { PartnersServiceProvider } from '@entities/typeorm';
+import {
+  EnvironmentEnum,
+  PartnersServiceProvider,
+  PartnersServiceProviderInstance,
+  PartnersServiceProviderInstanceVersion,
+  PublicationStatusEnum,
+} from '@entities/typeorm';
 
 import { PermissionInterface, RelatedEntitiesHelper } from '@fc/access-control';
 import { LoggerService } from '@fc/logger';
@@ -11,9 +17,14 @@ import {
   AccessControlEntity,
   AccessControlPermission,
 } from '@fc/partners/enums';
+import { OidcClientInterface } from '@fc/service-provider';
 
 import { getLoggerMock } from '@mocks/logger';
-import { getRepositoryMock, resetRepositoryMock } from '@mocks/typeorm';
+import {
+  getQueryRunnerMock,
+  getRepositoryMock,
+  resetRepositoryMock,
+} from '@mocks/typeorm';
 
 import { PartnersServiceProviderNotFoundException } from '../exceptions';
 import { PartnersServiceProviderService } from './partners-service-provider.service';
@@ -27,6 +38,8 @@ describe('PartnersServiceProviderService', () => {
   const repositoryMock = getRepositoryMock();
   const RelatedEntitiesHelperGetMock = jest.spyOn(RelatedEntitiesHelper, 'get');
 
+  let queryRunnerMock;
+
   const permissionsMock = [
     {
       permissionType: AccessControlPermission.SP_ADMIN,
@@ -35,16 +48,44 @@ describe('PartnersServiceProviderService', () => {
     },
   ] as PermissionInterface<AccessControlEntity, AccessControlPermission>[];
 
+  const versionMock: PartnersServiceProviderInstanceVersion = {
+    id: 'version-id',
+    data: {} as unknown as OidcClientInterface,
+    publicationStatus: PublicationStatusEnum.DRAFT,
+    createdAt: new Date('2024-01-01'),
+    updatedAt: new Date('2024-01-01'),
+    instance: null,
+  };
+
+  const instanceMock: Omit<PartnersServiceProviderInstance, 'versions'> = {
+    id: 'instance-id',
+    environment: EnvironmentEnum.SANDBOX,
+    creator: null,
+    serviceProvider: null,
+    createdAt: new Date('2024-01-01'),
+    updatedAt: new Date('2024-01-01'),
+    currentVersion: versionMock,
+  };
+
   const serviceProviderMock: PartnersServiceProvider = {
     id: 'service-provider-id',
     name: 'Test Service Provider',
-    organizationName: 'Test Organization',
     datapassRequestId: '12345',
+    datapassAuthorizationId: '456',
+    datapassEidasLevel: 'eidas_1',
     datapassScopes: ['openid', 'given_name', 'family_name', 'email'],
     platform: null,
-    organisation: null,
+    organization: {
+      id: '12345',
+      name: 'Test Organization',
+      siret: '12345678901234',
+      createdAt: new Date('2024-01-01'),
+      updatedAt: new Date('2024-01-01'),
+      serviceProviders: [],
+    },
     createdAt: new Date('2024-01-01'),
     updatedAt: new Date('2024-01-01'),
+    instances: [instanceMock as PartnersServiceProviderInstance],
   };
 
   const serviceProviderIdMock = 'service-provider-id';
@@ -72,6 +113,10 @@ describe('PartnersServiceProviderService', () => {
     );
 
     resetRepositoryMock(repositoryMock);
+
+    repositoryMock.findOne.mockResolvedValue(serviceProviderMock);
+
+    queryRunnerMock = getQueryRunnerMock();
   });
 
   it('should be defined', () => {
@@ -150,12 +195,31 @@ describe('PartnersServiceProviderService', () => {
       expect(repositoryMock.find).toHaveBeenCalledExactlyOnceWith({
         where: { id: In(serviceProviderIds) },
         order: { createdAt: 'DESC' },
+        relations: ['organization'],
       });
       expect(result).toEqual([serviceProviderMock]);
     });
   });
 
   describe('getById', () => {
+    it('should call repository.findOne with platform in relations', async () => {
+      // When
+      await service.getById(serviceProviderIdMock);
+
+      // Then
+      expect(repositoryMock.findOne).toHaveBeenCalledExactlyOnceWith({
+        where: { id: serviceProviderIdMock },
+        relations: [
+          'instances',
+          'instances.currentVersion',
+          'instances.creator',
+          'organization',
+          'platform',
+        ],
+        order: { instances: { createdAt: 'DESC' } },
+      });
+    });
+
     it('should return service provider when found', async () => {
       // Given
       repositoryMock.findOne.mockResolvedValue(serviceProviderMock);
@@ -176,36 +240,95 @@ describe('PartnersServiceProviderService', () => {
         PartnersServiceProviderNotFoundException,
       );
     });
+
+    it('should return the service provider with the latest version of the instance', async () => {
+      // When
+      const result = await service.getById(serviceProviderIdMock);
+
+      // Then
+      expect(result).toEqual({
+        ...serviceProviderMock,
+        instances: [
+          {
+            ...instanceMock,
+            currentVersion: versionMock,
+          },
+        ],
+      });
+    });
+  });
+
+  describe('getByIdTransactional', () => {
+    it('should call queryRunner.manager.findOne with platform in relations', async () => {
+      // Given
+      queryRunnerMock.manager.findOne = jest
+        .fn()
+        .mockResolvedValue(serviceProviderMock);
+
+      // When
+      await service.getByIdTransactional(
+        queryRunnerMock as unknown as QueryRunner,
+        serviceProviderIdMock,
+      );
+
+      // Then
+      expect(queryRunnerMock.manager.findOne).toHaveBeenCalledExactlyOnceWith(
+        PartnersServiceProvider,
+        {
+          where: { id: serviceProviderIdMock },
+          relations: [
+            'platform',
+            'instances',
+            'instances.currentVersion',
+            'instances.creator',
+          ],
+          order: {
+            instances: { createdAt: 'DESC' },
+          },
+        },
+      );
+    });
+
+    it('should return service provider when found', async () => {
+      // Given
+      queryRunnerMock.manager.findOne = jest
+        .fn()
+        .mockResolvedValue(serviceProviderMock);
+
+      // When
+      const result = await service.getByIdTransactional(
+        queryRunnerMock as unknown as QueryRunner,
+        serviceProviderIdMock,
+      );
+
+      // Then
+      expect(result).toEqual(serviceProviderMock);
+    });
+
+    it('should throw PartnersServiceProviderNotFoundException when service provider not found', async () => {
+      // Given
+      queryRunnerMock.manager.findOne = jest.fn().mockResolvedValue(null);
+
+      // When / Then
+      await expect(
+        service.getByIdTransactional(
+          queryRunnerMock as unknown as QueryRunner,
+          serviceProviderIdMock,
+        ),
+      ).rejects.toThrow(PartnersServiceProviderNotFoundException);
+    });
   });
 
   describe('upsert', () => {
-    const queryRunnerMock = {
-      manager: {
-        createQueryBuilder: jest.fn().mockReturnThis(),
-        insert: jest.fn().mockReturnThis(),
-        into: jest.fn().mockReturnThis(),
-        values: jest.fn().mockReturnThis(),
-        orUpdate: jest.fn().mockReturnThis(),
-        returning: jest.fn().mockReturnThis(),
-        execute: jest.fn(),
-      },
-    };
-
     const upsertResultMock = {
       generatedMaps: [serviceProviderMock],
     };
 
     beforeEach(() => {
-      jest.resetAllMocks();
-      queryRunnerMock.manager.createQueryBuilder.mockReturnThis();
-      queryRunnerMock.manager.insert.mockReturnThis();
-      queryRunnerMock.manager.into.mockReturnThis();
-      queryRunnerMock.manager.values.mockReturnThis();
-      queryRunnerMock.manager.orUpdate.mockReturnThis();
-      queryRunnerMock.manager.returning.mockReturnThis();
-      queryRunnerMock.manager.execute.mockResolvedValue(upsertResultMock);
+      queryRunnerMock.manager.execute = jest
+        .fn()
+        .mockResolvedValue(upsertResultMock);
     });
-
     it('should create queryBuilder chain with correct parameters', async () => {
       // When
       await service.upsert(
@@ -225,7 +348,13 @@ describe('PartnersServiceProviderService', () => {
         serviceProviderMock,
       );
       expect(queryRunnerMock.manager.orUpdate).toHaveBeenCalledWith(
-        ['name', 'organizationName', 'datapassScopes'],
+        [
+          'name',
+          'datapassScopes',
+          'datapassEidasLevel',
+          'datapassAuthorizationId',
+          'organizationId',
+        ],
         ['datapassRequestId'],
       );
       expect(queryRunnerMock.manager.returning).toHaveBeenCalledWith('*');

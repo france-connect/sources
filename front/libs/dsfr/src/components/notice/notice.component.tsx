@@ -1,6 +1,7 @@
 import React from 'react';
 
 import type { NavigationLinkInterface } from '@fc/common';
+import { MessageTypes } from '@fc/common';
 import { t } from '@fc/i18n';
 
 interface NoticeComponentProps {
@@ -8,15 +9,16 @@ interface NoticeComponentProps {
   description?: string;
   onClose?: () => void;
   link?: NavigationLinkInterface;
+  type?: MessageTypes;
 }
 
 export const NoticeComponent = React.memo(
-  ({ description, link, onClose, title }: NoticeComponentProps) => {
+  ({ description, link, onClose, title, type = MessageTypes.INFO }: NoticeComponentProps) => {
     const closeLabel = (onClose && t('DSFR.notice.close')) || undefined;
     const linkTitle = link?.title ? `${link.title} - ${t('FC.Common.newWindow')}` : undefined;
 
     return (
-      <div className="fr-notice fr-notice--info">
+      <div className={`fr-notice fr-notice--${type}`}>
         <div className="fr-container">
           <div className="fr-notice__body">
             <p>

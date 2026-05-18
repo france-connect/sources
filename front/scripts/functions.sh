@@ -18,6 +18,9 @@ copy_dsfr_files() {
   check_source_and_files "$DSFR_FOLDER"
   check_source_and_files "$DEST_FOLDER"
 
+  # Remove existing dsfr folder in destination if it exists to avoid stale files
+  rm -rf "$DEST_FOLDER/dsfr"
+
   copy_folder "$DSFR_FOLDER/fonts" "$DEST_FOLDER/dsfr/fonts"
   copy_folder "$DSFR_FOLDER/icons" "$DEST_FOLDER/dsfr/icons"
   copy_folder "$DSFR_FOLDER/artwork" "$DEST_FOLDER/dsfr/artwork"
@@ -62,6 +65,21 @@ generate_18n_files() {
   fi
 
   print_info "Generating i18n for $1..."
-  node ./scripts/i18n.mjs $1
+  # Ignore irrelevant i18n apps/libs for each app
+  local -a args=()
+  case "$1" in
+    partners)
+      args=("apps/core-user-dashboard" "apps/tracks" "apps/user-preferences")
+      ;;
+    user-dashboard)
+      args=("apps/core-partners")
+      ;;
+  esac
+
+  node ./scripts/i18n.mjs "$1" "${args[@]}"
+  if [ $? -ne 0 ]; then
+    print_error "Error generating i18n for $1"
+  fi
+
   print_success "Files created successfully !"
 }

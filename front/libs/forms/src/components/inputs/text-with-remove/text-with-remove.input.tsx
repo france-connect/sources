@@ -5,6 +5,7 @@ import { useField } from 'react-final-form';
 import { ComponentTypes } from '../../../enums';
 import { useFieldMessages, useFieldMeta } from '../../../hooks';
 import type { FieldMessage } from '../../../interfaces';
+import type { ExtendedFieldRenderProps } from '../../../types';
 import { ArrayRemoveButton, GroupElement, MessagesElement } from '../../elements';
 import { InputComponent } from '../input';
 
@@ -36,7 +37,7 @@ export const TextWithRemoveInput = React.memo(
       onRemove(index);
     }, [index, onRemove]);
 
-    const { className, disabled, name } = input;
+    const { className, disabled, name } = input as unknown as ExtendedFieldRenderProps['input'];
     const id = `form-input-array-${name}`;
     return (
       <GroupElement

@@ -50,7 +50,7 @@ Fonctionnalité: Connexion avec chiffrement
     Quand je m'authentifie avec succès
     Alors je suis redirigé vers la page erreur technique FranceConnect
     Et le code d'erreur FranceConnect est "Y020027"
-    Et le message d'erreur FranceConnect est "Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter."
+    Et le message d'erreur FranceConnect est "Une erreur technique est survenue. Veuillez vous reconnecter ultérieurement."
 
     Exemples:
       | signature    |

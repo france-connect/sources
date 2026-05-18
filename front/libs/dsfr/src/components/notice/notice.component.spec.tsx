@@ -1,5 +1,6 @@
 import { fireEvent, render } from '@testing-library/react';
 
+import { MessageTypes } from '@fc/common';
 import { t } from '@fc/i18n';
 
 import { NoticeComponent } from './notice.component';
@@ -32,6 +33,7 @@ describe('NoticeComponent', () => {
           title: 'any-link-title-mock',
         }}
         title="any-title-mock"
+        type={MessageTypes.WARNING}
         onClose={jest.fn()}
       />,
     );

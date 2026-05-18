@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 _log() {
   app=${@:-no-container}
   cd ${DOCKER_DIR}
@@ -170,11 +172,6 @@ _install_dependencies() {
     cd ${DOCKER_DIR}
     $DOCKER_COMPOSE exec ${NO_TTY} "${app}" "/opt/scripts/install.sh"
   done
-}
-
-_install_dependencies_all() {
-  _get_running_containers
-  _install_dependencies $NODEJS_CONTAINERS
 }
 
 _log_rotate() {

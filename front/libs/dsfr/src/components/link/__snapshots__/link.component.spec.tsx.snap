@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`LinkComponent should match the snapshot, when external is defined but no rel or target are defined 1`] = `
 <div>

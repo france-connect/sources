@@ -10,11 +10,13 @@ import {
   Put,
   UseGuards,
   UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 
 import {
   EnvironmentEnum,
   PartnersAccount,
+  PartnersServiceProvider,
   PartnersServiceProviderInstance,
   PublicationStatusEnum,
 } from '@entities/typeorm';
@@ -35,23 +37,29 @@ import {
 import { CsrfTokenGuard } from '@fc/csrf';
 import { FormValidationPipe } from '@fc/dto2form';
 import { PartnersAccountSession } from '@fc/partners-account';
+import { PartnersServiceProviderService } from '@fc/partners-service-provider';
 import { PartnersServiceProviderInstanceService } from '@fc/partners-service-provider-instance';
 import {
   PartnersServiceProviderInstanceVersionService,
   ServiceProviderInstanceVersionDto,
 } from '@fc/partners-service-provider-instance-version';
 import { OidcClientInterface } from '@fc/service-provider';
-import { ISessionService, Session } from '@fc/session';
+import { ISessionService, Session, SessionService } from '@fc/session';
 import { TypeormService } from '@fc/typeorm';
 
+import { LinkInstancesInputDto } from '../dto';
 import {
   AccessControlEntity,
   AccessControlHandler,
   AccessControlPermission,
+  DefaultServiceProviderEnum,
   PartnersBackRoutes,
+  PartnersPlatformEnum,
 } from '../enums';
+import { PartnersInstanceNotFoundException } from '../exceptions';
 import {
   PartnerPublicationService,
+  PartnersInstanceService,
   PartnersInstanceVersionFormService,
 } from '../services';
 
@@ -70,12 +78,21 @@ export class InstanceController {
       AccessControlPermission
     >,
     private readonly typeorm: TypeormService,
+    private readonly session: SessionService,
+    private readonly serviceProvider: PartnersServiceProviderService,
+    private readonly instanceService: PartnersInstanceService,
   ) {}
 
   @Get(PartnersBackRoutes.SP_INSTANCES)
   @AccessControl([
     {
       permission: AccessControlPermission.INSTANCE_CONTRIBUTOR,
+      handler: {
+        method: AccessControlHandler.GLOBAL_PERMISSION,
+      },
+    },
+    {
+      permission: AccessControlPermission.SP_CONTRIBUTOR,
       handler: {
         method: AccessControlHandler.GLOBAL_PERMISSION,
       },
@@ -89,7 +106,16 @@ export class InstanceController {
       AccessControlPermission
     >[],
   ): Promise<FSA<FSAMeta, PartnersServiceProviderInstance[]>> {
-    const instances = await this.instance.getAllowedInstances(permissions);
+    const {
+      identity: { id: accountId },
+    } =
+      this.session.get<
+        PartnersAccountSession<AccessControlEntity, AccessControlPermission>
+      >('PartnersAccount');
+    const instances = await this.instance.getAllowedInstances(
+      permissions,
+      accountId,
+    );
 
     return {
       type: 'INSTANCE',
@@ -104,6 +130,16 @@ export class InstanceController {
       entity: AccessControlEntity.SP_INSTANCE,
       handler: {
         method: AccessControlHandler.DIRECT_ENTITY,
+      },
+      entityIdLocation: { src: 'params', key: 'instanceId' },
+    },
+    {
+      permission: AccessControlPermission.SP_ADMIN,
+      entity: AccessControlEntity.SP_INSTANCE,
+      handler: {
+        method: AccessControlHandler.RELATED_ENTITY,
+        entity: AccessControlEntity.SERVICE_PROVIDER,
+        column: 'serviceProvider',
       },
       entityIdLocation: { src: 'params', key: 'instanceId' },
     },
@@ -143,13 +179,25 @@ export class InstanceController {
     const {
       identity: { id: accountId, email },
     } = sessionPartnersAccount.get();
-    const data = await this.form.fromFormValues(values);
+
+    /**
+     * Hard coded since we only have permission to create instances for the default low SP
+     * WARNING: Getting this parameter from body would imply to add a new AccessControl rule to the controller
+     */
+    const serviceProviderId = DefaultServiceProviderEnum.DEFAULT_LOW_SP;
+
+    const data = await this.form.fromFormValues(values, serviceProviderId);
 
     const { instanceId, versionId } = await this.typeorm.withTransaction<{
       instanceId: string;
       versionId: string;
     }>((queryRunner) =>
-      this.createInstanceInDatabase(queryRunner, data, accountId),
+      this.createInstanceInDatabase(
+        queryRunner,
+        data,
+        accountId,
+        serviceProviderId,
+      ),
     );
 
     const dataWithCreatedInfo: ConfigCreateViaMessageDtoPayload = {
@@ -171,14 +219,164 @@ export class InstanceController {
     };
   }
 
+  @Get(PartnersBackRoutes.LINKABLE_INSTANCES)
+  @AccessControl([
+    {
+      permission: AccessControlPermission.SP_ADMIN,
+      entity: AccessControlEntity.SERVICE_PROVIDER,
+      handler: {
+        method: AccessControlHandler.DIRECT_ENTITY,
+      },
+      entityIdLocation: { src: 'params', key: 'serviceProviderId' },
+    },
+    {
+      permission: AccessControlPermission.SP_TECH,
+      entity: AccessControlEntity.SERVICE_PROVIDER,
+      handler: {
+        method: AccessControlHandler.DIRECT_ENTITY,
+      },
+      entityIdLocation: { src: 'params', key: 'serviceProviderId' },
+    },
+    {
+      permission: AccessControlPermission.SP_CONTRIBUTOR,
+      entity: AccessControlEntity.SERVICE_PROVIDER,
+      handler: {
+        method: AccessControlHandler.DIRECT_ENTITY,
+      },
+      entityIdLocation: { src: 'params', key: 'serviceProviderId' },
+    },
+  ])
+  @UseGuards(AccessControlGuard)
+  async retrieveLinkableInstances(
+    @Param('serviceProviderId') serviceProviderId: string,
+  ): Promise<
+    FSA<
+      FSAMeta,
+      {
+        instances: PartnersServiceProviderInstance[];
+        serviceProvider: PartnersServiceProvider;
+      }
+    >
+  > {
+    const {
+      identity: { id: accountId },
+    } =
+      this.session.get<
+        PartnersAccountSession<AccessControlEntity, AccessControlPermission>
+      >('PartnersAccount');
+
+    const serviceProvider =
+      await this.serviceProvider.getById(serviceProviderId);
+
+    const defaultSpId =
+      serviceProvider.platform.name === PartnersPlatformEnum.FRANCE_CONNECT_HIGH
+        ? DefaultServiceProviderEnum.DEFAULT_HIGH_SP
+        : DefaultServiceProviderEnum.DEFAULT_LOW_SP;
+
+    const instances = await this.instance.getLinkableInstances(
+      accountId,
+      defaultSpId,
+    );
+
+    return {
+      type: 'INSTANCE',
+      payload: {
+        instances,
+        serviceProvider,
+      },
+    };
+  }
+
+  @Post(PartnersBackRoutes.LINK_INSTANCES)
+  @AccessControl([
+    {
+      permission: AccessControlPermission.SP_ADMIN,
+      entity: AccessControlEntity.SERVICE_PROVIDER,
+      handler: {
+        method: AccessControlHandler.LINKABLE_INSTANCES,
+      },
+      entityIdLocation: { src: 'body', key: 'serviceProviderId' },
+    },
+    {
+      permission: AccessControlPermission.SP_TECH,
+      entity: AccessControlEntity.SERVICE_PROVIDER,
+      handler: {
+        method: AccessControlHandler.LINKABLE_INSTANCES,
+      },
+      entityIdLocation: { src: 'body', key: 'serviceProviderId' },
+    },
+    {
+      permission: AccessControlPermission.SP_CONTRIBUTOR,
+      entity: AccessControlEntity.SERVICE_PROVIDER,
+      handler: {
+        method: AccessControlHandler.LINKABLE_INSTANCES,
+      },
+      entityIdLocation: { src: 'body', key: 'serviceProviderId' },
+    },
+  ])
+  @UseGuards(AccessControlGuard)
+  @UseGuards(CsrfTokenGuard)
+  @UsePipes(ValidationPipe)
+  async linkInstancesToServiceProvider(
+    @Body() { serviceProviderId, instanceIds }: LinkInstancesInputDto,
+    @Session('PartnersAccount', PartnersAccountSession)
+    sessionPartnersAccount: ISessionService<
+      PartnersAccountSession<AccessControlEntity, AccessControlPermission>
+    >,
+  ): Promise<FSA<FSAMeta, unknown>> {
+    let instances: PartnersServiceProviderInstance[] = [];
+    await this.typeorm.withTransaction(async (queryRunner) => {
+      await this.instance.linkToServiceProvider(
+        queryRunner,
+        instanceIds,
+        serviceProviderId,
+      );
+
+      instances = await this.instance.getByIdsWithQueryRunner(
+        queryRunner,
+        instanceIds,
+      );
+
+      const {
+        identity: { id: accountId, email },
+      } = sessionPartnersAccount.get();
+
+      for (const instance of instances) {
+        await this.instanceService.update(
+          queryRunner,
+          instance.currentVersion.data,
+          instance,
+          serviceProviderId,
+          email,
+        );
+
+        await this.accessControl.removePermissionTransactional(queryRunner, {
+          accountId,
+          permissionType: AccessControlPermission.INSTANCE_CONTRIBUTOR,
+          entity: AccessControlEntity.SP_INSTANCE,
+          entityId: instance.id,
+        });
+      }
+    });
+
+    return {
+      type: 'INSTANCE',
+      payload: instances,
+    };
+  }
+
   private async createInstanceInDatabase(
     queryRunner: QueryRunner,
     data: OidcClientInterface,
     accountId: string,
+    serviceProviderId: string,
   ): Promise<{ instanceId: string; versionId: string }> {
     const { id: instanceId } = await this.instance.save(queryRunner, {
       environment: EnvironmentEnum.SANDBOX,
       creator: { id: accountId } as PartnersAccount,
+      serviceProvider: {
+        id: serviceProviderId,
+      } as PartnersServiceProvider,
     });
 
     // Skip "DRAFT" for sandbox since there is no point to update right after creation
@@ -210,6 +408,26 @@ export class InstanceController {
       },
       entityIdLocation: { src: 'params', key: 'instanceId' },
     },
+    {
+      permission: AccessControlPermission.SP_ADMIN,
+      entity: AccessControlEntity.SP_INSTANCE,
+      handler: {
+        method: AccessControlHandler.RELATED_ENTITY,
+        entity: AccessControlEntity.SERVICE_PROVIDER,
+        column: 'serviceProvider',
+      },
+      entityIdLocation: { src: 'params', key: 'instanceId' },
+    },
+    {
+      permission: AccessControlPermission.SP_TECH,
+      entity: AccessControlEntity.SP_INSTANCE,
+      handler: {
+        method: AccessControlHandler.RELATED_ENTITY,
+        entity: AccessControlEntity.SERVICE_PROVIDER,
+        column: 'serviceProvider',
+      },
+      entityIdLocation: { src: 'params', key: 'instanceId' },
+    },
   ])
   @UseGuards(AccessControlGuard)
   @UseGuards(CsrfTokenGuard)
@@ -222,40 +440,28 @@ export class InstanceController {
       PartnersAccountSession<AccessControlEntity, AccessControlPermission>
     >,
   ): Promise<FSA<FSAMeta, unknown>> {
-    const fullData = await this.form.fromFormValues(data, instanceId);
-
-    // Skip "DRAFT" for sandbox since there is no point to update right after creation
-    const status = PublicationStatusEnum.PENDING;
-
-    const versionId = await this.typeorm.withQueryRunner(
-      async (queryRunner: QueryRunner) => {
-        const { id } = await this.version.create(
-          queryRunner,
-          fullData,
-          instanceId,
-          status,
-        );
-
-        return id;
-      },
-    );
-
     const {
-      identity: { email },
+      identity: { email: updatedBy },
     } = sessionPartnersAccount.get();
 
-    const fullDataWithCreatedInfo: ConfigCreateViaMessageDtoPayload = {
-      ...fullData,
-      updatedBy: email,
-    };
+    await this.typeorm.withTransaction(async (queryRunner) => {
+      const instance = await this.instance.getByIdWithQueryRunner(
+        queryRunner,
+        instanceId,
+      );
 
-    await this.publication.publish(
-      instanceId,
-      versionId,
-      fullDataWithCreatedInfo,
-      ActionTypes.CONFIG_UPDATE,
-    );
+      if (!instance) {
+        throw new PartnersInstanceNotFoundException();
+      }
 
+      await this.instanceService.update(
+        queryRunner,
+        data,
+        instance,
+        instance.serviceProvider.id,
+        updatedBy,
+      );
+    });
     return {
       type: 'INSTANCE',
       payload: {},

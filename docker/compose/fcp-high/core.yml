@@ -11,6 +11,8 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
+      node-modules-back:
+        condition: service_completed_successfully
       csmr-hsm:
         condition: service_started
       mongo-fcp-high-replica-single-init:

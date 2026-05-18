@@ -50,7 +50,6 @@ export class PartnersInvitationService {
       await this.accessControl.addPermissionTransactional(queryRunner, {
         accountId,
         permissionType: AccessControlPermission.INSTANCE_CONTRIBUTOR,
-        entity: AccessControlEntity.SP_INSTANCE,
       });
 
       await this.addInstancesPermissions(queryRunner, accountId, instances);

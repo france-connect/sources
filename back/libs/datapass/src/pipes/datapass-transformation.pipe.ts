@@ -1,21 +1,31 @@
 import { plainToInstance } from 'class-transformer';
-import { ValidatorOptions } from 'class-validator';
+import { ValidationError, ValidatorOptions } from 'class-validator';
 
 import { Injectable, PipeTransform } from '@nestjs/common';
 
-import { validateDto } from '@fc/common';
-import { DatapassWebhookPayloadDto } from '@fc/datapass';
+import {
+  getAllPropertiesErrors,
+  normalizeEmail,
+  validateDto,
+} from '@fc/common';
 import { LoggerService } from '@fc/logger';
 
+import { DatapassWebhookPayloadDto } from '../dto';
 import {
+  DatapassAuthorizationRequestClass,
+  DatapassAuthorizationState,
+} from '../enums';
+import {
+  DatapassEidasLevelException,
+  DatapassNoActiveAuthorizationException,
   DatapassTransformationException,
   DatapassValidationException,
 } from '../exceptions';
-import { SimplifiedDatapassPayload } from '../interfaces';
+import { Authorization, SimplifiedDatapassPayload } from '../interfaces';
 
 export const validationOptions: ValidatorOptions = {
-  forbidNonWhitelisted: true,
-  forbidUnknownValues: true,
+  forbidNonWhitelisted: false,
+  forbidUnknownValues: false,
   skipMissingProperties: false,
   whitelist: true,
 };
@@ -23,11 +33,17 @@ export const validationOptions: ValidatorOptions = {
 @Injectable()
 export class DatapassTransformationPipe implements PipeTransform<
   unknown,
-  Promise<SimplifiedDatapassPayload>
+  Promise<SimplifiedDatapassPayload | null>
 > {
   constructor(private readonly logger: LoggerService) {}
 
-  async transform(rawPayload: unknown): Promise<SimplifiedDatapassPayload> {
+  async transform(
+    rawPayload: unknown,
+  ): Promise<SimplifiedDatapassPayload | null> {
+    if (this.isTestPayload(rawPayload as Record<string, unknown>)) {
+      return null;
+    }
+
     this.logger.debug(
       'Starting Datapass webhook validation and transformation',
     );
@@ -41,6 +57,10 @@ export class DatapassTransformationPipe implements PipeTransform<
     });
 
     return simplifiedPayload;
+  }
+
+  private isTestPayload(rawPayload: Record<string, unknown>): boolean {
+    return rawPayload?.test === true;
   }
 
   private async validatePayloadStructure(
@@ -57,47 +77,70 @@ export class DatapassTransformationPipe implements PipeTransform<
     );
 
     if (validationErrors.length > 0) {
-      this.logger.debug({
-        message: 'Datapass payload validation failed',
-        validationErrors,
-      });
+      this.checkEidasLevel(validationErrors);
 
-      throw new DatapassValidationException();
+      throw new DatapassValidationException(validationErrors);
     }
 
     return dto;
+  }
+
+  private checkEidasLevel(validationErrors: ValidationError[]): void {
+    const simplifiedErrors = getAllPropertiesErrors(validationErrors);
+
+    if (simplifiedErrors.includes('data.data.france_connect_eidas: isIn')) {
+      throw new DatapassEidasLevelException();
+    }
   }
 
   private transformToSimplifiedPayload(
     payload: DatapassWebhookPayloadDto,
   ): SimplifiedDatapassPayload {
     try {
-      /**
-       * @TODO
-       * Replace structure when we will know real data returned by Datapass
-       * For now, we use dummy data from official documentation:
-       * @see https://github.com/etalab/data_pass/blob/develop/docs/webhooks.md
-       */
+      const currentAuthorization = this.getCurrentAuthorization(payload);
+
       return {
         event: payload.event,
         datapassRequestId: payload.data.id.toString(),
+        datapassAuthorizationId: currentAuthorization.id,
+        datapassEidasLevel: payload.data.data.france_connect_eidas,
         state: payload.data.state,
-        organizationName: payload.data.organization.name,
+        organization: payload.data.organization,
         applicant: {
-          email: payload.data.applicant.email,
+          email: normalizeEmail(payload.data.applicant.email),
           firstname: payload.data.applicant.given_name,
           lastname: payload.data.applicant.family_name,
+          phone: payload.data.applicant.phone_number,
         },
         datapassName: payload.data.data.intitule,
         scopes: payload.data.data.scopes,
         technicalContact: {
-          email: payload.data.data.contact_technique_email,
+          email: normalizeEmail(payload.data.data.contact_technique_email),
           firstname: payload.data.data.contact_technique_given_name,
           lastname: payload.data.data.contact_technique_family_name,
+          phone: payload.data.data.contact_technique_phone_number,
         },
       };
-    } catch {
-      throw new DatapassTransformationException();
+    } catch (error) {
+      throw new DatapassTransformationException(error);
     }
+  }
+
+  private getCurrentAuthorization(
+    payload: DatapassWebhookPayloadDto,
+  ): Authorization {
+    const currentAuthorization = payload.data.authorizations.find(
+      (authorization) =>
+        authorization.state === DatapassAuthorizationState.ACTIVE &&
+        authorization.authorization_request_class ===
+          DatapassAuthorizationRequestClass.FRANCE_CONNECT &&
+        authorization.revoked === false,
+    );
+
+    if (!currentAuthorization) {
+      throw new DatapassNoActiveAuthorizationException();
+    }
+
+    return currentAuthorization;
   }
 }

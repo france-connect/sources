@@ -1,9 +1,9 @@
 import type { Decorator } from 'final-form';
-import type { FormProps } from 'react-final-form';
 
 import type { HeadingTag } from '@fc/common';
 import type { HttpClientDataInterface } from '@fc/http-client';
 
+import type { FormOnSubmitType, FormValidateType } from '../types';
 import type { FormActionsInterface } from './form-actions.interface';
 
 export interface FormConfigInterface {
@@ -24,8 +24,8 @@ export interface FormInterface<T extends HttpClientDataInterface> {
   initialValues?: T;
   config: FormConfigInterface;
   decorators?: Decorator<T, Partial<T>>[];
-  onValidate?: FormProps<T>['onValidate'];
-  onSubmit: FormProps<T>['onSubmit'];
+  onValidate?: FormValidateType<T>;
+  onSubmit: FormOnSubmitType<T>;
   onPreSubmit?: (values: T) => Promise<T>;
-  onPostSubmit?: FormProps<T>['onSubmit'];
+  onPostSubmit?: FormOnSubmitType<T>;
 }

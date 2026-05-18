@@ -1,12 +1,12 @@
 services:
   ud:
-    image: alpine
+    image: ${DOCKER_HUB_PROXY}alpine
     depends_on:
       - "ud-front"
       - "ud-back"
 
   bdd-ud:
-    image: alpine
+    image: ${DOCKER_HUB_PROXY}alpine
     depends_on:
       # -- Core v1
       - "fc-exploitation"

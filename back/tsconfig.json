@@ -99,6 +99,8 @@
       "@fc/dto2form": ["libs/dto2form/src"],
       "@fc/dto2form/*": ["libs/dto2form/src/*"],
       "@fc/eidas": ["libs/eidas/src"],
+      "@fc/wallet-bridge": ["apps/wallet-bridge/src"],
+      "@fc/wallet-bridge/*": ["apps/wallet-bridge/src/*"],
       "@fc/eidas-bridge": ["apps/eidas-bridge/src"],
       "@fc/eidas-bridge/*": ["apps/eidas-bridge/src/*"],
       "@fc/eidas-client": ["libs/eidas-client/src"],
@@ -193,8 +195,8 @@
       "@fc/partners": ["apps/partners/src"],
       "@fc/partners-account": ["libs/partners-account/src"],
       "@fc/partners-account/*": ["libs/partners-account/src/*"],
-      "@fc/partners-organisation": ["libs/partners-organisation/src"],
-      "@fc/partners-organisation/*": ["libs/partners-organisation/src/*"],
+      "@fc/partners-organization": ["libs/partners-organization/src"],
+      "@fc/partners-organization/*": ["libs/partners-organization/src/*"],
       "@fc/partners-service-provider": ["libs/partners-service-provider/src"],
       "@fc/partners-service-provider-instance": [
         "libs/partners-service-provider-instance/src"

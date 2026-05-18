@@ -124,4 +124,23 @@ describe('useTabs', () => {
     expect(mockQuerySelector).toHaveBeenCalledWith('.fr-tabs__list');
     expect(mockQuerySelector).toHaveBeenCalledWith('.fr-tabs__panel--selected');
   });
+
+  it('should not set tabsStyle when list or panel elements are not found', () => {
+    // Given
+    const mockQuerySelector = jest.fn().mockReturnValueOnce(null);
+    const mockDiv = {
+      querySelector: mockQuerySelector,
+    } as unknown as HTMLDivElement;
+
+    // When
+    const { result } = renderHook(() => useTabs());
+    result.current.tabsRef.current = mockDiv;
+
+    act(() => {
+      result.current.selectTab(1);
+    });
+
+    // Then
+    expect(result.current.tabsStyle).toEqual({});
+  });
 });

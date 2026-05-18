@@ -20,7 +20,7 @@ FCP validation with system tests implemented using a Test Framework (based on Cy
 
 | Environment Variable | Description                       | Comment                                      |
 | -------------------- | --------------------------------- | -------------------------------------------- |
-| PLATFORM             | Platform under test               | `fcp-high` or `fcp-low` or `fcp-legacy`      |
+| PLATFORM             | Platform under test               | `fcp-high` or `fcp-low`                      |
 | TEST_ENV             | Test environment                  | `docker` or `integ01`, etc.                  |
 | TAGS                 | Tags expression                   | `@fcpLow and not @ignoreLow`                 |
 | EXPLOIT_ADMIN_NAME   | Exploitation admin username       | needed only for integ01/preprod              |

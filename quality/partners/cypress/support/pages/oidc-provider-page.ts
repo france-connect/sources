@@ -19,8 +19,29 @@ export default class OidcProviderPage {
     return cy.get('input[name="password"]');
   }
 
+  getIdpAcrInput(): ChainableElement {
+    return cy.get('input[name="acr"]');
+  }
+
   getIdpConnectionButton(): ChainableElement {
     return cy.get('[type="submit"]');
+  }
+
+  getIdpCustomIdentityLink(): ChainableElement {
+    return cy.get('#custom-identity-link');
+  }
+
+  private submitCustomIdentityForm(
+    userDetails: Record<string, string>,
+    acr: string,
+  ): void {
+    ['given_name', 'usual_name', 'email', 'uid'].forEach((key) => {
+      if (userDetails[key]) {
+        cy.get(`[name="${key}"]`).clearThenType(userDetails[key]);
+      }
+    });
+    cy.get('[name="acr"]').clearThenType(acr);
+    cy.get('button[type="submit"]').click();
   }
 
   checkIsVisible(): void {
@@ -31,7 +52,10 @@ export default class OidcProviderPage {
     this.getIdpUsernameInput().should('be.visible');
   }
 
-  private loginWithProConnect(userDetails: Record<string, string>): void {
+  private loginWithProConnect(
+    userDetails: Record<string, string>,
+    acr: string,
+  ): void {
     this.checkIsVisible();
     this.getEmailInput().clearThenType(IDP_MOCK_EMAIL);
     this.getConnectionButton().click();
@@ -45,22 +69,40 @@ export default class OidcProviderPage {
         }
       },
     );
+    cy.get('#acr').clearThenType(acr);
     cy.get('#email').click();
     cy.contains('button[type="submit"]', 'Se connecter').click();
   }
 
-  private loginWithIdpMock({ password, username }: UserCredentials): void {
+  private loginWithIdpMock(
+    { password, username }: UserCredentials,
+    acr: string,
+  ): void {
     this.checkIsIdpMockVisible();
     this.getIdpUsernameInput().clearThenType(username);
     this.getIdpPasswordInput().clearThenType(password);
+    this.getIdpAcrInput().clearThenType(acr);
     this.getIdpConnectionButton().click();
   }
 
-  login(user: UserData): void {
+  private loginWithIdpMockUsingCustomIdentity(
+    userDetails: Record<string, string>,
+    acr: string,
+  ): void {
+    this.checkIsIdpMockVisible();
+    this.getIdpCustomIdentityLink().click();
+    this.submitCustomIdentityForm(userDetails, acr);
+  }
+
+  login(user: UserData, acr: string, withCustomIdentity = false): void {
     if (Cypress.env('TEST_ENV') === 'docker') {
-      this.loginWithIdpMock(user.credentials);
+      if (withCustomIdentity) {
+        this.loginWithIdpMockUsingCustomIdentity(user.claims, acr);
+      } else {
+        this.loginWithIdpMock(user.credentials, acr);
+      }
     } else {
-      this.loginWithProConnect(user.claims);
+      this.loginWithProConnect(user.claims, acr);
     }
   }
 }

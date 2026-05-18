@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 function _fc_common_symlink() {
   local base="$FC_ROOT/fc/docker/volumes/src/FranceConnect/projects"
 

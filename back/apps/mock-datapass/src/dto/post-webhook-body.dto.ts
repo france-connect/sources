@@ -1,8 +1,7 @@
-import { IsEnum } from 'class-validator';
-
-import { DatapassEvents } from '@fc/datapass';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class PostWebhookBodyDto {
-  @IsEnum(DatapassEvents)
-  event: string;
+  @IsString()
+  @IsNotEmpty()
+  payload: string;
 }

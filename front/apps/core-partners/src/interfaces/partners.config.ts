@@ -6,5 +6,7 @@ export interface PartnersConfig {
     instances: string;
     serviceProvider: string;
     serviceProviders: string;
+    linkableInstancesByServiceProviderId: string;
+    linkInstances: string;
   };
 }

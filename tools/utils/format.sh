@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 format_success() {
   printf "${STYLE_SUCCESS}${1}${STYLE_RESET}"
 }

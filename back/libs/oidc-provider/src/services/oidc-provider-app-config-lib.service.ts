@@ -7,7 +7,7 @@ import {
 import { Injectable } from '@nestjs/common';
 
 import { AssetsService } from '@fc/app';
-import { AsyncFunctionSafe } from '@fc/common';
+import { AsyncFunctionSafe, nowInSeconds } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { throwException } from '@fc/exceptions/helpers';
 import { LoggerService } from '@fc/logger';
@@ -158,7 +158,7 @@ export abstract class OidcProviderAppConfigLibService implements IOidcProviderCo
         amr,
         acr,
         accountId,
-        ts: Math.floor(Date.now() / 1000),
+        ts: nowInSeconds(),
         remember: false,
       },
       /**

@@ -4,7 +4,7 @@ export interface UserCredentials {
 }
 
 export interface UserData {
-  claims: Record<string, string>;
+  claims: Record<string, string | null>;
   credentials: UserCredentials;
   descriptions: string[];
 }

@@ -5,19 +5,25 @@ import { PartnersServiceProviderInstance } from '@entities/typeorm';
 import { getTransformed } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
+import { PartnersServiceProviderService } from '@fc/partners-service-provider';
 import { PartnersServiceProviderInstanceService } from '@fc/partners-service-provider-instance';
 import { ServiceProviderInstanceVersionDto } from '@fc/partners-service-provider-instance-version';
 import { OidcClientInterface } from '@fc/service-provider';
 
 import { AppConfig, DefaultServiceProviderLowValueConfig } from '../dto';
 import { ExistingDataInterface } from '../interfaces';
+import { PartnersServiceProviderFormService } from './partners-service-provider-form.service';
 
 @Injectable()
 export class PartnersInstanceVersionFormService {
+  // More than 4 parameters authorized for Dependency Injection
+  // eslint-disable-next-line max-params
   constructor(
     private readonly config: ConfigService,
     private readonly instance: PartnersServiceProviderInstanceService,
     private readonly crypto: CryptographyService,
+    private readonly serviceProviderFormService: PartnersServiceProviderFormService,
+    private readonly serviceProvider: PartnersServiceProviderService,
   ) {}
 
   /**
@@ -25,7 +31,8 @@ export class PartnersInstanceVersionFormService {
    * Default or private values are set in the returned object
    */
   async fromFormValues(
-    values: ServiceProviderInstanceVersionDto,
+    values: ServiceProviderInstanceVersionDto | OidcClientInterface,
+    serviceProviderId: string,
     instanceId?: string,
   ): Promise<OidcClientInterface> {
     const DefaultServiceProviderLowValue =
@@ -35,11 +42,14 @@ export class PartnersInstanceVersionFormService {
 
     const { mutable, immutable } = await this.getOrGenerateValues(instanceId);
 
+    const scope = await this.getScopesForServiceProvider(serviceProviderId);
+
     const output = {
       ...DefaultServiceProviderLowValue,
       ...mutable,
       ...values,
       ...immutable,
+      scope,
     };
 
     return output;
@@ -60,9 +70,9 @@ export class PartnersInstanceVersionFormService {
   private async getLatestVersionForInstance(
     instanceId: string,
   ): Promise<ExistingDataInterface> {
-    const { versions } = await this.instance.getById(instanceId);
+    const { currentVersion } = await this.instance.getById(instanceId);
 
-    const { data: mutable } = versions[0];
+    const { data: mutable } = currentVersion;
 
     const immutable = {
       client_id: mutable.client_id,
@@ -89,6 +99,23 @@ export class PartnersInstanceVersionFormService {
     };
   }
 
+  private async getScopesForServiceProvider(
+    serviceProviderId: string,
+  ): Promise<string[]> {
+    const serviceProvider =
+      await this.serviceProvider.getById(serviceProviderId);
+
+    const { fcScopes } =
+      this.serviceProviderFormService.toDisplayValue(serviceProvider);
+
+    const DefaultServiceProviderLowValue =
+      this.config.get<DefaultServiceProviderLowValueConfig>(
+        'DefaultServiceProviderLowValue',
+      );
+
+    return [...fcScopes, ...DefaultServiceProviderLowValue.scope];
+  }
+
   /**
    * Get an object with only relevants values for the form.
    * Private values are removed from the returned object
@@ -98,15 +125,14 @@ export class PartnersInstanceVersionFormService {
   ): PartnersServiceProviderInstance {
     return {
       ...instance,
-      versions: instance.versions.map((version) => {
-        version.data = getTransformed<OidcClientInterface>(
-          version.data,
+      currentVersion: {
+        ...instance.currentVersion,
+        data: getTransformed<OidcClientInterface>(
+          instance.currentVersion.data,
           ServiceProviderInstanceVersionDto,
           { excludeExtraneousValues: true },
-        );
-
-        return version;
-      }),
+        ),
+      },
     };
   }
 }

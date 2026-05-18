@@ -1,7 +1,8 @@
 import { render } from '@testing-library/react';
 
-import { AccountContext } from '@fc/account';
-import { MessageTypes, useSafeContext } from '@fc/common';
+import type { AccountContextState } from '@fc/account';
+import { useAccountContext } from '@fc/account';
+import { MessageTypes } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import type { FraudConfigInterface } from '@fc/core-user-dashboard';
 import {
@@ -21,6 +22,13 @@ import { FraudFormPage } from './fraud-form.page';
 describe('FraudFormPage', () => {
   const fraudConfigMock = Symbol('any-fraudConfig-mock') as unknown as FraudConfigInterface;
 
+  const accountContextState = {
+    connected: true,
+    expired: false,
+    ready: true,
+    userinfos: { email: 'email@fi.com' },
+  } as AccountContextState;
+
   beforeEach(() => {
     // Given
     jest.mocked(ConfigService.get).mockReturnValue(fraudConfigMock);
@@ -31,7 +39,7 @@ describe('FraudFormPage', () => {
       submitErrors: undefined,
       submitWithSuccess: false,
     });
-    jest.mocked(useSafeContext).mockReturnValue({ userinfos: { email: 'email@fi.com' } });
+    jest.mocked(useAccountContext).mockReturnValue(accountContextState);
     jest
       .mocked(t)
       .mockReturnValueOnce('any-document-title-mock')
@@ -42,7 +50,7 @@ describe('FraudFormPage', () => {
 
   it('should match the snapshot on desktop layout with fraud form', () => {
     // Given
-    jest.mocked(useStylesQuery).mockReturnValue(false);
+    jest.mocked(useStylesQuery).mockReturnValueOnce(false);
 
     // When
     const { container } = render(<FraudFormPage />);
@@ -65,7 +73,7 @@ describe('FraudFormPage', () => {
 
   it('should match the snapshot on mobile layout with fraud form', () => {
     // Given
-    jest.mocked(useStylesQuery).mockReturnValue(true);
+    jest.mocked(useStylesQuery).mockReturnValueOnce(true);
 
     // When
     const { container } = render(<FraudFormPage />);
@@ -76,7 +84,7 @@ describe('FraudFormPage', () => {
 
   it('should match the snapshot on desktop layout without fraud form', () => {
     // Given
-    jest.mocked(useStylesQuery).mockReturnValue(false);
+    jest.mocked(useStylesQuery).mockReturnValueOnce(false);
     jest.mocked(useGetFraudSurveyOrigin).mockReturnValueOnce('');
 
     // When
@@ -88,7 +96,7 @@ describe('FraudFormPage', () => {
 
   it('should match the snapshot on mobile layout without fraud form', () => {
     // Given
-    jest.mocked(useStylesQuery).mockReturnValue(true);
+    jest.mocked(useStylesQuery).mockReturnValueOnce(true);
     jest.mocked(useGetFraudSurveyOrigin).mockReturnValueOnce('');
 
     // When
@@ -100,7 +108,7 @@ describe('FraudFormPage', () => {
 
   it('should match the snapshot on desktop layout, when form submission has succeeded', () => {
     // Given
-    jest.mocked(useStylesQuery).mockReturnValue(false);
+    jest.mocked(useStylesQuery).mockReturnValueOnce(false);
     jest.mocked(useFraudFormApi).mockReturnValueOnce({
       commit: jest.fn(),
       submitErrors: undefined,
@@ -116,7 +124,7 @@ describe('FraudFormPage', () => {
 
   it('should match the snapshot on mobile layout, when form submission has failed', () => {
     // Given
-    jest.mocked(useStylesQuery).mockReturnValue(true);
+    jest.mocked(useStylesQuery).mockReturnValueOnce(true);
     jest.mocked(useFraudFormApi).mockReturnValueOnce({
       commit: jest.fn(),
       submitErrors: new Error('any-error'),
@@ -132,7 +140,7 @@ describe('FraudFormPage', () => {
 
   it('should match the snapshot on desktop layout, when form submission has failed', () => {
     // Given
-    jest.mocked(useStylesQuery).mockReturnValue(false);
+    jest.mocked(useStylesQuery).mockReturnValueOnce(false);
     jest.mocked(useFraudFormApi).mockReturnValueOnce({
       commit: jest.fn(),
       submitErrors: new Error('any-error'),
@@ -148,7 +156,7 @@ describe('FraudFormPage', () => {
 
   it('should match the snapshot on mobile layout, when form submission has succeeded', () => {
     // Given
-    jest.mocked(useStylesQuery).mockReturnValue(true);
+    jest.mocked(useStylesQuery).mockReturnValueOnce(true);
     jest.mocked(useFraudFormApi).mockReturnValueOnce({
       commit: jest.fn(),
       submitErrors: undefined,
@@ -233,7 +241,8 @@ describe('FraudFormPage', () => {
     render(<FraudFormPage />);
 
     // Then
-    expect(useSafeContext).toHaveBeenCalledWith(AccountContext);
+    expect(useAccountContext).toHaveBeenCalledOnce();
+    expect(useAccountContext).toHaveBeenCalledWith();
   });
 
   it('should have called useFraudFormApi hook', () => {

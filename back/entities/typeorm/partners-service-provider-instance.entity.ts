@@ -2,13 +2,16 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 import { PartnersAccount } from './partners-account.entity';
+import { PartnersServiceProvider } from './partners-service-provider.entity';
 import { PartnersServiceProviderInstanceVersion } from './partners-service-provider-instance-version.entity';
 
 export enum EnvironmentEnum {
@@ -31,8 +34,15 @@ export class PartnersServiceProviderInstance {
   @OneToMany(
     () => PartnersServiceProviderInstanceVersion,
     (version: PartnersServiceProviderInstanceVersion) => version.instance,
+    {
+      onDelete: 'CASCADE',
+    },
   )
   versions: PartnersServiceProviderInstanceVersion[];
+
+  @OneToOne(() => PartnersServiceProviderInstanceVersion)
+  @JoinColumn()
+  currentVersion: PartnersServiceProviderInstanceVersion;
 
   @CreateDateColumn({
     default: () => 'NOW()',
@@ -48,6 +58,12 @@ export class PartnersServiceProviderInstance {
 
   @ManyToOne(() => PartnersAccount, {
     onDelete: 'CASCADE',
+    nullable: false,
   })
   creator: PartnersAccount;
+
+  @ManyToOne(() => PartnersServiceProvider, {
+    onDelete: 'CASCADE',
+  })
+  serviceProvider: PartnersServiceProvider;
 }

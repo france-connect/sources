@@ -30,6 +30,12 @@ export class VersionController {
         method: AccessControlHandler.GLOBAL_PERMISSION,
       },
     },
+    {
+      permission: AccessControlPermission.SP_CONTRIBUTOR,
+      handler: {
+        method: AccessControlHandler.GLOBAL_PERMISSION,
+      },
+    },
   ])
   @UseGuards(AccessControlGuard)
   getFormMetadata(): MetadataDtoTranslationInterface[] {

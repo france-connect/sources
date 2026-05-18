@@ -14,17 +14,15 @@ jest.mock('../post-submit/post-submit.hook');
 
 describe('useInstanceUpdate', () => {
   // Given
-  const versionsMock = [
-    {
-      data: {
-        name: 'Test Instance',
-      },
+  const currentVersionMock = {
+    data: {
+      name: 'Test Instance',
     },
-  ];
+  };
 
   const postSubmitMock = expect.any(Function);
   const schemaMock = Symbol('any-acme-schema') as unknown as SchemaFieldType[];
-  const initialValuesMock = versionsMock[0].data;
+  const initialValuesMock = currentVersionMock.data;
   const submitHandlerMock = jest.fn();
   const formMock = {
     id: 'any-acme-form-id',
@@ -45,7 +43,7 @@ describe('useInstanceUpdate', () => {
     jest.mocked(useLoaderData).mockReturnValue({
       data: {
         payload: {
-          versions: versionsMock,
+          currentVersion: currentVersionMock,
         },
       },
     });
@@ -83,7 +81,7 @@ describe('useInstanceUpdate', () => {
     renderHook(() => useInstanceUpdate());
 
     // Then
-    expect(parseInitialValues).toHaveBeenCalledExactlyOnceWith(schemaMock, versionsMock[0].data);
+    expect(parseInitialValues).toHaveBeenCalledExactlyOnceWith(schemaMock, currentVersionMock.data);
   });
 
   it('should return the correct configuration', () => {
@@ -94,7 +92,7 @@ describe('useInstanceUpdate', () => {
     expect(result.current).toStrictEqual({
       config: {
         ...formMock,
-        title: versionsMock[0].data.name,
+        title: currentVersionMock.data.name,
       },
       initialValues: initialValuesMock,
       postSubmit: postSubmitMock,
@@ -106,10 +104,10 @@ describe('useInstanceUpdate', () => {
 
   it('should not return the config title, when title is undefined in version', () => {
     // Given
-    jest.mocked(useLoaderData).mockReturnValue({
+    jest.mocked(useLoaderData).mockReturnValueOnce({
       data: {
         payload: {
-          versions: [{}],
+          currentVersion: {},
         },
       },
     });
@@ -128,12 +126,12 @@ describe('useInstanceUpdate', () => {
     );
   });
 
-  it('should not return the config title, when versions is empty', () => {
+  it('should not return the config title, when current version is empty', () => {
     // Given
-    jest.mocked(useLoaderData).mockReturnValue({
+    jest.mocked(useLoaderData).mockReturnValueOnce({
       data: {
         payload: {
-          versions: [],
+          currentVersion: undefined,
         },
       },
     });

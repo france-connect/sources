@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 _up() {
   task " * Checking required services" \
     "_check_for_unknown_services" "${@}"
@@ -14,9 +16,6 @@ _up() {
 
   task " * Populate global variables"
   "_get_running_containers"
-
-  task " * Automatically install dependencies for started containers" \
-    "_auto_install_dependencies"
 
   echo " * Automatically run init scripts for started containers"
   _auto_init_containers
@@ -79,13 +78,6 @@ _get_services() {
   done
 
   echo $services
-}
-
-_auto_install_dependencies() {
-  if [ "${NODEJS_CONTAINERS:-xxx}" != "xxx" ]; then
-    echo "Installing node modules..."
-    _install_dependencies $NODEJS_CONTAINERS
-  fi
 }
 
 _auto_init_containers() {

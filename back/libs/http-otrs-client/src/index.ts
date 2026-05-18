@@ -1,2 +1,6 @@
+export * from './dto';
+export * from './enums';
+export * from './exceptions';
 export * from './http-otrs-client.module';
-export * from './http-otrs-client.service';
+export * from './interfaces';
+export * from './services';

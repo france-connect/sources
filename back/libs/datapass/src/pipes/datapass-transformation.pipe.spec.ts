@@ -1,20 +1,28 @@
 import * as ClassTransformer from 'class-transformer';
+import { ValidationError } from 'class-validator';
 
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { validateDto } from '@fc/common';
-import {
-  DatapassWebhookPayloadDto,
-  SimplifiedDatapassPayload,
-} from '@fc/datapass';
+import { getAllPropertiesErrors, validateDto } from '@fc/common';
 import { LoggerService } from '@fc/logger';
 
 import { getLoggerMock } from '@mocks/logger';
 
+import { DatapassWebhookPayloadDto } from '../dto';
 import {
+  DatapassAuthorizationRequestClass,
+  DatapassAuthorizationState,
+  DatapassEidasLevels,
+  DatapassEvents,
+  DatapassScopes,
+} from '../enums';
+import {
+  DatapassEidasLevelException,
+  DatapassNoActiveAuthorizationException,
   DatapassTransformationException,
   DatapassValidationException,
 } from '../exceptions';
+import { SimplifiedDatapassPayload } from '../interfaces';
 import {
   DatapassTransformationPipe,
   validationOptions,
@@ -23,6 +31,7 @@ import {
 jest.mock('@fc/common', () => ({
   ...(jest.requireActual('@fc/common') as any),
   validateDto: jest.fn(),
+  getAllPropertiesErrors: jest.fn(),
 }));
 
 describe('DatapassTransformationPipe', () => {
@@ -56,10 +65,10 @@ describe('DatapassTransformationPipe', () => {
         intitule: 'Test Datapass',
         scopes: ['scope1', 'scope2'],
         contact_technique_email: 'tech@example.com',
+
         contact_technique_given_name: 'Jane',
         contact_technique_family_name: 'Smith',
         contact_technique_phone_number: '+33987654321',
-        contact_technique_job_title: 'Tech Lead',
       },
     },
   };
@@ -68,8 +77,32 @@ describe('DatapassTransformationPipe', () => {
     event: 'submit' as any,
     fired_at: 1640995200,
     model_type: 'Pass',
+    last_validated_at: '2024-01-15T10:00:00Z',
     data: {
       id: 123,
+      authorizations: [
+        {
+          id: '456',
+          state: DatapassAuthorizationState.OBSOLETE,
+          authorization_request_class:
+            DatapassAuthorizationRequestClass.FRANCE_CONNECT,
+          revoked: false,
+        },
+        {
+          id: '789',
+          state: DatapassAuthorizationState.OBSOLETE,
+          authorization_request_class:
+            DatapassAuthorizationRequestClass.FRANCE_CONNECT,
+          revoked: true,
+        },
+        {
+          id: '101',
+          state: DatapassAuthorizationState.ACTIVE,
+          authorization_request_class:
+            DatapassAuthorizationRequestClass.FRANCE_CONNECT,
+          revoked: false,
+        },
+      ],
       public_id: '12345',
       state: 'submitted',
       form_uid: 'test-form-uid',
@@ -79,41 +112,48 @@ describe('DatapassTransformationPipe', () => {
         siret: '12345678901234',
       },
       applicant: {
-        id: 789,
-        email: 'test@example.com',
+        email: 'Test@Example.COM',
         given_name: 'John',
         family_name: 'Doe',
         phone_number: '+33123456789',
-        job_title: 'Developer',
       },
       data: {
+        france_connect_eidas: DatapassEidasLevels.EIDAS_1,
         intitule: 'Test Datapass',
-        scopes: ['scope1', 'scope2'],
+        scopes: [DatapassScopes.EMAIL, DatapassScopes.GIVEN_NAME],
         contact_technique_email: 'tech@example.com',
+
         contact_technique_given_name: 'Jane',
         contact_technique_family_name: 'Smith',
         contact_technique_phone_number: '+33987654321',
-        contact_technique_job_title: 'Tech Lead',
       },
     },
   };
 
   const expectedSimplifiedPayload: SimplifiedDatapassPayload = {
-    event: 'submit' as any,
+    event: DatapassEvents.SUBMIT,
     datapassRequestId: '123',
+    datapassAuthorizationId: '456',
+    datapassEidasLevel: DatapassEidasLevels.EIDAS_1,
     state: 'submitted',
-    organizationName: 'Test Organization',
+    organization: {
+      id: 456,
+      name: 'Test Organization',
+      siret: '12345678901234',
+    },
     applicant: {
       email: 'test@example.com',
       firstname: 'John',
       lastname: 'Doe',
+      phone: '+33123456789',
     },
     datapassName: 'Test Datapass',
-    scopes: ['scope1', 'scope2'],
+    scopes: [DatapassScopes.EMAIL, DatapassScopes.GIVEN_NAME],
     technicalContact: {
       email: 'tech@example.com',
       firstname: 'Jane',
       lastname: 'Smith',
+      phone: '+33987654321',
     },
   };
 
@@ -134,8 +174,8 @@ describe('DatapassTransformationPipe', () => {
   describe('validationOptions', () => {
     it('should have correct validation options', () => {
       expect(validationOptions).toEqual({
-        forbidNonWhitelisted: true,
-        forbidUnknownValues: true,
+        forbidNonWhitelisted: false,
+        forbidUnknownValues: false,
         skipMissingProperties: false,
         whitelist: true,
       });
@@ -150,6 +190,17 @@ describe('DatapassTransformationPipe', () => {
       pipe['transformToSimplifiedPayload'] = jest
         .fn()
         .mockReturnValueOnce(expectedSimplifiedPayload);
+    });
+
+    it('should return null when called with a test payload', async () => {
+      // Given
+      const testPayload = { test: true };
+
+      // When
+      const result = await pipe.transform(testPayload);
+
+      // Then
+      expect(result).toBeNull();
     });
 
     it('should log debug information when method is called', async () => {
@@ -203,14 +254,14 @@ describe('DatapassTransformationPipe', () => {
   });
 
   describe('validatePayloadStructure', () => {
-    let validateDtoMock;
+    const validateDtoMock = jest.mocked(validateDto);
 
     beforeEach(() => {
       jest
         .spyOn(ClassTransformer, 'plainToInstance')
         .mockReturnValue(mockDatapassWebhookPayloadDto);
 
-      validateDtoMock = jest.mocked(validateDto).mockResolvedValueOnce([]);
+      validateDtoMock.mockResolvedValueOnce([]);
     });
 
     it('should call plainToInstance with correct parameters', async () => {
@@ -247,7 +298,16 @@ describe('DatapassTransformationPipe', () => {
 
     it('should throw an error when validation fails', async () => {
       // Given
-      const errors = ['error1', 'error2'];
+      const errors: ValidationError[] = [
+        {
+          property: 'event',
+          constraints: {
+            isEnum: 'event must be a valid enum value',
+          },
+          children: [],
+        },
+      ];
+      pipe['checkEidasLevel'] = jest.fn();
       validateDtoMock.mockReset().mockResolvedValueOnce(errors);
 
       // When / Then
@@ -255,26 +315,51 @@ describe('DatapassTransformationPipe', () => {
         pipe['validatePayloadStructure'](mockRawPayload),
       ).rejects.toThrow(DatapassValidationException);
     });
+  });
 
-    it('should log debug information when validation fails', async () => {
+  describe('checkEidasLevel', () => {
+    const errors: ValidationError[] = [];
+
+    it('should throw DatapassEidasLevelException when eidas level is invalid', () => {
       // Given
-      const errors = ['error1', 'error2'];
-      validateDtoMock.mockReset().mockResolvedValueOnce(errors);
+      jest
+        .mocked(getAllPropertiesErrors)
+        .mockReturnValueOnce(['data.data.france_connect_eidas: isIn']);
 
-      // When
-      try {
-        await pipe['validatePayloadStructure'](mockRawPayload);
-      } catch {}
+      // When / Then
+      expect(() => pipe['checkEidasLevel'](errors)).toThrow(
+        DatapassEidasLevelException,
+      );
+    });
 
-      // Then
-      expect(loggerMock.debug).toHaveBeenCalledWith({
-        message: 'Datapass payload validation failed',
-        validationErrors: errors,
-      });
+    it('should not throw DatapassEidasLevelException when eidas level is valid', () => {
+      // Given
+      jest
+        .mocked(getAllPropertiesErrors)
+        .mockReturnValueOnce(['data.data.some_other_field']);
+
+      // When / Then
+      expect(() => pipe['checkEidasLevel'](errors)).not.toThrow();
+    });
+
+    it('should not throw DatapassEidasLevelException when there are no errors', () => {
+      // Given
+      jest.mocked(getAllPropertiesErrors).mockReturnValueOnce([]);
+
+      // When / Then
+      expect(() => pipe['checkEidasLevel'](errors)).not.toThrow();
     });
   });
 
   describe('transformToSimplifiedPayload', () => {
+    beforeEach(() => {
+      pipe['getCurrentAuthorization'] = jest.fn().mockReturnValueOnce({
+        id: '456',
+        state: 'validated',
+        authorization_request_class: 'AuthorizationRequest::FranceConnect',
+        revoked: false,
+      });
+    });
     it('should transform DatapassWebhookPayloadDto to SimplifiedDatapassPayload correctly', () => {
       // When
       const result = pipe['transformToSimplifiedPayload'](
@@ -296,6 +381,36 @@ describe('DatapassTransformationPipe', () => {
       expect(() =>
         pipe['transformToSimplifiedPayload'](invalidPayload),
       ).toThrow(DatapassTransformationException);
+    });
+  });
+
+  describe('getCurrentAuthorization', () => {
+    it('should return the current authorization', () => {
+      // When
+      const result = pipe['getCurrentAuthorization'](
+        mockDatapassWebhookPayloadDto,
+      );
+
+      // Then
+      expect(result).toBe(mockDatapassWebhookPayloadDto.data.authorizations[2]);
+    });
+
+    it('should throw DatapassNoActiveAuthorizationException when no active authorization is found', () => {
+      // Given
+      const noActiveAuthorizationPayload = {
+        ...mockDatapassWebhookPayloadDto,
+        data: {
+          ...mockDatapassWebhookPayloadDto.data,
+          authorizations: [
+            ...mockDatapassWebhookPayloadDto.data.authorizations.slice(0, 2),
+          ],
+        },
+      };
+
+      // When / Then
+      expect(() =>
+        pipe['getCurrentAuthorization'](noActiveAuthorizationPayload),
+      ).toThrow(DatapassNoActiveAuthorizationException);
     });
   });
 });

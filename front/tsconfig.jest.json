@@ -1,6 +1,14 @@
 {
   "compilerOptions": {
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "types": ["node", "jest"],
+    // @FIXME FC-2578
+    // Workaround: ts-jest forces moduleResolution=node10 internally,
+    // Deprecated since TypeScript 6.0.*
+    // Remove it when ts-jest natively supports TS6+
+    // without using node10. Will cause blocking in TypeScript 7.0.
+    // @see https://github.com/kulshekhar/ts-jest/issues/4198
+    "ignoreDeprecations": "6.0"
   },
   "exclude": [
     "**/.template",

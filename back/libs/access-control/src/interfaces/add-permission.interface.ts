@@ -6,6 +6,6 @@ export interface AddPermissionInterface<
 > {
   accountId: uuid;
   permissionType: PermissionType;
-  entity: EntityType;
+  entity?: EntityType;
   entityId?: uuid;
 }

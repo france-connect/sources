@@ -103,14 +103,18 @@ const allowedSnakeCaseParameters = [
   'sp_id',
 
   // Datapass
+  'authorization_request_class',
   'contact_technique_email',
   'contact_technique_family_name',
   'contact_technique_given_name',
   'contact_technique_job_title',
   'contact_technique_phone_number',
+  'france_connect_eidas',
   'fired_at',
   'form_uid',
+  'insee_payload',
   'job_title',
+  'last_validated_at',
   'model_type',
   'public_id',
   'token_id',

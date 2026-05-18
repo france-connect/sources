@@ -50,7 +50,7 @@ describe('FraudFormComponent', () => {
 
   it('should match the snapshot on mobile layout', () => {
     // Given
-    jest.mocked(useStylesQuery).mockReturnValue(false);
+    jest.mocked(useStylesQuery).mockReturnValueOnce(false);
 
     // When
     const { container } = render(
@@ -67,7 +67,7 @@ describe('FraudFormComponent', () => {
 
   it('should match the snapshot on desktop layout', () => {
     // Given
-    jest.mocked(useStylesQuery).mockReturnValue(true);
+    jest.mocked(useStylesQuery).mockReturnValueOnce(true);
 
     // When
     const { container } = render(
@@ -215,7 +215,7 @@ describe('FraudFormComponent', () => {
         children: 'any-form-report-mock',
         className: 'fr-mt-4w',
         dataTestId: 'fraud-form-submit-button',
-        disabled: undefined,
+        disabled: false,
         size: Sizes.MEDIUM,
         type: ButtonTypes.SUBMIT,
       },

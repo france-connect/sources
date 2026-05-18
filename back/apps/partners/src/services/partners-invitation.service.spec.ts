@@ -126,7 +126,6 @@ describe('PartnersInvitationService', () => {
       ).toHaveBeenCalledWith(queryRunnerMock, {
         accountId: accountIdMock,
         permissionType: AccessControlPermission.INSTANCE_CONTRIBUTOR,
-        entity: AccessControlEntity.SP_INSTANCE,
       });
     });
 

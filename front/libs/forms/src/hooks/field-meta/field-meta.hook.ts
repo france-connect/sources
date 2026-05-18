@@ -1,7 +1,7 @@
 import classnames from 'classnames';
-import type { FieldMetaState } from 'react-final-form';
+import type { FieldRenderProps } from 'react-final-form';
 
-export const useFieldMeta = (meta: FieldMetaState<string>) => {
+export const useFieldMeta = (meta: FieldRenderProps<string>['meta']) => {
   const { error, invalid, pristine, submitError, touched, valid } = meta;
 
   const hasError = !!(touched && invalid);

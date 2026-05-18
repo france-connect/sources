@@ -1,5 +1,5 @@
 import { pick } from 'lodash';
-import { QueryRunner, Repository } from 'typeorm';
+import { FindOptionsWhere, QueryRunner, Repository } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 import { Injectable } from '@nestjs/common';
@@ -8,6 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { PartnersAccount } from '@entities/typeorm';
 
 import { AccountPermissionService } from '@fc/access-control';
+import { normalizeEmail } from '@fc/common';
 import {
   AccessControlEntity,
   AccessControlPermission,
@@ -35,7 +36,7 @@ export class PartnersAccountService {
     try {
       accountId = await this.typeorm.withTransaction(
         async (queryRunner: QueryRunner) => {
-          const accountId = await this.create(queryRunner, data);
+          const accountId = await this.upsert(queryRunner, data);
 
           await this.addPermissions(queryRunner, accountId);
 
@@ -52,29 +53,37 @@ export class PartnersAccountService {
   async getOrCreateByEmail(
     queryRunner: QueryRunner,
     account: AccountInitInputInterface,
+    options: { upsertFields: string[] } = {
+      upsertFields: ['firstname', 'lastname'],
+    },
   ): Promise<PartnersAccount['id']> {
-    const existing = await this.repository.findOne({
-      where: { email: account.email },
-    });
+    const normalizedAccount = {
+      ...account,
+      email: normalizeEmail(account.email),
+    };
 
-    if (existing) {
-      return existing.id;
-    }
-
-    const accountId = await this.create(queryRunner, account);
+    const accountId = await this.upsert(
+      queryRunner,
+      normalizedAccount,
+      options,
+    );
 
     return accountId;
   }
 
-  private async create(
+  private async upsert(
     queryRunner: QueryRunner,
     data: AccountInitInputInterface,
+    options: { upsertFields: string[] } = {
+      upsertFields: ['firstname', 'lastname'],
+    },
   ): Promise<PartnersAccount['id']> {
     const result = await queryRunner.manager
       .createQueryBuilder()
       .insert()
       .into(PartnersAccount)
       .values(data)
+      .orUpdate(options.upsertFields, ['email'])
       .returning(['id'])
       .execute();
 
@@ -90,26 +99,25 @@ export class PartnersAccountService {
     await this.accessControl.addPermissionTransactional(queryRunner, {
       accountId,
       permissionType: AccessControlPermission.INSTANCE_CONTRIBUTOR,
-      entity: AccessControlEntity.SP_INSTANCE,
     });
 
     await this.accessControl.addPermissionTransactional(queryRunner, {
       accountId,
-      permissionType: AccessControlPermission.SP_ADMIN,
-      entity: AccessControlEntity.SERVICE_PROVIDER,
+      permissionType: AccessControlPermission.SP_CONTRIBUTOR,
     });
   }
 
   async updateAccount(
     data: AccountInitInputInterface,
   ): Promise<PartnersAccount['id']> {
-    const { email } = data;
+    const email = normalizeEmail(data.email);
+    const normalizedData = { ...data, email };
 
     const existing = await this.repository.findOne({
       where: { email },
     });
 
-    const updateValues = this.buildUpdateValues(data, existing);
+    const updateValues = this.buildUpdateValues(normalizedData, existing);
 
     const accountId = await this.typeorm.withQueryRunner(
       async (queryRunner) => {
@@ -150,5 +158,32 @@ export class PartnersAccountService {
       lastConnection: queryBuilderGetCurrentTimestamp,
       updatedAt: queryBuilderGetCurrentTimestamp,
     };
+  }
+
+  async updateAccountTransactional(
+    queryRunner: QueryRunner,
+    data: AccountInitInputInterface,
+    where?: FindOptionsWhere<PartnersAccount>,
+  ): Promise<PartnersAccount['id']> {
+    const { email } = data;
+
+    const result = await queryRunner.manager
+      .createQueryBuilder()
+      .update(PartnersAccount)
+      .set(data)
+      .where(where || { email })
+      .returning(['id'])
+      .execute();
+
+    return result.raw[0]?.id;
+  }
+
+  async getTransactionalByEmail(
+    queryRunner: QueryRunner,
+    email: string,
+  ): Promise<PartnersAccount> {
+    return await queryRunner.manager.findOne(PartnersAccount, {
+      where: { email },
+    });
   }
 }

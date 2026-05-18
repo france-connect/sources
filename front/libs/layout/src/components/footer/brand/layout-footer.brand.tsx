@@ -11,7 +11,7 @@ import type { LayoutConfig } from '../../../interfaces';
 
 export const LayoutFooterBrandComponent = React.memo(() => {
   const config = ConfigService.get<LayoutConfig>(LayoutOptions.CONFIG_NAME);
-  const { baseline, homepage, logo, name } = config.service;
+  const { baseline, homepage, logo, logoTitle, name } = config.service;
 
   const backToHomepage = t('Layout.documentTitle.backToHomepage');
   const linkTitle = getAccessibleTitle(baseline, name);
@@ -21,7 +21,7 @@ export const LayoutFooterBrandComponent = React.memo(() => {
       <LogoRepubliqueFrancaiseComponent />
       <Link className="fr-footer__brand-link" title={homepageLinkTitle} to={homepage}>
         <img
-          alt={linkTitle}
+          alt={logoTitle ?? linkTitle}
           className="fr-footer__logo fr-responsive-img"
           src={logo as unknown as string}
           style={{ height: 90, maxHeight: 90 }}

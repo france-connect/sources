@@ -3,9 +3,7 @@ import type { PropsWithChildren } from 'react';
 import React from 'react';
 import { useDocumentTitle } from 'usehooks-ts';
 
-import type { AccountContextState } from '@fc/account';
-import { AccountContext } from '@fc/account';
-import { useSafeContext } from '@fc/common';
+import { useAccountContext } from '@fc/account';
 import { SessionExpiredAlertComponent } from '@fc/core-user-dashboard';
 import { Sizes } from '@fc/dsfr';
 
@@ -15,7 +13,7 @@ interface LoginLayoutProps extends Required<PropsWithChildren> {
 }
 
 export const LoginLayout = React.memo(({ children, documentTitle, size }: LoginLayoutProps) => {
-  const { expired } = useSafeContext<AccountContextState>(AccountContext);
+  const { expired } = useAccountContext();
 
   useDocumentTitle(documentTitle);
 

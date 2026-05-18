@@ -5,18 +5,28 @@ import { ConfigService } from '@fc/config';
 import type { ExternalUrlsInterface } from '@fc/core-partners';
 import { CorePartnersOptions } from '@fc/core-partners';
 import type { TabGroupItemInterface } from '@fc/dsfr';
-import { LinkComponent, TabsGroupComponent } from '@fc/dsfr';
+import { AlertComponent, LinkComponent, TabsGroupComponent } from '@fc/dsfr';
 import { t } from '@fc/i18n';
 
 import { useServiceProvider } from '../../../hooks';
+import { SandboxesSectionComponent } from './sandboxes-section';
 
 export const ServiceProviderPage = React.memo(() => {
-  const { datapassDocUrl, scopeDocUrl } = ConfigService.get<ExternalUrlsInterface>(
-    CorePartnersOptions.CONFIG_EXTERNAL_URLS,
-  );
+  const { datapassDocUrl, scopeDocUrl, spConfigurationDocUrl } =
+    ConfigService.get<ExternalUrlsInterface>(CorePartnersOptions.CONFIG_EXTERNAL_URLS);
 
-  const { datapassRequestId, datapassScopes, fcScopes, habilitationLink, name, organizationName } =
-    useServiceProvider();
+  const {
+    closeAlertHandler,
+    datapassRequestId,
+    datapassScopes,
+    fcScopes,
+    habilitationLink,
+    hasUnlinkedInstances,
+    instances,
+    name,
+    organization,
+    submitState,
+  } = useServiceProvider();
 
   const tabItems: TabGroupItemInterface[] = [
     {
@@ -62,7 +72,7 @@ export const ServiceProviderPage = React.memo(() => {
       <div className="fr-col-12">
         <h1>{name}</h1>
         <p className="is-uppercase" data-testid="service-provider-details-page-organization-name">
-          {organizationName}
+          {organization.name}
         </p>
         <h2 className="fr-mt-7w">{t('Partners.serviceProviderPage.habilitation.title')}</h2>
         <hr />
@@ -101,6 +111,30 @@ export const ServiceProviderPage = React.memo(() => {
             {t('Partners.serviceProviderPage.datapassDocumentation.introduction.link')}
           </LinkComponent>
         </p>
+        <h2 className="fr-mt-7w">{t('Partners.serviceProviderPage.sandboxes.title')}</h2>
+        <hr />
+        {submitState && (
+          <div className="fr-mb-3w">
+            <AlertComponent
+              dataTestId="service-provider-link-success-alert"
+              title={t(submitState.message)}
+              type={submitState.type}
+              onClose={closeAlertHandler}>
+              {t('Partners.serviceProviderPage.linkInstances.success.description')}
+            </AlertComponent>
+          </div>
+        )}
+        <p>
+          {t('Partners.serviceProviderPage.sandboxes.description')}
+          {Strings.WHITE_SPACE}
+          <LinkComponent external href={spConfigurationDocUrl}>
+            {t('Partners.serviceProviderPage.sandboxes.description.link')}
+          </LinkComponent>
+        </p>
+        <SandboxesSectionComponent
+          hasUnlinkedInstances={hasUnlinkedInstances}
+          sandboxes={instances}
+        />
       </div>
     </div>
   );

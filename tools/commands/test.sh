@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 _test() {
   apps=${@:-no-container}
 
@@ -37,7 +39,12 @@ _e2e() {
 }
 
 unit_test_watch_coverage() {
+  unit_test_coverage ${1} true
+}
+
+unit_test_coverage() {
   local path=${1}
+  local watch=${2:-false}
   local isFile=$(test -f ${path} && echo "1" || echo "0")
   local isDir=$(test -d ${path} && echo "1" || echo "0")
 
@@ -64,6 +71,13 @@ unit_test_watch_coverage() {
     fi
   fi
 
-  yarn test --watch --coverage --collectCoverageFrom="${coveragePath}" "${testPath}"
+  args=("--coverage" "--collectCoverageFrom=${coveragePath}" "${testPath}")
+  
+  if [ "${watch}" = "true" ]; then
+    args=("--watch" "${args[@]}")
+  fi
+
+  yarn test "${args[@]}"
+
 
 }

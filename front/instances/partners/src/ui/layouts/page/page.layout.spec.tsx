@@ -1,34 +1,76 @@
 import { render } from '@testing-library/react';
-import { Outlet } from 'react-router';
+import type { PathMatch } from 'react-router';
+import { Outlet, useMatch } from 'react-router';
 
+import { MessageTypes } from '@fc/common';
 import { NoticeComponent } from '@fc/dsfr';
-import { t } from '@fc/i18n';
 
 import { PageLayout } from './page.layout';
 
 describe('PageLayout', () => {
   it('should match snapshot', () => {
-    // Given
-    jest
-      .mocked(t)
-      .mockReturnValueOnce('Partners.page.noticeTitle-mock')
-      .mockReturnValueOnce('Partners.page.noticeDescription-mock');
-
     // When
     const { container } = render(<PageLayout />);
 
     // Then
     expect(container).toMatchSnapshot();
-    expect(t).toHaveBeenCalledTimes(2);
-    expect(t).toHaveBeenNthCalledWith(1, 'Partners.page.noticeTitle');
-    expect(t).toHaveBeenNthCalledWith(2, 'Partners.page.noticeDescription');
-    expect(Outlet).toHaveBeenCalledOnce();
-    expect(Outlet).toHaveBeenCalledWith({}, undefined);
-    expect(NoticeComponent).toHaveBeenCalledOnce();
-    expect(NoticeComponent).toHaveBeenCalledWith(
+  });
+
+  it('should call Outlet component', () => {
+    // When
+    render(<PageLayout />);
+
+    // Then
+    expect(Outlet).toHaveBeenCalledExactlyOnceWith({}, undefined);
+  });
+
+  it('should call NoticeComponent with arguments, when url is not service provider page', () => {
+    // Given
+    jest.mocked(useMatch).mockReturnValueOnce(null);
+
+    // When
+    render(<PageLayout />);
+
+    // Then
+    expect(NoticeComponent).toHaveBeenCalledExactlyOnceWith(
       {
-        description: 'Partners.page.noticeDescription-mock',
-        title: 'Partners.page.noticeTitle-mock',
+        description: 'Partners.layout.noticeDescription',
+        title: 'Partners.layout.noticeTitle',
+      },
+      undefined,
+    );
+  });
+
+  // @TODO to be removed with next BDD update
+  // https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/2625
+  it('should call NoticeComponent with arguments, when url is service provider page', () => {
+    // Given
+    jest.mocked(useMatch).mockReturnValueOnce({} as PathMatch<string>);
+
+    // When
+    render(<PageLayout />);
+
+    // Then
+    expect(NoticeComponent).toHaveBeenCalledExactlyOnceWith(
+      {
+        description: 'Partners.layout.serviceProvidersNoticeDescription',
+        title: 'Partners.layout.serviceProvidersNoticeTitle',
+        type: MessageTypes.WARNING,
+      },
+      undefined,
+    );
+  });
+
+  // @TODO to be removed with next BDD update
+  // https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/2625
+  it('should useMatch with path /fournisseurs-de-service', () => {
+    // When
+    render(<PageLayout />);
+
+    // Then
+    expect(useMatch).toHaveBeenCalledExactlyOnceWith(
+      {
+        path: '/fournisseurs-de-service',
       },
       undefined,
     );

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 _reset_mongodb() {
   local db_container_name=$1
   local script=$2

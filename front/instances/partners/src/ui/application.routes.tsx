@@ -8,6 +8,7 @@ import { Dto2FormServiceContext } from '@fc/dto2form-service';
 import { ApplicationLayout } from '@fc/layout';
 import { AuthedRoute, RouterErrorBoundaryComponent, UnauthedRoute } from '@fc/routing';
 
+import { loadServiceProviderPageData } from '../loaders';
 import { PageLayout } from './layouts';
 import {
   HomePage,
@@ -17,6 +18,7 @@ import {
   LegalNoticesPage,
   LoginPage,
   ServiceProviderErrorPage,
+  ServiceProviderLinkInstancesPage,
   ServiceProviderPage,
   ServiceProvidersPage,
   SitemapPage,
@@ -28,18 +30,20 @@ export const ApplicationRoutes = React.memo(() => {
 
   const routes = createRoutesFromElements(
     <Route element={<ApplicationLayout />} errorElement={<RouterErrorBoundaryComponent />} path="/">
-      <Route element={<UnauthedRoute fallback="/instances" />}>
+      <Route element={<UnauthedRoute fallback="/" />}>
         <Route element={<LoginPage />} path="login" />
       </Route>
       <Route element={<AuthedRoute fallback="/login" />}>
         <Route element={<PageLayout />}>
           <Route path="fournisseurs-de-service">
-            <Route
-              element={<ServiceProviderPage />}
-              errorElement={<ServiceProviderErrorPage />}
-              loader={PartnersService.loadServiceProviderById}
-              path=":serviceProviderId"
-            />
+            <Route errorElement={<ServiceProviderErrorPage />} path=":serviceProviderId">
+              <Route
+                element={<ServiceProviderLinkInstancesPage />}
+                loader={PartnersService.loadLinkableInstancesByServiceProviderId}
+                path="link-instances"
+              />
+              <Route index element={<ServiceProviderPage />} loader={loadServiceProviderPageData} />
+            </Route>
             <Route
               index
               element={<ServiceProvidersPage />}

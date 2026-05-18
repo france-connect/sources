@@ -9,10 +9,6 @@ export default class TechnicalErrorPage {
     cy.get('[data-testid="error-section"]').should('be.visible');
   }
 
-  checkErrorTitle(message: string): void {
-    cy.get('[data-testid="error-section-title"]').contains(message);
-  }
-
   checkErrorSubTitle(message: string): void {
     cy.get('[data-testid="error-section-subtitle"]').contains(message);
   }
@@ -32,9 +28,10 @@ export default class TechnicalErrorPage {
   }
 
   checkSupportLinkHref(errorCode: string): void {
-    cy.get('[data-testid="error-support-button"]')
-      .invoke('attr', 'value')
-      .contains(errorCode);
+    cy.get('[data-testid="error-support-button"]').should(($button) => {
+      const linkTarget = $button.attr('href') || $button.attr('value') || '';
+      expect(linkTarget.toLowerCase()).to.contain(errorCode.toLowerCase());
+    });
   }
 
   getBackToSPLink(): ChainableElement {

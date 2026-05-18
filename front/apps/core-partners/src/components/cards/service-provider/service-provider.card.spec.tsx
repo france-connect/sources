@@ -15,7 +15,11 @@ describe('ServiceProviderCardComponent', () => {
     datapassScopes: ['Identifiant technique', 'Adresse électronique'],
     id: 'any-id-mock',
     name: 'any-service-provider-name-mock',
-    organizationName: 'any-organization-name-mock',
+    organization: {
+      id: 'any-id-mock',
+      name: 'any-organization-name-mock',
+      siret: 'any-siret-mock',
+    },
     updatedAt: 'any-acme-date' as ISODate,
   };
 

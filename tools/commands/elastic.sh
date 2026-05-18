@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 _reset_stats() {
   cd ${DOCKER_DIR}
   echo "Resetting statistics index in elasticsearch..."
@@ -20,11 +22,11 @@ _reset_stats() {
   echo ""
 
   echo "# Create events index"
-  $RUN_CONTEXT curl ${CURL_OPTIONS} -XPUT -H "Content-Type:application/json" "$ES_URL/events" -d "@/index/create_index_stats.json"
+  $RUN_CONTEXT curl ${CURL_OPTIONS} -XPUT -H "Content-Type:application/json" "$ES_URL/events" -d "@/index/create_index_events.json"
   echo ""
 
   echo "# Create metrics index"
-  $RUN_CONTEXT curl ${CURL_OPTIONS} -XPUT -H "Content-Type:application/json" "$ES_URL/metrics" -d "@/index/create_index_stats.json"
+  $RUN_CONTEXT curl ${CURL_OPTIONS} -XPUT -H "Content-Type:application/json" "$ES_URL/metrics" -d "@/index/create_index_metrics.json"
   echo ""
 
   echo "# Create fc_tracks index"

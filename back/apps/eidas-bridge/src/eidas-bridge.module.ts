@@ -49,6 +49,7 @@ import {
   FrIdentityToEuController,
   OidcClientController,
   OidcProviderController,
+  StaticPagesController,
 } from './controllers';
 import {
   EidasBridgeTrackingService,
@@ -100,6 +101,7 @@ const oidcProviderModule = OidcProviderModule.register(
     EidasProviderController,
     OidcClientController,
     OidcProviderController,
+    StaticPagesController,
   ],
   providers: [
     OidcMiddlewareService,

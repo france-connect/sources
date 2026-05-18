@@ -5,6 +5,8 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
+      node-modules-back:
+        condition: service_completed_successfully
       redis-pwd:
         condition: service_healthy
     volumes:

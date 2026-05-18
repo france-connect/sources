@@ -1,6 +1,7 @@
 import { isEmpty } from 'lodash';
 import { Adapter, AdapterConstructor } from 'oidc-provider';
 
+import { nowInSeconds } from '@fc/common';
 import { IServiceProviderAdapter } from '@fc/oidc';
 import { RedisService } from '@fc/redis';
 
@@ -270,11 +271,8 @@ export class OidcProviderRedisAdapter implements Adapter {
   }
 
   async consume(id: string) {
-    await this.redis.client.hset(
-      this.key(id),
-      'consumed',
-      Math.floor(Date.now() / 1000),
-    );
+    const now = nowInSeconds();
+    await this.redis.client.hset(this.key(id), 'consumed', now);
   }
 
   async getExpireAndPayload<T>(
@@ -297,7 +295,7 @@ export class OidcProviderRedisAdapter implements Adapter {
      * Using floor to avoid amplifying rounding TTL errors between the time we get the TTL
      * and the time we use it to generate the JWT.
      */
-    const now = Math.floor(Date.now() / 1000);
+    const now = nowInSeconds();
     const expire = now + ttl;
 
     return {

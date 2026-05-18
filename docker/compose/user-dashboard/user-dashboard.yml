@@ -7,6 +7,8 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
+      node-modules-back:
+        condition: service_completed_successfully
       squid:
         condition: service_started
       core-fcp-low:
@@ -51,6 +53,8 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
+      node-modules-front:
+        condition: service_completed_successfully
       ud-back:
         condition: service_started
     volumes:

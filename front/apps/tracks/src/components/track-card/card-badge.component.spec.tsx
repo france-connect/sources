@@ -14,7 +14,7 @@ describe('TrackCardBadgeComponent', () => {
 
   it('should match the snapshot when breakpoint is greater than mobile', () => {
     // Given
-    jest.mocked(useStylesQuery).mockReturnValue(true);
+    jest.mocked(useStylesQuery).mockReturnValueOnce(true);
 
     // When
     const { container } = render(
@@ -27,7 +27,7 @@ describe('TrackCardBadgeComponent', () => {
 
   it('should match the snapshot when breakpoint is lower than mobile', () => {
     // Given
-    jest.mocked(useStylesQuery).mockReturnValue(false);
+    jest.mocked(useStylesQuery).mockReturnValueOnce(false);
 
     // When
     const { container } = render(

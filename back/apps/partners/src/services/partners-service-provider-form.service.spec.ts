@@ -1,6 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { PartnersServiceProvider } from '@entities/typeorm';
+import {
+  PartnersOrganization,
+  PartnersServiceProvider,
+  PartnersServiceProviderInstance,
+} from '@entities/typeorm';
 
 import { I18nService } from '@fc/i18n';
 import { LoggerService } from '@fc/logger';
@@ -27,16 +31,27 @@ describe('PartnersServiceProviderFormService', () => {
   const defaultScopesFromClaimsReturnValue = ['openid', 'profile', 'email'];
   const defaultRawClaimsFromScopesReturnValue = ['sub'];
 
+  const organizationMock: PartnersOrganization = {
+    id: '12345',
+    name: 'Test Organization',
+    siret: '12345678901234',
+    createdAt: new Date('2024-01-01'),
+    updatedAt: new Date('2024-01-01'),
+    serviceProviders: [],
+  };
+
   const serviceProviderMock: PartnersServiceProvider = {
     id: 'service-provider-id',
     name: 'Test Service Provider',
-    organizationName: 'Test Organization',
     datapassRequestId: '12345',
+    datapassAuthorizationId: '12345678901234',
+    datapassEidasLevel: 'EIDAS_1',
     datapassScopes: ['openid', 'given_name', 'family_name', 'email'],
     platform: null,
-    organisation: null,
+    organization: organizationMock,
     createdAt: new Date('2024-01-01'),
     updatedAt: new Date('2024-01-01'),
+    instances: [],
   };
 
   beforeEach(async () => {
@@ -92,7 +107,7 @@ describe('PartnersServiceProviderFormService', () => {
       expect(result).toEqual({
         id: 'service-provider-id',
         name: 'Test Service Provider',
-        organizationName: 'Test Organization',
+        organization: organizationMock,
         datapassRequestId: '12345',
         datapassScopes: [
           'Identifiant technique',
@@ -103,6 +118,7 @@ describe('PartnersServiceProviderFormService', () => {
         fcScopes: ['openid', 'profile', 'email'],
         createdAt: new Date('2024-01-01'),
         updatedAt: new Date('2024-01-01'),
+        instances: [],
       });
     });
 
@@ -144,19 +160,20 @@ describe('PartnersServiceProviderFormService', () => {
       expect(result).toEqual({
         id: 'service-provider-id',
         name: 'Test Service Provider',
-        organizationName: 'Test Organization',
+        organization: organizationMock,
         datapassRequestId: '12345',
         datapassScopes: ['Label', 'unknown_claim'],
         fcScopes: ['profile'],
         createdAt: new Date('2024-01-01'),
         updatedAt: new Date('2024-01-01'),
+        instances: [],
       });
       expect(loggerMock.warning).toHaveBeenCalledExactlyOnceWith(
         'Missing translation for datapassScope.unknown_claim',
       );
     });
 
-    it('should not include platform and organisation fields in response', () => {
+    it('should not include platform and organization fields in response', () => {
       // When
       const result = service.toDisplayValue(serviceProviderMock);
 
@@ -164,12 +181,13 @@ describe('PartnersServiceProviderFormService', () => {
       expect(result).toEqual({
         id: 'service-provider-id',
         name: 'Test Service Provider',
-        organizationName: 'Test Organization',
+        organization: organizationMock,
         datapassRequestId: '12345',
         datapassScopes: ['Label', 'Label', 'Label', 'Label'],
         fcScopes: ['openid', 'profile', 'email'],
         createdAt: new Date('2024-01-01'),
         updatedAt: new Date('2024-01-01'),
+        instances: [],
       });
     });
 
@@ -188,12 +206,13 @@ describe('PartnersServiceProviderFormService', () => {
       expect(result).toEqual({
         id: 'service-provider-id',
         name: 'Test Service Provider',
-        organizationName: 'Test Organization',
+        organization: organizationMock,
         datapassRequestId: '12345',
         datapassScopes: [],
         fcScopes: [],
         createdAt: new Date('2024-01-01'),
         updatedAt: new Date('2024-01-01'),
+        instances: [],
       });
     });
 
@@ -212,12 +231,13 @@ describe('PartnersServiceProviderFormService', () => {
       expect(result).toEqual({
         id: 'service-provider-id',
         name: 'Test Service Provider',
-        organizationName: 'Test Organization',
+        organization: organizationMock,
         datapassRequestId: '12345',
         datapassScopes: [],
         fcScopes: [],
         createdAt: new Date('2024-01-01'),
         updatedAt: new Date('2024-01-01'),
+        instances: [],
       });
     });
 
@@ -272,6 +292,96 @@ describe('PartnersServiceProviderFormService', () => {
         'openid',
         'sub',
       ]);
+    });
+
+    it('should expose only firstname and lastname for instance creator', () => {
+      // Given
+      const instanceWithCreator = {
+        id: 'instance-id',
+        environment: 'SANDBOX',
+        createdAt: new Date('2024-01-01'),
+        updatedAt: new Date('2024-01-01'),
+        creator: {
+          id: 'creator-id',
+          email: 'creator@example.com',
+          firstname: 'Jean',
+          lastname: 'Dupont',
+        },
+        currentVersion: null,
+      } as PartnersServiceProviderInstance;
+      const serviceProviderWithInstances = {
+        ...serviceProviderMock,
+        instances: [instanceWithCreator],
+      };
+
+      // When
+      const result = service.toDisplayValue(serviceProviderWithInstances);
+
+      // Then
+      expect(result.instances[0].creator).toEqual({
+        firstname: 'Jean',
+        lastname: 'Dupont',
+      });
+    });
+
+    it('should handle partial creator with only firstname', () => {
+      // Given
+      const instanceWithPartialCreator = {
+        id: 'instance-id',
+        environment: 'SANDBOX',
+        createdAt: new Date('2024-01-01'),
+        updatedAt: new Date('2024-01-01'),
+        creator: {
+          id: 'creator-id',
+          email: 'creator@example.com',
+          firstname: 'Jean',
+          lastname: null,
+        },
+        currentVersion: null,
+      } as PartnersServiceProviderInstance;
+      const serviceProviderWithInstances = {
+        ...serviceProviderMock,
+        instances: [instanceWithPartialCreator],
+      };
+
+      // When
+      const result = service.toDisplayValue(serviceProviderWithInstances);
+
+      // Then
+      expect(result.instances[0].creator).toEqual({
+        firstname: 'Jean',
+        lastname: null,
+      });
+    });
+
+    it('should pass through creator with null firstname and lastname without filtering', () => {
+      // Given
+      const instanceWithNullNames = {
+        id: 'instance-id',
+        environment: 'SANDBOX',
+        createdAt: new Date('2024-01-01'),
+        updatedAt: new Date('2024-01-01'),
+        creator: {
+          id: 'creator-id',
+          email: 'creator@example.com',
+          firstname: null,
+          lastname: null,
+        },
+        currentVersion: null,
+      } as PartnersServiceProviderInstance;
+      const serviceProviderWithInstances = {
+        ...serviceProviderMock,
+        instances: [instanceWithNullNames],
+      };
+
+      // When
+      const result = service.toDisplayValue(serviceProviderWithInstances);
+
+      // Then
+      expect(result.instances[0].creator).toEqual({
+        firstname: null,
+        lastname: null,
+      });
     });
   });
 });

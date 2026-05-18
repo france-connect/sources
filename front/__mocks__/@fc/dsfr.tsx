@@ -16,7 +16,13 @@ export const LinkButton = jest.fn(() => <div>LinkButton</div>);
 
 export const SimpleButton = jest.fn(() => <div>SimpleButton</div>);
 
+export const ButtonGroupComponent = jest.fn(({ children }) => (
+  <div data-mockid="ButtonGroupComponent">{children}</div>
+));
+
 export const CheckboxInput = jest.fn(() => <div>CheckboxInput</div>);
+
+export const CheckboxComponent = jest.fn(() => <div>CheckboxComponent</div>);
 
 export const ToggleInput = jest.fn(() => <div>ToggleInput</div>);
 

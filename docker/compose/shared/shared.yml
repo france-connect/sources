@@ -2,7 +2,7 @@
 ####################
 services:
   all:
-    image: alpine
+    image: ${DOCKER_HUB_PROXY}alpine
     depends_on:
       - "rp-all"
       - "all-fcp-high"
@@ -13,7 +13,7 @@ services:
   ####################
 
   rp-all:
-    image: nginx:1.22.1
+    image: ${DOCKER_HUB_PROXY}nginx:1.22.1
     container_name: fc-rp-all
     environment:
       DHPARAM_GENERATION: "false"
@@ -66,6 +66,9 @@ services:
           - eidas-fr.docker.dev-franceconnect.fr
           - eidas-mock.docker.dev-franceconnect.fr
           - eidas-be.docker.dev-franceconnect.fr
+          # Wallet Bridge
+          - wallet-bridge-high.docker.dev-franceconnect.fr
+          - wallet-bridge-low.docker.dev-franceconnect.fr
           # Aliases to access exploitation from test runner
           # TODO: Move those aliases to exploitation network once runner workaround found
           - exploitation-high.docker.dev-franceconnect.fr
@@ -84,6 +87,7 @@ services:
           # Espace partenaires
           - partners.docker.dev-franceconnect.fr
           - mock-proconnect.docker.dev-franceconnect.fr
+          - mock-datapass.docker.dev-franceconnect.fr
           # Znuny
           - znuny.docker.dev-franceconnect.fr
           # Stack Legacy
@@ -112,21 +116,27 @@ services:
 
   docker-gen:
     user: ${CURRENT_UID}
-    image: jwilder/docker-gen
+    group_add:
+      - ${DOCKER_GID}
+    image: ${DOCKER_HUB_PROXY}jwilder/docker-gen
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - ${VOLUMES_DIR}/nginx-proxy/default-vhost:/etc/nginx/html
       - ${VOLUMES_DIR}/nginx-proxy/etc:/etc/nginx/conf.d
       - ${VOLUMES_DIR}/docker-gen/config:/etc/docker-gen/config:ro
       - ${VOLUMES_DIR}/nginx-proxy/templates:/etc/docker-gen/templates:ro
+    extra_hosts:
+      - "docker:host-gateway"
+    environment:
+      - DOCKER_HOST
     networks:
       - public
       - fc
       - exploitation
-    command: -config /etc/docker-gen/config
+    command: -config /etc/docker-gen/config -endpoint ${DOCKER_HOST:-unix:///tmp/docker.sock}
 
   squid:
-    image: ubuntu/squid:4.13-21.10_beta
+    image: ${DOCKER_HUB_PROXY}ubuntu/squid:4.13-21.10_beta
     ulimits:
       nofile:
         soft: 1048576
@@ -137,7 +147,7 @@ services:
       - exploitation
 
   haproxy:
-    image: haproxy:2.6.12
+    image: ${DOCKER_HUB_PROXY}haproxy:2.6.12
     hostname: haproxy
     ulimits:
       nofile:
@@ -180,6 +190,8 @@ services:
     build:
       context: "${DOCKER_DIR}"
       dockerfile: "${DOCKER_DIR}/builds/broker/Dockerfile"
+      args:
+        DOCKER_HUB_PROXY: ${DOCKER_HUB_PROXY}
     # Specify hostname to fix cluster name
     hostname: broker
     depends_on:
@@ -196,7 +208,7 @@ services:
   ####################
 
   redis-pwd:
-    image: "bitnamilegacy/redis:7.4.2-debian-12-r0"
+    image: "${DOCKER_HUB_PROXY}bitnamilegacy/redis:7.4.2-debian-12-r0"
     env_file:
       - ${COMPOSE_DIR}/shared/.env/redis.env
     environment:
@@ -213,7 +225,7 @@ services:
         ipv4_address: 172.16.4.105
 
   redis-cluster-master:
-    image: "bitnamilegacy/redis:7.4.2-debian-12-r0"
+    image: "${DOCKER_HUB_PROXY}bitnamilegacy/redis:7.4.2-debian-12-r0"
     env_file:
       - ${COMPOSE_DIR}/shared/.env/redis.env
     environment:
@@ -229,7 +241,7 @@ services:
         ipv4_address: 172.16.4.100
 
   redis-cluster-replica:
-    image: "bitnamilegacy/redis:7.4.2-debian-12-r0"
+    image: "${DOCKER_HUB_PROXY}bitnamilegacy/redis:7.4.2-debian-12-r0"
     env_file:
       - ${COMPOSE_DIR}/shared/.env/redis.env
     environment:
@@ -249,7 +261,7 @@ services:
         ipv4_address: 172.16.4.101
 
   redis-sentinel:
-    image: "bitnamilegacy/redis-sentinel:7.4.2-debian-12-r0"
+    image: "${DOCKER_HUB_PROXY}bitnamilegacy/redis-sentinel:7.4.2-debian-12-r0"
     scale: 3
     env_file:
       - ${COMPOSE_DIR}/shared/.env/redis.env
@@ -280,7 +292,7 @@ services:
       - data
 
   postgres:
-    image: postgres:18-bookworm
+    image: ${DOCKER_HUB_PROXY}postgres:18-bookworm
     shm_size: 128mb
     volumes:
       - "${VOLUMES_DIR}/postgres/init-multiple-postgresql-databases.sh:/docker-entrypoint-initdb.d/init-multiple-postgresql-databases.sh:ro"
@@ -324,6 +336,8 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
+      node-modules-back:
+        condition: service_completed_successfully
       broker:
         condition: service_started
       hsm:
@@ -354,6 +368,7 @@ services:
       args:
         INTERNET_PROXY: ${PROXY_EXPLOITATION:-}
         NODE_IGNORE_ENGINE: ${NODE_IGNORE_ENGINE:-false}
+        DOCKER_HUB_PROXY: ${DOCKER_HUB_PROXY}
     image: ${FC_DOCKER_REGISTRY}/cypress:${IMAGE_VERSION:-${CYPRESS_IMAGE_VERSION}}
 
   cypress-fcp:
@@ -493,7 +508,7 @@ services:
 
   maildev:
     hostname: maildev
-    image: maildev/maildev:2.0.5
+    image: ${DOCKER_HUB_PROXY}maildev/maildev:2.0.5
     environment:
       - "VIRTUAL_HOST=maildev.docker.dev-franceconnect.fr"
       - "VIRTUAL_PORT=1080"
@@ -507,6 +522,9 @@ services:
     image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
     user: ${CURRENT_UID}
     working_dir: /var/www/app
+    depends_on:
+      node-modules-back:
+        condition: service_completed_successfully
     volumes:
       - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
       - "${VOLUMES_DIR}/app:/opt/scripts"
@@ -526,7 +544,7 @@ services:
   ####################
 
   elasticsearch:
-    image: elasticsearch:7.17.28
+    image: ${DOCKER_HUB_PROXY}elasticsearch:7.17.28
     volumes:
       - "${VOLUMES_DIR}/elasticsearch/data:/usr/share/elasticsearch/data"
       - "${VOLUMES_DIR}/elasticsearch/config/users:/usr/share/elasticsearch/config/users:ro"
@@ -548,7 +566,7 @@ services:
       - "ES_JAVA_OPTS=-Xms64m -Xmx256m"
 
   kibana:
-    image: kibana:7.17.9
+    image: ${DOCKER_HUB_PROXY}kibana:7.17.9
     depends_on:
       elasticsearch:
         condition: service_started
@@ -568,6 +586,8 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
+      node-modules-back:
+        condition: service_completed_successfully
       broker:
         condition: service_started
       csmr-account-legacy:
@@ -625,6 +645,8 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
+      node-modules-back:
+        condition: service_completed_successfully
       broker:
         condition: service_started
       mongo-fcp-low-replica-single-init:
@@ -662,6 +684,8 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
+      node-modules-back:
+        condition: service_completed_successfully
       broker:
         condition: service_started
       mongo-fcp-high-replica-single-init:
@@ -699,6 +723,8 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
+      node-modules-back:
+        condition: service_completed_successfully
       broker:
         condition: service_started
       maildev:
@@ -723,6 +749,8 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
+      node-modules-back:
+        condition: service_completed_successfully
       broker:
         condition: service_started
     volumes:
@@ -745,6 +773,8 @@ services:
     image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
     user: ${CURRENT_UID}
     depends_on:
+      node-modules-back:
+        condition: service_completed_successfully
       broker:
         condition: service_started
       mongo-fcp-low-replica-single-init:

@@ -90,10 +90,9 @@ Before(function () {
 });
 
 Given(
-  /^j'utilise la plateforme "(FranceConnect\(v2\)|FranceConnect\(CL\)|FranceConnect\+)"$/,
+  /^j'utilise la plateforme "(FranceConnect\(v2\)|FranceConnect\+)"$/,
   function (plateformName: string) {
     const platformMapping = {
-      'FranceConnect(CL)': 'fcp-legacy',
       'FranceConnect(v2)': 'fcp-low',
       'FranceConnect+': 'fcp-high',
     };

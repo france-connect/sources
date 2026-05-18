@@ -23,7 +23,9 @@ export function getQueryRunnerMock(): QueryRunner {
       getMongoRepository: jest.fn().mockReturnThis(),
       createQueryBuilder: jest.fn().mockReturnThis(),
       findOne: jest.fn().mockReturnThis(),
+      find: jest.fn(),
       update: jest.fn().mockReturnThis(),
+      orUpdate: jest.fn().mockReturnThis(),
     },
   };
 

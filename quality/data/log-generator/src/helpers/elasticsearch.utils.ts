@@ -46,8 +46,8 @@ export class ESHelper {
       },
       index,
       refresh: true,
-      /** 
-       * TODO: check on how to delete more than 10000 documents 
+      /**
+       * TODO: check on how to delete more than 10000 documents
        * by configuring "index.max_result_window" during index mapping ticket
        * @see: https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/2535
        */

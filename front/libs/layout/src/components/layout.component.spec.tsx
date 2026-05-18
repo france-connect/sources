@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import { Outlet, ScrollRestoration } from 'react-router';
 
-import { useSafeContext } from '@fc/common';
+import { useAccountContext } from '@fc/account';
 
 import { LayoutFooterComponent } from './footer';
 import { LayoutHeaderComponent } from './header';
@@ -14,7 +14,7 @@ jest.mock('./header/layout-header.component');
 describe('ApplicationLayout', () => {
   beforeEach(() => {
     // Given
-    jest.mocked(useSafeContext).mockReturnValue(expect.any(Object));
+    jest.mocked(useAccountContext).mockReturnValue(expect.any(Object));
     // @NOTE by implementation JEST.DOM render component into a <div />
     // <html element cannot be a child of a <div /> element
     // we cannot use JEST.DOM.render(..., { container }) option, because

@@ -1,21 +1,20 @@
 import { useMemo } from 'react';
-import type { FormProps } from 'react-final-form';
 import { useLoaderData } from 'react-router';
 
 import { useSafeContext } from '@fc/common';
 import type { SchemaFieldType } from '@fc/dto2form';
-import type { FormConfigInterface } from '@fc/forms';
+import type { FormConfigInterface, FormOnSubmitType } from '@fc/forms';
 import type { HttpClientDataInterface } from '@fc/http-client';
 
 import { Dto2FormServiceContext } from '../../context';
 import { parseInitialValues, removeReadOnlyFields } from '../../helpers';
 import { useDto2FormSubmitHandler } from '../dto2form-submit-handler';
 
-interface Dto2FormServiceHookReturnType<T> {
+interface Dto2FormServiceHookReturnType<T extends HttpClientDataInterface> {
   initialValues: T;
   form: FormConfigInterface;
   schema: SchemaFieldType[];
-  submitHandler: FormProps<T>['submit'];
+  submitHandler: FormOnSubmitType<T>;
 }
 
 export const useDto2FormService = <T extends HttpClientDataInterface>(

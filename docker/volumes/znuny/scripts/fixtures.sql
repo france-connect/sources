@@ -667,4 +667,17 @@ WHERE u.login IN ('agent1', 'agent2')
         AND gu.permission_key = p.permission
   );
 
+-- =====================================================================
+-- USER PREFERENCES (timezone)
+-- =====================================================================
+
+INSERT INTO public.user_preferences (user_id, preferences_key, preferences_value)
+SELECT id, 'UserTimeZone', 'Europe/Paris'
+FROM public.users
+WHERE login IN ('agent1', 'agent2')
+  AND NOT EXISTS (
+      SELECT 1 FROM public.user_preferences
+      WHERE user_id = users.id AND preferences_key = 'UserTimeZone'
+  );
+
 COMMIT;

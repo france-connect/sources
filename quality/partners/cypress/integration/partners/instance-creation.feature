@@ -7,7 +7,7 @@ Fonctionnalité: Instance - Création
 
   Scénario: Instance Création - Formulaire affiché depuis tuile de création
     Etant donné que je me connecte à l'espace partenaires avec un utilisateur "partenaire sans instance"
-    Et que je suis sur la page liste des instances
+    Et que je suis redirigé vers la page liste des instances
     Quand je clique sur la tuile de création d'instance
     Alors je suis redirigé vers la page création d'instance
 
@@ -19,6 +19,7 @@ Fonctionnalité: Instance - Création
 
   Scénario: Instance Création - Création réussie
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je clique sur le lien d'ajout d'une instance
     Et que j'utilise l'instance de FS "avec entityId"

@@ -2,7 +2,7 @@
 ####################
 services:
   min-fcp-high:
-    image: alpine
+    image: ${DOCKER_HUB_PROXY}alpine
     depends_on:
       - "core-fcp-high"
       - "fsp1-high"
@@ -12,7 +12,7 @@ services:
       - "dpp1-high"
 
   bdd-fcp-high:
-    image: alpine
+    image: ${DOCKER_HUB_PROXY}alpine
     depends_on:
       - "core-fcp-high"
       - "csmr-hsm"
@@ -36,7 +36,7 @@ services:
       - "maildev"
 
   all-fcp-high:
-    image: alpine
+    image: ${DOCKER_HUB_PROXY}alpine
     depends_on:
       - "core-fcp-high"
       - "exploitation-high"

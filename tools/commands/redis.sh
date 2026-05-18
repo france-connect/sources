@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 _redis_cli() {
   local service=$1
   echo -n "  * Check Redis DB number for ${service}: ..." 

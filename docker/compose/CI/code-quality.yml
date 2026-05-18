@@ -1,0 +1,32 @@
+services:
+  validate-code-back:
+    image: "${FC_DOCKER_REGISTRY}/nodejs-apps/dev-generic:${NODE_MODULE_BACK_VERSION}-${NODE_MODULE_FRONT_VERSION}-${NODE_MODULE_QUALITY_VERSION}"
+    volumes:
+      # Repo mounted from the host
+      - ${FC_ROOT}/fc:/opt/FranceConnect/fc
+      # node_modules in named volumes, independent of the host)
+      - back-node-modules:/opt/FranceConnect/fc/back/node_modules
+    entrypoint: ["docker-stack", "ci-validate-code-back"]
+
+  validate-code-front:
+    image: "${FC_DOCKER_REGISTRY}/nodejs-apps/dev-generic:${NODE_MODULE_BACK_VERSION}-${NODE_MODULE_FRONT_VERSION}-${NODE_MODULE_QUALITY_VERSION}"
+    volumes:
+      # Repo mounted from the host
+      - ${FC_ROOT}/fc:/opt/FranceConnect/fc
+      # node_modules in named volumes, independent of the host)
+      - front-node-modules:/opt/FranceConnect/fc/front/node_modules
+    entrypoint: ["docker-stack", "ci-validate-code-front"]
+
+  validate-code-quality:
+    image: "${FC_DOCKER_REGISTRY}/nodejs-apps/dev-generic:${NODE_MODULE_BACK_VERSION}-${NODE_MODULE_FRONT_VERSION}-${NODE_MODULE_QUALITY_VERSION}"
+    volumes:
+      # Repo mounted from the host
+      - ${FC_ROOT}/fc:/opt/FranceConnect/fc
+      # node_modules in named volumes, independent of the host)
+      - quality-node-modules:/opt/FranceConnect/fc/quality/node_modules
+    entrypoint: ["docker-stack", "ci-validate-code-quality"]
+
+volumes:
+  back-node-modules:
+  front-node-modules:
+  quality-node-modules:

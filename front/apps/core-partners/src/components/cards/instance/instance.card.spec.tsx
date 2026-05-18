@@ -13,22 +13,20 @@ describe('InstanceComponent', () => {
   // Given
   const instanceMock = {
     createdAt: 'any-createdAt-mock-1' as unknown as ISODate,
+    currentVersion: {
+      data: {
+        // @NOTE API interface
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        client_id: 'any-client_id-mock-1',
+        // @NOTE API interface
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        client_secret: 'any-client_secret-mock-1',
+        name: 'any-name-mock-1',
+      },
+    } as unknown as VersionInterface,
     environment: 'SANDBOX' as unknown as PartnersEnvironment,
     id: 'any-instance-id-mock-1',
     updatedAt: 'any-updatedAt-mock-1' as unknown as ISODate,
-    versions: [
-      {
-        data: {
-          // @NOTE API interface
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          client_id: 'any-client_id-mock-1',
-          // @NOTE API interface
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          client_secret: 'any-client_secret-mock-1',
-          name: 'any-name-mock-1',
-        },
-      } as unknown as VersionInterface,
-    ],
   };
 
   beforeEach(() => {

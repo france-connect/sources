@@ -164,4 +164,56 @@ describe('AccountPermissionRepository', () => {
       expect(result).toBe(dataMock);
     });
   });
+
+  describe('getAccountsByPermissions', () => {
+    const permissions = [PermissionsType.PERMISSION_VALUE];
+
+    it('should query repository with permissions and entity filters', async () => {
+      // Given
+      accountPermissionRepositoryMock.find.mockResolvedValueOnce([]);
+
+      // When
+      await repository.getAccountsByPermissions(
+        permissions,
+        EntityType.ENTITY_VALUE,
+        idMock,
+      );
+
+      // Then
+      expect(accountPermissionRepositoryMock.find).toHaveBeenCalledWith({
+        where: {
+          permissionType: expect.any(Object),
+          entity: EntityType.ENTITY_VALUE,
+          entityId: idMock,
+        },
+        relations: ['account'],
+      });
+    });
+
+    it('should map account and permission type from found rows', async () => {
+      // Given
+      const account = { id: 'account-id', email: 'test@example.com' };
+      accountPermissionRepositoryMock.find.mockReset();
+      accountPermissionRepositoryMock.find.mockResolvedValueOnce([
+        {
+          account,
+          permissionType: PermissionsType.PERMISSION_VALUE,
+        },
+      ]);
+
+      // When
+      const result = await repository.getAccountsByPermissions<
+        { id: string; email: string },
+        PermissionsType
+      >(permissions);
+
+      // Then
+      expect(result).toEqual([
+        {
+          account,
+          permissionType: PermissionsType.PERMISSION_VALUE,
+        },
+      ]);
+    });
+  });
 });

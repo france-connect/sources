@@ -3,10 +3,7 @@ import { redirectToUrl } from './redirect-to-url.util';
 
 describe('redirectToUrl', () => {
   beforeEach(() => {
-    Object.defineProperty(window, 'location', {
-      value: { assign: jest.fn(), origin: 'http://mock-origin.com' },
-      writable: true,
-    });
+    window.location.assign('http://mock-origin.acme');
   });
 
   it('should throw an RedirectException if the url is empty', () => {
@@ -57,6 +54,6 @@ describe('redirectToUrl', () => {
     redirectToUrl(url);
 
     // Then
-    expect(window.location.href).toBe('http://mock-origin.com/relative/path');
+    expect(window.location.href).toBe('http://mock-origin.acme/relative/path');
   });
 });

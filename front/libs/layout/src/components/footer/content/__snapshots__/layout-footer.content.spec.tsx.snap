@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`LayoutFooterContentComponent should match the snapshot when description and links are defined 1`] = `
 <div>

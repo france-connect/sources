@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 declare -A __CMD_COMMANDS
 declare -A __CMD_USAGES
 

@@ -35,12 +35,6 @@ Then(
 Then(
   "le message d'erreur FranceConnect est {string}",
   function (message: string) {
-    // TODO: Delete this once FC Legacy page design is made consistent with the others
-    const platform: string = Cypress.env('PLATFORM');
-    if (platform === 'fcp-legacy') {
-      technicalErrorPage.checkErrorTitle(message);
-      return;
-    }
     technicalErrorPage.checkErrorMessage(message);
   },
 );

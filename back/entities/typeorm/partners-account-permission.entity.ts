@@ -43,7 +43,7 @@ export class PartnersAccountPermission {
     nullable: true,
     default: null,
   })
-  entity: string;
+  entity: string | null;
 
   @Column({
     type: 'text',

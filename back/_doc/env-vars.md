@@ -5,32 +5,33 @@
 ## Instances index
 
 1. [command-elastic-instance](#command-elastic-instance)
-2. [command-import-sp-sandbox](#command-import-sp-sandbox)
-3. [command-pre-deploy](#command-pre-deploy)
-4. [command-runner-instance](#command-runner-instance)
-5. [command-support-ticket](#command-support-ticket)
-6. [core-fcp-high](#core-fcp-high)
-7. [core-fcp-low](#core-fcp-low)
-8. [csmr-account-instance](#csmr-account-instance)
-9. [csmr-config-partners](#csmr-config-partners)
-10. [csmr-config-sandbox-low](#csmr-config-sandbox-low)
-11. [csmr-fraud-instance](#csmr-fraud-instance)
-12. [csmr-hsm-high](#csmr-hsm-high)
-13. [csmr-import-core-instance](#csmr-import-core-instance)
-14. [csmr-tracks-instance](#csmr-tracks-instance)
-15. [csmr-user-preferences-high](#csmr-user-preferences-high)
-16. [eidas-bridge](#eidas-bridge)
-17. [mock-data-provider](#mock-data-provider)
-18. [mock-datapass-instance](#mock-datapass-instance)
-19. [mock-identity-provider-fcp-high](#mock-identity-provider-fcp-high)
-20. [mock-identity-provider-fcp-low](#mock-identity-provider-fcp-low)
-21. [mock-proconnect](#mock-proconnect)
-22. [mock-rnipp](#mock-rnipp)
-23. [mock-service-provider-fcp-high](#mock-service-provider-fcp-high)
-24. [mock-service-provider-fcp-legacy](#mock-service-provider-fcp-legacy)
-25. [mock-service-provider-fcp-low](#mock-service-provider-fcp-low)
-26. [partners](#partners)
-27. [user-dashboard](#user-dashboard)
+2. [command-import-datapass](#command-import-datapass)
+3. [command-import-sp-sandbox](#command-import-sp-sandbox)
+4. [command-pre-deploy](#command-pre-deploy)
+5. [command-runner-instance](#command-runner-instance)
+6. [command-support-ticket](#command-support-ticket)
+7. [core-fcp-high](#core-fcp-high)
+8. [core-fcp-low](#core-fcp-low)
+9. [csmr-account-instance](#csmr-account-instance)
+10. [csmr-config-partners](#csmr-config-partners)
+11. [csmr-config-sandbox-low](#csmr-config-sandbox-low)
+12. [csmr-fraud-instance](#csmr-fraud-instance)
+13. [csmr-hsm-high](#csmr-hsm-high)
+14. [csmr-import-core-instance](#csmr-import-core-instance)
+15. [csmr-tracks-instance](#csmr-tracks-instance)
+16. [csmr-user-preferences-high](#csmr-user-preferences-high)
+17. [eidas-bridge](#eidas-bridge)
+18. [mock-data-provider](#mock-data-provider)
+19. [mock-datapass-instance](#mock-datapass-instance)
+20. [mock-identity-provider-fcp-high](#mock-identity-provider-fcp-high)
+21. [mock-identity-provider-fcp-low](#mock-identity-provider-fcp-low)
+22. [mock-proconnect](#mock-proconnect)
+23. [mock-rnipp](#mock-rnipp)
+24. [mock-service-provider-fcp-high](#mock-service-provider-fcp-high)
+25. [mock-service-provider-fcp-legacy](#mock-service-provider-fcp-legacy)
+26. [mock-service-provider-fcp-low](#mock-service-provider-fcp-low)
+27. [partners](#partners)
+28. [user-dashboard](#user-dashboard)
 
 ## Variables
 
@@ -50,6 +51,18 @@
 | Elasticsearch_TRACKS_INDEX | string |
 | Elasticsearch_USERNAME | string |
 | Logger_THRESHOLD | string |
+
+### command-import-datapass
+
+| Var Name | Inferred type |
+|---|---|
+| App_ENVIRONMENT | string |
+| Datapass_API_CLIENT_ID | string |
+| Datapass_API_CLIENT_SECRET | string |
+| Datapass_API_URL | string |
+| Logger_THRESHOLD | string |
+| WebhooksPartners_SECRET | string |
+| WebhooksPartners_URL | string |
 
 ### command-import-sp-sandbox
 
@@ -96,6 +109,9 @@
 | Var Name | Inferred type |
 |---|---|
 | App_ENVIRONMENT | string |
+| HttpOtrsClient_BASE_URL | string |
+| HttpOtrsClient_LOGIN | string |
+| HttpOtrsClient_PASSWORD | string |
 | Logger_THRESHOLD | string |
 
 ### core-fcp-high
@@ -574,6 +590,7 @@
 | App_ENVIRONMENT | string |
 | App_HTTPS_SERVER_CERT | file |
 | App_HTTPS_SERVER_KEY | file |
+| App_PAYLOADS_PATH | string |
 | App_VIEWS_PATHS | json |
 | App_WEBHOOK_URL | string |
 | Logger_THRESHOLD | string |

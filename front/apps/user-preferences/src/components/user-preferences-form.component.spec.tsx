@@ -1,7 +1,8 @@
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent } from '@testing-library/react';
+import { useFormState } from 'react-final-form';
 
 import { AlertComponent, SimpleButton, ToggleInput } from '@fc/dsfr';
-import { useStylesQuery, useStylesVariables } from '@fc/styles';
+import { renderWithFinalForm } from '@fc/testing-library';
 
 import { useUserPreferencesForm } from '../hooks';
 import { AllowFutureIdpSwitchLabelComponent } from './allow-future-idp-switch-label.component';
@@ -25,26 +26,28 @@ describe('UserPreferencesFormComponent', () => {
     alertInfoState: alertInfoStateMock,
     allowingIdPConfirmation: jest.fn(),
   };
+  const useFormStateMock = {
+    dirty: undefined,
+    dirtyFields: undefined,
+    hasValidationErrors: undefined,
+    pristine: undefined,
+    submitting: undefined,
+  };
 
   beforeEach(() => {
     // Given
-    jest.mocked(useStylesVariables).mockReturnValue([expect.any(String)]);
+    jest.mocked(useFormState).mockReturnValue(useFormStateMock);
   });
 
-  it('should match the snapshot, display into a desktop viewport', () => {
+  it('should match the snapshot', () => {
     // Given
     jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
-    jest.mocked(useStylesQuery).mockReturnValueOnce(true);
 
     // When
-    const { container } = render(
+    const { container } = renderWithFinalForm(
       <UserPreferencesFormComponent
-        isDisabled
-        dirtyFields={{}}
-        hasValidationErrors={false}
-        showNotification={false}
+        submitWithSuccess={false}
         userPreferences={userPreferencesMock}
-        onSubmit={jest.fn()}
       />,
     );
 
@@ -52,20 +55,16 @@ describe('UserPreferencesFormComponent', () => {
     expect(container).toMatchSnapshot();
   });
 
-  it('should match the snapshot, display into a mobile viewport', () => {
+  it('should match the snapshot when form validation button is not disabled', () => {
     // Given
     jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
-    jest.mocked(useStylesQuery).mockReturnValueOnce(false);
+    jest.mocked(useFormState).mockReturnValue({ ...useFormStateMock, pristine: false });
 
     // When
-    const { container } = render(
+    const { container } = renderWithFinalForm(
       <UserPreferencesFormComponent
-        isDisabled
-        dirtyFields={{}}
-        hasValidationErrors={false}
-        showNotification={false}
+        submitWithSuccess={false}
         userPreferences={userPreferencesMock}
-        onSubmit={jest.fn()}
       />,
     );
 
@@ -73,83 +72,16 @@ describe('UserPreferencesFormComponent', () => {
     expect(container).toMatchSnapshot();
   });
 
-  it('should match the snapshot, display into a desktop viewport when form validation button is not disabled', () => {
+  it('should match the snapshot when the form has errors', () => {
     // Given
     jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
-    jest.mocked(useStylesQuery).mockReturnValueOnce(true);
+    jest.mocked(useFormState).mockReturnValue({ ...useFormStateMock, hasValidationErrors: true });
 
     // When
-    const { container } = render(
+    const { container } = renderWithFinalForm(
       <UserPreferencesFormComponent
-        dirtyFields={{}}
-        hasValidationErrors={false}
-        isDisabled={false}
-        showNotification={false}
+        submitWithSuccess={false}
         userPreferences={userPreferencesMock}
-        onSubmit={jest.fn()}
-      />,
-    );
-
-    // Then
-    expect(container).toMatchSnapshot();
-  });
-
-  it('should match the snapshot, display into a mobile viewport when form validation button is not disabled', () => {
-    // Given
-    jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
-    jest.mocked(useStylesQuery).mockReturnValueOnce(false);
-
-    // When
-    const { container } = render(
-      <UserPreferencesFormComponent
-        dirtyFields={{}}
-        hasValidationErrors={false}
-        isDisabled={false}
-        showNotification={false}
-        userPreferences={userPreferencesMock}
-        onSubmit={jest.fn()}
-      />,
-    );
-
-    // Then
-    expect(container).toMatchSnapshot();
-  });
-
-  it('should match the snapshot, display into a desktop viewport when the form has errors', () => {
-    // Given
-    jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
-    jest.mocked(useStylesQuery).mockReturnValueOnce(true);
-
-    // When
-    const { container } = render(
-      <UserPreferencesFormComponent
-        hasValidationErrors
-        dirtyFields={{}}
-        isDisabled={false}
-        showNotification={false}
-        userPreferences={userPreferencesMock}
-        onSubmit={jest.fn()}
-      />,
-    );
-
-    // Then
-    expect(container).toMatchSnapshot();
-  });
-
-  it('should match the snapshot, display into a mobile viewport when the form has errors', () => {
-    // Given
-    jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
-    jest.mocked(useStylesQuery).mockReturnValueOnce(false);
-
-    // When
-    const { container } = render(
-      <UserPreferencesFormComponent
-        hasValidationErrors
-        dirtyFields={{}}
-        isDisabled={false}
-        showNotification={false}
-        userPreferences={userPreferencesMock}
-        onSubmit={jest.fn()}
       />,
     );
 
@@ -162,14 +94,10 @@ describe('UserPreferencesFormComponent', () => {
     jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
 
     // When
-    render(
+    renderWithFinalForm(
       <UserPreferencesFormComponent
-        isDisabled
-        dirtyFields={{}}
-        hasValidationErrors={false}
-        showNotification={false}
+        submitWithSuccess={false}
         userPreferences={userPreferencesMock}
-        onSubmit={jest.fn()}
       />,
     );
 
@@ -186,14 +114,10 @@ describe('UserPreferencesFormComponent', () => {
     jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
 
     // When
-    render(
+    renderWithFinalForm(
       <UserPreferencesFormComponent
-        isDisabled
-        dirtyFields={{}}
-        hasValidationErrors={false}
-        showNotification={false}
+        submitWithSuccess={false}
         userPreferences={userPreferencesMock}
-        onSubmit={jest.fn()}
       />,
     );
 
@@ -219,14 +143,10 @@ describe('UserPreferencesFormComponent', () => {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
       .mockImplementationOnce(({ label }) => <div>{(label as Function)(toggleInputValue)}</div>);
     // When
-    render(
+    renderWithFinalForm(
       <UserPreferencesFormComponent
-        isDisabled
-        dirtyFields={{}}
-        hasValidationErrors={false}
-        showNotification={false}
+        submitWithSuccess={false}
         userPreferences={userPreferencesMock}
-        onSubmit={jest.fn()}
       />,
     );
 
@@ -244,16 +164,13 @@ describe('UserPreferencesFormComponent', () => {
     jest
       .mocked(AlertComponent)
       .mockImplementationOnce(({ children }) => <div data-mockid="AlertComponent">{children}</div>);
+    jest.mocked(useFormState).mockReturnValue({ ...useFormStateMock, hasValidationErrors: true });
 
     // When
-    const { container, getByText } = render(
+    const { container, getByText } = renderWithFinalForm(
       <UserPreferencesFormComponent
-        hasValidationErrors
-        dirtyFields={{}}
-        isDisabled={false}
-        showNotification={false}
+        submitWithSuccess={false}
         userPreferences={userPreferencesMock}
-        onSubmit={jest.fn()}
       />,
     );
     const textElt1 = getByText(
@@ -291,16 +208,13 @@ describe('UserPreferencesFormComponent', () => {
       },
       allowingIdPConfirmation: jest.fn(),
     });
+    jest.mocked(useFormState).mockReturnValue({ ...useFormStateMock, dirty: true });
 
     // When
-    const { getByTestId } = render(
+    const { getByTestId } = renderWithFinalForm(
       <UserPreferencesFormComponent
-        dirtyFields={{}}
-        hasValidationErrors={false}
-        isDisabled={false}
-        showNotification={false}
+        submitWithSuccess={false}
         userPreferences={userPreferencesMock}
-        onSubmit={jest.fn()}
       />,
     );
     const button = getByTestId('UserPreferenceFormComponent-button-info');
@@ -320,16 +234,13 @@ describe('UserPreferencesFormComponent', () => {
     jest
       .mocked(AlertComponent)
       .mockImplementationOnce(({ children }) => <div data-mockid="AlertComponent">{children}</div>);
+    jest.mocked(useFormState).mockReturnValue({ ...useFormStateMock, hasValidationErrors: false });
 
     // When
-    const { container, queryByText } = render(
+    const { container, queryByText } = renderWithFinalForm(
       <UserPreferencesFormComponent
-        dirtyFields={{}}
-        hasValidationErrors={false}
-        isDisabled={false}
-        showNotification={false}
+        submitWithSuccess={false}
         userPreferences={userPreferencesMock}
-        onSubmit={jest.fn()}
       />,
     );
 
@@ -354,14 +265,10 @@ describe('UserPreferencesFormComponent', () => {
     jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
 
     // When
-    render(
+    renderWithFinalForm(
       <UserPreferencesFormComponent
-        isDisabled
-        dirtyFields={{}}
-        hasValidationErrors={false}
-        showNotification={false}
+        submitWithSuccess={false}
         userPreferences={userPreferencesMock}
-        onSubmit={jest.fn()}
       />,
     );
 
@@ -380,16 +287,13 @@ describe('UserPreferencesFormComponent', () => {
   it('should call SimpleButton with params, can submit', () => {
     // Given
     jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
+    jest.mocked(useFormState).mockReturnValue({ ...useFormStateMock, pristine: false });
 
     // When
-    render(
+    renderWithFinalForm(
       <UserPreferencesFormComponent
-        dirtyFields={{}}
-        hasValidationErrors={false}
-        isDisabled={false}
-        showNotification={false}
+        submitWithSuccess={false}
         userPreferences={userPreferencesMock}
-        onSubmit={jest.fn()}
       />,
     );
 
@@ -408,17 +312,11 @@ describe('UserPreferencesFormComponent', () => {
   it('should show a notification when the form has been submitted', () => {
     // Given
     jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
+    jest.mocked(useFormState).mockReturnValue({ ...useFormStateMock, dirty: false });
 
     // When
-    const { getByText } = render(
-      <UserPreferencesFormComponent
-        isDisabled
-        showNotification
-        dirtyFields={{}}
-        hasValidationErrors={false}
-        userPreferences={userPreferencesMock}
-        onSubmit={jest.fn()}
-      />,
+    const { getByText } = renderWithFinalForm(
+      <UserPreferencesFormComponent submitWithSuccess userPreferences={userPreferencesMock} />,
     );
     const element = getByText(
       'Une notification récapitulant les modifications va vous être envoyée',

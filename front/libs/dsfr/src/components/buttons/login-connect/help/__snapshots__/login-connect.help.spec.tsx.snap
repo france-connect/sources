@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`LoginConnectHelp should match snapshot when ConnectType is FranceConnect 1`] = `
 <div>

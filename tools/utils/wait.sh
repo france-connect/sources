@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 wait_for_nodejs() {
 
   local container=$1
@@ -11,7 +13,9 @@ wait_for_nodejs() {
   echo "Waiting for ${container} on URL: $url"
 
   (
-    curl --insecure --retry ${max_retries} \
+    curl --insecure \
+      --resolve "*:443:${DOCKER_SERVICE_IP}" \
+      --retry ${max_retries} \
       --retry-delay ${delay} \
       --retry-max-time ${max_time} "${url}" \
       &>$__DKS_LAST_LOG_FILE && _wait_for_nodejs_success "${container}"

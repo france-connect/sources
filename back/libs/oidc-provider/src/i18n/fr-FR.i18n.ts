@@ -11,7 +11,8 @@ export const frFR: I18nTranslationsMapType = {
   ...runtime,
   // oidc-provider
   'OidcProvider.exceptions.OidcProviderUserAborted': ERROR_RECONNECT,
-  'OidcProvider.exceptions.oidcProviderAuthorizeParams': ERROR_RECONNECT,
+  'OidcProvider.exceptions.oidcProviderAuthorizeParams':
+    'Un incident technique est en cours sur le service à l’origine de la demande d’authentification via FranceConnect. Nous allons nous rapprocher de leurs équipes pour résoudre cet incident. Veuillez vous reconnecter ultérieurement.',
   'OidcProvider.exceptions.oidcProviderBinding': ERROR_CONTACT_US,
   'OidcProvider.exceptions.oidcProviderGrantSave': ERROR_CONTACT_US,
   'OidcProvider.exceptions.oidcProviderInitialisation': ERROR_CONTACT_US,

@@ -24,30 +24,17 @@ export const UserPreferencesComponent = React.memo(() => {
         (values) => validateHandler(values)
       }
       onSubmit={commit}>
-      {({
-        dirty,
-        dirtyFields,
-        handleSubmit,
-        hasValidationErrors,
-        pristine: isSameAsInitialValues,
-        submitting,
-      }) => {
-        const isDisabled = isSameAsInitialValues || submitting || hasValidationErrors;
-        const showNotification = !dirty && submitWithSuccess;
-        return (
+      {({ handleSubmit }) => (
+        <form
+          data-testid="user-preferences-form"
+          id="user-preferences-form-component"
+          onSubmit={handleSubmit}>
           <UserPreferencesFormComponent
-            // @TODO instead of passing through all props use the hook
-            // useFormState (https://final-form.org/docs/react-final-form/api/useFormState)
-            // to replace dirtyFields/hasValidationErrors/onSubmit/isDisabled/showNotification
-            dirtyFields={dirtyFields}
-            hasValidationErrors={hasValidationErrors}
-            isDisabled={isDisabled}
-            showNotification={showNotification}
+            submitWithSuccess={submitWithSuccess}
             userPreferences={userPreferences}
-            onSubmit={handleSubmit}
           />
-        );
-      }}
+        </form>
+      )}
     </Form>
   );
 });

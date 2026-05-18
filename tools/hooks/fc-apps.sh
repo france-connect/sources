@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 function _hook_fc_apps() {
   local apps=${@:-fc-exploitation fc-support exploitation-high}
 

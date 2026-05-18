@@ -1,5 +1,4 @@
-import type { PropsWithChildren } from 'react';
-import type React from 'react';
+import type { PropsWithChildren, SubmitEventHandler } from 'react';
 
 import type { FormConfigInterface } from '../../../interfaces';
 import { FormActionsComponent } from '../form-actions';
@@ -11,9 +10,9 @@ import { FormRequiredMessageComponent } from '../form-required';
 
 interface FormWrapperComponentProps extends Required<PropsWithChildren> {
   config: FormConfigInterface;
-  handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+  handleSubmit: SubmitEventHandler<HTMLFormElement>;
   submitError?: string | undefined;
-  submitting: boolean;
+  submitting?: boolean;
 }
 
 export const FormWrapperComponent = ({

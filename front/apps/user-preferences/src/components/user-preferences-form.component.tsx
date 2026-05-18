@@ -1,10 +1,9 @@
 import classnames from 'classnames';
-import type { FormEventHandler } from 'react';
 import React, { useCallback } from 'react';
+import { useFormState } from 'react-final-form';
 
 import { MessageTypes } from '@fc/common';
 import { AlertComponent, ButtonTypes, SimpleButton, Sizes, ToggleInput } from '@fc/dsfr';
-import { useStylesQuery, useStylesVariables } from '@fc/styles';
 
 import { useUserPreferencesForm } from '../hooks';
 import type { UserPreferencesDataInterface } from '../interfaces';
@@ -13,28 +12,22 @@ import { ServicesListComponent } from './services-list.component';
 import styles from './user-preferences-form.module.scss';
 
 interface UserPreferencesFormComponentProps {
-  dirtyFields: Record<string, boolean>;
-  isDisabled: boolean;
-  onSubmit: FormEventHandler<HTMLFormElement>;
   userPreferences: UserPreferencesDataInterface;
-  showNotification: boolean;
-  hasValidationErrors: boolean;
+  submitWithSuccess: boolean;
 }
 
 export const UserPreferencesFormComponent: React.FC<UserPreferencesFormComponentProps> = React.memo(
-  ({
-    dirtyFields,
-    hasValidationErrors,
-    isDisabled,
-    onSubmit,
-    showNotification,
-    userPreferences,
-  }: UserPreferencesFormComponentProps) => {
-    const [breakpointMd] = useStylesVariables(['breakpoint-md']);
-    const gtTablet = useStylesQuery({ minWidth: breakpointMd });
+  ({ submitWithSuccess, userPreferences }: UserPreferencesFormComponentProps) => {
+    const { dirty, dirtyFields, hasValidationErrors, pristine, submitting } = useFormState();
+
+    const showValidationErrors = hasValidationErrors ?? false;
+
+    const showNotification = !(dirty ?? false) && submitWithSuccess;
+
+    const isDisabled = (pristine ?? true) || (submitting ?? false) || showValidationErrors;
 
     const { alertInfoState, allowingIdPConfirmation } = useUserPreferencesForm({
-      dirtyFields,
+      dirtyFields: dirtyFields ?? {},
       userPreferences,
     });
 
@@ -44,10 +37,7 @@ export const UserPreferencesFormComponent: React.FC<UserPreferencesFormComponent
     );
 
     return (
-      <form
-        data-testid="user-preferences-form"
-        id="user-preferences-form-component"
-        onSubmit={onSubmit}>
+      <React.Fragment>
         <h1 className={classnames(styles.title, 'fr-h3 fr-mt-5w fr-mb-2w')}>Mes réglages</h1>
         <p className="fr-mt-2w">
           Attention&nbsp;:&nbsp;<strong>Vous devez avoir au moins un compte autorisé</strong> pour
@@ -56,7 +46,7 @@ export const UserPreferencesFormComponent: React.FC<UserPreferencesFormComponent
         </p>
         <ServicesListComponent identityProviders={userPreferences.idpList} />
 
-        {hasValidationErrors && (
+        {showValidationErrors && (
           <AlertComponent type={MessageTypes.ERROR}>
             <p className="fr-alert__title">
               Attention, vous devez avoir au moins un compte autorisé pour continuer à utiliser
@@ -105,15 +95,7 @@ export const UserPreferencesFormComponent: React.FC<UserPreferencesFormComponent
           </AlertComponent>
         )}
 
-        <div
-          className={classnames('text-center', {
-            // Class CSS
-            // eslint-disable-next-line @typescript-eslint/naming-convention
-            'fr-mt-11w': gtTablet,
-            // Class CSS
-            // eslint-disable-next-line @typescript-eslint/naming-convention
-            'fr-mt-5w': !gtTablet,
-          })}>
+        <div className="text-center fr-mt-5w fr-mt-md-11w">
           <SimpleButton
             disabled={isDisabled || alertInfoState.isDisplayedAlertInfo}
             size={Sizes.LARGE}
@@ -126,7 +108,7 @@ export const UserPreferencesFormComponent: React.FC<UserPreferencesFormComponent
             </p>
           )}
         </div>
-      </form>
+      </React.Fragment>
     );
   },
 );

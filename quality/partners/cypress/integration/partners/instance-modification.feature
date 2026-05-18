@@ -7,12 +7,14 @@ Fonctionnalité: Instance - Modification
 
   Scénario: Instance Modification - Formulaire affiché
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Quand je clique sur la première instance
     Alors je suis redirigé vers la page modification d'instance
 
   Scénario: Instance Modification - Modification du nom de l'instance
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je clique sur la première instance
     Et que je suis sur la page modification d'instance
@@ -28,6 +30,7 @@ Fonctionnalité: Instance - Modification
 
   Scénario: Instance Modification - Affichage du client_id et client_secret
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je mémorise le "client_id" de la première instance
     Et que je mémorise le "client_secret" de la première instance
@@ -37,9 +40,10 @@ Fonctionnalité: Instance - Modification
     Et le bouton "copier le client_id" est affiché dans le formulaire de modification d'instance
     Et le "client_secret" est identique dans le formulaire de modification d'instance
     Et le bouton "copier le client_secret" est affiché dans le formulaire de modification d'instance
-  
+
   Scénario: Instance Modification - Copier le client_id
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je mémorise le "client_id" de la première instance
     Et que je clique sur la première instance
@@ -49,6 +53,7 @@ Fonctionnalité: Instance - Modification
 
    Scénario: Instance Modification - Copier le client_secret
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je mémorise le "client_secret" de la première instance
     Et que je clique sur la première instance

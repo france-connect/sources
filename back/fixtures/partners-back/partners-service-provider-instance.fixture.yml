@@ -1,33 +1,73 @@
 entity: PartnersServiceProviderInstance
 items:
   # instance with 3 versions
-  sp1-i1-sandbox:
+  spi1-sandbox:
     id: '997abfe2-a19a-49c9-a2c2-138798dde859'
     createdAt: '2022-02-22'
     updatedAt: '2022-05-02'
     environment: 'SANDBOX'
     creator: '@user-angela-dubois'
+    serviceProvider: '@sp-default-low'
 
   # instance with 1 version
-  sp2-i1-sandbox:
+  spi2-sandbox:
     id: 'efa51522-26e9-4d03-8958-816ff59a74bd'
     createdAt: '2022-02-22T23:00:00.000Z'
     updatedAt: '2022-05-02T22:00:00.000Z'
     environment: 'SANDBOX'
     creator: '@user-bernard-martinot'
+    serviceProvider: '@sp-default-low'
 
   # instance for bdd_default
-  sp3-i1-sandbox:
+  spi3-sandbox:
     id: 'acfacfcf-291b-43bd-abe7-fb234b3d879e'
     createdAt: '2022-02-22T23:00:00.000Z'
     updatedAt: '2022-05-02T22:00:00.000Z'
     environment: 'SANDBOX'
     creator: '@user-bdd-default'
+    serviceProvider: '@sp-default-low'
 
   # instance for bdd_one_instance
-  sp4-i1-sandbox:
+  spi4-sandbox:
     id: '50b70101-0e1f-419a-9365-81754c2de689'
     createdAt: '2022-02-22T23:00:00.000Z'
     updatedAt: '2022-05-02T22:00:00.000Z'
     environment: 'SANDBOX'
     creator: '@user-bdd-one-instance'
+    serviceProvider: '@sp-default-low'
+
+  # instance 1 for sp1-low
+  sp1-i1-sandbox:
+    id: '997abfe3-a19a-49c9-a2c2-138798dde859'
+    createdAt: '2022-02-22T23:00:00.000Z'
+    updatedAt: '2022-05-02T22:00:00.000Z'
+    environment: 'SANDBOX'
+    serviceProvider: '@sp1-low'
+    creator: '@user-angela-dubois'
+
+  # instance 2 for sp1-low
+  sp1-i2-sandbox:
+    id: '666abfe2-a19a-49c9-a2c2-138798dde860'
+    createdAt: '2022-02-22T23:00:00.000Z'
+    updatedAt: '2022-05-02T22:00:00.000Z'
+    environment: 'SANDBOX'
+    serviceProvider: '@sp1-low'
+    creator: '@user-angela-dubois'
+
+  # instance for sp2-low
+  sp2-i1-sandbox:
+    id: 'efa51523-26e9-4d03-8958-816ff59a74be'
+    createdAt: '2024-01-15T23:00:00.000Z'
+    updatedAt: '2024-01-15T23:00:00.000Z'
+    environment: 'SANDBOX'
+    serviceProvider: '@sp2-low'
+    creator: '@user-bdd-two-sps'
+
+  # instance for sp4-low
+  sp4-i1-sandbox:
+    id: 'eda9a70b-1f60-41bd-870f-2b0398a02d2e'
+    createdAt: '2026-01-15T23:00:00.000Z'
+    updatedAt: '2026-01-15T23:00:00.000Z'
+    environment: 'SANDBOX'
+    serviceProvider: '@sp4-low'
+    creator: '@user-bdd-default'

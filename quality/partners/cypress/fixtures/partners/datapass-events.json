@@ -1,0 +1,104 @@
+{
+  "approve": {
+    "data": {
+      "id": 991234,
+      "created_at": "2026-01-28T13:50:18.354+01:00",
+      "form_uid": "france-connect-collectivite-administration",
+      "last_submitted_at": "2026-01-28T13:50:24.656+01:00",
+      "last_validated_at": "2026-01-28T13:50:54.037+01:00",
+      "public_id": "7f3ecf54-b592-428a-a0d9-331634fb5f15",
+      "service_provider": null,
+      "state": "validated",
+      "type": "AuthorizationRequest::FranceConnect",
+      "data": {
+        "alternative_connexion": true,
+        "cadre_juridique_nature": "Arrêté du 8 novembre 2018",
+        "cadre_juridique_url": "https://www.legifrance.gouv.fr/loda/id/JORFTEXT000037611479",
+        "contact_technique_email": "contact_technique@yopmail.com",
+        "contact_technique_family_name": "Contact technique",
+        "contact_technique_given_name": "Prénom contact technique",
+        "contact_technique_job_title": "Contact technique",
+        "contact_technique_phone_number": "0612345678",
+        "delegue_protection_donnees_email": "dpo@yopmail.com",
+        "delegue_protection_donnees_family_name": "Nom DPO",
+        "delegue_protection_donnees_given_name": "Prénom DPO",
+        "delegue_protection_donnees_job_title": "DPO",
+        "delegue_protection_donnees_phone_number": "0102030405",
+        "description": "Description du fournisseur de service",
+        "destinataire_donnees_caractere_personnel": "Agents",
+        "duree_conservation_donnees_caractere_personnel": 12,
+        "france_connect_eidas": "eidas_1",
+        "intitule": "Fournisseur de service de test",
+        "responsable_traitement_email": "rt@yopmail.com",
+        "responsable_traitement_family_name": "Nom du RT",
+        "responsable_traitement_given_name": "Prénom du RT",
+        "responsable_traitement_job_title": "Responsable de traitement",
+        "responsable_traitement_phone_number": "0102030405",
+        "scopes": [
+          "family_name",
+          "given_name",
+          "openid"
+        ]
+      },
+      "applicant": {
+        "email": "datapass@yopmail.com",
+        "family_name": "Nom du demandeur",
+        "given_name": "Prénom du demandeur",
+        "id": 65,
+        "job_title": "Demandeur",
+        "phone_number": "+33612345678",
+        "uid": "2267cb83-b60c-4f62-8e16-2f84a9990c72"
+      },
+      "organization": {
+        "id": 60,
+        "name": "DIRECTION INTERMINISTERIELLE DU NUMERIQUE",
+        "siret": "13002526500013"
+      },
+      "authorizations": [
+        {
+          "authorization_request_class": "AuthorizationRequest::FranceConnect",
+          "created_at": "2026-01-28T13:50:54.020+01:00",
+          "data": {
+            "alternative_connexion": "1",
+            "cadre_juridique_nature": "Arrêté du 8 novembre 2018",
+            "cadre_juridique_url": "https://www.legifrance.gouv.fr/loda/id/JORFTEXT000037611479",
+            "contact_technique_email": "contact_technique@yopmail.com",
+            "contact_technique_family_name": "Contact technique",
+            "contact_technique_given_name": "Prénom contact technique",
+            "contact_technique_job_title": "Contact technique",
+            "contact_technique_phone_number": "0612345678",
+            "delegue_protection_donnees_email": "dpo@yopmail.com",
+            "delegue_protection_donnees_family_name": "Nom DPO",
+            "delegue_protection_donnees_given_name": "Prénom DPO",
+            "delegue_protection_donnees_job_title": "DPO",
+            "delegue_protection_donnees_phone_number": "0102030405",
+            "description": "Description du fournisseur de service",
+            "destinataire_donnees_caractere_personnel": "Agents",
+            "duree_conservation_donnees_caractere_personnel": 12,
+            "france_connect_eidas": "eidas_1",
+            "intitule": "Fournisseur de service de test",
+            "responsable_traitement_email": "rt@yopmail.com",
+            "responsable_traitement_family_name": "Nom du RT",
+            "responsable_traitement_given_name": "Prénom du RT",
+            "responsable_traitement_job_title": "Responsable de traitement",
+            "responsable_traitement_phone_number": "0102030405",
+            "scopes": [
+              "family_name",
+              "given_name",
+              "openid"
+            ]
+          },
+          "definition_id": "france_connect",
+          "id": 881234,
+          "revoked": false,
+          "slug": "991234-28-01-2026",
+          "state": "active"
+        }
+      ]
+    },
+    "event": "approve",
+    "fired_at": 1769604654,
+    "model_id": 991234,
+    "model_type": "authorization_request/france_connect"
+  }
+}

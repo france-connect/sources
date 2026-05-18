@@ -4,6 +4,8 @@ import { Strings } from '@fc/common';
 import { IconPlacement, LinkButton } from '@fc/dsfr';
 import { t } from '@fc/i18n';
 
+// @DEV NOTE: Move this file to a separate folder
+// to follow the pattern of the other pages.
 export const ServiceProviderErrorPage = React.memo(() => (
   <div className="fr-col-12 fr-col-lg-10 fr-col-xl-8">
     <div className="fr-col-12">

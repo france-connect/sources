@@ -8,6 +8,7 @@ Fonctionnalité: Instance - Modification avec erreurs
   @ci
   Scénario: Instance Modification - Erreur champ obligatoires
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je clique sur la première instance
     Et que je suis sur la page modification d'instance
@@ -37,6 +38,7 @@ Fonctionnalité: Instance - Modification avec erreurs
 
   Scénario: Instance Modification - Erreur champs trop longs
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je clique sur la première instance
     Et que je suis sur la page modification d'instance
@@ -62,6 +64,7 @@ Fonctionnalité: Instance - Modification avec erreurs
   @ci
   Scénario: Instance Modification - Erreur autres validations
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je clique sur la première instance
     Et que je suis sur la page modification d'instance
@@ -92,6 +95,7 @@ Fonctionnalité: Instance - Modification avec erreurs
   @ci
   Scénario: Instance Modification - Défiler vers la première erreur
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je clique sur la première instance
     Et que je suis sur la page modification d'instance
@@ -111,6 +115,7 @@ Fonctionnalité: Instance - Modification avec erreurs
   @ci
   Scénario: Instance Modification - Modification après correction
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je clique sur la première instance
     Et que je suis sur la page modification d'instance

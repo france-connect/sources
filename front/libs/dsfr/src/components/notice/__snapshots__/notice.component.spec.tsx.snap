@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`NoticeComponent should match snapshot 1`] = `
 <div>
@@ -27,7 +27,7 @@ exports[`NoticeComponent should match snapshot 1`] = `
 exports[`NoticeComponent should match snapshot with optionnals props 1`] = `
 <div>
   <div
-    class="fr-notice fr-notice--info"
+    class="fr-notice fr-notice--warning"
   >
     <div
       class="fr-container"

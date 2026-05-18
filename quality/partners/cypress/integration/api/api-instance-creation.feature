@@ -4,6 +4,7 @@ Fonctionnalité: API - instance création
 
   Scénario: API instance création - création succès
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je prépare une requête "instance-creation"
     Quand je lance la requête avec le csrf-token
@@ -15,6 +16,7 @@ Fonctionnalité: API - instance création
 
   Scénario: API instance création - erreur csrf-token manquant
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je prépare une requête "instance-creation"
     Et je retire "x-csrf-token" de l'entête de la requête
@@ -28,6 +30,7 @@ Fonctionnalité: API - instance création
 
   Scénario: API instance création - erreur csrf-token non valide
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je prépare une requête "instance-creation"
     Quand je lance la requête
@@ -40,6 +43,7 @@ Fonctionnalité: API - instance création
 
   Scénario: API instance création - erreur champ obligatoire manquant
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je prépare une requête "instance-creation"
     Et je retire "name" du corps de la requête
@@ -60,6 +64,7 @@ Fonctionnalité: API - instance création
 
   Scénario: API instance création - erreur champ non valide
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je prépare une requête "instance-creation"
     Et je mets "abcdef" dans la propriété "signupId" du corps de la requête
@@ -79,6 +84,7 @@ Fonctionnalité: API - instance création
 
   Scénario: API instance création - plusieurs erreurs sur différentes propriétés
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je prépare une requête "instance-creation"
     Et je retire "name" du corps de la requête
@@ -105,6 +111,7 @@ Fonctionnalité: API - instance création
 
   Scénario: API instance création - plusieurs erreurs sur une propriété
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je prépare une requête "instance-creation"
     Et je mets "abcdefghij" dans la propriété "signupId" du corps de la requête

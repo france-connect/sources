@@ -1,3 +1,28 @@
+/**
+ * Warning: the implementations are all parallels.
+ *
+ * While this should be optimal for most cases,
+ * some business cases may require a sequential implementation.
+ * for example to limit the number of concurrent requests to a backend.
+ *
+ * in this case add a sequential implementation,
+ * please note that this comes at the price of more latency for the end user.
+ *
+ * @example
+ *  static async someAsyncSequential<T>(
+ *    arr: T[],
+ *    predicate: (value: T, index: number, array: T[]) => Promise<boolean>,
+ *  ): Promise<boolean> {
+ *    for (let i = 0; i < arr.length; i++) {
+ *      const result = await predicate(arr[i], i, arr);
+ *      if (result) {
+ *        return true;
+ *      }
+ *    }
+ *    return false;
+ *  }
+ */
+
 export class ArrayAsyncHelper {
   static async filterAsync<T>(
     arr,
@@ -15,6 +40,21 @@ export class ArrayAsyncHelper {
     return await Promise.all(arr.map(predicate));
   }
 
+  /**
+   *  Warning: this implementation is parallel and will execute all predicates.
+   * @see header of ArrayAsyncHelper class
+   */
+  static async someAsync<T>(
+    arr: T[],
+    predicate: (value: T, index: number, array: T[]) => Promise<boolean>,
+  ): Promise<boolean> {
+    return (await ArrayAsyncHelper.mapAsync(arr, predicate)).some(Boolean);
+  }
+
+  /**
+   *  Warning: this implementation is parallel and will execute all predicates.
+   * @see header of ArrayAsyncHelper class
+   */
   static async everyAsync<T>(
     arr: T[],
     predicate: (value: T, index: number, array: T[]) => Promise<boolean>,

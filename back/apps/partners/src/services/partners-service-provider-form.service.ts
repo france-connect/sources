@@ -37,13 +37,22 @@ export class PartnersServiceProviderFormService {
 
     const fcScopes = this.scopesService.getScopesFromClaims(baseClaims);
 
+    const instances = serviceProvider.instances?.map((instance) => ({
+      ...instance,
+      creator: {
+        firstname: instance.creator.firstname,
+        lastname: instance.creator.lastname,
+      },
+    }));
+
     return {
       id: serviceProvider.id,
       name: serviceProvider.name,
-      organizationName: serviceProvider.organizationName,
+      organization: serviceProvider.organization,
       datapassRequestId: serviceProvider.datapassRequestId,
+      instances,
       datapassScopes: datapassClaimLabels,
-      fcScopes: fcScopes,
+      fcScopes,
       createdAt: serviceProvider.createdAt,
       updatedAt: serviceProvider.updatedAt,
     };

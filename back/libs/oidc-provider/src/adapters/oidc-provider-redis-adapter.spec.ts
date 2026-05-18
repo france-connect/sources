@@ -1,3 +1,4 @@
+import { nowInSeconds } from '@fc/common';
 import { LoggerService } from '@fc/logger';
 import { OidcProviderService } from '@fc/oidc-provider';
 import { RedisService } from '@fc/redis';
@@ -14,8 +15,13 @@ import {
   OidcProviderRedisAdapter,
 } from './oidc-provider-redis.adapter';
 
+jest.mock('@fc/common', () => ({
+  ...jest.requireActual('@fc/common'),
+  nowInSeconds: jest.fn(),
+}));
+
 describe('OidcProviderRedisAdapter', () => {
-  let adapter;
+  let adapter: OidcProviderRedisAdapter;
 
   const loggerMock = getLoggerMock() as unknown as LoggerService;
   const redisMock = getRedisServiceMock();
@@ -45,6 +51,7 @@ describe('OidcProviderRedisAdapter', () => {
     );
 
     jest.resetAllMocks();
+    jest.mocked(nowInSeconds).mockReturnValue(0);
     redisMock.client.multi.mockReturnValue(multiMock);
     redisMock.client.ttl.mockResolvedValue(42);
     redisMock.client.lrange.mockResolvedValue(['a', 'b', 'c']);
@@ -114,7 +121,7 @@ describe('OidcProviderRedisAdapter', () => {
       const expires = 'not a number';
       // Then
       await expect(
-        adapter.upsert(idMock, defaultPayload, expires),
+        adapter.upsert(idMock, defaultPayload, expires as unknown as number),
       ).rejects.toThrow(TypeError);
     });
     it('should call expires if expiresIn is provided', async () => {
@@ -125,19 +132,18 @@ describe('OidcProviderRedisAdapter', () => {
     });
     it('should not call expires if expiresIn is not provided', async () => {
       // When
-      await adapter.upsert(idMock, defaultPayload);
+      await adapter.upsert(idMock, defaultPayload, 0);
       // Then
       expect(multiMock.expire).toHaveBeenCalledTimes(0);
     });
     it('should call set for userCode', async () => {
       // Given
       const payload = { userCode: 'userCode' };
-      adapter['userCodeKeyFor'] = jest.fn();
-      adapter['userCodeKeyFor'].mockReturnValue(
-        `${OIDC_PROVIDER_REDIS_PREFIX}:userCode:userCode`,
-      );
+      adapter['userCodeKeyFor'] = jest
+        .fn()
+        .mockReturnValue(`${OIDC_PROVIDER_REDIS_PREFIX}:userCode:userCode`);
       // When
-      await adapter.upsert(idMock, payload);
+      await adapter.upsert(idMock, payload, 0);
       // Then
       expect(multiMock.set).toHaveBeenCalledTimes(2);
       expect(multiMock.set).toHaveBeenCalledWith(
@@ -150,12 +156,11 @@ describe('OidcProviderRedisAdapter', () => {
     it('should call set for uid', async () => {
       // Given
       const payload = { uid: 'uid' };
-      adapter['uidKeyFor'] = jest.fn();
-      adapter['uidKeyFor'].mockReturnValue(
-        `${OIDC_PROVIDER_REDIS_PREFIX}:uid:uid`,
-      );
+      adapter['uidKeyFor'] = jest
+        .fn()
+        .mockReturnValue(`${OIDC_PROVIDER_REDIS_PREFIX}:uid:uid`);
       // When
-      await adapter.upsert(idMock, payload);
+      await adapter.upsert(idMock, payload, 0);
       // Then
       expect(multiMock.set).toHaveBeenCalledTimes(2);
       expect(multiMock.set).toHaveBeenCalledWith(
@@ -175,18 +180,15 @@ describe('OidcProviderRedisAdapter', () => {
       const SET_CALL_COUNT = 3;
       const RPUSH_CALL_COUNT = 1;
       const EXPIRE_CALL_COUNT = 4;
-      adapter['userCodeKeyFor'] = jest.fn();
-      adapter['userCodeKeyFor'].mockReturnValue(
-        `${OIDC_PROVIDER_REDIS_PREFIX}:userCode:userCode`,
-      );
-      adapter['uidKeyFor'] = jest.fn();
-      adapter['uidKeyFor'].mockReturnValue(
-        `${OIDC_PROVIDER_REDIS_PREFIX}:uid:uid`,
-      );
-      adapter['grantKeyFor'] = jest.fn();
-      adapter['grantKeyFor'].mockReturnValue(
-        `${OIDC_PROVIDER_REDIS_PREFIX}:grant:grantId`,
-      );
+      adapter['userCodeKeyFor'] = jest
+        .fn()
+        .mockReturnValue(`${OIDC_PROVIDER_REDIS_PREFIX}:userCode:userCode`);
+      adapter['uidKeyFor'] = jest
+        .fn()
+        .mockReturnValue(`${OIDC_PROVIDER_REDIS_PREFIX}:uid:uid`);
+      adapter['grantKeyFor'] = jest
+        .fn()
+        .mockReturnValue(`${OIDC_PROVIDER_REDIS_PREFIX}:grant:grantId`);
       // When
       await adapter.upsert(idMock, payload, expiresIn);
       // Then
@@ -205,7 +207,7 @@ describe('OidcProviderRedisAdapter', () => {
       const error = new Error('exec failed');
       multiMock.exec.mockRejectedValueOnce(error);
       // Then
-      await expect(adapter.upsert(idMock, defaultPayload)).rejects.toThrow(
+      await expect(adapter.upsert(idMock, defaultPayload, 0)).rejects.toThrow(
         error,
       );
     });
@@ -227,18 +229,43 @@ describe('OidcProviderRedisAdapter', () => {
       expect(multiMock.expire).toHaveBeenCalledTimes(1);
       expect(multiMock.expire).toHaveBeenCalledWith(`foo`, 6000);
     });
+
+    it('should not call set and expires if key is not defined', () => {
+      // Given
+      const keyMock = null as unknown as string;
+      const idMock = 'bar';
+      const expiresIn = 6000;
+
+      // When
+      adapter['addSetAndExpireOnMulti'](keyMock, idMock, expiresIn, multiMock);
+
+      // Then
+      expect(multiMock.set).toHaveBeenCalledTimes(0);
+      expect(multiMock.expire).toHaveBeenCalledTimes(0);
+    });
   });
 
   describe('saveGrantId', () => {
+    it('should return early if grantKey is null', async () => {
+      // Given
+      const grantId = 'grantId';
+      const keyMock = 'foo';
+      const expiresIn = 6000;
+      adapter['grantKeyFor'] = jest.fn().mockReturnValue(null);
+      // When
+      await adapter['saveGrantId'](multiMock, grantId, keyMock, expiresIn);
+      // Then
+      expect(multiMock.rpush).toHaveBeenCalledTimes(0);
+    });
+
     it('should call rpush and not expire for grantId', async () => {
       // Given
       const grantId = 'grantId';
       const keyMock = 'foo';
       const expiresIn = 0;
-      adapter['grantKeyFor'] = jest.fn();
-      adapter['grantKeyFor'].mockReturnValue(
-        `${OIDC_PROVIDER_REDIS_PREFIX}:grant:grantId`,
-      );
+      adapter['grantKeyFor'] = jest
+        .fn()
+        .mockReturnValue(`${OIDC_PROVIDER_REDIS_PREFIX}:grant:grantId`);
       // When
       await adapter['saveGrantId'](multiMock, grantId, keyMock, expiresIn);
       // Then
@@ -257,10 +284,9 @@ describe('OidcProviderRedisAdapter', () => {
       const grantId = 'grantId';
       const keyMock = 'foo';
       const expiresIn = 6000;
-      adapter['grantKeyFor'] = jest.fn();
-      adapter['grantKeyFor'].mockReturnValue(
-        `${OIDC_PROVIDER_REDIS_PREFIX}:grant:grantId`,
-      );
+      adapter['grantKeyFor'] = jest
+        .fn()
+        .mockReturnValue(`${OIDC_PROVIDER_REDIS_PREFIX}:grant:grantId`);
       // When
       await adapter['saveGrantId'](multiMock, grantId, keyMock, expiresIn);
       // Then
@@ -465,8 +491,7 @@ describe('OidcProviderRedisAdapter', () => {
       // Given
       const idMock = 'foo';
       redisMock.client.get.mockResolvedValue('{"foo":"bar"}');
-      adapter['parsedPayload'] = jest.fn();
-      adapter['parsedPayload'].mockReturnValue({ foo: 'bar' });
+      adapter['parsedPayload'] = jest.fn().mockReturnValue({ foo: 'bar' });
       // When
       const result = await adapter['findInRedis'](idMock);
       // Then
@@ -482,8 +507,7 @@ describe('OidcProviderRedisAdapter', () => {
         payload: '{"fizz":"buzz"}',
         foo: 'bar',
       });
-      adapter['parsedPayload'] = jest.fn();
-      adapter['parsedPayload'].mockReturnValue({ fizz: 'buzz' });
+      adapter['parsedPayload'] = jest.fn().mockReturnValue({ fizz: 'buzz' });
       // When
       const result = await adapter['findInRedis'](idMock);
       // Then
@@ -498,15 +522,19 @@ describe('OidcProviderRedisAdapter', () => {
 
     it('should return found Service Provider if the contextName is client', async () => {
       // GIVEN
-      adapter['contextName'] = 'Client';
-      adapter['findServiceProvider'] = jest.fn();
+      const clientAdapter = new OidcProviderRedisAdapter(
+        redisMock as unknown as RedisService,
+        ServiceProviderAdapterMock,
+        'Client',
+      );
+      clientAdapter['findServiceProvider'] = jest.fn();
 
       // WHEN
-      await adapter.find(id);
+      await clientAdapter.find(id);
 
       // THEN
-      expect(adapter['findServiceProvider']).toHaveBeenCalledTimes(1);
-      expect(adapter['findServiceProvider']).toHaveBeenCalledWith(id);
+      expect(clientAdapter['findServiceProvider']).toHaveBeenCalledTimes(1);
+      expect(clientAdapter['findServiceProvider']).toHaveBeenCalledWith(id);
     });
 
     it('should return findInRedis if the contextName is not client', async () => {
@@ -661,7 +689,7 @@ describe('OidcProviderRedisAdapter', () => {
       // Given
       const idMock = 'foo';
       // When
-      await adapter.fetchTtlAndValue(idMock);
+      await adapter['fetchTtlAndValue'](idMock);
       // Then
       expect(redisMock.client.multi).toHaveBeenCalledTimes(1);
     });
@@ -670,7 +698,7 @@ describe('OidcProviderRedisAdapter', () => {
       // Given
       const idMock = 'foo';
       // When
-      await adapter.fetchTtlAndValue(idMock);
+      await adapter['fetchTtlAndValue'](idMock);
       // Then
       expect(multiMock.ttl).toHaveBeenCalledTimes(1);
     });
@@ -679,7 +707,7 @@ describe('OidcProviderRedisAdapter', () => {
       // Given
       const idMock = 'foo';
       // When
-      await adapter.fetchTtlAndValue(idMock);
+      await adapter['fetchTtlAndValue'](idMock);
       // Then
       expect(multiMock.get).toHaveBeenCalledTimes(1);
     });
@@ -688,7 +716,7 @@ describe('OidcProviderRedisAdapter', () => {
       // Given
       const idMock = 'foo';
       // When
-      await adapter.fetchTtlAndValue(idMock);
+      await adapter['fetchTtlAndValue'](idMock);
       // Then
       expect(multiMock.exec).toHaveBeenCalledTimes(1);
     });
@@ -697,7 +725,7 @@ describe('OidcProviderRedisAdapter', () => {
       // Given
       const idMock = 'foo';
       // When
-      const result = await adapter.fetchTtlAndValue(idMock);
+      const result = await adapter['fetchTtlAndValue'](idMock);
       // Then
       expect(result).toEqual({ ttl: ttlMock, value: valueMock });
     });
@@ -710,7 +738,7 @@ describe('OidcProviderRedisAdapter', () => {
         [undefined, null],
       ]);
       // When
-      const result = await adapter.fetchTtlAndValue(idMock);
+      const result = await adapter['fetchTtlAndValue'](idMock);
       // Then
       expect(result).toEqual({ ttl: -1, value: null });
     });
@@ -722,41 +750,41 @@ describe('OidcProviderRedisAdapter', () => {
     const ttlMock = 42;
     const valueMock = '{"some": "json", "payload": "here"}';
     const payloadMock = { some: 'json', payload: 'here' };
-    const nowMock = 100000;
+    const nowMock = 100;
     const keyMock = 'keyMockValue';
 
     beforeEach(() => {
-      adapter.fetchTtlAndValue = jest.fn().mockResolvedValue({
+      adapter['fetchTtlAndValue'] = jest.fn().mockResolvedValue({
         ttl: ttlMock,
         value: valueMock,
       });
-      adapter.key = jest.fn().mockReturnValue(keyMock);
-      adapter.parsedPayload = jest.fn().mockReturnValue(payloadMock);
-      jest.spyOn(Date, 'now').mockReturnValue(nowMock);
+      adapter['key'] = jest.fn().mockReturnValue(keyMock);
+      adapter['parsedPayload'] = jest.fn().mockReturnValue(payloadMock);
+      jest.mocked(nowInSeconds).mockReturnValue(nowMock);
     });
 
     it('should call key', async () => {
       // When
       await adapter.getExpireAndPayload(idMock);
       // Then
-      expect(adapter.key).toHaveBeenCalledTimes(1);
-      expect(adapter.key).toHaveBeenCalledWith(idMock);
+      expect(adapter['key']).toHaveBeenCalledTimes(1);
+      expect(adapter['key']).toHaveBeenCalledWith(idMock);
     });
 
     it('should call fetchTtlAndValue', async () => {
       // When
       await adapter.getExpireAndPayload(idMock);
       // Then
-      expect(adapter.fetchTtlAndValue).toHaveBeenCalledTimes(1);
-      expect(adapter.fetchTtlAndValue).toHaveBeenCalledWith(keyMock);
+      expect(adapter['fetchTtlAndValue']).toHaveBeenCalledTimes(1);
+      expect(adapter['fetchTtlAndValue']).toHaveBeenCalledWith(keyMock);
     });
 
     it('should call parsedPayload', async () => {
       // When
       await adapter.getExpireAndPayload(idMock);
       // Then
-      expect(adapter.parsedPayload).toHaveBeenCalledTimes(1);
-      expect(adapter.parsedPayload).toHaveBeenCalledWith(valueMock);
+      expect(adapter['parsedPayload']).toHaveBeenCalledTimes(1);
+      expect(adapter['parsedPayload']).toHaveBeenCalledWith(valueMock);
     });
 
     it('should return an object with expire and payload', async () => {
@@ -768,7 +796,7 @@ describe('OidcProviderRedisAdapter', () => {
 
     it('should return expire = -1 and payload = null', async () => {
       // Given
-      adapter.fetchTtlAndValue.mockResolvedValueOnce({
+      (adapter['fetchTtlAndValue'] as jest.Mock).mockResolvedValueOnce({
         ttl: -1,
         value: null,
       });

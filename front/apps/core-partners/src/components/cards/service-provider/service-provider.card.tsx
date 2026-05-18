@@ -12,7 +12,7 @@ interface ServiceProviderCardComponentProps extends PropsWithClassName {
 
 export const ServiceProviderCardComponent = React.memo(
   ({ className, data }: ServiceProviderCardComponentProps) => {
-    const { createdAt, datapassRequestId, name, organizationName } = data;
+    const { createdAt, datapassRequestId, name, organization } = data;
 
     const formattedCreatedDate = isoToDate(createdAt);
     const createdDate = t('FC.Common.createdAt.male', { date: formattedCreatedDate });
@@ -32,7 +32,7 @@ export const ServiceProviderCardComponent = React.memo(
         size={Sizes.MEDIUM}
         title={name}>
         <p className="is-uppercase fr-text--sm fr-mb-2w">
-          <b>{organizationName}</b>
+          <b>{organization.name}</b>
         </p>
         <p>
           <b>{habilitationNumberText}</b>

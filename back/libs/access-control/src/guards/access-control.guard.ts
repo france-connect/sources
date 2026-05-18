@@ -1,5 +1,3 @@
-import { Observable, of } from 'rxjs';
-
 import {
   CanActivate,
   ExecutionContext,
@@ -25,7 +23,7 @@ export class AccessControlGuard<
     >,
   ) {}
 
-  canActivate(context: ExecutionContext): Observable<boolean> {
-    return of(this.permissionHandler.handle(context));
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    return await this.permissionHandler.handle(context);
   }
 }

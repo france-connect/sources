@@ -1,4 +1,5 @@
-FROM mongo:7.0.22
+ARG DOCKER_HUB_PROXY
+FROM ${DOCKER_HUB_PROXY}mongo:7.0.22
 
 COPY ./volumes/ssl/mongo.pem /mongo.pem
 

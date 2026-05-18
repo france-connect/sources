@@ -1,0 +1,51 @@
+---
+Debugger:
+  DebugThreshold: debug
+  TestMode: '0'
+Description: 'FranceConnect REST API - Webservice exposing ticket and session operations for the FranceConnect support automation pipeline'
+FrameworkVersion: 6.0.48
+Provider:
+  Operation:
+    SessionCreate:
+      Description: 'Create a new session and return a SessionID to authenticate subsequent requests'
+      IncludeTicketData: '0'
+      Type: Session::SessionCreate
+    TicketGet:
+      Description: 'Retrieve a ticket with its articles and dynamic fields by TicketID'
+      IncludeTicketData: '0'
+      Type: Ticket::TicketGet
+    TicketSearch:
+      Description: 'Search tickets by creation date range and return matching TicketIDs'
+      IncludeTicketData: '0'
+      Type: Ticket::TicketSearch
+    TicketUpdate:
+      Description: 'Update dynamic fields of a ticket identified by TicketID'
+      IncludeTicketData: '0'
+      Type: Ticket::TicketUpdate
+  Transport:
+    Config:
+      AdditionalHeaders: ~
+      KeepAlive: ''
+      MaxLength: ''
+      RouteOperationMapping:
+        SessionCreate:
+          RequestMethod:
+          - POST
+          Route: /SessionCreate
+        TicketGet:
+          RequestMethod:
+          - POST
+          Route: /TicketGet
+        TicketSearch:
+          RequestMethod:
+          - POST
+          Route: /TicketSearch
+        TicketUpdate:
+          RequestMethod:
+          - POST
+          Route: /TicketUpdate
+    Type: HTTP::REST
+RemoteSystem: ''
+Requester:
+  Transport:
+    Type: ''

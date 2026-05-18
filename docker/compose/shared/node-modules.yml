@@ -1,0 +1,68 @@
+services:
+  node-modules-back: &node-common
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    volumes:
+      - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
+      - &v_scripts "${VOLUMES_DIR}/app:/opt/scripts"
+      - &v_log "${VOLUMES_DIR}/log:/var/log/app"
+    env_file:
+      - "${COMPOSE_DIR}/shared/.env/node-modules.env"
+    environment:
+      - PROXY_EXPLOITATION=${PROXY_EXPLOITATION:-}
+      - CI=${CI:-}
+    tty: true
+    networks:
+      - public
+    init: true
+    command: "/opt/scripts/install.sh"
+
+  node-modules-front:
+    <<: *node-common
+    volumes:
+      - "${VOLUMES_DIR}/src/fc/front:/var/www/app"
+      - *v_scripts
+      - *v_log
+
+  node-modules-usagers:
+    <<: *node-common
+    volumes:
+      - "${VOLUMES_DIR}/src/usagers:/var/www/app"
+      - *v_scripts
+      - *v_log
+
+  node-modules-fc-apps:
+    <<: *node-common
+    volumes:
+      - "${VOLUMES_DIR}/src/fc-apps:/var/www/app"
+      - *v_scripts
+      - *v_log
+
+  node-modules-legacy:
+    <<: *node-common
+    volumes:
+      - "${VOLUMES_DIR}/src/FranceConnect:/var/www/app"
+      - *v_scripts
+      - *v_log
+
+  node-modules-legacy-fi-mock:
+    <<: *node-common
+    volumes:
+      - "${VOLUMES_DIR}/src/fi-mock:/var/www/app"
+      - *v_scripts
+      - *v_log
+
+  node-modules-legacy-fs-mock:
+    <<: *node-common
+    volumes:
+      - "${VOLUMES_DIR}/src/service-provider-example:/var/www/app"
+      - *v_scripts
+      - *v_log
+
+  node-modules-legacy-fd-mock:
+    <<: *node-common
+    volumes:
+      - "${VOLUMES_DIR}/src/data-provider-example:/var/www/app"
+      - *v_scripts
+      - *v_log

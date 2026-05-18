@@ -19,7 +19,7 @@ describe('TracksPage', () => {
 
   it('should match the snapshot', () => {
     // Given
-    jest.mocked(useStylesQuery).mockReturnValue(true);
+    jest.mocked(useStylesQuery).mockReturnValueOnce(true);
 
     // When
     const { container } = render(<TracksPage />);

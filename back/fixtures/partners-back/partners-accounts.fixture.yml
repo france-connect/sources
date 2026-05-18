@@ -39,3 +39,13 @@ items:
     lastname: 'CHEVALIER'
     createdAt: '2024-02-22'
     updatedAt: '2024-05-02'
+
+  # bdd_two_sps / 123 / fia1
+  user-bdd-two-sps:
+    id: 'fcc3b759-8a04-4328-b0b4-a605d6f6e065'
+    sub: '70a1aa8d-a659-4765-aec7-2752a53f3cb9'
+    email: 'aloupe@yopmail.com'
+    firstname: 'Arsène'
+    lastname: 'LOUPE'
+    createdAt: '2026-03-27'
+    updatedAt: '2026-03-27'

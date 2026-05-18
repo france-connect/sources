@@ -11,10 +11,21 @@ Fonctionnalité: Connexion Espace Partenaires
     Et je suis déconnecté de l'espace partenaires
     Et le bouton AgentConnect est visible
 
-  Scénario: Espace Partenaires - Connexion
-    Quand je me connecte à l'espace partenaires
+  Plan du Scénario: Espace Partenaires - Connexion avec acr <acr>
+    Quand je me connecte à l'espace partenaires avec un acr "<acr>"
     Alors je suis connecté à l'espace partenaires
     Et le nom de l'usager de l'espace partenaires est affiché
+
+    Exemples:
+      | acr                                                          |
+      | eidas1                                                       |
+      | eidas2                                                       |
+      | eidas3                                                       |
+      | https://proconnect.gouv.fr/assurance/self-asserted           |
+      | https://proconnect.gouv.fr/assurance/self-asserted-2fa       |
+      | https://proconnect.gouv.fr/assurance/consistency-checked     |
+      | https://proconnect.gouv.fr/assurance/consistency-checked-2fa |
+      | https://proconnect.gouv.fr/assurance/certification-dirigeant |
 
   Scénario: Espace Partenaires - Déconnexion
     Etant donné que je me connecte à l'espace partenaires

@@ -1,4 +1,4 @@
-import { QueryRunner, Repository } from 'typeorm';
+import { In, QueryRunner, Repository } from 'typeorm';
 
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -9,6 +9,7 @@ import { PermissionInterface, RelatedEntitiesHelper } from '@fc/access-control';
 import {
   AccessControlEntity,
   AccessControlPermission,
+  DefaultServiceProviderEnum,
 } from '@fc/partners/enums';
 import { getInsertedEntity } from '@fc/typeorm';
 
@@ -24,23 +25,48 @@ export class PartnersServiceProviderInstanceService {
       AccessControlEntity,
       AccessControlPermission
     >[],
+    accountId: string,
   ): Promise<PartnersServiceProviderInstance[]> {
-    const relatedEntitiesOptions = {
-      entityTypes: [AccessControlEntity.SP_INSTANCE],
+    const relatedServiceProvidersIds = {
+      entityTypes: [AccessControlEntity.SERVICE_PROVIDER],
     };
 
-    const instanceIds = RelatedEntitiesHelper.get(
+    const serviceProviderIds = RelatedEntitiesHelper.get(
       permissions,
-      relatedEntitiesOptions,
+      relatedServiceProvidersIds,
     );
 
-    const instances = await Promise.all(
-      instanceIds.map(async (instanceId) => await this.getById(instanceId)),
-    );
+    const instances = await this.repository.find({
+      where: [
+        {
+          serviceProvider: {
+            id: In(serviceProviderIds),
+          },
+        },
+        {
+          serviceProvider: {
+            id: DefaultServiceProviderEnum.DEFAULT_LOW_SP,
+          },
+          creator: {
+            id: accountId,
+          },
+        },
+        {
+          serviceProvider: {
+            id: DefaultServiceProviderEnum.DEFAULT_HIGH_SP,
+          },
+          creator: {
+            id: accountId,
+          },
+        },
+      ],
+      order: {
+        createdAt: 'DESC',
+      },
+      relations: ['currentVersion', 'creator', 'serviceProvider'],
+    });
 
-    const existsInstances = instances.filter(Boolean);
-
-    return existsInstances;
+    return instances;
   }
 
   async getById(
@@ -48,12 +74,7 @@ export class PartnersServiceProviderInstanceService {
   ): Promise<PartnersServiceProviderInstance | null> {
     const instance = await this.repository.findOne({
       where: { id: instanceId },
-      relations: ['versions', 'creator'],
-      order: {
-        versions: {
-          createdAt: 'DESC',
-        },
-      },
+      relations: ['currentVersion', 'creator', 'serviceProvider'],
       select: {
         creator: {
           id: true,
@@ -63,11 +84,6 @@ export class PartnersServiceProviderInstanceService {
         },
       },
     });
-
-    if (instance?.versions?.length > 0) {
-      const latestVersion = instance.versions[0];
-      instance.versions = [latestVersion];
-    }
 
     return instance;
   }
@@ -80,12 +96,7 @@ export class PartnersServiceProviderInstanceService {
       PartnersServiceProviderInstance,
       {
         where: { id: instanceId },
-        relations: ['versions', 'creator'],
-        order: {
-          versions: {
-            createdAt: 'DESC',
-          },
-        },
+        relations: ['currentVersion', 'creator', 'serviceProvider'],
         select: {
           creator: {
             id: true,
@@ -97,13 +108,19 @@ export class PartnersServiceProviderInstanceService {
       },
     );
 
-    if (instance?.versions?.length > 0) {
-      const latestVersion = instance.versions[0];
-      instance.versions = [latestVersion];
-    }
-
     return instance;
   }
+
+  async getByIdsWithQueryRunner(
+    queryRunner: QueryRunner,
+    instanceIds: string[],
+  ): Promise<PartnersServiceProviderInstance[]> {
+    return await queryRunner.manager.find(PartnersServiceProviderInstance, {
+      where: { id: In(instanceIds) },
+      relations: ['currentVersion', 'creator', 'serviceProvider'],
+    });
+  }
+
   async save(
     queryRunner: QueryRunner,
     data: Partial<PartnersServiceProviderInstance>,
@@ -117,6 +134,33 @@ export class PartnersServiceProviderInstanceService {
       .execute();
 
     return getInsertedEntity<PartnersServiceProviderInstance>(insertResult);
+  }
+
+  async getLinkableInstances(
+    accountId: string,
+    defaultServiceProviderId: string,
+  ): Promise<PartnersServiceProviderInstance[]> {
+    return await this.repository.find({
+      where: {
+        serviceProvider: { id: defaultServiceProviderId },
+        creator: { id: accountId },
+      },
+      order: { createdAt: 'DESC' },
+      relations: ['currentVersion', 'creator', 'serviceProvider'],
+    });
+  }
+
+  async linkToServiceProvider(
+    queryRunner: QueryRunner,
+    instanceIds: string[],
+    serviceProviderId: string,
+  ): Promise<void> {
+    await queryRunner.manager
+      .createQueryBuilder()
+      .update(PartnersServiceProviderInstance)
+      .set({ serviceProvider: { id: serviceProviderId } })
+      .where({ id: In(instanceIds) })
+      .execute();
   }
 
   async delete(id: string): Promise<number> {

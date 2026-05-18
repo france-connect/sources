@@ -35,6 +35,12 @@ run_cmd "$CONSOLE Maint::Database::Check"
 # Create admin user
 run_cmd "${CONSOLE} Admin::User::Add --user-name ${ZNUNY_ADMIN_USER} --password ${ZNUNY_ADMIN_PASS} --email-address ${ZNUNY_ADMIN_EMAIL} --first-name ${ZNUNY_ADMIN_FIRSTNAME} --last-name ${ZNUNY_ADMIN_LASTNAME}"
 
+# Create FranceConnect webservice
+run_cmd "$CONSOLE Admin::WebService::Add --name FranceConnect --source-path /tmp/webservice-franceconnect.yml"
+
 chown www-data:www-data /etc/ssl/postgres.znuny.client.*
+
+# Start OTRS daemon
+run_cmd "/opt/otrs/bin/otrs.Daemon.pl start"
 
 echo "Fixture injection completed."

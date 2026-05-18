@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 MONGO_DEFAULT_USER="rootAdmin"
 MONGO_DEFAULT_PASS="pass"
 

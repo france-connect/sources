@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 # Dirty hack:
 # This variable is used to discriminate successful output from error output
 # Every lines begining with this value are considered as a path to a modified file
@@ -243,5 +245,95 @@ _analyse_diff_results() {
     echo "${files}" | sed "s#${prefix}# - ${prefix}#"
 
   fi
+}
 
+_ci_run_validate_code_back() {
+  cd ${FC_ROOT}/fc/back
+
+  yarn doc
+  git --no-pager diff --exit-code -- . || (echo "💥 You forgot documentation 💥" && exit 1)
+  yarn generate-oidc-provider-exceptions
+  git --no-pager diff --exit-code -- . || (echo "💥 oidc-provider runtime exceptions diff detected 💥" && exit 1)
+  yarn prettier
+  yarn lint
+  yarn test:cov:ci
+  ${FC_ROOT}/fc/coverage.sh
+}
+
+_ci_create_front_workspaces() {
+  cd ${FC_ROOT}/fc/front
+
+  # Install local workspaces dependencies
+  # To prevent too much cache busting, those are not added to the dev-generic image.
+  # Feel free to propose a better solution if you have one.
+  yarn workspaces info --json \
+  | sed '1d;$d' \
+  | jq -r 'to_entries[] | "\(.key) \(.value.location)"' \
+  | xargs -n2 sh -c '
+      mkdir -p "node_modules/$(dirname "$1")"
+      ln -sfn "../../$2" "node_modules/$1"
+    ' _
+}
+
+_ci_run_validate_code_front() {
+  cd ${FC_ROOT}/fc/front
+
+  _ci_create_front_workspaces
+
+  yarn i18n:generate
+  git --no-pager diff --exit-code -- . || (echo "💥 You forgot i18n generation 💥" && exit 1)
+  yarn prettier
+  yarn lint
+  yarn test:cov:ci
+  ${FC_ROOT}/fc/coverage.sh
+}
+
+_ci_run_validate_code_quality() {
+  cd ${FC_ROOT}/fc/quality
+
+  # Partners checks
+  cd ${FC_ROOT}/fc/quality/partners
+  yarn prettier
+  yarn lint
+  yarn tsc --noEmit
+
+  # Fcp checks
+  cd ${FC_ROOT}/fc/quality/fcp
+  yarn prettier
+  yarn lint
+  yarn tsc --noEmit
+
+  # Tests with coverage
+  cd ${FC_ROOT}/fc/quality
+  yarn test --coverage --runInBand
+  ${FC_ROOT}/fc/coverage.sh
+}
+
+_ci_dev-generic_cache_resolve() {
+  local image="${REGISTRY_URL}/dev-generic"
+  local generic_tag="${NODE_MODULE_BACK_VERSION}-${NODE_MODULE_FRONT_VERSION}-${NODE_MODULE_QUALITY_VERSION}"
+  local target_tag="${CI_COMMIT_REF_SLUG}"
+
+  # On staging, force cache to hit only on node_modules to prevent error when dependencies update
+  if [[ "${target_tag}" != "${REPOSITORY_MAIN_BRANCH}" ]] \
+    && [[ "${CI_MERGE_REQUEST_LABELS:-}" != *"CI Refresh Cache"* ]] \
+    && _docker_image_exists "${image}" "${target_tag}"; then
+    echo "🟢 Cache hit on target → skipping build."
+    return 0
+  fi
+
+  if _docker_image_exists "${image}" "${generic_tag}"; then
+    echo "🔵 Cache hit on node_modules → retag and skipping build."
+
+    if _docker_image_retag --overwrite "${image}" "${generic_tag}" "${target_tag}"; then
+      echo "🟢 Target ready !"
+      return 0
+    fi
+
+    echo "🟠 Unable to retag, will still try to re-build."
+    return 1
+  fi
+
+  echo "🟡 No cache hit, build is needed."
+  return 1
 }

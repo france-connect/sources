@@ -3,7 +3,9 @@
     "descriptions": [
       "default",
       "partenaire déjà existant",
-      "partenaire avec au moins un fournisseur de service"
+      "partenaire avec au moins un fournisseur de service",
+      "demandeur datapass par défaut",
+      "contact technique datapass par défaut"
     ],
     "credentials": {
       "username": "bdd_default",
@@ -14,6 +16,7 @@
       "given_name": "Hugo",
       "usual_name": "DUBOIS",
       "email": "hdubois@yopmail.com",
+      "phone_number": "0612345678",
       "is_service_public": "true",
       "sub": "ef3121cd-8d03-4f95-8839-2f9c06faab5d"
     }
@@ -24,7 +27,7 @@
       "partenaire sans fournisseur de service"
     ],
     "credentials": {
-      "username": "bdd_new",
+      "username": "bdd_empty",
       "password": "123"
     },
     "claims": {
@@ -32,14 +35,13 @@
       "given_name": "Marie-Charlène",
       "usual_name": "GARNIER",
       "email": "mcgarnier@yopmail.com",
+      "phone_number": "0612345678",
       "is_service_public": "true",
       "sub": "721a5d0b-53eb-4209-8a4c-45a1a92427f5"
     }
   },
   {
-    "descriptions": [
-      "partenaire avec une instance"
-    ],
+    "descriptions": ["partenaire avec une instance"],
     "credentials": {
       "username": "bdd_one_instance",
       "password": "123"
@@ -49,25 +51,73 @@
       "given_name": "Clara Angela",
       "usual_name": "CHEVALIER",
       "email": "cchevalier@yopmail.com",
+      "phone_number": "0612345678",
       "is_service_public": "false",
       "sub": "0db92561-9007-49e6-8e3b-e17294ff7818"
     }
   },
   {
-    "descriptions": [
-      "partenaire invité"
-    ],
+    "descriptions": ["partenaire invité"],
     "credentials": {
       "username": "bdd_new2",
       "password": "123"
     },
     "claims": {
-      "uid": "25",
+      "uid": "34",
       "given_name": "Lady Di",
       "usual_name": "NUM",
       "email": "bdd2@yopmail.com",
+      "phone_number": "0612345678",
       "is_service_public": "true",
-      "sub": "784cd652e99549eb66ae63fb245c6d9ed44436a49d98335a1b71f053bdaaa313"
+      "sub": "f98b2ceb-382f-49e7-a8c0-b95b07c18dc7"
+    }
+  },
+  {
+    "descriptions": ["partenaire avec deux fournisseurs de service"],
+    "credentials": {
+      "username": "bdd_two_sps",
+      "password": "123"
+    },
+    "claims": {
+      "uid": "35",
+      "given_name": "Arsène",
+      "usual_name": "LOUPE",
+      "email": "aloupe@yopmail.com",
+      "phone_number": "0612345678",
+      "is_service_public": "true",
+      "sub": "70a1aa8d-a659-4765-aec7-2752a53f3cb9"
+    }
+  },
+  {
+    "descriptions": ["demandeur datapass", "contact datapass 1"],
+    "credentials": {
+      "username": "bdd_sp_admin",
+      "password": "123"
+    },
+    "claims": {
+      "uid": "36",
+      "given_name": "Pierre",
+      "usual_name": "GUERIN",
+      "email": "pguerin@yopmail.com",
+      "phone_number": "0612345678",
+      "is_service_public": "true",
+      "sub": "83606fba-bd87-44f8-b1d1-5257048b468f"
+    }
+  },
+  {
+    "descriptions": ["contact technique datapass", "contact datapass 2"],
+    "credentials": {
+      "username": "bdd_sp_tech",
+      "password": "123"
+    },
+    "claims": {
+      "uid": "37",
+      "given_name": "Olivier",
+      "usual_name": "MARAIS",
+      "email": "omarais@yopmail.com",
+      "phone_number": "0612345678",
+      "is_service_public": "true",
+      "sub": "ac74c687-f978-42ea-97ec-7671d4b5b94f"
     }
   }
 ]

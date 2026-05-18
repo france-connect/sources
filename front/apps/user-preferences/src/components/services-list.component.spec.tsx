@@ -1,7 +1,8 @@
 import { render } from '@testing-library/react';
 
-import { AccountContext } from '@fc/account';
-import { useSafeContext } from '@fc/common';
+import type { AccountContextState } from '@fc/account';
+import { useAccountContext } from '@fc/account';
+import type { DashboardUserInfosInterface } from '@fc/core-user-dashboard';
 
 import { ServiceComponent } from './service.component';
 import { ServicesListComponent } from './services-list.component';
@@ -29,9 +30,21 @@ describe('ServicesListComponent', () => {
     },
   ];
 
+  const accountContextState = {
+    connected: true,
+    expired: false,
+    ready: true,
+    userinfos: {
+      email: 'any email mock',
+      firstname: 'any firstname mock',
+      idpId: 'any-idp-id',
+      lastname: 'any lastname mock',
+    },
+  };
+
   beforeEach(() => {
     // Given
-    jest.mocked(useSafeContext).mockReturnValue({ userinfos: {} });
+    jest.mocked(useAccountContext).mockReturnValue(accountContextState);
   });
 
   it('should match the snapshot', () => {
@@ -42,12 +55,12 @@ describe('ServicesListComponent', () => {
     expect(container).toMatchSnapshot();
   });
 
-  it('should call useSafeContext with AccountContext as parameter', () => {
+  it('should call useAccountContext', () => {
     // When
     render(<ServicesListComponent identityProviders={[]} />);
 
     // Then
-    expect(useSafeContext).toHaveBeenCalledWith(AccountContext);
+    expect(useAccountContext).toHaveBeenCalledWith();
   });
 
   it('should call ServiceComponent with a service', () => {
@@ -70,8 +83,10 @@ describe('ServicesListComponent', () => {
 
   it('should call a ServiceComponent with params when first element is not allowed to be updated', () => {
     // Given
-    const userinfos = { idpId: identityProvidersMock[0].uid };
-    jest.mocked(useSafeContext).mockReturnValueOnce({ userinfos });
+    jest.mocked(useAccountContext).mockReturnValueOnce({
+      ...accountContextState,
+      userinfos: { ...accountContextState.userinfos, idpId: identityProvidersMock[0].uid },
+    } as AccountContextState<DashboardUserInfosInterface>);
 
     // When
     render(<ServicesListComponent identityProviders={identityProvidersMock} />);

@@ -1,7 +1,7 @@
 import { Before } from '@badeball/cypress-cucumber-preprocessor';
 
 import { getDefaultUser } from '../../helpers';
-import { UserData } from '../../types';
+import { Environment, UserData } from '../../types';
 
 const setFixtureContext = (
   fixture: string,
@@ -25,12 +25,17 @@ Before(function () {
   setFixtureContext('api-common.json', pathArray, 'apiRequests');
   setFixtureContext('users.json', pathArray, 'users');
   setFixtureContext('instances.json', pathArray, 'instances');
+  setFixtureContext('service-providers.json', pathArray, 'serviceProviders');
+  setFixtureContext('datapass-events.json', pathArray, 'datapassEvents');
 
   cy.get<UserData[]>('@users').then((users) => {
     this.user = getDefaultUser(users);
   });
 
-  cy.intercept('GET', '/api/me').as('api:me');
+  cy.get<Environment>('@env').then((env) => {
+    const { partnersRootUrl } = env;
+    cy.intercept('GET', `${partnersRootUrl}/api/me`).as('api:me');
+  });
 });
 
 Before({ tags: '@ignoreDocker' }, function () {

@@ -2,9 +2,8 @@ import { Helmet } from '@dr.pogodin/react-helmet';
 import classnames from 'classnames';
 import React from 'react';
 
-import type { AccountContextState } from '@fc/account';
-import { AccountContext } from '@fc/account';
-import { MessageTypes, useSafeContext } from '@fc/common';
+import { useAccountContext } from '@fc/account';
+import { MessageTypes } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import type { FraudConfigInterface } from '@fc/core-user-dashboard';
 import {
@@ -24,7 +23,7 @@ export const FraudFormPage = React.memo(() => {
   const [breakpointLg] = useStylesVariables(['breakpoint-lg']);
   const gtDesktop = useStylesQuery({ minWidth: breakpointLg });
 
-  const { userinfos } = useSafeContext<AccountContextState>(AccountContext);
+  const { userinfos } = useAccountContext();
 
   const fraudConfig = ConfigService.get<FraudConfigInterface>(FraudOptions.CONFIG_NAME);
 

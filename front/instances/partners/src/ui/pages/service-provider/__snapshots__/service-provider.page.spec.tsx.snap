@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`ServiceProviderPage should match snapshot 1`] = `
 <div>
@@ -59,6 +59,29 @@ exports[`ServiceProviderPage should match snapshot 1`] = `
           data-mockid="LinkComponent"
         />
       </p>
+      <h2
+        class="fr-mt-7w"
+      >
+        Partners.serviceProviderPage.sandboxes.title
+      </h2>
+      <hr />
+      <p>
+        Partners.serviceProviderPage.sandboxes.description
+         
+        <span
+          data-mockid="LinkComponent"
+        />
+      </p>
+      <div
+        data-mockid="AlertComponent"
+      >
+        <div>
+          AlertComponent
+        </div>
+        <div>
+          Partners.serviceProviderPage.sandboxes.empty
+        </div>
+      </div>
     </div>
   </div>
 </div>

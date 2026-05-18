@@ -1,18 +1,10 @@
 import { ChainableElement } from '../types';
 
 export default class TopMenuComponent {
-  visitHomePage(): void {
-    cy.visit('/');
-  }
-
-  visitServiceProvidersPage(): void {
-    cy.visit('/fournisseurs-de-service');
-  }
-
-  getServiceProvidersLink(): ChainableElement {
+  getNavigationLink(label: string): ChainableElement {
     return cy.contains(
-      'header[role="banner"] nav[role="navigation"] a',
-      'Fournisseurs de service',
+      'header[role="banner"] nav[role="navigation"] a.fr-nav__link',
+      label,
     );
   }
 
@@ -37,11 +29,11 @@ export default class TopMenuComponent {
     this.getLogoutLink().should(state);
   }
 
-  checkIsConnected(isConnected = true): void {
+  checkIsConnected(partnersRootUrl: string, isConnected = true): void {
     const state = isConnected ? 'exist' : 'not.exist';
     cy.request({
       failOnStatusCode: false,
-      url: '/api/me',
+      url: `${partnersRootUrl}/api/me`,
     })
       .its('body')
       .its('accountId')

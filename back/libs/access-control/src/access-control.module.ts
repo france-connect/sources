@@ -6,6 +6,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { PartnersAccountPermission } from '@entities/typeorm';
 
+import { TypeormModule } from '@fc/typeorm';
+
 import { AccessControlGuard } from './guards';
 import { BaseAccessControlHandler } from './handlers';
 import { AccessControlSessionInterceptor } from './interceptors/access-control-session.interceptor';
@@ -13,7 +15,7 @@ import {
   AccountPermissionRepository,
   AccountPermissionService,
 } from './services';
-import { APP_ACCESS_CONTROL_HANDLER } from './tokens';
+import { APP_ACCESS_CONTROL_HANDLER, ENTITIES_MAP_TOKEN } from './tokens';
 
 @Module({})
 export class AccessControlModule {
@@ -29,12 +31,13 @@ export class AccessControlModule {
         PermissionHandlerType
       >
     >,
+    entitiesMap: Record<string, Type<any>>,
   ): DynamicModule {
     const accountRole = TypeOrmModule.forFeature([PartnersAccountPermission]);
 
     return {
       module: AccessControlModule,
-      imports: [accountRole],
+      imports: [TypeormModule, accountRole],
       exports: [
         { provide: APP_ACCESS_CONTROL_HANDLER, useClass: handler },
         AccessControlGuard,
@@ -51,6 +54,10 @@ export class AccessControlModule {
         {
           provide: APP_INTERCEPTOR,
           useClass: AccessControlSessionInterceptor,
+        },
+        {
+          provide: ENTITIES_MAP_TOKEN,
+          useValue: entitiesMap,
         },
       ],
     };

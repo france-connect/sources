@@ -1,7 +1,10 @@
-export const waitForConnectionStatus = (
-  timeout = 2000,
-): Cypress.Chainable<unknown> =>
+export const waitForConnectionStatus = (timeout = 2000): void => {
   cy.wait('@api:me', { responseTimeout: timeout });
+};
+
+export const waitForContentRendering = (timeout = 2000): void => {
+  cy.get('h1', { timeout }).should('be.visible');
+};
 
 export const spyClipboardWrite = (): void => {
   cy.window()

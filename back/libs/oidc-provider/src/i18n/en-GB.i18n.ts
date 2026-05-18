@@ -10,7 +10,8 @@ const ERROR_RECONNECT =
 export const enGB: I18nTranslationsMapType = {
   ...runtime,
   // oidc-provider
-  'OidcProvider.exceptions.oidcProviderAuthorizeParams': ERROR_RECONNECT,
+  'OidcProvider.exceptions.oidcProviderAuthorizeParams':
+    'A technical incident is currently affecting the service that initiated the authentication request via FranceConnect. We will reach out to their teams to resolve this incident. Please reconnect later.',
   'OidcProvider.exceptions.oidcProviderBinding': ERROR_CONTACT_US,
   'OidcProvider.exceptions.oidcProviderGrantSave': ERROR_CONTACT_US,
   'OidcProvider.exceptions.oidcProviderInitialisation': ERROR_CONTACT_US,

@@ -16,7 +16,7 @@ export const useInstanceUpdate = () => {
   // should update the backend to return the version data
   // #region TODO
   const response = useLoaderData();
-  const { data } = response.data?.payload?.versions[0] || {};
+  const { data } = response.data?.payload?.currentVersion || {};
   const initialValues = parseInitialValues(schema, data);
   const { name: title } = data || {};
   // #endregion

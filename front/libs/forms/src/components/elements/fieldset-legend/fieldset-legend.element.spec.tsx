@@ -48,7 +48,7 @@ describe('FieldsetLegendElement', () => {
     const labelMock = Symbol('any-label-mock') as unknown as string;
     const requiredMock = Symbol('any-required-mock') as unknown as boolean;
 
-    jest.mocked(useFieldLabel).mockReturnValue({
+    jest.mocked(useFieldLabel).mockReturnValueOnce({
       hint: undefined,
       label: 'hook-label-mock',
       required: expect.any(Boolean),

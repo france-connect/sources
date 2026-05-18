@@ -173,7 +173,7 @@ describe('TrackCardComponent', () => {
   it('should call toggleOpened on each button click', () => {
     // Given
     const toggleMock = jest.fn();
-    jest.mocked(useToggle).mockReturnValue([false, toggleMock, jest.fn()]);
+    jest.mocked(useToggle).mockReturnValueOnce([false, toggleMock, jest.fn()]);
 
     // When
     const { getByTestId } = render(<TrackCardComponent track={track} />);
@@ -191,7 +191,7 @@ describe('TrackCardComponent', () => {
     // Given
     jest
       .mocked(useToggle)
-      .mockReturnValue([
+      .mockReturnValueOnce([
         'initial_usetoggle_value_mock' as unknown as boolean,
         jest.fn(),
         jest.fn(),

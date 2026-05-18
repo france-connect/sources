@@ -51,6 +51,7 @@ export class PartnersServiceProviderService {
     const serviceProviders = await this.repository.find({
       where: { id: In(serviceProviderIds) },
       order: { createdAt: 'DESC' },
+      relations: ['organization'],
     });
 
     return serviceProviders;
@@ -59,7 +60,44 @@ export class PartnersServiceProviderService {
   async getById(id: string): Promise<PartnersServiceProvider> {
     const serviceProvider = await this.repository.findOne({
       where: { id },
+      relations: [
+        'instances',
+        'instances.currentVersion',
+        'instances.creator',
+        'organization',
+        'platform',
+      ],
+      order: {
+        instances: { createdAt: 'DESC' },
+      },
     });
+
+    if (!serviceProvider) {
+      throw new PartnersServiceProviderNotFoundException();
+    }
+
+    return serviceProvider;
+  }
+
+  async getByIdTransactional(
+    queryRunner: QueryRunner,
+    id: string,
+  ): Promise<PartnersServiceProvider> {
+    const serviceProvider = await queryRunner.manager.findOne(
+      PartnersServiceProvider,
+      {
+        where: { id },
+        relations: [
+          'platform',
+          'instances',
+          'instances.currentVersion',
+          'instances.creator',
+        ],
+        order: {
+          instances: { createdAt: 'DESC' },
+        },
+      },
+    );
 
     if (!serviceProvider) {
       throw new PartnersServiceProviderNotFoundException();
@@ -78,7 +116,13 @@ export class PartnersServiceProviderService {
       .into(PartnersServiceProvider)
       .values(data)
       .orUpdate(
-        ['name', 'organizationName', 'datapassScopes'],
+        [
+          'name',
+          'datapassScopes',
+          'datapassEidasLevel',
+          'datapassAuthorizationId',
+          'organizationId',
+        ],
         ['datapassRequestId'],
       )
       .returning('*')

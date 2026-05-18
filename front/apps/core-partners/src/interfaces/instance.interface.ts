@@ -8,5 +8,5 @@ export interface InstanceInterface {
   updatedAt: ISODate;
   id: UUIDType;
   environment: PartnersEnvironment;
-  versions: VersionInterface[];
+  currentVersion: VersionInterface;
 }

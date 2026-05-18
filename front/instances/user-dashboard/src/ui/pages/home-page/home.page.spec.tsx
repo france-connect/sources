@@ -1,4 +1,5 @@
 import { render } from '@testing-library/react';
+import type { Location } from 'react-router';
 import { useLocation } from 'react-router';
 
 import { Sizes } from '@fc/dsfr';
@@ -106,7 +107,7 @@ describe('HomePage', () => {
       pathname: expect.any(String),
       search: expect.any(String),
       state: { from: { pathname: '/any-pathname' } },
-    });
+    } as unknown as Location);
 
     // When
     render(<HomePage />);

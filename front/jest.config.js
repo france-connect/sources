@@ -14,6 +14,7 @@ module.exports = {
   coverageDirectory: '<rootDir>/coverage',
   coveragePathIgnorePatterns: [
     '.*.d.ts',
+    '.*.d.scss.ts',
     '.configs/',
     '/__mocks__/',
     '/__fixtures__/',

@@ -1,6 +1,9 @@
 import { Module } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
 import { CqrsModule } from '@nestjs/cqrs';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { PartnersPlatform } from '@entities/typeorm';
 
 import { AccessControlModule } from '@fc/access-control';
 import { AppModule } from '@fc/app';
@@ -21,7 +24,7 @@ import {
 } from '@fc/identity-provider-adapter-env';
 import { OidcClientModule } from '@fc/oidc-client';
 import { PartnersAccountModule } from '@fc/partners-account';
-import { PartnersOrganisationModule } from '@fc/partners-organisation';
+import { PartnersOrganizationModule } from '@fc/partners-organization';
 import { PartnersServiceProviderModule } from '@fc/partners-service-provider';
 import { PartnersServiceProviderInstanceModule } from '@fc/partners-service-provider-instance';
 import { PartnersServiceProviderInstanceVersionModule } from '@fc/partners-service-provider-instance-version';
@@ -36,6 +39,7 @@ import { TypeormModule } from '@fc/typeorm';
 import { ViewTemplatesModule } from '@fc/view-templates';
 import { WebhooksModule } from '@fc/webhooks';
 
+import { AccessControlEntitiesMap } from './const';
 import {
   DatapassWebhookController,
   InstanceController,
@@ -54,6 +58,7 @@ import { AppPermissionsHandler } from './handlers';
 import {
   PartnerPublicationService,
   PartnersDatapassService,
+  PartnersInstanceService,
   PartnersInstanceVersionFormService,
   PartnersInvitationService,
   PartnersOidcClientService,
@@ -71,7 +76,7 @@ const accessControlModule = AccessControlModule.withRolesHandler<
   AccessControlEntity,
   AccessControlPermission,
   AccessControlHandler
->(AppPermissionsHandler);
+>(AppPermissionsHandler, AccessControlEntitiesMap);
 
 @Module({
   imports: [
@@ -82,7 +87,7 @@ const accessControlModule = AccessControlModule.withRolesHandler<
     I18nModule,
     IdentityProviderAdapterEnvModule,
     oidcClientModule,
-    PartnersOrganisationModule,
+    PartnersOrganizationModule,
     PartnersServiceProviderModule,
     CsrfModule,
     ExceptionsModule,
@@ -97,6 +102,7 @@ const accessControlModule = AccessControlModule.withRolesHandler<
     HttpProxyModule,
     ScopesModule,
     TypeormModule,
+    TypeOrmModule.forFeature([PartnersPlatform]),
     WebhooksModule,
   ],
   providers: [
@@ -120,6 +126,7 @@ const accessControlModule = AccessControlModule.withRolesHandler<
     PartnersOidcClientService,
     PartnersDatapassService,
     PartnersServiceProviderFormService,
+    PartnersInstanceService,
   ],
   controllers: [
     InstanceController,

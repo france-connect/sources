@@ -8,89 +8,57 @@
         <main>
           <div class="fr-container fr-container-main fr-mt-4v">
             <h2>Déclencher un appel webhook</h2>
+
+            <div class="fr-mt-2v fr-mb-2v">
+              <strong>Payloads pré-enregistrés :</strong>
+              <div class="fr-select-group fr-mt-1v">
+                <label class="fr-label" for="payload-preset">
+                  Choisir un payload pré-enregistré
+                </label>
+                <select
+                  class="fr-select"
+                  id="payload-preset"
+                  data-testid="mock-datapass-preset-select"
+                >
+                  <% payloadPresets.forEach((preset, index) => { %>
+                    <option value="<%= preset.id %>" <%= index === 0 ? 'selected' : '' %>>
+                      <%= preset.label %>
+                    </option>
+                  <% }) %>
+                </select>
+              </div>
+            </div>
+
             <form method="POST" action="/webhook">
-              <input
-                class="fr-btn"
-                type="submit"
-                name="event"
-                id="btn-create"
-                value="create"
-              />
-              <input
-                class="fr-btn"
-                type="submit"
-                name="event"
-                id="btn-update"
-                value="update"
-              />
-              <input
-                class="fr-btn"
-                type="submit"
-                name="event"
-                id="btn-submit"
-                value="submit"
-              />
-              <input
-                class="fr-btn"
-                type="submit"
-                name="event"
-                id="btn-refuse"
-                value="refuse"
-              />
-              <input
-                class="fr-btn"
-                type="submit"
-                name="event"
-                id="btn-revoke"
-                value="revoke"
-              />
-              <input
-                class="fr-btn"
-                type="submit"
-                name="event"
-                id="btn-request_changes"
-                value="request_changes"
-              />
-              <input
-                class="fr-btn"
-                type="submit"
-                name="event"
-                id="btn-archive"
-                value="archive"
-              />
-              <input
-                class="fr-btn"
-                type="submit"
-                name="event"
-                id="btn-approve"
-                value="approve"
-              />
-              <input
-                class="fr-btn"
-                type="submit"
-                name="event"
-                id="btn-reopen"
-                value="reopen"
-              />
-              <input
-                class="fr-btn"
-                type="submit"
-                name="event"
-                id="btn-cancel_reopening"
-                value="cancel_reopening"
-              />
-              <input
-                class="fr-btn"
-                type="submit"
-                name="event"
-                id="btn-transfer"
-                value="transfer"
-              />
+              <div class="fr-input-group">
+                <label class="fr-label" for="payload">
+                  Payload JSON envoyé au webhook
+                </label>
+                <textarea
+                  class="fr-input"
+                  id="payload"
+                  data-testid="mock-datapass-payload-textarea"
+                  name="payload"
+                  rows="30"
+                  style="font-family: monospace; font-size: 0.85rem"
+                ><%= defaultPayload %></textarea>
+              </div>
+              <div class="fr-mt-4v fr-mb-2v">
+                <input
+                  class="fr-btn"
+                  data-testid="mock-datapass-send-button"
+                  type="submit"
+                  value="Envoyer le webhook"
+                  id="btn-send"
+                />
+              </div>
             </form>
           </div>
         </main>
       </div>
     </div>
     <%- include("includes/footer") %>
+    <div id="payload-presets-data" data-presets="<%= encodeURIComponent(JSON.stringify(payloadPresets)) %>" hidden></div>
+    <script src="<%= $asset('/js/presets.js') %>"></script>
   </body>
 </html>

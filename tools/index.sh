@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 set -e
 
 if [ -z "${FC_ROOT}" ]; then
@@ -18,7 +19,7 @@ source "${INCLUDE_DIR}/hooks/index.sh"
 ### Postgres
 _command_register "migrations-partners-back" "_migrations-postgres partners-back" ""                   # Description to be defined
 _command_register "migrations-generate-partners-back" "_migrations-generate-postgres partners-back" "" # Description to be defined
-_command_register "fixtures-partners-back" "_fixtures-postgres 'partners-back'" ""                     # Description to be defined
+_command_register "fixtures-partners-back" "_fixtures-postgres partners-back" ""                       # Description to be defined
 
 _command_register "fixtures" "_hook_fc_apps" "Init postgres FC-Apps : docker-stack fixtures <fc-exploitation | fc-support | exploitation-high>"
 
@@ -69,16 +70,22 @@ _command_register "log" "_log" "log [<app>] => exec pm2 logs for given instance"
 _command_register "logs" "_logs" "[--bg] - Show and expose logs for chrome dev-tools. If --bg option is passed, logs are only exposed to dev-tools with a background process"
 
 _command_register "dependencies" "_install_dependencies" "dependencies [<app1> <app2> <...>] / dep [...] => install dependencies (using npm or yarn) on given nodejs applications (fc-core|fc-exploitation|fc-support|fc-workers|fdp1|fip1|aidants-connect-mock|fsp1|fsp2|fsp3|rnipp|partenaires|usagers - default: fc-core)"
-_command_register "dependencies-all" "_install_dependencies_all" "dependencies-all | dep-all => install dependencies (using npm or yarn) on all nodejs applications"
 
 _command_register "dep" "_install_dependencies" "Alias de dependencies"
-_command_register "dep-all" "_install_dependencies_all" "Alias de dependencies-all"
 
 ## Test
 _command_register "test" "_test" "Launch tests?"
 _command_register "test-all" "_test_all" "" # Description to be defined
 _command_register "e2e" "_e2e" ""           # Description to be defined
 _command_register "twc" "unit_test_watch_coverage" "twc <path> => Watch unit tests for given path and display coverage only for that path"
+_command_register "tc" "unit_test_coverage" "tc <path> => Run unit tests for given path and display coverage only for that path"
+
+_command_register "ci-validate-code-back" "_ci_run_validate_code_back" "Run code quality checks for back applications"
+_command_register "ci-validate-code-front" "_ci_run_validate_code_front" "Run code quality checks for front applications"
+_command_register "ci-validate-code-quality" "_ci_run_validate_code_quality" "Run code quality checks for quality applications"
+_command_register "ci-create-front-workspaces" "_ci_create_front_workspaces" "Create front workspaces dependencies without calling yarn install"
+_command_register "ci-dev-generic-cache-resolve" "_ci_dev-generic_cache_resolve" "Resolves if build of dependencies is needed to run jobs"
+
 _command_register "cypress" "_cypress" "Run Cypress tests"
 _command_register "bdd-fcp-report" "_bdd_fcp_report" "Generate the test report for fcp workspace"
 _command_register "bdd-eidas-open" "_bdd_eidas_open" "Open Cypress UI for eIDAS bridge"
@@ -112,7 +119,17 @@ _command_register "halt" "_halt" "alt => stop docker-compose and delete containe
 _command_register "switch" "_switch" "Switch to another stack: performs a prune, an up and a start-all"
 _command_register "build-push" "_build_push" "Build and push image to FC Docker registry"
 _command_register "run-prod" "_run_prod" "" # Description to be defined
+_command_register "run-once" "_run_once" "run-once <service> => Run once a service container"
 _command_register "list" "_list_services" "List available services / stacks: list <search term>"
+_command_register "grab_logs" "_grab_logs" "grab-logs <output_dir> => Grab logs of all containers into given output directory"
+_command_register "docker-image-exists" "_docker_image_exists" "Check if a docker image exists"
+_command_register "docker-image-retag" "_docker_image_retag" "Retag a docker image"
+
+# Buildx Bake
+_command_register "bake-nodejs-app" "_bake_nodejs_app" "Buildx bake for nodejs applications"
+_command_register "bake-ci-cd-slim" "_bake_ci_cd_slim" "Buildx bake for CI-CD base image (used main builds)"
+_command_register "bake-ci-cd-full" "_bake_ci_cd_full" "Buildx bake for CI-CD base image (used for BDD tests)"
+_command_register "bake-dev-generic" "_bake_dev_generic" "Buildx bake for dev-generic image (used main builds)"
 
 ## General / utils
 _command_register "help" "_command_list" "Display this help: help <search term>"

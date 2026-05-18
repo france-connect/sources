@@ -1,16 +1,16 @@
 import { CommandFactory } from 'nest-commander';
 
-import { CommandRunnerConfig } from '@fc/command-runner';
 import { ConfigService } from '@fc/config';
 import { NestLoggerService } from '@fc/logger';
 
 import { AppModule } from './app.module';
 import config from './config';
+import { CommandSupportTicketConfigDto } from './dto';
 
 async function bootstrap() {
   const configService = new ConfigService({
     config,
-    schema: CommandRunnerConfig,
+    schema: CommandSupportTicketConfigDto,
   });
 
   const appModule = AppModule.forRoot(configService);

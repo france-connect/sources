@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -7,6 +7,9 @@ import { PartnersAccountPermission } from '@entities/typeorm';
 
 import { uuid } from '@fc/common';
 import { LoggerService } from '@fc/logger';
+
+import { AccessControlIdentityDto } from '../dto';
+import { AccountPermissionInterface } from '../interfaces';
 
 @Injectable()
 export class AccountPermissionRepository<
@@ -56,5 +59,21 @@ export class AccountPermissionRepository<
     });
 
     return rows;
+  }
+
+  async getAccountsByPermissions<A extends AccessControlIdentityDto, T>(
+    permissions: T[],
+    entity?: EntityType,
+    entityId?: string,
+  ): Promise<AccountPermissionInterface<A, T>[]> {
+    const accountsPermissions = await this.accountPermission.find({
+      where: { permissionType: In(permissions), entity, entityId },
+      relations: ['account'],
+    });
+
+    return accountsPermissions.map((accountPermission) => ({
+      account: accountPermission.account as unknown as A,
+      permissionType: accountPermission.permissionType as T,
+    }));
   }
 }

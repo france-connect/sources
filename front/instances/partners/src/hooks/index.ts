@@ -3,4 +3,5 @@ export * from './instance-update';
 export * from './instances';
 export * from './post-submit';
 export * from './service-provider';
+export * from './service-provider-link-instances';
 export * from './service-providers';

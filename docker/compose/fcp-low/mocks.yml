@@ -9,6 +9,8 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
+      node-modules-back:
+        condition: service_completed_successfully
       redis-pwd:
         condition: service_healthy
       squid:
@@ -35,6 +37,8 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
+      node-modules-back:
+        condition: service_completed_successfully
       redis-pwd:
         condition: service_healthy
       squid:
@@ -61,6 +65,8 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
+      node-modules-back:
+        condition: service_completed_successfully
       redis-pwd:
         condition: service_healthy
       squid:
@@ -87,6 +93,8 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
+      node-modules-back:
+        condition: service_completed_successfully
       redis-pwd:
         condition: service_healthy
       squid:
@@ -117,6 +125,8 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
+      node-modules-back:
+        condition: service_completed_successfully
       redis-pwd:
         condition: service_healthy
       squid:
@@ -144,6 +154,8 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
+      node-modules-back:
+        condition: service_completed_successfully
       redis-pwd:
         condition: service_healthy
       squid:
@@ -171,6 +183,8 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
+      node-modules-back:
+        condition: service_completed_successfully
       redis-pwd:
         condition: service_healthy
       squid:
@@ -198,6 +212,8 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
+      node-modules-back:
+        condition: service_completed_successfully
       redis-pwd:
         condition: service_healthy
     volumes:
@@ -223,6 +239,8 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
+      node-modules-back:
+        condition: service_completed_successfully
       redis-pwd:
         condition: service_healthy
     volumes:
@@ -248,6 +266,8 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
+      node-modules-back:
+        condition: service_completed_successfully
       redis-pwd:
         condition: service_healthy
     volumes:
@@ -273,6 +293,8 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
+      node-modules-back:
+        condition: service_completed_successfully
       redis-pwd:
         condition: service_healthy
     volumes:
@@ -301,6 +323,9 @@ services:
     image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
     user: ${CURRENT_UID}
     working_dir: /var/www/app
+    depends_on:
+      node-modules-back:
+        condition: service_completed_successfully
     volumes:
       - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
       - "${VOLUMES_DIR}/app:/opt/scripts"
@@ -320,6 +345,9 @@ services:
     image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
     user: ${CURRENT_UID}
     working_dir: /var/www/app
+    depends_on:
+      node-modules-back:
+        condition: service_completed_successfully
     volumes:
       - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
       - "${VOLUMES_DIR}/app:/opt/scripts"

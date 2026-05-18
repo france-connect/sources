@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 #### Global Variables:
 DOCKER_DIR="${FC_ROOT}/fc/docker"
 
@@ -28,6 +30,12 @@ else
   DOCKER_COMPOSE='docker compose'
 fi
 
+# If behind a proxy, set DOCKER_HUB_PROXY to the proxy URL. CI makes use of Gitlab proxy cache.
+DOCKER_HUB_PROXY="${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX:+$CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX/}"
+
+DOCKER_SERVICE_IP=$(getent hosts docker | awk '{print $1}')
+DOCKER_SERVICE_IP=${DOCKER_SERVICE_IP:-127.0.0.1}
+
 # https://docs.docker.com/compose/migrate/#service-container-names
 export COMPOSE_COMPATIBILITY=1
 
@@ -42,10 +50,16 @@ export COMPOSE_PROJECT_NAME
 export DOCKER_DIR
 export DOCKER_COMPOSE
 export COMPOSE_COMPATIBILITY
+export DOCKER_HUB_PROXY
+export DOCKER_SERVICE_IP
 
 # Get current uid/gid to use it within docker-compose:
 # see https://medium.com/redbubble/running-a-docker-container-as-a-non-root-user-7d2e00f8ee15
 # Modf 2020-06-04: récupération de l'id du groupe docker (nécessaire pour le conteneur 'docker-gen')
-export CURRENT_UID="$(id -u):$(grep docker /etc/group | cut -d: -f3)"
+export CURRENT_UID="$(id -u):$(id -g)"
+
+# This is used specifically for the 'docker-gen' container to access the host docker socket if it exists
+DOCKER_GID="$(grep -m1 '^docker:' /etc/group | cut -d: -f3)"
+export DOCKER_GID="${DOCKER_GID:-$(id -g)}"
 
 export LOGS_PATH="${VOLUMES_DIR}/log"

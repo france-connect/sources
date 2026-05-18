@@ -80,7 +80,7 @@ describe('useDto2FormService', () => {
 
   it('should call removeReadOnlyFields when loadedValues are not defined', () => {
     // Given
-    jest.mocked(useLoaderData).mockReturnValue({
+    jest.mocked(useLoaderData).mockReturnValueOnce({
       data: null,
       schema: schemaMock,
     });

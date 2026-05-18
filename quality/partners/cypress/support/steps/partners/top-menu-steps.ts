@@ -25,6 +25,6 @@ When(
   },
 );
 
-When('je clique sur le lien vers la page fournisseurs de service', function () {
-  topMenuComponent.getServiceProvidersLink().click();
+When(/^je clique sur le menu "([^"]+)"$/, function (label: string) {
+  topMenuComponent.getNavigationLink(label).click();
 });

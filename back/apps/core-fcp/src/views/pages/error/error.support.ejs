@@ -1,50 +1,51 @@
 <%
 const showButton = $showSupportButton(locals.error.code);
-const offsetLgClass = showButton
-  ? 'fr-col-offset-lg-0'
-  : 'fr-col-offset-lg-1';
+
+if (showButton) {
+  const sp_name = $session('OidcClient.spName') || locals.spName;
+  const idp_name = $session('OidcClient.idpLabel') || $session('OidcClient.idpName');
+
+  const params = {
+    platform: $config('App.name'),
+    error_code: locals.error.code,
+    sp_name,
+    idp_name,
+    error_id: locals.error.id,
+  };
+
+  const queryString = Object.entries(params).reduce((acc, [key, value]) => {
+    const separator = acc === '' ? '?' : '&';
+    return value ? `${acc}${separator}${key}=${encodeURIComponent(value)}` : acc;
+  }, '');
+
+  const { href, buttonLabel } = $getCustomErrorSupport({
+    code: locals.error.code,
+    href: `${$config('Core.supportFormUrl')}${queryString}`
+  });
 %>
-
-<% if (showButton) { %>
-<%
-const sp_name = $session('OidcClient.spName') || locals.spName;
-const idp_name = $session('OidcClient.idpLabel') || $session('OidcClient.idpName');
-
-const params = {
-  platform: $config('App.name'),
-  error_code: locals.error.code,
-  sp_name,
-  idp_name,
-  error_id: locals.error.id,
-};
-
-const queryString = Object.entries(params).reduce((acc, [key, value]) => {
-  const separator = acc === '' ? '?' : '&';
-  return value ? `${acc}${separator}${key}=${encodeURIComponent(value)}` : acc;
-}, '');
-
-const { href, buttonLabel } = $getCustomErrorSupport({
-  code: locals.error.code,
-  href: `${$config('Core.supportFormUrl')}${queryString}`
-})
-
-%>
-<section
-  data-testid="error-support"
-  class="fr-col-12 fr-col-offset-md-1 fr-col-md-10 fr-col-offset-lg-1 fr-col-lg-3 fr-mb-2w">
-  <a
-    href="<%= href %>"
-    rel="noreferrer noopener"
-    data-testid="error-support-button"
-    class="fr-btn fr-btn--lg fc-btn--full-width fc-text--center"
-  >
-    <%= buttonLabel %>
-  </a>
+<section class="fr-col-12 fr-col-offset-md-1 fr-col-md-9">
+  <ul class="fr-btns-group fr-btns-group--md fr-btns-group--inline-lg fr-btns-group--icon-left">
+    <li data-testid="error-support">
+      <a
+        href="<%= href %>"
+        rel="noreferrer noopener"
+        data-testid="error-support-button"
+        class="fr-btn"
+      >
+        <%= buttonLabel %>
+      </a>
+    </li>
+    <li data-testid="error-back">
+      <%- include('includes/back-button.ejs') %>
+    </li>
+  </ul>
 </section>
-<% } %>
-
+<% } else { %>
 <section
   data-testid="error-back"
-  class="fr-col-12 fr-col-offset-md-1 fr-col-md-10 <%= offsetLgClass %> fr-col-lg-8 fr-mb-2w fc-text--center fc-text-lg--left">
-  <%- include('includes/back-button.ejs') %>
+  class="fr-col-12 fr-col-offset-md-1 fr-col-md-9">
+  <p class="fc-text--center fc-text-lg--left">
+    <%- include('includes/back-button.ejs') %>
+  </p>
 </section>
+<% } %>

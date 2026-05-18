@@ -28,7 +28,13 @@ describe('DatapassWebhookController', () => {
     event: DatapassEvents.APPROVE,
     datapassRequestId: '12345',
     state: 'approve',
-    organizationName: 'UMAD CORP',
+    organization: {
+      id: 12345,
+      name: 'UMAD CORP',
+      siret: '12345678901234',
+    },
+    datapassAuthorizationId: '12345678901234',
+    datapassEidasLevel: 'eidas_1',
     applicant: {
       email: 'jean.dupont@beta.gouv.fr',
       firstname: 'Jean',
@@ -71,6 +77,33 @@ describe('DatapassWebhookController', () => {
   });
 
   describe('handleWebhook', () => {
+    it('should log when a test payload is received', async () => {
+      // Given
+      const webhookMockWithTestPayload = null;
+
+      // When
+      await controller.handleWebhook(webhookMockWithTestPayload, resMock);
+
+      // Then
+      expect(loggerMock.info).toHaveBeenCalledExactlyOnceWith(
+        'Test payload received, skipping processing',
+      );
+    });
+
+    it('should respond with success when a test payload is received', async () => {
+      // Given
+      const webhookMockWithTestPayload = null;
+
+      // When
+      await controller.handleWebhook(webhookMockWithTestPayload, resMock);
+
+      // Then
+      expect(resMock.status).toHaveBeenCalledExactlyOnceWith(HttpStatus.OK);
+      expect(resMock.json).toHaveBeenCalledExactlyOnceWith({
+        message: 'Test payload received',
+      });
+    });
+
     it('should log webhook properties', async () => {
       // Given
       partnersDatapassServiceMock.handleWebhookEvent.mockResolvedValueOnce({

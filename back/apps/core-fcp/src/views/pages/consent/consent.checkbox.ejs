@@ -4,7 +4,6 @@
     data-testid="checkbox-consent"
     id="consent"
     name="consent"
-    aria-label="consent"
   />
   <label class="fr-label" data-testid="label-consent" for="consent">
     <%= $translate('consent.data_transfer_consent', { platform: $config('App.platform') }) %>
@@ -14,4 +13,4 @@
   </p>
 </div>
 <%# hidden input to prove that the user accepted consent %>
-<input type="hidden" name="accept" value="1" aria-label="accept" />
+<input type="hidden" name="accept" value="1" />

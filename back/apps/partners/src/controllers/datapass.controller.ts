@@ -29,9 +29,15 @@ export class DatapassWebhookController {
   @Webhooks(PartnersHookNames.DATAPASS)
   @UseGuards(WebhooksGuard)
   async handleWebhook(
-    @Body() payload: SimplifiedDatapassPayload,
+    @Body() payload: SimplifiedDatapassPayload | null,
     @Res() res,
   ): Promise<void> {
+    if (payload === null) {
+      this.logger.info('Test payload received, skipping processing');
+      res.status(200).json({ message: 'Test payload received' });
+      return;
+    }
+
     this.logger.info({
       message: 'Datapass webhook received and validated',
       event: payload.event,

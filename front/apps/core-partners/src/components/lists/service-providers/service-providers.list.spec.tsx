@@ -17,7 +17,11 @@ describe('ServiceProvidersListComponent', () => {
       datapassScopes: ['Identifiant technique'],
       id: '1',
       name: 'any-name-mock-1',
-      organizationName: 'any-organizationName-mock-1',
+      organization: {
+        id: 'any-id-mock-1',
+        name: 'any-organizationName-mock-1',
+        siret: 'any-siret-mock-1',
+      },
       updatedAt: 'any-updatedAt-mock-1' as unknown as ISODate,
     },
     {
@@ -26,7 +30,11 @@ describe('ServiceProvidersListComponent', () => {
       datapassScopes: ['Identifiant technique'],
       id: '2',
       name: 'any-name-mock-2',
-      organizationName: 'any-organizationName-mock-2',
+      organization: {
+        id: 'any-id-mock-2',
+        name: 'any-organizationName-mock-2',
+        siret: 'any-siret-mock-2',
+      },
       updatedAt: 'any-updatedAt-mock-2' as unknown as ISODate,
     },
     {
@@ -35,7 +43,11 @@ describe('ServiceProvidersListComponent', () => {
       datapassScopes: ['Identifiant technique'],
       id: '3',
       name: 'any-name-mock-3',
-      organizationName: 'any-organizationName-mock-3',
+      organization: {
+        id: 'any-id-mock-3',
+        name: 'any-organizationName-mock-3',
+        siret: 'any-siret-mock-3',
+      },
       updatedAt: 'any-updatedAt-mock-3' as unknown as ISODate,
     },
   ];

@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
@@ -6,13 +6,14 @@ import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 import { PartnersServiceProviderInstance } from '@entities/typeorm';
 
 import { PermissionInterface, RelatedEntitiesHelper } from '@fc/access-control';
-import { LoggerService } from '@fc/logger';
 import {
   AccessControlEntity,
   AccessControlPermission,
 } from '@fc/partners/enums';
+import { PartnersAccountSession } from '@fc/partners-account';
+import { SessionService } from '@fc/session';
 
-import { getLoggerMock } from '@mocks/logger';
+import { getSessionServiceMock } from '@mocks/session';
 import {
   getQueryRunnerMock,
   getRepositoryMock,
@@ -26,9 +27,18 @@ jest.mock('@fc/access-control');
 describe('PartnersServiceProviderInstanceService', () => {
   let service: PartnersServiceProviderInstanceService;
 
-  const loggerServiceMock = getLoggerMock();
-
+  const sessionServiceMock = getSessionServiceMock();
   const repositoryMock = getRepositoryMock();
+
+  const sessionPartnersAccountDataMock = {
+    identity: {
+      id: 'accountId',
+    },
+  } as unknown as PartnersAccountSession<
+    AccessControlEntity,
+    AccessControlPermission
+  >;
+
   let queryRunnerMock;
 
   const RelatedEntitiesHelperGetMock = jest.spyOn(RelatedEntitiesHelper, 'get');
@@ -39,16 +49,12 @@ describe('PartnersServiceProviderInstanceService', () => {
   >[];
 
   const idMock = 'id';
-  const instanceIds = ['instanceId1', 'instanceId2'];
   const partnersServiceProvidersInstanceMock = {
     createdAt: '2022-02-21T23:00:00.000Z',
     updatedAt: '2022-02-21T23:00:00.000Z',
     id: idMock,
     name: 'instance name',
-    versions: [
-      { id: 'versionId', name: 'version name' },
-      { id: 'versionId', name: 'version name' },
-    ],
+    currentVersion: { id: 'versionId', name: 'version name' },
   };
 
   beforeEach(async () => {
@@ -58,15 +64,15 @@ describe('PartnersServiceProviderInstanceService', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [TypeOrmModule.forFeature([PartnersServiceProviderInstance])],
       providers: [
-        LoggerService,
         PartnersServiceProviderInstanceService,
         Repository<PartnersServiceProviderInstance>,
+        SessionService,
       ],
     })
-      .overrideProvider(LoggerService)
-      .useValue(loggerServiceMock)
       .overrideProvider(getRepositoryToken(PartnersServiceProviderInstance))
       .useValue(repositoryMock)
+      .overrideProvider(SessionService)
+      .useValue(sessionServiceMock)
       .compile();
 
     service = module.get<PartnersServiceProviderInstanceService>(
@@ -74,7 +80,12 @@ describe('PartnersServiceProviderInstanceService', () => {
     );
 
     resetRepositoryMock(repositoryMock);
+    repositoryMock.find.mockResolvedValueOnce([
+      partnersServiceProvidersInstanceMock,
+    ]);
     queryRunnerMock = getQueryRunnerMock();
+
+    sessionServiceMock.get.mockReturnValue(sessionPartnersAccountDataMock);
   });
 
   it('should be defined', () => {
@@ -82,6 +93,7 @@ describe('PartnersServiceProviderInstanceService', () => {
   });
 
   describe('getAllowedInstances', () => {
+    const accountIdMock = 'accountId';
     beforeEach(() => {
       service['getById'] = jest
         .fn()
@@ -93,33 +105,24 @@ describe('PartnersServiceProviderInstanceService', () => {
       RelatedEntitiesHelperGetMock.mockReturnValueOnce([]);
 
       // When
-      await service.getAllowedInstances(permissionsMock);
+      await service.getAllowedInstances(permissionsMock, accountIdMock);
 
       // Then
       expect(RelatedEntitiesHelperGetMock).toHaveBeenCalledTimes(1);
       expect(RelatedEntitiesHelperGetMock).toHaveBeenCalledWith(
         permissionsMock,
         {
-          entityTypes: [AccessControlEntity.SP_INSTANCE],
+          entityTypes: [AccessControlEntity.SERVICE_PROVIDER],
         },
       );
     });
 
-    it('should call getById() and return result', async () => {
-      // Given
-      RelatedEntitiesHelperGetMock.mockReturnValueOnce(instanceIds);
-
+    it('should call repository.find() with where clause', async () => {
       // When
-      const result = await service.getAllowedInstances(permissionsMock);
+      await service.getAllowedInstances(permissionsMock, accountIdMock);
 
       // Then
-      expect(service['getById']).toHaveBeenCalledTimes(2);
-      expect(service['getById']).toHaveBeenNthCalledWith(1, instanceIds[0]);
-      expect(service['getById']).toHaveBeenNthCalledWith(2, instanceIds[1]);
-      expect(result).toStrictEqual([
-        { ...partnersServiceProvidersInstanceMock },
-        { ...partnersServiceProvidersInstanceMock },
-      ]);
+      expect(repositoryMock.find).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -137,12 +140,7 @@ describe('PartnersServiceProviderInstanceService', () => {
       expect(repositoryMock.findOne).toHaveBeenCalledTimes(1);
       expect(repositoryMock.findOne).toHaveBeenCalledWith({
         where: { id: idMock },
-        relations: ['versions', 'creator'],
-        order: {
-          versions: {
-            createdAt: 'DESC',
-          },
-        },
+        relations: ['currentVersion', 'creator', 'serviceProvider'],
         select: {
           creator: {
             id: true,
@@ -154,7 +152,7 @@ describe('PartnersServiceProviderInstanceService', () => {
       });
       expect(result).toStrictEqual({
         ...partnersServiceProvidersInstanceMock,
-        versions: [partnersServiceProvidersInstanceMock.versions[0]],
+        currentVersion: partnersServiceProvidersInstanceMock.currentVersion,
       });
     });
 
@@ -193,12 +191,7 @@ describe('PartnersServiceProviderInstanceService', () => {
         PartnersServiceProviderInstance,
         {
           where: { id: idMock },
-          relations: ['versions', 'creator'],
-          order: {
-            versions: {
-              createdAt: 'DESC',
-            },
-          },
+          relations: ['currentVersion', 'creator', 'serviceProvider'],
           select: {
             creator: {
               id: true,
@@ -226,7 +219,7 @@ describe('PartnersServiceProviderInstanceService', () => {
       // Then
       expect(result).toStrictEqual({
         ...partnersServiceProvidersInstanceMock,
-        versions: [partnersServiceProvidersInstanceMock.versions[0]],
+        currentVersion: partnersServiceProvidersInstanceMock.currentVersion,
       });
     });
 
@@ -270,6 +263,150 @@ describe('PartnersServiceProviderInstanceService', () => {
 
       // Then
       expect(result).toBe(expected);
+    });
+  });
+
+  describe('getByIdsWithQueryRunner', () => {
+    // Given
+    const instanceIdsMock = ['id-1', 'id-2'];
+
+    beforeEach(() => {
+      queryRunnerMock.manager.find.mockResolvedValueOnce([
+        partnersServiceProvidersInstanceMock,
+      ]);
+    });
+
+    it('should call queryRunner.manager.find', async () => {
+      // When
+      await service.getByIdsWithQueryRunner(queryRunnerMock, instanceIdsMock);
+
+      // Then
+      expect(queryRunnerMock.manager.find).toHaveBeenCalledExactlyOnceWith(
+        PartnersServiceProviderInstance,
+        {
+          where: { id: In(instanceIdsMock) },
+          relations: ['currentVersion', 'creator', 'serviceProvider'],
+        },
+      );
+    });
+
+    it('should return the instances found', async () => {
+      // When
+      const result = await service.getByIdsWithQueryRunner(
+        queryRunnerMock,
+        instanceIdsMock,
+      );
+
+      // Then
+      expect(result).toStrictEqual([partnersServiceProvidersInstanceMock]);
+    });
+  });
+
+  describe('getLinkableInstances', () => {
+    const accountIdMock = 'account-id';
+    const defaultSpIdMock = 'default-sp-id';
+
+    it('should fetch instances with serviceProvider and creator filters', async () => {
+      // When
+      await service.getLinkableInstances(accountIdMock, defaultSpIdMock);
+
+      // Then
+      expect(repositoryMock.find).toHaveBeenCalledExactlyOnceWith({
+        where: {
+          serviceProvider: { id: defaultSpIdMock },
+          creator: { id: accountIdMock },
+        },
+        order: { createdAt: 'DESC' },
+        relations: ['currentVersion', 'creator', 'serviceProvider'],
+      });
+    });
+
+    it('should return the detached instances', async () => {
+      // When
+      const result = await service.getLinkableInstances(
+        accountIdMock,
+        defaultSpIdMock,
+      );
+
+      // Then
+      expect(result).toStrictEqual([partnersServiceProvidersInstanceMock]);
+    });
+  });
+
+  describe('linkToServiceProvider', () => {
+    const instanceIdsMock = ['id-1', 'id-2'];
+    const serviceProviderIdMock = 'sp-id';
+
+    let qbMock: {
+      update: jest.Mock;
+      set: jest.Mock;
+      where: jest.Mock;
+      execute: jest.Mock;
+    };
+
+    beforeEach(() => {
+      qbMock = {
+        update: jest.fn().mockReturnThis(),
+        set: jest.fn().mockReturnThis(),
+        where: jest.fn().mockReturnThis(),
+        execute: jest.fn().mockResolvedValue(undefined),
+      };
+      queryRunnerMock.manager.createQueryBuilder.mockReturnValue(qbMock);
+    });
+
+    it('should build the update query with the correct entity', async () => {
+      // When
+      await service.linkToServiceProvider(
+        queryRunnerMock,
+        instanceIdsMock,
+        serviceProviderIdMock,
+      );
+
+      // Then
+      expect(queryRunnerMock.manager.createQueryBuilder).toHaveBeenCalledTimes(
+        1,
+      );
+      expect(qbMock.update).toHaveBeenCalledExactlyOnceWith(expect.anything());
+    });
+
+    it('should set the serviceProvider relation to the new sp', async () => {
+      // When
+      await service.linkToServiceProvider(
+        queryRunnerMock,
+        instanceIdsMock,
+        serviceProviderIdMock,
+      );
+
+      // Then
+      expect(qbMock.set).toHaveBeenCalledExactlyOnceWith({
+        serviceProvider: { id: serviceProviderIdMock },
+      });
+    });
+
+    it('should filter by the given instanceIds', async () => {
+      // When
+      await service.linkToServiceProvider(
+        queryRunnerMock,
+        instanceIdsMock,
+        serviceProviderIdMock,
+      );
+
+      // Then
+      expect(qbMock.where).toHaveBeenCalledExactlyOnceWith({
+        id: In(instanceIdsMock),
+      });
+    });
+
+    it('should execute the query', async () => {
+      // When
+      await service.linkToServiceProvider(
+        queryRunnerMock,
+        instanceIdsMock,
+        serviceProviderIdMock,
+      );
+
+      // Then
+      expect(qbMock.execute).toHaveBeenCalledTimes(1);
     });
   });
 

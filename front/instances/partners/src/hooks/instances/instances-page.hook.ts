@@ -11,6 +11,9 @@ export const useInstances = () => {
   const location = useLocation() as LocationWithSubmitStateType;
   const response = useLoaderData();
 
+  // @NOTE DEV : should be merged and renamed into a generic hook with
+  // instances/partners/src/hooks/instances/instances-page.hook.ts
+  // Ex : hook named as useCleanupRouteState
   const closeAlertHandler = useCallback(() => {
     // @NOTE onCloseAlert
     // reload the page without the submit state

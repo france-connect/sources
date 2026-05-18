@@ -1,8 +1,10 @@
 /* istanbul ignore file */
 
 // Declarative code
-const ELASTICSEARCH_URL =
-  'https://docker-stack:docker-stack@elasticsearch:9200';
+const { DOCKER_SERVICE_IP } = process.env;
+
+const ELASTICSEARCH_HOST = DOCKER_SERVICE_IP || 'elasticsearch';
+const ELASTICSEARCH_URL = `https://docker-stack:docker-stack@${ELASTICSEARCH_HOST}:9200`;
 
 export const ElasticSearchConfig = {
   coreV2Index: 'fc_tracks',

@@ -16,4 +16,5 @@ export default {
   },
   environment: env.string('ENVIRONMENT'),
   webhookUrl: env.string('WEBHOOK_URL'),
+  payloadsPath: env.string('PAYLOADS_PATH'),
 } as AppConfig;

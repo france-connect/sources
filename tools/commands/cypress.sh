@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 _cypress() {
   # stack compose run --rm cypress-partners yarn test
   local service=$1

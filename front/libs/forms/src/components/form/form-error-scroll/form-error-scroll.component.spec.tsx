@@ -61,6 +61,7 @@ describe('FormErrorScrollComponent', () => {
     // When
     renderWithFinalForm(<FormErrorScrollComponent elementClassName={expect.any(String)} />);
     const { onChange } = jest.mocked(FormSpy).mock.calls[0][0] as { onChange: () => void };
+    scrollToElementMock.mockClear();
     onChange();
 
     // Then

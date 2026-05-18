@@ -7,6 +7,7 @@ const config: Config = {
   coveragePathIgnorePatterns: [
     'instances/.+/src/config/.+.ts',
     'instances/.+/src/main.ts',
+    'instances/.+/deploy/',
     '.mocks/',
     '.+/index.ts',
     '.+.(config|descriptor|dto|enum|fixture|i18n|interface|module|override|plugin|provider|schema|type|token).ts',
@@ -37,6 +38,7 @@ const config: Config = {
     '^@fc/app(|/.*)$': '<rootDir>/libs/app/src/$1',
     '^@fc/async-local-storage(|/.*)$':
       '<rootDir>/libs/async-local-storage/src/$1',
+    '^@fc/bridge-wallet(|/.*)$': '<rootDir>/apps/bridge-wallet/src/$1',
     '^@fc/cog(|/.*)$': '<rootDir>/libs/cog/src/$1',
     '^@fc/command-runner(|/.*)$': '<rootDir>/apps/command-runner/src/$1',
     '^@fc/command-elastic(|/.*)$': '<rootDir>/apps/command-elastic/src/$1',
@@ -155,8 +157,8 @@ const config: Config = {
     '^@fc/typeorm(|/.*)$': '<rootDir>/libs/typeorm/src/$1',
     '^@fc/postgres(|/.*)$': '<rootDir>/libs/postgres/src/$1',
     '^@fc/partners-account(|/.*)$': '<rootDir>/libs/partners-account/src/$1',
-    '^@fc/partners-organisation(|/.*)$':
-      '<rootDir>/libs/partners-organisation/src/$1',
+    '^@fc/partners-organization(|/.*)$':
+      '<rootDir>/libs/partners-organization/src/$1',
     '^@fc/partners-service-provider(|/.*)$':
       '<rootDir>/libs/partners-service-provider/src/$1',
     '^@fc/partners-service-provider-instance(|/.*)$':

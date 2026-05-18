@@ -4,6 +4,15 @@
  * These translations match the exact labels defined in the DataPass configuration:
  * @see https://github.com/etalab/data_pass/blob/develop/config/authorization_definitions/france_connect.yml
  */
+export const datapassExceptionsFrFR = {
+  'Datapass.exceptions.apiHttpFailed':
+    "Échec de la requête HTTP vers l'API Datapass",
+  'Datapass.exceptions.apiResponseValidationFailed':
+    "La réponse de l'API Datapass ne contient pas les champs requis",
+  'Datapass.exceptions.paginationLimitExceeded':
+    "Le nombre maximal d'itérations de pagination de l'API Datapass a été dépassé, possible boucle API",
+};
+
 export const datapassScopesFrFR = {
   'datapassScope.family_name': 'Nom de naissance',
   'datapassScope.given_name': 'Prénoms',

@@ -14,6 +14,7 @@ export const enGB: I18nTranslationsMapType = {
 
   // Footer
   'footer.a11y_conformity': 'Accessibility : non-compliant',
+  'footer.legal_notice': 'Legal notice',
   'footer.more_info': 'Learn more about {platform}',
   'footer.tos': 'TOS',
   'footer.faq': 'Frequently Asked Questions',
@@ -67,6 +68,8 @@ export const enGB: I18nTranslationsMapType = {
   'error.faq.button_label': 'Please refer to the help page',
   'error.faq.body':
     'For more information on how to use FranceConnect, please visit our help page.',
+  'error.faq.y100011.body':
+    'You have blocked the use of this identity provider. To use it again, please consult our FranceConnect help page. If you are unable to unblock your access, please contact us and provide an identity document.',
 
   'skiplinks.quick_access': 'Quick access',
   'skiplinks.content': 'Content',

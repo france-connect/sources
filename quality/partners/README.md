@@ -71,6 +71,17 @@ We are running visual validation using the cypress plugin [cypress-image-snapsho
 
 The visual validations are done on Electron 114 headless in the terminal.
 
+### Visual scenarios (sandboxes)
+
+- **Service provider without sandbox access**:
+  - SP3 - Fournisseur de service de test sans instance (no instance)
+  - → snapshots `*_bacs-vides_*`
+- **Service provider with sandbox access**:
+  - SP2 - Fournisseur de service de test avec 1 instance (with instances)
+  - → snapshots `*_bacs-avec-acces_*`
+
+These scenarios depend on partners-back fixtures. If the "bacs-avec-acces" snapshots don't show the access cards, see [Regenerate snapshots with fresh fixtures](#regenerate-snapshots-with-fresh-fixtures-sandboxes).
+
 ### Run the snapshot tests
 
 ```shell
@@ -80,6 +91,24 @@ docker-stack bdd-partners-test-visual
 ### Update the base image files for all of your tests
 
 ```shell
+docker-stack bdd-partners-test-visual --env updateSnapshots=true
+```
+
+### Regenerate snapshots with fresh fixtures (sandboxes)
+
+The visual tests for "empty sandboxes" and "sandbox access" require the fixtures to be loaded. If the "bacs-avec-acces" snapshots don't show the sandbox access cards, reload the fixtures and regenerate the snapshots:
+
+```shell
+# 1. Start the stack (loads fixtures via partners-pre-deploy)
+docker-stack switch bdd-partners
+
+# 2. Wait for partners-front to be ready
+docker-stack wait "partners-front" "https://partners.docker.dev-franceconnect.fr" "240"
+
+# 3. Reload fixtures (if the stack was already running before changes)
+docker-stack fixtures-partners-back
+
+# 4. Regenerate snapshots
 docker-stack bdd-partners-test-visual --env updateSnapshots=true
 ```
 

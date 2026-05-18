@@ -4,6 +4,7 @@ Fonctionnalité: API - instance modification
 
   Scénario: API instance modification - création succès
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je prépare une requête "instance-modification"
     Quand je lance la requête avec le csrf-token
@@ -13,8 +14,23 @@ Fonctionnalité: API - instance modification
     Et le corps de la réponse a une propriété "type" égale à "INSTANCE"
     Et le corps de la réponse a une propriété "payload" avec 0 attribut
 
+  Scénario: API instance modification - erreur identifiant invalide (400)
+    Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
+    Et que je suis sur la page liste des instances
+    Et que je prépare une requête "instance-modification"
+    Et que je mets le chemin "/api/instances/not-a-valid-uuid" dans l'url de la requête
+    Quand je lance la requête avec le csrf-token
+    Alors le statut de la réponse est 400
+    Et l'entête de la réponse a une propriété "content-type" contenant "application/json"
+    Et le corps de la réponse a 3 propriétés
+    Et le corps de la réponse a une propriété "code" égale à "P240003"
+    Et le corps de la réponse a une propriété "id"
+    Et le corps de la réponse a une propriété "message" égale à "AccessControl.exceptions.AccessControlInvalidEntityIdException"
+
   Scénario: API instance modification - erreur instance inexistante
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je prépare une requête "instance-modification"
     Et que je mets le chemin "/api/instances/aaaaaaaa-aaaa-4aaa-aaaa-aaaaaaaaaaaa" dans l'url de la requête
@@ -28,6 +44,7 @@ Fonctionnalité: API - instance modification
 
   Scénario: API instance modification - erreur instance sans droit de modification
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je prépare une requête "instance-modification"
     Et que je mets le chemin "/api/instances/50b70101-0e1f-419a-9365-81754c2de689" dans l'url de la requête
@@ -41,6 +58,7 @@ Fonctionnalité: API - instance modification
 
   Scénario: API instance modification - erreur csrf-token manquant
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je prépare une requête "instance-modification"
     Et je retire "x-csrf-token" de l'entête de la requête
@@ -54,6 +72,7 @@ Fonctionnalité: API - instance modification
 
   Scénario: API instance modification - erreur csrf-token non valide
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je prépare une requête "instance-modification"
     Quand je lance la requête
@@ -66,6 +85,7 @@ Fonctionnalité: API - instance modification
 
   Scénario: API instance modification - erreur csrf-token déjà utilisé
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je prépare une requête "instance-modification"
     Et que je lance la requête avec le csrf-token
@@ -80,6 +100,7 @@ Fonctionnalité: API - instance modification
 
   Scénario: API instance modification - erreur champ obligatoire manquant
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je prépare une requête "instance-modification"
     Et je retire "name" du corps de la requête
@@ -99,6 +120,7 @@ Fonctionnalité: API - instance modification
 
   Scénario: API instance modification - erreur champ non valide
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je prépare une requête "instance-modification"
     Et je mets "abcdef" dans la propriété "signupId" du corps de la requête
@@ -118,6 +140,7 @@ Fonctionnalité: API - instance modification
 
   Scénario: API instance modification - plusieurs erreurs sur différentes propriétés
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je prépare une requête "instance-modification"
     Et je retire "name" du corps de la requête
@@ -144,6 +167,7 @@ Fonctionnalité: API - instance modification
 
   Scénario: API instance modification - plusieurs erreurs sur une propriété
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je prépare une requête "instance-modification"
     Et je mets "abcdefghij" dans la propriété "signupId" du corps de la requête
@@ -160,4 +184,3 @@ Fonctionnalité: API - instance modification
     Et le corps de la réponse a une propriété "payload.signupId[0].content" égale à "Le numéro de la demande datapass doit être de 7 caractères maximum"
     Et le corps de la réponse a une propriété "payload.signupId[1]" avec 3 attributs
     Et le corps de la réponse a une propriété "payload.signupId[1].content" égale à "Veuillez saisir un numéro valide"
-

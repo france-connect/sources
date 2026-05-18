@@ -1,0 +1,36 @@
+{
+  "label": "Payload Échec (DTO invalide)",
+  "payload": {
+    "event": "approve",
+    "fired_at": "not_a_number",
+    "model_type": "authorization_request/france_connect",
+    "data": {
+      "id": "invalid",
+      "public_id": "a90939e8-f906-4343-8996-5955257f161d",
+      "state": "validated",
+      "form_uid": "france-connect-collectivite-administration",
+      "organization": {
+        "id": 9002,
+        "name": "DIRECTION INTERMINISTERIELLE DU NUMERIQUE",
+        "siret": "13002526500013"
+      },
+      "applicant": {
+        "id": 9003,
+        "email": "invalid_email",
+        "given_name": "John",
+        "family_name": "Doe",
+        "phone_number": "+33 1 02 03 04 05",
+        "job_title": "Senior customer experience squad leader"
+      },
+      "data": {
+        "intitule": "Test DataPass échec",
+        "scopes": "not_an_array",
+        "contact_technique_given_name": "Jean",
+        "contact_technique_family_name": "Administrateur",
+        "contact_technique_phone_number": "0623456789",
+        "contact_technique_job_title": "",
+        "contact_technique_email": "invalid_email"
+      }
+    }
+  }
+}

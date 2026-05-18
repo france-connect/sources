@@ -2,9 +2,7 @@ import './user-preferences.scss';
 
 import React from 'react';
 
-import type { AccountContextState } from '@fc/account';
-import { AccountContext } from '@fc/account';
-import { useSafeContext } from '@fc/common';
+import { useAccountContext } from '@fc/account';
 import type { DashboardUserInfosInterface } from '@fc/core-user-dashboard';
 
 import type { ServiceInterface } from '../interfaces';
@@ -16,8 +14,8 @@ interface ServicesListComponentProps {
 
 export const ServicesListComponent: React.FC<ServicesListComponentProps> = React.memo(
   ({ identityProviders }: ServicesListComponentProps) => {
-    const { userinfos } = useSafeContext<AccountContextState>(AccountContext);
-    const currentLoggedInIdentityProvider = (userinfos as DashboardUserInfosInterface)?.idpId;
+    const { userinfos } = useAccountContext<DashboardUserInfosInterface>();
+    const currentLoggedInIdentityProvider = userinfos?.idpId;
 
     return (
       <ul className="fr-toggle__list">

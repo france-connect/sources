@@ -47,7 +47,7 @@ export interface OidcClientInterface {
   platform?: PlatformTechnicalKeyEnum;
 
   /**
-   * Used to generate a organisation (entity) wise sub.
+   * Used to generate a organization (entity) wise sub.
    * Is defaulted by management apps to client_id value
    */
   entityId: string;

@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import { useDocumentTitle } from 'usehooks-ts';
 
-import { useSafeContext } from '@fc/common';
+import { type AccountContextState, useAccountContext } from '@fc/account';
 import { SessionExpiredAlertComponent } from '@fc/core-user-dashboard';
 import { Sizes } from '@fc/dsfr';
 
@@ -11,10 +11,16 @@ describe('LoginLayout', () => {
   // Given
   const childrenMock = <div>Children Mock</div>;
   const documentTitleMock = 'any-acme-document-title';
+  const accountContextState = {
+    connected: true,
+    expired: false,
+    ready: true,
+    userinfos: undefined,
+  } as AccountContextState;
 
   beforeEach(() => {
     // Given
-    jest.mocked(useSafeContext).mockReturnValue({ expired: false });
+    jest.mocked(useAccountContext).mockReturnValue(accountContextState);
   });
 
   it('should match the snapshot, when size is small', () => {
@@ -55,7 +61,7 @@ describe('LoginLayout', () => {
 
   it('should match the snapshot, when session has expired', () => {
     // Given
-    jest.mocked(useSafeContext).mockReturnValueOnce({ expired: true });
+    jest.mocked(useAccountContext).mockReturnValueOnce({ ...accountContextState, expired: true });
 
     // When
     const { container } = render(
@@ -70,7 +76,7 @@ describe('LoginLayout', () => {
 
   it('should render SessionExpiredAlertComponent, when session has expired', () => {
     // Given
-    jest.mocked(useSafeContext).mockReturnValueOnce({ expired: true });
+    jest.mocked(useAccountContext).mockReturnValueOnce({ ...accountContextState, expired: true });
 
     // When
     render(

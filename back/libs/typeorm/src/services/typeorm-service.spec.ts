@@ -1,4 +1,4 @@
-import { DataSource } from 'typeorm';
+import { DataSource, EntityTarget } from 'typeorm';
 
 import { Test, TestingModule } from '@nestjs/testing';
 
@@ -10,7 +10,10 @@ describe('TypeormService', () => {
   let service: TypeormService;
   const dataSourceMock = {
     createQueryRunner: jest.fn(),
+    getRepository: jest.fn(),
   };
+
+  const repositoryMock = Symbol('RepositoryMock');
 
   const queryRunnerMock = getQueryRunnerMock();
 
@@ -31,6 +34,22 @@ describe('TypeormService', () => {
     service = module.get<TypeormService>(TypeormService);
 
     dataSourceMock.createQueryRunner.mockReturnValue(queryRunnerMock);
+    dataSourceMock.getRepository.mockReturnValue(repositoryMock);
+  });
+
+  describe('getRepository', () => {
+    it('should return the repository', () => {
+      // Given
+      const MockEntity = Symbol(
+        'MockEntity',
+      ) as unknown as EntityTarget<unknown>;
+
+      // When
+      const repository = service.getRepository(MockEntity);
+
+      // Then
+      expect(repository).toBeDefined();
+    });
   });
 
   describe('withTransaction', () => {

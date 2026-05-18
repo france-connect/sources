@@ -1,9 +1,7 @@
 import React from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router';
 
-import type { AccountContextState } from '@fc/account';
-import { AccountContext } from '@fc/account';
-import { useSafeContext } from '@fc/common';
+import { useAccountContext } from '@fc/account';
 
 import { AuthFallbackRoutes } from '../../enums';
 import type { AuthRouteInterface } from '../../interfaces';
@@ -11,7 +9,7 @@ import type { AuthRouteInterface } from '../../interfaces';
 export const UnauthedRoute = React.memo(
   ({ fallback = AuthFallbackRoutes.INDEX, replace = false }: AuthRouteInterface) => {
     const location = useLocation();
-    const { connected } = useSafeContext<AccountContextState>(AccountContext);
+    const { connected } = useAccountContext();
 
     if (connected) {
       const navigateTo = typeof fallback === 'function' ? fallback(location) : fallback;

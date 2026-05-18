@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
+set -e
+
+source "${INCLUDE_DIR}/config/_versions.sh"
 source "${INCLUDE_DIR}/config/ci.sh"
-# Node needs to be set before docker.
-source "${INCLUDE_DIR}/config/node.sh"
 source "${INCLUDE_DIR}/config/docker.sh"
 source "${INCLUDE_DIR}/config/mongo.sh"
 source "${INCLUDE_DIR}/config/styles.sh"

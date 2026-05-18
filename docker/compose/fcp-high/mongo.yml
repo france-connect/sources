@@ -4,6 +4,8 @@ services:
     build:
       context: "${DOCKER_DIR}"
       dockerfile: "${DOCKER_DIR}/builds/mongodb/Dockerfile"
+      args:
+        DOCKER_HUB_PROXY: ${DOCKER_HUB_PROXY}
     volumes:
       - "${VOLUMES_DIR}/mongo-fcp-high/scripts:/opt/scripts"
       - "${VOLUMES_DIR}/mongo-fcp-high/initdb.d:/docker-entrypoint-initdb.d"
@@ -24,6 +26,8 @@ services:
     build:
       context: "${DOCKER_DIR}"
       dockerfile: "${DOCKER_DIR}/builds/mongodb/Dockerfile"
+      args:
+        DOCKER_HUB_PROXY: ${DOCKER_HUB_PROXY}
     env_file:
       - "${COMPOSE_DIR}/shared/.env/mongo-high.env"
     volumes:

@@ -1,11 +1,58 @@
 entity: PartnersServiceProvider
 items:
+  sp-default-low:
+    id: '7b51b520-24db-4d70-bc89-bec37fb0c6ff'
+    name: 'SP_DEFAULT_LOW'
+    datapassRequestId: '007'
+    datapassAuthorizationId: '13007'
+    datapassEidasLevel: 'eidas_1'
+    datapassScopes:
+      [
+        'openid',
+        'given_name',
+        'family_name',
+        'email',
+        'gender',
+        'birthdate',
+        'birthplace',
+        'birthcountry',
+        'preferred_username',
+      ]
+    platform: '@france-connect-low'
+    organization: '@orga-1'
+    createdAt: '2026-02-26T23:00:00.000Z'
+    updatedAt: '2026-02-26T23:00:00.000Z'
+
+  sp-default-high:
+    id: '61c13e0d-531a-4a82-9a75-26bf696fafa7'
+    name: 'SP_DEFAULT_HIGH'
+    datapassRequestId: '117'
+    datapassAuthorizationId: '13008'
+    datapassEidasLevel: 'eidas_1'
+    datapassScopes:
+      [
+        'openid',
+        'given_name',
+        'family_name',
+        'email',
+        'gender',
+        'birthdate',
+        'birthplace',
+        'birthcountry',
+        'preferred_username',
+      ]
+    platform: '@france-connect-high'
+    organization: '@orga-1'
+    createdAt: '2026-02-26T23:00:00.000Z'
+    updatedAt: '2026-02-26T23:00:00.000Z'
+
   # sp with 2 instances
-  sp1-sandbox:
+  sp1-low:
     id: 'd7d36b81-0b68-4c26-a399-854848164f29'
-    name: 'Service Provider 1'
-    organizationName: 'Ministère de la Transition Écologique'
-    datapassRequestId: '12345'
+    name: 'SP1 - Fournisseur de service de test avec 2 instances'
+    datapassRequestId: '9900001'
+    datapassAuthorizationId: '10001'
+    datapassEidasLevel: 'eidas_1'
     datapassScopes:
       [
         'openid',
@@ -19,16 +66,17 @@ items:
         'preferred_username',
       ]
     platform: '@france-connect-low'
-    organisation: null
-    createdAt: '2022-02-22T23:00:00.000Z'
+    organization: '@orga-1'
+    createdAt: '2022-02-01T01:00:00.000Z'
     updatedAt: '2022-05-02T22:00:00.000Z'
 
-  # sp with 1 instance
-  sp2-sandbox:
+  # sp with 1 instance (sp2-i1-sandbox) - used by visual tests
+  sp2-low:
     id: '25c4e41c-a97d-4bc9-8e05-e353c91eaef5'
-    name: 'Service Provider 2'
-    organizationName: "Ministère de l'Intérieur"
-    datapassRequestId: '13245'
+    name: 'SP2 - Fournisseur de service de test avec 1 instance'
+    datapassRequestId: '9900002'
+    datapassAuthorizationId: '10002'
+    datapassEidasLevel: 'eidas_1'
     datapassScopes:
       [
         'openid',
@@ -42,19 +90,69 @@ items:
         'preferred_username',
       ]
     platform: '@france-connect-low'
-    organisation: null
-    createdAt: '2022-02-22T23:00:00.000Z'
+    organization: '@orga-1'
+    createdAt: '2022-02-02T02:00:00.000Z'
     updatedAt: '2022-05-02T22:00:00.000Z'
 
-  # sp with 0 instance
-  sp3-sandbox:
+  # sp with 0 instance - used by visual tests
+  sp3-low:
     id: 'b66afba8-58b2-4465-a868-6a187ea67f5a'
-    name: 'Service Provider 3'
-    organizationName: 'Ministère de la Justice'
-    datapassRequestId: '14235'
+    name: 'SP3 - Fournisseur de service de test sans instance'
+    datapassRequestId: '9900003'
+    datapassAuthorizationId: '10003'
+    datapassEidasLevel: 'eidas_1'
     datapassScopes:
       ['openid', 'given_name', 'family_name', 'email', 'birthdate']
-    platform: '@france-connect-high'
-    organisation: null
-    createdAt: '2022-02-22T23:00:00.000Z'
+    platform: '@france-connect-low'
+    organization: '@orga-2'
+    createdAt: '2022-02-03T03:00:00.000Z'
     updatedAt: '2022-05-02T22:00:00.000Z'
+
+  # sp for bdd_default with 1 instance
+  sp4-low:
+    id: 'da4685a5-6f87-47d1-8f8f-3be496815dc8'
+    name: 'SP4 - Fournisseur de service par défaut'
+    datapassRequestId: '9900004'
+    datapassAuthorizationId: '10004'
+    datapassEidasLevel: 'eidas_1'
+    datapassScopes:
+      [
+        'openid',
+        'given_name',
+        'family_name',
+        'email',
+        'gender',
+        'birthdate',
+        'birthplace',
+        'birthcountry',
+        'preferred_username',
+      ]
+    platform: '@france-connect-low'
+    organization: '@orga-1'
+    createdAt: '2022-02-04T04:00:00.000Z'
+    updatedAt: '2022-05-02T22:00:00.000Z'
+
+  # sp for instance linking tests
+  sp5-low:
+    id: '9ed086cd-4c35-4156-94c0-75c356747698'
+    name: 'SP5 - FS pour lier les instances'
+    datapassRequestId: '9900005'
+    datapassAuthorizationId: '10005'
+    datapassEidasLevel: 'eidas_1'
+    datapassScopes:
+      [
+        'openid',
+        'given_name',
+        'family_name',
+        'email',
+        'gender',
+        'birthdate',
+        'birthplace',
+        'birthcountry',
+        'preferred_username',
+      ]
+    platform: '@france-connect-low'
+    organization: '@orga-1'
+    createdAt: '2022-02-05T05:00:00.000Z'
+    updatedAt: '2022-05-02T22:00:00.000Z'
+

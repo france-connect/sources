@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 task() {
   local message=${1}
   local cmd=${2}

@@ -11,11 +11,9 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 
-import { DatapassEvents } from '@fc/datapass';
-
 import { PostWebhookBodyDto } from '../dto';
 import { MockDatapassRoutes } from '../enums';
-import { MockDatapassService } from '../services';
+import { MockDatapassService, PayloadPreset } from '../services';
 
 @Injectable()
 @Controller()
@@ -24,7 +22,14 @@ export class MockDatapassController {
 
   @Get(MockDatapassRoutes.INDEX)
   @Render('index')
-  getIndex(): void {}
+  getIndex(): { payloadPresets: PayloadPreset[]; defaultPayload: string } {
+    const payloadPresets = this.mockDatapassService.getPayloadPresets();
+
+    return {
+      payloadPresets,
+      defaultPayload: payloadPresets[0]?.payload ?? '',
+    };
+  }
 
   @Post(MockDatapassRoutes.WEBHOOK)
   @UsePipes(ValidationPipe)
@@ -32,12 +37,10 @@ export class MockDatapassController {
   async postWebhook(
     @Body() body: PostWebhookBodyDto,
   ): Promise<AxiosResponse<unknown>> {
-    const { event } = body;
+    const { payload } = body;
 
-    const result = await this.mockDatapassService.handleWebhook(
-      event as DatapassEvents,
-    );
+    const response = await this.mockDatapassService.handleWebhook(payload);
 
-    return result;
+    return response;
   }
 }

@@ -5,36 +5,23 @@
 ########################################
 ARG NODE_VERSION
 ARG DEBIAN_VERSION
+ARG NODE_MODULE_BACK_VERSION
+ARG REGISTRY_URL
 
 ########################################
-# Stage 1: Build the dev-deps
+# Stage 1: Build the dev-back-deps
 ########################################
-FROM node:${NODE_VERSION}-${DEBIAN_VERSION} AS dev-deps
-
-ARG INTERNET_PROXY
-ARG NODE_IGNORE_ENGINE
-
-WORKDIR /tmp/dependencies
-
-COPY ./back/package.json ./back/yarn.lock ./
-RUN \
-  yarn config set proxy ${INTERNET_PROXY} && \
-  yarn config set https-proxy ${INTERNET_PROXY} && \
-  yarn config set ignore-engines ${NODE_IGNORE_ENGINE} && \
-  yarn install --immutable --frozen-lockfile && \
-  yarn cache clean --all && \
-  yarn config delete proxy && \
-  yarn config delete https-proxy
+FROM ${REGISTRY_URL}/nodejs-apps/dev-back-deps:${NODE_MODULE_BACK_VERSION} AS dev-back-deps
 
 ########################################
 # Stage 2: Build the prod-deps
 ########################################
-FROM node:${NODE_VERSION}-${DEBIAN_VERSION} AS prod-deps
+FROM ${DOCKER_HUB_PROXY}node:${NODE_VERSION}-${DEBIAN_VERSION} AS prod-deps
 
 ARG INTERNET_PROXY
 ARG NODE_IGNORE_ENGINE
 
-WORKDIR /tmp/dependencies
+WORKDIR /opt/dependencies/back
 
 COPY ./back/package.json ./back/yarn.lock ./
 RUN \
@@ -49,27 +36,16 @@ RUN \
 ########################################
 # Stage 3.1: Base CA certificates image
 ########################################
-FROM node:${NODE_VERSION}-${DEBIAN_VERSION}-slim AS ca-build
-
-ARG INTERNET_PROXY
+FROM ${DOCKER_HUB_PROXY}node:${NODE_VERSION}-${DEBIAN_VERSION} AS ca-build
 
 COPY --from=tls FranceConnect-CA.crt /usr/local/share/ca-certificates/FranceConnect.crt
 
-RUN \
-  echo "Acquire::http::Proxy \"$INTERNET_PROXY\";" > /etc/apt/apt.conf.d/proxy.conf && \
-  export http_proxy=${INTERNET_PROXY} && export https_proxy=${INTERNET_PROXY} && \
-  apt-get update && \
-  apt-get install -y ca-certificates && \
-  update-ca-certificates --fresh && \
-  apt-get clean  && \
-  unset http_proxy && unset https_proxy && \
-  rm -rf /var/lib/apt/lists/* && \
-  rm -rf /etc/apt/apt.conf.d/proxy.conf
+RUN update-ca-certificates --fresh;
 
 ########################################
 # Stage 3.2: Base production image
 ########################################
-FROM node:${NODE_VERSION}-${DEBIAN_VERSION}-slim AS prod-base
+FROM ${DOCKER_HUB_PROXY}node:${NODE_VERSION}-${DEBIAN_VERSION}-slim AS prod-base
 
 ARG INTERNET_PROXY
 
@@ -88,21 +64,27 @@ RUN \
 
 COPY --from=pm2 . /etc/pm2
 
-COPY --from=ca-build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
-COPY --from=ca-build /etc/ssl/certs/*.pem /etc/ssl/certs/
+COPY --from=ca-build /etc/ssl/certs/ /etc/ssl/certs/
 
 VOLUME ["/data/log", "/etc/ssl/client_certs"]
 
 ENTRYPOINT ["pm2-runtime", "/etc/pm2/ecosystem.config.js"]
 
 ########################################
-# Stage 3.3: Build the application
+# Stage 3.3: Copy sources
 ########################################
-FROM dev-deps AS app-build
+FROM dev-back-deps AS dev-generic
+
+WORKDIR /opt/dependencies/back
+
+COPY ./back/ .
+
+########################################
+# Stage 3.4: Build the application
+########################################
+FROM dev-generic AS app-build
 
 ARG APP_NAME
-
-COPY ./back .
 
 RUN yarn run build:${APP_NAME} && \
   rm -rf node_modules
@@ -119,9 +101,9 @@ ENV \
   APP_VERSION=$APP_VERSION \
   APP_NAME=$APP_NAME
 
-COPY --chown=node:node --from=app-build /tmp/dependencies/dist/instances/${APP_NAME} /var/www/app
+COPY --chown=node:node --from=app-build /opt/dependencies/back/dist/instances/${APP_NAME} /var/www/app
 
-COPY --chown=node:node --from=prod-deps /tmp/dependencies/node_modules /var/www/app/node_modules
+COPY --chown=node:node --from=prod-deps /opt/dependencies/back/node_modules /var/www/app/node_modules
 
 WORKDIR /var/www/app
 USER node
@@ -148,7 +130,7 @@ ENV \
 RUN rm -rf /var/www/app/node_modules
 
 # Use the dev deps instead
-COPY --chown=node:node --from=dev-deps /tmp/dependencies/node_modules /var/www/app/node_modules
+COPY --chown=node:node --from=dev-back-deps /opt/dependencies/back/node_modules /var/www/app/node_modules
 
 ########################################
 # Stage 4.4: Command pre-deploy app image

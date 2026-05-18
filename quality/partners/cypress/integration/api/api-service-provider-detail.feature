@@ -1,9 +1,10 @@
 #language: fr
-@api @apiServiceProviderDetail @ci @ignoreInteg01
+@api @apiServiceProviderDetail @ci
 Fonctionnalité: API - Service Provider détail
 
   Scénario: API service-provider - détail succès utilisateur authentifié
-    Etant donné que je me connecte à l'espace partenaires
+    Etant donné que je me connecte à l'espace partenaires avec un utilisateur "partenaire avec deux fournisseurs de service"
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je prépare une requête "service-provider-get"
     Quand je lance la requête
@@ -11,10 +12,11 @@ Fonctionnalité: API - Service Provider détail
     Et l'entête de la réponse a une propriété "content-type" contenant "application/json"
     Et le corps de la réponse a une propriété "type" égale à "SERVICE_PROVIDER"
     Et le corps de la réponse a une propriété "payload"
-    Et le corps de la réponse a une propriété "payload.id" égale à "25c4e41c-a97d-4bc9-8e05-e353c91eaef5"
-    Et le corps de la réponse a une propriété "payload.name" égale à "Service Provider 2"
-    Et le corps de la réponse a une propriété "payload.organizationName" égale à "Ministère de l'Intérieur"
-    Et le corps de la réponse a une propriété "payload.datapassRequestId" égale à "13245"
+    Et le corps de la réponse a une propriété "payload.id"
+    Et le corps de la réponse a une propriété "payload.name" égale à "SP2 - Fournisseur de service de test avec 1 instance"
+    Et le corps de la réponse a une propriété "payload.organization.name" égale à "Direction Interministerielle du Numérique"
+    Et le corps de la réponse a une propriété "payload.organization.siret" égale à "13002526500013"
+    Et le corps de la réponse a une propriété "payload.datapassRequestId" égale à "9900002"
     Et le corps de la réponse a une propriété "payload.datapassScopes"
     Et le corps de la réponse a une propriété "payload.datapassScopes[0]" égale à "Identifiant technique"
     Et le corps de la réponse a une propriété "payload.datapassScopes[1]" égale à "Prénoms"
@@ -42,16 +44,39 @@ Fonctionnalité: API - Service Provider détail
     Et le corps de la réponse a une propriété "payload.fcScopes" avec 12 éléments
     Et le corps de la réponse a une propriété "payload.createdAt"
     Et le corps de la réponse a une propriété "payload.updatedAt"
-    Et le corps de la réponse a 2 propriétés
-    Et le corps de la réponse a une propriété "payload" avec 8 attributs
+    Et le corps de la réponse a une propriété "payload.instances"
+    Et le corps de la réponse a une propriété "meta.permissions"
+    Et le corps de la réponse a une propriété "meta.permissions.0.account"
+    Et le corps de la réponse a une propriété "meta.permissions.0.account.id"
+    Et le corps de la réponse a une propriété "meta.permissions.0.account.email" égale à "aloupe@yopmail.com"
+    Et le corps de la réponse a une propriété "meta.permissions.0.account.firstname" égale à "Arsène"
+    Et le corps de la réponse a une propriété "meta.permissions.0.account.lastname" égale à "LOUPE"
+    Et le corps de la réponse a une propriété "meta.permissions.0.account.lastConnection"
+    Et le corps de la réponse a une propriété "meta.permissions.0.permissionType" égale à "SP_ADMIN"
+    Et le corps de la réponse a une propriété "payload" avec 9 attributs
 
   Scénario: API service-provider - erreur utilisateur non authentifié (401)
     Etant donné que je prépare une requête "service-provider-get"
     Quand je lance la requête
     Alors le statut de la réponse est 401
 
+  Scénario: API service-provider - erreur identifiant invalide (400)
+    Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
+    Et que je suis sur la page liste des instances
+    Et que je prépare une requête "service-provider-get"
+    Et que je mets le chemin "/api/service-providers/not-a-valid-uuid" dans l'url de la requête
+    Quand je lance la requête
+    Alors le statut de la réponse est 400
+    Et l'entête de la réponse a une propriété "content-type" contenant "application/json"
+    Et le corps de la réponse a une propriété "code" égale à "P240003"
+    Et le corps de la réponse a une propriété "message" égale à "AccessControl.exceptions.AccessControlInvalidEntityIdException"
+    Et le corps de la réponse a une propriété "id"
+    Et le corps de la réponse a 3 propriétés
+
   Scénario: API service-provider - erreur utilisateur sans permission (403)
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je prépare une requête "service-provider-get"
     Et que je mets le chemin "/api/service-providers/aaaaaaaa-aaaa-4aaa-aaaa-aaaaaaaaaaaa" dans l'url de la requête
@@ -65,6 +90,7 @@ Fonctionnalité: API - Service Provider détail
 
   Scénario: API service-provider - erreur service provider inexistant (403)
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je prépare une requête "service-provider-get"
     Et que je mets le chemin "/api/service-providers/99999999-9999-4999-9999-999999999999" dans l'url de la requête
@@ -75,4 +101,3 @@ Fonctionnalité: API - Service Provider détail
     Et le corps de la réponse a une propriété "message"
     Et le corps de la réponse a une propriété "id"
     Et le corps de la réponse a 3 propriétés
-

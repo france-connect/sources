@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`AppBoundaryComponent should match the snapshot 1`] = `
 <div>
@@ -79,7 +79,9 @@ exports[`AppBoundaryComponent should match the snapshot 1`] = `
           >
             any error with message mock
           </h3>
-          <ul>
+          <ul
+            data-testid="app-boundary-error-stack"
+          >
             <li>
               any error with stack mock
             </li>

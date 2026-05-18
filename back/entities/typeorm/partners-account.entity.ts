@@ -36,6 +36,12 @@ export class PartnersAccount {
   lastname: string; // claim `usual_name`
 
   @Column({
+    type: 'text',
+    nullable: true,
+  })
+  phone?: string; // claim `phone_number`
+
+  @Column({
     type: 'timestamp',
     nullable: true,
   })

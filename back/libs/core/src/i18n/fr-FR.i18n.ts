@@ -6,7 +6,7 @@ export const frFR: I18nTranslationsMapType = {
   'Core.exceptions.coreIdentityProviderNotFound':
     'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.',
   'Core.exceptions.coreIdpBlockedForAccount':
-    "Vous avez bloqué l'utilisation de ce fournisseur d'identité. Pour pouvoir l'utiliser, merci de vous rendre dans vos préférences FranceConnect pour l'autoriser.",
+    "Vous avez bloqué l'utilisation de ce fournisseur d'identité. Pour pouvoir l'utiliser à nouveau, merci de consulter notre page d'aide FranceConnect. Dans le cas où vous ne parviendriez pas à débloquer votre accès, veuillez nous contacter et nous transmettre un justificatif d'identité.",
   'Core.exceptions.coreIdpHint':
     'Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous',
   'Core.exceptions.coreInvalidAcr':

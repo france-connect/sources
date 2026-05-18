@@ -13,20 +13,29 @@ import {
 import { CreatedVia } from '@fc/csmr-config-client';
 import { CsrfTokenGuard } from '@fc/csrf';
 import { FormValidationPipe } from '@fc/dto2form';
+import { PartnersServiceProviderService } from '@fc/partners-service-provider';
 import { PartnersServiceProviderInstanceService } from '@fc/partners-service-provider-instance';
 import {
   PartnersServiceProviderInstanceVersionService,
   ServiceProviderInstanceVersionDto,
 } from '@fc/partners-service-provider-instance-version';
 import { OidcClientInterface } from '@fc/service-provider';
+import { SessionService } from '@fc/session';
 import { TypeormService } from '@fc/typeorm';
 
 import { getSessionServiceMock } from '@mocks/session';
 import { getQueryRunnerMock, getTypeormServiceMock } from '@mocks/typeorm';
 
-import { AccessControlEntity, AccessControlPermission } from '../enums';
+import {
+  AccessControlEntity,
+  AccessControlPermission,
+  DefaultServiceProviderEnum,
+  PartnersPlatformEnum,
+} from '../enums';
+import { PartnersInstanceNotFoundException } from '../exceptions';
 import {
   PartnerPublicationService,
+  PartnersInstanceService,
   PartnersInstanceVersionFormService,
 } from '../services';
 import { InstanceController } from './instance.controller';
@@ -35,13 +44,26 @@ describe('InstanceController', () => {
   let controller: InstanceController;
 
   const sessionPartnersAccountMock = getSessionServiceMock();
+  const sessionServiceMock = getSessionServiceMock();
   const typeormServiceMock = getTypeormServiceMock();
   const queryRunnerMock = getQueryRunnerMock();
 
   const instanceMock = {
     getAllowedInstances: jest.fn(),
     getById: jest.fn(),
+    getByIdWithQueryRunner: jest.fn(),
+    getByIdsWithQueryRunner: jest.fn(),
+    getLinkableInstances: jest.fn(),
+    linkToServiceProvider: jest.fn(),
     save: jest.fn(),
+  };
+
+  const serviceProviderServiceMock = {
+    getById: jest.fn(),
+  };
+
+  const datapassServiceMock = {
+    updateInstance: jest.fn(),
   };
 
   const versionMock = {
@@ -50,6 +72,7 @@ describe('InstanceController', () => {
 
   const accountPermissionServiceMock = {
     addPermissionTransactional: jest.fn(),
+    removePermissionTransactional: jest.fn(),
   };
 
   const partnersServiceMock = {
@@ -97,6 +120,14 @@ describe('InstanceController', () => {
     publish: jest.fn(),
   };
 
+  const serviceProviderMock = {
+    id: DefaultServiceProviderEnum.DEFAULT_LOW_SP,
+  };
+
+  const instanceServiceMock = {
+    update: jest.fn(),
+  };
+
   const pendingPublicationStatus = PublicationStatusEnum.PENDING;
 
   beforeEach(async () => {
@@ -112,6 +143,9 @@ describe('InstanceController', () => {
         PartnerPublicationService,
         PartnersInstanceVersionFormService,
         TypeormService,
+        SessionService,
+        PartnersServiceProviderService,
+        PartnersInstanceService,
       ],
     })
       .overrideProvider(PartnersServiceProviderInstanceService)
@@ -134,6 +168,12 @@ describe('InstanceController', () => {
       .useValue(publicationMock)
       .overrideProvider(TypeormService)
       .useValue(typeormServiceMock)
+      .overrideProvider(SessionService)
+      .useValue(sessionServiceMock)
+      .overrideProvider(PartnersServiceProviderService)
+      .useValue(serviceProviderServiceMock)
+      .overrideProvider(PartnersInstanceService)
+      .useValue(instanceServiceMock)
       .compile();
 
     controller = module.get<InstanceController>(InstanceController);
@@ -141,6 +181,7 @@ describe('InstanceController', () => {
     instanceMock.save.mockResolvedValueOnce({ id: instanceIdMock });
     versionMock.create.mockResolvedValueOnce({ id: versionIdMock });
     sessionPartnersAccountMock.get.mockReturnValue(sessionPartnersMock);
+    sessionServiceMock.get.mockReturnValue(sessionPartnersMock);
     partnersServiceMock.fromFormValues.mockResolvedValue(body);
   });
 
@@ -156,6 +197,7 @@ describe('InstanceController', () => {
       // Then
       expect(instanceMock.getAllowedInstances).toHaveBeenCalledExactlyOnceWith(
         permissionMock,
+        sessionPartnersMock.identity.id,
       );
     });
 
@@ -234,6 +276,7 @@ describe('InstanceController', () => {
         queryRunnerMock,
         body,
         sessionPartnersAccountMock.get().identity.id,
+        serviceProviderMock.id,
       );
     });
 
@@ -268,6 +311,7 @@ describe('InstanceController', () => {
       const expected = {
         environment: EnvironmentEnum.SANDBOX,
         creator: { id: accountId } as PartnersAccount,
+        serviceProvider: serviceProviderMock,
       };
 
       // When
@@ -275,6 +319,7 @@ describe('InstanceController', () => {
         queryRunnerMock,
         data,
         accountId,
+        serviceProviderMock.id,
       );
 
       // Then
@@ -290,6 +335,7 @@ describe('InstanceController', () => {
         queryRunnerMock,
         data,
         accountId,
+        serviceProviderMock.id,
       );
 
       // Then
@@ -308,6 +354,7 @@ describe('InstanceController', () => {
         queryRunnerMock,
         data,
         accountId,
+        serviceProviderMock.id,
       );
 
       // Then
@@ -322,31 +369,247 @@ describe('InstanceController', () => {
     });
   });
 
-  describe('updateInstance', () => {
-    const versionId = 'versionIdMock';
+  describe('retrieveLinkableInstances', () => {
+    const serviceProviderIdMock = 'sp-id-mock';
+    const detachedInstancesMock = [Symbol('instance1'), Symbol('instance2')];
 
     beforeEach(() => {
-      typeormServiceMock.withQueryRunner.mockImplementationOnce((callback) => {
-        callback(queryRunnerMock);
-        return versionId;
-      });
+      instanceMock.getLinkableInstances.mockResolvedValue(
+        detachedInstancesMock,
+      );
     });
 
-    it('should call fromFormValues with body and instance id', async () => {
+    it('should call serviceProvider.getById with the serviceProviderId', async () => {
+      // Given
+      serviceProviderServiceMock.getById.mockResolvedValueOnce({
+        platform: { name: PartnersPlatformEnum.FRANCE_CONNECT_LOW },
+      });
+
       // When
-      await controller.updateInstance(
-        body,
-        instanceIdMock,
+      await controller.retrieveLinkableInstances(serviceProviderIdMock);
+
+      // Then
+      expect(
+        serviceProviderServiceMock.getById,
+      ).toHaveBeenCalledExactlyOnceWith(serviceProviderIdMock);
+    });
+
+    it('should call getDetachedInstances with accountId and DEFAULT_LOW_SP for a LOW platform', async () => {
+      // Given
+      serviceProviderServiceMock.getById.mockResolvedValueOnce({
+        platform: { name: PartnersPlatformEnum.FRANCE_CONNECT_LOW },
+      });
+
+      // When
+      await controller.retrieveLinkableInstances(serviceProviderIdMock);
+
+      // Then
+      expect(instanceMock.getLinkableInstances).toHaveBeenCalledExactlyOnceWith(
+        sessionPartnersMock.identity.id,
+        DefaultServiceProviderEnum.DEFAULT_LOW_SP,
+      );
+    });
+
+    it('should call getDetachedInstances with accountId and DEFAULT_HIGH_SP for a HIGH platform', async () => {
+      // Given
+      serviceProviderServiceMock.getById.mockResolvedValueOnce({
+        platform: { name: PartnersPlatformEnum.FRANCE_CONNECT_HIGH },
+      });
+
+      // When
+      await controller.retrieveLinkableInstances(serviceProviderIdMock);
+
+      // Then
+      expect(instanceMock.getLinkableInstances).toHaveBeenCalledExactlyOnceWith(
+        sessionPartnersMock.identity.id,
+        DefaultServiceProviderEnum.DEFAULT_HIGH_SP,
+      );
+    });
+
+    it('should call serviceProvider.getById with the serviceProviderId', async () => {
+      // Given
+      serviceProviderServiceMock.getById.mockResolvedValueOnce({
+        platform: { name: PartnersPlatformEnum.FRANCE_CONNECT_HIGH },
+      });
+
+      // When
+      await controller.retrieveLinkableInstances(serviceProviderIdMock);
+    });
+
+    it('should return instances and serviceProvider as FSA payload', async () => {
+      // Given
+      serviceProviderServiceMock.getById.mockResolvedValueOnce({
+        platform: { name: PartnersPlatformEnum.FRANCE_CONNECT_LOW },
+      });
+
+      // When
+      const result = await controller.retrieveLinkableInstances(
+        serviceProviderIdMock,
+      );
+
+      // Then
+      expect(result).toEqual({
+        type: 'INSTANCE',
+        payload: {
+          instances: detachedInstancesMock,
+          serviceProvider: {
+            platform: { name: PartnersPlatformEnum.FRANCE_CONNECT_LOW },
+          },
+        },
+      });
+    });
+  });
+
+  describe('linkInstancesToServiceProvider', () => {
+    const serviceProviderIdMock = 'sp-id-mock';
+    const instanceIdsMock = ['instance-id-1', 'instance-id-2'];
+    const instancesMock = [
+      {
+        id: instanceIdsMock[0],
+        currentVersion: { data: { name: 'instance name 1' } },
+      },
+      {
+        id: instanceIdsMock[1],
+        currentVersion: { data: { name: 'instance name 2' } },
+      },
+    ];
+
+    beforeEach(() => {
+      typeormServiceMock.withTransaction.mockImplementationOnce(
+        async (callback) => {
+          await callback(queryRunnerMock);
+        },
+      );
+      instanceMock.getByIdsWithQueryRunner.mockResolvedValue(instancesMock);
+      datapassServiceMock.updateInstance.mockResolvedValue(undefined);
+    });
+
+    it('should call linkToServiceProvider in a transaction', async () => {
+      // When
+      await controller.linkInstancesToServiceProvider(
+        {
+          serviceProviderId: serviceProviderIdMock,
+          instanceIds: instanceIdsMock,
+        },
+        sessionPartnersAccountMock,
+      );
+
+      // Then
+      expect(typeormServiceMock.withTransaction).toHaveBeenCalledTimes(1);
+      expect(
+        instanceMock.linkToServiceProvider,
+      ).toHaveBeenCalledExactlyOnceWith(
+        queryRunnerMock,
+        instanceIdsMock,
+        serviceProviderIdMock,
+      );
+    });
+
+    it('should call getByIds with instanceIds after the transaction', async () => {
+      // When
+      await controller.linkInstancesToServiceProvider(
+        {
+          serviceProviderId: serviceProviderIdMock,
+          instanceIds: instanceIdsMock,
+        },
         sessionPartnersAccountMock,
       );
 
       // Then
       expect(
-        partnersServiceMock.fromFormValues,
-      ).toHaveBeenCalledExactlyOnceWith(body, instanceIdMock);
+        instanceMock.getByIdsWithQueryRunner,
+      ).toHaveBeenCalledExactlyOnceWith(queryRunnerMock, instanceIdsMock);
     });
 
-    it('should call version.create with queryRunner', async () => {
+    it('should update each instance', async () => {
+      // When
+      await controller.linkInstancesToServiceProvider(
+        {
+          serviceProviderId: serviceProviderIdMock,
+          instanceIds: instanceIdsMock,
+        },
+        sessionPartnersAccountMock,
+      );
+
+      // Then
+      expect(instanceServiceMock.update).toHaveBeenCalledTimes(
+        instancesMock.length,
+      );
+      instancesMock.forEach((instance) => {
+        expect(instanceServiceMock.update).toHaveBeenCalledWith(
+          queryRunnerMock,
+          instance.currentVersion.data,
+          instance,
+          serviceProviderIdMock,
+          userInfoMock.email,
+        );
+      });
+    });
+
+    it('should remove the INSTANCE_CONTRIBUTOR permission for each instance', async () => {
+      // When
+      await controller.linkInstancesToServiceProvider(
+        {
+          serviceProviderId: serviceProviderIdMock,
+          instanceIds: instanceIdsMock,
+        },
+        sessionPartnersAccountMock,
+      );
+
+      // Then
+      expect(
+        accountPermissionServiceMock.removePermissionTransactional,
+      ).toHaveBeenCalledTimes(instancesMock.length);
+      instancesMock.forEach((instance) => {
+        expect(
+          accountPermissionServiceMock.removePermissionTransactional,
+        ).toHaveBeenCalledWith(queryRunnerMock, {
+          accountId: userInfoMock.id,
+          permissionType: AccessControlPermission.INSTANCE_CONTRIBUTOR,
+          entity: AccessControlEntity.SP_INSTANCE,
+          entityId: instance.id,
+        });
+      });
+    });
+
+    it('should return the linked instances as FSA payload', async () => {
+      // When
+      const result = await controller.linkInstancesToServiceProvider(
+        {
+          serviceProviderId: serviceProviderIdMock,
+          instanceIds: instanceIdsMock,
+        },
+        sessionPartnersAccountMock,
+      );
+
+      // Then
+      expect(result).toEqual({
+        type: 'INSTANCE',
+        payload: instancesMock,
+      });
+    });
+  });
+
+  describe('updateInstance', () => {
+    const versionId = 'versionIdMock';
+    const instanceEntityMock = {
+      serviceProvider: serviceProviderMock,
+    };
+
+    beforeEach(() => {
+      typeormServiceMock.withTransaction.mockImplementationOnce(
+        async (callback) => {
+          await callback(queryRunnerMock);
+          return versionId;
+        },
+      );
+
+      instanceMock.getByIdWithQueryRunner.mockResolvedValueOnce(
+        instanceEntityMock,
+      );
+    });
+
+    it('should update instance with session partners account email', async () => {
       // When
       await controller.updateInstance(
         body,
@@ -355,36 +618,28 @@ describe('InstanceController', () => {
       );
 
       // Then
-      expect(typeormServiceMock.withQueryRunner).toHaveBeenCalledTimes(1);
-      expect(versionMock.create).toHaveBeenCalledWith(
+      expect(instanceServiceMock.update).toHaveBeenCalledWith(
         queryRunnerMock,
         body,
-        instanceIdMock,
-        pendingPublicationStatus,
+        instanceEntityMock,
+        serviceProviderMock.id,
+        userInfoMock.email,
       );
     });
 
-    it('should call publish method with instanceId, VersionId, data and action type to update config', async () => {
+    it('should throw PartnersInstanceNotFoundException if instance is not found', async () => {
       // Given
-      const dataWithCreatedInfo = {
-        ...body,
-        updatedBy: userInfoMock.email,
-      };
+      instanceMock.getByIdWithQueryRunner.mockReset();
+      instanceMock.getByIdWithQueryRunner.mockResolvedValueOnce(null);
 
-      // When
-      await controller.updateInstance(
-        body,
-        instanceIdMock,
-        sessionPartnersAccountMock,
-      );
-
-      // Then
-      expect(publicationMock.publish).toHaveBeenCalledWith(
-        instanceIdMock,
-        versionId,
-        dataWithCreatedInfo,
-        'CONFIG_UPDATE',
-      );
+      // When / Then
+      await expect(
+        controller.updateInstance(
+          body,
+          instanceIdMock,
+          sessionPartnersAccountMock,
+        ),
+      ).rejects.toThrow(PartnersInstanceNotFoundException);
     });
   });
 });

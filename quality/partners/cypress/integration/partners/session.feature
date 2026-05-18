@@ -4,6 +4,7 @@ Fonctionnalité: Perte de session Espace Partenaires
 
   Scénario: Liste mes Instances - Click sur la carte d'une instance après expiration de la session
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je supprime tous les cookies
     Quand je clique sur la première instance
@@ -12,6 +13,7 @@ Fonctionnalité: Perte de session Espace Partenaires
 
   Scénario: Liste mes Instances - Rechargement de la page après expiration de la session
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je supprime tous les cookies
     Quand je rafraîchis la page
@@ -20,6 +22,7 @@ Fonctionnalité: Perte de session Espace Partenaires
 
   Scénario: Création d'une instance - Click sur le bouton submit après expiration de la session
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je clique sur le lien d'ajout d'une instance
     Et que je suis redirigé vers la page création d'instance
@@ -32,6 +35,7 @@ Fonctionnalité: Perte de session Espace Partenaires
 
   Scénario: Création d'une instance - Rechargement de la page après expiration de la session
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je clique sur le lien d'ajout d'une instance
     Et que je suis redirigé vers la page création d'instance
@@ -42,6 +46,7 @@ Fonctionnalité: Perte de session Espace Partenaires
 
   Scénario: Modification d'une instance - Click sur le bouton submit après expiration de la session
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je clique sur la première instance
     Et que je suis sur la page modification d'instance
@@ -52,6 +57,7 @@ Fonctionnalité: Perte de session Espace Partenaires
 
   Scénario: Modification d'une instance - Rechargement de la page après expiration de la session
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je clique sur la première instance
     Et que je suis sur la page modification d'instance

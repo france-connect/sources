@@ -16,13 +16,13 @@ export const enGB: I18nTranslationsMapType = {
   'OidcClient.exceptions.oidcClientMissingCode':
     'An error occurred while processing your request. Contact us if the problem persists.',
   'OidcClient.exceptions.oidcClientMissingIdentitySub':
-    'An error occurred while processing your request. Contact us if the problem persists.',
+    'A technical error has occurred. Please reconnect later.',
   'OidcClient.exceptions.oidcClientMissingState':
     'An error occurred while processing your request. Contact us if the problem persists.',
   'OidcClient.exceptions.oidcClientTokenFailed':
-    'An error occurred while processing your request. Contact us if the problem persists.',
+    'A technical error has occurred. Please reconnect later.',
   'OidcClient.exceptions.oidcClientTokenResultFailed':
     'An error occurred while processing your request. Contact us if the problem persists.',
   'OidcClient.exceptions.oidcClientUserinfosFailed':
-    'An error occurred while processing your request. Contact us if the problem persists.',
+    'A technical error has occurred. Please reconnect later.',
 };

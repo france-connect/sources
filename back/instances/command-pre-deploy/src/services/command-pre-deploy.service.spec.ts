@@ -187,10 +187,10 @@ describe('CommandPreDeployService', () => {
       await service['runPreDeployScript'](scriptPath, basePath);
 
       // Then
-      expect(loggerMock.info).toHaveBeenCalledWith(
-        { context: { stdout } },
-        'Pre-deploy script output',
-      );
+      expect(loggerMock.info).toHaveBeenCalledWith({
+        context: { stdout },
+        msg: 'Pre-deploy script output',
+      });
     });
 
     it('should not log stdout when empty', async () => {
@@ -216,10 +216,10 @@ describe('CommandPreDeployService', () => {
       await service['runPreDeployScript'](scriptPath, basePath);
 
       // Then
-      expect(loggerMock.warning).toHaveBeenCalledWith(
-        { context: { stderr } },
-        'Pre-deploy script stderr output',
-      );
+      expect(loggerMock.warning).toHaveBeenCalledWith({
+        context: { stderr },
+        msg: 'Pre-deploy script stderr output',
+      });
     });
 
     it('should not log stderr when empty', async () => {
@@ -249,6 +249,7 @@ describe('CommandPreDeployService', () => {
     it('should log error and rethrow when script execution fails', async () => {
       // Given
       const error = new Error('Script execution failed');
+      error['stdout'] = 'Script output\non\nmultiple\nlines';
       execAsyncMock.mockRejectedValue(error);
 
       // When / Then
@@ -256,16 +257,16 @@ describe('CommandPreDeployService', () => {
         service['runPreDeployScript'](scriptPath, basePath),
       ).rejects.toThrow(error);
 
-      expect(loggerMock.crit).toHaveBeenCalledWith(
-        {
-          context: {
-            scriptPath,
-            reason: error.message,
-            stack: error.stack,
-          },
+      expect(loggerMock.crit).toHaveBeenCalledWith({
+        context: {
+          scriptPath,
+          reason: error.message,
+          stack: error.stack,
+          output: error['stdout'].split('\n'),
         },
-        'Failed to run pre-deploy script',
-      );
+        msg: 'Failed to run pre-deploy script',
+        error,
+      });
     });
   });
 });

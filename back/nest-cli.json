@@ -80,6 +80,15 @@
         "tsConfigPath": "instances/command-import-sp-sandbox/tsconfig.app.json"
       }
     },
+    "command-import-datapass": {
+      "type": "application",
+      "root": "instances/command-import-datapass",
+      "entryFile": "main",
+      "sourceRoot": "instances/command-import-datapass/src",
+      "compilerOptions": {
+        "tsConfigPath": "instances/command-import-datapass/tsconfig.app.json"
+      }
+    },
     "command-pre-deploy": {
       "type": "application",
       "root": "instances/command-pre-deploy",
@@ -555,6 +564,24 @@
         "tsConfigPath": "libs/eidas/tsconfig.lib.json"
       }
     },
+    "wallet-bridge": {
+      "type": "library",
+      "root": "apps/wallet-bridge",
+      "entryFile": "index",
+      "sourceRoot": "apps/wallet-bridge/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/wallet-bridge/tsconfig.lib.json"
+      }
+    },
+    "wallet-bridge-instance": {
+      "type": "application",
+      "root": "instances/wallet-bridge",
+      "entryFile": "main",
+      "sourceRoot": "instances/wallet-bridge/src",
+      "compilerOptions": {
+        "tsConfigPath": "instances/wallet-bridge/tsconfig.app.json"
+      }
+    },
     "eidas-bridge": {
       "type": "library",
       "root": "apps/eidas-bridge",
@@ -868,6 +895,7 @@
           "../../../apps/mock-datapass/**/*.woff2",
           "../../../apps/mock-datapass/**/*.webmanifest",
           "../../../apps/mock-datapass/**/robots.txt",
+          "../../../apps/mock-datapass/src/fixtures/**/*.json",
           "../../../instances/mock-datapass-instance/src/**/*.js",
           "../../../instances/mock-datapass-instance/src/**/*.css",
           "../../../instances/mock-datapass-instance/src/**/*.ejs",
@@ -1147,13 +1175,13 @@
         "tsConfigPath": "instances/partners/tsconfig.app.json"
       }
     },
-    "partners-organisation": {
+    "partners-organization": {
       "type": "library",
-      "root": "libs/partners-organisation",
+      "root": "libs/partners-organization",
       "entryFile": "index",
-      "sourceRoot": "libs/partners-organisation/src",
+      "sourceRoot": "libs/partners-organization/src",
       "compilerOptions": {
-        "tsConfigPath": "libs/partners-organisation/tsconfig.lib.json"
+        "tsConfigPath": "libs/partners-organization/tsconfig.lib.json"
       }
     },
     "partners-service-provider": {

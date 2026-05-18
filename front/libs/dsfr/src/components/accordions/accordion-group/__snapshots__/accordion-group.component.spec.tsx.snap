@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`AccordionGroupComponent should match the snapshot, and container should have the custom classname 1`] = `
 <div>

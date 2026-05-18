@@ -5,4 +5,5 @@ export interface LayoutServiceInterface {
   homepage: string;
   baseline?: string;
   logo: SVGComponentInterface;
+  logoTitle?: string;
 }

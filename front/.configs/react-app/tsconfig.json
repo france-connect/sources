@@ -3,7 +3,7 @@
     "target": "ES2020",
     "useDefineForClassFields": true,
     // Include lib.es2021 to resolve TypeScript errors with replaceAll, which is defined in this library.
-    "lib": ["ES2021", "DOM", "DOM.Iterable"],
+    "lib": ["ES2021", "DOM"],
     "module": "ESNext",
     "skipLibCheck": true,
 
@@ -20,8 +20,8 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "types": ["node"]
   },
   "files": ["globals.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]

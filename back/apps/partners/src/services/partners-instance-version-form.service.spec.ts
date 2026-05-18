@@ -5,6 +5,7 @@ import { PartnersServiceProviderInstance } from '@entities/typeorm';
 import { getTransformed } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
+import { PartnersServiceProviderService } from '@fc/partners-service-provider';
 import { PartnersServiceProviderInstanceService } from '@fc/partners-service-provider-instance';
 import { ServiceProviderInstanceVersionDto } from '@fc/partners-service-provider-instance-version';
 import { ClientTypeEnum, SignatureAlgorithmEnum } from '@fc/service-provider';
@@ -12,6 +13,7 @@ import { ClientTypeEnum, SignatureAlgorithmEnum } from '@fc/service-provider';
 import { getConfigMock } from '@mocks/config';
 
 import { PartnersInstanceVersionFormService } from './partners-instance-version-form.service';
+import { PartnersServiceProviderFormService } from './partners-service-provider-form.service';
 
 describe('PartnersInstanceVersionFormService', () => {
   let service: PartnersInstanceVersionFormService;
@@ -25,7 +27,7 @@ describe('PartnersInstanceVersionFormService', () => {
   const configDataMock = {
     active: false,
     type: ClientTypeEnum.PUBLIC,
-    scopes: ['openid'],
+    scope: ['dgfip_foo', 'cnam_bar'],
     claims: [],
     rep_scope: [],
     idpFilterExclude: true,
@@ -72,6 +74,27 @@ describe('PartnersInstanceVersionFormService', () => {
     getById: jest.fn(),
   };
 
+  const serviceProviderServiceMock = {
+    getById: jest.fn(),
+  };
+
+  const serviceProviderMock = {
+    id: 'service-provider-id',
+    name: 'Test Service Provider',
+    datapassRequestId: '12345',
+    datapassScopes: ['openid', 'given_name'],
+    platform: null,
+    organization: null,
+  };
+
+  const serviceProviderFormServiceMock = {
+    toDisplayValue: jest.fn(),
+  };
+
+  const spDisplayValueMock = {
+    fcScopes: ['openid', 'given_name'],
+  };
+
   beforeEach(async () => {
     jest.clearAllMocks();
 
@@ -81,6 +104,8 @@ describe('PartnersInstanceVersionFormService', () => {
         ConfigService,
         PartnersServiceProviderInstanceService,
         CryptographyService,
+        PartnersServiceProviderService,
+        PartnersServiceProviderFormService,
       ],
     })
       .overrideProvider(ConfigService)
@@ -89,6 +114,10 @@ describe('PartnersInstanceVersionFormService', () => {
       .useValue(instanceMock)
       .overrideProvider(CryptographyService)
       .useValue(cryptoMock)
+      .overrideProvider(PartnersServiceProviderService)
+      .useValue(serviceProviderServiceMock)
+      .overrideProvider(PartnersServiceProviderFormService)
+      .useValue(serviceProviderFormServiceMock)
       .compile();
 
     service = module.get<PartnersInstanceVersionFormService>(
@@ -99,6 +128,11 @@ describe('PartnersInstanceVersionFormService', () => {
     cryptoMock.genRandomString
       .mockReturnValueOnce(generatedClientIdMock)
       .mockReturnValueOnce(generatedClientSecretMock);
+
+    serviceProviderServiceMock.getById.mockResolvedValue(serviceProviderMock);
+    serviceProviderFormServiceMock.toDisplayValue.mockReturnValue(
+      spDisplayValueMock,
+    );
   });
 
   it('should be defined', () => {
@@ -106,37 +140,41 @@ describe('PartnersInstanceVersionFormService', () => {
   });
 
   describe('fromFormValues', () => {
-    it('should return an object with default values from config', async () => {
-      // When
-      const result = await service.fromFormValues(formVersionMock);
+    const getOrGenerateValuesMock = {
+      mutable: { generated: 'value' },
+      immutable: {
+        client_id: generatedClientIdMock,
+        client_secret: generatedClientSecretMock,
+      },
+    };
 
-      // Then
-      expect(result).toStrictEqual(expect.objectContaining(configDataMock));
-    });
-
-    it('should return an object with generated values', async () => {
-      // Given
-      const generatedValues = {
-        mutable: { generated: 'value' },
-        immutable: {
-          client_id: generatedClientIdMock,
-          client_secret: generatedClientSecretMock,
-        },
-      };
+    const getScopesForServiceProviderMock = ['openid', 'given_name'];
+    beforeEach(() => {
       service['getOrGenerateValues'] = jest
         .fn()
-        .mockResolvedValueOnce(generatedValues);
+        .mockResolvedValueOnce(getOrGenerateValuesMock);
+      service['getScopesForServiceProvider'] = jest
+        .fn()
+        .mockResolvedValueOnce(getScopesForServiceProviderMock);
+    });
 
+    it('should return an object with expected values', async () => {
       // When
-      const result = await service.fromFormValues(formVersionMock);
+      const result = await service.fromFormValues(
+        formVersionMock,
+        serviceProviderMock.id,
+      );
 
       // Then
-      expect(result).toStrictEqual({
-        ...configDataMock,
-        ...generatedValues.mutable,
-        ...formVersionMock,
-        ...generatedValues.immutable,
-      });
+      expect(result).toStrictEqual(
+        expect.objectContaining({
+          ...configDataMock,
+          ...getOrGenerateValuesMock.mutable,
+          ...formVersionMock,
+          ...getOrGenerateValuesMock.immutable,
+          scope: getScopesForServiceProviderMock,
+        }),
+      );
     });
   });
 
@@ -181,11 +219,9 @@ describe('PartnersInstanceVersionFormService', () => {
     it('should return an object with client_id and client_secret', async () => {
       // Given
       instanceMock.getById.mockResolvedValueOnce({
-        versions: [
-          {
-            data: databaseVersionMock,
-          },
-        ],
+        currentVersion: {
+          data: databaseVersionMock,
+        },
       });
 
       // When
@@ -232,15 +268,33 @@ describe('PartnersInstanceVersionFormService', () => {
     });
   });
 
+  describe('getScopesForServiceProvider', () => {
+    it('should return mix of scopes from config and service provider', async () => {
+      // Given
+      serviceProviderFormServiceMock.toDisplayValue.mockReturnValue(
+        spDisplayValueMock,
+      );
+      configServiceMock.get.mockReturnValue(configDataMock);
+
+      // When
+      const result =
+        await service['getScopesForServiceProvider']('serviceProviderId');
+
+      // Then
+      expect(result).toEqual([
+        ...spDisplayValueMock.fcScopes,
+        ...configDataMock.scope,
+      ]);
+    });
+  });
+
   describe('toFormValues', () => {
     it('should remove private values', () => {
       // Given
       const instanceMock = {
-        versions: [
-          {
-            data: databaseVersionMock,
-          },
-        ],
+        currentVersion: {
+          data: databaseVersionMock,
+        },
       } as unknown as PartnersServiceProviderInstance;
 
       // When
@@ -249,16 +303,14 @@ describe('PartnersInstanceVersionFormService', () => {
       // Then
       expect(result).toEqual({
         ...instanceMock,
-        versions: [
-          {
-            data: {
-              ...formVersionMock,
-              client_id: databaseVersionMock.client_id,
-              client_secret: databaseVersionMock.client_secret,
-              entityId: databaseVersionMock.entityId,
-            },
+        currentVersion: {
+          data: {
+            ...formVersionMock,
+            client_id: databaseVersionMock.client_id,
+            client_secret: databaseVersionMock.client_secret,
+            entityId: databaseVersionMock.entityId,
           },
-        ],
+        },
       });
     });
   });

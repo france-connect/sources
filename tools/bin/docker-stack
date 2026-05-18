@@ -1,3 +1,5 @@
 #!/usr/bin/env bash
 
+set -e
+
 source "$FC_ROOT/fc/tools/index.sh"

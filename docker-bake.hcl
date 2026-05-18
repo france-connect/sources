@@ -4,8 +4,11 @@
 # Variables: Globals
 # ===========================
 
-variable "REGISTRY_URL" {
-  default = "registry.gitlab.dev-franceconnect.fr/france-connect/fc"
+variable "FC_ROOT" {
+  validation {
+    condition     = FC_ROOT != ""
+    error_message = "The variable 'FC_ROOT' must not be empty."
+  }
 }
 
 variable "INTERNET_PROXY" {
@@ -15,13 +18,18 @@ variable "INTERNET_PROXY" {
   }
 }
 
-# ===========================
-# Variables: NodeJS docker image
-# ===========================
+variable "DOCKER_HUB_PROXY" {
+  default = ""
+}
+
+variable "DOCKER_VERSION" {
+  validation {
+    condition     = DOCKER_VERSION != ""
+    error_message = "The variable 'DOCKER_VERSION' must not be empty."
+  }
+}
 
 variable "NODE_VERSION" {
-  default = "22"
-
   validation {
     condition     = NODE_VERSION != ""
     error_message = "The variable 'NODE_VERSION' must not be empty."
@@ -29,8 +37,6 @@ variable "NODE_VERSION" {
 }
 
 variable "DEBIAN_VERSION" {
-  default = "bookworm"
-
   validation {
     condition     = DEBIAN_VERSION != ""
     error_message = "The variable 'DEBIAN_VERSION' must not be empty."
@@ -38,39 +44,21 @@ variable "DEBIAN_VERSION" {
 }
 
 # ===========================
-# Variables: Build
-# ===========================
-
-variable "NODE_MODULE_VERSION" {
-  validation {
-    condition     = NODE_MODULE_VERSION != ""
-    error_message = "The variable 'NODE_MODULE_VERSION' must not be empty."
-  }
-}
-
-variable "APP_VERSION" {
-  validation {
-    condition     = APP_VERSION != ""
-    error_message = "The variable 'APP_VERSION' must not be empty."
-  }
-}
-
-variable "APP_LIST" {
-  validation {
-    condition     = APP_LIST != ""
-    error_message = "The variable 'APP_LIST' must not be empty."
-  }
-}
-
-# ===========================
 # Variables: Registry
 # ===========================
+
+variable "REGISTRY_URL" {
+  validation {
+    condition     = REGISTRY_URL != ""
+    error_message = "The variable 'REGISTRY_URL' must not be empty."
+  }
+}
 
 variable "REGISTRY_COMMON" {
   default = {
     type              = "registry"
     compression       = "zstd"
-    compression-level = 10
+    compression-level = 3
   }
 }
 
@@ -78,9 +66,8 @@ variable "REGISTRY_CACHE_COMMON" {
   default = merge(
     REGISTRY_COMMON,
     {
-      mode            = "max"
-      image-manifest  = true
-      push            = true
+      mode = "max"
+      push = true
     }
   )
 }
@@ -89,7 +76,6 @@ variable "REGISTRY_OUTPUT_COMMON" {
   default = merge(
     REGISTRY_COMMON,
     {
-      rewrite-timestamp = true
     }
   )
 }
@@ -99,270 +85,13 @@ variable "REGISTRY_OUTPUT_COMMON" {
 # ---------------------------
 
 target "commons" {
-  dockerfile = "docker/builds/nodejs-apps/prod/Dockerfile"
+  context = "${FC_ROOT}/fc"
 
   args = {
-    NODE_VERSION       = trim(NODE_VERSION, "v")
-    NODE_IGNORE_ENGINE = false
-    DEBIAN_VERSION     = DEBIAN_VERSION
-    INTERNET_PROXY     = INTERNET_PROXY
+    INTERNET_PROXY   = INTERNET_PROXY
+    DOCKER_HUB_PROXY = DOCKER_HUB_PROXY
+    DEBIAN_VERSION   = DEBIAN_VERSION
+    DOCKER_VERSION   = DOCKER_VERSION
+    NODE_VERSION     = trim(NODE_VERSION, "v")
   }
-}
-
-# ---------------------------
-# Target: dev-deps
-# ---------------------------
-
-target "dev-deps" {
-  inherits = [ "commons" ]
-  target = "dev-deps"
-
-  cache-to = [
-    merge(
-      REGISTRY_CACHE_COMMON,
-      { ref = "${REGISTRY_URL}/nodejs-apps/dev-deps:${NODE_MODULE_VERSION}-cache" }
-    )
-  ]
-
-  cache-from = [
-    {
-      type = "registry"
-      ref  = "${REGISTRY_URL}/nodejs-apps/dev-deps:${NODE_MODULE_VERSION}-cache"
-    }
-  ]
-
-  output = [
-    merge(
-      REGISTRY_OUTPUT_COMMON,
-      { name = "${REGISTRY_URL}/nodejs-apps/dev-deps:${NODE_MODULE_VERSION}" }
-    )
-  ]
-}
-
-# ---------------------------
-# Target: prod-deps
-# ---------------------------
-
-target "prod-deps" {
-  inherits = [ "commons" ]
-
-  target = "prod-deps"
-
-  cache-to = [
-    merge(
-      REGISTRY_CACHE_COMMON,
-      { ref = "${REGISTRY_URL}/nodejs-apps/prod-deps:${NODE_MODULE_VERSION}-cache" }
-    )
-  ]
-
-  cache-from = [
-    {
-      type = "registry"
-      ref  = "${REGISTRY_URL}/nodejs-apps/prod-deps:${NODE_MODULE_VERSION}-cache"
-    }
-  ]
-
-  output = [
-    merge(
-      REGISTRY_OUTPUT_COMMON,
-      { name = "${REGISTRY_URL}/nodejs-apps/prod-deps:${NODE_MODULE_VERSION}" }
-    )
-  ]
-}
-
-# ---------------------------
-# Target: nodejs-apps-base
-# ---------------------------
-
-target "prod-base" {
-  inherits = [ "commons" ]
-  target = "prod-base"
-
-  cache-from = [
-    {
-      type = "registry"
-      ref  = "${REGISTRY_URL}/nodejs-apps/prod-base:${DEBIAN_VERSION}-cache"
-    }
-  ]
-
-  cache-to = [
-    merge(
-      REGISTRY_CACHE_COMMON,
-      { ref = "${REGISTRY_URL}/nodejs-apps/prod-base:${DEBIAN_VERSION}-cache" }
-    )
-  ]
-
-  contexts = {
-    pm2 = "./docker/builds/nodejs-apps/prod/includes/pm2"
-    tls = "./docker/builds/tls"
-  }
-}
-
-
-# ---------------------------
-# Target: prod-generic-commons
-# ---------------------------
-
-target "prod-generic-commons" {
-  inherits = [ "prod-base" ]
-  target = "prod-generic"
-
-  args = {
-    APP_VERSION = APP_VERSION
-  }
-
-  cache-from = [
-    {
-      type = "registry"
-      ref  = "${REGISTRY_URL}/nodejs-apps/prod-base:${DEBIAN_VERSION}-cache"
-    },
-    {
-      type = "registry"
-      ref  = "${REGISTRY_URL}/nodejs-apps/dev-deps:${NODE_MODULE_VERSION}-cache"
-    },
-    {
-      type = "registry"
-      ref  = "${REGISTRY_URL}/nodejs-apps/prod-deps:${NODE_MODULE_VERSION}-cache"
-    }
-  ]
-}
-
-# ---------------------------
-# Target: prod-generic (matrix)
-# ---------------------------
-
-target "prod-generic" {
-  inherits = [ "prod-generic-commons" ]
-
-  matrix = {
-    app = split(",", APP_LIST)
-  }
-
-  name = "${app}"
-
-  args = {
-    APP_NAME = "${app}"
-  }
-
-  output = [
-    merge(
-      REGISTRY_OUTPUT_COMMON,
-      { name = "${REGISTRY_URL}/nodejs-apps/${app}:${APP_VERSION}" }
-    )
-  ]
-}
-
-# ---------------------------
-# Target: prod-with-hsm (specific)
-# ---------------------------
-
-target "csmr-hsm-high" {
-  inherits = ["prod-generic-commons"]
-  target = "prod-with-hsm"
-
-  args = {
-    APP_NAME = "csmr-hsm-high"
-  }
-
-  contexts = {
-    hsm = "./docker/builds/nodejs-apps/prod/includes/hsm"
-  }
-
-  output = [
-    merge(
-      REGISTRY_OUTPUT_COMMON,
-      { name = "${REGISTRY_URL}/nodejs-apps/csmr-hsm-high:${APP_VERSION}" }
-    )
-  ]
-}
-
-# ---------------------------
-# Target: command-runner (specific)
-# ---------------------------
-
-target "command-runner" {
-  inherits = ["prod-base"]
-  target = "command-runner-generic"
-
-  args = {
-    APP_NAME  = "command-runner-instance"
-    COMMAND_ARGS = "deployment"
-  }
-  
-  contexts = {
-    pm2 = "./docker/builds/command-apps/includes/pm2"
-  }
-
-  output = [
-    merge(
-      REGISTRY_OUTPUT_COMMON,
-      { name = "${REGISTRY_URL}/nodejs-apps/command-runner:${APP_VERSION}" }
-    )
-  ]
-}
-
-# ---------------------------
-# Target: command-import-sp-sandbox (specific)
-# ---------------------------
-
-target "command-import-sp-sandbox" {
-  inherits = ["prod-base"]
-  target = "command-runner-generic"
-
-  args = {
-    APP_NAME  = "command-import-sp-sandbox"
-    COMMAND_ARGS = "import-sp-sandbox"
-  }
-  
-  contexts = {
-    pm2 = "./docker/builds/command-apps/includes/pm2"
-  }
-
-  output = [
-    merge(
-      REGISTRY_OUTPUT_COMMON,
-      { name = "${REGISTRY_URL}/nodejs-apps/command-import-sp-sandbox:${APP_VERSION}" }
-    )
-  ]
-}
-
-# ---------------------------
-# Target: command-pre-deploy (specific)
-# ---------------------------
-
-target "command-pre-deploy" {
-  inherits = ["prod-base"]
-  target = "command-pre-deploy"
-
-  matrix = {
-    app = ["partners"]
-  }
-
-  name = "${app}-pre-deploy"
-
-  args = {
-    APP_NAME = "command-pre-deploy"
-    TARGET_APP = "${app}"
-    COMMAND_ARGS = "command-pre-deploy"
-  }
-
-  contexts = {
-    pm2 = "./docker/builds/command-apps/includes/pm2"
-  }
-
-  output = [
-    merge(
-      REGISTRY_OUTPUT_COMMON,
-      { name = "${REGISTRY_URL}/nodejs-apps/${app}-pre-deploy:${APP_VERSION}" }
-    )
-  ]
-}
-
-
-# ---------------------------
-# Groups
-# ---------------------------
-
-group "dependencies" {
-  targets = ["dev-deps", "prod-deps"]
 }

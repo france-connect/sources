@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 _logs() {
   local option=$1
 

@@ -1,0 +1,7 @@
+// @NOTE duplicated from back/apps/partners/src/enums/access-control-permission.enum.ts
+export enum AccessControlPermission {
+  SP_ADMIN = 'SP_ADMIN',
+  SP_TECH = 'SP_TECH',
+  SP_CONTRIBUTOR = 'SP_CONTRIBUTOR',
+  INSTANCE_CONTRIBUTOR = 'INSTANCE_CONTRIBUTOR',
+}

@@ -6,7 +6,7 @@ import { loadAllServiceProviders } from './load-all-service-providers';
 describe('loadAllServiceProviders', () => {
   beforeEach(() => {
     // Given
-    jest.mocked(ConfigService.get).mockReturnValue({
+    jest.mocked(ConfigService.get).mockReturnValueOnce({
       endpoints: {
         serviceProviders: '/api-serviceProviders-mock',
       },

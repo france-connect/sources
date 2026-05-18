@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 function _hook_mongo() {
   local app="$1"
 

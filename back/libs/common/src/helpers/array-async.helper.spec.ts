@@ -31,6 +31,33 @@ describe('ArrayAsyncHelper', () => {
     });
   });
 
+  describe('someAsync', () => {
+    it('should return true if at least one element matches async predicate', async () => {
+      // Given
+      const arr = [1, 2, 3];
+      const predicate = async (value: number) =>
+        await Promise.resolve(value % 2 === 0);
+      // When
+      const result = await ArrayAsyncHelper.someAsync(arr, predicate);
+
+      // Then
+      expect(result).toBe(true);
+    });
+
+    it('should return false if no element matches async predicate', async () => {
+      // Given
+      const arr = [1, 3, 5];
+      const predicate = async (value: number) =>
+        await Promise.resolve(value % 2 === 0);
+
+      // When
+      const result = await ArrayAsyncHelper.someAsync(arr, predicate);
+
+      // Then
+      expect(result).toBe(false);
+    });
+  });
+
   describe('everyAsync', () => {
     it('should return true if all elements match async predicate', async () => {
       // Given

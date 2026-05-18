@@ -2,6 +2,7 @@ import type { FallbackProps } from 'react-error-boundary';
 import { useDocumentTitle } from 'usehooks-ts';
 
 import { LogoFranceConnect } from '@fc/assets';
+import { isErrorLike, Strings } from '@fc/common';
 
 // @TODO
 // - translate with i18n
@@ -11,6 +12,12 @@ export const AppBoundaryComponent = ({ error }: FallbackProps) => {
 
   // @NOTE TSError : img.src should be a string
   const logo = LogoFranceConnect as unknown as string;
+
+  const iserror = isErrorLike(error);
+  const errorMessage = iserror ? error.message : String(error);
+  const errorStack = iserror ? error.stack?.split(Strings.NEW_LINE) : [];
+
+  const hasStack = errorStack && errorStack.length > 0;
 
   return (
     <div className="sticky-body">
@@ -49,12 +56,12 @@ export const AppBoundaryComponent = ({ error }: FallbackProps) => {
           {/* <!-- APPLICATION CONTENT --> */}
           <h1>Oooops, Something went wrong ! 🤷</h1>
           <div className="fr-alert fr-alert--error fr-alert--md">
-            <h3 className="fr-alert__title">{error.message}</h3>
-            {error && (
-              <ul>
-                {error.stack.split('\n').map((v: string, index: number) => (
+            <h3 className="fr-alert__title">{errorMessage}</h3>
+            {hasStack && (
+              <ul data-testid="app-boundary-error-stack">
+                {errorStack.map((str: string, index: number) => (
                   // eslint-disable-next-line react/no-array-index-key
-                  <li key={`error-stack::${index}`}>{v}</li>
+                  <li key={`error-stack::${index}`}>{str}</li>
                 ))}
               </ul>
             )}

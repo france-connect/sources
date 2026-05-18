@@ -1,6 +1,9 @@
 import { I18nTranslationsMapType } from '@fc/i18n';
 
 export const enGB: I18nTranslationsMapType = {
+  // Common
+  'common.new_window': 'Open a new window',
+
   // Interaction
   'interaction.tuto.title': "Why can't I find my usual accounts?",
   'interaction.tuto.body':

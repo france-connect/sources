@@ -15,19 +15,17 @@ const availability = !provider.active
   </p>
 <% } %>
 
-<figure
-  class="fr-content-media"
->
+<span class="fr-content-media">
   <% if(provider.image) { %>
-  <div class="fr-content-media__img">
+  <span class="fr-content-media__img">
     <img
       alt=""
       src="<%= $asset(`/img/fi/${provider.image}`) %>" />
-  </div>
+  </span>
   <% } %>
-  <figcaption class="fr-content-media__caption fr-text--xs fr-mt-1-5v">
+  <span class="fr-content-media__caption fr-text--xs fr-mt-1-5v">
     <%= provider.title %>
     <br />
     <%= availability %>
-  </figcaption>
-</figure>
+  </span>
+</span>

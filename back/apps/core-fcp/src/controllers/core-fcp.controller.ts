@@ -74,6 +74,12 @@ export class CoreFcpController {
     return res.render('accessibility');
   }
 
+  @Get(CoreRoutes.LEGAL_NOTICE)
+  @Header('cache-control', 'no-store')
+  getLegalNotice(@Res() res) {
+    return res.render('legal-notice');
+  }
+
   // More than 4 parameters authorized for dependency injection
   // eslint-disable-next-line max-params
   @Get(CoreRoutes.INTERACTION)

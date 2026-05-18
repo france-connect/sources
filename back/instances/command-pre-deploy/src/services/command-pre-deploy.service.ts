@@ -53,22 +53,31 @@ export class CommandPreDeployService implements OnModuleInit {
       );
 
       if (stdout) {
-        this.logger.info({ context: { stdout } }, 'Pre-deploy script output');
+        this.logger.info({
+          context: { stdout },
+          msg: 'Pre-deploy script output',
+        });
       }
 
       if (stderr) {
-        this.logger.warning(
-          { context: { stderr } },
-          'Pre-deploy script stderr output',
-        );
+        this.logger.warning({
+          context: { stderr },
+          msg: 'Pre-deploy script stderr output',
+        });
       }
 
       this.logger.notice('Pre-deploy completed successfully');
     } catch (error) {
-      this.logger.crit(
-        { context: { scriptPath, reason: error.message, stack: error.stack } },
-        'Failed to run pre-deploy script',
-      );
+      this.logger.crit({
+        context: {
+          scriptPath,
+          reason: error.message,
+          stack: error.stack,
+          output: error.stdout.split('\n'),
+        },
+        error,
+        msg: 'Failed to run pre-deploy script',
+      });
       throw error;
     }
   }

@@ -1,9 +1,14 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`UserPreferencesComponent should match the snapshot 1`] = `
 <div>
-  <div>
-    UserPreferencesFormComponent
-  </div>
+  <form
+    data-testid="user-preferences-form"
+    id="user-preferences-form-component"
+  >
+    <div>
+      UserPreferencesFormComponent
+    </div>
+  </form>
 </div>
 `;

@@ -5,4 +5,5 @@ export enum Strings {
   WHITE_SPACE = ' ',
   SLASH = '/',
   NBSP_UNICODE = '\u00A0',
+  NEW_LINE = '\n',
 }

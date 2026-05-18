@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 source "$INCLUDE_DIR/hooks/fc-apps.sh"
 source "$INCLUDE_DIR/hooks/legacy-fc-commons.sh"
 source "$INCLUDE_DIR/hooks/mongo.sh"

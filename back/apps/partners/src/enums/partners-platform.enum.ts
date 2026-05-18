@@ -1,0 +1,4 @@
+export enum PartnersPlatformEnum {
+  FRANCE_CONNECT_LOW = 'FRANCE_CONNECT_LOW',
+  FRANCE_CONNECT_HIGH = 'FRANCE_CONNECT_HIGH',
+}

@@ -1,8 +1,10 @@
 export * from './array-async.helper';
 export * from './capitalize-words.helper';
+export * from './case-conversion.helper';
 export * from './count-occurence.helper';
 export * from './difference';
 export * from './dto-validation';
+export * from './normalize-email.helper';
 export * from './object-diff.helper';
 export * from './override-with-source-if-not-null';
 export * from './parse-boolean';
@@ -10,5 +12,6 @@ export * from './parse-json-property';
 export * from './safely-parse-json';
 export * from './split-in-two-parts.helper';
 export * from './unique';
+export * from './unix-timestamp.helper';
 export * from './url.helper';
 export * from './wait';

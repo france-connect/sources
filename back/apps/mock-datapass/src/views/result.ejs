@@ -11,15 +11,19 @@
 
             <div>
               <strong>Code HTTP :</strong>
-              <div class="fr-highlight" id="response-status-code">
+              <div
+                class="fr-highlight"
+                id="response-status-code"
+                data-testid="mock-datapass-response-status-code"
+              >
                 <%= status %>
               </div>
             </div>
 
             <div>
-              <strong>Corp de la réponse :</strong>
+              <strong>Corps de la réponse :</strong>
               <div class="fr-highlight">
-                <pre><code id="response-body"><%= JSON.stringify(data, null, 2) %></code></pre>
+                <pre><code id="response-body" data-testid="mock-datapass-response-body"><%= JSON.stringify(data, null, 2) %></code></pre>
               </div>
             </div>
           </div>

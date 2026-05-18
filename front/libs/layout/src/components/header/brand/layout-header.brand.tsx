@@ -17,7 +17,7 @@ export const LayoutHeaderBrandComponent = React.memo(() => {
 
   const config = ConfigService.get<LayoutConfig>(LayoutOptions.CONFIG_NAME);
   const { showServiceTitle } = config.features;
-  const { baseline, homepage, logo, name } = config.service;
+  const { baseline, homepage, logo, logoTitle, name } = config.service;
 
   const backToHomepage = t('Layout.documentTitle.backToHomepage');
   const linkTitle = getAccessibleTitle(baseline, name);
@@ -31,7 +31,11 @@ export const LayoutHeaderBrandComponent = React.memo(() => {
           </Link>
         </div>
         <div className="fr-header__operator">
-          <img alt={linkTitle} className="fr-responsive-img" src={logo as unknown as string} />
+          <img
+            alt={logoTitle ?? linkTitle}
+            className="fr-responsive-img"
+            src={logo as unknown as string}
+          />
         </div>
         {isUserConnected && <LayoutHeaderMobileBurgerButton />}
       </div>

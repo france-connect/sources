@@ -8,7 +8,6 @@ import {
   dgfip,
   dsnj,
   dss,
-  fcpLow,
   ft,
   mesri,
 } from '@fc/scopes';
@@ -23,7 +22,6 @@ import {
 export default {
   scope: [
     ...new Set([
-      ...Object.keys(fcpLow.scopes),
       ...Object.keys(dgfip.scopes),
       ...Object.keys(cnam.scopes),
       ...Object.keys(cnous.scopes),

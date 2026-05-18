@@ -4,7 +4,7 @@ const collections = db.getCollectionNames();
 
 collections.forEach((collection) => {
   print(`Resetting ${collection} collection...`);
-  db[collection].remove({});
-  db[collection].dropIndex({});
+  db[collection].deleteMany({});
+  db[collection].dropIndexes();
 });
 print("All collections reset!");

@@ -213,10 +213,10 @@ Fonctionnalité: API - authorize
 
     @exceptions
     Exemples:
-      | redirectUri                          | httpCode | error    | errorDescription                                                                                            |
-      |                                      | 400      | Y030007  | Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous.                 |
-      | https://my-malicious-url.fr/callback | 400      | Y04C013C | Une erreur de communication avec le fournisseur de service est survenue. Veuillez réessayer ultérieurement. |
-      | example.com                          | 400      | Y030007  | Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous.                 |
+      | redirectUri                          | httpCode | error    | errorDescription                                                                                                                                                                                                                     |
+      |                                      | 400      | Y030007  | Un incident technique est en cours sur le service à l’origine de la demande d’authentification via FranceConnect. Nous allons nous rapprocher de leurs équipes pour résoudre cet incident. Veuillez vous reconnecter ultérieurement. |
+      | https://my-malicious-url.fr/callback | 400      | Y04C013C | Une erreur de communication avec le fournisseur de service est survenue. Veuillez réessayer ultérieurement.                                                                                                                          |
+      | example.com                          | 400      | Y030007  | Un incident technique est en cours sur le service à l’origine de la demande d’authentification via FranceConnect. Nous allons nous rapprocher de leurs équipes pour résoudre cet incident. Veuillez vous reconnecter ultérieurement. |
 
 
   @exceptions

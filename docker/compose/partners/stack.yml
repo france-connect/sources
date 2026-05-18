@@ -1,6 +1,6 @@
 services:
   partners:
-    image: alpine
+    image: ${DOCKER_HUB_PROXY}alpine
     depends_on:
       - "partners-front"
       - "partners-back"
@@ -10,13 +10,13 @@ services:
       - "csmr-config-partners"
 
   bdd-partners:
-    image: alpine
+    image: ${DOCKER_HUB_PROXY}alpine
     depends_on:
       # -- PARTNERS
       - "partners"
 
   import-sandbox:
-    image: alpine
+    image: ${DOCKER_HUB_PROXY}alpine
     depends_on:
       - "partners"
       - "mongo-fcp-high"

@@ -1,6 +1,8 @@
+import { DatapassEvent } from './datapass-event';
 import { Environment } from './environment';
 import { Instance } from './instance';
 import { RmqMessage } from './rmq-message';
+import { ServiceProvider } from './service-provider';
 import { UserData } from './user';
 
 // Cypress Alias
@@ -27,6 +29,10 @@ declare module 'mocha' {
     rmqResponseMessage: RmqMessage;
     // BDD context
     env: Environment;
+    datapassEvents: Record<string, DatapassEvent>;
+    serviceProviders: ServiceProvider[];
+    serviceProvider: ServiceProvider;
+    serviceProviderId: string;
     instances: Instance[];
     instance: Instance;
     users: UserData[];
@@ -36,7 +42,10 @@ declare module 'mocha' {
   }
 }
 
+export * from './datapass-event';
 export * from './environment';
 export * from './instance';
 export * from './rmq-message';
+export * from './service-provider';
+export * from './service-provider-response';
 export * from './user';

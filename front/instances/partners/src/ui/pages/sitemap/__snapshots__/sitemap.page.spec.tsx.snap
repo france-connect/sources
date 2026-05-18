@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`SitemapPage should match the snapshot, when sitemap prop into layout config is defined 1`] = `
 <div>

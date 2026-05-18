@@ -13,7 +13,7 @@ Fonctionnalité: API - authorize localhost
     Et le corps de la réponse contient une page web
     Et je suis redirigé vers la page erreur technique FranceConnect
     Et le code d'erreur FranceConnect est "Y030007"
-    Et le message d'erreur FranceConnect est "Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous."
+    Et le message d'erreur FranceConnect est "Un incident technique est en cours sur le service à l’origine de la demande d’authentification via FranceConnect. Nous allons nous rapprocher de leurs équipes pour résoudre cet incident. Veuillez vous reconnecter ultérieurement."
     Et le lien retour vers le FS n'est pas affiché dans la page erreur technique
 
   @fcpHigh @ignoreDocker
@@ -27,7 +27,7 @@ Fonctionnalité: API - authorize localhost
     Et le corps de la réponse contient une page web
     Et je suis redirigé vers la page erreur technique FranceConnect
     Et le code d'erreur FranceConnect est "Y030007"
-    Et le message d'erreur FranceConnect est "Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous."
+    Et le message d'erreur FranceConnect est "Un incident technique est en cours sur le service à l’origine de la demande d’authentification via FranceConnect. Nous allons nous rapprocher de leurs équipes pour résoudre cet incident. Veuillez vous reconnecter ultérieurement."
     Et le lien retour vers le FS n'est pas affiché dans la page erreur technique
 
   @fcpLow @ignoreDocker

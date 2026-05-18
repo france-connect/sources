@@ -43,4 +43,19 @@ describe('ToggleInputComponent', () => {
     // Then
     expect(onUpdateMock).toHaveBeenCalled();
   });
+
+  it('should not call onUpdate when input change', () => {
+    // Given
+    const onUpdateMock = jest.fn();
+
+    // When
+    const { getByTestId } = render(
+      <ToggleInputComponent disabled input={fieldInputPropsMock} onUpdate={undefined} />,
+    );
+    const inputElement = getByTestId('field-toggle-input-any-field-name-mock');
+    fireEvent.click(inputElement);
+
+    // Then
+    expect(onUpdateMock).not.toHaveBeenCalled();
+  });
 });
