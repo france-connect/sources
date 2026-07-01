@@ -2,41 +2,27 @@ import { Then, When } from '@badeball/cypress-cucumber-preprocessor';
 
 import ServiceProviderPage from '../pages/service-provider-page';
 
+const getLogoutUrls = (fcRootUrl: string, idpUrl: string, spUrl: string) => ({
+  'fcp:logoutCallback': `${fcRootUrl}/api/v2/client/logout-callback*`,
+  'fcp:sessionEnd': `${fcRootUrl}/api/v2/session/end*`,
+  'fcp:sessionEndConfirm': `${fcRootUrl}/api/v2/session/end/confirm*`,
+  'idp:sessionEnd': `${idpUrl}/session/end*`,
+  'sp:logoutCallback': `${spUrl}/client/logout-callback*`,
+});
+
 When(
-  "je me déconnecte du fournisseur de service et du fournisseur d'identité",
+  /^je me déconnecte du fournisseur de service et (?:du fournisseur d'identité|de FranceConnect)$/,
   function () {
     const serviceProviderPage = new ServiceProviderPage(this.serviceProvider);
     const { url: idpUrl } = this.identityProvider;
     const { fcRootUrl } = this.env;
     const { url: spUrl } = this.serviceProvider;
 
-    cy.intercept(`${idpUrl}/session/end*`).as('idp:sessionEnd');
-    cy.intercept(`${fcRootUrl}/api/v2/client/logout-callback*`).as(
-      'idp:logoutCallback',
-    );
-    cy.intercept(`${fcRootUrl}/api/v2/session/end/confirm*`).as(
-      'fcp:sessionEndConfirm',
-    );
-    cy.intercept(`${spUrl}/client/logout-callback*`).as('sp:logoutCallback');
+    const logoutUrls = getLogoutUrls(fcRootUrl, idpUrl, spUrl);
 
-    serviceProviderPage.getLogoutButton().click();
-  },
-);
-
-When(
-  'je me déconnecte du fournisseur de service et de FranceConnect',
-  function () {
-    const serviceProviderPage = new ServiceProviderPage(this.serviceProvider);
-    const { url: idpUrl } = this.identityProvider;
-    const { fcRootUrl } = this.env;
-    const { url: spUrl } = this.serviceProvider;
-
-    cy.intercept(`${idpUrl}/session/end*`).as('idp:sessionEnd');
-    cy.intercept(`${fcRootUrl}/api/v2/session/end*`).as('fcp:sessionEnd');
-    cy.intercept(`${fcRootUrl}/api/v2/session/end/confirm*`).as(
-      'fcp:sessionEndConfirm',
+    Object.entries(logoutUrls).forEach(([key, urlPattern]) =>
+      cy.intercept(urlPattern).as(key),
     );
-    cy.intercept(`${spUrl}/client/logout-callback*`).as('sp:logoutCallback');
 
     serviceProviderPage.getLogoutButton().click();
   },
@@ -74,7 +60,7 @@ Then("je suis déconnecté du fournisseur d'identité", function () {
     expect(intercept.response?.statusCode).to.equal(200);
   });
 
-  cy.wait('@idp:logoutCallback').then((intercept) => {
+  cy.wait('@fcp:logoutCallback').then((intercept) => {
     cy.log(intercept.request.url);
     expect(intercept.response?.statusCode).to.equal(200);
   });

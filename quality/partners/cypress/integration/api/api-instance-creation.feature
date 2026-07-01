@@ -12,7 +12,9 @@ Fonctionnalité: API - instance création
     Et l'entête de la réponse a une propriété "content-type" contenant "application/json"
     Et le corps de la réponse a 2 propriétés
     Et le corps de la réponse a une propriété "type" égale à "INSTANCE"
-    Et le corps de la réponse a une propriété "payload" avec 0 attribut
+    Et le corps de la réponse a une propriété "payload" avec 2 attributs
+    Et le corps de la réponse a une propriété "payload.instanceId"
+    Et le corps de la réponse a une propriété "payload.versionId"
 
   Scénario: API instance création - erreur csrf-token manquant
     Etant donné que je me connecte à l'espace partenaires

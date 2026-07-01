@@ -5,17 +5,13 @@ exports[`ServiceProvidersPage should match snapshot 1`] = `
   <div
     class="fr-col-12 fr-col-lg-10 fr-col-xl-8"
   >
-    <div
-      class="fr-col-12"
+    <h1
+      data-testid="service-providers-page-title"
     >
-      <h1
-        data-testid="service-providers-page-title"
-      >
-        CorePartners.serviceProvidersPage.title
-      </h1>
-    </div>
+      CorePartners.serviceProvidersPage.title
+    </h1>
     <div
-      class="fr-col-12 fr-mt-5w"
+      class="fr-mt-5w"
     >
       <div
         data-mockid="ServiceProvidersPageNoticeComponent"

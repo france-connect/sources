@@ -1,20 +1,22 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`LayoutHeaderToolsComponent should match the snapshot 1`] = `
+exports[`LayoutHeaderToolsComponent should match the snapshot when user is connected 1`] = `
 <div>
   <ul
     class="fr-btns-group"
   >
-    <li>
-      <div>
-        LayoutHeaderAccountComponent
-      </div>
-    </li>
-    <li>
-      <div>
-        LayoutHeaderLogoutButton
-      </div>
-    </li>
+    <div
+      data-mockid="LayoutHeaderToolsLink"
+    />
+    <div
+      data-mockid="LayoutHeaderToolsLink"
+    />
+    <div>
+      LayoutHeaderAccountComponent
+    </div>
+    <div>
+      LayoutHeaderLogoutButton
+    </div>
   </ul>
 </div>
 `;
@@ -24,11 +26,12 @@ exports[`LayoutHeaderToolsComponent should match the snapshot, when AccountConfi
   <ul
     class="fr-btns-group"
   >
-    <li>
-      <div>
-        LayoutHeaderAccountComponent
-      </div>
-    </li>
+    <div
+      data-mockid="LayoutHeaderToolsLink"
+    />
+    <div>
+      LayoutHeaderAccountComponent
+    </div>
   </ul>
 </div>
 `;
@@ -38,11 +41,12 @@ exports[`LayoutHeaderToolsComponent should match the snapshot, when AccountConfi
   <ul
     class="fr-btns-group"
   >
-    <li>
-      <div>
-        LayoutHeaderAccountComponent
-      </div>
-    </li>
+    <div
+      data-mockid="LayoutHeaderToolsLink"
+    />
+    <div>
+      LayoutHeaderAccountComponent
+    </div>
   </ul>
 </div>
 `;

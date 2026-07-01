@@ -1,6 +1,6 @@
 #language: fr
 @validationVisuelle @fcpHigh
-Fonctionnalité: Validation Visuelle
+Fonctionnalité: Validation Visuelle - FC+
 
   Plan du Scénario: Validation Visuelle - cinématique depuis un FS public sur <device>
     Etant donné que j'utilise un navigateur web sur "<device>"

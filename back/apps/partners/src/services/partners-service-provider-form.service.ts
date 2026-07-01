@@ -1,11 +1,13 @@
 import { Injectable } from '@nestjs/common';
 
-import { PartnersServiceProvider } from '@entities/typeorm';
+import { PartnersAccount, PartnersServiceProvider } from '@entities/typeorm';
 
+import { AccountPermissionInterface } from '@fc/access-control';
 import { I18nService } from '@fc/i18n';
 import { LoggerService } from '@fc/logger';
 import { ScopesService } from '@fc/scopes';
 
+import { AccessControlPermission } from '../enums';
 import { PartnersServiceProviderPayloadInterface } from '../interfaces';
 
 @Injectable()
@@ -56,5 +58,34 @@ export class PartnersServiceProviderFormService {
       createdAt: serviceProvider.createdAt,
       updatedAt: serviceProvider.updatedAt,
     };
+  }
+
+  sortPermissions(
+    a: AccountPermissionInterface<PartnersAccount, AccessControlPermission>,
+    b: AccountPermissionInterface<PartnersAccount, AccessControlPermission>,
+  ): number {
+    // First SP_ADMIN, then SP_TECH, then SP_CONTRIBUTOR, and sort by lastConnection descending order inside the same permission type
+    const order = [
+      AccessControlPermission.SP_ADMIN,
+      AccessControlPermission.SP_TECH,
+      AccessControlPermission.SP_CONTRIBUTOR,
+    ];
+    const indexA = order.indexOf(a.permissionType);
+    const indexB = order.indexOf(b.permissionType);
+
+    if (indexA !== indexB) {
+      return indexA - indexB;
+    }
+
+    return this.getLastConnectionTime(b) - this.getLastConnectionTime(a);
+  }
+
+  private getLastConnectionTime({
+    account,
+  }: AccountPermissionInterface<
+    PartnersAccount,
+    AccessControlPermission
+  >): number {
+    return account.lastConnection?.getTime() || 0;
   }
 }

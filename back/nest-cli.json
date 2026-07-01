@@ -579,7 +579,32 @@
       "entryFile": "main",
       "sourceRoot": "instances/wallet-bridge/src",
       "compilerOptions": {
-        "tsConfigPath": "instances/wallet-bridge/tsconfig.app.json"
+        "tsConfigPath": "instances/wallet-bridge/tsconfig.app.json",
+        "assets": [
+          "../../../apps/wallet-bridge/**/*.ejs",
+          "../../../apps/wallet-bridge/**/*.css",
+          "../../../apps/wallet-bridge/**/*.js",
+          "../../../apps/wallet-bridge/**/*.svg",
+          "../../../apps/wallet-bridge/**/*.png",
+          "../../../apps/wallet-bridge/**/*.ico",
+          "../../../apps/wallet-bridge/**/*.woff2",
+          "../../../apps/wallet-bridge/**/*.webmanifest",
+          "../../../apps/wallet-bridge/**/robots.txt",
+          "../../../instances/wallet-bridge/src/**/*.js",
+          "../../../instances/wallet-bridge/src/**/*.css",
+          "../../../instances/wallet-bridge/src/**/*.ejs",
+          "../../../instances/wallet-bridge/src/**/*.ico",
+          "../../../instances/wallet-bridge/src/**/*.svg",
+          "../../../instances/wallet-bridge/src/**/*.png",
+          "../../../instances/wallet-bridge/src/**/*.woff2",
+          "../../../instances/wallet-bridge/src/**/*.webmanifest",
+          "../../../instances/wallet-bridge/src/**/robots.txt",
+          {
+            "include": "../../../node_modules/@gouvfr/dsfr/dist/",
+            "outDir": "dist/instances/wallet-bridge/public/gouvfr/.",
+            "watchAssets": false
+          }
+        ]
       }
     },
     "eidas-bridge": {
@@ -669,6 +694,15 @@
       "sourceRoot": "libs/elasticsearch/src",
       "compilerOptions": {
         "tsConfigPath": "libs/elasticsearch/tsconfig.lib.json"
+      }
+    },
+    "eudi": {
+      "type": "library",
+      "root": "libs/eudi",
+      "entryFile": "index",
+      "sourceRoot": "libs/eudi/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/eudi/tsconfig.lib.json"
       }
     },
     "exceptions": {
@@ -840,6 +874,15 @@
       "sourceRoot": "libs/mailer/src",
       "compilerOptions": {
         "tsConfigPath": "libs/mailer/tsconfig.lib.json"
+      }
+    },
+    "mdoc": {
+      "type": "library",
+      "root": "libs/mdoc",
+      "entryFile": "index",
+      "sourceRoot": "libs/mdoc/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/mdoc/tsconfig.lib.json"
       }
     },
     "microservices": {
@@ -1139,6 +1182,15 @@
         "tsConfigPath": "libs/oidc-provider/tsconfig.lib.json"
       }
     },
+    "openid4vp": {
+      "type": "library",
+      "root": "libs/openid4vp",
+      "entryFile": "index",
+      "sourceRoot": "libs/openid4vp/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/openid4vp/tsconfig.lib.json"
+      }
+    },
     "override-code": {
       "type": "library",
       "root": "libs/override-code",
@@ -1227,6 +1279,15 @@
       "sourceRoot": "libs/postgres/src",
       "compilerOptions": {
         "tsConfigPath": "libs/postgres/tsconfig.lib.json"
+      }
+    },
+    "qrcode": {
+      "type": "library",
+      "root": "libs/qrcode",
+      "entryFile": "index",
+      "sourceRoot": "libs/qrcode/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/qrcode/tsconfig.lib.json"
       }
     },
     "rabbitmq": {

@@ -3,27 +3,9 @@ import { Then } from '@badeball/cypress-cucumber-preprocessor';
 // Custom blackout methods
 const blackout = [
   { selector: '#error-id' },
-  { selector: '#tracks-list h2', width: 200 },
   {
-    selector:
-      '#tracks-list button [data-testid="TrackCardHeaderComponent-connection-date-label"]',
-    width: 175,
-  },
-  {
-    selector:
-      '#tracks-list button [data-testid="ConnectionComponent-connection-datetime-label"]',
-    width: 275,
-  },
-  {
-    selector: '#tracks-list button [data-testid="ClaimsComponent-date-label"]',
-    width: 275,
-  },
-  {
-    selector: '[data-testid="updateidpsettings-date"]',
-    width: 275,
-  },
-  {
-    selector: '[data-testid="connection-notification-message"]',
+    selector: 'tr[id^="service-provider-permissions--row"] td:nth-child(4)',
+    width: 130,
   },
 ];
 const blackoutDiv = (width) => {
@@ -47,7 +29,12 @@ const prepareScreenshot = () => {
       blackout.forEach(({ selector, width }) => {
         const $elementToBlackout = $el.find(selector);
         if ($elementToBlackout) {
-          $elementToBlackout.wrap(blackoutDiv(width));
+          // Wrap the content of the cell in order to keep the table layout
+          if ($elementToBlackout.is('td')) {
+            $elementToBlackout.contents().wrap(blackoutDiv(width));
+          } else {
+            $elementToBlackout.wrap(blackoutDiv(width));
+          }
         }
       });
     },

@@ -45,14 +45,14 @@ export class JwtService {
   ) {}
 
   getFirstRelevantKey(
-    jwks: JSONWebKeySet,
-    alg: KekAlg,
+    jwks: JSONWebKeySet | JwksDto,
     use: Use,
+    alg?: KekAlg,
     kid?: string,
   ): JWK {
     const relevantKeys = jwks.keys
       .filter((jwk: JWK) => jwk.use === use)
-      .filter((jwk: JWK) => jwk.alg === alg)
+      .filter((jwk: JWK) => (alg ? jwk.alg === alg : true))
       .filter((jwk: JWK) => (kid ? jwk.kid === kid : true));
 
     if (relevantKeys.length === 0) {
@@ -63,7 +63,7 @@ export class JwtService {
 
     const [key] = relevantKeys;
 
-    return key;
+    return key as JWK;
   }
 
   getKeyForToken(jwt: string, jwks: JSONWebKeySet, use: Use): JWK {
@@ -72,7 +72,7 @@ export class JwtService {
     const alg = headers.alg as KekAlg;
     const kid = headers.kid;
 
-    const key = this.getFirstRelevantKey(jwks, alg, use, kid);
+    const key = this.getFirstRelevantKey(jwks, use, alg, kid);
 
     return key;
   }
@@ -97,8 +97,8 @@ export class JwtService {
     return encryptedJwt;
   }
 
-  async decrypt(jwt: string, jwks: JSONWebKeySet): Promise<string> {
-    const jwk = this.getKeyForToken(jwt, jwks, Use.ENC);
+  async decrypt(jwt: string, jwks: JSONWebKeySet | JwksDto): Promise<string> {
+    const jwk = this.getKeyForToken(jwt, jwks as JSONWebKeySet, Use.ENC);
 
     const key = await this.importJwk(jwk);
 
@@ -148,9 +148,9 @@ export class JwtService {
   async verify(
     jwt: string,
     issuer: string,
-    jwks: JSONWebKeySet,
+    jwks: JSONWebKeySet | JwksDto,
   ): Promise<JWTPayload> {
-    const jwk = this.getKeyForToken(jwt, jwks, Use.SIG);
+    const jwk = this.getKeyForToken(jwt, jwks as JSONWebKeySet, Use.SIG);
 
     const key = await this.importJwk(jwk);
 

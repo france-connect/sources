@@ -760,6 +760,59 @@ const fip = {
     disabledForLegacy: true,
     amr: ["eidas"],
   },
+
+  // Wallet Bridge as Identity Provider (EUDI wallet, standard OIDC, signing only — no encryption)
+  "wallet-bridge": {
+    uid: "b6d907cf-3552-41f3-80d7-a7685badc3a9",
+    url: "https://wallet-bridge-low.docker.dev-franceconnect.fr",
+    name: "wallet-bridge-low",
+    image: "fi-mock-eleve.svg",
+    imageFocus: "fi-mock-eleve.svg",
+    alt: "Wallet Bridge",
+    title: "Wallet Bridge (EUDI)",
+    active: true,
+    display: true,
+    isBeta: false,
+    featureHandlers: {
+      coreVerify: "core-fcp-default-verify",
+      authenticationEmail: null,
+      idpIdentityCheck: "core-fcp-default-identity-check",
+      coreAuthorization: "core-fcp-default-authorization",
+    },
+    clientID: "wallet-bridge-low-client-id",
+    client_secret:
+      "jClItOnQiSZdE4kxm7EWzJbz4ckfD89k1e3NJw/pbGRHD/Jp6ooupqmHTyc3b62L9wqyF2TlR/5hJejE",
+    response_types: ["code"],
+    revocation_endpoint_auth_method: "client_secret_post",
+    token_endpoint_auth_method: "client_secret_post",
+    discovery: false,
+    order: 9,
+    authzURL:
+      "https://wallet-bridge-low.docker.dev-franceconnect.fr/authorize",
+    tokenURL:
+      "https://wallet-bridge-low.docker.dev-franceconnect.fr/token",
+    userInfoURL:
+      "https://wallet-bridge-low.docker.dev-franceconnect.fr/userinfo",
+    jwksURL:
+      "https://wallet-bridge-low.docker.dev-franceconnect.fr/jwks",
+    id_token_signed_response_alg: "ES256",
+    // Encryption is out of scope — wallet-bridge signs only (ES256)
+    id_token_encrypted_response_alg: "",
+    id_token_encrypted_response_enc: "",
+    userinfo_signed_response_alg: "ES256",
+    userinfo_encrypted_response_alg: "",
+    userinfo_encrypted_response_enc: "",
+    trustedIdentity: false,
+    eidas: 3,
+    allowedAcr: ["eidas1", "eidas2", "eidas3"],
+    mailto: "",
+    specificText: "specific text wallet-bridge",
+    disabledForLegacy: false,
+    createdAt: new Date("2024-01-01 00:00:00"),
+    updatedAt: new Date("2024-01-01 00:00:00"),
+    updatedBy: "admin",
+    amr: [],
+  },
 };
 
 // -- FIs ----------

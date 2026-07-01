@@ -1,0 +1,46 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`LayoutHeaderToolsLink should match the snapshot, with external true 1`] = `
+<div>
+  <li>
+    <a
+      class="fr-btn"
+      href="/any-href-mock"
+      rel="noopener noreferrer external"
+      target="_blank"
+      title="any title mock"
+    >
+      any label mock
+    </a>
+  </li>
+</div>
+`;
+
+exports[`LayoutHeaderToolsLink should match the snapshot, with icon and dataTestId 1`] = `
+<div>
+  <li>
+    <a
+      class="fr-btn fr-icon-any-icon-mock"
+      data-testid="any-data-testid-mock"
+      href="/any-href-mock"
+      title="any title mock"
+    >
+      any label mock
+    </a>
+  </li>
+</div>
+`;
+
+exports[`LayoutHeaderToolsLink should match the snapshot, with minimal props 1`] = `
+<div>
+  <li>
+    <a
+      class="fr-btn"
+      href="/any-href-mock"
+      title="any title mock"
+    >
+      any label mock
+    </a>
+  </li>
+</div>
+`;

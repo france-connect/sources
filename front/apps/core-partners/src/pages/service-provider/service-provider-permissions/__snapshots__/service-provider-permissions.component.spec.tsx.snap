@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ServiceProviderPermissionsComponent should match snapshot 1`] = `
+<div>
+  <div
+    class="fr-col-12 fr-col-lg-10 fr-col-xl-8 fr-mt-4w"
+  >
+    <h2>
+      Partners.serviceProviderPage.usersSection.title
+    </h2>
+    <hr />
+    <p>
+      Partners.serviceProviderPage.usersSection.description
+       
+      <span
+        data-mockid="LinkComponent"
+      />
+    </p>
+    <div
+      data-mockid="ServiceProviderPermissionsTable"
+    />
+  </div>
+</div>
+`;

@@ -8,7 +8,7 @@ import type { HttpClientDataInterface } from '@fc/http-client';
 interface InstancePageFormComponentProps<T extends HttpClientDataInterface> {
   config: FormConfigInterface;
   initialValues: T;
-  postSubmit: () => Promise<undefined>;
+  postSubmit: (values: T) => void | Promise<void>;
   preSubmit: (values: T) => Promise<T>;
   schema: BaseAttributes[];
   submitHandler: FormInterface<T>['onSubmit'];

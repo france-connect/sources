@@ -57,6 +57,7 @@ services:
       - "dpp2-low"
       # -- Exploitation
       - "fc-exploitation"
+      - "fc-support"
       - "csmr-import-core"
       - "hsm"
       # -- Mailer

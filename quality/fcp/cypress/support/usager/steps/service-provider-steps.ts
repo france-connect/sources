@@ -3,10 +3,9 @@ import { Given, Then, When } from '@badeball/cypress-cucumber-preprocessor';
 import {
   addInterceptHeaders,
   checkFCBasicAuthorization,
-  getClaims,
-  getIdpClaims,
-  getRnippClaims,
+  getExpectedClaimsByPlatform,
   getScopeByType,
+  getUserClaimsByPlatform,
   isUsingFCBasicAuthorization,
   navigateTo,
 } from '../../common/helpers';
@@ -131,36 +130,13 @@ Then(
   function (type: string) {
     const { allClaims } = this.user;
     if (this.serviceProvider.mocked === true) {
-      serviceProviderPage.checkMandatoryData();
       const platform: string = Cypress.env('PLATFORM');
       const scope = getScopeByType(this.scopes, type);
-      const expectedClaims = getClaims(scope);
-      if (platform === 'fcp-high') {
-        // Get automatically the equivalent RNIPP claims
-        const rnippClaims = getRnippClaims(allClaims);
-        const userClaims = {
-          ...allClaims,
-          ...rnippClaims,
-        };
-        serviceProviderPage.checkExpectedUserClaims(expectedClaims, userClaims);
-        serviceProviderPage.checkNoExtraClaims(expectedClaims);
-        return;
-      }
-      if (platform === 'fcp-low') {
-        // Force the given_name_array claim into expectedClaim
-        if (expectedClaims.includes('given_name')) {
-          expectedClaims.push('given_name_array');
-        }
-        const idpClaims = getIdpClaims(allClaims);
-        const userClaims = {
-          ...allClaims,
-          ...idpClaims,
-        };
-        serviceProviderPage.checkExpectedUserClaims(expectedClaims, userClaims);
-        serviceProviderPage.checkNoExtraClaims(expectedClaims);
-        return;
-      }
-      serviceProviderPage.checkExpectedUserClaims(expectedClaims, allClaims);
+      const userClaims = getUserClaimsByPlatform(allClaims, platform);
+      const expectedClaims = getExpectedClaimsByPlatform(scope, platform);
+
+      serviceProviderPage.checkMandatoryData();
+      serviceProviderPage.checkExpectedUserClaims(expectedClaims, userClaims);
       serviceProviderPage.checkNoExtraClaims(expectedClaims);
     }
   },

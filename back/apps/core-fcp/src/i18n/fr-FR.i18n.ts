@@ -68,7 +68,7 @@ export const frFR: I18nTranslationsMapType = {
   'common.close': 'Fermer',
   'common.new_window': 'Ouvre une nouvelle fenêtre',
 
-  'footer.a11y_conformity': 'Accessibilité : non conforme',
+  'footer.a11y_conformity': 'Accessibilité : totalement conforme',
   'footer.legal_notice': 'Mentions légales',
   'footer.more_info': 'En savoir plus sur {platform}',
   'footer.tos': 'CGU',
@@ -130,6 +130,14 @@ export const frFR: I18nTranslationsMapType = {
   'exceptions.http.404': 'Page non trouvée',
   'loading_modal.redirecting': 'Redirection en cours...',
   'loading_modal.wait': 'veuillez patienter',
+
+  'session_expiration.title': 'Votre session va bientôt expirer',
+  'session_expiration.message_interaction':
+    'Si votre session expire avant d’avoir choisi un compte, votre connexion ne pourra pas aboutir. Pour poursuivre votre connexion, choisissez dès maintenant l’un des comptes proposés.',
+  'session_expiration.message_confirmation':
+    'Si votre session expire avant d’avoir cliqué sur « Continuer », votre connexion ne pourra pas aboutir. Pour poursuivre votre connexion, cliquez dès maintenant sur « Continuer ».',
+  'session_expiration.message_consent':
+    'Si votre session expire avant d’avoir cliqué sur « Continuer », votre connexion ne pourra pas aboutir. Pour continuer, acceptez dès maintenant que FranceConnect transmette vos données au service puis cliquez sur « Continuer ».',
 
   'skiplinks.quick_access': 'Accès rapide',
   'skiplinks.content': 'Contenu',

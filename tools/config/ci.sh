@@ -8,4 +8,4 @@ export REPOSITORY_MAIN_BRANCH="staging"
 [ $CI ] && NO_TTY=" -T" || NO_TTY=""
 
 # Define current Cypress image version
-export CYPRESS_IMAGE_VERSION=${CYPRESS_IMAGE_VERSION:-15.8.2}
+export CYPRESS_IMAGE_VERSION=${CYPRESS_IMAGE_VERSION:-15.8.2-es8}

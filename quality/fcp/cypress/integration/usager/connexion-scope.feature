@@ -121,6 +121,15 @@ Fonctionnalité: Connexion Usager - Scope
     Et le fournisseur de service a accès aux informations du scope "anonyme"
 
   @fcpLow @fcpHigh
+  Scénario: Connexion d'un usager - scope openid obligatoire
+    Etant donné que le fournisseur de service requiert l'accès aux informations des scopes "profile sans openid"
+    Et que je navigue sur la page fournisseur de service
+    Quand je clique sur le bouton FranceConnect
+    Alors je suis redirigé vers la page erreur du fournisseur de service
+    Et le titre de l'erreur fournisseur de service est "invalid_request"
+    Et la description de l'erreur fournisseur de service est "openid scope must be requested when using the acr_values parameter"
+
+  @fcpLow @fcpHigh
   Scénario: Connexion d'un usager - attribut scope inconnu ignoré
     Etant donné que le fournisseur de service requiert l'accès aux informations des scopes "profile avec scope inconnu"
     Et que je navigue sur la page fournisseur de service

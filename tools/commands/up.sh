@@ -52,6 +52,14 @@ _do_up() {
   fi
 
   cd ${DOCKER_DIR}
+
+  # FC-APPS need special treatment for network fc_public to work with old runners that have external network declaration
+  local external="    external: true"
+  if [ "${CI_PROJECT_ID}" = "${CI_FC_APPS_PROJECT_ID:-none}" ] \
+    && ! grep -qxF "${external}" "${COMPOSE_DIR}/CI/fc_public.yml"; then
+    echo "${external}" >> "${COMPOSE_DIR}/CI/fc_public.yml"
+  fi
+
   $DOCKER_COMPOSE up $shouldBuild -d $services
 }
 

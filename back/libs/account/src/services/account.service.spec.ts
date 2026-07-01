@@ -25,7 +25,11 @@ describe('AccountService', () => {
   class ModelClassMock {
     constructor(obj) {
       constructorSpy(obj);
-      return obj;
+      return {
+        ...obj,
+        toObject: jest.fn().mockReturnValue({ ...obj }),
+        markModified: jest.fn(),
+      };
     }
 
     // Actually async
@@ -145,12 +149,14 @@ describe('AccountService', () => {
         await service['getAccountWithInteraction'](newInteractionMock);
       // Then
       expect(constructorSpy).toHaveBeenCalledTimes(1);
-      expect(constructorSpy).toHaveBeenCalledWith(newInteractionMock);
-      expect(result).toEqual({
-        identityHash,
-        spFederation: { sp1Id: 'sp1Sub' },
-        lastConnection: new Date('2020-05-01'),
-      });
+      expect(constructorSpy).toHaveBeenCalledWith({ identityHash });
+      expect(result).toEqual(
+        expect.objectContaining({
+          identityHash,
+          spFederation: { sp1Id: 'sp1Sub' },
+          lastConnection: new Date('2020-05-01'),
+        }),
+      );
     });
 
     it('should return an object with sp informations when an account exists', async () => {
@@ -160,6 +166,13 @@ describe('AccountService', () => {
         identityHash,
         spFederation: { sp2Id: 'sp2Sub' },
         lastConnection: new Date('2020-04-15'),
+        toObject: jest.fn().mockReturnValue({
+          id,
+          identityHash,
+          spFederation: { sp2Id: 'sp2Sub' },
+          lastConnection: new Date('2020-04-15'),
+        }),
+        markModified: jest.fn(),
       };
       findOneSpy.mockResolvedValueOnce(databaseInteractionMock);
       // When
@@ -167,15 +180,17 @@ describe('AccountService', () => {
         await service['getAccountWithInteraction'](newInteractionMock);
       // Then
       expect(constructorSpy).toHaveBeenCalledTimes(0);
-      expect(result).toEqual({
-        id,
-        identityHash,
-        spFederation: {
-          sp1Id: 'sp1Sub',
-          sp2Id: 'sp2Sub',
-        },
-        lastConnection: new Date('2020-05-01'),
-      });
+      expect(result).toEqual(
+        expect.objectContaining({
+          id,
+          identityHash,
+          spFederation: {
+            sp1Id: 'sp1Sub',
+            sp2Id: 'sp2Sub',
+          },
+          lastConnection: new Date('2020-05-01'),
+        }),
+      );
     });
   });
 

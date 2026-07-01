@@ -42,7 +42,7 @@ Then(
 );
 
 Then(
-  /^le bouton confirmer la liaison des instances est (actif|désactivé)$/,
+  /^le bouton "confirmer la liaison des instances" est (actif|désactivé)$/,
   function (buttonState: string) {
     const expectedState =
       buttonState === 'désactivé' ? 'be.disabled' : 'be.enabled';

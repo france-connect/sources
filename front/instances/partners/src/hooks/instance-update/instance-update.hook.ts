@@ -1,14 +1,13 @@
+import { useCallback } from 'react';
 import { useLoaderData } from 'react-router';
 
-import { MessageTypes } from '@fc/common';
 import { removeEmptyValues } from '@fc/dto2form';
 import { parseInitialValues, useDto2FormService } from '@fc/dto2form-service';
-
-import { SubmitTypesMessage } from '../../enums';
-import { usePostSubmit } from '../post-submit';
+import { useNavigateWithState } from '@fc/routing';
 
 export const useInstanceUpdate = () => {
   const { form, schema, submitHandler } = useDto2FormService('InstancesUpdate');
+  const { goBackWithSuccess } = useNavigateWithState();
 
   // @TODO #2356
   // https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/2356
@@ -21,10 +20,9 @@ export const useInstanceUpdate = () => {
   const { name: title } = data || {};
   // #endregion
 
-  const postSubmit = usePostSubmit(
-    SubmitTypesMessage.INSTANCE_SUCCESS_UPDATE,
-    MessageTypes.SUCCESS,
-  );
+  const postSubmit = useCallback(() => {
+    goBackWithSuccess({ title: 'Partners.instance.successUpdate' });
+  }, [goBackWithSuccess]);
 
   return {
     config: { ...form, title },

@@ -1,0 +1,13 @@
+<% if (locals.error.message) {
+  const { title, message } = $getCustomErrorAction({
+    message: locals.error.message,
+    code: locals.error.code,
+  });
+%>
+<h2 class="fr-h6 fr-mb-2w" data-testid="error-section-subtitle">
+  <%= $translate(title) %>
+</h2>
+<p class="fr-text--md fr-mb-0" data-testid="error-message">
+  <%= $translate(message, null, { default: 'exceptions.default_message' }) %>
+</p>
+<% } %>

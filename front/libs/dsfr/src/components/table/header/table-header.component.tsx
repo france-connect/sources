@@ -5,21 +5,27 @@ import type { PropsWithClassName } from '@fc/common';
 import type { TableColumnInterface } from '../../../interfaces';
 
 interface TableHeaderComponentProps extends PropsWithClassName {
-  columns: TableColumnInterface[];
+  columns: Array<Pick<TableColumnInterface, 'label'>>;
+  tableId: string;
+}
+
+function TableHeaderComponentInner({ className, columns, tableId }: TableHeaderComponentProps) {
+  return (
+    <thead className={className}>
+      <tr>
+        {columns.map((item, idx) => {
+          const uniqKey = `${tableId}--th-${idx}`;
+          return (
+            <th key={uniqKey} scope="col">
+              {item.label}
+            </th>
+          );
+        })}
+      </tr>
+    </thead>
+  );
 }
 
 export const TableHeaderComponent = React.memo(
-  ({ className, columns }: TableHeaderComponentProps) => (
-    <thead className={className}>
-      <tr>
-        {columns.map((item) => (
-          <th key={item.key} scope="col">
-            {item.label}
-          </th>
-        ))}
-      </tr>
-    </thead>
-  ),
-);
-
-TableHeaderComponent.displayName = 'TableHeaderComponent';
+  TableHeaderComponentInner,
+) as typeof TableHeaderComponentInner;

@@ -3,86 +3,19 @@
 exports[`ServiceProviderPage should match snapshot 1`] = `
 <div>
   <div
-    class="fr-col-12 fr-col-lg-10 fr-col-xl-8"
-  >
-    <div
-      class="fr-col-12"
-    >
-      <h1>
-        any-name-mock
-      </h1>
-      <p
-        class="is-uppercase"
-        data-testid="service-provider-details-page-organization-name"
-      >
-        any-organizationName-mock
-      </p>
-      <h2
-        class="fr-mt-7w"
-      >
-        Partners.serviceProviderPage.habilitation.title
-      </h2>
-      <hr />
-      <ul>
-        <li>
-          <b>
-            Partners.serviceProviderPage.habilitation.number
-             
-          </b>
-          <span
-            data-mockid="LinkComponent"
-          />
-        </li>
-      </ul>
-      <h2
-        class="fr-mt-5w"
-      >
-        Partners.serviceProviderPage.scopeSection.title
-      </h2>
-      <hr />
-      <p>
-        Partners.serviceProviderPage.scopeSection.description
-         
-        <span
-          data-mockid="LinkComponent"
-        />
-      </p>
-      <div
-        data-mockid="TabsGroupComponent"
-      />
-      <p
-        class="fr-mt-5w"
-      >
-        Partners.serviceProviderPage.datapassDocumentation.introduction
-         
-        <span
-          data-mockid="LinkComponent"
-        />
-      </p>
-      <h2
-        class="fr-mt-7w"
-      >
-        Partners.serviceProviderPage.sandboxes.title
-      </h2>
-      <hr />
-      <p>
-        Partners.serviceProviderPage.sandboxes.description
-         
-        <span
-          data-mockid="LinkComponent"
-        />
-      </p>
-      <div
-        data-mockid="AlertComponent"
-      >
-        <div>
-          AlertComponent
-        </div>
-        <div>
-          Partners.serviceProviderPage.sandboxes.empty
-        </div>
-      </div>
-    </div>
-  </div>
+    data-mockid="ServiceProviderNameComponent"
+  />
+  <div
+    data-mockid="ServiceProviderDatapassComponent"
+  />
+  <div
+    data-mockid="ServiceProviderScopesComponent"
+  />
+  <div
+    data-mockid="ServiceProviderPermissionsComponent"
+  />
+  <div
+    data-mockid="ServiceProviderSandboxesComponent"
+  />
 </div>
 `;

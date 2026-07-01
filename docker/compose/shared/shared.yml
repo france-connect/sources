@@ -544,7 +544,7 @@ services:
   ####################
 
   elasticsearch:
-    image: ${DOCKER_HUB_PROXY}elasticsearch:7.17.28
+    image: ${DOCKER_HUB_PROXY}elasticsearch:8.19.15
     volumes:
       - "${VOLUMES_DIR}/elasticsearch/data:/usr/share/elasticsearch/data"
       - "${VOLUMES_DIR}/elasticsearch/config/users:/usr/share/elasticsearch/config/users:ro"
@@ -555,7 +555,7 @@ services:
       - "${VOLUMES_DIR}/elasticsearch/index/:/index"
       - "${VOLUMES_DIR}/elasticsearch/ingest_pipelines:/ingest_pipelines"
       - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
-      - "${VOLUMES_DIR}/maxmind/database/GeoLite2-City/GeoLite2-City.mmdb:/usr/share/elasticsearch/modules/ingest-geoip/GeoLite2-City.mmdb:ro"
+      - "${VOLUMES_DIR}/maxmind/database/GeoLite2-City/GeoLite2-City.mmdb:/usr/share/elasticsearch/config/ingest-geoip/GeoLite2-City.mmdb:ro"
     networks:
       - data
       - public
@@ -566,7 +566,7 @@ services:
       - "ES_JAVA_OPTS=-Xms64m -Xmx256m"
 
   kibana:
-    image: ${DOCKER_HUB_PROXY}kibana:7.17.9
+    image: ${DOCKER_HUB_PROXY}kibana:8.19.15
     depends_on:
       elasticsearch:
         condition: service_started

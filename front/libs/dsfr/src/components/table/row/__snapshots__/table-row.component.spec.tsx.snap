@@ -4,6 +4,7 @@ exports[`TableRowComponent should match the snapshot 1`] = `
 <tbody>
   <tr
     data-row-key="0"
+    id="any-table-id-mock--row-0"
   >
     <td
       class=""

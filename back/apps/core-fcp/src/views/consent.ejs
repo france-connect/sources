@@ -11,7 +11,16 @@
     <div class="fc-sticky-body">
       <%- include('includes/header.ejs') %>
       <main role="main" id="main-content" class="fr-container fr-mt-md-8w fr-mt-5w">
+        <%
+        const showConsentBox = !locals.isOpenIdScope && locals.consentRequired;
+        %>
         <div class="fr-grid-row fr-grid-row--gutters">
+
+          <%- include('includes/eos-alert.ejs', {
+            sessionExpirationMessageKey: showConsentBox
+              ? 'session_expiration.message_consent'
+              : 'session_expiration.message_confirmation'
+          }) %>
 
           <section class="fr-col-12 fr-col-offset-md-1 fr-col-md-10">
             <%- include('pages/consent/consent.title.ejs'); %>
@@ -24,9 +33,6 @@
               data-testid="consent-form"
               data-prevent-double-submit
             >
-              <%
-              const showConsentBox = !locals.isOpenIdScope && locals.consentRequired;
-              %>
               <% if (showConsentBox) { %>
                 <%- include('pages/consent/consent.checkbox.ejs') %>
               <% } %>
@@ -61,5 +67,6 @@
   <% if (showConsentBox) { %>
     <script type="text/javascript" src="<%= $asset('/js/dsfr.consent.js') %>"></script>
   <% } %>
+  <script type="text/javascript" defer src="<%= $asset('/js/eos-alert.js') %>"></script>
 </body>
 </html>

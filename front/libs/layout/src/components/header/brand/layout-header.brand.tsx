@@ -19,6 +19,11 @@ export const LayoutHeaderBrandComponent = React.memo(() => {
   const { showServiceTitle } = config.features;
   const { baseline, homepage, logo, logoTitle, name } = config.service;
 
+  const hasVisibleToolsLinks = !!config.header?.toolsLinks?.some(
+    ({ onlyIfConnected }) => !onlyIfConnected,
+  );
+  const shouldShowMenu = isUserConnected || hasVisibleToolsLinks;
+
   const backToHomepage = t('Layout.documentTitle.backToHomepage');
   const linkTitle = getAccessibleTitle(baseline, name);
   const homepageLinkTitle = getAccessibleTitle(backToHomepage, linkTitle);
@@ -37,7 +42,7 @@ export const LayoutHeaderBrandComponent = React.memo(() => {
             src={logo as unknown as string}
           />
         </div>
-        {isUserConnected && <LayoutHeaderMobileBurgerButton />}
+        {shouldShowMenu && <LayoutHeaderMobileBurgerButton />}
       </div>
       {showServiceTitle && <LayoutHeaderServiceComponent />}
     </div>

@@ -35,6 +35,7 @@ describe('TableRowComponent', () => {
         columns={columnsMock}
         data={dataMock}
         index={0}
+        tableId="any-table-id-mock"
       />,
       { container: document.body.appendChild(tbody) },
     );
@@ -88,6 +89,66 @@ describe('TableRowComponent', () => {
     expect(colsElements.item(2)).toBe(col3Element);
   });
 
+  it('should render accessor column value', () => {
+    // Given
+    const getValueColumnsMock = [
+      {
+        getValue: (row: unknown) => {
+          const { firstname, lastname } = row as { firstname: string; lastname: string };
+          return `${lastname} ${firstname}`;
+        },
+        label: 'full-name-mock',
+      },
+    ];
+    const getValueDataMock = {
+      firstname: 'John',
+      lastname: 'Doe',
+    };
+
+    // When
+    const { getByText } = render(
+      <TableRowComponent
+        className="any-classname-mock"
+        columns={getValueColumnsMock}
+        data={getValueDataMock}
+        index={0}
+        tableId="any-table-id-mock"
+      />,
+      { container: document.body.appendChild(tbody) },
+    );
+    const col1Element = getByText('Doe John');
+
+    // Then
+    expect(col1Element).toBeInTheDocument();
+  });
+
+  it('should render formatted column value', () => {
+    // Given
+    const formatColumnsMock = [
+      {
+        format: (value: unknown) => `formatted-${value}`,
+        key: 'column1',
+        label: 'column-mock-1',
+      },
+    ];
+
+    // When
+    const { getByText } = render(
+      <TableRowComponent
+        className="any-classname-mock"
+        columns={formatColumnsMock}
+        data={dataMock}
+        index={0}
+        tableId="any-table-id-mock"
+      />,
+      { container: document.body.appendChild(tbody) },
+    );
+    const col1Element = getByText('formatted-value1');
+
+    // Then
+    expect(col1Element).toBeInTheDocument();
+  });
+
   it('should be multiline element if columns multiline is defined', () => {
     // When
     const { getByText } = render(
@@ -104,5 +165,37 @@ describe('TableRowComponent', () => {
 
     // Then
     expect(col2Element).toHaveClass('fr-cell--multiline');
+  });
+
+  it('should be N/A element if value is undefined', () => {
+    // When
+    const { getByText } = render(
+      <TableRowComponent
+        className="any-classname-mock"
+        columns={[
+          {
+            key: 'column1',
+            label: 'column-mock-1',
+          },
+          {
+            getValue: () => undefined,
+            label: 'column-mock-2',
+            multiline: true,
+          },
+          {
+            key: 'column3',
+            label: 'column-mock-3',
+          },
+        ]}
+        data={dataMock}
+        index={0}
+        tableId="any-table-id-mock"
+      />,
+      { container: document.body.appendChild(tbody) },
+    );
+    const col2Element = getByText('N/A');
+
+    // Then
+    expect(col2Element).toBeInTheDocument();
   });
 });

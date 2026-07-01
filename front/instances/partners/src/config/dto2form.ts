@@ -40,4 +40,22 @@ export const Dto2FormService: Dto2FormConfigInterface = {
       validateOnSubmit: false,
     },
   },
+  ServiceProviderCreateInstance: {
+    endpoints: {
+      schema: {
+        method: HttpMethods.GET,
+        path: '/api/service-providers/:serviceProviderId/versions/form-metadata',
+      },
+      submit: {
+        method: HttpMethods.POST,
+        path: '/api/service-providers/:serviceProviderId/instances',
+      },
+    },
+    form: {
+      id: 'Dto2Form-service-provider-create-instance',
+      showFieldValidationMessage: false,
+      validateOnFieldChange: false,
+      validateOnSubmit: false,
+    },
+  },
 };

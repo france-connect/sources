@@ -58,3 +58,31 @@ exports[`LayoutHeaderMenuComponent should match the snapshot, with navigation de
   </div>
 </div>
 `;
+
+exports[`LayoutHeaderMenuComponent should render menu without navigation when user is not connected 1`] = `
+<div>
+  <div
+    aria-labelledby="burger-button-mobile-menu"
+    class="fr-header__menu fr-modal no-touch-action fr-modal--opened"
+    id="layout-header-menu-modal"
+  >
+    <div
+      class="fr-container"
+    >
+      <button
+        aria-controls="layout-header-menu-modal"
+        class="fr-btn--close fr-btn"
+      >
+        FC.Common.close
+      </button>
+      <div
+        class="fr-header__menu-links"
+      >
+        <div>
+          LayoutHeaderToolsComponent
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

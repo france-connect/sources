@@ -8,7 +8,8 @@ const TEMPLATE_FILE = `${__dirname}/views/env-vars.ejs`;
 const FILE_SEARCH_PATTERN = 'instances/*/src/config/*.ts';
 const DEST_FILE = '_doc/env-vars.md';
 
-const CONFIG_PREFIX_REGEX = /new ConfigParser\(process\.env, '(\w+)'\)/;
+const CONFIG_PREFIX_REGEX =
+  /new ConfigParser(<typeof \w+>)?\(process\.env, '(\w+)'\)/;
 const PROCESS_ENV_REGEX = /process\.env[\n\r\s]*\.(\w+)/g;
 const CONFIG_ENV_REGEX = /env\.(\w+)\([\n\r\s]*'(\w+)'/g;
 
@@ -49,7 +50,7 @@ export class Runner {
 
   static filesReducer(envMap, { path, file }) {
     const instanceName = path.split('/')[1];
-    const configPrefix = file.match(CONFIG_PREFIX_REGEX)?.[1];
+    const configPrefix = file.match(CONFIG_PREFIX_REGEX)?.[2];
 
     if (!envMap[instanceName]) {
       envMap[instanceName] = {};

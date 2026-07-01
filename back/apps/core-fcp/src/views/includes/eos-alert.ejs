@@ -1,0 +1,16 @@
+<div id="session-expiration-alert-live-region"></div>
+
+<template id="session-expiration-alert-template">
+  <div class="fr-col-12 fr-col-lg-8 fr-col-offset-lg-2 fr-px-3v">
+    <section
+      class="fr-alert fr-alert--warning"
+      data-testid="session-expiration-alert"
+      role="alert"
+    >
+      <h3 class="fr-alert__title"><%= $translate('session_expiration.title') %></h3>
+      <p><%= $translate(locals.sessionExpirationMessageKey) %></p>
+    </section>
+  </div>
+</template>
+
+<input type="hidden" id="session-alert-delay" value="<%= $eosAlertDelay() %>" />

@@ -1,14 +1,13 @@
 import { useCallback } from 'react';
-import { useLoaderData, useNavigate } from 'react-router';
+import { useLoaderData, useRevalidator } from 'react-router';
 
 import type { FSAInterface, UUIDType } from '@fc/common';
-import { MessageTypes } from '@fc/common';
 import type { InstanceInterface } from '@fc/core-partners';
 import { PartnersService } from '@fc/core-partners';
+import { useNavigateWithState } from '@fc/routing';
 
-import { SubmitTypesMessage } from '../../enums';
-import { usePostSubmit } from '../post-submit/post-submit.hook';
-
+// @NOTE investigate to know why we need this interface here
+// and nowhere else
 interface LinkInstancesLoaderPayloadInterface {
   datapassRequestId: string;
   serviceProviderId: UUIDType;
@@ -16,17 +15,19 @@ interface LinkInstancesLoaderPayloadInterface {
   linkableInstances: InstanceInterface[];
 }
 
-export interface LinkInstancesFormValuesInterface {
+// @NOTE investigate to know why we need this interface here
+// Create a generic one ?
+interface LinkInstancesFormValuesInterface {
   instances: Record<string, boolean>;
 }
 
 export const useLinkableInstancesToServiceProvider = () => {
-  const navigate = useNavigate();
-  const response = useLoaderData();
-  const { payload } = response as Required<FSAInterface<LinkInstancesLoaderPayloadInterface>>;
+  const { payload } = useLoaderData<Required<FSAInterface<LinkInstancesLoaderPayloadInterface>>>();
   const { datapassRequestId, linkableInstances, serviceProviderId, serviceProviderName } = payload;
 
-  const postSubmit = usePostSubmit(SubmitTypesMessage.INSTANCES_SUCCESS_LINK, MessageTypes.SUCCESS);
+  const { revalidate } = useRevalidator();
+
+  const { goBack, goBackWithSuccess } = useNavigateWithState();
 
   // Pre-check instances whose signupId matches the target SP's datapassRequestId,
   // so the user sees the most relevant instances already selected on page load.
@@ -43,21 +44,30 @@ export const useLinkableInstancesToServiceProvider = () => {
     return hasSelection ? undefined : { instances: 'error' };
   };
 
-  const handleSubmit = async ({ instances }: LinkInstancesFormValuesInterface) => {
-    const selectedInstanceIds = Object.entries(instances)
-      .filter(([, checked]) => checked)
-      .map(([id]) => id);
+  const handleSubmit = useCallback(
+    async ({ instances }: LinkInstancesFormValuesInterface) => {
+      const selectedInstanceIds = Object.entries(instances)
+        .filter(([, checked]) => checked)
+        .map(([id]) => id);
 
-    await PartnersService.linkInstancesToServiceProvider({
-      instanceIds: selectedInstanceIds,
-      serviceProviderId,
-    });
-    await postSubmit();
-  };
+      await PartnersService.linkInstancesToServiceProvider({
+        instanceIds: selectedInstanceIds,
+        serviceProviderId,
+      });
 
-  // @NOTE DEV
-  // @SEE instances/partners/src/hooks/post-submit/post-submit.hook.ts
-  const handleCancel = useCallback(() => navigate('..'), [navigate]);
+      // @NOTE should be done into form.postSubmit
+      revalidate();
+      goBackWithSuccess({
+        message: 'Partners.serviceProviderPage.linkInstances.success.description',
+        title: 'Partners.instances.successLink',
+      });
+    },
+    [goBackWithSuccess, revalidate, serviceProviderId],
+  );
+
+  const handleCancel = useCallback(() => {
+    goBack();
+  }, [goBack]);
 
   return {
     handleCancel,

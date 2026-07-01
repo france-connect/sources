@@ -32,6 +32,7 @@
 26. [mock-service-provider-fcp-low](#mock-service-provider-fcp-low)
 27. [partners](#partners)
 28. [user-dashboard](#user-dashboard)
+29. [wallet-bridge](#wallet-bridge)
 
 ## Variables
 
@@ -189,6 +190,7 @@
 | Rnipp_HOSTNAME | string |
 | Rnipp_PROTOCOL | string |
 | Session_COOKIE_SECRETS | json |
+| Session_EOS_ALERT_DELAY | number |
 | Session_USERINFO_CRYPT_KEY | string |
 | UD_FQDN | string |
 
@@ -267,6 +269,7 @@
 | Rnipp_HOSTNAME | string |
 | Rnipp_PROTOCOL | string |
 | Session_COOKIE_SECRETS | json |
+| Session_EOS_ALERT_DELAY | number |
 | Session_USERINFO_CRYPT_KEY | string |
 | UD_FQDN | string |
 
@@ -1012,3 +1015,54 @@
 | UserPreferencesBroker_MESSAGE_TTL | number |
 | UserPreferencesBroker_QUEUE | string |
 | UserPreferencesBroker_URLS | json |
+
+### wallet-bridge
+
+| Var Name | Inferred type |
+|---|---|
+| App_ASSETS_CACHE_TTL | number |
+| App_ASSETS_PATHS | json |
+| App_ASSETS_URL_DOMAIN | string |
+| App_ASSETS_URL_PREFIX | string |
+| App_ENVIRONMENT | string |
+| App_FQDN | string |
+| App_HTTPS_SERVER_CERT | file |
+| App_HTTPS_SERVER_KEY | file |
+| App_VIEWS_PATHS | json |
+| LoggerLegacy_FILE | string |
+| Logger_THRESHOLD | string |
+| OidcProvider_COOKIES_KEYS | json |
+| OidcProvider_CRYPTO_SIG_ES256_PRIV_KEYS | json |
+| OidcProvider_ERROR_URI_BASE | string |
+| OidcProvider_ISSUER | string |
+| OidcProvider_PREFIX | string |
+| Openid4vp_CLIENT_ID | string |
+| Openid4vp_JWKS | json |
+| REQUEST_TIMEOUT | string |
+| Redis_CACERT | file |
+| Redis_DB | number |
+| Redis_ENABLE_TLS_FOR_SENTINEL_MODE | boolean |
+| Redis_HOST | string |
+| Redis_NAME | string |
+| Redis_PASSWORD | string |
+| Redis_PORT | number |
+| Redis_SENTINELS | json |
+| Redis_SENTINEL_PASSWORD | string |
+| ServiceProviderAdapterEnvHigh_CLIENT_ID | string |
+| ServiceProviderAdapterEnvHigh_CLIENT_SECRET | string |
+| ServiceProviderAdapterEnvHigh_ID_TOKEN_SIGNED_RESPONSE_ALG | string |
+| ServiceProviderAdapterEnvHigh_JWKS_URI | string |
+| ServiceProviderAdapterEnvHigh_POST_LOGOUT_REDIRECT_URIS | json |
+| ServiceProviderAdapterEnvHigh_REDIRECT_URIS | json |
+| ServiceProviderAdapterEnvHigh_SCOPE | string |
+| ServiceProviderAdapterEnvHigh_USERINFO_SIGNED_RESPONSE_ALG | string |
+| ServiceProviderAdapterEnvLow_CLIENT_ID | string |
+| ServiceProviderAdapterEnvLow_CLIENT_SECRET | string |
+| ServiceProviderAdapterEnvLow_ID_TOKEN_SIGNED_RESPONSE_ALG | string |
+| ServiceProviderAdapterEnvLow_JWKS_URI | string |
+| ServiceProviderAdapterEnvLow_POST_LOGOUT_REDIRECT_URIS | json |
+| ServiceProviderAdapterEnvLow_REDIRECT_URIS | json |
+| ServiceProviderAdapterEnvLow_SCOPE | string |
+| ServiceProviderAdapterEnvLow_USERINFO_SIGNED_RESPONSE_ALG | string |
+| Session_COOKIE_SECRETS | json |
+| Session_ENCRYPTION_KEY | string |

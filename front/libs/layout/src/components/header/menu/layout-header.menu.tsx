@@ -10,12 +10,14 @@ import { LayoutHeaderNavigationComponent } from '../navigation';
 import { LayoutHeaderToolsComponent } from '../tools';
 
 interface LayoutHeaderMenuComponentProps {
+  isUserConnected: boolean;
   navigation?: NavigationLinkInterface[];
 }
 
 export const LayoutHeaderMenuComponent = React.memo(
-  ({ navigation }: LayoutHeaderMenuComponentProps) => {
+  ({ isUserConnected, navigation }: LayoutHeaderMenuComponentProps) => {
     const { menuIsOpened, toggleMenu } = useSafeContext<LayoutContextState>(LayoutContext);
+    const shouldShowMenu = isUserConnected && navigation && navigation.length > 0;
 
     return (
       <div
@@ -34,9 +36,9 @@ export const LayoutHeaderMenuComponent = React.memo(
             {t('FC.Common.close')}
           </button>
           <div className="fr-header__menu-links">
-            <LayoutHeaderToolsComponent />
+            <LayoutHeaderToolsComponent isUserConnected={isUserConnected} />
           </div>
-          {navigation?.length && (
+          {shouldShowMenu && (
             <LayoutHeaderNavigationComponent navigation={navigation} onItemClick={toggleMenu} />
           )}
         </div>

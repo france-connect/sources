@@ -156,3 +156,27 @@ items:
     createdAt: '2022-02-05T05:00:00.000Z'
     updatedAt: '2022-05-02T22:00:00.000Z'
 
+  # sp for instance creation from service provider tests
+  sp6-low:
+    id: '8a2a4f1d-3c5e-4b7a-9f0d-1e2c3b4a5d6e'
+    name: 'SP6 - FS pour créer des instances'
+    datapassRequestId: '9900006'
+    datapassAuthorizationId: '10006'
+    datapassEidasLevel: 'eidas_1'
+    datapassScopes:
+      [
+        'openid',
+        'given_name',
+        'family_name',
+        'email',
+        'gender',
+        'birthdate',
+        'birthplace',
+        'birthcountry',
+        'preferred_username',
+      ]
+    platform: '@france-connect-low'
+    organization: '@orga-1'
+    createdAt: '2022-02-06T06:00:00.000Z'
+    updatedAt: '2022-05-02T22:00:00.000Z'
+

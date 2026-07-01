@@ -13,17 +13,15 @@ export const ServiceProvidersPage = React.memo(() => {
 
   return (
     <div className="fr-col-12 fr-col-lg-10 fr-col-xl-8">
-      <div className="fr-col-12">
-        <h1 data-testid="service-providers-page-title">
-          {t('CorePartners.serviceProvidersPage.title')}
-        </h1>
-      </div>
+      <h1 data-testid="service-providers-page-title">
+        {t('CorePartners.serviceProvidersPage.title')}
+      </h1>
       {hasItems && (
-        <div className="fr-col-12 fr-mb-3w fr-mt-5w" data-testid="service-providers-card-list">
+        <div className="fr-mb-3w fr-mt-5w" data-testid="service-providers-card-list">
           <ServiceProvidersListComponent items={items} />
         </div>
       )}
-      <div className="fr-col-12 fr-mt-5w">
+      <div className="fr-mt-5w">
         <ServiceProvidersPageNoticeComponent hasItems={hasItems} />
       </div>
     </div>

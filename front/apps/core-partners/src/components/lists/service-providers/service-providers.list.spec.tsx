@@ -15,7 +15,9 @@ describe('ServiceProvidersListComponent', () => {
       createdAt: 'any-createdAt-mock-1' as unknown as ISODate,
       datapassRequestId: 'any-datapassRequestId-mock-1',
       datapassScopes: ['Identifiant technique'],
+      fcScopes: [],
       id: '1',
+      instances: [],
       name: 'any-name-mock-1',
       organization: {
         id: 'any-id-mock-1',
@@ -28,7 +30,9 @@ describe('ServiceProvidersListComponent', () => {
       createdAt: 'any-createdAt-mock-2' as unknown as ISODate,
       datapassRequestId: 'any-datapassRequestId-mock-2',
       datapassScopes: ['Identifiant technique'],
+      fcScopes: [],
       id: '2',
+      instances: [],
       name: 'any-name-mock-2',
       organization: {
         id: 'any-id-mock-2',
@@ -41,7 +45,9 @@ describe('ServiceProvidersListComponent', () => {
       createdAt: 'any-createdAt-mock-3' as unknown as ISODate,
       datapassRequestId: 'any-datapassRequestId-mock-3',
       datapassScopes: ['Identifiant technique'],
+      fcScopes: [],
       id: '3',
+      instances: [],
       name: 'any-name-mock-3',
       organization: {
         id: 'any-id-mock-3',

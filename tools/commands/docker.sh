@@ -262,3 +262,20 @@ _docker_image_retag() {
   echo "⬆️ Push ${target_tag}"
   docker push --quiet "${image}:${target_tag}" || return 1
 }
+
+_docker_image_digest() {
+  local image="${1}"
+  local tag="${2}"
+
+  docker manifest inspect "${image}:${tag}" \
+    | jq -r '.config.digest // .manifests[0].digest'
+}
+
+_docker_images_in_sync() {
+  local image="${1}"
+  local tag_a="${2}"
+  local tag_b="${3}"
+
+  [[ "$(_docker_image_digest "${image}" "${tag_a}")" \
+  == "$(_docker_image_digest "${image}" "${tag_b}")" ]]
+}

@@ -26,7 +26,7 @@
     "@babel/core": "^7.28.5",
     "@badeball/cypress-cucumber-preprocessor": "24.0.0",
     "@bahmutov/cypress-esbuild-preprocessor": "^2.2.8",
-    "@elastic/elasticsearch": "^9.0.1",
+    "@elastic/elasticsearch": "^8.19.1",
     "@simonsmith/cypress-image-snapshot": "^10.0.3",
     "amqplib": "^0.10.9",
     "axe-core": "^4.11.1",

@@ -48,7 +48,7 @@ export class NotificationService {
       // Sort must be identical to what is done on CL
       // In this case it will put the last created first
       .sort({ _id: 'desc' })
-      .lean();
+      .lean<NotificationInterface[]>();
 
     return result;
   }

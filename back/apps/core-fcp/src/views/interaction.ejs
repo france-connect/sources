@@ -15,6 +15,9 @@
 
           <div class="fr-container fr-mt-5w fr-mt-md-8w">
             <section class="fr-grid-row fr-grid-row--gutters">
+              <%- include('includes/eos-alert.ejs', {
+                sessionExpirationMessageKey: 'session_expiration.message_interaction'
+              }) %>
               <%- include('pages/interaction/interaction.error.ejs') %>
               <%- include('pages/interaction/interaction.anonymous.ejs') %>
               <%- include('pages/interaction/interaction.welcome.ejs') %>
@@ -62,5 +65,6 @@
     <% if (locals.errorContext && locals.errorContext.hasError && locals.errorContext.idpLabel) { %>
     <script type="text/javascript" src="<%= $asset('/js/interaction-error-banner.js') %>"></script>
     <% } %>
+    <script type="text/javascript" defer src="<%= $asset('/js/eos-alert.js') %>"></script>
   </body>
 </html>

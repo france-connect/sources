@@ -43,53 +43,35 @@
   },
   {
     "type": "email",
-    "scopes": [
-      "openid",
-      "email"
-    ]
+    "scopes": ["openid", "email"]
   },
   {
     "type": "birth",
-    "scopes": [
-      "openid",
-      "birth"
-    ]
+    "scopes": ["openid", "birth"]
   },
   {
     "type": "birthdate et idp_birthdate",
-    "scopes": [
-      "openid",
-      "idp_birthdate",
-      "birthdate"
-    ]
+    "scopes": ["openid", "idp_birthdate", "birthdate"]
   },
   {
     "type": "profile",
-    "scopes": [
-      "openid",
-      "profile"
-    ]
+    "scopes": ["openid", "profile"]
+  },
+  {
+    "type": "profile sans openid",
+    "scopes": ["profile"]
   },
   {
     "type": "profile avec scope inconnu",
-    "scopes": [
-      "openid",
-      "profile",
-      "inconnu"
-    ]
+    "scopes": ["openid", "profile", "inconnu"]
   },
   {
     "type": "identite_pivot",
-    "scopes": [
-      "openid",
-      "identite_pivot"
-    ]
+    "scopes": ["openid", "identite_pivot"]
   },
   {
     "type": "anonyme",
-    "scopes": [
-      "openid"
-    ]
+    "scopes": ["openid"]
   },
   {
     "type": "tous les scopes data",
@@ -103,11 +85,7 @@
   },
   {
     "type": "CNAM",
-    "scopes": [
-      "openid",
-      "droits_assurance_maladie",
-      "cnam_caisse"
-    ]
+    "scopes": ["openid", "droits_assurance_maladie", "cnam_caisse"]
   },
   {
     "type": "dgfip et cnam",
@@ -136,9 +114,6 @@
   },
   {
     "type": "cnous_statut_boursier",
-    "scopes": [
-      "openid",
-      "cnous_statut_boursier"
-    ]
+    "scopes": ["openid", "cnous_statut_boursier"]
   }
 ]

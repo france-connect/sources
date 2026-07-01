@@ -1,0 +1,72 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ServiceProviderLinkInstancesPage should match snapshot 1`] = `
+<div>
+  <div
+    class="fr-col-12 fr-col-lg-10 fr-col-xl-8"
+  >
+    <h1
+      class="fr-display--sm"
+    >
+      Partners.linkInstances.title
+    </h1>
+    <p
+      class="fr-display--xs fr-mb-3w"
+    >
+      Formulaire d'accès à l'administration numérique pour les étrangers en France
+    </p>
+    <p
+      class="fr-text--lead fr-mb-3w"
+    >
+      Partners.linkInstances.description
+    </p>
+    <form>
+      <div
+        class="fr-mb-3w fr-p-2w selectAll"
+      >
+        <div
+          class="fr-checkbox-group"
+        >
+          <input
+            id="link-instances-select-all"
+            type="checkbox"
+          />
+          <label
+            class="fr-label"
+            for="link-instances-select-all"
+          >
+            Partners.linkInstances.selectAll
+          </label>
+        </div>
+      </div>
+      <div
+        data-testid="link-instances-table-mock"
+      >
+        <div>
+          <div
+            class="fr-text--bold"
+          >
+            <div>
+              CheckboxComponent
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="fr-grid-row fr-grid-row--right fr-mt-5w"
+      >
+        <div
+          data-mockid="ButtonGroupComponent"
+        >
+          <div>
+            SimpleButton
+          </div>
+          <div>
+            SimpleButton
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+`;

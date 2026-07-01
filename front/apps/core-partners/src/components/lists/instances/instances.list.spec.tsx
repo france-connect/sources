@@ -28,6 +28,7 @@ describe('InstancesListComponent', () => {
       } as unknown as VersionInterface,
       environment: 'SANDBOX' as unknown as PartnersEnvironment,
       id: '1',
+      name: 'any-name-mock-1',
       updatedAt: 'any-updatedAt-mock-1' as unknown as ISODate,
     },
     {
@@ -45,6 +46,7 @@ describe('InstancesListComponent', () => {
       } as unknown as VersionInterface,
       environment: 'SANDBOX' as unknown as PartnersEnvironment,
       id: '2',
+      name: 'any-name-mock-2',
       updatedAt: 'any-updatedAt-mock-2' as unknown as ISODate,
     },
     {
@@ -62,6 +64,7 @@ describe('InstancesListComponent', () => {
       } as unknown as VersionInterface,
       environment: 'SANDBOX' as unknown as PartnersEnvironment,
       id: '3',
+      name: 'any-name-mock-3',
       updatedAt: 'any-updatedAt-mock-3' as unknown as ISODate,
     },
   ];

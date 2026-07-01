@@ -1,0 +1,8 @@
+<h1 data-testid="error-section-title">
+  <%= $translate('error.error_title') %>
+</h1>
+<% if (locals.error.code) { %>
+  <p class="fr-text--sm" data-testid="error-code">
+    <%= $translate('error.error_code', { code: locals.error.code }) %>
+  </p>
+<% } %>

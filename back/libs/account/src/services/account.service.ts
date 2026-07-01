@@ -68,11 +68,14 @@ export class AccountService {
       account = new this.model({ identityHash });
     }
 
-    // Spread new interactions
+    // toObject() is required here: Mongoose 8.x returns a Proxy for Mixed fields,
+    // spreading it directly loses nested keys.
     account.spFederation = {
-      ...account.spFederation,
+      ...account.toObject().spFederation,
       ...interaction.spFederation,
     };
+
+    account.markModified('spFederation');
 
     // Update last connection timestamp
     account.lastConnection = interaction.lastConnection;

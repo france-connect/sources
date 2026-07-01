@@ -281,6 +281,20 @@ docker-stack bdd-ud-test-visual
 # docker-stack reset-db-core-fcp-high
 docker-stack bdd-eidas-test-visual
 ```
+##### X Server error when running headless Cypress test
+
+When Cypress launches a browser in non-headless mode, it needs access to the X server to display the graphical interface. However, depending on the system configuration, the X server only allows the current user to open a window. 
+
+If Cypress, Chrome, or a sandbox runs under a different user (sudo, Docker, CI, sandbox), access is denied and the browser cannot start.
+
+```shell
+# Allow local users to use the X server
+xhost +local:
+```
+
+The `xhost +local:` command relaxes these restrictions by allowing all local users to connect to the X server through the Unix socket.
+
+This enables processes launched by Cypress — even under a different UID or inside an isolated environment — to access the display and successfully start the browser.
 
 #### As in a production environment
 

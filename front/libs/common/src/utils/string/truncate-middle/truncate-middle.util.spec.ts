@@ -9,12 +9,12 @@ describe('truncateMiddle', () => {
     const result = truncateMiddle(input);
 
     // Then
-    expect(result).toBe('a1b2c3d4...34567890');
+    expect(result).toBe('a1b2c3d4…34567890');
   });
 
   it('should not truncate a string that is exactly the minimum length', () => {
     // Given
-    const input = 'a1b2c3d4...34567890'; // 19 chars = 8 * 2 + 3
+    const input = 'a1b2c3d4…34567890';
 
     // When
     const result = truncateMiddle(input);
@@ -42,12 +42,12 @@ describe('truncateMiddle', () => {
     const result = truncateMiddle(input, 4);
 
     // Then
-    expect(result).toBe('abcd...wxyz');
+    expect(result).toBe('abcd…wxyz');
   });
 
   it('should not truncate when string length equals minimum for custom visible chars', () => {
     // Given
-    const input = 'abcdefghijk'; // 11 chars = 4 * 2 + 3
+    const input = 'abcdefgh';
 
     // When
     const result = truncateMiddle(input, 4);

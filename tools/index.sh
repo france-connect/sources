@@ -85,6 +85,7 @@ _command_register "ci-validate-code-front" "_ci_run_validate_code_front" "Run co
 _command_register "ci-validate-code-quality" "_ci_run_validate_code_quality" "Run code quality checks for quality applications"
 _command_register "ci-create-front-workspaces" "_ci_create_front_workspaces" "Create front workspaces dependencies without calling yarn install"
 _command_register "ci-dev-generic-cache-resolve" "_ci_dev-generic_cache_resolve" "Resolves if build of dependencies is needed to run jobs"
+_command_register "ci-ci-cd-cache-resolve" "_ci_ci-cd_cache_resolve" "Resolves if build of base ci-cd images are to be built"
 
 _command_register "cypress" "_cypress" "Run Cypress tests"
 _command_register "bdd-fcp-report" "_bdd_fcp_report" "Generate the test report for fcp workspace"

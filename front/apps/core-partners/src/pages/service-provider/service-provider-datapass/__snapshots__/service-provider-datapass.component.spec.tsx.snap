@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ServiceProviderDatapassComponent should match the snapshot 1`] = `
+<div>
+  <div
+    class="fr-col-12 fr-col-lg-10 fr-col-xl-8 fr-mt-4w"
+  >
+    <h2>
+      Partners.serviceProviderPage.datapass.title
+    </h2>
+    <hr />
+    <ul>
+      <li>
+        <b>
+          Partners.serviceProviderPage.datapass.number
+           
+        </b>
+        <span
+          data-mockid="LinkComponent"
+        />
+      </li>
+    </ul>
+  </div>
+</div>
+`;

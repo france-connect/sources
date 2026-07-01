@@ -1,0 +1,15 @@
+{
+  "createdAt": "2022-02-22T23:00:00.000Z",
+  "datapassRequestId": "datapass-request-id-mock",
+  "datapassScopes": ["datapass-scope-1", "datapass-scope-2"],
+  "fcScopes": ["fc-scope-1", "fc-scope-2"],
+  "id": "service-provider-id-mock",
+  "instances": [],
+  "name": "service-provider-name-mock",
+  "organization": {
+    "id": "organization-id-mock",
+    "name": "organization-name-mock",
+    "siret": "12345678901234"
+  },
+  "updatedAt": "2022-02-22T23:00:00.000Z"
+}

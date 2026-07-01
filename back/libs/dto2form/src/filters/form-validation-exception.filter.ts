@@ -32,7 +32,7 @@ export class FormValidationExceptionFilter
     protected readonly config: ConfigService,
     protected readonly logger: LoggerService,
     protected readonly eventBus: EventBus,
-    private readonly partners: Dto2FormI18nService,
+    private readonly i18n: Dto2FormI18nService,
   ) {
     super(config, logger, eventBus);
   }
@@ -48,7 +48,7 @@ export class FormValidationExceptionFilter
     const message = exceptionConstructor.UI;
 
     // Translate
-    const exceptionLogI18n = this.partners.translation(
+    const exceptionLogI18n = this.i18n.translation(
       exception.log as MetadataDtoInterface[],
     );
 

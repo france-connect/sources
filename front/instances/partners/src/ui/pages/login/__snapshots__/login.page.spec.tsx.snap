@@ -1,67 +1,5 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`Login Page shoud match the snapshot, greater than desktop viewport 1`] = `
-<div>
-  <div>
-    NoticeComponent
-  </div>
-  <main
-    class="fr-container fr-py-8v"
-  >
-    <div
-      class="fr-grid-row fr-grid-row--center fr-mt-8w"
-    >
-      <div
-        class="fr-col-9"
-      >
-        <h1>
-          any-translation-value
-        </h1>
-        <h2
-          class="fr-mt-4w"
-        >
-          any-translation-value
-        </h2>
-        <div
-          data-mockid="LoginFormComponent"
-        />
-      </div>
-    </div>
-  </main>
-</div>
-`;
-
-exports[`Login Page shoud match the snapshot, lower than mobile viewport 1`] = `
-<div>
-  <div>
-    NoticeComponent
-  </div>
-  <main
-    class="fr-container fr-py-8v"
-  >
-    <div
-      class="fr-grid-row fr-grid-row--center fr-mt-5w"
-    >
-      <div
-        class="fr-col-9"
-      >
-        <h1>
-          any-translation-value
-        </h1>
-        <h2
-          class="fr-mt-4w"
-        >
-          any-translation-value
-        </h2>
-        <div
-          data-mockid="LoginFormComponent"
-        />
-      </div>
-    </div>
-  </main>
-</div>
-`;
-
 exports[`Login Page shoud match the snapshot, when user session has expired 1`] = `
 <div>
   <div>
@@ -71,15 +9,23 @@ exports[`Login Page shoud match the snapshot, when user session has expired 1`] 
     class="fr-container fr-py-8v"
   >
     <div
-      data-mockid="AlertComponent"
+      class="fr-grid-row fr-grid-row--left fr-my-3w"
     >
-      <div>
-        AlertComponent
+      <div
+        class="fr-col-12"
+      >
+        <div
+          data-mockid="AlertComponent"
+        >
+          <div>
+            AlertComponent
+          </div>
+          <div />
+        </div>
       </div>
-      <div />
     </div>
     <div
-      class="fr-grid-row fr-grid-row--center fr-mt-8w"
+      class="fr-grid-row fr-grid-row--center fr-mt-5w fr-mt-md-8w"
     >
       <div
         class="fr-col-9"
@@ -110,7 +56,7 @@ exports[`Login Page should match the snapshot 1`] = `
     class="fr-container fr-py-8v"
   >
     <div
-      class="fr-grid-row fr-grid-row--center fr-mt-8w"
+      class="fr-grid-row fr-grid-row--center fr-mt-5w fr-mt-md-8w"
     >
       <div
         class="fr-col-9"

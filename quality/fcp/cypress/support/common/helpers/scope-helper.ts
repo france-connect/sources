@@ -146,3 +146,40 @@ export const getClaimsWithoutRnippPrefix = (
 
   return expectedClaimsSet;
 };
+
+export const getExpectedClaimsByPlatform = (
+  scope: ScopeContext,
+  platform: string,
+): string[] => {
+  const expectedClaims = getClaims(scope);
+  if (platform === 'fcp-low') {
+    // Force the given_name_array claim into expectedClaim
+    if (expectedClaims.includes('given_name')) {
+      expectedClaims.push('given_name_array');
+    }
+  }
+  return expectedClaims;
+};
+
+export const getUserClaimsByPlatform = (
+  allClaims: UserClaims,
+  platform: string,
+): UserClaims => {
+  let userClaims: UserClaims;
+  if (platform === 'fcp-high') {
+    // Get automatically the equivalent RNIPP claims
+    const rnippClaims = getRnippClaims(allClaims);
+    userClaims = {
+      ...allClaims,
+      ...rnippClaims,
+    };
+  } else {
+    // Get extra idp claims
+    const idpClaims = getIdpClaims(allClaims);
+    userClaims = {
+      ...allClaims,
+      ...idpClaims,
+    };
+  }
+  return userClaims;
+};

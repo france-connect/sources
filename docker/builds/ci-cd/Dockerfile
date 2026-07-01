@@ -14,7 +14,7 @@ ARG NODE_MODULE_QUALITY_VERSION="default"
 FROM ${DOCKER_HUB_PROXY}docker:${DOCKER_VERSION}-cli AS ci-cd-slim
 
 # These ARGs are available as env vars during RUN
-RUN apk add --no-cache bash
+RUN apk add --no-cache bash jq
 
 CMD ["bash"]
 

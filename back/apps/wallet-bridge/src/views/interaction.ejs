@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="<%= $translate('meta.lang') %>" data-fr-scheme="light">
+  <head>
+    <%- include('includes/head.ejs') %>
+    <!-- <script src="<%= $asset('/js/oid4vp.js') %>" defer></script> -->
+    <!-- <link rel="stylesheet" href="<%= $asset('/css/pages/oid4vp.css') %>" /> -->
+    <!-- <%- include('pages/error/error.page-title.ejs') %> -->
+  </head>
+  <body id="wb-interaction-page">
+    <div class="fc-sticky-wrapper">
+      <div class="fc-sticky-body">
+        <%- include('includes/header.ejs') %>
+        <main
+          role="main"
+          id="main-content"
+          class="fr-container fr-mt-5w fr-mt-md-8w"
+        >
+          <h1>🇪🇺🔒🪪 Connexion OpenID4VP</h1>
+          <div class="fr-grid-row">
+            <div class="fr-grid-col-12">
+              <a href="<%= httpRequestUri %>" class="fr-link">
+                <img src="<%= qrcodeDataUrl %>" alt="QR Code" />
+              </a>
+            </div>
+
+            <div class="fr-grid-col-12">
+              <div class="fc-text--center qr-state" id="countDown"></div>
+              <div class="fc-text--center qr-state pending" id="readSuccess">
+                ✅
+              </div>
+            </div>
+          </div>
+          <div class="fr-grid-row fr-grid-row--gutters">
+            <form>
+              <input
+                type="text"
+                name="requestUri"
+                value="<%= requestUri %>"
+                class="fr-input"
+              />
+              <input
+                type="text"
+                name="httpRequestUri"
+                value="<%= httpRequestUri %>"
+                class="fr-input"
+              />
+              <input type="text" name="successUrl" value="<%= successUrl %>" />
+              <input type="hidden" name="statusUrl" value="<%= statusUrl %>" />
+              <input type="hidden" name="timeout" value="<%= timeout %>" />
+            </form>
+          </div>
+        </main>
+      </div>
+      <%- include('includes/footer.ejs') %>
+    </div>
+    <%- include('includes/scripts.ejs') %>
+  </body>
+</html>

@@ -134,3 +134,7 @@ Before({ tags: '@clearExploitBusinessLogs' }, function () {
     clearBusinessLog(logPath);
   }
 });
+
+Before({ tags: '@connexionSub' }, function () {
+  cy.clearCookies();
+});

@@ -83,11 +83,22 @@ describe('JwtService', () => {
 
     it('should return the first relevant key (sig)', () => {
       // Given
+      const use = Use.SIG;
+
+      // When
+      const result = service.getFirstRelevantKey(jwks, use);
+
+      // Then
+      expect(result).toEqual(key1);
+    });
+
+    it('should return the first relevant key (with alg)', () => {
+      // Given
       const alg = KekAlg.ES256;
       const use = Use.SIG;
 
       // When
-      const result = service.getFirstRelevantKey(jwks, alg, use);
+      const result = service.getFirstRelevantKey(jwks, use, alg);
 
       // Then
       expect(result).toEqual(key2);
@@ -99,7 +110,7 @@ describe('JwtService', () => {
       const use = Use.ENC;
 
       // When
-      const result = service.getFirstRelevantKey(jwks, alg, use);
+      const result = service.getFirstRelevantKey(jwks, use, alg);
 
       // Then
       expect(result).toEqual(key3);
@@ -111,7 +122,7 @@ describe('JwtService', () => {
       const use = Use.SIG;
 
       // When
-      const result = () => service.getFirstRelevantKey(jwks, alg, use);
+      const result = () => service.getFirstRelevantKey(jwks, use, alg);
 
       // Then
       expect(result).toThrow(NoRelevantKeyException);
@@ -129,7 +140,7 @@ describe('JwtService', () => {
 
       // When
       const result = () =>
-        service.getFirstRelevantKey(jwksMultipleRelevantKeys, alg, use, kid);
+        service.getFirstRelevantKey(jwksMultipleRelevantKeys, use, alg, kid);
 
       // Then
       expect(result).toThrow(MultipleRelevantKeysException);
@@ -142,7 +153,7 @@ describe('JwtService', () => {
       const kid = 'foo';
 
       // When
-      const result = service.getFirstRelevantKey(jwks, alg, use, kid);
+      const result = service.getFirstRelevantKey(jwks, use, alg, kid);
 
       // Then
       expect(result).toEqual(key2);

@@ -12,4 +12,4 @@ export * from './media.interface';
 export * from './pagination.interface';
 export * from './stepper';
 export * from './tab-group-item.interface';
-export * from './table';
+export * from './table.interface';

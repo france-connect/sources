@@ -3,7 +3,7 @@
 exports[`ButtonGroupComponent should match snapshot with all props 1`] = `
 <div>
   <ul
-    class="fr-btns-group fr-btns-group--md fr-btns-group--equisized"
+    class="fr-btns-group fr-btns-group--right fr-btns-group--equisized fr-btns-group--md"
   >
     <li>
       <div
@@ -22,7 +22,7 @@ exports[`ButtonGroupComponent should match snapshot with all props 1`] = `
 exports[`ButtonGroupComponent should match snapshot with default props 1`] = `
 <div>
   <ul
-    class="fr-btns-group fr-btns-group--inline-md"
+    class="fr-btns-group fr-btns-group--left fr-btns-group--inline"
   >
     <li>
       <div
@@ -35,5 +35,17 @@ exports[`ButtonGroupComponent should match snapshot with default props 1`] = `
       />
     </li>
   </ul>
+</div>
+`;
+
+exports[`ButtonGroupComponent should show only one button when there is only one button 1`] = `
+<div>
+  <div
+    class="fr-btns-group fr-btns-group--left fr-btns-group--inline"
+  >
+    <div
+      data-mockid="SimpleButton"
+    />
+  </div>
 </div>
 `;

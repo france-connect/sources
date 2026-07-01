@@ -10,6 +10,8 @@ When(/^je rafraîchis la page$/, function () {
 
 When("j'attends le chargement de la page {int}ms", (ms: number) => cy.wait(ms));
 
+When("j'attends {int} secondes", (seconds: number) => cy.wait(seconds * 1000));
+
 Given(
   /^j'attend le rechargement déférré du cache des (?:fournisseurs d'identité|fournisseurs de service|messages d'information)$/,
   function () {

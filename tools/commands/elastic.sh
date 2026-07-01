@@ -106,12 +106,12 @@ _generate_events() {
   cd ${DOCKER_DIR}
 
   echo "Generate logs"
-  $DOCKER_COMPOSE exec $NO_TTY fc-workers bash -c "cd tests/fixtures && node generate-logs.js $START $STOP $LOGS_PER_DAY $VARIATION"
+  $DOCKER_COMPOSE exec $NO_TTY fc-workers-low bash -c "cd tests/fixtures && node generate-logs.js $START $STOP $LOGS_PER_DAY $VARIATION"
   echo "Sleep 2 seconds to give elastic some rest"
   sleep 1
 
   echo "Generate stats"
-  $DOCKER_COMPOSE exec $NO_TTY fc-workers ./run IndexElasticLogs --start=$START --stop=$STOP
+  $DOCKER_COMPOSE exec $NO_TTY fc-workers-low ./run IndexElasticLogs --start=$START --stop=$STOP --version=v2
 }
 
 _index_events() {
@@ -139,11 +139,11 @@ _generate_metrics() {
   METRIC_GROWTH=0.03
 
   echo "Generate metrics"
-  $DOCKER_COMPOSE exec $NO_TTY fc-workers bash -c "cd tests/fixtures && node generate-metrics.js $START $STOP $METRIC_GROWTH"
+  $DOCKER_COMPOSE exec $NO_TTY fc-workers-low bash -c "cd tests/fixtures && node generate-metrics.js $START $STOP $METRIC_GROWTH"
 
   echo "Generate Identities"
-  $DOCKER_COMPOSE up -d mongo
-  $DOCKER_COMPOSE exec $NO_TTY fc-workers bash -c "yarn debug generate-identities.js && ./run InitIdentityES && ./run IndexUserStats --metric=identity"
+  $DOCKER_COMPOSE up -d mongo-fcp-low
+  $DOCKER_COMPOSE exec $NO_TTY fc-workers-low bash -c "yarn debug generate-identities.js && ./run InitIdentityES && ./run IndexUserStats --metric=identity"
 }
 
 _delete_indices() {
@@ -171,7 +171,6 @@ _delete_indices() {
   echo "Delete metrics index"
   $RUN_CONTEXT curl -XDELETE ${CURL_OPTIONS} "$ES_URL/metrics"
   echo ""
-
 }
 
 _es_restore_snapshot() {

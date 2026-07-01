@@ -2,7 +2,7 @@ build-back-staging:
   stage: 'Build Staging'
   rules:
     - if: '$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME == "staging" || $CI_COMMIT_BRANCH == "staging"'
-  image:  ${FC_DOCKER_REGISTRY}/ci-cd-slim:latest
+  image:  ${FC_DOCKER_REGISTRY}/ci-cd-slim:${DOCKER_VERSION}
   services:
     - name: docker:28-dind
       alias: docker

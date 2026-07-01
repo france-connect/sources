@@ -6,4 +6,6 @@ export enum Strings {
   SLASH = '/',
   NBSP_UNICODE = '\u00A0',
   NEW_LINE = '\n',
+  ELLIPSIS = '…',
+  N_A = 'N/A',
 }

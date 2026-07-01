@@ -7,11 +7,14 @@ import { ConfigService } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
 import { PartnersServiceProviderService } from '@fc/partners-service-provider';
 import { PartnersServiceProviderInstanceService } from '@fc/partners-service-provider-instance';
-import { ServiceProviderInstanceVersionDto } from '@fc/partners-service-provider-instance-version';
+import { ServiceProviderInstanceVersionStandaloneDto } from '@fc/partners-service-provider-instance-version';
 import { OidcClientInterface } from '@fc/service-provider';
 
 import { AppConfig, DefaultServiceProviderLowValueConfig } from '../dto';
-import { ExistingDataInterface } from '../interfaces';
+import {
+  ExistingDataInterface,
+  InstanceVersionFromSpPayloadInterface,
+} from '../interfaces';
 import { PartnersServiceProviderFormService } from './partners-service-provider-form.service';
 
 @Injectable()
@@ -31,7 +34,10 @@ export class PartnersInstanceVersionFormService {
    * Default or private values are set in the returned object
    */
   async fromFormValues(
-    values: ServiceProviderInstanceVersionDto | OidcClientInterface,
+    values:
+      | ServiceProviderInstanceVersionStandaloneDto
+      | InstanceVersionFromSpPayloadInterface
+      | OidcClientInterface,
     serviceProviderId: string,
     instanceId?: string,
   ): Promise<OidcClientInterface> {
@@ -129,7 +135,7 @@ export class PartnersInstanceVersionFormService {
         ...instance.currentVersion,
         data: getTransformed<OidcClientInterface>(
           instance.currentVersion.data,
-          ServiceProviderInstanceVersionDto,
+          ServiceProviderInstanceVersionStandaloneDto,
           { excludeExtraneousValues: true },
         ),
       },

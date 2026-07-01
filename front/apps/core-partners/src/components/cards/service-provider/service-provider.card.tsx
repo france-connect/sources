@@ -4,10 +4,10 @@ import { HeadingTag, isoToDate, type PropsWithClassName, Strings } from '@fc/com
 import { CardComponent, Sizes } from '@fc/dsfr';
 import { t } from '@fc/i18n';
 
-import type { ServiceProviderItemInterface } from '../../../interfaces';
+import type { ServiceProviderInterface } from '../../../interfaces';
 
 interface ServiceProviderCardComponentProps extends PropsWithClassName {
-  data: ServiceProviderItemInterface;
+  data: ServiceProviderInterface;
 }
 
 export const ServiceProviderCardComponent = React.memo(

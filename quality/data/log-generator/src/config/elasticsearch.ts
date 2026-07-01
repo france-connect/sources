@@ -11,6 +11,7 @@ export const ElasticSearchConfig = {
   legacyIndex: 'franceconnect',
   nodes: `["${ELASTICSEARCH_URL}"]`,
   password: 'docker-stack',
+  tls: { rejectUnauthorized: false },
   url: ELASTICSEARCH_URL,
   username: 'docker-stack',
 };

@@ -525,6 +525,34 @@ describe('CoreFcpDefaultVerifyHandler', () => {
       // Then
       expect(result).toBe(generatedSubMock);
     });
+
+    it('should use toObject() when account is a Mongoose document', () => {
+      // Given
+      const subFromAccount = 'subFromToObjectMockValue';
+      const toObjectSpy = jest.fn().mockReturnValue({
+        active: true,
+        spFederation: {
+          [spMock.entityId]: subFromAccount,
+        },
+      });
+      const mongooseAccountMock = {
+        id: 'some-mongoose-document-id',
+        active: true,
+        spFederation: {},
+        toObject: toObjectSpy,
+      } as unknown as Account;
+
+      // When
+      const result = service['getSub'](
+        mongooseAccountMock,
+        identityHashMock,
+        spMock.entityId,
+      );
+
+      // Then
+      expect(toObjectSpy).toHaveBeenCalledTimes(1);
+      expect(result).toBe(subFromAccount);
+    });
   });
 
   describe('buildSpIdentity', () => {

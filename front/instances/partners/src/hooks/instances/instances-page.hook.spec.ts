@@ -1,18 +1,22 @@
 import { renderHook } from '@testing-library/react';
-import type { Location } from 'react-router';
-import { useLoaderData, useLocation, useNavigate } from 'react-router';
+import { useLoaderData } from 'react-router';
+
+import { MessageTypes } from '@fc/common';
+import type { LocationWithSubmitStateInterface } from '@fc/core-partners';
+import { useCleanupRouteState } from '@fc/routing';
 
 import { useInstances } from './instances-page.hook';
 
 describe('useInstances', () => {
   // Given
-  const navigateMock = jest.fn();
+  const cleanupRouteStateMock = jest.fn();
 
   beforeEach(() => {
     // Given
-    jest.mocked(useNavigate).mockReturnValue(navigateMock);
-    jest.mocked(useLocation).mockReturnValue({ state: {} } as Location);
     jest.mocked(useLoaderData).mockReturnValue({ payload: [] });
+    jest
+      .mocked(useCleanupRouteState)
+      .mockReturnValue({ cleanupRouteState: cleanupRouteStateMock, state: undefined });
   });
 
   it('should return hasItems as false when payload has no items', () => {
@@ -21,7 +25,7 @@ describe('useInstances', () => {
 
     // Then
     expect(result.current).toEqual({
-      closeAlertHandler: expect.any(Function),
+      cleanupRouteState: expect.any(Function),
       hasItems: false,
       items: [],
       submitState: undefined,
@@ -63,7 +67,7 @@ describe('useInstances', () => {
 
     // Then
     expect(result.current).toEqual({
-      closeAlertHandler: expect.any(Function),
+      cleanupRouteState: expect.any(Function),
       hasItems: true,
       items: [instanceMock1, instanceMock2],
       submitState: undefined,
@@ -72,37 +76,24 @@ describe('useInstances', () => {
 
   it('should return params when submit state is defined', () => {
     // Given
-    jest.mocked(useLocation).mockReturnValueOnce({
-      state: {
-        submitState: {
-          message: 'any-submitstate-message-mock',
-          type: 'any-message-type-mock',
-        },
-      },
-    } as Location);
+    const submitStateMock = {
+      message: 'any-submitstate-message-mock',
+      title: 'any-submitstate-title-mock',
+      type: MessageTypes.SUCCESS,
+    } as unknown as LocationWithSubmitStateInterface;
+    jest
+      .mocked(useCleanupRouteState)
+      .mockReturnValueOnce({ cleanupRouteState: cleanupRouteStateMock, state: submitStateMock });
 
     // When
     const { result } = renderHook(() => useInstances());
 
     // Then
     expect(result.current).toEqual({
-      closeAlertHandler: expect.any(Function),
+      cleanupRouteState: expect.any(Function),
       hasItems: false,
       items: [],
-      submitState: {
-        message: 'any-submitstate-message-mock',
-        type: 'any-message-type-mock',
-      },
+      submitState: submitStateMock,
     });
-  });
-
-  it('should call navigate with params when user close the alert component', () => {
-    // When
-    const { result } = renderHook(() => useInstances());
-    result.current.closeAlertHandler();
-
-    // Then
-    expect(navigateMock).toHaveBeenCalledOnce();
-    expect(navigateMock).toHaveBeenCalledWith('.', { replace: false, state: undefined });
   });
 });

@@ -3,7 +3,7 @@ items:
   # orga by default
   orga-1:
     id: '7437f9bf-a514-46ab-a883-43115a4e8287'
-    name: 'Direction Interministerielle du Numérique'
+    name: 'DIRECTION INTERMINISTERIELLE DU NUMERIQUE'
     siret: '13002526500013'
     createdAt: '2022-02-21T23:00:00.000Z'
     updatedAt: '2022-05-01T22:00:00.000Z'

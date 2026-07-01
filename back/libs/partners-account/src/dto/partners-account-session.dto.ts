@@ -6,6 +6,7 @@ import {
   IsOptional,
   IsString,
   IsUUID,
+  ValidateIf,
   ValidateNested,
 } from 'class-validator';
 
@@ -22,11 +23,13 @@ export class PartnersAccountIdentity extends AccessControlIdentityDto {
   @IsString()
   readonly email: string;
 
+  @ValidateIf((_, value) => value !== null)
   @IsString()
-  readonly firstname: string;
+  readonly firstname: string | null;
 
+  @ValidateIf((_, value) => value !== null)
   @IsString()
-  readonly lastname: string;
+  readonly lastname: string | null;
 
   @IsUUID()
   readonly id: string;

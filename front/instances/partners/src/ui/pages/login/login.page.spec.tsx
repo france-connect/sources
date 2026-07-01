@@ -4,7 +4,6 @@ import { useAccountContext } from '@fc/account';
 import { AlertComponent, NoticeComponent } from '@fc/dsfr';
 import { t } from '@fc/i18n';
 import { LoginFormComponent } from '@fc/login-form';
-import { useStylesQuery, useStylesVariables } from '@fc/styles';
 
 import { LoginPage } from './login.page';
 
@@ -18,18 +17,11 @@ describe('Login Page', () => {
 
   beforeEach(() => {
     jest.mocked(useAccountContext).mockReturnValue(accountContextState);
-    // @NOTE used to prevent useStylesVariables.useStylesContext to throw
-    // useStylesContext requires to be into a StylesProvider context
-    jest.mocked(useStylesVariables).mockReturnValue([expect.any(Number)]);
-    jest.mocked(useStylesQuery).mockReturnValue(true);
     jest.mocked(t).mockReturnValue('any-translation-value');
   });
 
   it('should match the snapshot', () => {
     // Given
-    const breakpointMock = Symbol(1234) as unknown as string;
-    jest.mocked(useStylesVariables).mockReturnValueOnce([breakpointMock]);
-    jest.mocked(useStylesQuery).mockReturnValueOnce(true);
     jest.mocked(useAccountContext).mockReturnValueOnce(accountContextState);
     jest
       .mocked(t)
@@ -47,10 +39,6 @@ describe('Login Page', () => {
     expect(container).toMatchSnapshot();
     expect(useAccountContext).toHaveBeenCalledOnce();
     expect(useAccountContext).toHaveBeenCalledWith();
-    expect(useStylesVariables).toHaveBeenCalledOnce();
-    expect(useStylesVariables).toHaveBeenCalledWith(['breakpoint-lg']);
-    expect(useStylesQuery).toHaveBeenCalledOnce();
-    expect(useStylesQuery).toHaveBeenCalledWith({ minWidth: breakpointMock });
     expect(t).toHaveBeenCalledTimes(4);
     expect(t).toHaveBeenNthCalledWith(1, 'Partners.layout.noticeDescription');
     expect(t).toHaveBeenNthCalledWith(2, 'Partners.layout.noticeTitle');
@@ -78,40 +66,6 @@ describe('Login Page', () => {
     );
   });
 
-  it('shoud match the snapshot, greater than desktop viewport', () => {
-    // Given
-    const breakpointDesktopMock = Symbol(1234) as unknown as string;
-    jest.mocked(useStylesVariables).mockReturnValueOnce([breakpointDesktopMock]);
-    jest.mocked(useStylesQuery).mockReturnValueOnce(true);
-
-    // When
-    const { container } = render(<LoginPage />);
-
-    // Then
-    expect(container).toMatchSnapshot();
-    expect(useStylesVariables).toHaveBeenCalledOnce();
-    expect(useStylesVariables).toHaveBeenCalledWith(['breakpoint-lg']);
-    expect(useStylesQuery).toHaveBeenCalledOnce();
-    expect(useStylesQuery).toHaveBeenCalledWith({ minWidth: breakpointDesktopMock });
-  });
-
-  it('shoud match the snapshot, lower than mobile viewport', () => {
-    // Given
-    const breakpointLowerMock = Symbol(1234) as unknown as string;
-    jest.mocked(useStylesVariables).mockReturnValueOnce([breakpointLowerMock]);
-    jest.mocked(useStylesQuery).mockReturnValueOnce(false);
-
-    // When
-    const { container } = render(<LoginPage />);
-
-    // Then
-    expect(container).toMatchSnapshot();
-    expect(useStylesVariables).toHaveBeenCalledOnce();
-    expect(useStylesVariables).toHaveBeenCalledWith(['breakpoint-lg']);
-    expect(useStylesQuery).toHaveBeenCalledOnce();
-    expect(useStylesQuery).toHaveBeenCalledWith({ minWidth: breakpointLowerMock });
-  });
-
   it('shoud match the snapshot, when user session has expired', () => {
     // Given
     jest.mocked(useAccountContext).mockReturnValueOnce({ ...accountContextState, expired: true });
@@ -133,7 +87,6 @@ describe('Login Page', () => {
     expect(AlertComponent).toHaveBeenCalledOnce();
     expect(AlertComponent).toHaveBeenCalledWith(
       {
-        className: 'text-left fr-my-3w',
         size: 'md',
         title: 'FC.session.expired-mock',
         type: 'error',

@@ -72,8 +72,10 @@ describe('ESHelper', () => {
           },
         },
         index,
+        // Respect ES naming convention
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        max_docs: 10000,
         refresh: true,
-        size: 10000,
       };
 
       // When
@@ -106,7 +108,7 @@ describe('ESHelper', () => {
       expect(hasNoError).toHaveBeenCalledTimes(1);
       expect(esHelper.esClient.bulk).toHaveBeenCalledWith({
         body: [
-          { index: { _index: index, _type: '_doc' } },
+          { index: { _index: index } },
           { accountId: '123', time: '2021-01-01T00:00:00Z' },
         ],
         pipeline: 'geo',
@@ -125,8 +127,10 @@ describe('ESHelper', () => {
           },
         },
         index: 'test-index',
+        // Respect ES naming convention
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        max_docs: 10000,
         refresh: true,
-        size: 10000,
       };
 
       (esHelper.esClient.deleteByQuery as jest.Mock).mockResolvedValue({
@@ -151,8 +155,10 @@ describe('ESHelper', () => {
           },
         },
         index: 'test-index',
+        // Respect ES naming convention
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        max_docs: 10000,
         refresh: true,
-        size: 10000,
       };
 
       const mockResult = {

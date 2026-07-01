@@ -2,11 +2,11 @@ import React from 'react';
 
 import { sortByKey, SortOrder } from '@fc/common';
 
-import type { ServiceProviderItemInterface } from '../../../interfaces';
+import type { ServiceProviderInterface } from '../../../interfaces';
 import { ServiceProviderCardComponent } from '../../cards';
 
 interface ServiceProvidersListComponentProps {
-  items: ServiceProviderItemInterface[];
+  items: ServiceProviderInterface[];
 }
 
 export const ServiceProvidersListComponent = React.memo(

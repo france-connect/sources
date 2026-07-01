@@ -1,7 +1,6 @@
-type Meta = Record<string, unknown>;
-type Payload = unknown;
+import type { AnyObjectInterface } from './any-object.interface';
 
-export type FSAInterface<P = Payload, M extends Meta = Meta> = {
+export type FSAInterface<P = unknown, M = AnyObjectInterface> = {
   meta?: M;
   payload?: P;
   type: string;

@@ -17,7 +17,11 @@ export const InstancesListComponent = React.memo(({ items }: InstancesListCompon
   items.sort(sortByKey('updatedAt', SortOrder.DESC)).map((data, index) => {
     const uniqkey = `instance::${data.id}`;
     const className = index > 0 ? 'fr-mt-2w' : undefined;
-    return <InstanceCardComponent key={uniqkey} className={className} data={data} />;
+    return (
+      <div key={uniqkey}>
+        <InstanceCardComponent className={className} data={data} />
+      </div>
+    );
   }),
 );
 

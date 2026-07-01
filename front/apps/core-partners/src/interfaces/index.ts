@@ -1,5 +1,7 @@
 export * from './external-urls.interface';
 export * from './instance.interface';
+export * from './location-with-submit-state.interface';
+export * from './organization.interface';
 export * from './partner-user-infos.interface';
 export * from './partners.config';
 export * from './permission.interface';

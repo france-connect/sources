@@ -71,6 +71,14 @@ export const enGB: I18nTranslationsMapType = {
   'error.faq.y100011.body':
     'You have blocked the use of this identity provider. To use it again, please consult our FranceConnect help page. If you are unable to unblock your access, please contact us and provide an identity document.',
 
+  'session_expiration.title': 'Your session is about to expire',
+  'session_expiration.message_interaction':
+    'If your session expires before you have chosen an account, you will not be able to complete your connection. To continue your connection, choose one of the proposed accounts right now.',
+  'session_expiration.message_confirmation':
+    'If your session expires before you have clicked on “Continue”, your connection will not be completed. To continue your connection, click on “Continue” right now.',
+  'session_expiration.message_consent':
+    'If your session expires before you have clicked on “Continue”, your connection will not be completed. To continue, agree right now for FranceConnect to transmit your data to the service then click on “Continue”.',
+
   'skiplinks.quick_access': 'Quick access',
   'skiplinks.content': 'Content',
   'skiplinks.footer': 'Footer',

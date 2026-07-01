@@ -44,6 +44,7 @@ export const loadLinkableInstancesByServiceProviderId = async ({
     await fetchWithAuthHandling<Required<FSAInterface<LinkableInstancesApiPayloadInterface>>>(path);
 
   if (!apiResponse?.payload) {
+    // @NOTE was this a business requirement?
     return {
       payload: {
         datapassRequestId: '',

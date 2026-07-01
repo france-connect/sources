@@ -15,7 +15,7 @@ import { ApplicationLayout } from '@fc/layout';
 import { AuthedRoute, RouterErrorBoundaryComponent, UnauthedRoute } from '@fc/routing';
 
 import { loadFraudTracks } from '../loaders';
-import { IdentityTheftReportLayout, StepperLayout } from './layouts';
+import { IdentityTheftReportLayout, NoticeLayout, StepperLayout } from './layouts';
 import {
   AccessibilityPage,
   Error409Component,
@@ -42,58 +42,60 @@ export const ApplicationRoutes = React.memo(() => {
 
   const routes = createRoutesFromElements(
     <Route element={<ApplicationLayout />} errorElement={<RouterErrorBoundaryComponent />} path="/">
-      <Route element={<AuthedRoute fallback={authedFallback} />}>
-        <Route element={<TracksPage />} path="history" />
-        <Route element={<UserPreferencesPage />} path="preferences" />
-        <Route element={<FraudFormPage />} path="fraud/form" />
-      </Route>
-      <Route element={<UnauthedRoute fallback={unauthedFallback} />}>
-        <Route element={<FraudLoginPage />} path="fraud" />
-        <Route index element={<HomePage />} />
-      </Route>
-      <Route element={<IdentityTheftReportLayout />} path="signalement-usurpation">
-        <Route element={<IdentityTheftReportSuccessPage />} path="success" />
-        <Route element={<StepperLayout />}>
-          <Route
-            element={<IdentityTheftReportSummaryPage />}
-            loader={loadData('IdentityTheftSummary')}
-            path="recapitulatif"
-          />
-          <Route
-            element={<IdentityTheftReportContactPage />}
-            loader={loadData('IdentityTheftContact')}
-            path="contact"
-          />
-          <Route
-            element={<IdentityTheftReportIdentityPage />}
-            loader={loadData('IdentityTheftIdentity')}
-            path="identite-usurpee"
-          />
-          <Route
-            element={<IdentityTheftReportConnectionListPage />}
-            loader={loadFraudTracks}
-            path="connexions-existantes"
-          />
-          <Route
-            element={<IdentityTheftReportAuthenticationEventIdPage />}
-            loader={loadData('IdentityTheftConnection')}
-            path="code-identification"
-          />
-          <Route
-            element={<IdentityTheftReportDescriptionUsurpationPage />}
-            loader={loadData('IdentityTheftDescription')}
-            path="description-usurpation"
-          />
+      <Route element={<NoticeLayout />}>
+        <Route element={<AuthedRoute fallback={authedFallback} />}>
+          <Route element={<TracksPage />} path="history" />
+          <Route element={<UserPreferencesPage />} path="preferences" />
+          <Route element={<FraudFormPage />} path="fraud/form" />
         </Route>
-        <Route index element={<Navigate to="description-usurpation" />} />
+        <Route element={<UnauthedRoute fallback={unauthedFallback} />}>
+          <Route element={<FraudLoginPage />} path="fraud" />
+          <Route index element={<HomePage />} />
+        </Route>
+        <Route element={<IdentityTheftReportLayout />} path="signalement-usurpation">
+          <Route element={<IdentityTheftReportSuccessPage />} path="success" />
+          <Route element={<StepperLayout />}>
+            <Route
+              element={<IdentityTheftReportSummaryPage />}
+              loader={loadData('IdentityTheftSummary')}
+              path="recapitulatif"
+            />
+            <Route
+              element={<IdentityTheftReportContactPage />}
+              loader={loadData('IdentityTheftContact')}
+              path="contact"
+            />
+            <Route
+              element={<IdentityTheftReportIdentityPage />}
+              loader={loadData('IdentityTheftIdentity')}
+              path="identite-usurpee"
+            />
+            <Route
+              element={<IdentityTheftReportConnectionListPage />}
+              loader={loadFraudTracks}
+              path="connexions-existantes"
+            />
+            <Route
+              element={<IdentityTheftReportAuthenticationEventIdPage />}
+              loader={loadData('IdentityTheftConnection')}
+              path="code-identification"
+            />
+            <Route
+              element={<IdentityTheftReportDescriptionUsurpationPage />}
+              loader={loadData('IdentityTheftDescription')}
+              path="description-usurpation"
+            />
+          </Route>
+          <Route index element={<Navigate to="description-usurpation" />} />
+        </Route>
+        <Route element={<ErrorPage />} path="error">
+          <Route index element={<ErrorGenericComponent />} />
+          <Route element={<Error409Component />} path="409" />
+        </Route>
+        <Route element={<AccessibilityPage />} path="/accessibilite" />
+        <Route element={<LegalNoticesPage />} path="/mentions-legales" />
+        <Route element={<NotFoundPage />} path="*" />
       </Route>
-      <Route element={<ErrorPage />} path="error">
-        <Route index element={<ErrorGenericComponent />} />
-        <Route element={<Error409Component />} path="409" />
-      </Route>
-      <Route element={<AccessibilityPage />} path="/accessibilite" />
-      <Route element={<LegalNoticesPage />} path="/mentions-legales" />
-      <Route element={<NotFoundPage />} path="*" />
     </Route>,
   );
 

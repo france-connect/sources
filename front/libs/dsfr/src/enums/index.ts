@@ -1,3 +1,4 @@
+export * from './align.enum';
 export * from './button-types.enum';
 export * from './card-backgrounds.enum';
 export * from './connect-types.enum';

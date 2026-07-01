@@ -63,16 +63,25 @@ export const Layout: LayoutConfig = {
       },
     ],
   },
-  navigation: [
-    {
-      href: '/fournisseurs-de-service',
-      label: 'Mes fournisseurs de service',
-    },
-    {
-      href: '/instances',
-      label: 'Mes accès au bac à sable',
-    },
-  ],
+  header: {
+    navigation: [
+      {
+        href: '/fournisseurs-de-service',
+        label: 'Mes fournisseurs de service',
+      },
+      {
+        href: '/instances',
+        label: 'Mes accès au bac à sable',
+      },
+    ],
+    toolsLinks: [
+      {
+        external: true,
+        href: 'https://docs.partenaires.franceconnect.gouv.fr/',
+        label: 'Documentation',
+      },
+    ],
+  },
   service: {
     baseline: 'Espace Partenaires',
     homepage: '/',

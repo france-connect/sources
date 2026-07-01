@@ -1,38 +1,36 @@
 import { act, renderHook } from '@testing-library/react';
-import { useLoaderData, useNavigate } from 'react-router';
+import { useLoaderData, useRevalidator } from 'react-router';
 
 import { PartnersService } from '@fc/core-partners';
+import { useNavigateWithState } from '@fc/routing';
 
-import { usePostSubmit } from '../post-submit/post-submit.hook';
 import { useLinkableInstancesToServiceProvider } from './service-provider-link-instances.hook';
 
-jest.mock('../post-submit/post-submit.hook');
-
-const mockInstanceId = 'instance-id-1';
-
-const baseInstance = {
-  createdAt: '2024-01-01T00:00:00.000Z',
-  currentVersion: {
-    data: {
-      // eslint-disable-next-line @typescript-eslint/naming-convention -- API payload uses client_id
-      client_id: 'client-id-1',
-      name: 'Instance 1',
-      signupId: 'DP-1234',
-    },
-  },
-  environment: 'SANDBOX',
-  id: mockInstanceId,
-  updatedAt: '2024-01-01T00:00:00.000Z',
-};
-
 describe('useLinkableInstancesToServiceProvider', () => {
-  const navigateMock = jest.fn();
-  const postSubmitMock = jest.fn().mockResolvedValue(undefined);
+  // Given
+  const goBackMock = jest.fn();
+  const mockInstanceId = 'instance-id-1';
+
+  const goBackWithSuccessMock = jest.fn();
+  const revalidateMock = jest.fn();
+
+  const baseInstance = {
+    createdAt: '2024-01-01T00:00:00.000Z',
+    currentVersion: {
+      data: {
+        // eslint-disable-next-line @typescript-eslint/naming-convention -- API payload uses client_id
+        client_id: 'client-id-1',
+        name: 'Instance 1',
+        signupId: 'DP-1234',
+      },
+    },
+    environment: 'SANDBOX',
+    id: mockInstanceId,
+    updatedAt: '2024-01-01T00:00:00.000Z',
+  };
 
   beforeEach(() => {
-    jest.clearAllMocks();
-    jest.mocked(useNavigate).mockReturnValue(navigateMock as never);
-    jest.mocked(usePostSubmit).mockReturnValue(postSubmitMock);
+    // Given
     jest.mocked(PartnersService.linkInstancesToServiceProvider).mockResolvedValue(undefined);
     jest.mocked(useLoaderData).mockReturnValue({
       payload: {
@@ -40,7 +38,17 @@ describe('useLinkableInstancesToServiceProvider', () => {
         linkableInstances: [baseInstance],
         serviceProviderId: 'service-provider-id-1',
       },
-    } as never);
+    });
+    jest.mocked(useNavigateWithState).mockReturnValue({
+      goBack: goBackMock,
+      goBackWithError: jest.fn(),
+      goBackWithSuccess: goBackWithSuccessMock,
+      navigateWithState: jest.fn(),
+    });
+    jest.mocked(useRevalidator).mockReturnValue({
+      revalidate: revalidateMock,
+      state: 'idle',
+    });
   });
 
   it('should return link instances loader payload', () => {
@@ -71,7 +79,7 @@ describe('useLinkableInstancesToServiceProvider', () => {
           linkableInstances: [baseInstance],
           serviceProviderId: 'service-provider-id-1',
         },
-      } as never);
+      });
 
       // When
       const { result } = renderHook(() => useLinkableInstancesToServiceProvider());
@@ -103,8 +111,16 @@ describe('useLinkableInstancesToServiceProvider', () => {
     });
   });
 
+  it('should call useRevalidator', () => {
+    // When
+    renderHook(() => useLinkableInstancesToServiceProvider());
+
+    // Then
+    expect(useRevalidator).toHaveBeenCalledExactlyOnceWith();
+  });
+
   describe('handleSubmit', () => {
-    it('should call linkInstancesToServiceProvider with selected instance ids', async () => {
+    it('should call revalidate, linkInstancesToServiceProvider with selected instance ids and goBackWithSuccess', async () => {
       // When
       const { result } = renderHook(() => useLinkableInstancesToServiceProvider());
       await act(async () => {
@@ -112,11 +128,15 @@ describe('useLinkableInstancesToServiceProvider', () => {
       });
 
       // Then
+      expect(revalidateMock).toHaveBeenCalledExactlyOnceWith();
       expect(PartnersService.linkInstancesToServiceProvider).toHaveBeenCalledExactlyOnceWith({
         instanceIds: [mockInstanceId],
         serviceProviderId: 'service-provider-id-1',
       });
-      expect(postSubmitMock).toHaveBeenCalledOnce();
+      expect(goBackWithSuccessMock).toHaveBeenCalledExactlyOnceWith({
+        message: 'Partners.serviceProviderPage.linkInstances.success.description',
+        title: 'Partners.instances.successLink',
+      });
     });
 
     it('should exclude unselected instances from the payload', async () => {
@@ -127,6 +147,7 @@ describe('useLinkableInstancesToServiceProvider', () => {
       });
 
       // Then
+      expect(revalidateMock).toHaveBeenCalledExactlyOnceWith();
       expect(PartnersService.linkInstancesToServiceProvider).toHaveBeenCalledExactlyOnceWith({
         instanceIds: [],
         serviceProviderId: 'service-provider-id-1',
@@ -135,15 +156,13 @@ describe('useLinkableInstancesToServiceProvider', () => {
   });
 
   describe('handleCancel', () => {
-    it('should navigate back when called', () => {
+    it('should call goBack', () => {
       // When
       const { result } = renderHook(() => useLinkableInstancesToServiceProvider());
-      act(() => {
-        result.current.handleCancel();
-      });
+      result.current.handleCancel();
 
       // Then
-      expect(navigateMock).toHaveBeenCalledExactlyOnceWith('..');
+      expect(goBackMock).toHaveBeenCalledOnce();
     });
   });
 });

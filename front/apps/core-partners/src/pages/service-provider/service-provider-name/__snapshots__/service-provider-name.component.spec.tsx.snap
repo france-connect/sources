@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ServiceProviderNameComponent should match the snapshot 1`] = `
+<div>
+  <div
+    class="fr-col-12 fr-col-lg-10 fr-col-xl-8"
+  >
+    <h1>
+      Service Provider Name Mock
+    </h1>
+    <p
+      class="is-uppercase"
+      data-testid="service-provider-details-page-organization-name"
+    >
+      Organization Name Mock
+    </p>
+  </div>
+</div>
+`;

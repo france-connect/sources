@@ -1,53 +1,27 @@
-import type { ISODate, UUIDType } from '@fc/common';
+import type { EntityBaseInterface, ISODate, UUIDType } from '@fc/common';
 
-export interface InstanceVersionDataInterface {
-  /* eslint-disable-next-line @typescript-eslint/naming-convention -- API contract uses snake_case */
-  client_id: string;
-  name: string;
-}
+import type { AccessControlPermission } from '../enums';
+import type { InstanceInterface } from './instance.interface';
+import type { OrganizationInterface } from './organization.interface';
+import type { PartnersAccountInterface } from './partners-account.interface';
 
-export interface InstanceCurrentVersionInterface {
-  id: UUIDType;
-  publicationStatus: string;
-  data: InstanceVersionDataInterface;
-  createdAt: ISODate;
-  updatedAt: ISODate;
-}
-
-export interface InstanceCreatorInterface {
-  id?: UUIDType;
-  email?: string;
-  firstname?: string;
-  lastname?: string;
-}
-
-export interface InstanceItemInterface {
-  id: UUIDType;
-  environment: string;
-  createdAt: ISODate;
-  updatedAt: ISODate;
-  currentVersion: InstanceCurrentVersionInterface;
-  creator?: InstanceCreatorInterface;
-}
-
-export interface PartnersOrganizationInterface {
+export interface ServiceProviderInterface extends EntityBaseInterface {
   id: UUIDType;
   name: string;
-  siret: string;
-}
-export interface ServiceProviderInterface {
-  id: UUIDType;
-  name: string;
-  organization: PartnersOrganizationInterface;
+  organization: OrganizationInterface;
   datapassRequestId: string;
   datapassScopes: string[];
   createdAt: ISODate;
   updatedAt: ISODate;
   fcScopes: string[];
-  instances: InstanceItemInterface[];
+  instances: InstanceInterface[];
 }
 
-export type ServiceProviderItemInterface = Pick<
-  ServiceProviderInterface,
-  'id' | 'name' | 'organization' | 'datapassRequestId' | 'createdAt' | 'updatedAt'
->;
+export interface ServiceProviderPermissionInterface {
+  account: PartnersAccountInterface;
+  permissionType: AccessControlPermission;
+}
+
+export interface ServiceProviderMetaInterface {
+  permissions: ServiceProviderPermissionInterface[];
+}

@@ -9,6 +9,10 @@ export default class InstanceFormPage {
     cy.get('[id="Dto2Form-instance-update"]').should('be.visible');
   }
 
+  checkIsLinkedInstanceCreatePageVisible(): void {
+    cy.get('#Dto2Form-service-provider-create-instance').should('be.visible');
+  }
+
   getClientId(): Cypress.Chainable<string> {
     return cy.get('[name="client_id"]').invoke('val');
   }

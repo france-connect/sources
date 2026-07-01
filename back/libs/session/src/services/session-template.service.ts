@@ -26,6 +26,14 @@ export class SessionTemplateService {
     }
   }
 
+  @TemplateMethod('eosAlertDelay')
+  getEosAlertDelay(): number {
+    const { lifetime, eosAlertDelay } =
+      this.config.get<SessionConfig>('Session');
+
+    return lifetime - eosAlertDelay;
+  }
+
   getSessionParts(parts: TemplateExposedType) {
     const moduleNames = Object.keys(parts);
     const data = this.exposedDataForModules(moduleNames);

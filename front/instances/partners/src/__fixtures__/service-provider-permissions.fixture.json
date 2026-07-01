@@ -1,0 +1,29 @@
+[
+  {
+    "account": {
+      "email": "test@example.com",
+      "firstname": "John",
+      "lastConnection": "2024-01-01T00:00:00.000Z",
+      "lastname": "Doe"
+    },
+    "permissionType": "SP_ADMIN"
+  },
+  {
+    "account": {
+      "email": "test2@example.com",
+      "firstname": "Jane",
+      "lastConnection": "2024-01-01T00:00:00.000Z",
+      "lastname": "Doe"
+    },
+    "permissionType": "SP_TECH"
+  },
+  {
+    "account": {
+      "email": "test3@example.com",
+      "firstname": "Jim",
+      "lastConnection": "2024-01-01T00:00:00.000Z",
+      "lastname": "Beam"
+    },
+    "permissionType": "SP_CONTRIBUTOR"
+  }
+]

@@ -1,6 +1,6 @@
 #language: fr
 @validationVisuelle @fcpLow
-Fonctionnalité: Validation Visuelle
+Fonctionnalité: Validation Visuelle - FC Low
 
   Plan du Scénario: Validation Visuelle - cinématique depuis un FS public sur <device>
     Etant donné que j'utilise un navigateur web sur "<device>"

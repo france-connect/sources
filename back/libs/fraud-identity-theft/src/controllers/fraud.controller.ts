@@ -78,7 +78,7 @@ export class FraudController {
     private readonly tracking: TrackingService,
     private readonly metadataFormService: MetadataFormService,
     private readonly fraudIdentityTheft: FraudIdentityTheftService,
-    private readonly dto2FormI18n: Dto2FormI18nService,
+    private readonly i18n: Dto2FormI18nService,
   ) {}
 
   @Get(FraudIdentityTheftRoutes.FRAUD_NO_AUTH_DESCRIPTION)
@@ -87,7 +87,7 @@ export class FraudController {
       FraudDescriptionFormDto,
     );
 
-    const payloadI18n = this.dto2FormI18n.translation(payload);
+    const payloadI18n = this.i18n.translation(payload);
 
     return payloadI18n;
   }
@@ -117,7 +117,7 @@ export class FraudController {
       FraudConnectionFormDto,
     );
 
-    const payloadI18n = this.dto2FormI18n.translation(payload);
+    const payloadI18n = this.i18n.translation(payload);
 
     return payloadI18n;
   }
@@ -199,7 +199,7 @@ export class FraudController {
     const payload =
       this.metadataFormService.getDtoMetadata(FraudIdentityFormDto);
 
-    const payloadI18n = this.dto2FormI18n.translation(payload);
+    const payloadI18n = this.i18n.translation(payload);
 
     return payloadI18n;
   }
@@ -226,7 +226,7 @@ export class FraudController {
     const payload =
       this.metadataFormService.getDtoMetadata(FraudContactFormDto);
 
-    const payloadI18n = this.dto2FormI18n.translation(payload);
+    const payloadI18n = this.i18n.translation(payload);
 
     return payloadI18n;
   }
@@ -258,7 +258,7 @@ export class FraudController {
     const summary = this.fraudIdentityTheft.buildFraudSummary(session);
     const form = this.metadataFormService.getDtoMetadata(FraudSummaryFormDto);
 
-    const formI18n = this.dto2FormI18n.translation(form);
+    const formI18n = this.i18n.translation(form);
 
     const payload = {
       summary,

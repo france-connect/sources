@@ -7,6 +7,7 @@ Fonctionnalité: Instance - Création avec erreurs
   @ci
   Scénario: Instance Création - Erreur champ obligatoires
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je clique sur le lien d'ajout d'une instance
     Et que je suis redirigé vers la page création d'instance
@@ -19,8 +20,8 @@ Fonctionnalité: Instance - Création avec erreurs
       | post_logout_redirect_uris[0] | Veuillez saisir votre url de déconnexion (url de logout) |
       | id_token_signed_response_alg | Ce champ est obligatoire                                 |
     Et les champs suivants ne sont pas en erreur dans le formulaire de création d'instance
-      | name |
-      | site[0]
+      | name                          |
+      | site[0]                       |
       | platform                      |
       | signupId                      |
       | IPServerAddressesAndRanges[0] |
@@ -28,6 +29,7 @@ Fonctionnalité: Instance - Création avec erreurs
 
   Scénario: Instance Création - Erreur champs trop longs
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je clique sur le lien d'ajout d'une instance
     Et que je suis redirigé vers la page création d'instance
@@ -53,6 +55,7 @@ Fonctionnalité: Instance - Création avec erreurs
   @ci
   Scénario: Instance Création - Erreur autres validations
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je clique sur le lien d'ajout d'une instance
     Et que je suis redirigé vers la page création d'instance
@@ -84,6 +87,7 @@ Fonctionnalité: Instance - Création avec erreurs
   @ci
   Scénario: Instance Création - Défiler vers la première erreur
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je clique sur le lien d'ajout d'une instance
     Et que je suis redirigé vers la page création d'instance
@@ -105,6 +109,7 @@ Fonctionnalité: Instance - Création avec erreurs
   @ci
   Scénario: Instance Création - Création après correction
     Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
     Et que je clique sur le lien d'ajout d'une instance
     Et que je suis redirigé vers la page création d'instance

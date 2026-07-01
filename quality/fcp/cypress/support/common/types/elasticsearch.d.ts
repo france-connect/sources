@@ -12,5 +12,7 @@ export interface ElasticsearchFilterInterface {
   dateField?: string;
   startDate?: string;
   endDate?: string;
-  size: number;
+  // Respect ES naming convention
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  max_docs: number;
 }

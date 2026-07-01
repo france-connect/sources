@@ -1,2 +1,1 @@
-export * from './location-with-submit-state.type';
-export * from './router-submit-state.interface';
+export * from './service-provider-loader-data.interface';

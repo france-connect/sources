@@ -220,8 +220,8 @@ export class DataProviderService {
 
     const signingKey = this.jwt.getFirstRelevantKey(
       jwks,
-      signingAlgorithm,
       Use.SIG,
+      signingAlgorithm,
     );
 
     return signingKey;
@@ -240,8 +240,8 @@ export class DataProviderService {
 
     const encryptionKey = this.jwt.getFirstRelevantKey(
       jwks,
-      encryptionAlgorithm,
       Use.ENC,
+      encryptionAlgorithm,
     );
 
     const jwe = await this.jwt.encrypt(jwt, encryptionKey, encryptionEncoding);

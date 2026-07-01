@@ -20,12 +20,17 @@ export const frFR: I18nTranslationsMapType = {
   ...datapassScopesFrFR,
 
   // form text
+  'Form.label.nameSection': '1. Nom de l’instance',
+  'Form.label.configurationSection':
+    '2. Configuration de votre instance de test',
+  'Form.label.subSection':
+    '3. Gestion des subs pour votre Fournisseur de Service',
   'Form.label.platformSection': '1. Choix de l’environnement',
   'Form.label.spInformationSection':
     '2. Informations sur votre Fournisseur de Service',
   'Form.label.spConfigurationSection':
     '3. Configuration de votre instance de test',
-  'Form.label.subSection':
+  'Form.label.spSubSection':
     '4. Gestion des subs pour votre Fournisseur de Service',
 
   // form create instance label

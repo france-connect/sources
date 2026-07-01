@@ -6,41 +6,46 @@ import { ButtonTypes, SimpleButton, TableComponent } from '@fc/dsfr';
 import { useLinkableInstancesToServiceProvider } from '../../../hooks/service-provider-link-instances';
 import { ServiceProviderLinkInstancesPage } from './service-provider-link-instances.page';
 
+// @NOTE should be removed
+// react-final-form should only be mocked from __mocks__ folder
+// and not being mocked or modified by any TU file
 jest.unmock('react-final-form');
 
 jest.mock('../../../hooks/service-provider-link-instances/service-provider-link-instances.hook');
 
-const defaultUnlinkedInstances = [
-  {
-    createdAt: '2024-01-01T00:00:00.000Z',
-    currentVersion: {
-      data: {
-        // eslint-disable-next-line @typescript-eslint/naming-convention -- API payload uses client_id
-        client_id: '12345678901234567890',
-        name: 'Sandbox 1',
-        signupId: '5555',
-      },
-    },
-    environment: 'SANDBOX',
-    id: 'instance-id-1',
-    updatedAt: '2024-01-01T00:00:00.000Z',
-  },
-];
-
 describe('ServiceProviderLinkInstancesPage', () => {
+  // Given
   const handleCancelMock = jest.fn();
   const handleSubmitMock = jest.fn().mockResolvedValue(undefined);
   const validateHandlerMock = jest.fn().mockReturnValue(undefined);
 
+  const defaultUnlinkedInstances = [
+    {
+      createdAt: '2024-01-01T00:00:00.000Z',
+      currentVersion: {
+        data: {
+          // eslint-disable-next-line @typescript-eslint/naming-convention -- API payload uses client_id
+          client_id: '12345678901234567890',
+          name: 'Sandbox 1',
+          signupId: '5555',
+        },
+      },
+      environment: 'SANDBOX',
+      id: 'instance-id-1',
+      updatedAt: '2024-01-01T00:00:00.000Z',
+    },
+  ];
+
   beforeEach(() => {
-    jest.clearAllMocks();
+    // Given
     jest.mocked(TableComponent).mockImplementation(({ sources }) => {
       const rows = sources as unknown as { clientId: string; name: ReactNode }[];
       return (
         <div data-testid="link-instances-table-mock">
-          {rows.map((source) => (
-            <div key={source.clientId}>{source.name}</div>
-          ))}
+          {rows.map((source, idx) => {
+            const key = `row-${idx}`;
+            return <div key={key}>{source.name}</div>;
+          })}
         </div>
       );
     });
@@ -53,6 +58,14 @@ describe('ServiceProviderLinkInstancesPage', () => {
         "Formulaire d'accès à l'administration numérique pour les étrangers en France",
       validateHandler: validateHandlerMock,
     } as never);
+  });
+
+  it('should match snapshot', () => {
+    // When
+    const { container } = render(<ServiceProviderLinkInstancesPage />);
+
+    // Then
+    expect(container).toMatchSnapshot();
   });
 
   it('should render link instances page', () => {

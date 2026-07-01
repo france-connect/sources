@@ -4,9 +4,17 @@ import InstanceFormPage from '../../pages/instance-form-page';
 
 const instanceFormPage = new InstanceFormPage();
 
-Then(/^je suis (redirigé vers|sur) la page création d'instance$/, function () {
-  instanceFormPage.checkIsCreatePageVisible();
-});
+Then(
+  /^je suis (?:redirigé vers|sur) la page création d'instance( depuis un fournisseur de service)?$/,
+  function (text: string | undefined) {
+    const isFromServiceProvider = !!text;
+    if (isFromServiceProvider) {
+      instanceFormPage.checkIsLinkedInstanceCreatePageVisible();
+    } else {
+      instanceFormPage.checkIsCreatePageVisible();
+    }
+  },
+);
 
 Then(
   /^je suis (redirigé vers|sur) la page modification d'instance$/,

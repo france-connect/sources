@@ -103,6 +103,43 @@ Then(/^le corps de la réponse a (\d+) propriétés?$/, function (count: number)
     .should('have.length', count);
 });
 
+Then('le corps de la réponse est un tableau', function () {
+  cy.get('@apiResponse').its('body').should('be.an', 'array');
+});
+
+Then(
+  /^le corps de la réponse est un tableau avec (\d+) éléments?$/,
+  function (count: number) {
+    cy.get('@apiResponse').its('body').should('have.length', count);
+  },
+);
+
+Then(
+  'le corps de la réponse contient un champ de formulaire {string}',
+  function (fieldName: string) {
+    cy.get('@apiResponse')
+      .its('body')
+      .then((body: { name: string }[]) => {
+        const fieldNames = body.map((field) => field.name);
+        expect(fieldNames, `form field '${fieldName}'`).to.include(fieldName);
+      });
+  },
+);
+
+Then(
+  'le corps de la réponse ne contient pas de champ de formulaire {string}',
+  function (fieldName: string) {
+    cy.get('@apiResponse')
+      .its('body')
+      .then((body: { name: string }[]) => {
+        const fieldNames = body.map((field) => field.name);
+        expect(fieldNames, `form field '${fieldName}'`).to.not.include(
+          fieldName,
+        );
+      });
+  },
+);
+
 Then('le corps de la réponse contient une page web', function () {
   cy.get('@apiResponse')
     .its('body')

@@ -38,6 +38,8 @@ describe('SessionTemplateService', () => {
     sessionIdLength: 64,
     middlewareExcludedRoutes: ['/route/66'],
     templateExposed: { oidcClient: oidcClientMock },
+    lifetime: 600,
+    eosAlertDelay: 42,
   };
 
   beforeEach(async () => {
@@ -132,6 +134,26 @@ describe('SessionTemplateService', () => {
 
       // Then
       expect(result).toBeUndefined();
+    });
+  });
+
+  describe('getEosAlertDelay()', () => {
+    it('should call config.get() with "Session"', () => {
+      // When
+      service.getEosAlertDelay();
+
+      // Then
+      expect(configServiceMock.get).toHaveBeenCalledTimes(1);
+      expect(configServiceMock.get).toHaveBeenCalledWith('Session');
+    });
+
+    it('should return the delay from page load (lifetime minus eosAlertDelay)', () => {
+      // When
+      const result = service.getEosAlertDelay();
+      const expectedDelay = configMock.lifetime - configMock.eosAlertDelay;
+
+      // Then
+      expect(result).toBe(expectedDelay);
     });
   });
 

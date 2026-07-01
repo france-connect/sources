@@ -1,0 +1,5 @@
+export enum Openid4vpInteractionStatus {
+  REQUEST_URI_PROVIDED,
+  REQUEST_OBJECT_PROVIDED,
+  RESPONSE_RECEIVED,
+}

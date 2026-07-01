@@ -1,4 +1,12 @@
-export const CreateInstanceButton = jest.fn(() => <div data-mockid="CreateInstanceButton" />);
+export const CreateUnlinkedInstanceButton = jest.fn(() => (
+  <div data-mockid="CreateUnlinkedInstanceButton" />
+));
+
+export const CreateLinkedInstanceButton = jest.fn(() => (
+  <div data-mockid="CreateLinkedInstanceButton" />
+));
+
+export const LinkInstancesButton = jest.fn(() => <div data-mockid="LinkInstancesButton" />);
 
 export const InstancesListComponent = jest.fn(() => <div data-mockid="InstancesListComponent" />);
 
@@ -16,6 +24,27 @@ export const InstancePageFormComponent = jest.fn(() => (
 
 export const InstancePageNoticeComponent = jest.fn(() => (
   <div data-mockid="InstancePageNoticeComponent" />
+));
+
+export const ServiceProviderNameComponent = jest.fn(() => (
+  <div data-mockid="ServiceProviderNameComponent" />
+));
+
+export const ServiceProviderDatapassComponent = jest.fn(() => (
+  <div data-mockid="ServiceProviderDatapassComponent" />
+));
+
+export const ServiceProviderScopesComponent = jest.fn(() => (
+  <div data-mockid="ServiceProviderScopesComponent" />
+));
+
+export const ServiceProviderSandboxesComponent = jest.fn(() => (
+  <div data-mockid="ServiceProviderSandboxesComponent" />
+));
+
+// @NOTE should be renamed to ServiceProviderContributorsComponent
+export const ServiceProviderPermissionsComponent = jest.fn(() => (
+  <div data-mockid="ServiceProviderPermissionsComponent" />
 ));
 
 export const ServiceProvidersPageNoticeComponent = jest.fn(() => (

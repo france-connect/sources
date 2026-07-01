@@ -25,6 +25,7 @@ export default {
   cookieSecrets: env.json('COOKIE_SECRETS'),
   sessionCookieName: 'fc_session_id',
   lifetime: 1800, // 30 minutes
+  eosAlertDelay: env.number('EOS_ALERT_DELAY'),
   sessionIdLength: 64,
   slidingExpiration: true,
   middlewareExcludedRoutes: [],

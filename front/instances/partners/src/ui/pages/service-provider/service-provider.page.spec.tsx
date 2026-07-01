@@ -1,39 +1,34 @@
 import { render } from '@testing-library/react';
 
-import { MessageTypes } from '@fc/common';
-import { ConfigService } from '@fc/config';
-import { AlertComponent, LinkComponent, TabsGroupComponent } from '@fc/dsfr';
+import type {
+  ServiceProviderInterface,
+  ServiceProviderPermissionInterface,
+} from '@fc/core-partners';
+import {
+  ServiceProviderDatapassComponent,
+  ServiceProviderNameComponent,
+  ServiceProviderPermissionsComponent,
+  ServiceProviderSandboxesComponent,
+  ServiceProviderScopesComponent,
+} from '@fc/core-partners';
 
-import { SubmitTypesMessage } from '../../../enums';
+import serviceProviderFixture from '../../../__fixtures__/service-provider.fixture.json';
+import serviceProviderPermissionsFixture from '../../../__fixtures__/service-provider-permissions.fixture.json';
 import { useServiceProvider } from '../../../hooks';
 import { ServiceProviderPage } from './service-provider.page';
 
 jest.mock('../../../hooks/service-provider/service-provider.hook');
 
 describe('ServiceProviderPage', () => {
+  // Given
+  const serviceProviderMock = serviceProviderFixture;
+  const permissionsMock = serviceProviderPermissionsFixture;
+
   beforeEach(() => {
     // Given
-    jest.mocked(ConfigService.get).mockReturnValue({
-      datapassDocUrl: 'any-datapassDocUrl-mock',
-      scopeDocUrl: 'any-scopeDocUrl-mock',
-      spConfigurationDocUrl: 'any-spConfigurationDocUrl-mock',
-    });
     jest.mocked(useServiceProvider).mockReturnValue({
-      closeAlertHandler: jest.fn(),
-      datapassRequestId: 'any-datapassRequestId-mock',
-      datapassScopes: ['any-scope-mock1', 'any-scope-mock2', 'any-scope-mock3'],
-      fcScopes: ['any-scope-mock1', 'any-scope-mock2', 'any-scope-mock3'],
-      habilitationLink: 'any-habilitationLink-mock',
-      hasUnlinkedInstances: false,
-      id: 'any-id-mock',
-      instances: [],
-      name: 'any-name-mock',
-      organization: {
-        id: 'any-id-mock',
-        name: 'any-organizationName-mock',
-        siret: 'any-siret-mock',
-      },
-      submitState: undefined,
+      permissions: permissionsMock as unknown as ServiceProviderPermissionInterface[],
+      serviceProvider: serviceProviderMock as unknown as ServiceProviderInterface,
     });
   });
 
@@ -45,149 +40,77 @@ describe('ServiceProviderPage', () => {
     expect(container).toMatchSnapshot();
   });
 
-  it('should show the service provider name', () => {
-    // When
-    const { getByText } = render(<ServiceProviderPage />);
-    const textElt = getByText('any-name-mock');
-
-    // Then
-    expect(textElt).toBeInTheDocument();
-  });
-
-  it('should show the service provider organizationName', () => {
-    // When
-    const { getByText } = render(<ServiceProviderPage />);
-    const textElt = getByText('any-organizationName-mock');
-
-    // Then
-    expect(textElt).toBeInTheDocument();
-  });
-
-  it('should show the service provider datapassRequestId', () => {
+  it('should call useServiceProvider hook', () => {
     // When
     render(<ServiceProviderPage />);
 
     // Then
-    expect(LinkComponent).toHaveBeenNthCalledWith(
-      1,
+    expect(useServiceProvider).toHaveBeenCalledExactlyOnceWith();
+  });
+
+  it('should render ServiceProviderNameComponent with name and organizationName', () => {
+    // When
+    render(<ServiceProviderPage />);
+
+    // Then
+    expect(ServiceProviderNameComponent).toHaveBeenCalledExactlyOnceWith(
       {
-        children: 'any-datapassRequestId-mock',
-        dataTestId: 'service-provider-details-page-datapass-request-id',
-        external: true,
-        href: 'any-habilitationLink-mock',
+        name: serviceProviderMock.name,
+        organizationName: serviceProviderMock.organization.name,
       },
       undefined,
     );
   });
 
-  it('should show the scope documentation link', () => {
+  it('should render ServiceProviderDatapassComponent with datapassRequestId', () => {
     // When
     render(<ServiceProviderPage />);
 
     // Then
-    expect(LinkComponent).toHaveBeenNthCalledWith(
-      2,
+    expect(ServiceProviderDatapassComponent).toHaveBeenCalledExactlyOnceWith(
       {
-        children: 'Partners.serviceProviderPage.scopeSection.description.link',
-        external: true,
-        href: 'any-scopeDocUrl-mock',
+        datapassRequestId: serviceProviderMock.datapassRequestId,
       },
       undefined,
     );
   });
 
-  it('should show the datapass project documentation link', () => {
+  it('should render ServiceProviderScopesComponent with scopes', () => {
     // When
     render(<ServiceProviderPage />);
 
     // Then
-    expect(LinkComponent).toHaveBeenNthCalledWith(
-      3,
+    expect(ServiceProviderScopesComponent).toHaveBeenCalledExactlyOnceWith(
       {
-        children: 'Partners.serviceProviderPage.datapassDocumentation.introduction.link',
-        external: true,
-        href: 'any-datapassDocUrl-mock',
+        datapassScopes: serviceProviderMock.datapassScopes,
+        fcScopes: serviceProviderMock.fcScopes,
       },
       undefined,
     );
   });
 
-  it('should show the sandboxes documentation link', () => {
+  it('should render ServiceProviderPermissionsComponent with permissions', () => {
     // When
     render(<ServiceProviderPage />);
 
     // Then
-    expect(LinkComponent).toHaveBeenNthCalledWith(
-      4,
+    expect(ServiceProviderPermissionsComponent).toHaveBeenCalledExactlyOnceWith(
       {
-        children: 'Partners.serviceProviderPage.sandboxes.description.link',
-        external: true,
-        href: 'any-spConfigurationDocUrl-mock',
+        permissions: permissionsMock,
       },
       undefined,
     );
   });
 
-  it('should render TabsGroupComponent with correct props', () => {
+  it('should render ServiceProviderSandboxesComponent with instances', () => {
     // When
     render(<ServiceProviderPage />);
 
     // Then
-    expect(TabsGroupComponent).toHaveBeenNthCalledWith(
-      1,
+    expect(ServiceProviderSandboxesComponent).toHaveBeenCalledExactlyOnceWith(
       {
-        ariaLabel: 'Partners.serviceProviderPage.scopeSection.title',
-        dataTestId: 'service-provider-scopes-tabs',
-        items: [
-          {
-            element: expect.anything(),
-            id: 'datapass-scopes-tab-button',
-            label: 'Partners.serviceProviderPage.datapassScopes.title',
-          },
-          {
-            element: expect.anything(),
-            id: 'fc-scopes-tab-button',
-            label: 'Partners.serviceProviderPage.fcScopes.title',
-          },
-        ],
+        instances: serviceProviderMock.instances,
       },
-      undefined,
-    );
-  });
-
-  it('should render link success alert when submitState is present', () => {
-    const closeAlertHandler = jest.fn();
-    jest.mocked(useServiceProvider).mockReturnValueOnce({
-      closeAlertHandler,
-      datapassRequestId: 'any-datapassRequestId-mock',
-      datapassScopes: ['any-scope-mock1', 'any-scope-mock2', 'any-scope-mock3'],
-      fcScopes: ['any-scope-mock1', 'any-scope-mock2', 'any-scope-mock3'],
-      habilitationLink: 'any-habilitationLink-mock',
-      hasUnlinkedInstances: false,
-      id: 'any-id-mock',
-      instances: [],
-      name: 'any-name-mock',
-      organization: {
-        id: 'any-org-id-mock',
-        name: 'any-organizationName-mock',
-        siret: 'any-siret-mock',
-      },
-      submitState: {
-        message: SubmitTypesMessage.INSTANCES_SUCCESS_LINK,
-        type: MessageTypes.SUCCESS,
-      },
-    });
-
-    render(<ServiceProviderPage />);
-
-    expect(AlertComponent).toHaveBeenCalledWith(
-      expect.objectContaining({
-        children: 'Partners.serviceProviderPage.linkInstances.success.description',
-        dataTestId: 'service-provider-link-success-alert',
-        onClose: closeAlertHandler,
-        title: 'Partners.instances.successLink',
-        type: MessageTypes.SUCCESS,
-      }),
       undefined,
     );
   });

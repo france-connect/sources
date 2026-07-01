@@ -8,7 +8,6 @@ import { Dto2FormServiceContext } from '@fc/dto2form-service';
 import { ApplicationLayout } from '@fc/layout';
 import { AuthedRoute, RouterErrorBoundaryComponent, UnauthedRoute } from '@fc/routing';
 
-import { loadServiceProviderPageData } from '../loaders';
 import { PageLayout } from './layouts';
 import {
   HomePage,
@@ -17,6 +16,7 @@ import {
   InstanceUpdatePage,
   LegalNoticesPage,
   LoginPage,
+  ServiceProviderCreateInstancePage,
   ServiceProviderErrorPage,
   ServiceProviderLinkInstancesPage,
   ServiceProviderPage,
@@ -36,13 +36,27 @@ export const ApplicationRoutes = React.memo(() => {
       <Route element={<AuthedRoute fallback="/login" />}>
         <Route element={<PageLayout />}>
           <Route path="fournisseurs-de-service">
-            <Route errorElement={<ServiceProviderErrorPage />} path=":serviceProviderId">
+            <Route
+              errorElement={<ServiceProviderErrorPage />}
+              id="service-provider"
+              loader={PartnersService.loadServiceProviderById}
+              path=":serviceProviderId">
               <Route
                 element={<ServiceProviderLinkInstancesPage />}
                 loader={PartnersService.loadLinkableInstancesByServiceProviderId}
                 path="link-instances"
               />
-              <Route index element={<ServiceProviderPage />} loader={loadServiceProviderPageData} />
+              <Route
+                element={<ServiceProviderCreateInstancePage />}
+                id={getConfigFormById('ServiceProviderCreateInstance').id}
+                loader={loadData('ServiceProviderCreateInstance')}
+                path="creer-instance"
+              />
+              <Route
+                index
+                element={<ServiceProviderPage />}
+                loader={PartnersService.loadLinkableInstancesByServiceProviderId}
+              />
             </Route>
             <Route
               index
@@ -55,7 +69,7 @@ export const ApplicationRoutes = React.memo(() => {
               element={<InstanceCreatePage />}
               id={getConfigFormById('InstancesCreate').id}
               loader={loadData('InstancesCreate')}
-              path="create"
+              path="creer-instance"
             />
             <Route
               element={<InstanceUpdatePage />}

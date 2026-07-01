@@ -21,7 +21,9 @@ When(
   /^je récupère les (traces|événements|métriques) "(FranceConnect\(v2\)|FranceConnect\(CL\)|FranceConnect\+)" dans elasticsearch$/,
   function (type: string, platform: string) {
     const filter = getElasticsearchFilter(this.esFilter, type, platform);
-    searchElastic({ ...filter, size: 10000 }).as('esData');
+    // Respect ES naming convention
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    searchElastic({ ...filter, max_docs: 10000 }).as('esData');
   },
 );
 
@@ -34,7 +36,9 @@ When(
       platform,
       eventName,
     );
-    searchElastic({ ...filter, size: 10000 }).as('esData');
+    // Respect ES naming convention
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    searchElastic({ ...filter, max_docs: 10000 }).as('esData');
   },
 );
 

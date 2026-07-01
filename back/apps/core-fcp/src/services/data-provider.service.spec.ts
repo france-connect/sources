@@ -654,8 +654,8 @@ describe('DataProviderService', () => {
       // Then
       expect(jwtServiceMock.getFirstRelevantKey).toHaveBeenCalledWith(
         dataProviderJwksMock,
-        DataProviderMock.checktoken_encrypted_response_alg,
         'enc',
+        DataProviderMock.checktoken_encrypted_response_alg,
       );
     });
 

@@ -104,6 +104,7 @@ const config: Config = {
     '^@fc/eidas-oidc-mapper(|/.*)$': '<rootDir>/libs/eidas-oidc-mapper/src/$1',
     '^@fc/eidas-provider(|/.*)$': '<rootDir>/libs/eidas-provider/src/$1',
     '^@fc/elasticsearch(|/.*)$': '<rootDir>/libs/elasticsearch/src/$1',
+    '^@fc/eudi(|/.*)$': '<rootDir>/libs/eudi/src/$1',
     '^@fc/exceptions(|/.*)$': '<rootDir>/libs/exceptions/src/$1',
     '^@fc/exceptions-fcp(|/.*)$': '<rootDir>/libs/exceptions-fcp/src/$1',
     '^@fc/feature-handler(|/.*)$': '<rootDir>/libs/feature-handler/src/$1',
@@ -129,6 +130,7 @@ const config: Config = {
     '^@fc/logger-session-plugin(|/.*)$':
       '<rootDir>/libs/logger-session-plugin/src/$1',
     '^@fc/mailer(|/.*)$': '<rootDir>/libs/mailer/src/$1',
+    '^@fc/mdoc(|/.*)$': '<rootDir>/libs/mdoc/src/$1',
     '^@fc/microservices(|/.*)$': '<rootDir>/libs/microservices/src/$1',
     '^@fc/microservices-rmq(|/.*)$': '<rootDir>/libs/microservices-rmq/src/$1',
     '^@fc/mock-data-provider(|/.*)$':
@@ -147,6 +149,7 @@ const config: Config = {
     '^@fc/oidc-acr(|/.*)$': '<rootDir>/libs/oidc-acr/src/$1',
     '^@fc/oidc-client(|/.*)$': '<rootDir>/libs/oidc-client/src$1',
     '^@fc/oidc-provider(|/.*)$': '<rootDir>/libs/oidc-provider/src$1',
+    '^@fc/openid4vp(|/.*)$': '<rootDir>/libs/openid4vp/src$1',
     '^@fc/override-code(|/.*)$': '<rootDir>/libs/override-code/src/$1',
     '^@fc/partners(|/.*)$': '<rootDir>/apps/partners/src/$1',
     '^@fc/command-import-sp-sandbox(|/.*)$':
@@ -166,6 +169,7 @@ const config: Config = {
     '^@fc/partners-service-provider-instance-version(|/.*)$':
       '<rootDir>/libs/partners-service-provider-instance-version/src/$1',
     '^@fc/plugins(|/.*)$': '<rootDir>/libs/plugins/src/$1',
+    '^@fc/qrcode(|/.*)$': '<rootDir>/libs/qrcode/src/$1',
     '^@fc/rabbitmq(|/.*)$': '<rootDir>/libs/rabbitmq/src$1',
     '^@fc/redis(|/.*)$': '<rootDir>/libs/redis/src$1',
     '^@fc/rnipp(|/.*)$': '<rootDir>/libs/rnipp/src$1',
@@ -201,11 +205,14 @@ const config: Config = {
       '<rootDir>/libs/microservices-rmq/.mocks/$1',
     '^@mocks/redis(|/.*)$': '<rootDir>/libs/redis/.mocks$1',
     '^@mocks/session(|/.*)$': '<rootDir>/libs/session/.mocks/$1',
+    '^@mocks/openid4vp(|/.*)$': '<rootDir>/libs/openid4vp/.mocks/$1',
     '^@mocks/webhooks(|/.*)$': '<rootDir>/libs/webhooks/.mocks/$1',
+    '^@owf/mdoc(|/.*)$': '<rootDir>/libs/mdoc/mocks/lib/$1',
     '^jose/(.*)$': '<rootDir>/node_modules/jose/dist/node/cjs/$1',
     '^jose-openid-client(|/.*)$':
       '<rootDir>node_modules/openid-client/node_modules/jose$1',
     '^oidc-provider(|/.*)$': '<rootDir>/libs/oidc-provider/mocks/lib/$1',
+    '^@openid4vc/openid4vp(|/.*)$': '<rootDir>/libs/openid4vp/.mocks/$1',
   },
   preset: 'ts-jest',
 };

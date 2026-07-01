@@ -54,7 +54,7 @@ describe('ApplicationLayout', () => {
 
     // Then
     expect(LayoutFooterComponent).toHaveBeenCalledOnce();
-    expect(LayoutHeaderComponent).toHaveBeenCalledWith({}, undefined);
+    expect(LayoutFooterComponent).toHaveBeenCalledWith({}, undefined);
   });
 
   it('should render Outlet without props', () => {

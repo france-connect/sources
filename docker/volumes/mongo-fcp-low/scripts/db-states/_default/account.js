@@ -1,12 +1,25 @@
 // == ACCOUNTS
 const accounts = [
+  // -- User Account already desactivated for tests purposes
+  {
+    id: "Y180001",
+    identityHash: "X5SdAu/G7jgltChquZKbuXpRYkCgWGhd3K1sMefoHzQ=",
+    createdAt: new Date("2026-04-29T11:16:23.540Z"),
+    active: false,
+    spFederation: {
+      a0cd64372db6ecf39c317c0c74ce90f02d8ad7d510ce054883b759d666a996bc:
+        "d431e61c3bb64eba755d9ea52c0d6de3d2e9e9e482b099797cdd87e406e0ee54v1",
+    },
+    __v: 1,
+    noDisplayConfirmation: false,
+  },
   // BDD default account - to check federationKey
   {
     identityHash: "ieFUFlBzMSDN+mz+DSHCjgmaPbOd2OPRsSP4QbUMvxE=",
-    createdAt: ISODate("2023-03-20T09:37:28.535Z"),
+    createdAt: ISODate("2026-03-20T09:37:28.535Z"),
     active: true,
-    updatedAt: ISODate("2023-03-20T10:17:46.996Z"),
-    lastConnection: ISODate("2023-03-20T10:17:46.992Z"),
+    updatedAt: ISODate("2026-03-20T10:17:46.996Z"),
+    lastConnection: ISODate("2026-03-20T10:17:46.992Z"),
     spFederation: {
       abcd64372db6ecf39c317c0c74ce90f02d8ad7d510ce054883b759d666a996bc:
         "fff725a2ab2971fa9e5329b2ac30d0fb3a063db332b9ffd69d7f186deacffa63v1",

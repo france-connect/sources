@@ -1,6 +1,11 @@
 {
   "CorePartners.documentation.label": "documentation partenaires",
   "CorePartners.instance.noticeTitle": "Une évolution des adresses a été faite récemment. Une modification de votre configuration sera nécessaire pour que le bac à sable soit fonctionnel.",
+  "CorePartners.permission.SP_ADMIN": "Administrateur",
+  "CorePartners.permission.SP_CONTRIBUTOR": "Contributeur",
+  "CorePartners.permission.SP_TECH": "Administrateur",
+  "CorePartners.serviceProviderPage.createLinkedInstance.button": "Créer un accès",
+  "CorePartners.serviceProviderPage.linkInstances.button": "Relier les instances",
   "CorePartners.serviceProviderPage.noticeTitle": "Vous ne voyez pas de fournisseur de service{NBSP_UNICODE}?",
   "CorePartners.serviceProvidersPage.backToServiceProviders": "Retourner sur Mes fournisseurs de service",
   "CorePartners.serviceProvidersPage.datapassRequestId": "Numéro de demande d’habilitation{NBSP_UNICODE}:{NBSP_UNICODE}",
@@ -9,5 +14,9 @@
   "CorePartners.serviceProvidersPage.noticeBullet3": "Le fournisseur de service a été désactivé ou supprimé",
   "CorePartners.serviceProvidersPage.noticeSubtitle": "Cela peut s’expliquer par l’une des raisons suivantes{NBSP_UNICODE}:",
   "CorePartners.serviceProvidersPage.noticeTitle": "Vous ne voyez pas un fournisseur de service attendu{NBSP_UNICODE}?",
+  "CorePartners.serviceProvidersPage.permissionsSection.table.email": "Adresse Email",
+  "CorePartners.serviceProvidersPage.permissionsSection.table.lastConnection": "Dernière connexion",
+  "CorePartners.serviceProvidersPage.permissionsSection.table.name": "Nom",
+  "CorePartners.serviceProvidersPage.permissionsSection.table.role": "Rôle",
   "CorePartners.serviceProvidersPage.title": "Mes fournisseurs de service"
 }

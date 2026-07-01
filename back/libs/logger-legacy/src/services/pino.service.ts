@@ -1,4 +1,5 @@
-import pino, { DestinationStream, Logger } from 'pino';
+import * as pino from 'pino';
+import { DestinationStream, Logger } from 'pino';
 
 import { Injectable, ShutdownSignal } from '@nestjs/common';
 

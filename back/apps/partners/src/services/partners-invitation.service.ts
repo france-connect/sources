@@ -28,16 +28,6 @@ export class PartnersInvitationService {
   async inviteOne(email: string, instances: string[]): Promise<void> {
     const account = {
       email,
-      /**
-       * Data model does not allow those fields to be null or undefined,
-       * We use a placeholder for now to avoid schema migration,
-       * since the migration system is not yet automatized.
-       *
-       * @todo "2377" Update the data model and remove those placeholders
-       * @todo Add a flag to indicate that the account is not fully initialized
-       */
-      firstname: 'N/A',
-      lastname: 'N/A',
       sub: this.crypto.hash(email),
     };
 

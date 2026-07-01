@@ -26,6 +26,201 @@
   },
   {
     "enabled": true,
+    "criteria": ["pour le test de désactivation"],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "bdd_enable_disable",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "gender": "male",
+      "given_name": "François",
+      "family_name": "DUPOND",
+      "birthdate": "1962-08-24",
+      "birthplace": "75107",
+      "birthcountry": "99100",
+      "email": "x1_bdd_enable_disable@yopmail.com"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": ["non trouvé avec un echo RNIPP"],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "E010004",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "gender": "male",
+      "given_name": "Jean_E010004",
+      "family_name": "Martin",
+      "birthdate": "1981-02-03",
+      "birthplace": "75112",
+      "birthcountry": "99100",
+      "email": "jean_E010004.martin@france.fr"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": ["non trouvé avec plusieurs echos RNIPP"],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "E010006",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "gender": "male",
+      "given_name": "Jean_E010006",
+      "family_name": "Martin",
+      "birthdate": "1981-02-03",
+      "birthplace": "75112",
+      "birthcountry": "99100",
+      "email": "jean_E010006.martin@france.fr"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": ["non trouvé avec aucun echo RNIPP"],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "E010008",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "gender": "male",
+      "given_name": "Jean_E010008",
+      "family_name": "Martin",
+      "birthdate": "1981-02-03",
+      "birthplace": "75112",
+      "birthcountry": "99100",
+      "email": "jean_E010008.martin@france.fr"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": ["avec erreur RNIPP mauvaise requête"],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "E010009",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "gender": "male",
+      "given_name": "Jean_E010009",
+      "family_name": "Martin",
+      "birthdate": "1981-02-03",
+      "birthplace": "75112",
+      "birthcountry": "99100",
+      "email": "jean_E010009.martin@france.fr"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": ["avec erreur RNIPP mauvais format"],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "E010012",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "gender": "male",
+      "given_name": "Jean_E010012",
+      "family_name": "Martin",
+      "birthdate": "1981-02-03",
+      "birthplace": "75112",
+      "birthcountry": "99100",
+      "email": "jean_E010012.martin@france.fr"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": ["sans nom de naissance"],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "E010013",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "gender": "male",
+      "given_name": "Arthur Philip",
+      "birthdate": "1978-03-08",
+      "birthplace": "95277",
+      "birthcountry": "99100"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": ["avec date de naissance erronée"],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "E010014",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "gender": "male",
+      "given_name": "Arthur Philip",
+      "family_name": "DENT",
+      "birthdate": "2001-03-08",
+      "birthplace": "95277",
+      "birthcountry": "99100"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": ["décédé"],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "E010015",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "gender": "male",
+      "given_name": "Pierre Eugène",
+      "family_name": "Beregovoy",
+      "birthdate": "1925-12-23",
+      "birthplace": "76216",
+      "birthcountry": "99100"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": ["décédée"],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "E010016",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "gender": "female",
+      "given_name": "Simone",
+      "family_name": "Veil",
+      "birthdate": "1927-07-13",
+      "birthplace": "",
+      "birthcountry": "99139"
+    }
+  },
+  {
+    "enabled": true,
     "criteria": [
       "né en Corse",
       "deuxième identité"
@@ -113,6 +308,47 @@
       "birthdate": "1963-12-05",
       "birthcountry": "99352",
       "email": "senossammab-2430@yopmail.com"
+    }
+  },
+    {
+    "enabled": true,
+    "criteria": ["né dans l'Aisne"],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "dep_moins_dix",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "gender": "male",
+      "given_name": "Depart",
+      "family_name": "DUBOIS",
+      "preferred_username": "POULAIN",
+      "birthdate": "1985-09-10",
+      "birthplace": "02408",
+      "birthcountry": "99100",
+      "email": "testmodac@gmail.com"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": ["pour le test de dernière connexion", "avec 3 prénoms"],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "bdd_last_connection",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "gender": "female",
+      "given_name": "Angela Claire Louise",
+      "family_name": "DULAC",
+      "birthdate": "1962-08-24",
+      "birthplace": "75107",
+      "birthcountry": "99100",
+      "email": "x1_bdd_last_connection@yopmail.com"
     }
   },
   {
@@ -233,28 +469,6 @@
   {
     "enabled": true,
     "criteria": [
-      "avec 3 prénoms"
-    ],
-    "credentials": [
-      {
-        "idpId": "default",
-        "username": "bdd_last_connection",
-        "password": "123"
-      }
-    ],
-    "claims": {
-      "gender": "female",
-      "given_name": "Angela Claire Louise",
-      "family_name": "DULAC",
-      "birthdate": "1962-08-24",
-      "birthplace": "75107",
-      "birthcountry": "99100",
-      "email": "x1_bdd_last_connection@yopmail.com"
-    }
-  },
-  {
-    "enabled": true,
-    "criteria": [
       "avec prénom composé"
     ],
     "credentials": [
@@ -333,7 +547,7 @@
     "credentials": [
       {
         "idpId": "default",
-        "username": "E000001",
+        "username": "Y180001",
         "password": "123"
       }
     ]

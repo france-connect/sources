@@ -8,8 +8,10 @@ import type { TranslationsReplacementType } from '../types';
  *
  * @see ../../README.md for more details
  */
-export const t = (key: string, values?: TranslationsReplacementType) =>
-  I18nService.instance().translate(key, {
+export const t = (key: string, values?: TranslationsReplacementType) => {
+  const nextValues = {
     ...values,
     NBSP_UNICODE: Strings.NBSP_UNICODE,
-  });
+  };
+  return I18nService.instance().translate(key, nextValues);
+};

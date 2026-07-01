@@ -67,10 +67,22 @@ exports[`LayoutHeaderComponent should match the snapshot when user is not connec
           >
             <div
               class="fr-header__tools-links"
-            />
+            >
+              <div>
+                LayoutHeaderToolsComponent
+              </div>
+            </div>
           </div>
         </div>
       </div>
+    </div>
+    <div>
+      <div>
+        LayoutHeaderMenuComponent
+      </div>
+      <button
+        data-testid="LayoutHeaderMenuComponent-button-mock"
+      />
     </div>
   </header>
 </div>

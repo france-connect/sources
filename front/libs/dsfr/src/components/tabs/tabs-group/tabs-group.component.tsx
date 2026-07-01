@@ -31,6 +31,7 @@ export const TabsGroupComponent = React.memo(
         data-testid={dataTestId}
         style={tabsStyle}>
         <ul aria-label={ariaLabel} className="fr-tabs__list" role="tablist">
+          {/* @NOTE split into a new component "tab-list-item" */}
           {items.map((item, index) => {
             const isSelected = index === selectedIndex;
             const panelId = `${item.id}-panel`;
@@ -50,6 +51,7 @@ export const TabsGroupComponent = React.memo(
             );
           })}
         </ul>
+        {/* @NOTE split into a new component "tab-panel-item" */}
         {items.map((item, index) => {
           const isSelected = index === selectedIndex;
           const panelId = `${item.id}-panel`;

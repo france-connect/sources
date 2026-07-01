@@ -30,6 +30,13 @@ variable "NODE_MODULE_QUALITY_VERSION" {
   }
 }
 
+variable "NODE_MODULE_CACHE_KEY" {
+  validation {
+    condition     = NODE_MODULE_CACHE_KEY != ""
+    error_message = "The variable 'NODE_MODULE_CACHE_KEY' must not be empty."
+  }
+}
+
 # ---------------------------
 # Targets
 # ---------------------------
@@ -53,20 +60,14 @@ target "ci-cd-slim" {
   labels = {
     "org.opencontainers.image.title"       = "FranceConnect CI/CD Slim"
     "org.opencontainers.image.description" = "Mostly for build jobs"
-    "org.opencontainers.image.version"     = "Debian: ${DEBIAN_VERSION}\nDocker: ${DOCKER_VERSION}\nNode: ${NODE_VERSION}"
+    "org.opencontainers.image.version"     = "Docker: ${DOCKER_VERSION}"
   }
 
   output = [
     merge(
       REGISTRY_OUTPUT_COMMON,
       {
-        name = "${REGISTRY_URL}/ci-cd-slim:${DEBIAN_VERSION}-${DOCKER_VERSION}-${NODE_VERSION}"
-      }
-    ),
-    merge(
-      REGISTRY_OUTPUT_COMMON,
-      {
-        name = "${REGISTRY_URL}/ci-cd-slim:latest"
+        name = "${REGISTRY_URL}/ci-cd-slim:${DOCKER_VERSION}"
       }
     ),
   ]
@@ -145,7 +146,7 @@ target "dev-generic" {
     merge(
       REGISTRY_OUTPUT_COMMON,
       {
-        name = "${REGISTRY_URL}/dev-generic:${NODE_MODULE_BACK_VERSION}-${NODE_MODULE_FRONT_VERSION}-${NODE_MODULE_QUALITY_VERSION}"
+        name = "${REGISTRY_URL}/dev-generic:${NODE_MODULE_CACHE_KEY}"
       }
     ),
     merge(

@@ -9,6 +9,7 @@ export * from './object-diff.helper';
 export * from './override-with-source-if-not-null';
 export * from './parse-boolean';
 export * from './parse-json-property';
+export * from './path.helper';
 export * from './safely-parse-json';
 export * from './split-in-two-parts.helper';
 export * from './unique';

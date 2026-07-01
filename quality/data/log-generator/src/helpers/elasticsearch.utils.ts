@@ -45,19 +45,21 @@ export class ESHelper {
         },
       },
       index,
-      refresh: true,
       /**
        * TODO: check on how to delete more than 10000 documents
        * by configuring "index.max_result_window" during index mapping ticket
        * @see: https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/2535
        */
-      size: 10000,
+      // Respect ES naming convention
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      max_docs: 10000,
+      refresh: true,
     };
   }
 
   async save(logs: LogsInterface[], index: string): Promise<boolean> {
     const header = {
-      index: { _index: index, _type: '_doc' },
+      index: { _index: index },
     };
     const body = logs.flatMap((doc) => [header, doc]);
 

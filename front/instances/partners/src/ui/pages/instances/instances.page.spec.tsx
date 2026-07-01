@@ -1,12 +1,11 @@
 import { render } from '@testing-library/react';
 
 import { type MessageTypes, useScrollTo } from '@fc/common';
-import type { InstanceInterface } from '@fc/core-partners';
-import { CreateInstanceButton, InstancesListComponent } from '@fc/core-partners';
+import type { InstanceInterface, LocationWithSubmitStateInterface } from '@fc/core-partners';
+import { CreateUnlinkedInstanceButton, InstancesListComponent } from '@fc/core-partners';
 import { AlertComponent, LinkEmailComponent, TileComponent } from '@fc/dsfr';
 import { t } from '@fc/i18n';
 
-import type { SubmitTypesMessage } from '../../../enums';
 import { useInstances } from '../../../hooks';
 import { InstancesPage } from './instances.page';
 
@@ -15,7 +14,7 @@ jest.mock('../../../hooks/instances/instances-page.hook');
 describe('InstancesPage', () => {
   // Given
   const scrollToTopMock = jest.fn();
-  const closeAlertHandlerMock = jest.fn();
+  const cleanupRouteStateMock = jest.fn();
 
   beforeEach(() => {
     // Given
@@ -23,7 +22,7 @@ describe('InstancesPage', () => {
       scrollToTop: scrollToTopMock,
     });
     jest.mocked(useInstances).mockReturnValue({
-      closeAlertHandler: closeAlertHandlerMock,
+      cleanupRouteState: cleanupRouteStateMock,
       hasItems: false,
       items: [],
       submitState: undefined,
@@ -54,7 +53,7 @@ describe('InstancesPage', () => {
         dataTestId: 'instances-page-create-tile',
         description: 'any-create_tile_desc',
         isHorizontal: true,
-        link: 'create',
+        link: 'creer-instance',
         size: 'lg',
         title: 'any-create_tile_title',
       },
@@ -66,7 +65,7 @@ describe('InstancesPage', () => {
     // Given
     const itemsMock = Symbol('any-items-list') as unknown as InstanceInterface[];
     jest.mocked(useInstances).mockReturnValueOnce({
-      closeAlertHandler: closeAlertHandlerMock,
+      cleanupRouteState: cleanupRouteStateMock,
       hasItems: true,
       items: itemsMock,
       submitState: undefined,
@@ -80,8 +79,8 @@ describe('InstancesPage', () => {
     // Then
     expect(container).toMatchSnapshot();
     expect(titleElt).toBeInTheDocument();
-    expect(CreateInstanceButton).toHaveBeenCalledOnce();
-    expect(CreateInstanceButton).toHaveBeenCalledWith({}, undefined);
+    expect(CreateUnlinkedInstanceButton).toHaveBeenCalledOnce();
+    expect(CreateUnlinkedInstanceButton).toHaveBeenCalledWith({}, undefined);
     expect(InstancesListComponent).toHaveBeenCalledOnce();
     expect(InstancesListComponent).toHaveBeenCalledWith({ items: itemsMock }, undefined);
   });
@@ -121,16 +120,17 @@ describe('InstancesPage', () => {
     // Given
     const itemsMock = Symbol('any-items-list') as unknown as InstanceInterface[];
     const submitStateMock = {
-      message: 'any-submit-i18n-message-mock' as SubmitTypesMessage,
-      type: 'any-message-type-mock' as MessageTypes.ERROR,
-    };
+      message: 'any-submit-i18n-message-mock',
+      title: 'any-submit-i18n-title-mock',
+      type: 'any-message-type-mock' as MessageTypes.ERROR | MessageTypes.SUCCESS,
+    } as unknown as LocationWithSubmitStateInterface;
     jest
       .mocked(t)
       .mockReturnValueOnce('any')
       .mockReturnValueOnce('any-baseline-mock')
       .mockReturnValueOnce('any-submit-message-mock');
     jest.mocked(useInstances).mockReturnValueOnce({
-      closeAlertHandler: closeAlertHandlerMock,
+      cleanupRouteState: cleanupRouteStateMock,
       hasItems: true,
       items: itemsMock,
       submitState: submitStateMock,
@@ -146,7 +146,7 @@ describe('InstancesPage', () => {
       2,
       {
         dataTestId: 'instances-page-alert-top',
-        onClose: closeAlertHandlerMock,
+        onClose: cleanupRouteStateMock,
         title: 'any-submit-message-mock',
         type: 'any-message-type-mock',
       },

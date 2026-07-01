@@ -1,6 +1,6 @@
 #language: fr
 @validationVisuelle @eidasBridge
-Fonctionnalité: Validation Visuelle
+Fonctionnalité: Validation Visuelle - eIDAS Bridge
 
   Plan du Scénario: Validation Visuelle - cinématique eidas depuis un FS FR sur <device>
     Etant donné que j'utilise un navigateur web sur "<device>"

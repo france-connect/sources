@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ServiceProviderScopesTabViewComponent should match the snapshot 1`] = `
+<div>
+  <ul>
+    <li
+      data-testid="service-provider-scopes-tab-fc-scope-0"
+    >
+      scope-1
+    </li>
+    <li
+      data-testid="service-provider-scopes-tab-fc-scope-1"
+    >
+      scope-2
+    </li>
+  </ul>
+</div>
+`;

@@ -48,7 +48,7 @@ Then("je clique sur la tuile de création d'instance", function () {
 });
 
 When("je clique sur le lien d'ajout d'une instance", function () {
-  instancesListPage.getAddInstanceLink().click();
+  instancesListPage.getCreateUnlinkedInstanceButton().click();
 });
 
 When('je clique sur la première instance', function () {

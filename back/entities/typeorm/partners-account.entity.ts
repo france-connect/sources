@@ -27,13 +27,15 @@ export class PartnersAccount {
 
   @Column({
     type: 'text',
+    nullable: true,
   })
-  firstname: string; // claim `given_name`
+  firstname?: string | null; // claim `given_name`
 
   @Column({
     type: 'text',
+    nullable: true,
   })
-  lastname: string; // claim `usual_name`
+  lastname?: string | null; // claim `usual_name`
 
   @Column({
     type: 'text',

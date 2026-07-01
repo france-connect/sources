@@ -40,6 +40,7 @@ describe('TableComponent', () => {
     expect(TableHeaderComponent).toHaveBeenCalledExactlyOnceWith(
       {
         columns: columnsMock,
+        tableId: 'any-table-id-mock',
       },
       undefined,
     );

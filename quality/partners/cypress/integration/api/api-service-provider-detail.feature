@@ -2,6 +2,8 @@
 @api @apiServiceProviderDetail @ci
 Fonctionnalité: API - Service Provider détail
 
+  # TODO: re-enable on integ01 once adding contributors is supported there
+  @ignoreInteg01
   Scénario: API service-provider - détail succès utilisateur authentifié
     Etant donné que je me connecte à l'espace partenaires avec un utilisateur "partenaire avec deux fournisseurs de service"
     Et que je navigue sur la page liste des instances de l'espace partenaires
@@ -14,7 +16,7 @@ Fonctionnalité: API - Service Provider détail
     Et le corps de la réponse a une propriété "payload"
     Et le corps de la réponse a une propriété "payload.id"
     Et le corps de la réponse a une propriété "payload.name" égale à "SP2 - Fournisseur de service de test avec 1 instance"
-    Et le corps de la réponse a une propriété "payload.organization.name" égale à "Direction Interministerielle du Numérique"
+    Et le corps de la réponse a une propriété "payload.organization.name" égale à "DIRECTION INTERMINISTERIELLE DU NUMERIQUE"
     Et le corps de la réponse a une propriété "payload.organization.siret" égale à "13002526500013"
     Et le corps de la réponse a une propriété "payload.datapassRequestId" égale à "9900002"
     Et le corps de la réponse a une propriété "payload.datapassScopes"
@@ -53,6 +55,28 @@ Fonctionnalité: API - Service Provider détail
     Et le corps de la réponse a une propriété "meta.permissions.0.account.lastname" égale à "LOUPE"
     Et le corps de la réponse a une propriété "meta.permissions.0.account.lastConnection"
     Et le corps de la réponse a une propriété "meta.permissions.0.permissionType" égale à "SP_ADMIN"
+    Et le corps de la réponse a une propriété "meta.permissions.1.account"
+    Et le corps de la réponse a une propriété "meta.permissions.1.account.id"
+    Et le corps de la réponse a une propriété "meta.permissions.1.account.email" égale à "cmercier@yopmail.com"
+    Et le corps de la réponse a une propriété "meta.permissions.1.account.firstname" égale à "Camille"
+    Et le corps de la réponse a une propriété "meta.permissions.1.account.lastname" égale à "MERCIER"
+    Et le corps de la réponse n'a pas de propriété "meta.permissions.1.account.lastConnection"
+    Et le corps de la réponse a une propriété "meta.permissions.1.permissionType" égale à "SP_TECH"
+    Et le corps de la réponse a une propriété "meta.permissions.2.account"
+    Et le corps de la réponse a une propriété "meta.permissions.2.account.id"
+    Et le corps de la réponse a une propriété "meta.permissions.2.account.email" égale à "nlaurent@yopmail.com"
+    Et le corps de la réponse a une propriété "meta.permissions.2.account.firstname" égale à "Noémie"
+    Et le corps de la réponse a une propriété "meta.permissions.2.account.lastname" égale à "LAURENT"
+    Et le corps de la réponse a une propriété "meta.permissions.2.account.lastConnection"
+    Et le corps de la réponse a une propriété "meta.permissions.2.permissionType" égale à "SP_CONTRIBUTOR"
+    Et le corps de la réponse a une propriété "meta.permissions.3.account"
+    Et le corps de la réponse a une propriété "meta.permissions.3.account.id"
+    Et le corps de la réponse a une propriété "meta.permissions.3.account.email" égale à "tbernard@yopmail.com"
+    Et le corps de la réponse a une propriété "meta.permissions.3.account.firstname" égale à "Théo"
+    Et le corps de la réponse a une propriété "meta.permissions.3.account.lastname" égale à "BERNARD"
+    Et le corps de la réponse n'a pas de propriété "meta.permissions.3.account.lastConnection"
+    Et le corps de la réponse a une propriété "meta.permissions.3.permissionType" égale à "SP_CONTRIBUTOR"
+    Et le corps de la réponse a une propriété "meta.permissions" avec 4 éléments
     Et le corps de la réponse a une propriété "payload" avec 9 attributs
 
   Scénario: API service-provider - erreur utilisateur non authentifié (401)

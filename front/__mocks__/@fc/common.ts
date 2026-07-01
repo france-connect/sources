@@ -10,21 +10,9 @@ export const isErrorLike = jest.fn();
 
 export const getAccessibleTitle = jest.fn();
 
-export const truncateMiddle = jest.fn((v: string, visibleChars = 8) => {
-  const minLength = visibleChars * 2 + 3;
-  if (v.length <= minLength) return v;
-  return `${v.slice(0, visibleChars)}...${v.slice(-visibleChars)}`;
-});
+export const truncateMiddle = jest.fn();
 
-export const formatFullName = jest.fn((person?: { firstname?: string; lastname?: string }) => {
-  if (!person) {
-    return '-';
-  }
-
-  const parts = [person.firstname, person.lastname].filter(Boolean);
-
-  return parts.length > 0 ? parts.join(' ') : '-';
-});
+export const getFullName = jest.fn();
 
 /* ----------------------
  Hooks
@@ -72,6 +60,8 @@ export enum Strings {
   SLASH = '/',
   NBSP_UNICODE = '\u00A0',
   NEW_LINE = '\n',
+  ELLIPSIS = '…',
+  N_A = 'N/A',
 }
 
 export enum ContentType {
@@ -122,6 +112,12 @@ export enum SortOrder {
 export enum Platforms {
   FranceConnect = 'FranceConnect',
   FranceConnectPlus = 'FranceConnect+',
+}
+
+export enum PublicationStatus {
+  DRAFT = 'DRAFT',
+  PENDING = 'PENDING',
+  PUBLISHED = 'PUBLISHED',
 }
 
 export const Timezones = {

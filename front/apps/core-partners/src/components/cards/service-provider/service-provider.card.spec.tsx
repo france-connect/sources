@@ -13,7 +13,9 @@ describe('ServiceProviderCardComponent', () => {
     createdAt: dateMock as ISODate,
     datapassRequestId: 'any-datapass-request-id-mock',
     datapassScopes: ['Identifiant technique', 'Adresse électronique'],
+    fcScopes: [],
     id: 'any-id-mock',
+    instances: [],
     name: 'any-service-provider-name-mock',
     organization: {
       id: 'any-id-mock',

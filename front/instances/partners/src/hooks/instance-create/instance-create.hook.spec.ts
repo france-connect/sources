@@ -1,28 +1,28 @@
 import { renderHook } from '@testing-library/react';
 
-import { MessageTypes } from '@fc/common';
+import type { SchemaFieldType } from '@fc/dto2form';
 import { removeEmptyValues } from '@fc/dto2form';
 import { useDto2FormService } from '@fc/dto2form-service';
+import type { FormConfigInterface } from '@fc/forms';
+import { useNavigateWithState } from '@fc/routing';
 
-import { SubmitTypesMessage } from '../../enums';
-import { usePostSubmit } from '../post-submit';
 import { useInstanceCreate } from './instance-create.hook';
-
-jest.mock('../post-submit/post-submit.hook');
 
 describe('useInstanceCreate', () => {
   // Given
-  const postSubmitMock = expect.any(Function);
+  const formMock = Symbol('any-form-mock') as unknown as FormConfigInterface;
+  const initialValuesMock = Symbol('any-initial-values-mock') as unknown as Record<string, unknown>;
+  const schemaMock = Symbol('any-schema-mock') as unknown as SchemaFieldType[];
+  const submitHandlerMock = jest.fn();
   const UseDto2FormServiceResult = {
-    form: expect.any(Object),
-    initialValues: expect.any(Object),
-    schema: expect.any(Object),
-    submitHandler: expect.any(Function),
+    form: formMock,
+    initialValues: initialValuesMock,
+    schema: schemaMock,
+    submitHandler: submitHandlerMock,
   };
 
   beforeEach(() => {
     // Given
-    jest.mocked(usePostSubmit).mockReturnValue(postSubmitMock);
     jest.mocked(useDto2FormService).mockReturnValue(UseDto2FormServiceResult);
   });
 
@@ -31,35 +31,48 @@ describe('useInstanceCreate', () => {
     renderHook(() => useInstanceCreate());
 
     // Then
-    expect(useDto2FormService).toHaveBeenCalledOnce();
-    expect(useDto2FormService).toHaveBeenCalledWith('InstancesCreate');
+    expect(useDto2FormService).toHaveBeenCalledExactlyOnceWith('InstancesCreate');
   });
 
-  it('should call usePostSubmit with parameter', () => {
+  it('should call useNavigateWithState with parameter', () => {
     // When
     renderHook(() => useInstanceCreate());
 
     // Then
-    expect(usePostSubmit).toHaveBeenCalledOnce();
-    expect(usePostSubmit).toHaveBeenCalledWith(
-      SubmitTypesMessage.INSTANCE_SUCCESS_CREATE,
-      MessageTypes.SUCCESS,
-    );
+    expect(useNavigateWithState).toHaveBeenCalledExactlyOnceWith();
   });
 
   it('should return the correct configuration', () => {
-    // Given
-    const { result } = renderHook(() => useInstanceCreate());
-
     // When
+    const { result } = renderHook(() => useInstanceCreate());
     const { config, initialValues, postSubmit, preSubmit, schema, submitHandler } = result.current;
 
     // Then
-    expect(config).toEqual(expect.any(Object));
-    expect(initialValues).toEqual(expect.any(Object));
-    expect(postSubmit).toEqual(expect.any(Function));
+    expect(config).toStrictEqual(formMock);
+    expect(initialValues).toStrictEqual(initialValuesMock);
+    expect(postSubmit).toStrictEqual(expect.any(Function));
     expect(preSubmit).toBe(removeEmptyValues);
-    expect(schema).toEqual(expect.any(Object));
-    expect(submitHandler).toEqual(expect.any(Function));
+    expect(schema).toStrictEqual(schemaMock);
+    expect(submitHandler).toStrictEqual(submitHandlerMock);
+  });
+
+  it('should call goBackWithSuccess with parameter', () => {
+    // Given
+    const goBackWithSuccessMock = jest.fn();
+    jest.mocked(useNavigateWithState).mockReturnValueOnce({
+      goBack: jest.fn(),
+      goBackWithError: jest.fn(),
+      goBackWithSuccess: goBackWithSuccessMock,
+      navigateWithState: jest.fn(),
+    });
+
+    // When
+    const { result } = renderHook(() => useInstanceCreate());
+    result.current.postSubmit();
+
+    // Then
+    expect(goBackWithSuccessMock).toHaveBeenCalledExactlyOnceWith({
+      title: 'Partners.instance.successCreate',
+    });
   });
 });

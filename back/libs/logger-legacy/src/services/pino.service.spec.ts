@@ -1,4 +1,5 @@
-import pino, { Logger } from 'pino';
+import * as pino from 'pino';
+import { Logger } from 'pino';
 
 import { ShutdownSignal } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';

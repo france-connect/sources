@@ -33,6 +33,10 @@ module.exports = {
   useNavigate: jest.fn(() => jest.fn()),
   useOutletContext: jest.fn(),
   useParams: jest.fn(),
+  useRevalidator: jest.fn(() => ({
+    revalidate: jest.fn(),
+    state: 'idle',
+  })),
   useRouteError: jest.fn(),
   useRouteLoaderData: jest.fn(),
   useSearchParams: jest.fn(() => [new URLSearchParams(), jest.fn()]),

@@ -41,7 +41,7 @@ describe('LayoutHeaderMenuComponent', () => {
   it('should match the snapshot, with navigation defined', () => {
     // When
     const { container, getByRole } = render(
-      <LayoutHeaderMenuComponent navigation={navigationMock} />,
+      <LayoutHeaderMenuComponent isUserConnected navigation={navigationMock} />,
     );
     const button = getByRole('button');
 
@@ -54,7 +54,7 @@ describe('LayoutHeaderMenuComponent', () => {
     expect(button).toHaveClass('fr-btn--close fr-btn');
     expect(button).toHaveAttribute('aria-controls', 'layout-header-menu-modal');
     expect(LayoutHeaderToolsComponent).toHaveBeenCalledOnce();
-    expect(LayoutHeaderToolsComponent).toHaveBeenCalledWith({}, undefined);
+    expect(LayoutHeaderToolsComponent).toHaveBeenCalledWith({ isUserConnected: true }, undefined);
     expect(LayoutHeaderNavigationComponent).toHaveBeenCalledOnce();
     expect(LayoutHeaderNavigationComponent).toHaveBeenCalledWith(
       {
@@ -73,7 +73,7 @@ describe('LayoutHeaderMenuComponent', () => {
     });
 
     // When
-    const { container, getByRole } = render(<LayoutHeaderMenuComponent />);
+    const { container, getByRole } = render(<LayoutHeaderMenuComponent isUserConnected />);
     const button = getByRole('button');
 
     // Then
@@ -86,13 +86,41 @@ describe('LayoutHeaderMenuComponent', () => {
     expect(button).toHaveClass('fr-btn--close fr-btn');
     expect(button).toHaveAttribute('aria-controls', 'layout-header-menu-modal');
     expect(LayoutHeaderToolsComponent).toHaveBeenCalledOnce();
-    expect(LayoutHeaderToolsComponent).toHaveBeenCalledWith({}, undefined);
+    expect(LayoutHeaderToolsComponent).toHaveBeenCalledWith({ isUserConnected: true }, undefined);
+    expect(LayoutHeaderNavigationComponent).not.toHaveBeenCalled();
+  });
+
+  it('should render menu without navigation when user is not connected', () => {
+    // When
+    const { container, getByRole } = render(
+      <LayoutHeaderMenuComponent isUserConnected={false} navigation={navigationMock} />,
+    );
+    const button = getByRole('button');
+
+    // Then
+    expect(container).toMatchSnapshot();
+    expect(container.firstChild).toHaveClass('fr-header__menu fr-modal no-touch-action');
+    expect(button).toBeInTheDocument();
+    expect(LayoutHeaderToolsComponent).toHaveBeenCalledOnce();
+    expect(LayoutHeaderToolsComponent).toHaveBeenCalledWith({ isUserConnected: false }, undefined);
+    expect(LayoutHeaderNavigationComponent).not.toHaveBeenCalled();
+  });
+
+  it('should not render navigation when user is connected but navigation is an empty array', () => {
+    // When
+    render(<LayoutHeaderMenuComponent isUserConnected navigation={[]} />);
+
+    // Then
+    expect(LayoutHeaderToolsComponent).toHaveBeenCalledExactlyOnceWith(
+      { isUserConnected: true },
+      undefined,
+    );
     expect(LayoutHeaderNavigationComponent).not.toHaveBeenCalled();
   });
 
   it('should call useSafeContext with LayoutContext', () => {
     // When
-    render(<LayoutHeaderMenuComponent />);
+    render(<LayoutHeaderMenuComponent isUserConnected />);
 
     // Then
     expect(useSafeContext).toHaveBeenCalledOnce();
@@ -101,7 +129,7 @@ describe('LayoutHeaderMenuComponent', () => {
 
   it('should call toggleMenu on button click', () => {
     // When
-    const { getByRole } = render(<LayoutHeaderMenuComponent />);
+    const { getByRole } = render(<LayoutHeaderMenuComponent isUserConnected />);
     const button = getByRole('button');
     fireEvent.click(button);
 

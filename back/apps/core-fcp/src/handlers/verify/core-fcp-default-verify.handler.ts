@@ -143,15 +143,24 @@ export class CoreFcpDefaultVerifyHandler implements IVerifyFeatureHandler {
     }
   }
 
+  private getSpFederation(account: Account) {
+    return account.id ? account.toObject().spFederation : account.spFederation;
+  }
+
   private getSub(
     account: Account,
     identityHash: string,
     entityId: string,
   ): string {
     let sub: string;
-    if (account.spFederation?.hasOwnProperty(entityId)) {
+    const spFederation = this.getSpFederation(account);
+
+    if (
+      spFederation &&
+      Object.prototype.hasOwnProperty.call(spFederation, entityId)
+    ) {
       this.logger.debug('using existing sub from spFederation');
-      const subData = account.spFederation[entityId];
+      const subData = spFederation[entityId];
       sub = typeof subData === 'string' ? subData : subData.sub;
     } else {
       this.logger.debug('creating new sub');

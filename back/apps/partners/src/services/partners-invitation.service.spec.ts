@@ -89,8 +89,6 @@ describe('PartnersInvitationService', () => {
     const email = emails[0];
     const account = {
       email,
-      firstname: 'N/A',
-      lastname: 'N/A',
       sub: 'hashed-email',
     };
     const accountIdMock = 'account-id-mock';
@@ -114,6 +112,17 @@ describe('PartnersInvitationService', () => {
       expect(
         partnersAccountServiceMock.getOrCreateByEmail,
       ).toHaveBeenCalledWith(queryRunnerMock, account);
+    });
+
+    it('should create an account without firstname/lastname', async () => {
+      // When
+      await service.inviteOne(email, instances);
+
+      // Then
+      const [, accountArg] =
+        partnersAccountServiceMock.getOrCreateByEmail.mock.calls[0];
+      expect(accountArg).not.toHaveProperty('firstname');
+      expect(accountArg).not.toHaveProperty('lastname');
     });
 
     it('should add LIST permission for SP_INSTANCE entity', async () => {

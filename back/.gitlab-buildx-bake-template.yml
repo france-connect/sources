@@ -1,6 +1,6 @@
 .base-buildx-bake:
   stage: 'Build Back'
-  image: ${FC_DOCKER_REGISTRY}/ci-cd-slim:latest
+  image: ${FC_DOCKER_REGISTRY}/ci-cd-slim:${DOCKER_VERSION}
   services:
     - name: docker:28-dind
       alias: docker

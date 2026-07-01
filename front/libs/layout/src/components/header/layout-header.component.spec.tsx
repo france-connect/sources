@@ -25,7 +25,7 @@ describe('LayoutHeaderComponent', () => {
     // Given
     const navigationItemsMock = jest.fn();
     jest.mocked(ConfigService.get).mockReturnValue({
-      navigation: navigationItemsMock,
+      header: { navigation: navigationItemsMock },
     });
 
     // When
@@ -33,13 +33,14 @@ describe('LayoutHeaderComponent', () => {
 
     // Then
     expect(container).toMatchSnapshot();
-    expect(LayoutHeaderBrandComponent).toHaveBeenCalledOnce();
-    expect(LayoutHeaderBrandComponent).toHaveBeenCalledWith({}, undefined);
-    expect(LayoutHeaderToolsComponent).toHaveBeenCalledOnce();
-    expect(LayoutHeaderToolsComponent).toHaveBeenCalledWith({}, undefined);
-    expect(LayoutHeaderMenuComponent).toHaveBeenCalledOnce();
-    expect(LayoutHeaderMenuComponent).toHaveBeenCalledWith(
+    expect(LayoutHeaderBrandComponent).toHaveBeenCalledExactlyOnceWith({}, undefined);
+    expect(LayoutHeaderToolsComponent).toHaveBeenCalledExactlyOnceWith(
+      { isUserConnected: true },
+      undefined,
+    );
+    expect(LayoutHeaderMenuComponent).toHaveBeenCalledExactlyOnceWith(
       {
+        isUserConnected: true,
         navigation: navigationItemsMock,
       },
       undefined,
@@ -57,9 +58,17 @@ describe('LayoutHeaderComponent', () => {
 
     // Then
     expect(container).toMatchSnapshot();
-    expect(LayoutHeaderBrandComponent).toHaveBeenCalledOnce();
-    expect(LayoutHeaderBrandComponent).toHaveBeenCalledWith({}, undefined);
-    expect(LayoutHeaderToolsComponent).not.toHaveBeenCalledOnce();
-    expect(LayoutHeaderMenuComponent).not.toHaveBeenCalledOnce();
+    expect(LayoutHeaderBrandComponent).toHaveBeenCalledExactlyOnceWith({}, undefined);
+    expect(LayoutHeaderToolsComponent).toHaveBeenCalledExactlyOnceWith(
+      { isUserConnected: false },
+      undefined,
+    );
+    expect(LayoutHeaderMenuComponent).toHaveBeenCalledExactlyOnceWith(
+      {
+        isUserConnected: false,
+        navigation: undefined,
+      },
+      undefined,
+    );
   });
 });

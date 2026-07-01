@@ -143,7 +143,7 @@ describe('LayoutHeaderBrandComponent', () => {
     expect(element).toBeInTheDocument();
   });
 
-  it('should call LayoutHeaderMobileBurgerButton', () => {
+  it('should call LayoutHeaderMobileBurgerButton when user is connected', () => {
     // Given
     jest.mocked(useSafeContext).mockReturnValueOnce({
       isUserConnected: true,
@@ -153,8 +153,81 @@ describe('LayoutHeaderBrandComponent', () => {
     render(<LayoutHeaderBrandComponent />);
 
     // Then
-    expect(LayoutHeaderMobileBurgerButton).toHaveBeenCalledOnce();
-    expect(LayoutHeaderMobileBurgerButton).toHaveBeenCalledWith({}, undefined);
+    expect(LayoutHeaderMobileBurgerButton).toHaveBeenCalledExactlyOnceWith({}, undefined);
+  });
+
+  it('should call LayoutHeaderMobileBurgerButton when disconnected but visible toolsLinks exist', () => {
+    // Given
+    jest.mocked(ConfigService.get).mockReturnValueOnce({
+      features: { showServiceTitle: false },
+      header: {
+        toolsLinks: [{ href: '/docs', label: 'Documentation' }],
+      },
+      service: {
+        baseline: 'any-service-baseline-mock',
+        homepage: expect.any(String),
+        logo: expect.any(String),
+        name: 'any-service-name-mock',
+      },
+    });
+
+    // When
+    render(<LayoutHeaderBrandComponent />);
+
+    // Then
+    expect(LayoutHeaderMobileBurgerButton).toHaveBeenCalledExactlyOnceWith({}, undefined);
+  });
+
+  it('should not call LayoutHeaderMobileBurgerButton when disconnected and no visible toolsLinks', () => {
+    // When (default beforeEach: isUserConnected=false, no header.toolsLinks)
+    render(<LayoutHeaderBrandComponent />);
+
+    // Then
+    expect(LayoutHeaderMobileBurgerButton).not.toHaveBeenCalled();
+  });
+
+  it('should not call LayoutHeaderMobileBurgerButton when disconnected and only onlyIfConnected toolsLinks', () => {
+    // Given
+    jest.mocked(ConfigService.get).mockReturnValueOnce({
+      features: { showServiceTitle: false },
+      header: {
+        toolsLinks: [{ href: '/private', label: 'Private', onlyIfConnected: true }],
+      },
+      service: {
+        baseline: 'any-service-baseline-mock',
+        homepage: expect.any(String),
+        logo: expect.any(String),
+        name: 'any-service-name-mock',
+      },
+    });
+
+    // When
+    render(<LayoutHeaderBrandComponent />);
+
+    // Then
+    expect(LayoutHeaderMobileBurgerButton).not.toHaveBeenCalled();
+  });
+
+  it('should not call LayoutHeaderMobileBurgerButton when disconnected and toolsLinks is an empty array', () => {
+    // Given
+    jest.mocked(ConfigService.get).mockReturnValueOnce({
+      features: { showServiceTitle: false },
+      header: {
+        toolsLinks: [],
+      },
+      service: {
+        baseline: 'any-service-baseline-mock',
+        homepage: expect.any(String),
+        logo: expect.any(String),
+        name: 'any-service-name-mock',
+      },
+    });
+
+    // When
+    render(<LayoutHeaderBrandComponent />);
+
+    // Then
+    expect(LayoutHeaderMobileBurgerButton).not.toHaveBeenCalled();
   });
 
   it('should call LayoutHeaderServiceComponent', () => {

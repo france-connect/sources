@@ -7,10 +7,10 @@ import {
   ConfigParserStringOptionsInterface,
 } from '../interfaces';
 
-export class ConfigParser {
+export class ConfigParser<T extends string = string> {
   constructor(
     private readonly source: any,
-    private readonly namespace: string,
+    private readonly namespace: T,
     private readonly separator = '_',
   ) {}
 

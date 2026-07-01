@@ -23,7 +23,11 @@ describe('TableHeaderComponent', () => {
   it('should match the snapshot', () => {
     // When
     const { container } = render(
-      <TableHeaderComponent className="any-classname-mock" columns={columnsMock} />,
+      <TableHeaderComponent
+        className="any-classname-mock"
+        columns={columnsMock}
+        tableId="any-table-id-mock"
+      />,
       { container: document.body.appendChild(table) },
     );
 
@@ -33,9 +37,12 @@ describe('TableHeaderComponent', () => {
 
   it('should match the snapshot without classnames', () => {
     // When
-    const { container } = render(<TableHeaderComponent columns={columnsMock} />, {
-      container: document.body.appendChild(table),
-    });
+    const { container } = render(
+      <TableHeaderComponent columns={columnsMock} tableId="any-table-id-mock" />,
+      {
+        container: document.body.appendChild(table),
+      },
+    );
 
     // Then
     expect(container).toMatchSnapshot();
@@ -44,7 +51,11 @@ describe('TableHeaderComponent', () => {
   it('should set the classname to the container', () => {
     // When
     const { container } = render(
-      <TableHeaderComponent className="any-classname-mock" columns={columnsMock} />,
+      <TableHeaderComponent
+        className="any-classname-mock"
+        columns={columnsMock}
+        tableId="any-table-id-mock"
+      />,
       { container: document.body.appendChild(table) },
     );
 
@@ -55,7 +66,11 @@ describe('TableHeaderComponent', () => {
   it('should create 3 columns in the table header', () => {
     // When
     const { container, getByText } = render(
-      <TableHeaderComponent className="any-classname-mock" columns={columnsMock} />,
+      <TableHeaderComponent
+        className="any-classname-mock"
+        columns={columnsMock}
+        tableId="any-table-id-mock"
+      />,
       { container: document.body.appendChild(table) },
     );
     const thElements = container.querySelectorAll('th');

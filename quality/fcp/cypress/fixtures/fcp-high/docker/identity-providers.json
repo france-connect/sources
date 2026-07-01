@@ -207,5 +207,20 @@
     "selectors": {
       "idpButton": "#idp-8aa849db-8402-4f2e-bad9-7471dd21ff94"
     }
+  },
+  {
+    "idpId": "31505144-8da5-49f4-a507-c6352eaf34a5",
+    "name": "wallet-bridge",
+    "title": "Wallet Bridge (EUDI)",
+    "descriptions": ["wallet-bridge"],
+    "mocked": false,
+    "usable": true,
+    "url": "https://wallet-bridge-high.docker.dev-franceconnect.fr",
+    "acrValue": "eidas3",
+    "encryption": "",
+    "signature": "ES256",
+    "selectors": {
+      "idpButton": "#idp-31505144-8da5-49f4-a507-c6352eaf34a5"
+    }
   }
 ]

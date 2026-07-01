@@ -6,7 +6,7 @@ import {
   MetadataDtoTranslationInterface,
   MetadataFormService,
 } from '@fc/dto2form';
-import { ServiceProviderInstanceVersionDto } from '@fc/partners-service-provider-instance-version';
+import { ServiceProviderInstanceVersionStandaloneDto } from '@fc/partners-service-provider-instance-version';
 
 import {
   AccessControlHandler,
@@ -19,7 +19,7 @@ import {
 export class VersionController {
   constructor(
     private readonly metadataFormService: MetadataFormService,
-    private readonly partnersi18n: Dto2FormI18nService,
+    private readonly i18n: Dto2FormI18nService,
   ) {}
 
   @Get(PartnersBackRoutes.SP_VERSION_FORM_METADATA)
@@ -40,10 +40,10 @@ export class VersionController {
   @UseGuards(AccessControlGuard)
   getFormMetadata(): MetadataDtoTranslationInterface[] {
     const payload = this.metadataFormService.getDtoMetadata(
-      ServiceProviderInstanceVersionDto,
+      ServiceProviderInstanceVersionStandaloneDto,
     );
 
-    const payloadI18n = this.partnersi18n.translation(payload);
+    const payloadI18n = this.i18n.translation(payload);
 
     return payloadI18n;
   }

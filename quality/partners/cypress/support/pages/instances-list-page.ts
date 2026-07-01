@@ -17,8 +17,8 @@ export default class InstancesListPage {
     );
   }
 
-  getAddInstanceLink(): ChainableElement {
-    return cy.get('[data-testid="CreateInstanceButton"]');
+  getCreateUnlinkedInstanceButton(): ChainableElement {
+    return cy.get('[data-testid="CreateUnlinkedInstanceButton"]');
   }
 
   getAllInstanceCards(): ChainableElement {

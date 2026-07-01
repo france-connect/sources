@@ -7,6 +7,8 @@ export enum PartnersBackRoutes {
 
   SERVICE_PROVIDERS = '/service-providers',
   SERVICE_PROVIDER = '/service-providers/:serviceProviderId',
+  SERVICE_PROVIDER_CREATE_INSTANCE = '/service-providers/:serviceProviderId/instances',
+  SERVICE_PROVIDER_INSTANCE_FORM_METADATA = '/service-providers/:serviceProviderId/versions/form-metadata',
 
   SP_INSTANCES = '/instances',
   SP_INSTANCE = '/instances/:instanceId',

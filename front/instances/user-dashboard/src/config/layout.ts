@@ -58,20 +58,22 @@ export const Layout: LayoutConfig = {
       },
     ],
   },
-  navigation: [
-    {
-      href: '/history',
-      label: 'Consulter mon historique',
-    },
-    {
-      href: '/preferences',
-      label: 'Gérer mes accès',
-    },
-    {
-      href: '/fraud/form',
-      label: 'Signaler une usurpation',
-    },
-  ],
+  header: {
+    navigation: [
+      {
+        href: '/history',
+        label: 'Consulter mon historique',
+      },
+      {
+        href: '/preferences',
+        label: 'Gérer mes accès',
+      },
+      {
+        href: '/fraud/form',
+        label: 'Signaler une usurpation',
+      },
+    ],
+  },
   service: {
     homepage: '/',
     logo: LogoFranceConnect10Ans,

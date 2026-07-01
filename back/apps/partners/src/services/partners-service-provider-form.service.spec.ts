@@ -1,15 +1,18 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import {
+  PartnersAccount,
   PartnersOrganization,
   PartnersServiceProvider,
   PartnersServiceProviderInstance,
 } from '@entities/typeorm';
 
+import { AccountPermissionInterface } from '@fc/access-control';
 import { I18nService } from '@fc/i18n';
 import { LoggerService } from '@fc/logger';
 import { ScopesService } from '@fc/scopes';
 
+import { AccessControlPermission } from '../enums';
 import { PartnersServiceProviderFormService } from './partners-service-provider-form.service';
 
 describe('PartnersServiceProviderFormService', () => {
@@ -382,6 +385,102 @@ describe('PartnersServiceProviderFormService', () => {
         firstname: null,
         lastname: null,
       });
+    });
+  });
+
+  describe('sortPermissions', () => {
+    // Given
+
+    const item1 = {
+      permissionType: AccessControlPermission.SP_ADMIN,
+      account: {
+        lastConnection: new Date('2024-02-02'),
+      },
+    } as AccountPermissionInterface<PartnersAccount, AccessControlPermission>;
+
+    const item2 = {
+      permissionType: AccessControlPermission.SP_ADMIN,
+      account: {
+        lastConnection: new Date('2024-01-01'),
+      },
+    } as AccountPermissionInterface<PartnersAccount, AccessControlPermission>;
+
+    const item3 = {
+      permissionType: AccessControlPermission.SP_TECH,
+      account: {
+        lastConnection: new Date('2024-01-01'),
+      },
+    } as AccountPermissionInterface<PartnersAccount, AccessControlPermission>;
+
+    const item4 = {
+      permissionType: AccessControlPermission.SP_CONTRIBUTOR,
+      account: {
+        lastConnection: new Date('2024-03-01'),
+      },
+    } as AccountPermissionInterface<PartnersAccount, AccessControlPermission>;
+
+    const item5 = {
+      permissionType: AccessControlPermission.SP_CONTRIBUTOR,
+      account: {},
+    } as AccountPermissionInterface<PartnersAccount, AccessControlPermission>;
+
+    const expected = [item1, item2, item3, item4, item5];
+
+    it.each([
+      [[item1, item2, item3, item4, item5]],
+      [[item1, item2, item5, item4, item3]],
+      [[item1, item5, item2, item4, item3]],
+      [[item1, item5, item2, item3, item4]],
+      [[item5, item4, item3, item2, item1]],
+      [[item5, item4, item3, item1, item2]],
+      [[item5, item4, item2, item1, item3]],
+      [[item5, item4, item2, item3, item1]],
+      [[item5, item4, item1, item2, item3]],
+      [[item5, item4, item1, item3, item2]],
+      [[item5, item3, item2, item1, item4]],
+      [[item5, item3, item2, item4, item1]],
+    ])(
+      'should sort permissions by SP_ADMIN, SP_TECH, SP_CONTRIBUTOR, then by lastConnection descending order',
+      (permissions) => {
+        // When
+        const result = permissions.sort(
+          service['sortPermissions'].bind(service),
+        );
+
+        // Then
+        expect(result).toEqual(expected);
+      },
+    );
+  });
+
+  describe('getLastConnectionTime', () => {
+    // Given
+    const LAST_CONNECTION_TIMESTAMP = 233366400000;
+
+    const item1 = {
+      account: {
+        lastConnection: new Date(LAST_CONNECTION_TIMESTAMP),
+      },
+    } as AccountPermissionInterface<PartnersAccount, AccessControlPermission>;
+
+    const item2 = {
+      account: {},
+    } as AccountPermissionInterface<PartnersAccount, AccessControlPermission>;
+
+    it('should return the last connection time', () => {
+      // When
+      const result = service['getLastConnectionTime'](item1);
+
+      // Then
+      expect(result).toEqual(LAST_CONNECTION_TIMESTAMP);
+    });
+
+    it('should return zero when last connection time is not set', () => {
+      // When
+      const result = service['getLastConnectionTime'](item2);
+
+      // Then
+      expect(result).toEqual(0);
     });
   });
 });

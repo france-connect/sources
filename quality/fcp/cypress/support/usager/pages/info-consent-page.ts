@@ -64,7 +64,7 @@ export default class InfoConsentPage {
     if (!explicitConsent) {
       // Information page: Use the toggle to display the claims
       this.getShowClaimsToggle().should('be.visible');
-      this.getClaimDetails().should('not.be.visible');
+      this.getClaimDetailsItems().should('not.be.visible');
       // Wait for element to be bound to click event
       // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(500);
@@ -73,7 +73,7 @@ export default class InfoConsentPage {
 
     this.getClaimDetailsItems().last().should('be.visible');
 
-    this.getClaimDetails()
+    this.getClaimDetailsItems()
       .invoke('text')
       .then((text) => {
         const arrClaims = text.trim().split(/\s\s+/);

@@ -1,16 +1,12 @@
 import { renderHook } from '@testing-library/react';
 import { useLoaderData } from 'react-router';
 
-import { MessageTypes } from '@fc/common';
 import type { SchemaFieldType } from '@fc/dto2form';
 import { removeEmptyValues } from '@fc/dto2form';
 import { parseInitialValues, useDto2FormService } from '@fc/dto2form-service';
+import { useNavigateWithState } from '@fc/routing';
 
-import { SubmitTypesMessage } from '../../enums';
-import { usePostSubmit } from '../post-submit';
 import { useInstanceUpdate } from './instance-update.hook';
-
-jest.mock('../post-submit/post-submit.hook');
 
 describe('useInstanceUpdate', () => {
   // Given
@@ -20,7 +16,6 @@ describe('useInstanceUpdate', () => {
     },
   };
 
-  const postSubmitMock = expect.any(Function);
   const schemaMock = Symbol('any-acme-schema') as unknown as SchemaFieldType[];
   const initialValuesMock = currentVersionMock.data;
   const submitHandlerMock = jest.fn();
@@ -37,7 +32,6 @@ describe('useInstanceUpdate', () => {
 
   beforeEach(() => {
     // Given
-    jest.mocked(usePostSubmit).mockReturnValue(postSubmitMock);
     jest.mocked(parseInitialValues).mockReturnValue(initialValuesMock);
     jest.mocked(useDto2FormService).mockReturnValue(UseDto2FormServiceResult);
     jest.mocked(useLoaderData).mockReturnValue({
@@ -65,15 +59,32 @@ describe('useInstanceUpdate', () => {
     expect(useDto2FormService).toHaveBeenCalledExactlyOnceWith('InstancesUpdate');
   });
 
-  it('should call usePostSubmit with parameter', () => {
+  it('should call useNavigateWithState with parameter', () => {
     // When
     renderHook(() => useInstanceUpdate());
 
     // Then
-    expect(usePostSubmit).toHaveBeenCalledExactlyOnceWith(
-      SubmitTypesMessage.INSTANCE_SUCCESS_UPDATE,
-      MessageTypes.SUCCESS,
-    );
+    expect(useNavigateWithState).toHaveBeenCalledExactlyOnceWith();
+  });
+
+  it('should call goBackWithSuccess with parameter', () => {
+    // Given
+    const goBackWithSuccessMock = jest.fn();
+    jest.mocked(useNavigateWithState).mockReturnValueOnce({
+      goBack: jest.fn(),
+      goBackWithError: jest.fn(),
+      goBackWithSuccess: goBackWithSuccessMock,
+      navigateWithState: jest.fn(),
+    });
+
+    // When
+    const { result } = renderHook(() => useInstanceUpdate());
+    result.current.postSubmit();
+
+    // Then
+    expect(goBackWithSuccessMock).toHaveBeenCalledExactlyOnceWith({
+      title: 'Partners.instance.successUpdate',
+    });
   });
 
   it('should call parseInitialValues with parameters', () => {
@@ -95,7 +106,7 @@ describe('useInstanceUpdate', () => {
         title: currentVersionMock.data.name,
       },
       initialValues: initialValuesMock,
-      postSubmit: postSubmitMock,
+      postSubmit: expect.any(Function),
       preSubmit: removeEmptyValues,
       schema: schemaMock,
       submitHandler: submitHandlerMock,

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 
 import { useScrollTo } from '@fc/common';
-import { CreateInstanceButton, InstancesListComponent } from '@fc/core-partners';
+import { CreateUnlinkedInstanceButton, InstancesListComponent } from '@fc/core-partners';
 import { AlertComponent, LinkEmailComponent, Sizes, TileComponent } from '@fc/dsfr';
 import { SeeAlsoElement } from '@fc/forms';
 import { t } from '@fc/i18n';
@@ -10,15 +10,15 @@ import { useInstances } from '../../../hooks';
 
 export const InstancesPage = React.memo(() => {
   const { scrollToTop } = useScrollTo();
-  const { closeAlertHandler, hasItems, items, submitState } = useInstances();
+  const { cleanupRouteState, hasItems, items, submitState } = useInstances();
 
   useEffect(() => {
     scrollToTop();
   }, [submitState, scrollToTop]);
 
   return (
-    <div className="fr-col-12 fr-col-lg-10 fr-col-xl-8">
-      <div className="fr-col-12">
+    <React.Fragment>
+      <div className="fr-col-12 fr-col-lg-10 fr-col-xl-8">
         <h1 data-testid="instances-page-title">{t('Partners.homepage.sandboxTitle')}</h1>
         <p>
           {t('Partners.homepage.baseline')}{' '}
@@ -28,7 +28,7 @@ export const InstancesPage = React.memo(() => {
           />
         </p>
       </div>
-      <div className="fr-col-12 fr-mb-3w fr-mt-5w">
+      <div className="fr-col-12 fr-col-lg-10 fr-col-xl-8 fr-mb-3w fr-mt-4v">
         <AlertComponent title="Vous ne trouvez pas l’instance de votre fournisseur de service, bien que la demande de création ait été faite via Démarches Simplifiées ?">
           <ul>
             <li>
@@ -45,38 +45,38 @@ export const InstancesPage = React.memo(() => {
         </AlertComponent>
       </div>
       {submitState && (
-        <div className="fr-col-12 fr-mb-3w">
+        <div className="fr-col-12 fr-col-lg-10 fr-col-xl-8 fr-mb-3w">
           <AlertComponent
             dataTestId="instances-page-alert-top"
-            title={t(submitState.message)}
+            title={t(submitState.title)}
             type={submitState.type}
-            onClose={closeAlertHandler}
+            onClose={cleanupRouteState}
           />
         </div>
       )}
       {hasItems && (
         <React.Fragment>
-          <div className="fr-col-12 fr-mb-3w">
-            <CreateInstanceButton />
+          <div className="fr-col-12 fr-col-lg-10 fr-col-xl-8 fr-mb-3w">
+            <CreateUnlinkedInstanceButton />
           </div>
-          <div className="fr-col-12">
+          <div className="fr-col-12 fr-col-lg-10 fr-col-xl-8">
             <InstancesListComponent items={items} />
           </div>
         </React.Fragment>
       )}
       {!hasItems && (
-        <div className="fr-col-12">
+        <div className="fr-col-12 fr-col-lg-10 fr-col-xl-8">
           <TileComponent
             isHorizontal
             dataTestId="instances-page-create-tile"
             description={t('Partners.homepage.createTileDescription')}
-            link="create"
+            link="creer-instance"
             size={Sizes.LARGE}
             title={t('Partners.homepage.createTileTitle')}
           />
         </div>
       )}
-    </div>
+    </React.Fragment>
   );
 });
 

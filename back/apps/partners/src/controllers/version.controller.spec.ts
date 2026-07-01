@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { AccessControlGuard } from '@fc/access-control';
 import { Dto2FormI18nService, MetadataFormService } from '@fc/dto2form';
-import { ServiceProviderInstanceVersionDto } from '@fc/partners-service-provider-instance-version';
+import { ServiceProviderInstanceVersionStandaloneDto } from '@fc/partners-service-provider-instance-version';
 
 import { VersionController } from './version.controller';
 
@@ -60,7 +60,9 @@ describe('VersionController', () => {
       // Then
       expect(
         metadataFormServiceMock.getDtoMetadata,
-      ).toHaveBeenCalledExactlyOnceWith(ServiceProviderInstanceVersionDto);
+      ).toHaveBeenCalledExactlyOnceWith(
+        ServiceProviderInstanceVersionStandaloneDto,
+      );
     });
 
     it('should call replaceWithI18n to retrieve paylaod with i18n translation', () => {

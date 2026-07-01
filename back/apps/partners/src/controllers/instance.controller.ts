@@ -1,5 +1,3 @@
-import { QueryRunner } from 'typeorm';
-
 import {
   Body,
   Controller,
@@ -15,10 +13,8 @@ import {
 
 import {
   EnvironmentEnum,
-  PartnersAccount,
   PartnersServiceProvider,
   PartnersServiceProviderInstance,
-  PublicationStatusEnum,
 } from '@entities/typeorm';
 
 import {
@@ -29,21 +25,12 @@ import {
   PermissionInterface,
 } from '@fc/access-control';
 import { FSA, FSAMeta } from '@fc/common';
-import {
-  ActionTypes,
-  ConfigCreateViaMessageDtoPayload,
-  CreatedVia,
-} from '@fc/csmr-config-client';
 import { CsrfTokenGuard } from '@fc/csrf';
 import { FormValidationPipe } from '@fc/dto2form';
 import { PartnersAccountSession } from '@fc/partners-account';
 import { PartnersServiceProviderService } from '@fc/partners-service-provider';
 import { PartnersServiceProviderInstanceService } from '@fc/partners-service-provider-instance';
-import {
-  PartnersServiceProviderInstanceVersionService,
-  ServiceProviderInstanceVersionDto,
-} from '@fc/partners-service-provider-instance-version';
-import { OidcClientInterface } from '@fc/service-provider';
+import { ServiceProviderInstanceVersionStandaloneDto } from '@fc/partners-service-provider-instance-version';
 import { ISessionService, Session, SessionService } from '@fc/session';
 import { TypeormService } from '@fc/typeorm';
 
@@ -58,7 +45,6 @@ import {
 } from '../enums';
 import { PartnersInstanceNotFoundException } from '../exceptions';
 import {
-  PartnerPublicationService,
   PartnersInstanceService,
   PartnersInstanceVersionFormService,
 } from '../services';
@@ -70,8 +56,6 @@ export class InstanceController {
   // eslint-disable-next-line max-params
   constructor(
     private readonly instance: PartnersServiceProviderInstanceService,
-    private readonly version: PartnersServiceProviderInstanceVersionService,
-    private readonly publication: PartnerPublicationService,
     private readonly form: PartnersInstanceVersionFormService,
     private readonly accessControl: AccountPermissionService<
       AccessControlEntity,
@@ -170,7 +154,7 @@ export class InstanceController {
   @UseGuards(CsrfTokenGuard)
   @UsePipes(FormValidationPipe)
   async createInstance(
-    @Body() values: ServiceProviderInstanceVersionDto,
+    @Body() values: ServiceProviderInstanceVersionStandaloneDto,
     @Session('PartnersAccount', PartnersAccountSession)
     sessionPartnersAccount: ISessionService<
       PartnersAccountSession<AccessControlEntity, AccessControlPermission>
@@ -185,37 +169,20 @@ export class InstanceController {
      * WARNING: Getting this parameter from body would imply to add a new AccessControl rule to the controller
      */
     const serviceProviderId = DefaultServiceProviderEnum.DEFAULT_LOW_SP;
+    const environment = EnvironmentEnum.SANDBOX;
 
-    const data = await this.form.fromFormValues(values, serviceProviderId);
-
-    const { instanceId, versionId } = await this.typeorm.withTransaction<{
-      instanceId: string;
-      versionId: string;
-    }>((queryRunner) =>
-      this.createInstanceInDatabase(
-        queryRunner,
-        data,
-        accountId,
-        serviceProviderId,
-      ),
-    );
-
-    const dataWithCreatedInfo: ConfigCreateViaMessageDtoPayload = {
-      ...data,
-      createdBy: email,
-      createdVia: CreatedVia.PARTNERS_MANUAL,
-    };
-
-    await this.publication.publish(
-      instanceId,
-      versionId,
-      dataWithCreatedInfo,
-      ActionTypes.CONFIG_CREATE,
+    const { instanceId, versionId } = await this.instanceService.create(
+      values,
+      { accountId, email, serviceProviderId },
+      {
+        environment,
+        grantInstanceContributor: true,
+      },
     );
 
     return {
       type: 'INSTANCE',
-      payload: {},
+      payload: { instanceId, versionId },
     };
   }
 
@@ -365,39 +332,6 @@ export class InstanceController {
     };
   }
 
-  private async createInstanceInDatabase(
-    queryRunner: QueryRunner,
-    data: OidcClientInterface,
-    accountId: string,
-    serviceProviderId: string,
-  ): Promise<{ instanceId: string; versionId: string }> {
-    const { id: instanceId } = await this.instance.save(queryRunner, {
-      environment: EnvironmentEnum.SANDBOX,
-      creator: { id: accountId } as PartnersAccount,
-      serviceProvider: {
-        id: serviceProviderId,
-      } as PartnersServiceProvider,
-    });
-
-    // Skip "DRAFT" for sandbox since there is no point to update right after creation
-    const status = PublicationStatusEnum.PENDING;
-    const { id: versionId } = await this.version.create(
-      queryRunner,
-      data,
-      instanceId,
-      status,
-    );
-
-    await this.accessControl.addPermissionTransactional(queryRunner, {
-      accountId,
-      permissionType: AccessControlPermission.INSTANCE_CONTRIBUTOR,
-      entity: AccessControlEntity.SP_INSTANCE,
-      entityId: instanceId,
-    });
-
-    return { instanceId, versionId };
-  }
-
   @Put(PartnersBackRoutes.SP_INSTANCE)
   @AccessControl([
     {
@@ -433,7 +367,7 @@ export class InstanceController {
   @UseGuards(CsrfTokenGuard)
   @UsePipes(FormValidationPipe)
   async updateInstance(
-    @Body() data: ServiceProviderInstanceVersionDto,
+    @Body() data: ServiceProviderInstanceVersionStandaloneDto,
     @Param('instanceId') instanceId: string,
     @Session('PartnersAccount', PartnersAccountSession)
     sessionPartnersAccount: ISessionService<

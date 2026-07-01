@@ -1,4 +1,6 @@
-import pino, { Logger } from 'pino';
+// eslint-disable-next-line @typescript-eslint/no-require-imports -- CJS interop for pino v10 (export = pino)
+import pino = require('pino');
+import { Logger } from 'pino';
 
 import { Test, TestingModule } from '@nestjs/testing';
 

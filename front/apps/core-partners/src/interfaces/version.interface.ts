@@ -1,11 +1,9 @@
-import type { AnyObjectInterface, ISODate, PublicationStatus, UUIDType } from '@fc/common';
+import type { AnyObjectInterface, EntityBaseInterface, PublicationStatus } from '@fc/common';
 
-export interface VersionInterface {
-  id: UUIDType;
-  createdAt: ISODate;
-  updatedAt: ISODate;
+export interface VersionInterface extends EntityBaseInterface {
   publicationStatus: PublicationStatus;
   data: {
+    name: string;
     // @NOTE API interface
     // eslint-disable-next-line @typescript-eslint/naming-convention
     client_id?: string;

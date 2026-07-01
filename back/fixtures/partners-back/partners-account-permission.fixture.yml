@@ -84,6 +84,14 @@ items:
     entityId: 'acfacfcf-291b-43bd-abe7-fb234b3d879e'
     account: '@user-bdd-default'
 
+  permissions-bdd-default-sp6-admin:
+    id: 'd2c1f5a8-7e3b-4c9d-8a6f-0b1e2d3c4f5a'
+    permissionType: 'SP_ADMIN'
+    entity: 'SERVICE_PROVIDER'
+    # @sp6-low
+    entityId: '8a2a4f1d-3c5e-4b7a-9f0d-1e2c3b4a5d6e'
+    account: '@user-bdd-default'
+
   # Permissions for @user-bdd-one-instance
 
   permissions-bdd-one-instance-spi-contributor:
@@ -131,3 +139,63 @@ items:
     # @sp3-low
     entityId: 'b66afba8-58b2-4465-a868-6a187ea67f5a'
     account: '@user-bdd-two-sps'
+
+  # Permissions for @user-bdd-sp2-tech
+
+  permissions-bdd-sp2-tech-spi-contributor:
+    id: '068383d8-9fad-4aee-9886-c214e32a03dd'
+    permissionType: 'INSTANCE_CONTRIBUTOR'
+    account: '@user-bdd-sp2-tech'
+
+  permissions-bdd-sp2-tech-sp-contributor:
+    id: '45b0449f-d07d-41c4-9038-5ec6a52880e0'
+    permissionType: 'SP_CONTRIBUTOR'
+    account: '@user-bdd-sp2-tech'
+
+  permissions-bdd-sp2-tech-sp2-admin:
+    id: '2925d10d-7769-4958-b516-047bd0328e29'
+    permissionType: 'SP_TECH'
+    entity: 'SERVICE_PROVIDER'
+    # @sp2-low
+    entityId: '25c4e41c-a97d-4bc9-8e05-e353c91eaef5'
+    account: '@user-bdd-sp2-tech'
+
+  # Permissions for @user-bdd-sp2-contributor-new
+
+  permissions-bdd-sp2-contributor-new-spi-contributor:
+    id: '843e1bdd-364f-4480-9df7-964dfc63998d'
+    permissionType: 'INSTANCE_CONTRIBUTOR'
+    account: '@user-bdd-sp2-contributor-new'
+
+  permissions-bdd-sp2-contributor-new-sp-contributor:
+    id: '77eff1d2-3dbb-4d17-8e3c-3a9de4bc0f25'
+    permissionType: 'SP_CONTRIBUTOR'
+    account: '@user-bdd-sp2-contributor-new'
+
+  permissions-bdd-sp2-contributor-new-sp2-admin:
+    id: '3f9dc77a-5f20-455b-ab4e-0a151270df25'
+    permissionType: 'SP_CONTRIBUTOR'
+    entity: 'SERVICE_PROVIDER'
+    # @sp2-low
+    entityId: '25c4e41c-a97d-4bc9-8e05-e353c91eaef5'
+    account: '@user-bdd-sp2-contributor-new'
+
+  # Permissions for @user-bdd-sp2-contributor-connection
+
+  permissions-bdd-sp2-contributor-connection-spi-contributor:
+    id: 'd9003ed8-b2e9-4932-ac01-b961ff5554e0'
+    permissionType: 'INSTANCE_CONTRIBUTOR'
+    account: '@user-bdd-sp2-contributor-connection'
+
+  permissions-bdd-sp2-contributor-connection-sp-contributor:
+    id: '4f67c387-e7ac-44f7-8a93-549a916ba5c5'
+    permissionType: 'SP_CONTRIBUTOR'
+    account: '@user-bdd-sp2-contributor-connection'
+
+  permissions-bdd-sp2-contributor-connection-sp2-admin:
+    id: 'e9090248-392a-4f36-9c50-a2da13a36bb9'
+    permissionType: 'SP_CONTRIBUTOR'
+    entity: 'SERVICE_PROVIDER'
+    # @sp2-low
+    entityId: '25c4e41c-a97d-4bc9-8e05-e353c91eaef5'
+    account: '@user-bdd-sp2-contributor-connection'

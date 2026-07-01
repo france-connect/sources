@@ -16,6 +16,9 @@ export class AsyncLocalStorageModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(AsyncLocalStorageMiddleware, AsyncLocalStorageRequestMiddleware)
-      .forRoutes('*');
+      /**
+       * @see https://docs.nestjs.com/middleware#route-wildcards
+       */
+      .forRoutes('{*path}');
   }
 }

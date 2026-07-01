@@ -13,11 +13,11 @@ export const InstanceCreatePage = React.memo(() => {
   const { config, initialValues, postSubmit, preSubmit, schema, submitHandler } =
     useInstanceCreate();
 
-  const pageTile = t('Partners.createpage.title');
+  const pageTitle = t('Partners.createpage.title');
   const pageIntro = t('Partners.instance.createIntro');
   return (
     <React.Fragment>
-      <InstancePageHeaderComponent intro={pageIntro} title={pageTile} />
+      <InstancePageHeaderComponent intro={pageIntro} title={pageTitle} />
       <InstancePageNoticeComponent />
       <InstancePageFormComponent
         config={config}

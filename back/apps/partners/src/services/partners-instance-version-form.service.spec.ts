@@ -7,7 +7,7 @@ import { ConfigService } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
 import { PartnersServiceProviderService } from '@fc/partners-service-provider';
 import { PartnersServiceProviderInstanceService } from '@fc/partners-service-provider-instance';
-import { ServiceProviderInstanceVersionDto } from '@fc/partners-service-provider-instance-version';
+import { ServiceProviderInstanceVersionStandaloneDto } from '@fc/partners-service-provider-instance-version';
 import { ClientTypeEnum, SignatureAlgorithmEnum } from '@fc/service-provider';
 
 import { getConfigMock } from '@mocks/config';
@@ -48,7 +48,7 @@ describe('PartnersInstanceVersionFormService', () => {
     post_logout_redirect_uris: ['https://site.fr/logout'],
     IPServerAddressesAndRanges: [],
     ...configDataMock,
-  } as unknown as ServiceProviderInstanceVersionDto;
+  } as unknown as ServiceProviderInstanceVersionStandaloneDto;
 
   const formVersionMock = getTransformed(
     {
@@ -63,8 +63,8 @@ describe('PartnersInstanceVersionFormService', () => {
       post_logout_redirect_uris: ['https://site.fr/logout'],
       IPServerAddressesAndRanges: [],
     },
-    ServiceProviderInstanceVersionDto,
-  ) as unknown as ServiceProviderInstanceVersionDto;
+    ServiceProviderInstanceVersionStandaloneDto,
+  ) as unknown as ServiceProviderInstanceVersionStandaloneDto;
 
   const cryptoMock = {
     genRandomString: jest.fn(),

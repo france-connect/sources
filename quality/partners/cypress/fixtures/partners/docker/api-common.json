@@ -120,6 +120,27 @@
     "method": "POST",
     "url": "https://partners.docker.dev-franceconnect.fr/api/datapass/webhook"
   },
+  "service-provider-instance-creation": {
+    "headers": {
+      "x-csrf-token": "49fbf16dd64a32216a6fb639426b41e11d678590e2879a55a41705368163aa97"
+    },
+    "body": {
+      "name": "bdd_test API creation from SP",
+      "site[]": "https://test.franceconnect.gouv.fr",
+      "redirect_uris[]": "https://test.franceconnect.gouv.fr/callback",
+      "post_logout_redirect_uris[]": "https://test.franceconnect.gouv.fr/logout",
+      "IPServerAddressesAndRanges[]": "37.65.14.169",
+      "id_token_signed_response_alg": "ES256",
+      "entityId": "4a858a99-5baf-4068-bd59-ff551ede3619"
+    },
+    "form": true,
+    "method": "POST",
+    "url": "https://partners.docker.dev-franceconnect.fr/api/service-providers/8a2a4f1d-3c5e-4b7a-9f0d-1e2c3b4a5d6e/instances"
+  },
+  "service-provider-instance-form-metadata": {
+    "method": "GET",
+    "url": "https://partners.docker.dev-franceconnect.fr/api/service-providers/8a2a4f1d-3c5e-4b7a-9f0d-1e2c3b4a5d6e/versions/form-metadata"
+  },
   "service-providers-list": {
     "method": "GET",
     "url": "https://partners.docker.dev-franceconnect.fr/api/service-providers"

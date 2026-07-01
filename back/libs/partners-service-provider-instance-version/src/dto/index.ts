@@ -1,1 +1,2 @@
-export * from './sp-instance-version-form.dto';
+export * from './service-provider-instance-version-from-sp.dto';
+export * from './service-provider-instance-version-standalone.dto';

@@ -86,6 +86,10 @@ export class SessionConfig {
   @IsOptional()
   readonly templateExposed?: TemplateExposedType;
 
+  @IsPositive()
+  @IsOptional()
+  readonly eosAlertDelay?: number;
+
   @IsBoolean()
   readonly slidingExpiration: boolean;
 

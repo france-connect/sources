@@ -1,6 +1,6 @@
 export interface UserInfosInterface {
-  lastname: string;
-  firstname: string;
+  lastname: string | null;
+  firstname: string | null;
   idpId: string;
   email: string;
 }

@@ -67,6 +67,10 @@
     "scopes": ["openid", "profile"]
   },
   {
+    "type": "profile sans openid",
+    "scopes": ["profile"]
+  },
+  {
     "type": "profile avec scope inconnu",
     "scopes": ["openid", "profile", "inconnu"]
   },
@@ -155,11 +159,7 @@
   },
   {
     "type": "CNAM",
-    "scopes": [
-      "openid",
-      "droits_assurance_maladie",
-      "cnam_caisse"
-    ]
+    "scopes": ["openid", "droits_assurance_maladie", "cnam_caisse"]
   },
   {
     "type": "dgfip et cnam",
@@ -175,9 +175,6 @@
   },
   {
     "type": "cnous_statut_boursier",
-    "scopes": [
-      "openid",
-      "cnous_statut_boursier"
-    ]
+    "scopes": ["openid", "cnous_statut_boursier"]
   }
 ]

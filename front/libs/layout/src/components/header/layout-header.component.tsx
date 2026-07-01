@@ -15,8 +15,8 @@ import { LayoutHeaderToolsComponent } from './tools';
 export const LayoutHeaderComponent = React.memo(() => {
   const { isUserConnected } = useSafeContext<LayoutContextState>(LayoutContext);
 
-  const config = ConfigService.get<LayoutConfig>(LayoutOptions.CONFIG_NAME);
-  const { navigation } = config;
+  const { header } = ConfigService.get<LayoutConfig>(LayoutOptions.CONFIG_NAME);
+  const { navigation } = header ?? {};
 
   return (
     <header className={classnames(styles.banner, 'fr-header')} role="banner">
@@ -26,13 +26,13 @@ export const LayoutHeaderComponent = React.memo(() => {
             <LayoutHeaderBrandComponent />
             <div className="fr-header__tools">
               <div className="fr-header__tools-links">
-                {isUserConnected && <LayoutHeaderToolsComponent />}
+                <LayoutHeaderToolsComponent isUserConnected={isUserConnected} />
               </div>
             </div>
           </div>
         </div>
       </div>
-      {isUserConnected && <LayoutHeaderMenuComponent navigation={navigation} />}
+      <LayoutHeaderMenuComponent isUserConnected={isUserConnected} navigation={navigation} />
     </header>
   );
 });

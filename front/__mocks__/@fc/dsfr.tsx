@@ -126,3 +126,9 @@ export const ButtonTypes = {
   RESET: 'reset',
   SUBMIT: 'submit',
 };
+
+export const Align = {
+  CENTER: 'center',
+  LEFT: 'left',
+  RIGHT: 'right',
+};

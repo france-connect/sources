@@ -309,31 +309,60 @@ _ci_run_validate_code_quality() {
   ${FC_ROOT}/fc/coverage.sh
 }
 
-_ci_dev-generic_cache_resolve() {
-  local image="${REGISTRY_URL}/dev-generic"
-  local generic_tag="${NODE_MODULE_BACK_VERSION}-${NODE_MODULE_FRONT_VERSION}-${NODE_MODULE_QUALITY_VERSION}"
-  local target_tag="${CI_COMMIT_REF_SLUG}"
+_ci_cache_resolve() {
+  local image="${1}"
+  local tag="${2}"
 
-  # On staging, force cache to hit only on node_modules to prevent error when dependencies update
-  if [[ "${target_tag}" != "${REPOSITORY_MAIN_BRANCH}" ]] \
-    && [[ "${CI_MERGE_REQUEST_LABELS:-}" != *"CI Refresh Cache"* ]] \
-    && _docker_image_exists "${image}" "${target_tag}"; then
-    echo "🟢 Cache hit on target → skipping build."
+  if [[ "${CI_MERGE_REQUEST_LABELS:-}" != *"CI Refresh Cache"* ]] \
+    && _docker_image_exists "${image}" "${tag}"; then
+    echo "🟢 Cache hit on ${image}:${tag} → skipping build."
     return 0
-  fi
-
-  if _docker_image_exists "${image}" "${generic_tag}"; then
-    echo "🔵 Cache hit on node_modules → retag and skipping build."
-
-    if _docker_image_retag --overwrite "${image}" "${generic_tag}" "${target_tag}"; then
-      echo "🟢 Target ready !"
-      return 0
-    fi
-
-    echo "🟠 Unable to retag, will still try to re-build."
-    return 1
   fi
 
   echo "🟡 No cache hit, build is needed."
   return 1
+}
+
+_ci_cache_retag_or_rebuild() {
+  local image="${1}"
+  local src_tag="${2}"
+  local dst_tag="${3}"
+
+  if _docker_image_exists "${image}" "${dst_tag}"; then
+    if _docker_images_in_sync "${image}" "${src_tag}" "${dst_tag}"; then
+      echo "🟢 Cache hit: ${dst_tag} is up-to-date."
+      return 0
+    fi
+    echo "🔵 ${dst_tag} exists but is outdated → retagging."
+  else
+    echo "🔵 ${dst_tag} not found → tagging from ${src_tag}."
+  fi
+
+  if _docker_image_retag --overwrite "${image}" "${src_tag}" "${dst_tag}"; then
+    echo "🟢 Retag successful → ${dst_tag} ready."
+    return 0
+  fi
+
+  echo "🟠 Retag failed — rebuild needed."
+  return 1
+}
+
+_ci_ci-cd_cache_resolve() {
+  local image="${REGISTRY_URL}/ci-cd-full"
+  local tag="${DEBIAN_VERSION}-${DOCKER_VERSION}-${NODE_VERSION}"
+
+  _ci_cache_resolve "${image}" "${tag}"
+}
+
+_ci_dev-generic_cache_resolve() {
+  local image="${REGISTRY_URL}/dev-generic"
+  local generic_tag="${NODE_MODULE_CACHE_KEY}"
+  local target_tag="${CI_COMMIT_REF_SLUG}"
+
+  if ! _docker_image_exists "${image}" "${generic_tag}"; then
+    echo "🟡 No generic cache, full rebuild needed."
+    return 1
+  fi
+
+  _ci_cache_retag_or_rebuild "${image}" "${generic_tag}" "${target_tag}"
 }

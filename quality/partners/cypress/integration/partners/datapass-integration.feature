@@ -54,7 +54,7 @@ Fonctionnalité: Datapass - Création / Modification d'un fournisseur de service
     Et que le fournisseur de service a un nouveau numéro de demande datapass
     Et que le fournisseur de service a un nouveau numéro d'habilitation datapass
     Et que le fournisseur de service a pour nom "Nouveau FS avec organisation existante et comptes existants"
-    Et que le fournisseur de service a pour organisation "Direction Interministerielle du Numérique" avec siret "13002526500013"
+    Et que le fournisseur de service a pour organisation "DIRECTION INTERMINISTERIELLE DU NUMERIQUE" avec siret "13002526500013"
     Et que le fournisseur de service a pour scopes "openid,given_name,family_name,email"
     Et que le fournisseur de service a pour demandeur datapass "demandeur datapass"
     Et que le fournisseur de service a pour contact technique datapass "contact technique datapass"
@@ -78,10 +78,7 @@ Fonctionnalité: Datapass - Création / Modification d'un fournisseur de service
     Etant donné que j'utilise le fournisseur de service "par défaut"
     Et que le fournisseur de service a pour nom "SP4 - Fournisseur de service par défaut modifié"
     Et que le fournisseur de service a pour scopes "openid,given_name"
-    # TODO: L'Espace Partenaires ne gère pas correctement la modification d'une organisation pour un FS existant
-    # Il faudra mettre à jour le nom de l'organisation s'il a changé dans Datapass
-    # Et que le fournisseur de service a pour organisation "Nouvelle organisation pour FS existant" avec un nouveau siret
-    Et que le fournisseur de service a pour organisation "Direction Interministerielle du Numérique" avec un nouveau siret
+    Et que le fournisseur de service a pour organisation "Nouvelle organisation pour FS existant" avec un nouveau siret
     Et que le fournisseur de service a pour demandeur datapass "demandeur datapass par défaut"
     Et que le fournisseur de service a pour contact technique datapass "contact technique datapass par défaut"
     Quand je navigue sur la page mock Datapass
@@ -103,7 +100,7 @@ Fonctionnalité: Datapass - Création / Modification d'un fournisseur de service
     Etant donné que j'utilise le fournisseur de service "par défaut"
     Et que le fournisseur de service a pour nom "SP4 - Fournisseur de service par défaut"
     Et que le fournisseur de service a pour scopes "openid,given_name"
-    Et que le fournisseur de service a pour organisation "Direction Interministerielle du Numérique" avec siret "13002526500013"
+    Et que le fournisseur de service a pour organisation "DIRECTION INTERMINISTERIELLE DU NUMERIQUE" avec siret "13002526500013"
     Et que le fournisseur de service a pour demandeur datapass "demandeur datapass par défaut"
     Et que le fournisseur de service a pour contact technique datapass "contact technique datapass par défaut"
     Quand je navigue sur la page mock Datapass
