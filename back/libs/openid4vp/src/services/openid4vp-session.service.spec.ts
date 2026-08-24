@@ -12,8 +12,12 @@ import { getRedisServiceMock, getRedisServiceMultiMock } from '@mocks/redis';
 import { getSessionServiceMock } from '@mocks/session';
 
 import { Openid4vpInteractionDto } from '../dto';
-import { Openid4vpInteractionStatus } from '../enums';
+import {
+  Openid4vpAuthorizationError,
+  Openid4vpInteractionStatus,
+} from '../enums';
 import { Openid4vpAuthorizationNotFoundException } from '../exceptions';
+import { Openid4vpInteractionStatusService } from './openid4vp-interaction-status.service';
 import { Openid4vpSessionService } from './openid4vp-session.service';
 
 describe('Openid4vpSessionService', () => {
@@ -24,6 +28,7 @@ describe('Openid4vpSessionService', () => {
   const multiMock = getRedisServiceMultiMock();
   const configMock = getConfigMock();
   const loggerMock = getLoggerMock();
+  const interactionStatusMock = { publishStatus: jest.fn() };
 
   const interactionMock: Openid4vpInteractionDto = {
     id: 'interactionIdMock',
@@ -56,6 +61,7 @@ describe('Openid4vpSessionService', () => {
         RedisService,
         ConfigService,
         LoggerService,
+        Openid4vpInteractionStatusService,
       ],
     })
       .overrideProvider(SessionService)
@@ -66,6 +72,8 @@ describe('Openid4vpSessionService', () => {
       .useValue(configMock)
       .overrideProvider(LoggerService)
       .useValue(loggerMock)
+      .overrideProvider(Openid4vpInteractionStatusService)
+      .useValue(interactionStatusMock)
       .compile();
 
     service = module.get<Openid4vpSessionService>(Openid4vpSessionService);
@@ -219,6 +227,118 @@ describe('Openid4vpSessionService', () => {
       // Then
       expect(multiMock.exec).toHaveBeenCalledExactlyOnceWith();
     });
+
+    it('should publish the REQUEST_OBJECT_PROVIDED status via interactionStatus service', async () => {
+      // When
+      await service.setAuthorizationRequestObjectAsRead(interactionMock);
+
+      // Then
+      expect(
+        interactionStatusMock.publishStatus,
+      ).toHaveBeenCalledExactlyOnceWith(
+        interactionMock.id,
+        Openid4vpInteractionStatus.REQUEST_OBJECT_PROVIDED,
+      );
+    });
+  });
+
+  describe('bindInteractionToBackendId', () => {
+    // Given
+    const backendIdMock = 'backendIdMock';
+    const backendIdRedisKey = `oid4vp:backend:${backendIdMock}`;
+
+    it('should persist the interaction id at the backend id redis key', async () => {
+      // When
+      await service.bindInteractionToBackendId(backendIdMock, interactionMock);
+
+      // Then
+      expect(multiMock.set).toHaveBeenCalledExactlyOnceWith(
+        backendIdRedisKey,
+        interactionMock.id,
+      );
+    });
+
+    it('should configure the backend id key TTL with the responseDelay', async () => {
+      // When
+      await service.bindInteractionToBackendId(backendIdMock, interactionMock);
+
+      // Then
+      expect(multiMock.expire).toHaveBeenCalledExactlyOnceWith(
+        backendIdRedisKey,
+        openid4vpConfigMock.relayingParty.responseDelay,
+      );
+    });
+
+    it('should execute the redis transaction', async () => {
+      // When
+      await service.bindInteractionToBackendId(backendIdMock, interactionMock);
+
+      // Then
+      expect(multiMock.exec).toHaveBeenCalledExactlyOnceWith();
+    });
+  });
+
+  describe('unbindInteractionFromBackendId', () => {
+    // Given
+    const backendIdMock = 'backendIdMock';
+    const backendIdRedisKey = `oid4vp:backend:${backendIdMock}`;
+
+    it('should delete the interaction id from the backend id redis key', async () => {
+      // When
+      await service.unbindInteractionFromBackendId(backendIdMock);
+
+      // Then
+      expect(redisMock.client.del).toHaveBeenCalledExactlyOnceWith(
+        backendIdRedisKey,
+      );
+    });
+  });
+
+  describe('getInteractionByBackendId', () => {
+    // Given
+    const backendIdMock = 'backendIdMock';
+    const interactionIdMock = 'interactionIdMock';
+    const backendIdRedisKey = `oid4vp:backend:${backendIdMock}`;
+
+    beforeEach(() => {
+      redisMock.client.get.mockResolvedValue(interactionIdMock);
+      service.getInteractionById = jest.fn().mockResolvedValue(interactionMock);
+    });
+
+    it('should fetch the interaction id from the backend id key', async () => {
+      // Given
+
+      // When
+      await service.getInteractionByBackendId(backendIdMock);
+
+      // Then
+      expect(redisMock.client.get).toHaveBeenCalledExactlyOnceWith(
+        backendIdRedisKey,
+      );
+    });
+
+    it('should fetch the interaction from the interaction with the interaction id fetched from redis', async () => {
+      // Given
+      redisMock.client.get.mockResolvedValueOnce(interactionIdMock);
+
+      // When
+      await service.getInteractionByBackendId(backendIdMock);
+
+      // Then
+      expect(service.getInteractionById).toHaveBeenCalledExactlyOnceWith(
+        interactionIdMock,
+      );
+    });
+
+    it('should throw Openid4vpAuthorizationNotFoundException when the interaction is not found', async () => {
+      // Given
+      redisMock.client.get.mockResolvedValueOnce(null);
+
+      // When / Then
+      await expect(
+        service.getInteractionByBackendId(backendIdMock),
+      ).rejects.toThrow(Openid4vpAuthorizationNotFoundException);
+    });
   });
 
   describe('getInteractionByState', () => {
@@ -296,24 +416,65 @@ describe('Openid4vpSessionService', () => {
       { docType: 'foo', claims: { foo: 'bar' } },
     ] as SimpleDocumentInterface<{ foo: string }>[];
 
-    it('should persist the updated interaction with the response and the RESPONSE_RECEIVED status', async () => {
+    beforeEach(() => {
+      service['persistTerminalState'] = jest.fn();
+    });
+
+    it('should persist the interaction enriched with the response and the RESPONSE_RECEIVED status', async () => {
       // When
       await service.saveResponse(interactionMock, responseMock);
 
       // Then
+      expect(service['persistTerminalState']).toHaveBeenCalledExactlyOnceWith({
+        ...interactionMock,
+        response: responseMock,
+        status: Openid4vpInteractionStatus.RESPONSE_RECEIVED,
+      });
+    });
+  });
+
+  describe('saveError', () => {
+    const errorMock = Openid4vpAuthorizationError.ACCESS_DENIED;
+    const errorDescriptionMock = 'errorDescriptionMock';
+
+    beforeEach(() => {
+      service['persistTerminalState'] = jest.fn();
+    });
+
+    it('should persist the interaction enriched with the error and the ERROR status', async () => {
+      // When
+      await service.saveError(interactionMock, errorMock, errorDescriptionMock);
+
+      // Then
+      expect(service['persistTerminalState']).toHaveBeenCalledExactlyOnceWith({
+        ...interactionMock,
+        error: errorMock,
+        errorDescription: errorDescriptionMock,
+        status: Openid4vpInteractionStatus.ERROR,
+      });
+    });
+  });
+
+  describe('persistTerminalState', () => {
+    const terminalInteractionMock: Openid4vpInteractionDto = {
+      ...interactionMock,
+      status: Openid4vpInteractionStatus.RESPONSE_RECEIVED,
+    };
+
+    it('should persist the interaction as provided', async () => {
+      // When
+      await service['persistTerminalState'](terminalInteractionMock);
+
+      // Then
       expect(multiMock.set).toHaveBeenCalledExactlyOnceWith(
         idRedisKey,
-        JSON.stringify({
-          ...interactionMock,
-          response: responseMock,
-          status: Openid4vpInteractionStatus.RESPONSE_RECEIVED,
-        }),
+        JSON.stringify(terminalInteractionMock),
       );
     });
 
     it('should configure the interaction key TTL with the interactionTtl', async () => {
       // When
-      await service.saveResponse(interactionMock, responseMock);
+      await service['persistTerminalState'](terminalInteractionMock);
 
       // Then
       expect(multiMock.expire).toHaveBeenCalledExactlyOnceWith(
@@ -324,7 +485,7 @@ describe('Openid4vpSessionService', () => {
 
     it('should delete the state key', async () => {
       // When
-      await service.saveResponse(interactionMock, responseMock);
+      await service['persistTerminalState'](terminalInteractionMock);
 
       // Then
       expect(multiMock.del).toHaveBeenCalledExactlyOnceWith(stateRedisKey);
@@ -332,10 +493,23 @@ describe('Openid4vpSessionService', () => {
 
     it('should execute the redis transaction', async () => {
       // When
-      await service.saveResponse(interactionMock, responseMock);
+      await service['persistTerminalState'](terminalInteractionMock);
 
       // Then
       expect(multiMock.exec).toHaveBeenCalledExactlyOnceWith();
+    });
+
+    it('should publish the interaction status via interactionStatus service', async () => {
+      // When
+      await service['persistTerminalState'](terminalInteractionMock);
+
+      // Then
+      expect(
+        interactionStatusMock.publishStatus,
+      ).toHaveBeenCalledExactlyOnceWith(
+        terminalInteractionMock.id,
+        terminalInteractionMock.status,
+      );
     });
   });
 });

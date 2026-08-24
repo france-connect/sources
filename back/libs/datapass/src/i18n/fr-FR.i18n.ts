@@ -1,8 +1,10 @@
 /**
  * Translations of DataPass scopes for FranceConnect
  *
- * These translations match the exact labels defined in the DataPass configuration:
+ * These translations match the labels defined in the DataPass configuration:
  * @see https://github.com/etalab/data_pass/blob/develop/config/authorization_definitions/france_connect.yml
+ *
+ * Exception: `family_name` uses the official civil status wording ("Nom de famille"),
  */
 export const datapassExceptionsFrFR = {
   'Datapass.exceptions.apiHttpFailed':
@@ -14,7 +16,7 @@ export const datapassExceptionsFrFR = {
 };
 
 export const datapassScopesFrFR = {
-  'datapassScope.family_name': 'Nom de naissance',
+  'datapassScope.family_name': 'Nom de famille',
   'datapassScope.given_name': 'Prénoms',
   'datapassScope.birthdate': 'Date de naissance',
   'datapassScope.birthplace': 'Ville de naissance',

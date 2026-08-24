@@ -4,29 +4,31 @@ import { MessageTypes } from '@fc/common';
 import { AlertComponent, ButtonGroupComponent, LinkComponent } from '@fc/dsfr';
 import { t } from '@fc/i18n';
 
-import { CreateLinkedInstanceButton, LinkInstancesButton } from '../../../components';
+import { CreateLinkedInstanceButton, LinkInstancesButton, SandboxAlert } from '../../../components';
 import { ServiceProviderSandboxesTable } from '../../../components/tables';
 import { useServiceProviderSandboxes } from '../../../hooks';
-import type { InstanceInterface, LocationWithSubmitStateInterface } from '../../../interfaces';
+import type { InstanceInterface } from '../../../interfaces';
 import { ServiceProviderSandboxesComponent } from './service-provider-sandboxes.component';
 
 jest.mock('../../../components/buttons/link-instance/link-instance.button');
 jest.mock('../../../components/buttons/create-linked-instance/create-linked-instance.button');
+jest.mock('../../../components/alerts/sandbox/sandbox.alert');
 jest.mock('../../../components/tables/service-provider-sandboxes/service-provider-sandboxes.table');
 jest.mock('../../../hooks/service-provider-sandboxes/service-provider-sandboxes.hook');
 
 describe('ServiceProviderSandboxesComponent', () => {
   // Given
-  const cleanupRouteStateMock = jest.fn();
   const spConfigurationDocUrlMock = 'https://example.com/sp-configuration-doc-mock';
   const instancesMock = [{ id: 'instance-mock' }] as InstanceInterface[];
   const emptyInstancesMock: InstanceInterface[] = [];
 
+  const deleteInstanceHandlerMock = jest.fn();
+
   const defaultHookResultMock = {
-    cleanupRouteState: cleanupRouteStateMock,
+    confirmDeleteInstance: jest.fn(),
+    deleteInstanceHandler: deleteInstanceHandlerMock,
     hasUnlinkedInstances: false,
     spConfigurationDocUrl: spConfigurationDocUrlMock,
-    submitState: undefined,
   };
 
   beforeEach(() => {
@@ -56,6 +58,14 @@ describe('ServiceProviderSandboxesComponent', () => {
 
     // Then
     expect(t).toHaveBeenCalledWith('Partners.serviceProviderPage.sandboxes.title');
+  });
+
+  it('should render SandboxAlert', () => {
+    // When
+    render(<ServiceProviderSandboxesComponent instances={instancesMock} />);
+
+    // Then
+    expect(SandboxAlert).toHaveBeenCalledExactlyOnceWith({}, undefined);
   });
 
   it('should render LinkComponent with spConfigurationDocUrl', () => {
@@ -102,7 +112,7 @@ describe('ServiceProviderSandboxesComponent', () => {
 
     // Then
     expect(ServiceProviderSandboxesTable).toHaveBeenCalledExactlyOnceWith(
-      { sandboxes: instancesMock },
+      { onDelete: deleteInstanceHandlerMock, sandboxes: instancesMock },
       undefined,
     );
   });
@@ -121,80 +131,6 @@ describe('ServiceProviderSandboxesComponent', () => {
       undefined,
     );
     expect(ServiceProviderSandboxesTable).not.toHaveBeenCalled();
-  });
-
-  it('should not render AlertComponent when sandboxes exist and submitState is undefined', () => {
-    // When
-    render(<ServiceProviderSandboxesComponent instances={instancesMock} />);
-
-    // Then
-    expect(AlertComponent).not.toHaveBeenCalled();
-  });
-
-  it('should render AlertComponent when submitState is defined', () => {
-    // Given
-    const instanceNameMock = 'any-instance-name-mock';
-    const submitStateMock: LocationWithSubmitStateInterface = {
-      from: expect.any(String),
-      instanceName: instanceNameMock,
-      message: 'Partners.serviceProviderPage.linkInstances.success.description',
-      title: 'Partners.instances.successLink',
-      type: MessageTypes.SUCCESS,
-    };
-
-    jest.mocked(useServiceProviderSandboxes).mockReturnValueOnce({
-      ...defaultHookResultMock,
-      submitState: submitStateMock,
-    });
-
-    // When
-    render(<ServiceProviderSandboxesComponent instances={instancesMock} />);
-
-    // Then
-    expect(t).toHaveBeenCalledWith(submitStateMock.title, {
-      instanceName: instanceNameMock,
-    });
-    expect(AlertComponent).toHaveBeenCalledExactlyOnceWith(
-      {
-        children: 'Partners.serviceProviderPage.linkInstances.success.description',
-        className: 'fr-mb-3w',
-        dataTestId: 'service-provider-instance-success-alert',
-        onClose: cleanupRouteStateMock,
-        title: 'Partners.instances.successLink',
-        type: MessageTypes.SUCCESS,
-      },
-      undefined,
-    );
-  });
-
-  it('should render AlertComponent when submitState is defined and submitState.message is undefined', () => {
-    // Given
-    const submitStateMock: LocationWithSubmitStateInterface = {
-      from: expect.any(String),
-      title: 'Partners.instances.successLink',
-      type: MessageTypes.SUCCESS,
-    };
-
-    jest.mocked(useServiceProviderSandboxes).mockReturnValueOnce({
-      ...defaultHookResultMock,
-      submitState: submitStateMock,
-    });
-
-    // When
-    render(<ServiceProviderSandboxesComponent instances={instancesMock} />);
-
-    // Then
-    expect(AlertComponent).toHaveBeenCalledExactlyOnceWith(
-      {
-        children: '',
-        className: 'fr-mb-3w',
-        dataTestId: 'service-provider-instance-success-alert',
-        onClose: cleanupRouteStateMock,
-        title: 'Partners.instances.successLink',
-        type: MessageTypes.SUCCESS,
-      },
-      undefined,
-    );
   });
 
   it('should render LinkInstancesButton when unlinked instances exist', () => {

@@ -39,6 +39,8 @@ describe('CommandElasticReindexService', () => {
     updateControlDoc: jest.fn(),
     buildControlDocId: jest.fn(),
     getControlDocById: jest.fn(),
+    findRunningOperations: jest.fn(),
+    countNonFinalOperations: jest.fn(),
   };
 
   const optionsMock: ElasticControlReindexOptionsDto = {
@@ -113,6 +115,155 @@ describe('CommandElasticReindexService', () => {
 
   it('should be defined', () => {
     expect(service).toBeDefined();
+  });
+
+  describe('actualizeAllReindexes', () => {
+    const runningReindexDocMock: ControlDocumentInterface = {
+      ...reindexDocMock,
+      state: ControlStatesEnum.RUNNING,
+      status: {
+        id: 'taskId',
+        completed: false,
+      },
+    };
+
+    const completedTaskMock: ReindexStatusInterface = {
+      id: 'taskId',
+      completed: true,
+      total: 100,
+    };
+
+    beforeEach(() => {
+      service['getReindexTarget'] = jest.fn().mockResolvedValue(100);
+      service['getNextState'] = jest
+        .fn()
+        .mockReturnValue(ControlStatesEnum.COMPLETED);
+
+      controlDocumentMock.findRunningOperations.mockResolvedValue([
+        runningReindexDocMock,
+      ]);
+      controlDocumentMock.updateControlDoc.mockResolvedValue(undefined);
+      controlDocumentMock.countNonFinalOperations.mockResolvedValue(0);
+      reindexServiceMock.findTask.mockResolvedValue(completedTaskMock);
+    });
+
+    it('should call controlDocument.findRunningOperations', async () => {
+      // When
+      await service.actualizeAllReindexes(dryRun);
+
+      // Then
+      expect(
+        controlDocumentMock.findRunningOperations,
+      ).toHaveBeenCalledExactlyOnceWith(ElasticOperationsEnum.REINDEX);
+    });
+
+    it('should call getReindexTarget for each doc', async () => {
+      // When
+      await service.actualizeAllReindexes(dryRun);
+
+      // Then
+      expect(service['getReindexTarget']).toHaveBeenCalledExactlyOnceWith(
+        runningReindexDocMock.options,
+      );
+    });
+
+    it('should call reindex.findTask with taskId from doc.status', async () => {
+      // When
+      await service.actualizeAllReindexes(dryRun);
+
+      // Then
+      expect(reindexServiceMock.findTask).toHaveBeenCalledExactlyOnceWith(
+        'taskId',
+        runningReindexDocMock.options,
+      );
+    });
+
+    it('should call getNextState for each doc', async () => {
+      // When
+      await service.actualizeAllReindexes(dryRun);
+
+      // Then
+      expect(service['getNextState']).toHaveBeenCalledExactlyOnceWith(
+        completedTaskMock,
+        100,
+      );
+    });
+
+    it('should call controlDocument.updateControlDoc for each doc', async () => {
+      // When
+      await service.actualizeAllReindexes(dryRun);
+
+      // Then
+      expect(
+        controlDocumentMock.updateControlDoc,
+      ).toHaveBeenCalledExactlyOnceWith(
+        runningReindexDocMock,
+        ControlStatesEnum.COMPLETED,
+        completedTaskMock,
+        dryRun,
+      );
+    });
+
+    it('should call controlDocument.countNonFinalOperations', async () => {
+      // When
+      await service.actualizeAllReindexes(dryRun);
+
+      // Then
+      expect(
+        controlDocumentMock.countNonFinalOperations,
+      ).toHaveBeenCalledExactlyOnceWith(ElasticOperationsEnum.REINDEX);
+    });
+
+    it('should return true when remaining is 0', async () => {
+      // Given
+      controlDocumentMock.countNonFinalOperations.mockResolvedValue(0);
+
+      // When
+      const result = await service.actualizeAllReindexes(dryRun);
+
+      // Then
+      expect(result).toBe(true);
+    });
+
+    it('should return false when remaining is > 0', async () => {
+      // Given
+      controlDocumentMock.countNonFinalOperations.mockResolvedValue(5);
+
+      // When
+      const result = await service.actualizeAllReindexes(dryRun);
+
+      // Then
+      expect(result).toBe(false);
+    });
+
+    it('should handle empty docs list', async () => {
+      // Given
+      controlDocumentMock.findRunningOperations.mockResolvedValue([]);
+
+      // When
+      const result = await service.actualizeAllReindexes(dryRun);
+
+      // Then
+      expect(reindexServiceMock.findTask).not.toHaveBeenCalled();
+      expect(controlDocumentMock.updateControlDoc).not.toHaveBeenCalled();
+      expect(result).toBe(true);
+    });
+
+    it('should log messages', async () => {
+      // When
+      await service.actualizeAllReindexes(dryRun);
+
+      // Then
+      expect(loggerMock.info).toHaveBeenCalledWith(
+        `[Command] Actualizing all reindexes`,
+      );
+      expect(loggerMock.info).toHaveBeenCalledWith(
+        `[Command] Reindex "${runningReindexDocMock.id}": ${runningReindexDocMock.state} -> ${ControlStatesEnum.COMPLETED}`,
+      );
+      expect(loggerMock.info).toHaveBeenCalledWith(
+        `[Command] Remaining non-final reindex operations: 0`,
+      );
+    });
   });
 
   describe('safeInitializeReindex', () => {
@@ -547,6 +698,22 @@ describe('CommandElasticReindexService', () => {
       expect(result).toBe(ControlStatesEnum.FAILED);
     });
 
+    it('should return FAILED if reindex.completed is true, total equals target but failures are present', () => {
+      // Given
+      const reindex: ReindexStatusInterface = {
+        id: 'taskId',
+        completed: true,
+        total: 100,
+        failures: [{ id: 'doc1', reason: 'mapping error' }],
+      };
+
+      // When
+      const result = service['getNextState'](reindex, 100);
+
+      // Then
+      expect(result).toBe(ControlStatesEnum.FAILED);
+    });
+
     it('should return RUNNING if reindex.completed is false', () => {
       // Given
       const reindex: ReindexStatusInterface = {
@@ -627,7 +794,6 @@ describe('CommandElasticReindexService', () => {
           product: optionsMock.product,
           range: optionsMock.range,
           pivot: optionsMock.pivot,
-          period: optionsMock.period,
         }),
       );
     });

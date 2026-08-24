@@ -1,4 +1,8 @@
-import { ConfigMessageDto } from '@fc/csmr-config-client/protocol';
+import {
+  ConfigCreateMessageDto,
+  ConfigDeleteMessageDto,
+  ConfigUpdateMessageDto,
+} from '@fc/csmr-config-client/protocol';
 
 import { diffKeys } from '../types';
 
@@ -8,7 +12,9 @@ export interface ConfigSaveResultInterface {
 }
 
 export interface ConfigDatabaseServiceInterface {
-  create(config: ConfigMessageDto): Promise<ConfigSaveResultInterface>;
+  create(config: ConfigCreateMessageDto): Promise<ConfigSaveResultInterface>;
 
-  update(config: ConfigMessageDto): Promise<ConfigSaveResultInterface>;
+  update(config: ConfigUpdateMessageDto): Promise<ConfigSaveResultInterface>;
+
+  delete(config: ConfigDeleteMessageDto): Promise<ConfigSaveResultInterface>;
 }

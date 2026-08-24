@@ -30,7 +30,7 @@ export const FormActionsComponent = React.memo(
         throw new Error('FormActionsComponent: Only one button with type "submit" is allowed.');
       }
 
-      const result = items.map(({ disabled, label, priority, type }, index) => {
+      const result = items.map(({ disabled, label, onClick, priority, type }, index) => {
         const key = `form-action-button::${type}-${index}`;
         const isDisabled = typeof disabled === 'function' ? disabled({ canSubmit }) : disabled;
 
@@ -41,7 +41,8 @@ export const FormActionsComponent = React.memo(
             disabled={isDisabled}
             priority={priority ?? Priorities.PRIMARY}
             size={size}
-            type={type}>
+            type={type}
+            onClick={onClick}>
             {t(label)}
           </SimpleButton>
         );

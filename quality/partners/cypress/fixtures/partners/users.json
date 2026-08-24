@@ -119,5 +119,21 @@
       "is_service_public": "true",
       "sub": "ac74c687-f978-42ea-97ec-7671d4b5b94f"
     }
+  },
+  {
+    "descriptions": ["contributeur ajouté par e-mail"],
+    "credentials": {
+      "username": "bdd_addedcontributor",
+      "password": "123"
+    },
+    "claims": {
+      "uid": "41",
+      "given_name": "Nina",
+      "usual_name": "NEUF",
+      "email": "addedcontributor@yopmail.com",
+      "phone_number": "0612345678",
+      "is_service_public": "true",
+      "sub": "c4a8f1e2-9b3d-4f6a-8e1c-2d7b5a9f0e3c"
+    }
   }
 ]

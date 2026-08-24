@@ -50,7 +50,9 @@ Fonctionnalité: Connexion Usager - session absente
     Et je rafraîchis la page
     Alors je suis redirigé vers la page erreur technique FranceConnect
     Et le code d'erreur FranceConnect est "Y190001"
+    Et le sous-titre de la page d'erreur est "Besoin d'aide ?"
     Et le message d'erreur FranceConnect est "Votre session a expiré ou est invalide, fermez l’onglet de votre navigateur et reconnectez-vous."
+    Et le bouton "consulter la faq" est affiché
 
   @exceptions
   Scénario: Connexion erreur - session absente au retour du FI

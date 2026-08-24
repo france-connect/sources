@@ -3,7 +3,7 @@ import { Strings } from '@fc/common';
 import { removeEmptyValues } from './remove-empty-values.helper';
 
 describe('removeEmptyValues', () => {
-  it('should filter empty values using the preSubmit function', async () => {
+  it('should filter empty values using the preSubmit function', () => {
     // Given
     const stringWithSpaces = '    ';
     const formValues = {
@@ -20,7 +20,7 @@ describe('removeEmptyValues', () => {
     };
 
     // When
-    const result = await removeEmptyValues(formValues);
+    const result = removeEmptyValues(formValues);
 
     // Then
     expect(result).toEqual({

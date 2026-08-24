@@ -1,9 +1,11 @@
 import { renderHook } from '@testing-library/react';
 import { useRevalidator } from 'react-router';
 
+import { PartnersAlertVariants } from '@fc/core-partners';
 import type { SchemaFieldType } from '@fc/dto2form';
 import { removeEmptyValues } from '@fc/dto2form';
 import { useDto2FormService } from '@fc/dto2form-service';
+import { t } from '@fc/i18n';
 import { useNavigateWithState } from '@fc/routing';
 
 import { useServiceProviderCreateInstance } from './service-provider-create-instance.hook';
@@ -89,9 +91,12 @@ describe('useServiceProviderCreateInstance', () => {
 
     // Then
     expect(revalidateMock).toHaveBeenCalledExactlyOnceWith();
-    expect(goBackWithSuccessMock).toHaveBeenCalledExactlyOnceWith({
+    expect(t).toHaveBeenCalledWith('Partners.serviceProvider.createInstance.success', {
       instanceName: valuesMock.name,
+    });
+    expect(goBackWithSuccessMock).toHaveBeenCalledExactlyOnceWith({
       title: 'Partners.serviceProvider.createInstance.success',
+      variant: PartnersAlertVariants.INSTANCE,
     });
   });
 });

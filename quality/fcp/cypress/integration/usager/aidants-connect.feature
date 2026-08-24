@@ -91,7 +91,7 @@ Fonctionnalité: Aidants Connect
     Et je m'authentifie sur Aidants Connect avec un mandat "sans périmètre"
     Alors je suis redirigé vers la page erreur technique FranceConnect
     Et le code d'erreur FranceConnect est "Y600020"
-    Et le message d'erreur FranceConnect est "Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous."
+    Et le message d'erreur FranceConnect est "Le mandat que vous utilisez pour vous connecter ne vous autorise pas à vous connecter à ce service."
     Et le lien retour vers le FS est affiché dans la page erreur technique
 
   @fcpLow @ignoreInteg01
@@ -106,7 +106,7 @@ Fonctionnalité: Aidants Connect
     Et je suis redirigé vers la page login du fournisseur d'identité
     Et je m'authentifie sur Aidants Connect avec un mandat "avec un périmètre différent"
     Alors le code d'erreur FranceConnect est "Y600020"
-    Et le message d'erreur FranceConnect est "Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous."
+    Et le message d'erreur FranceConnect est "Le mandat que vous utilisez pour vous connecter ne vous autorise pas à vous connecter à ce service."
     Et le lien retour vers le FS est affiché dans la page erreur technique
 
   @fcpLow @ignoreInteg01
@@ -156,7 +156,7 @@ Fonctionnalité: Aidants Connect
     Et je clique sur le bouton FranceConnect
     Alors je suis redirigé vers la page erreur technique FranceConnect
     Et le code d'erreur FranceConnect est "Y600020"
-    Et le message d'erreur FranceConnect est "Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous."
+    Et le message d'erreur FranceConnect est "Le mandat que vous utilisez pour vous connecter ne vous autorise pas à vous connecter à ce service."
     Et le lien retour vers le FS est affiché dans la page erreur technique
 
   @fcpLow @ignoreInteg01

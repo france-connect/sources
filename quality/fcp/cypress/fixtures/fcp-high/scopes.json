@@ -90,8 +90,7 @@
       "birthdate",
       "birthplace",
       "given_name",
-      "family_name",
-      "preferred_username"
+      "family_name"
     ]
   },
   {
@@ -100,18 +99,6 @@
       "openid",
       "gender",
       "birthdate",
-      "given_name",
-      "family_name",
-      "preferred_username"
-    ]
-  },
-  {
-    "type": "eidas sans preferred_username",
-    "scopes": [
-      "openid",
-      "gender",
-      "birthdate",
-      "birthplace",
       "given_name",
       "family_name"
     ]

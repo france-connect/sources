@@ -1,12 +1,15 @@
 services:
-  min-wallet-bridge-high:
-    image: ${DOCKER_HUB_PROXY}alpine
-    depends_on:
-      - "min-fcp-high"
-      - "wallet-bridge-high"
-
-  min-wallet-bridge-low:
+  wallet:
     image: ${DOCKER_HUB_PROXY}alpine
     depends_on:
       - "min-fcp-low"
-      - "wallet-bridge-low"
+      - "wallet-bridge-devtools"
+      - "mock-wallet"
+
+  bdd-wallet:
+    image: ${DOCKER_HUB_PROXY}alpine
+    depends_on:
+      - "min-fcp-high"
+      - "min-fcp-low"
+      - "wallet-bridge"
+      - "mock-wallet"

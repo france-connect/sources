@@ -51,9 +51,28 @@ describe('LinkComponent', () => {
         rel: 'noopener',
         reloadDocument: true,
         target: '_blank',
-        title: 'any-title-mock',
+        title: 'any-title-mock - FC.Common.newWindow',
         to: 'any-url-mock',
       },
+      undefined,
+    );
+  });
+
+  it('should match the snapshot, when className is defined', () => {
+    // When
+    const { container } = render(
+      <LinkComponent className="any-class-name" href="any-url-mock">
+        any-label-mock
+      </LinkComponent>,
+    );
+
+    // Then
+    expect(container).toMatchSnapshot();
+    expect(Link).toHaveBeenCalledOnce();
+    expect(Link).toHaveBeenCalledWith(
+      expect.objectContaining({
+        className: 'any-class-name',
+      }),
       undefined,
     );
   });
@@ -61,7 +80,7 @@ describe('LinkComponent', () => {
   it('should match the snapshot, when external is defined but no rel or target are defined', () => {
     // When
     const { container } = render(
-      <LinkComponent external href="any-url-mock">
+      <LinkComponent external href="any-url-mock" title="any-title-mock">
         any-label-mock
       </LinkComponent>,
     );
@@ -73,6 +92,7 @@ describe('LinkComponent', () => {
       expect.objectContaining({
         rel: 'noopener noreferrer external',
         target: '_blank',
+        title: 'any-title-mock - FC.Common.newWindow',
       }),
       undefined,
     );

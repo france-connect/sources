@@ -12,7 +12,7 @@ export const useFormSubmit = <T extends Record<string, unknown>>(
     async (values: T, form: FormApi<T, Partial<T>>) => {
       let preSubmitValues = values;
       if (onPreSubmit) {
-        preSubmitValues = await onPreSubmit(values);
+        preSubmitValues = await onPreSubmit(values, form);
       }
 
       let errors: SubmissionErrors | void = await onSubmit(preSubmitValues, form);

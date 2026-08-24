@@ -60,6 +60,7 @@ describe('PartnersServiceProviderService', () => {
   const instanceMock: Omit<PartnersServiceProviderInstance, 'versions'> = {
     id: 'instance-id',
     environment: EnvironmentEnum.SANDBOX,
+    markedForDeletion: false,
     creator: null,
     serviceProvider: null,
     createdAt: new Date('2024-01-01'),
@@ -255,6 +256,28 @@ describe('PartnersServiceProviderService', () => {
           },
         ],
       });
+    });
+
+    it('should exclude the instances marked for deletion', async () => {
+      // Given
+      const markedForDeletionInstanceMock = {
+        ...instanceMock,
+        id: 'marked-for-deletion-instance-id',
+        markedForDeletion: true,
+      } as PartnersServiceProviderInstance;
+      repositoryMock.findOne.mockResolvedValueOnce({
+        ...serviceProviderMock,
+        instances: [
+          markedForDeletionInstanceMock,
+          instanceMock as PartnersServiceProviderInstance,
+        ],
+      });
+
+      // When
+      const result = await service.getById(serviceProviderIdMock);
+
+      // Then
+      expect(result.instances).toEqual([instanceMock]);
     });
   });
 

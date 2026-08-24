@@ -1,9 +1,9 @@
 import React from 'react';
 
 import {
+  ServiceProviderContributorsComponent,
   ServiceProviderDatapassComponent,
   ServiceProviderNameComponent,
-  ServiceProviderPermissionsComponent,
   ServiceProviderSandboxesComponent,
   ServiceProviderScopesComponent,
 } from '@fc/core-partners';
@@ -24,7 +24,7 @@ export const ServiceProviderPage = React.memo(() => {
         datapassScopes={serviceProvider.datapassScopes}
         fcScopes={serviceProvider.fcScopes}
       />
-      <ServiceProviderPermissionsComponent permissions={permissions} />
+      <ServiceProviderContributorsComponent permissions={permissions} />
       <ServiceProviderSandboxesComponent instances={serviceProvider.instances} />
     </React.Fragment>
   );

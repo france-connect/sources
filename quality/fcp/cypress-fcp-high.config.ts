@@ -19,8 +19,9 @@ export default defineConfig({
     // Other Configuration
     LOG_FILE_PATH: `${process.env.LOG_VOLUMES_DIR}/core-fcp-high.log`,
     // Base Configuration
-    PLATFORM: 'fcp-high',
     TAGS: '@fcpHigh and not @ignoreHigh',
+    TECHNICAL_LOG_FILE_PATH: `${process.env.LOG_VOLUMES_DIR}/core-fcp-high-out.log`,
     TEST_ENV: 'docker',
+    TEST_PLATFORM: 'fcp-high',
   },
 });

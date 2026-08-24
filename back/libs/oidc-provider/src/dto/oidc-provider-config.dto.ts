@@ -604,8 +604,6 @@ class AllClientMetadataValidator implements AllClientMetadata {
   readonly userinfo_encrypted_response_enc?: EncryptionEncValues;
 
   @IsOptional()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly authorization_signed_response_alg?: SigningAlgorithm;
 
   @IsOptional()

@@ -22,6 +22,7 @@ import {
   IdentityProviderAdapterEnvModule,
   IdentityProviderAdapterEnvService,
 } from '@fc/identity-provider-adapter-env';
+import { MailerModule } from '@fc/mailer';
 import { OidcClientModule } from '@fc/oidc-client';
 import { PartnersAccountModule } from '@fc/partners-account';
 import { PartnersOrganizationModule } from '@fc/partners-organization';
@@ -41,9 +42,9 @@ import { WebhooksModule } from '@fc/webhooks';
 
 import { AccessControlEntitiesMap } from './const';
 import {
+  ContributorController,
   DatapassWebhookController,
   InstanceController,
-  InvitationController,
   OidcClientController,
   PartnersController,
   ServiceProviderController,
@@ -57,10 +58,10 @@ import {
 import { AppPermissionsHandler } from './handlers';
 import {
   PartnerPublicationService,
+  PartnersContributorService,
   PartnersDatapassService,
   PartnersInstanceService,
   PartnersInstanceVersionFormService,
-  PartnersInvitationService,
   PartnersOidcClientService,
   PartnersServiceProviderFormService,
 } from './services';
@@ -86,6 +87,7 @@ const accessControlModule = AccessControlModule.withRolesHandler<
     SessionModule,
     I18nModule,
     IdentityProviderAdapterEnvModule,
+    MailerModule,
     oidcClientModule,
     PartnersOrganizationModule,
     PartnersServiceProviderModule,
@@ -109,7 +111,7 @@ const accessControlModule = AccessControlModule.withRolesHandler<
     FcWebJsonExceptionFilter,
     FormValidationExceptionFilter,
     PartnerPublicationService,
-    PartnersInvitationService,
+    PartnersContributorService,
     {
       provide: APP_FILTER,
       useClass: UnknownJsonExceptionFilter,
@@ -129,8 +131,8 @@ const accessControlModule = AccessControlModule.withRolesHandler<
     PartnersInstanceService,
   ],
   controllers: [
+    ContributorController,
     InstanceController,
-    InvitationController,
     OidcClientController,
     PartnersController,
     ServiceProviderController,

@@ -1,0 +1,46 @@
+<% if (locals.walletBridge) { %>
+<p class="fr-hr-or fr-mt-3w fr-mb-3w">
+  <%= $translate('interaction.wallet.or') %>
+</p>
+<form
+  method="POST"
+  action="/api/v2/redirect-to-idp"
+  name="fs-request"
+  data-prevent-double-submit
+>
+  <div class="fr-tile fr-tile--horizontal fr-enlarge-button fr-px-5v fc-tile--wallet">
+    <div class="fr-tile__body">
+      <div class="fr-tile__content">
+        <h3 class="fr-tile__title">
+          <button
+            type="submit"
+            id="idp-<%= locals.walletBridge.uid %>"
+          >
+            <%= $translate('interaction.wallet.title') %>
+          </button>
+        </h3>
+        <p class="fr-tile__desc">
+          <%= $translate('interaction.wallet.description', { platform: $config('App.platform') }) %>
+        </p>
+        <p class="fr-tile__detail">
+          <%= $translate('interaction.wallet.details') %>
+        </p>
+      </div>
+    </div>
+    <div class="fr-tile__header">
+      <div class="fr-tile__pictogram">
+        <img
+          class="fr-responsive-img"
+          src="<%= $asset('/img/fi/fi-wallet-eudi.png') %>"
+          alt=""
+        />
+      </div>
+    </div>
+  </div>
+  <%-
+  include('pages/interaction/provider/interaction.provider-inputs.ejs', {
+    provider: locals.walletBridge
+  })
+  %>
+</form>
+<% } %>

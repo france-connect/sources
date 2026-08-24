@@ -11,3 +11,5 @@ export const isRedirectURL = jest.fn();
 export const isSignedResponseAlg = jest.fn();
 
 export const isIpAddressesAndRange = jest.fn();
+
+export const isEmptyValue = jest.fn();

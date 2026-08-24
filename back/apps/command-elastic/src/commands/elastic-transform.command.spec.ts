@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import {
-  DEFAULT_TIMEZONE,
+  derivePeriod,
   ElasticControlPivotEnum,
   ElasticControlProductEnum,
   ElasticControlRangeEnum,
@@ -12,17 +12,22 @@ import { getLoggerMock } from '@mocks/logger';
 
 import { ElasticTransformCommandOptionsInterface } from '../interfaces';
 import { CommandElasticTransformService } from '../services';
-import { getPreviousMonth } from '../utils';
 import { ElasticTransformCommand } from './elastic-transform.command';
 
-jest.mock('../utils');
+jest.mock('@fc/elasticsearch', () => ({
+  ...jest.requireActual('@fc/elasticsearch'),
+  derivePeriod: jest.fn(),
+}));
 
 describe('ElasticTransformCommand', () => {
   let command: ElasticTransformCommand;
   const loggerMock = getLoggerMock();
-  const periodMock = '2025-08';
+  const monthPeriodMock = '2025-08';
+  const yearPeriodMock = '2024';
+  const semesterPeriodMock = '2025-01';
 
   const transformMock = { safeInitializeTransform: jest.fn() };
+  const derivePeriodMock = jest.mocked(derivePeriod);
 
   beforeEach(async () => {
     jest.resetAllMocks();
@@ -41,7 +46,16 @@ describe('ElasticTransformCommand', () => {
       .useValue(transformMock)
       .compile();
 
-    jest.mocked(getPreviousMonth).mockReturnValue(periodMock);
+    derivePeriodMock.mockImplementation((range) => {
+      switch (range) {
+        case ElasticControlRangeEnum.YEAR:
+          return yearPeriodMock;
+        case ElasticControlRangeEnum.SEMESTER:
+          return semesterPeriodMock;
+        default:
+          return monthPeriodMock;
+      }
+    });
 
     command = module.get<ElasticTransformCommand>(ElasticTransformCommand);
   });
@@ -57,35 +71,21 @@ describe('ElasticTransformCommand', () => {
       pivot: ElasticControlPivotEnum.SP,
     };
 
-    it('should log start and end messages', async () => {
+    it('should log start and end messages in order', async () => {
       // When
       await command.run([], baseOptions);
 
       // Then
-      expect(loggerMock.debug).toHaveBeenCalledTimes(2);
       expect(loggerMock.debug).toHaveBeenNthCalledWith(
         1,
         '--- Start ElasticTransformCommand ---',
       );
-      expect(loggerMock.debug).toHaveBeenNthCalledWith(
-        2,
+      expect(loggerMock.debug).toHaveBeenLastCalledWith(
         '--- End ElasticTransformCommand ---',
       );
     });
 
-    it('should call getPreviousMonth', async () => {
-      // When
-      await command.run([], baseOptions);
-
-      // Then
-      expect(getPreviousMonth).toHaveBeenCalledTimes(1);
-    });
-
-    it('should call safeInitializeTransform with default period and no flags', async () => {
-      // Given
-      const dryRunMock = false;
-      const forceMock = false;
-
+    it('should call safeInitializeTransform with derived month period for MONTH range', async () => {
       // When
       await command.run([], baseOptions);
 
@@ -94,45 +94,135 @@ describe('ElasticTransformCommand', () => {
         transformMock.safeInitializeTransform,
       ).toHaveBeenCalledExactlyOnceWith(
         {
-          period: periodMock,
           product: baseOptions.product,
           range: baseOptions.range,
           pivot: baseOptions.pivot,
-          timezone: DEFAULT_TIMEZONE,
+          period: monthPeriodMock,
         },
-        dryRunMock,
-        forceMock,
+        false,
+        false,
       );
     });
 
-    it('should call safeInitializeTransform with all provided options', async () => {
+    it('should call derivePeriod with YEAR range and forward the derived period', async () => {
       // Given
-      const dryRunMock = true;
-      const forceMock = true;
       const options: ElasticTransformCommandOptionsInterface = {
-        product: ElasticControlProductEnum.HIGH,
-        range: ElasticControlRangeEnum.MONTH,
-        pivot: ElasticControlPivotEnum.SP,
-        period: '2024-01',
-        dryRun: dryRunMock,
-        force: forceMock,
+        ...baseOptions,
+        range: ElasticControlRangeEnum.YEAR,
       };
 
       // When
       await command.run([], options);
 
       // Then
-      expect(transformMock.safeInitializeTransform).toHaveBeenCalledTimes(1);
+      expect(derivePeriodMock).toHaveBeenCalledExactlyOnceWith(
+        ElasticControlRangeEnum.YEAR,
+      );
       expect(transformMock.safeInitializeTransform).toHaveBeenCalledWith(
-        {
-          period: options.period,
-          product: options.product,
-          range: options.range,
-          pivot: options.pivot,
-          timezone: DEFAULT_TIMEZONE,
-        },
-        dryRunMock,
-        forceMock,
+        expect.objectContaining({ period: yearPeriodMock }),
+        false,
+        false,
+      );
+    });
+
+    it('should call derivePeriod with SEMESTER range and forward the derived period', async () => {
+      // Given
+      const options: ElasticTransformCommandOptionsInterface = {
+        ...baseOptions,
+        range: ElasticControlRangeEnum.SEMESTER,
+      };
+
+      // When
+      await command.run([], options);
+
+      // Then
+      expect(derivePeriodMock).toHaveBeenCalledExactlyOnceWith(
+        ElasticControlRangeEnum.SEMESTER,
+      );
+      expect(transformMock.safeInitializeTransform).toHaveBeenCalledWith(
+        expect.objectContaining({ period: semesterPeriodMock }),
+        false,
+        false,
+      );
+    });
+
+    it('should not call derivePeriod when period is explicitly provided', async () => {
+      // Given
+      const options: ElasticTransformCommandOptionsInterface = {
+        ...baseOptions,
+        range: ElasticControlRangeEnum.SEMESTER,
+        period: '2023-07',
+      };
+
+      // When
+      await command.run([], options);
+
+      // Then
+      expect(derivePeriodMock).not.toHaveBeenCalled();
+      expect(transformMock.safeInitializeTransform).toHaveBeenCalledWith(
+        expect.objectContaining({ period: '2023-07' }),
+        false,
+        false,
+      );
+    });
+
+    it('should call safeInitializeTransform with dryRun=true when option is set', async () => {
+      // Given
+      const options: ElasticTransformCommandOptionsInterface = {
+        ...baseOptions,
+        dryRun: true,
+      };
+
+      // When
+      await command.run([], options);
+
+      // Then
+      expect(transformMock.safeInitializeTransform).toHaveBeenCalledWith(
+        expect.any(Object),
+        true,
+        false,
+      );
+    });
+
+    it('should call safeInitializeTransform with force=true when option is set', async () => {
+      // Given
+      const options: ElasticTransformCommandOptionsInterface = {
+        ...baseOptions,
+        force: true,
+      };
+
+      // When
+      await command.run([], options);
+
+      // Then
+      expect(transformMock.safeInitializeTransform).toHaveBeenCalledWith(
+        expect.any(Object),
+        false,
+        true,
+      );
+    });
+
+    it('should call safeInitializeTransform with dryRun=false when dryRun option is not set', async () => {
+      // When
+      await command.run([], baseOptions);
+
+      // Then
+      expect(transformMock.safeInitializeTransform).toHaveBeenCalledWith(
+        expect.any(Object),
+        false,
+        expect.any(Boolean),
+      );
+    });
+
+    it('should call safeInitializeTransform with force=false when force option is not set', async () => {
+      // When
+      await command.run([], baseOptions);
+
+      // Then
+      expect(transformMock.safeInitializeTransform).toHaveBeenCalledWith(
+        expect.any(Object),
+        expect.any(Boolean),
+        false,
       );
     });
   });

@@ -27,8 +27,9 @@ export const useDto2FormService = <T extends HttpClientDataInterface>(
     data: T | null;
   }>();
 
+  const form = getConfigFormById(routeId);
   const endpoints = getConfigEndpointsById(routeId);
-  const submitHandler = useDto2FormSubmitHandler(endpoints);
+  const submitHandler = useDto2FormSubmitHandler(endpoints, form.contentType);
 
   const result = useMemo(() => {
     // @NOTE
@@ -42,12 +43,12 @@ export const useDto2FormService = <T extends HttpClientDataInterface>(
     const parsedSchema = isCreationModeForm ? removeReadOnlyFields(jsonSchema) : jsonSchema;
 
     return {
-      form: getConfigFormById(routeId),
+      form,
       initialValues: parseInitialValues<T>(jsonSchema, loadedValues),
       schema: parsedSchema,
       submitHandler,
     };
-  }, [getConfigFormById, jsonSchema, loadedValues, routeId, submitHandler]);
+  }, [form, jsonSchema, loadedValues, submitHandler]);
 
   return result;
 };

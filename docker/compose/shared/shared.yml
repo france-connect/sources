@@ -67,8 +67,8 @@ services:
           - eidas-mock.docker.dev-franceconnect.fr
           - eidas-be.docker.dev-franceconnect.fr
           # Wallet Bridge
-          - wallet-bridge-high.docker.dev-franceconnect.fr
-          - wallet-bridge-low.docker.dev-franceconnect.fr
+          - wallet-bridge.docker.dev-franceconnect.fr
+          - mock-wallet.docker.dev-franceconnect.fr
           # Aliases to access exploitation from test runner
           # TODO: Move those aliases to exploitation network once runner workaround found
           - exploitation-high.docker.dev-franceconnect.fr
@@ -388,7 +388,7 @@ services:
       - NO_PROXY
       - DISPLAY
       - CYPRESS_TAGS
-      - CYPRESS_PLATFORM
+      - CYPRESS_TEST_PLATFORM
       - CYPRESS_TEST_ENV
       - CYPRESS_EXPLOIT_USER_NAME
       - CYPRESS_EXPLOIT_USER_PASS
@@ -426,7 +426,7 @@ services:
       - NO_PROXY
       - DISPLAY
       - CYPRESS_TAGS
-      - CYPRESS_PLATFORM
+      - CYPRESS_TEST_PLATFORM
       - CYPRESS_TEST_ENV
       - CYPRESS_INTERNAL_BROWSER_CONNECT_TIMEOUT
       - CI
@@ -458,7 +458,7 @@ services:
       - NO_PROXY
       - DISPLAY
       - CYPRESS_TAGS
-      - CYPRESS_PLATFORM
+      - CYPRESS_TEST_PLATFORM
       - CYPRESS_TEST_ENV
       - CI
       - CI_COMMIT_REF_NAME
@@ -489,7 +489,7 @@ services:
       - NO_PROXY
       - DISPLAY
       - CYPRESS_TAGS
-      - CYPRESS_PLATFORM
+      - CYPRESS_TEST_PLATFORM
       - CYPRESS_TEST_ENV
       - CI
       - CI_COMMIT_REF_NAME

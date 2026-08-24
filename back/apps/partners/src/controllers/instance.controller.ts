@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Injectable,
   Param,
@@ -45,6 +46,11 @@ import {
 } from '../enums';
 import { PartnersInstanceNotFoundException } from '../exceptions';
 import {
+  InstancePublicationInterface,
+  LinkInstancesResultInterface,
+} from '../interfaces';
+import {
+  PartnerPublicationService,
   PartnersInstanceService,
   PartnersInstanceVersionFormService,
 } from '../services';
@@ -65,6 +71,7 @@ export class InstanceController {
     private readonly session: SessionService,
     private readonly serviceProvider: PartnersServiceProviderService,
     private readonly instanceService: PartnersInstanceService,
+    private readonly publication: PartnerPublicationService,
   ) {}
 
   @Get(PartnersBackRoutes.SP_INSTANCES)
@@ -291,40 +298,60 @@ export class InstanceController {
       PartnersAccountSession<AccessControlEntity, AccessControlPermission>
     >,
   ): Promise<FSA<FSAMeta, unknown>> {
-    let instances: PartnersServiceProviderInstance[] = [];
-    await this.typeorm.withTransaction(async (queryRunner) => {
-      await this.instance.linkToServiceProvider(
-        queryRunner,
-        instanceIds,
-        serviceProviderId,
+    const { instances, publications } =
+      await this.typeorm.withTransaction<LinkInstancesResultInterface>(
+        async (queryRunner) => {
+          await this.instance.linkToServiceProvider(
+            queryRunner,
+            instanceIds,
+            serviceProviderId,
+          );
+
+          const instances = await this.instance.getByIdsWithQueryRunner(
+            queryRunner,
+            instanceIds,
+          );
+
+          const {
+            identity: { id: accountId, email },
+          } = sessionPartnersAccount.get();
+
+          const publications: InstancePublicationInterface[] = [];
+
+          for (const instance of instances) {
+            const publication = await this.instanceService.update(
+              queryRunner,
+              instance.currentVersion.data,
+              instance,
+              serviceProviderId,
+              email,
+            );
+
+            publications.push(publication);
+
+            await this.accessControl.removePermissionTransactional(
+              queryRunner,
+              {
+                accountId,
+                permissionType: AccessControlPermission.INSTANCE_CONTRIBUTOR,
+                entity: AccessControlEntity.SP_INSTANCE,
+                entityId: instance.id,
+              },
+            );
+          }
+
+          return { instances, publications };
+        },
       );
 
-      instances = await this.instance.getByIdsWithQueryRunner(
-        queryRunner,
-        instanceIds,
+    for (const publication of publications) {
+      await this.publication.publish(
+        publication.instanceId,
+        publication.versionId,
+        publication.payload,
+        publication.type,
       );
-
-      const {
-        identity: { id: accountId, email },
-      } = sessionPartnersAccount.get();
-
-      for (const instance of instances) {
-        await this.instanceService.update(
-          queryRunner,
-          instance.currentVersion.data,
-          instance,
-          serviceProviderId,
-          email,
-        );
-
-        await this.accessControl.removePermissionTransactional(queryRunner, {
-          accountId,
-          permissionType: AccessControlPermission.INSTANCE_CONTRIBUTOR,
-          entity: AccessControlEntity.SP_INSTANCE,
-          entityId: instance.id,
-        });
-      }
-    });
+    }
 
     return {
       type: 'INSTANCE',
@@ -378,24 +405,79 @@ export class InstanceController {
       identity: { email: updatedBy },
     } = sessionPartnersAccount.get();
 
-    await this.typeorm.withTransaction(async (queryRunner) => {
-      const instance = await this.instance.getByIdWithQueryRunner(
-        queryRunner,
-        instanceId,
+    const publication =
+      await this.typeorm.withTransaction<InstancePublicationInterface>(
+        async (queryRunner) => {
+          const instance = await this.instance.getByIdWithQueryRunner(
+            queryRunner,
+            instanceId,
+          );
+
+          if (!instance) {
+            throw new PartnersInstanceNotFoundException();
+          }
+
+          return await this.instanceService.update(
+            queryRunner,
+            data,
+            instance,
+            instance.serviceProvider.id,
+            updatedBy,
+          );
+        },
       );
 
-      if (!instance) {
-        throw new PartnersInstanceNotFoundException();
-      }
+    await this.publication.publish(
+      publication.instanceId,
+      publication.versionId,
+      publication.payload,
+      publication.type,
+    );
 
-      await this.instanceService.update(
-        queryRunner,
-        data,
-        instance,
-        instance.serviceProvider.id,
-        updatedBy,
-      );
-    });
+    return {
+      type: 'INSTANCE',
+      payload: {},
+    };
+  }
+
+  @Delete(PartnersBackRoutes.SP_INSTANCE)
+  @AccessControl([
+    {
+      permission: AccessControlPermission.INSTANCE_CONTRIBUTOR,
+      entity: AccessControlEntity.SP_INSTANCE,
+      handler: {
+        method: AccessControlHandler.DIRECT_ENTITY,
+      },
+      entityIdLocation: { src: 'params', key: 'instanceId' },
+    },
+    {
+      permission: AccessControlPermission.SP_ADMIN,
+      entity: AccessControlEntity.SP_INSTANCE,
+      handler: {
+        method: AccessControlHandler.RELATED_ENTITY,
+        entity: AccessControlEntity.SERVICE_PROVIDER,
+        column: 'serviceProvider',
+      },
+      entityIdLocation: { src: 'params', key: 'instanceId' },
+    },
+    {
+      permission: AccessControlPermission.SP_TECH,
+      entity: AccessControlEntity.SP_INSTANCE,
+      handler: {
+        method: AccessControlHandler.RELATED_ENTITY,
+        entity: AccessControlEntity.SERVICE_PROVIDER,
+        column: 'serviceProvider',
+      },
+      entityIdLocation: { src: 'params', key: 'instanceId' },
+    },
+  ])
+  @UseGuards(AccessControlGuard)
+  @UseGuards(CsrfTokenGuard)
+  async deleteInstance(
+    @Param('instanceId') instanceId: string,
+  ): Promise<FSA<FSAMeta, unknown>> {
+    await this.instanceService.delete(instanceId);
+
     return {
       type: 'INSTANCE',
       payload: {},

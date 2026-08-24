@@ -41,3 +41,7 @@ You can display info about a specific index of the database :
 
 A script places in `./back/apps/csmr-tracks/fixtures/**` can populate the database with fake data
 for a testing purpose.
+
+## Statistics operations (ElasticControl)
+
+See [README.elastic-control.md](./README.elastic-control.md) for documentation on transforms, reindexes, and the control document tracking system.

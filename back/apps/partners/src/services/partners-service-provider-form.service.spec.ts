@@ -100,7 +100,7 @@ describe('PartnersServiceProviderFormService', () => {
       i18nMock.translate
         .mockReturnValueOnce('Identifiant technique')
         .mockReturnValueOnce('Prénoms')
-        .mockReturnValueOnce('Nom de naissance')
+        .mockReturnValueOnce('Nom de famille')
         .mockReturnValueOnce('Adresse électronique');
 
       // When
@@ -115,7 +115,7 @@ describe('PartnersServiceProviderFormService', () => {
         datapassScopes: [
           'Identifiant technique',
           'Prénoms',
-          'Nom de naissance',
+          'Nom de famille',
           'Adresse électronique',
         ],
         fcScopes: ['openid', 'profile', 'email'],

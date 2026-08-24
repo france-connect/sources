@@ -3,7 +3,7 @@ import { Context } from 'mocha';
 
 import {
   addFCBasicAuthorization,
-  clearBusinessLog,
+  clearAllLogs,
   disableSameSiteLax,
   getDefaultIdentityProvider,
   getDefaultServiceProvider,
@@ -66,10 +66,10 @@ const setupTestFramework = (
   }
 
   if (testEnv === 'docker') {
-    clearBusinessLog();
+    clearAllLogs();
     const eidasLogPath = Cypress.env('EIDAS_LOG_FILE_PATH');
     if (eidasLogPath) {
-      clearBusinessLog(eidasLogPath);
+      clearAllLogs(eidasLogPath);
     }
   } else if (testEnv === 'integ01') {
     // Setup interceptions to override set-cookie samesite values
@@ -84,7 +84,7 @@ const setupTestFramework = (
 
 Before(function () {
   // Load environment config and test data
-  const platform: string = Cypress.env('PLATFORM');
+  const platform: string = Cypress.env('TEST_PLATFORM');
   const testEnv: string = Cypress.env('TEST_ENV');
   setupTestFramework(platform, testEnv, this);
 });
@@ -131,7 +131,14 @@ Before({ tags: '@ignoreInteg01' }, function () {
 Before({ tags: '@clearExploitBusinessLogs' }, function () {
   if (Cypress.env('TEST_ENV') === 'docker') {
     const logPath = Cypress.env('EXPLOIT_LOG_FILE_PATH');
-    clearBusinessLog(logPath);
+    clearAllLogs(logPath);
+  }
+});
+
+Before({ tags: '@clearTechnicalLogs' }, function () {
+  if (Cypress.env('TEST_ENV') === 'docker') {
+    const technicalLogPath = Cypress.env('TECHNICAL_LOG_FILE_PATH');
+    clearAllLogs(technicalLogPath);
   }
 });
 

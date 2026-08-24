@@ -1,4 +1,5 @@
 export * from './enforce-array.transform';
 export * from './enforce-boolean.transform';
 export * from './join.transform';
+export * from './parse-json.transform';
 export * from './split.transform';

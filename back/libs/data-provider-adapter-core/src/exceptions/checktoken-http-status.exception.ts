@@ -8,7 +8,7 @@ import { ChecktokenBaseException } from './checktoken-base.exception';
 export class ChecktokenHttpStatusException extends ChecktokenBaseException {
   static CODE = ErrorCode.CHECKTOKEN_HTTP_STATUS_EXCEPTION;
   static DOCUMENTATION =
-    "Impossible de joindre le core. L'utilisateur doit redémarrer sa cinématique. Si cela persiste, contacter le support N3";
+    'Impossible de joindre le core. L’utilisateur doit redémarrer sa cinématique. Si cela persiste, contacter le support N3.';
 
   static ERROR = 'server_error';
   static ERROR_DESCRIPTION =

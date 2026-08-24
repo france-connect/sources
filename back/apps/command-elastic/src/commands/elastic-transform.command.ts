@@ -1,7 +1,7 @@
 import { Command } from 'nest-commander';
 
 import {
-  DEFAULT_TIMEZONE,
+  derivePeriod,
   ElasticControlPivotEnum,
   ElasticControlProductEnum,
   ElasticControlRangeEnum,
@@ -10,7 +10,6 @@ import { LoggerService } from '@fc/logger';
 
 import { ElasticTransformCommandOptionsInterface } from '../interfaces';
 import { CommandElasticTransformService } from '../services';
-import { getPreviousMonth } from '../utils';
 import { ElasticTransformBaseCommand } from './elastic-transform-base.command';
 
 @Command({
@@ -34,11 +33,10 @@ export class ElasticTransformCommand extends ElasticTransformBaseCommand {
     const product = options.product as ElasticControlProductEnum;
     const range = options.range as ElasticControlRangeEnum;
     const pivot = options.pivot as ElasticControlPivotEnum;
-    const period = options?.period || getPreviousMonth();
-    const timezone = DEFAULT_TIMEZONE;
+    const period = options?.period ?? derivePeriod(range);
 
     await this.transform.safeInitializeTransform(
-      { period, product, range, pivot, timezone },
+      { product, range, pivot, period },
       Boolean(options.dryRun),
       Boolean(options.force),
     );

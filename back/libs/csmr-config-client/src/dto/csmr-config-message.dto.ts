@@ -1,5 +1,6 @@
 import { Type } from 'class-transformer';
 import {
+  Equals,
   IsArray,
   IsBoolean,
   IsEnum,
@@ -160,23 +161,26 @@ export class ConfigMessageDtoMeta implements FSAMeta {
   [key: string]: unknown;
 
   @IsString()
-  readonly versionId: string;
+  readonly instanceId: string;
 
   @IsString()
-  readonly instanceId: string;
+  readonly versionId: string;
 
   @IsEnum(PublicationStatusEnum)
   readonly publicationStatus: PublicationStatusEnum;
 }
 
-export class ConfigMessageDto implements FSA<ConfigMessageDtoMeta> {
+// The deletion only needs to identify the client, it must not validate the
+// creation payload: an instance published before a new mandatory attribute was
+// added would keep an outdated version data and become impossible to delete.
+export class ConfigDeleteMessageDtoPayload implements Partial<OidcClientInterface> {
+  @IsString()
+  readonly client_id: string;
+}
+
+export abstract class ConfigBaseMessageDto implements FSA<ConfigMessageDtoMeta> {
   @IsEnum(ActionTypes)
   readonly type: ActionTypes;
-
-  @IsObject()
-  @Type(() => ConfigCreateViaMessageDtoPayload)
-  @ValidateNested()
-  readonly payload: ConfigCreateViaMessageDtoPayload;
 
   @IsOptional()
   @IsObject()
@@ -184,3 +188,34 @@ export class ConfigMessageDto implements FSA<ConfigMessageDtoMeta> {
   @ValidateNested()
   readonly meta?: ConfigMessageDtoMeta;
 }
+
+export abstract class ConfigMessageDto extends ConfigBaseMessageDto {
+  @IsObject()
+  @Type(() => ConfigCreateViaMessageDtoPayload)
+  @ValidateNested()
+  readonly payload: ConfigCreateViaMessageDtoPayload;
+}
+
+export class ConfigCreateMessageDto extends ConfigMessageDto {
+  @Equals(ActionTypes.CONFIG_CREATE)
+  readonly type = ActionTypes.CONFIG_CREATE;
+}
+
+export class ConfigUpdateMessageDto extends ConfigMessageDto {
+  @Equals(ActionTypes.CONFIG_UPDATE)
+  readonly type = ActionTypes.CONFIG_UPDATE;
+}
+
+export class ConfigDeleteMessageDto extends ConfigBaseMessageDto {
+  @Equals(ActionTypes.CONFIG_DELETE)
+  readonly type = ActionTypes.CONFIG_DELETE;
+
+  @IsObject()
+  @Type(() => ConfigDeleteMessageDtoPayload)
+  @ValidateNested()
+  readonly payload: ConfigDeleteMessageDtoPayload;
+}
+
+export type ConfigAnyMessageDto = ConfigBaseMessageDto & {
+  payload: ConfigCreateViaMessageDtoPayload | ConfigDeleteMessageDtoPayload;
+};

@@ -1,5 +1,7 @@
 import { createHash } from 'crypto';
 
+import { omit } from 'lodash';
+
 import { Injectable } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
@@ -123,6 +125,82 @@ export class ElasticControlDocumentService {
     }
   }
 
+  async countNonFinalOperations(
+    operation: ElasticOperationsEnum,
+  ): Promise<number> {
+    const query = {
+      query: {
+        bool: {
+          must: [
+            { term: { operation } },
+            {
+              terms: {
+                state: [ControlStatesEnum.PENDING, ControlStatesEnum.RUNNING],
+              },
+            },
+          ],
+        },
+      },
+    };
+
+    try {
+      const { count } = await this.elastic.countDocuments(
+        this.controlIndex,
+        query,
+      );
+
+      this.logger.debug(
+        `[control] Non-final ${operation} operations: ${count}`,
+      );
+
+      return count;
+    } catch (error) {
+      throw new ElasticControlInvalidRequestException(error);
+    }
+  }
+
+  async findRunningOperations(
+    operation: ElasticOperationsEnum,
+  ): Promise<ControlDocumentInterface[]> {
+    const { runningOperationsMaxSize } =
+      this.config.get<ElasticControlConfig>('ElasticControl');
+
+    const query = {
+      size: runningOperationsMaxSize,
+      query: {
+        bool: {
+          must: [
+            { term: { operation } },
+            {
+              term: {
+                state: ControlStatesEnum.RUNNING,
+              },
+            },
+          ],
+        },
+      },
+    };
+
+    try {
+      const response = await this.elastic.searchDocuments(
+        this.controlIndex,
+        query,
+      );
+
+      const documents = response.hits.hits.map(
+        (hit) => hit._source as ControlDocumentInterface,
+      );
+
+      this.logger.debug(
+        `[control] Found ${documents.length} running ${operation} operations`,
+      );
+
+      return documents;
+    } catch (error) {
+      throw new ElasticControlInvalidRequestException(error);
+    }
+  }
+
   async getControlDocById(
     id: string,
   ): Promise<ControlDocumentInterface | null> {
@@ -144,8 +222,18 @@ export class ElasticControlDocumentService {
       | ElasticControlTransformOptionsDto
       | ElasticControlReindexOptionsDto,
   ): string {
-    const optionsKeys = Object.keys(options);
-    const sortedOptions = optionsKeys.sort().map((k) => options[k]);
+    // A transform is unique per (product, range, pivot) triplet — only one
+    // lives at a time and gets overwritten on each run. Excluding `period`
+    // and `key` from the hash keeps a single control document per triplet
+    // across periods, and lets the reindex (which carries `key`) look up
+    // the matching transform doc without rebuilding the options shape.
+    const hashable =
+      operation === ElasticOperationsEnum.TRANSFORM
+        ? omit(options, ['period', 'key'])
+        : options;
+
+    const optionsKeys = Object.keys(hashable);
+    const sortedOptions = optionsKeys.sort().map((k) => hashable[k]);
     const payload = [operation, ...sortedOptions].join('.');
     const id = createHash('sha256').update(payload, 'utf8').digest('hex');
     return id;

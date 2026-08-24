@@ -22,7 +22,7 @@ Fonctionnalité: API - Service Provider détail
     Et le corps de la réponse a une propriété "payload.datapassScopes"
     Et le corps de la réponse a une propriété "payload.datapassScopes[0]" égale à "Identifiant technique"
     Et le corps de la réponse a une propriété "payload.datapassScopes[1]" égale à "Prénoms"
-    Et le corps de la réponse a une propriété "payload.datapassScopes[2]" égale à "Nom de naissance"
+    Et le corps de la réponse a une propriété "payload.datapassScopes[2]" égale à "Nom de famille"
     Et le corps de la réponse a une propriété "payload.datapassScopes[3]" égale à "Adresse électronique"
     Et le corps de la réponse a une propriété "payload.datapassScopes[4]" égale à "Sexe"
     Et le corps de la réponse a une propriété "payload.datapassScopes[5]" égale à "Date de naissance"

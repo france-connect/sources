@@ -127,7 +127,7 @@ export class CoreFcpController {
     const { idpFilterExclude, idpFilterList } =
       await this.serviceProvider.getById(clientId);
 
-    const { aidantsConnectUid, showExcludedIdp } =
+    const { aidantsConnectUid, walletBridgeUid, showExcludedIdp } =
       this.config.get<AppConfig>('App');
 
     const providers = await this.identityProvider.getFilteredList(
@@ -161,6 +161,11 @@ export class CoreFcpController {
       return isAidantsConnect && provider.display;
     });
 
+    const walletBridge = authorizedProviders.find((provider) => {
+      const isWalletBridge = provider.uid === walletBridgeUid;
+      return isWalletBridge && provider.display && provider.active;
+    });
+
     // -- generate and store in session the CSRF token
 
     const notification = await this.notification.getNotificationToDisplay();
@@ -176,6 +181,7 @@ export class CoreFcpController {
       params,
       providers: authorizedProviders,
       aidantsConnect: aidantsConnect,
+      walletBridge: walletBridge,
       spName,
       spScope,
       errorContext: {

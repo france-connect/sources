@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsObject, ValidateNested } from 'class-validator';
+import { IsObject, IsOptional, ValidateNested } from 'class-validator';
 
 import { I18nSession } from '@fc/i18n';
 import { OidcClientSession } from '@fc/oidc-client';
@@ -18,6 +18,7 @@ export class WalletBridgeSession {
 
   @IsObject()
   @ValidateNested()
+  @IsOptional()
   @Type(() => OidcClientSession)
-  readonly OidcClient: OidcClientSession;
+  readonly OidcClient?: OidcClientSession;
 }

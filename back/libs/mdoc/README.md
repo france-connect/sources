@@ -25,8 +25,28 @@ Out of scope (requires `MdocContext`, trust store, session transcript, etc.):
 - Cryptographic digest checks for disclosed attributes vs MSO.
 - SD-JWT VC (separate stack).
 
+### Mock issuance (dev fixtures)
+
+`buildMdocVpToken()` (and `MdocService.buildMdocVpToken()`) build a base64url mdoc `vp_token` using `@owf/mdoc` (`DeviceResponse.encodedForOid4Vp`, the wire form used in OpenID4VP). Issuer and device signatures are generated from the supplied configuration and OpenID4VP session parameters (`clientId`, `nonce`, `responseUri`).
+
 Use `Verifier.verifyDeviceResponse` from `@owf/mdoc` in the wallet-bridge
 Verifier when you can provide `MdocContext` and verification options.
+
+## Configuration
+
+Register a `Mdoc` section in the instance config and validate it with `MdocConfig`.
+
+| Key                       | Description                                              |
+| ------------------------- | -------------------------------------------------------- |
+| `docType`                 | mdoc doctype presented in the `vp_token`                 |
+| `issuerPrivateKeyPem`     | PEM private key used to sign the issuer namespace        |
+| `issuerCertificatePem`    | PEM certificate bundled in the issuer auth               |
+| `devicePrivateKeyJwk`     | Device private JWK used to sign device authentication  |
+| `deviceCertificatePem`    | PEM certificate bundled in the device signature        |
+
+Environment variables (mock-wallet): `Mdoc_ISSUER_PRIVATE_KEY`, `Mdoc_ISSUER_CERTIFICATE`, `Mdoc_DEVICE_PRIVATE_KEY_JWK`, `Mdoc_DEVICE_CERTIFICATE`. See [`back/_doc/env-vars.md`](../../_doc/env-vars.md).
+
+Example (mock-wallet instance): [`back/instances/mock-wallet/src/config/mdoc.ts`](../../instances/mock-wallet/src/config/mdoc.ts).
 
 ## Public API
 

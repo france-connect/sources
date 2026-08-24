@@ -7,7 +7,8 @@
     "cypress/support/dashboard/steps/*.ts",
     "cypress/support/eidas-bridge/steps/*.ts",
     "cypress/support/exploitation/steps/*.ts",
-    "cypress/support/usager/steps/*.ts"
+    "cypress/support/usager/steps/*.ts",
+    "cypress/support/wallet-bridge/steps/*.ts"
   ],
   "json": {
     "enabled": true,

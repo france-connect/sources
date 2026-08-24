@@ -142,8 +142,8 @@ describe('IdentityTheftReportSummaryPage', () => {
         hideHeader: true,
         id: 'identity-theft-report-summary--etat-civil',
         sources: [
-          { label: 'Nom de naissance', value: 'any-family_name-mock' },
-          { label: 'Prénom de naissance', value: 'any-given_name-mock' },
+          { label: 'Nom de famille', value: 'any-family_name-mock' },
+          { label: 'Prénom', value: 'any-given_name-mock' },
           { label: 'Date de naissance', value: 'any-rawBirthdate-mock' },
           { label: 'Pays de naissance', value: 'any-rawBirthcountry-mock' },
           { label: 'Ville de naissance', value: 'any-rawBirthplace-mock' },

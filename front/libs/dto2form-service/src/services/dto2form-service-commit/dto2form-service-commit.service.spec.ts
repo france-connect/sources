@@ -1,7 +1,7 @@
 import type { AxiosResponse } from 'axios';
 import { FORM_ERROR } from 'final-form';
 
-import { type HttpMethods } from '@fc/common';
+import { ContentType, type HttpMethods } from '@fc/common';
 import { getCSRF, makeRequest } from '@fc/http-client';
 import { t } from '@fc/i18n';
 
@@ -132,5 +132,36 @@ describe('dto2FormServicecommit', () => {
       anyFieldName2: 'any-error-mock',
       anyFieldName3: 'any-error-mock',
     });
+  });
+
+  it('should call http-client.makeRequest with the correct content type if the content type is provided', async () => {
+    // Given
+    const methodMock = 'any-method-mock' as unknown as HttpMethods.POST;
+    jest.mocked(getCSRF).mockResolvedValueOnce({ csrfToken: 'any-csrfToken-mock' });
+
+    // When
+    await dto2FormServiceCommit(
+      methodMock,
+      'any-url-mock',
+      {
+        data: 'any-data-mock',
+      },
+      ContentType.JSON,
+    );
+
+    // Then
+    expect(makeRequest).toHaveBeenCalledExactlyOnceWith(
+      methodMock,
+      'any-url-mock',
+      { data: 'any-data-mock' },
+      {
+        headers: {
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          'Content-Type': 'application/json',
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          'x-csrf-token': 'any-csrfToken-mock',
+        },
+      },
+    );
   });
 });

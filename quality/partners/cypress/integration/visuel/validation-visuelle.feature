@@ -97,3 +97,15 @@ Fonctionnalité: Validation Visuelle - Espace Partenaires
     Exemples:
       | device           |
       | desktop          |
+
+  Plan du Scénario: Validation Visuelle - Page Accessibilité sur <device>
+    Etant donné que j'utilise un navigateur web sur "<device>"
+    Et que je navigue sur la page d'accueil de l'espace partenaires
+    Et que je suis redirigé vers la page login de l'espace partenaires
+    Quand je clique sur le lien "Accessibilité : non conforme" dans le footer
+    Alors je suis redirigé vers la page accessibilité
+    Et la copie d'écran "accessibilité" correspond à la page actuelle sur "<device>"
+
+    Exemples:
+      | device           |
+      | desktop          |

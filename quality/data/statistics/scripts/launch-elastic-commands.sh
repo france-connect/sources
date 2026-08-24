@@ -20,6 +20,9 @@ keys=("nbOfIdentities" "nbOfConnections")
 # Base command
 BASE_CMD="docker-stack command command-elastic command-elastic"
 
+# Optional flags forwarded from CLI (--dry-run, --force)
+EXTRA_FLAGS="$*"
+
 # Counter for tracking executions
 elastic_transform_count=0
 elastic_reindex_count=0
@@ -49,27 +52,19 @@ echo ""
 for product in "${products[@]}"; do
   for range in "${ranges[@]}"; do
     for pivot in "${pivots[@]}"; do
-      cmd="$BASE_CMD elastic-transform --product=$product --range=$range --pivot=$pivot"
+      cmd="$BASE_CMD elastic-transform --product=$product --range=$range --pivot=$pivot $EXTRA_FLAGS"
       execute_command "$cmd"
       ((elastic_transform_count++))
     done
   done
 done
 
-# Add 5 minutes before running watcher commands
-echo -e "${YELLOW}Waiting 5 minutes before launching watcher commands...${NC}"
-sleep 300
-
-for product in "${products[@]}"; do
-  for range in "${ranges[@]}"; do
-    for pivot in "${pivots[@]}"; do
-      cmd="$BASE_CMD elastic-transform-watcher --product=$product --range=$range --pivot=$pivot"
-      execute_command "$cmd"
-      ((elastic_transform_count++))
-    done
-  done
+echo -e "${YELLOW}Waiting for all transforms to complete...${NC}"
+until $BASE_CMD elastic-transform-watcher; do
+  echo -e "  Transforms still running, retrying in 30s..."
+  sleep 30
 done
-
+echo -e "${GREEN}All transforms completed!${NC}"
 echo ""
 echo -e "${YELLOW}Running all elastic-reindex commands...${NC}"
 echo "(Total combinations: $((${#products[@]} * ${#ranges[@]} * ${#pivots[@]} * ${#keys[@]})))"
@@ -79,7 +74,7 @@ for product in "${products[@]}"; do
   for range in "${ranges[@]}"; do
     for pivot in "${pivots[@]}"; do
       for key in "${keys[@]}"; do
-        cmd="$BASE_CMD elastic-reindex --product=$product --range=$range --pivot=$pivot --key=$key"
+        cmd="$BASE_CMD elastic-reindex --product=$product --range=$range --pivot=$pivot --key=$key $EXTRA_FLAGS"
         execute_command "$cmd"
         ((elastic_reindex_count++))
       done
@@ -87,21 +82,12 @@ for product in "${products[@]}"; do
   done
 done
 
-# Add 5 minutes before running watcher commands
-echo -e "${YELLOW}Waiting 5 minutes before launching watcher commands...${NC}"
-sleep 300
-
-for product in "${products[@]}"; do
-  for range in "${ranges[@]}"; do
-    for pivot in "${pivots[@]}"; do
-      for key in "${keys[@]}"; do
-        cmd="$BASE_CMD elastic-reindex-watcher --product=$product --range=$range --pivot=$pivot --key=$key"
-        execute_command "$cmd"
-        ((elastic_reindex_count++))
-      done
-    done
-  done
+echo -e "${YELLOW}Waiting for all reindexes to complete...${NC}"
+until $BASE_CMD elastic-reindex-watcher; do
+  echo -e "  Reindexes still running, retrying in 30s..."
+  sleep 30
 done
+echo -e "${GREEN}All reindexes completed!${NC}"
 
 echo -e "${YELLOW}========================================${NC}"
 echo -e "${GREEN}All commands completed!${NC}"

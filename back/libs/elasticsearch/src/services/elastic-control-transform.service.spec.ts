@@ -21,7 +21,8 @@ import {
   TransformStatusInterface,
 } from '../interfaces';
 import {
-  computeWindowFromPeriod,
+  derivePeriod,
+  getPeriodWindow,
   getTransformDocIndexed,
   getTransformLastCheckpoint,
   isNotFound,
@@ -37,7 +38,6 @@ describe('ElasticControlTransformService', () => {
   const loggerMock = getLoggerMock();
   const configMock = getConfigMock();
 
-  const computeWindowFromPeriodMock = jest.mocked(computeWindowFromPeriod);
   const getTransformDocIndexedMock = jest.mocked(getTransformDocIndexed);
   const getTransformLastCheckpointMock = jest.mocked(
     getTransformLastCheckpoint,
@@ -59,19 +59,15 @@ describe('ElasticControlTransformService', () => {
     product: ElasticControlProductEnum.HIGH,
     range: ElasticControlRangeEnum.MONTH,
     pivot: ElasticControlPivotEnum.SP,
-    period: '2025-08',
-    timezone: DEFAULT_TIMEZONE,
   };
 
-  const transformIdMock = '2025-08_sp_franceconnect_plus_month';
+  const transformIdMock = 'runner_stats_franceconnect_plus_sp_month';
   const dryRun = false;
 
   const elasticControlConfigMock = {
     highTracksIndex: 'highIndex',
     lowTracksIndex: 'lowIndex',
   };
-
-  const windowMock = { gte: '2025-08-01', lt: '2025-09-01' };
 
   const elasticTransformStatsMock: ElasticTransformStatsResponse = {
     count: 1,
@@ -94,7 +90,6 @@ describe('ElasticControlTransformService', () => {
     configMock.get.mockReturnValue(elasticControlConfigMock);
 
     isNotFoundMock.mockReturnValue(false);
-    computeWindowFromPeriodMock.mockReturnValue(windowMock);
     getTransformLastCheckpointMock.mockReturnValue(1);
     getTransformDocIndexedMock.mockReturnValue(100);
 
@@ -134,7 +129,7 @@ describe('ElasticControlTransformService', () => {
       );
     });
 
-    it('should call buildTransformId', async () => {
+    it('should call buildTransformId with options', async () => {
       // When
       await service.findTransform(optionsMock);
 
@@ -144,7 +139,7 @@ describe('ElasticControlTransformService', () => {
       );
     });
 
-    it('should call elastic.getTransformStats', async () => {
+    it('should call elastic.getTransformStats with the transform id', async () => {
       // When
       await service.findTransform(optionsMock);
 
@@ -167,7 +162,7 @@ describe('ElasticControlTransformService', () => {
       expect(result).toBeNull();
     });
 
-    it('should return TransformStatusInterface on success', async () => {
+    it('should return the transform status on success', async () => {
       // When
       const result = await service.findTransform(optionsMock);
 
@@ -175,7 +170,7 @@ describe('ElasticControlTransformService', () => {
       expect(result).toEqual(transformStatusMock);
     });
 
-    it('should call getTransformLastCheckpoint', async () => {
+    it('should call getTransformLastCheckpoint with the current transform', async () => {
       // When
       await service.findTransform(optionsMock);
 
@@ -185,7 +180,7 @@ describe('ElasticControlTransformService', () => {
       );
     });
 
-    it('should call getTransformDocIndexed', async () => {
+    it('should call getTransformDocIndexed with the current transform', async () => {
       // When
       await service.findTransform(optionsMock);
 
@@ -216,7 +211,7 @@ describe('ElasticControlTransformService', () => {
       service['startTransform'] = jest.fn().mockResolvedValue(undefined);
     });
 
-    it('should call buildTransformId', async () => {
+    it('should call buildTransformId with options', async () => {
       // When
       await service.initializeTransform(optionsMock, dryRun);
 
@@ -226,7 +221,7 @@ describe('ElasticControlTransformService', () => {
       );
     });
 
-    it('should call safeDeleteTransform', async () => {
+    it('should call safeDeleteTransform with the transform id and dryRun', async () => {
       // When
       await service.initializeTransform(optionsMock, dryRun);
 
@@ -237,7 +232,7 @@ describe('ElasticControlTransformService', () => {
       );
     });
 
-    it('should call destIndex.safeDeleteDestIndex', async () => {
+    it('should call destIndex.safeDeleteDestIndex with the transform id and dryRun', async () => {
       // When
       await service.initializeTransform(optionsMock, dryRun);
 
@@ -247,7 +242,7 @@ describe('ElasticControlTransformService', () => {
       ).toHaveBeenCalledExactlyOnceWith(transformIdMock, dryRun);
     });
 
-    it('should call buildTransformBody', async () => {
+    it('should call buildTransformBody with options', async () => {
       // When
       await service.initializeTransform(optionsMock, dryRun);
 
@@ -257,7 +252,7 @@ describe('ElasticControlTransformService', () => {
       );
     });
 
-    it('should call createTransform', async () => {
+    it('should call createTransform with the transform id, body and dryRun', async () => {
       // When
       await service.initializeTransform(optionsMock, dryRun);
 
@@ -269,7 +264,7 @@ describe('ElasticControlTransformService', () => {
       );
     });
 
-    it('should call startTransform', async () => {
+    it('should call startTransform with the transform id and dryRun', async () => {
       // When
       await service.initializeTransform(optionsMock, dryRun);
 
@@ -280,7 +275,7 @@ describe('ElasticControlTransformService', () => {
       );
     });
 
-    it('should return a "STARTED" status object', async () => {
+    it('should return a STARTED status object', async () => {
       // When
       const result = await service.initializeTransform(optionsMock, dryRun);
 
@@ -295,7 +290,7 @@ describe('ElasticControlTransformService', () => {
   });
 
   describe('createTransform', () => {
-    it('should call elastic.createTransform', async () => {
+    it('should call elastic.createTransform with the transform id and body', async () => {
       // When
       await service['createTransform'](transformIdMock, bodyMock, dryRun);
 
@@ -306,7 +301,7 @@ describe('ElasticControlTransformService', () => {
       );
     });
 
-    it('should log creation', async () => {
+    it('should log creation message', async () => {
       // When
       await service['createTransform'](transformIdMock, bodyMock, dryRun);
 
@@ -316,12 +311,12 @@ describe('ElasticControlTransformService', () => {
       );
     });
 
-    it('should handle dryRun', async () => {
+    it('should log dry-run message and not call elastic.createTransform when dryRun is true', async () => {
       // Given
-      const dryRun = true;
+      const dryRunTrue = true;
 
       // When
-      await service['createTransform'](transformIdMock, bodyMock, dryRun);
+      await service['createTransform'](transformIdMock, bodyMock, dryRunTrue);
 
       // Then
       expect(elasticClientMock.createTransform).not.toHaveBeenCalled();
@@ -343,7 +338,7 @@ describe('ElasticControlTransformService', () => {
   });
 
   describe('startTransform', () => {
-    it('should call elastic.startTransform', async () => {
+    it('should call elastic.startTransform with the transform id', async () => {
       // When
       await service['startTransform'](transformIdMock, dryRun);
 
@@ -353,7 +348,7 @@ describe('ElasticControlTransformService', () => {
       );
     });
 
-    it('should log start', async () => {
+    it('should log start message', async () => {
       // When
       await service['startTransform'](transformIdMock, dryRun);
 
@@ -363,12 +358,12 @@ describe('ElasticControlTransformService', () => {
       );
     });
 
-    it('should handle dryRun', async () => {
+    it('should log dry-run message and not call elastic.startTransform when dryRun is true', async () => {
       // Given
-      const dryRun = true;
+      const dryRunTrue = true;
 
       // When
-      await service['startTransform'](transformIdMock, dryRun);
+      await service['startTransform'](transformIdMock, dryRunTrue);
 
       // Then
       expect(elasticClientMock.startTransform).not.toHaveBeenCalled();
@@ -390,7 +385,7 @@ describe('ElasticControlTransformService', () => {
   });
 
   describe('safeDeleteTransform', () => {
-    it('should call elastic.stopTransform', async () => {
+    it('should call elastic.stopTransform with the transform id', async () => {
       // When
       await service['safeDeleteTransform'](transformIdMock, dryRun);
 
@@ -400,7 +395,7 @@ describe('ElasticControlTransformService', () => {
       );
     });
 
-    it('should call elastic.deleteTransform', async () => {
+    it('should call elastic.deleteTransform with the transform id', async () => {
       // When
       await service['safeDeleteTransform'](transformIdMock, dryRun);
 
@@ -410,7 +405,7 @@ describe('ElasticControlTransformService', () => {
       );
     });
 
-    it('should log stop and delete', async () => {
+    it('should log stop and delete messages', async () => {
       // When
       await service['safeDeleteTransform'](transformIdMock, dryRun);
 
@@ -426,12 +421,12 @@ describe('ElasticControlTransformService', () => {
       );
     });
 
-    it('should handle dryRun', async () => {
+    it('should log dry-run message and not call elastic when dryRun is true', async () => {
       // Given
-      const dryRun = true;
+      const dryRunTrue = true;
 
       // When
-      await service['safeDeleteTransform'](transformIdMock, dryRun);
+      await service['safeDeleteTransform'](transformIdMock, dryRunTrue);
 
       // Then
       expect(elasticClientMock.stopTransform).not.toHaveBeenCalled();
@@ -441,7 +436,7 @@ describe('ElasticControlTransformService', () => {
       );
     });
 
-    it('should ignore 404 errors', async () => {
+    it('should log and ignore 404 errors', async () => {
       // Given
       const error = new Error('not found');
       elasticClientMock.stopTransform.mockRejectedValueOnce(error);
@@ -458,7 +453,7 @@ describe('ElasticControlTransformService', () => {
       );
     });
 
-    it('should throw ElasticControlInvalidRequestException on other errors', async () => {
+    it('should throw ElasticControlInvalidRequestException on non-404 errors', async () => {
       // Given
       const error = new Error('other error');
       elasticClientMock.stopTransform.mockRejectedValueOnce(error);
@@ -472,19 +467,20 @@ describe('ElasticControlTransformService', () => {
   });
 
   describe('buildTransformBody', () => {
+    const sourceIndexMock = 'sourceIndexMock';
+    const filtersMock = [{ term: { foo: 'bar' } }];
+    const groupByMock = { spId: { terms: { field: 'spId' } } };
+
     beforeEach(() => {
       service['buildTransformId'] = jest.fn().mockReturnValue(transformIdMock);
+      service['buildSource'] = jest.fn().mockReturnValue({
+        sourceIndex: sourceIndexMock,
+        filters: filtersMock,
+      });
+      service['buildGroupBy'] = jest.fn().mockReturnValue(groupByMock);
     });
 
-    it('should get config', () => {
-      // When
-      service['buildTransformBody'](optionsMock);
-
-      // Then
-      expect(configMock.get).toHaveBeenCalledExactlyOnceWith('ElasticControl');
-    });
-
-    it('should call buildTransformId', () => {
+    it('should call buildTransformId with options', () => {
       // When
       service['buildTransformBody'](optionsMock);
 
@@ -494,22 +490,31 @@ describe('ElasticControlTransformService', () => {
       );
     });
 
-    it('should call computeWindowFromPeriod', () => {
+    it('should call buildSource with options and pivotConfig', () => {
       // When
       service['buildTransformBody'](optionsMock);
 
       // Then
-      expect(computeWindowFromPeriodMock).toHaveBeenCalledExactlyOnceWith(
-        optionsMock.period,
-        optionsMock.range,
-        optionsMock.timezone,
+      expect(service['buildSource']).toHaveBeenCalledExactlyOnceWith(
+        optionsMock,
+        PIVOT_FIELDS[optionsMock.pivot],
       );
     });
 
-    it('should return a correctly structured body', () => {
+    it('should call buildGroupBy with groupFields and options', () => {
+      // When
+      service['buildTransformBody'](optionsMock);
+
+      // Then
+      expect(service['buildGroupBy']).toHaveBeenCalledExactlyOnceWith(
+        PIVOT_FIELDS[optionsMock.pivot].groupFields,
+        optionsMock,
+      );
+    });
+
+    it('should return a body assembled from source, filters and group_by', () => {
       // Given
-      const { groupFields, nameFields } = PIVOT_FIELDS[optionsMock.pivot];
-      const groupFieldStr = groupFields[0];
+      const { nameFields } = PIVOT_FIELDS[optionsMock.pivot];
 
       // When
       const result = service['buildTransformBody'](optionsMock);
@@ -517,42 +522,22 @@ describe('ElasticControlTransformService', () => {
       // Then
       expect(result).toEqual({
         source: {
-          index: elasticControlConfigMock.highTracksIndex, // From HIGH product
+          index: sourceIndexMock,
           query: {
             bool: {
-              filter: [
-                { term: { event: 'FC_VERIFIED' } },
-                { term: { service: 'fc_core_v2_app' } },
-                {
-                  range: {
-                    time: {
-                      format: 'strict_date_optional_time',
-                      gte: windowMock.gte,
-                      lt: windowMock.lt,
-                      // elastic defined property
-                      // eslint-disable-next-line @typescript-eslint/naming-convention
-                      time_zone: optionsMock.timezone,
-                    },
-                  },
-                },
-              ],
+              filter: filtersMock,
             },
           },
         },
         dest: { index: transformIdMock },
         pivot: {
-          // elastic defined property
           // eslint-disable-next-line @typescript-eslint/naming-convention
-          group_by: {
-            [groupFieldStr]: { terms: { field: groupFieldStr } },
-          },
+          group_by: groupByMock,
           aggregations: {
             nbOfIdentities: { cardinality: { field: 'accountId' } },
-            // elastic defined property
             // eslint-disable-next-line @typescript-eslint/naming-convention
             nbOfConnections: { value_count: { field: 'accountId' } },
             info: {
-              // elastic defined property
               // eslint-disable-next-line @typescript-eslint/naming-convention
               top_metrics: {
                 metrics: nameFields.map((field) => ({ field })),
@@ -563,144 +548,314 @@ describe('ElasticControlTransformService', () => {
         },
       });
     });
+  });
 
-    it('should add spType filter with value "public" for IDP_PUBLIC_SP pivot', () => {
-      // Given
-      const options: ElasticControlTransformOptionsDto = {
-        ...optionsMock,
-        pivot: ElasticControlPivotEnum.IDP_PUBLIC_SP,
-      };
+  describe('buildSource', () => {
+    const periodFromInMs = 1_735_689_600_000;
+    const periodToInMs = 1_738_368_000_000;
 
-      // When
-      const result = service['buildTransformBody'](options);
-
-      // Then
-      const filters = (result.source as any).query.bool.filter;
-      expect(filters).toContainEqual({
-        term: { spType: 'public' },
+    beforeEach(() => {
+      jest.mocked(getPeriodWindow).mockReturnValue({
+        gte: new Date(periodFromInMs),
+        lt: new Date(periodToInMs),
       });
-      expect(filters).toHaveLength(4);
     });
 
-    it('should add spType filter with value "private" for IDP_PRIVATE_SP pivot', () => {
+    it('should get ElasticControl config', () => {
+      // Given
+      const pivotConfig = PIVOT_FIELDS[ElasticControlPivotEnum.SP];
+
+      // When
+      service['buildSource'](optionsMock, pivotConfig);
+
+      // Then
+      expect(configMock.get).toHaveBeenCalledExactlyOnceWith('ElasticControl');
+    });
+
+    it('should return highTracksIndex as sourceIndex for HIGH product', () => {
+      // Given
+      const pivotConfig = PIVOT_FIELDS[ElasticControlPivotEnum.SP];
+
+      // When
+      const { sourceIndex } = service['buildSource'](optionsMock, pivotConfig);
+
+      // Then
+      expect(sourceIndex).toBe(elasticControlConfigMock.highTracksIndex);
+    });
+
+    it('should return lowTracksIndex as sourceIndex for LOW product', () => {
       // Given
       const options: ElasticControlTransformOptionsDto = {
         ...optionsMock,
-        pivot: ElasticControlPivotEnum.IDP_PRIVATE_SP,
+        product: ElasticControlProductEnum.LOW,
       };
+      const pivotConfig = PIVOT_FIELDS[ElasticControlPivotEnum.SP];
 
       // When
-      const result = service['buildTransformBody'](options);
+      const { sourceIndex } = service['buildSource'](options, pivotConfig);
 
       // Then
-      const filters = (result.source as any).query.bool.filter;
-      expect(filters).toContainEqual({
-        term: { spType: 'private' },
-      });
-      expect(filters).toHaveLength(4);
+      expect(sourceIndex).toBe(elasticControlConfigMock.lowTracksIndex);
     });
 
-    it('should not add spType filter for SP pivot', () => {
+    it('should always include event and service filters for HIGH product', () => {
+      // Given
+      const pivotConfig = PIVOT_FIELDS[ElasticControlPivotEnum.SP];
+
+      // When
+      const { filters } = service['buildSource'](optionsMock, pivotConfig);
+
+      // Then
+      expect(filters).toContainEqual({ term: { event: 'FC_VERIFIED' } });
+      expect(filters).toContainEqual({ term: { service: 'fc_core_v2_app' } });
+    });
+
+    it('should use FCP_LOW service for LOW product', () => {
       // Given
       const options: ElasticControlTransformOptionsDto = {
         ...optionsMock,
-        pivot: ElasticControlPivotEnum.SP,
+        product: ElasticControlProductEnum.LOW,
       };
+      const pivotConfig = PIVOT_FIELDS[ElasticControlPivotEnum.SP];
 
       // When
-      const result = service['buildTransformBody'](options);
+      const { filters } = service['buildSource'](options, pivotConfig);
 
       // Then
-      const filters = (result.source as any).query.bool.filter;
+      expect(filters).toContainEqual({ term: { service: 'fc_core_low_app' } });
+    });
+
+    it('should add filter term when pivotConfig has filterField and filterValue', () => {
+      // Given
+      const pivotConfig = PIVOT_FIELDS[ElasticControlPivotEnum.IDP_PUBLIC_SP];
+
+      // When
+      const { filters } = service['buildSource'](optionsMock, pivotConfig);
+
+      // Then
+      expect(filters).toContainEqual({ term: { spType: 'public' } });
+    });
+
+    it('should add only the period range filter when pivotConfig has no filterField', () => {
+      // Given
+      const pivotConfig = PIVOT_FIELDS[ElasticControlPivotEnum.SP];
+
+      // When
+      const { filters } = service['buildSource'](optionsMock, pivotConfig);
+
+      // Then
       expect(filters).toHaveLength(3);
-      expect(filters).not.toContainEqual(
-        expect.objectContaining({
-          term: expect.objectContaining({ spType: expect.anything() }),
-        }),
-      );
     });
 
-    it('should not add spType filter for IDP pivot', () => {
+    it.each([
+      ElasticControlRangeEnum.MONTH,
+      ElasticControlRangeEnum.YEAR,
+      ElasticControlRangeEnum.SEMESTER,
+    ])('should call buildPeriodRangeFilter for %s range', (range) => {
       // Given
       const options: ElasticControlTransformOptionsDto = {
         ...optionsMock,
-        pivot: ElasticControlPivotEnum.IDP,
+        range,
+        period: '2025-01',
       };
+      const periodFilterMock = { range: { time: { gte: 1, lt: 2 } } };
+      service['buildPeriodRangeFilter'] = jest
+        .fn()
+        .mockReturnValue(periodFilterMock);
+      const pivotConfig = PIVOT_FIELDS[ElasticControlPivotEnum.SP];
 
       // When
-      const result = service['buildTransformBody'](options);
+      const { filters } = service['buildSource'](options, pivotConfig);
 
       // Then
-      const filters = (result.source as any).query.bool.filter;
-      expect(filters).toHaveLength(3);
-      expect(filters).not.toContainEqual(
-        expect.objectContaining({
-          term: expect.objectContaining({ spType: expect.anything() }),
-        }),
+      expect(service['buildPeriodRangeFilter']).toHaveBeenCalledExactlyOnceWith(
+        range,
+        '2025-01',
       );
+      expect(filters).toContainEqual(periodFilterMock);
     });
   });
 
-  describe('buildTransformBody with SP_IDP_PAIR pivot', () => {
-    it('should create group_by with both spId and idpId fields', () => {
-      // Given
-      const options: ElasticControlTransformOptionsDto = {
-        ...optionsMock,
-        pivot: ElasticControlPivotEnum.SP_IDP_PAIR,
-      };
+  describe('buildPeriodRangeFilter', () => {
+    const periodFromInMs = 1_735_689_600_000;
+    const periodToInMs = 1_738_368_000_000;
 
-      // When
-      const result = service['buildTransformBody'](options);
-
-      // Then
-      const pivot = result.pivot as any;
-      expect(pivot.group_by).toHaveProperty('spId');
-      expect(pivot.group_by).toHaveProperty('idpId');
-      expect(pivot.group_by.spId).toEqual({ terms: { field: 'spId' } });
-      expect(pivot.group_by.idpId).toEqual({ terms: { field: 'idpId' } });
+    beforeEach(() => {
+      jest.mocked(getPeriodWindow).mockReturnValue({
+        gte: new Date(periodFromInMs),
+        lt: new Date(periodToInMs),
+      });
     });
 
-    it('should include both spName and idpName in top_metrics', () => {
-      // Given
-      const options: ElasticControlTransformOptionsDto = {
-        ...optionsMock,
-        pivot: ElasticControlPivotEnum.SP_IDP_PAIR,
-      };
-
+    it('should call getPeriodWindow with the range and the provided period', () => {
       // When
-      const result = service['buildTransformBody'](options);
+      service['buildPeriodRangeFilter'](
+        ElasticControlRangeEnum.MONTH,
+        '2025-01',
+      );
 
       // Then
-      const info = (result.pivot as any).aggregations.info;
-      expect(info.top_metrics.metrics).toEqual([
-        { field: 'spName' },
-        { field: 'idpName' },
-      ]);
+      expect(getPeriodWindow).toHaveBeenCalledExactlyOnceWith(
+        ElasticControlRangeEnum.MONTH,
+        '2025-01',
+      );
     });
 
-    it('should not add any filter for SP_IDP_PAIR pivot', () => {
+    it('should fall back to derivePeriod when period is undefined', () => {
       // Given
-      const options: ElasticControlTransformOptionsDto = {
-        ...optionsMock,
-        pivot: ElasticControlPivotEnum.SP_IDP_PAIR,
-      };
+      jest.mocked(derivePeriod).mockReturnValue('2024-12');
 
       // When
-      const result = service['buildTransformBody'](options);
+      service['buildPeriodRangeFilter'](
+        ElasticControlRangeEnum.MONTH,
+        undefined,
+      );
 
       // Then
-      const filters = (result.source as any).query.bool.filter;
-      expect(filters).toHaveLength(3);
+      expect(derivePeriod).toHaveBeenCalledExactlyOnceWith(
+        ElasticControlRangeEnum.MONTH,
+      );
+      expect(getPeriodWindow).toHaveBeenCalledExactlyOnceWith(
+        ElasticControlRangeEnum.MONTH,
+        '2024-12',
+      );
+    });
+
+    it('should return a range filter with epoch_millis from getPeriodWindow', () => {
+      // When
+      const result = service['buildPeriodRangeFilter'](
+        ElasticControlRangeEnum.MONTH,
+        '2025-01',
+      );
+
+      // Then
+      expect(result).toEqual({
+        range: {
+          time: { gte: periodFromInMs, lt: periodToInMs },
+        },
+      });
+    });
+  });
+
+  describe('buildGroupBy', () => {
+    it('should create a terms entry for each groupField', () => {
+      // Given
+      const groupFields = ['spId', 'idpId'];
+
+      // When
+      const result = service['buildGroupBy'](groupFields, optionsMock);
+
+      // Then
+      expect(result['spId']).toEqual({ terms: { field: 'spId' } });
+      expect(result['idpId']).toEqual({ terms: { field: 'idpId' } });
+    });
+
+    it('should call buildDateHistogram and add period for non-SEMESTER range', () => {
+      // Given
+      const dateHistogramMock = {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        date_histogram: { field: 'time' },
+      };
+      service['buildDateHistogram'] = jest
+        .fn()
+        .mockReturnValue(dateHistogramMock);
+
+      // When
+      const result = service['buildGroupBy'](['spId'], optionsMock);
+
+      // Then
+      expect(service['buildDateHistogram']).toHaveBeenCalledExactlyOnceWith(
+        optionsMock.range,
+      );
+      expect(result['period']).toEqual(dateHistogramMock);
+    });
+
+    it('should not add period for SEMESTER range', () => {
+      // Given
+      const semesterOptions: ElasticControlTransformOptionsDto = {
+        ...optionsMock,
+        range: ElasticControlRangeEnum.SEMESTER,
+      };
+      service['buildDateHistogram'] = jest.fn();
+
+      // When
+      const result = service['buildGroupBy'](['spId'], semesterOptions);
+
+      // Then
+      expect(service['buildDateHistogram']).not.toHaveBeenCalled();
+      expect(result).not.toHaveProperty('period');
+    });
+  });
+
+  describe('buildDateHistogram', () => {
+    it('should return a calendar_interval date_histogram for MONTH range', () => {
+      // When
+      const result = service['buildDateHistogram'](
+        ElasticControlRangeEnum.MONTH,
+      );
+
+      // Then
+      expect(result).toEqual({
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        date_histogram: {
+          field: 'time',
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          calendar_interval: '1M',
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          time_zone: DEFAULT_TIMEZONE,
+        },
+      });
+    });
+
+    it('should return a calendar_interval date_histogram for YEAR range', () => {
+      // When
+      const result = service['buildDateHistogram'](
+        ElasticControlRangeEnum.YEAR,
+      );
+
+      // Then
+      expect(result).toEqual({
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        date_histogram: {
+          field: 'time',
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          calendar_interval: '1y',
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          time_zone: DEFAULT_TIMEZONE,
+        },
+      });
+    });
+
+    it('should throw ElasticControlInvalidRequestException for unsupported range', () => {
+      // When / Then
+      expect(() =>
+        service['buildDateHistogram']('UNSUPPORTED' as ElasticControlRangeEnum),
+      ).toThrow(ElasticControlInvalidRequestException);
     });
   });
 
   describe('buildTransformId', () => {
-    it('should return a sorted, underscore-joined string', () => {
+    it('should return an id following the runner_stats_<product>_<pivot>_<range> convention', () => {
       // When
-      const result = service['buildTransformId'](optionsMock);
+      const result = service.buildTransformId(optionsMock);
 
       // Then
-      expect(result).toBe('2025-08_sp_franceconnect_plus_month');
+      expect(result).toBe('runner_stats_franceconnect_plus_sp_month');
+    });
+
+    it('should build correct id for LOW product', () => {
+      // Given
+      const options: ElasticControlTransformOptionsDto = {
+        product: ElasticControlProductEnum.LOW,
+        range: ElasticControlRangeEnum.YEAR,
+        pivot: ElasticControlPivotEnum.IDP,
+      };
+
+      // When
+      const result = service.buildTransformId(options);
+
+      // Then
+      expect(result).toBe('runner_stats_franceconnect_idp_year');
     });
   });
 });

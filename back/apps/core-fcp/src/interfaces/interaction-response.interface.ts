@@ -7,6 +7,7 @@ export interface InteractionResponseInterface {
   params: any;
   providers: IdentityProviderMetadata[];
   aidantsConnect: IdentityProviderMetadata | undefined;
+  walletBridge: IdentityProviderMetadata | undefined;
   spName: string | null;
   spScope: string;
   errorContext: ErrorContextInterface;

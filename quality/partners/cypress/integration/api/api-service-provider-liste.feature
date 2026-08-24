@@ -20,7 +20,7 @@ Fonctionnalité: API - Service Provider liste
     Et le corps de la réponse a une propriété "payload[0].datapassScopes"
     Et le corps de la réponse a une propriété "payload[0].datapassScopes[0]" égale à "Identifiant technique"
     Et le corps de la réponse a une propriété "payload[0].datapassScopes[1]" égale à "Prénoms"
-    Et le corps de la réponse a une propriété "payload[0].datapassScopes[2]" égale à "Nom de naissance"
+    Et le corps de la réponse a une propriété "payload[0].datapassScopes[2]" égale à "Nom de famille"
     Et le corps de la réponse a une propriété "payload[0].datapassScopes[3]" égale à "Adresse électronique"
     Et le corps de la réponse a une propriété "payload[0].datapassScopes[4]" égale à "Date de naissance"
     Et le corps de la réponse a une propriété "payload[0].datapassScopes" avec 5 éléments

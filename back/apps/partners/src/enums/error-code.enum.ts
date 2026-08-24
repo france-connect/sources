@@ -1,3 +1,4 @@
 export enum ErrorCode {
   INSTANCE_NOT_FOUND = 1,
+  CONTRIBUTOR_ALREADY_EXISTS = 2,
 }

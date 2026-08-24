@@ -8,6 +8,7 @@ export default {
       platform: true,
       eidasBridgeUid: true,
       aidantsConnectUid: true,
+      walletBridgeUid: true,
       environment: true,
     },
   },

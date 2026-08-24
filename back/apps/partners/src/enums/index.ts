@@ -3,6 +3,7 @@ export * from './access-control-handler.enum';
 export * from './access-control-permission.enum';
 export * from './created-by.enum';
 export * from './default-service-providers.enum';
+export * from './emails-template.enum';
 export * from './error-code.enum';
 export * from './partners-back-routes.enum';
 export * from './partners-front-routes.enum';

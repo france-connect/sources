@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`DeleteInstanceModalComponent should match the snapshot 1`] = `
+<div>
+  <p>
+    Partners.serviceProviderPage.sandboxes.deleteModal.description
+  </p>
+</div>
+`;

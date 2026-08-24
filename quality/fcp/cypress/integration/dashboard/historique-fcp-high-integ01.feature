@@ -11,6 +11,7 @@ Fonctionnalité: Historique Connexion sur FC+ (integ01)
     Et que le fournisseur de service requiert l'accès aux informations du scope "tous les scopes"
     Et que j'utilise le fournisseur de service "par défaut"
     Et que j'ai fait une cinématique FranceConnect avec appel aux FD
+    Et que j'attends 30 secondes
     Et que j'utilise la plateforme "FranceConnect(v2)"
     Et que j'utilise un compte usager "pour les tests de traces"
     Et que je navigue sur la page d'accueil du tableau de bord usager
@@ -35,6 +36,7 @@ Fonctionnalité: Historique Connexion sur FC+ (integ01)
     Et que j'utilise le fournisseur de service "par défaut"
     Et que le fournisseur de service requiert l'accès aux informations des scopes "dgfip et cnam"
     Et que j'ai fait une cinématique FranceConnect avec appel aux FD
+    Et que j'attends 30 secondes
     Et que j'utilise la plateforme "FranceConnect(v2)"
     Et que j'utilise un compte usager "pour les tests de traces"
     Et que je navigue sur la page d'accueil du tableau de bord usager
@@ -81,6 +83,7 @@ Fonctionnalité: Historique Connexion sur FC+ (integ01)
     Et que j'utilise le fournisseur de service "privé avec consentement obligatoire"
     Et que le fournisseur de service requiert l'accès aux informations du scope "identite_pivot sans alias"
     Et que j'ai fait une cinématique FranceConnect avec appel aux FD
+    Et que j'attends 30 secondes
     Et que j'utilise la plateforme "FranceConnect(v2)"
     Et que j'utilise un compte usager "pour les tests de traces"
     Et que je navigue sur la page d'accueil du tableau de bord usager
@@ -104,7 +107,7 @@ Fonctionnalité: Historique Connexion sur FC+ (integ01)
     Et la date et heure de l'évènement correspondent à maintenant
     Et l'évènement concerne 7 données "FCP_HIGH"
     Et les données "FCP_HIGH" de l'évènement contiennent "Prénom(s)"
-    Et les données "FCP_HIGH" de l'évènement contiennent "Nom de naissance"
+    Et les données "FCP_HIGH" de l'évènement contiennent "Nom de famille"
     Et les données "FCP_HIGH" de l'évènement contiennent "Date de naissance"
     Et les données "FCP_HIGH" de l'évènement contiennent "Sexe"
     Et les données "FCP_HIGH" de l'évènement contiennent "Nom d’usage"
@@ -121,6 +124,7 @@ Fonctionnalité: Historique Connexion sur FC+ (integ01)
     Et que j'utilise le fournisseur de service "privé avec consentement obligatoire"
     Et que le fournisseur de service requiert l'accès aux informations des scopes "dgfip et cnam"
     Et que j'ai fait une cinématique FranceConnect avec appel aux FD
+    Et que j'attends 30 secondes
     Et que j'utilise la plateforme "FranceConnect(v2)"
     Et que j'utilise un compte usager "pour les tests de traces"
     Et que je navigue sur la page d'accueil du tableau de bord usager
@@ -182,6 +186,7 @@ Fonctionnalité: Historique Connexion sur FC+ (integ01)
     Et que j'utilise le fournisseur de service "privé avec consentement obligatoire"
     Et que le fournisseur de service requiert l'accès aux informations du scope "anonyme"
     Et que j'ai fait une cinématique FranceConnect avec appel aux FD
+    Et que j'attends 30 secondes
     Et que j'utilise la plateforme "FranceConnect(v2)"
     Et que j'utilise un compte usager "pour les tests de traces"
     Et que je navigue sur la page d'accueil du tableau de bord usager

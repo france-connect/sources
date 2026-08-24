@@ -1,3 +1,4 @@
+export * from './build-mdoc-vp-token-options.interface';
 export * from './mdoc-claims.interface';
 export * from './mdoc-device-name-spaces.type';
 export * from './mdoc-device-signed.interface';
@@ -6,6 +7,7 @@ export * from './mdoc-issuer-name-spaces.type';
 export * from './mdoc-issuer-signed.interface';
 export * from './mdoc-issuer-signed-item.interface';
 export * from './mdoc-mso.interface';
+export * from './mdoc-openid4vp-session.interface';
 export * from './mdoc-validity-info.interface';
 export * from './mdoc-value-digests.type';
 export * from './simple-document.interface';

@@ -1,7 +1,7 @@
 import { Then } from '@badeball/cypress-cucumber-preprocessor';
 
 import {
-  getAllBusinessLogs,
+  getAllLogs,
   hasBusinessLog,
   LogResult,
   prepareEventVerification,
@@ -100,7 +100,7 @@ Then(
 
     expect(expectedEvents).not.to.be.undefined;
 
-    getAllBusinessLogs(logPath).then((logs) => {
+    getAllLogs(logPath).then((logs) => {
       // Need te re-reverse the logs to have them in the right order (most recent last)
       const orderedLogs = logs.reverse();
 

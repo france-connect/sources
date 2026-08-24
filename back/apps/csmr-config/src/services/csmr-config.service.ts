@@ -4,7 +4,11 @@ import {
   ConfigDatabaseServiceInterface,
   ConfigSaveResultInterface,
 } from '@fc/config-abstract-adapter';
-import { ConfigMessageDto } from '@fc/csmr-config-client/dto';
+import {
+  ConfigCreateMessageDto,
+  ConfigDeleteMessageDto,
+  ConfigUpdateMessageDto,
+} from '@fc/csmr-config-client/dto';
 
 import { CONFIG_DATABASE_SERVICE } from '../tokens';
 
@@ -15,14 +19,26 @@ export class CsmrConfigService {
     private readonly configDatabaseService: ConfigDatabaseServiceInterface,
   ) {}
 
-  async create(config: ConfigMessageDto): Promise<ConfigSaveResultInterface> {
+  async create(
+    config: ConfigCreateMessageDto,
+  ): Promise<ConfigSaveResultInterface> {
     const result = await this.configDatabaseService.create(config);
 
     return result;
   }
 
-  async update(config: ConfigMessageDto): Promise<ConfigSaveResultInterface> {
+  async update(
+    config: ConfigUpdateMessageDto,
+  ): Promise<ConfigSaveResultInterface> {
     const result = await this.configDatabaseService.update(config);
+
+    return result;
+  }
+
+  async delete(
+    config: ConfigDeleteMessageDto,
+  ): Promise<ConfigSaveResultInterface> {
+    const result = await this.configDatabaseService.delete(config);
 
     return result;
   }

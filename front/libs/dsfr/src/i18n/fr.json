@@ -16,6 +16,7 @@
   "DSFR.stepper.nextStepButton": "Suivant",
   "DSFR.stepper.previousStepButton": "Précédent",
   "DSFR.stepper.skipStepButton": "Passer cette étape",
+  "DSFR.table.columnActions.label": "Actions",
   "DSFR.toggle.checked": "Activé",
   "DSFR.toggle.unchecked": "Désactivé"
 }

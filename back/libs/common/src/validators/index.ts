@@ -6,3 +6,4 @@ export * from './is-included-in-config.validator';
 export * from './is-siret.validator';
 export * from './is-string-or-regexp.validator';
 export * from './is-url-required-tld-from-config';
+export * from './require-at-least-one-of.validator';

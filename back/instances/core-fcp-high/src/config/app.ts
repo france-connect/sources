@@ -20,6 +20,7 @@ export default {
   udFqdn: process.env.UD_FQDN,
   minAcrForContextRequest: 'eidas2',
   eidasBridgeUid: env.string('EIDAS_BRIDGE_UID'),
+  walletBridgeUid: env.string('WALLET_BRIDGE_UID'),
   sortedClaims: [
     'family_name',
     'preferred_username',

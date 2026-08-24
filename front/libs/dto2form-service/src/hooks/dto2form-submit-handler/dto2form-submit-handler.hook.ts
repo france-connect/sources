@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { generatePath, useParams } from 'react-router';
 
+import type { ContentType } from '@fc/common';
 import type { HttpClientDataInterface } from '@fc/http-client';
 
 import type { Dto2FormServiceFormConfigInterface } from '../../interfaces';
@@ -8,16 +9,17 @@ import { dto2FormServiceCommit } from '../../services';
 
 export const useDto2FormSubmitHandler = (
   endpoints: Dto2FormServiceFormConfigInterface['endpoints'],
+  contentType?: ContentType,
 ) => {
   const params = useParams();
   const handler = useCallback(
     async (data: HttpClientDataInterface) => {
       const { method, path } = endpoints.submit;
       const url = generatePath(path, params);
-      const result = await dto2FormServiceCommit(method, url, data);
+      const result = await dto2FormServiceCommit(method, url, data, contentType);
       return result;
     },
-    [endpoints, params],
+    [endpoints, params, contentType],
   );
 
   return handler;

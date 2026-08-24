@@ -9,6 +9,7 @@ export enum PartnersBackRoutes {
   SERVICE_PROVIDER = '/service-providers/:serviceProviderId',
   SERVICE_PROVIDER_CREATE_INSTANCE = '/service-providers/:serviceProviderId/instances',
   SERVICE_PROVIDER_INSTANCE_FORM_METADATA = '/service-providers/:serviceProviderId/versions/form-metadata',
+  SERVICE_PROVIDER_CONTRIBUTORS = '/service-providers/:serviceProviderId/contributors',
 
   SP_INSTANCES = '/instances',
   SP_INSTANCE = '/instances/:instanceId',
@@ -18,6 +19,7 @@ export enum PartnersBackRoutes {
 
   SP_VERSION_FORM_METADATA = '/versions/form-metadata',
 
+  SP_CONTRIBUTORS_FORM_METADATA = '/contributors/form-metadata',
+
   DATAPASS_WEBHOOK = '/datapass/webhook',
-  INVITATION = '/invitation',
 }

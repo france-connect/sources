@@ -13,10 +13,14 @@ const config: Partial<Cypress.ResolvedConfigOptions<never>> = {
   env: {
     APP_LABEL: 'Espace Partenaires',
     // Base Configuration
-    PLATFORM: 'partners',
+    TEST_PLATFORM: 'partners',
     TEST_ENV: 'docker',
     TAGS: 'not @ignore',
     CI: process.env.CI,
+    // Maildev
+    MAILDEV_PROTOCOL: 'https',
+    MAILDEV_HOST: 'maildev.docker.dev-franceconnect.fr',
+    MAILDEV_API_PORT: '443',
   },
 };
 /* eslint-enable sort-keys-fix/sort-keys-fix, sort-keys */

@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react';
 import { useLoaderData } from 'react-router';
 
-import { useSafeContext } from '@fc/common';
+import { ContentType, useSafeContext } from '@fc/common';
 
 import { Dto2FormServiceContext } from '../../context';
 import { parseInitialValues, removeReadOnlyFields } from '../../helpers';
@@ -25,17 +25,22 @@ describe('useDto2FormService', () => {
       },
     },
     form: {
+      contentType: ContentType.JSON,
       id: 'any-form-id-mock',
     },
   };
-  const contextMock = {
-    getConfigEndpointsById: jest.fn().mockReturnValue(formMock.endpoints),
-    getConfigFormById: jest.fn().mockReturnValue(formMock),
-  };
+  const getConfigFormByIdMock = jest.fn();
+  const getConfigEndpointsByIdMock = jest.fn();
 
   beforeEach(() => {
+    // Given
     jest.mocked(useLoaderData).mockReturnValue({ data: dataMock, schema: schemaMock });
-    jest.mocked(useSafeContext).mockReturnValue(contextMock);
+    jest.mocked(getConfigFormByIdMock).mockReturnValue(formMock.form);
+    jest.mocked(getConfigEndpointsByIdMock).mockReturnValue(formMock.endpoints);
+    jest.mocked(useSafeContext).mockReturnValue({
+      getConfigEndpointsById: getConfigEndpointsByIdMock,
+      getConfigFormById: getConfigFormByIdMock,
+    });
   });
 
   it('should get config helpers from Dto2FormServiceContext', () => {
@@ -54,12 +59,20 @@ describe('useDto2FormService', () => {
     expect(useLoaderData).toHaveBeenCalledExactlyOnceWith();
   });
 
+  it('should retrieve contentType from config for the route id', () => {
+    // When
+    renderHook(() => useDto2FormService('any-form-id-mock'));
+
+    // Then
+    expect(getConfigFormByIdMock).toHaveBeenCalledExactlyOnceWith('any-form-id-mock');
+  });
+
   it('should retrieve endpoint from config for the route id', () => {
     // When
     renderHook(() => useDto2FormService('any-form-id-mock'));
 
     // Then
-    expect(contextMock.getConfigEndpointsById).toHaveBeenCalledExactlyOnceWith('any-form-id-mock');
+    expect(getConfigEndpointsByIdMock).toHaveBeenCalledExactlyOnceWith('any-form-id-mock');
   });
 
   it('should call useDto2FormSubmitHandler with endpoints from config', () => {
@@ -67,7 +80,10 @@ describe('useDto2FormService', () => {
     renderHook(() => useDto2FormService('any-form-id-mock'));
 
     // Then
-    expect(useDto2FormSubmitHandler).toHaveBeenCalledExactlyOnceWith(formMock.endpoints);
+    expect(useDto2FormSubmitHandler).toHaveBeenCalledExactlyOnceWith(
+      formMock.endpoints,
+      ContentType.JSON,
+    );
   });
 
   it('should call parseInitialValues with schema and data', () => {
@@ -105,7 +121,7 @@ describe('useDto2FormService', () => {
 
     // Then
     expect(result.current).toEqual({
-      form: formMock,
+      form: formMock.form,
       initialValues: initialValuesMock,
       schema: schemaMock,
       submitHandler: submitHandlerMock,

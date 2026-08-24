@@ -14,25 +14,25 @@ export const Layout: LayoutConfig = {
         external: true,
         href: 'https://www.legifrance.gouv.fr',
         label: 'legifrance.gouv.fr',
-        title: 'Accéder au site legifrance.gouv.fr nouvelle fenêtre',
+        title: 'Accéder au site legifrance.gouv.fr',
       },
       {
         external: true,
         href: 'https://www.info.gouv.fr',
         label: 'info.gouv.fr',
-        title: 'Accéder au site info.gouv.fr nouvelle fenêtre',
+        title: 'Accéder au site info.gouv.fr',
       },
       {
         external: true,
         href: 'https://www.service-public.gouv.fr/',
         label: 'service-public.gouv.fr',
-        title: 'Accéder au site service-public.gouv.fr nouvelle fenêtre',
+        title: 'Accéder au site service-public.gouv.fr',
       },
       {
         external: true,
         href: 'https://data.gouv.fr',
         label: 'data.gouv.fr',
-        title: 'Accéder au site data.gouv.fr nouvelle fenêtre',
+        title: 'Accéder au site data.gouv.fr',
       },
     ],
     navigation: [
@@ -42,8 +42,8 @@ export const Layout: LayoutConfig = {
         label: 'Plan du site',
       },
       {
-        external: true,
-        href: 'https://franceconnect.gouv.fr/accessibilite/',
+        external: false,
+        href: '/accessibilite',
         label: 'Accessibilité : non conforme',
       },
       {
@@ -53,12 +53,12 @@ export const Layout: LayoutConfig = {
       },
       {
         external: true,
-        href: 'https://franceconnect.gouv.fr/cgu/',
+        href: 'https://www.franceconnect.gouv.fr/cgu/politique-protection-donnees-personnelles/',
         label: 'Données personnelles',
       },
       {
         external: true,
-        href: 'https://franceconnect.gouv.fr/cgu/',
+        href: 'https://www.franceconnect.gouv.fr/gestion-cookies/',
         label: 'Gestion des cookies',
       },
     ],
@@ -91,8 +91,12 @@ export const Layout: LayoutConfig = {
   },
   sitemap: [
     {
-      href: '/',
-      label: 'Accueil',
+      href: '/fournisseurs-de-service',
+      label: 'Mes fournisseurs de service',
+    },
+    {
+      href: '/instances',
+      label: 'Mes accès au bac à sable',
     },
     {
       href: '/mentions-legales',
@@ -100,12 +104,12 @@ export const Layout: LayoutConfig = {
     },
     {
       external: true,
-      href: 'https://franceconnect.gouv.fr/licence/',
+      href: 'https://www.franceconnect.gouv.fr/licence/',
       label: 'Licence',
     },
     {
-      external: true,
-      href: 'https://franceconnect.gouv.fr/accessibilite/',
+      external: false,
+      href: '/accessibilite',
       label: 'Accessibilité',
     },
   ],

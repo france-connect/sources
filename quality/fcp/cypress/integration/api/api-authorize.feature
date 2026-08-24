@@ -46,7 +46,7 @@ Fonctionnalité: API - authorize
     Et le code d'erreur FranceConnect est "Y04A8220"
     Et le message d'erreur FranceConnect est "Une erreur de communication avec le fournisseur de service est survenue : Impossible de contacter le \"sector_identifier_uri\"."
 
-
+  @clearTechnicalLogs
   Plan du Scénario: API authorize - erreur Y030007 <param> manquant
     Etant donné que je prépare une requête "authorize"
     Et je retire le paramètre "<param>" de la requête
@@ -56,18 +56,20 @@ Fonctionnalité: API - authorize
     Et le corps de la réponse contient une page web
     Et je suis redirigé vers la page erreur technique FranceConnect
     Et le code d'erreur FranceConnect est "Y030007"
+    Et le log technique de code "Y030007" est journalisé avec "clientId" "<clientId>"
 
     @exceptions
     Exemples:
-      | param         |
-      | acr_values    |
-      | client_id     |
-      | nonce         |
-      | redirect_uri  |
-      | response_type |
-      | scope         |
-      | state         |
+      | param         | clientId                                                         |
+      | acr_values    | 6925fb8143c76eded44d32b40c0cb1006065f7f003de52712b78985704f39950 |
+      | client_id     | undefined                                                        |
+      | nonce         | 6925fb8143c76eded44d32b40c0cb1006065f7f003de52712b78985704f39950 |
+      | redirect_uri  | 6925fb8143c76eded44d32b40c0cb1006065f7f003de52712b78985704f39950 |
+      | response_type | 6925fb8143c76eded44d32b40c0cb1006065f7f003de52712b78985704f39950 |
+      | scope         | 6925fb8143c76eded44d32b40c0cb1006065f7f003de52712b78985704f39950 |
+      | state         | 6925fb8143c76eded44d32b40c0cb1006065f7f003de52712b78985704f39950 |
 
+  @clearTechnicalLogs
   Plan du Scénario: API authorize - erreur Y030007 prompt=<prompt>
     Etant donné que je prépare une requête "authorize"
     Et je mets "<prompt>" dans le paramètre "prompt" de la requête
@@ -77,12 +79,13 @@ Fonctionnalité: API - authorize
     Et le corps de la réponse contient une page web
     Et je suis redirigé vers la page erreur technique FranceConnect
     Et le code d'erreur FranceConnect est "Y030007"
+    Et le log technique de code "Y030007" est journalisé avec "clientId" "<clientId>"
 
     Exemples:
-      | prompt         |
-      |                |
-      | none           |
-      | select_account |
+      | prompt         | clientId                                                         |
+      |                | 6925fb8143c76eded44d32b40c0cb1006065f7f003de52712b78985704f39950 |
+      | none           | 6925fb8143c76eded44d32b40c0cb1006065f7f003de52712b78985704f39950 |
+      | select_account | 6925fb8143c76eded44d32b40c0cb1006065f7f003de52712b78985704f39950 |
 
   Plan du Scénario: API authorize - Cas nominal nonce=<nonce>
     Etant donné que je prépare une requête "authorize"
@@ -98,6 +101,7 @@ Fonctionnalité: API - authorize
       | nonceatleastthirtytwocharacterss                                    |
       | nonceatleastsixtyfourcharacterss@#&nonceatleastsixtyfourcharacterss |
 
+  @clearTechnicalLogs
   Plan du Scénario: API authorize - erreur Y030007 nonce=<nonce>
     Etant donné que je prépare une requête "authorize"
     Et je mets "<nonce>" dans le paramètre "nonce" de la requête
@@ -107,11 +111,12 @@ Fonctionnalité: API - authorize
     Et le corps de la réponse contient une page web
     Et je suis redirigé vers la page erreur technique FranceConnect
     Et le code d'erreur FranceConnect est "Y030007"
+    Et le log technique de code "Y030007" est journalisé avec "clientId" "<clientId>"
 
     Exemples:
-      | nonce            |
-      |                  |
-      | nonce_trop_court |
+      | nonce            | clientId                                                         |
+      |                  | 6925fb8143c76eded44d32b40c0cb1006065f7f003de52712b78985704f39950 |
+      | nonce_trop_court | 6925fb8143c76eded44d32b40c0cb1006065f7f003de52712b78985704f39950 |
 
   Plan du Scénario: API authorize - Erreur <error> avec response_type=<responseType>
     Etant donné que je prépare une requête "authorize"
@@ -164,6 +169,7 @@ Fonctionnalité: API - authorize
     Et le code d'erreur FranceConnect est "Y030007"
     Et le lien retour vers le FS n'est pas affiché dans la page erreur technique
 
+  @clearTechnicalLogs
   Plan du Scénario: API authorize - erreur Y04EA6EF client_id=<clientId>
     Etant donné que je prépare une requête "authorize"
     Et je mets "<clientId>" dans le paramètre "client_id" de la requête
@@ -175,6 +181,7 @@ Fonctionnalité: API - authorize
     Et le code d'erreur FranceConnect est "Y04EA6EF"
     Et le message d'erreur FranceConnect est "Une erreur de communication avec le fournisseur de service est survenue. Veuillez réessayer ultérieurement."
     Et le lien retour vers le FS n'est pas affiché dans la page erreur technique
+    Et le log technique de code "Y04EA6EF" est journalisé avec "clientId" "<clientId>"
 
     @exceptions
     Exemples:
@@ -230,7 +237,7 @@ Fonctionnalité: API - authorize
     Et le corps de la réponse contient une page web
     Et je suis redirigé vers la page erreur technique FranceConnect
     Et le code d'erreur FranceConnect est "Y040001"
-    Et le message d'erreur FranceConnect est "Une erreur s'est produite, veuillez réessayer ultérieurement"
+    Et le message d'erreur FranceConnect est "Une erreur s’est produite, veuillez réessayer ultérieurement"
     Et le lien retour vers le FS n'est pas affiché dans la page erreur technique
 
   Scénario: API authorize - Paramètre ui_locales autorisé mais non utilisé

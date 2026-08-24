@@ -1,6 +1,8 @@
 <%
 locals.providers
-  .filter(p => p.display).filter(p => p.uid !== $config('App.eidasBridgeUid'))
+  .filter(p => p.display)
+  .filter(p => p.uid !== $config('App.eidasBridgeUid'))
+  .filter(p => p.uid !== $config('App.walletBridgeUid'))
   .forEach(provider => {
 %>
   <li>

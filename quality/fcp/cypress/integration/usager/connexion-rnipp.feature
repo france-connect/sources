@@ -126,6 +126,35 @@ Fonctionnalité: Connexion Usager - RNIPP
       | scenario          | username | errorCode | event                     |
       | aucun echo trouvé | E010008  | Y010008   | FC_RECEIVED_INVALID_RNIPP |
 
+  @fcpLow @fcpHigh @exceptions
+  Scénario: Connexion avec erreur RNIPP Y010009 - mauvais format de requête
+    Etant donné que je navigue sur la page fournisseur de service
+    Et que je clique sur le bouton FranceConnect
+    Et que je suis redirigé vers la page sélection du fournisseur d'identité
+    Et que je clique sur le fournisseur d'identité
+    Et que je suis redirigé vers la page login du fournisseur d'identité
+    Quand je m'authentifie avec "E010009"
+    Alors je suis redirigé vers la page erreur technique FranceConnect
+    Et le code d'erreur FranceConnect est "Y010009"
+    Et le sous-titre de la page d'erreur est "Que faire ?"
+    Et le message d'erreur FranceConnect est "Un problème lié à vos données d’identité empêche la connexion d’aboutir. Nous vous invitons à nous contacter pour corriger le problème."
+    Et le bouton "contacter le support" est affiché
+    Et le lien vers le support contient le code d'erreur "Y010009"
+
+  @fcpLow @fcpHigh @exceptions
+  Scénario: Connexion avec erreur RNIPP Y010015 - usager décédé
+    Etant donné que je navigue sur la page fournisseur de service
+    Et que je clique sur le bouton FranceConnect
+    Et que je suis redirigé vers la page sélection du fournisseur d'identité
+    Et que je clique sur le fournisseur d'identité
+    Et que je suis redirigé vers la page login du fournisseur d'identité
+    Quand je m'authentifie avec "E010015"
+    Alors je suis redirigé vers la page erreur technique FranceConnect
+    Et le code d'erreur FranceConnect est "Y010015"
+    Et le sous-titre de la page d'erreur est "Besoin d'aide ?"
+    Et le message d'erreur FranceConnect est "Les identifiants utilisés correspondent à une identité qui ne permet plus la connexion."
+    Et le bouton "consulter la faq" est affiché
+
   @fcpHigh @exceptions
   Plan du Scénario: Connexion avec erreur RNIPP <errorCode> <scenario>
     Etant donné que je navigue sur la page fournisseur de service

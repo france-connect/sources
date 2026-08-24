@@ -45,7 +45,7 @@ export class ExceptionsFcpService {
     }
 
     return {
-      message: customAction.errorMessage,
+      message: customAction.errorMessage ?? message,
       title: customAction.actionTitle,
     };
   }

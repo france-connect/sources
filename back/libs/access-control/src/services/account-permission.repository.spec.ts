@@ -25,6 +25,7 @@ describe('AccountPermissionRepository', () => {
   const accountPermissionRepositoryMock = {
     find: jest.fn(),
     findOne: jest.fn(),
+    count: jest.fn(),
     insert: jest.fn(),
     upsert: jest.fn(),
     catch: jest.fn(),
@@ -162,6 +163,65 @@ describe('AccountPermissionRepository', () => {
 
       // Then
       expect(result).toBe(dataMock);
+    });
+  });
+
+  describe('hasPermission', () => {
+    const permissionTypes = [PermissionsType.PERMISSION_VALUE];
+
+    it('should query repository with a count scoped to email, permissions and entity', async () => {
+      // Given
+      accountPermissionRepositoryMock.count.mockResolvedValueOnce(0);
+
+      // When
+      await repository.hasPermission(
+        emailMock,
+        permissionTypes,
+        EntityType.ENTITY_VALUE,
+        idMock,
+      );
+
+      // Then
+      expect(accountPermissionRepositoryMock.count).toHaveBeenCalledWith({
+        where: {
+          account: { email: emailMock },
+          permissionType: expect.any(Object),
+          entity: EntityType.ENTITY_VALUE,
+          entityId: idMock,
+        },
+      });
+    });
+
+    it('should return true when at least one matching permission exists', async () => {
+      // Given
+      accountPermissionRepositoryMock.count.mockResolvedValueOnce(1);
+
+      // When
+      const result = await repository.hasPermission(
+        emailMock,
+        permissionTypes,
+        EntityType.ENTITY_VALUE,
+        idMock,
+      );
+
+      // Then
+      expect(result).toBe(true);
+    });
+
+    it('should return false when no matching permission exists', async () => {
+      // Given
+      accountPermissionRepositoryMock.count.mockResolvedValueOnce(0);
+
+      // When
+      const result = await repository.hasPermission(
+        emailMock,
+        permissionTypes,
+        EntityType.ENTITY_VALUE,
+        idMock,
+      );
+
+      // Then
+      expect(result).toBe(false);
     });
   });
 

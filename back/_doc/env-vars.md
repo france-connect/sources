@@ -6,30 +6,30 @@
 
 1. [command-elastic-instance](#command-elastic-instance)
 2. [command-import-datapass](#command-import-datapass)
-3. [command-import-sp-sandbox](#command-import-sp-sandbox)
-4. [command-pre-deploy](#command-pre-deploy)
-5. [command-runner-instance](#command-runner-instance)
-6. [command-support-ticket](#command-support-ticket)
-7. [core-fcp-high](#core-fcp-high)
-8. [core-fcp-low](#core-fcp-low)
-9. [csmr-account-instance](#csmr-account-instance)
-10. [csmr-config-partners](#csmr-config-partners)
-11. [csmr-config-sandbox-low](#csmr-config-sandbox-low)
-12. [csmr-fraud-instance](#csmr-fraud-instance)
-13. [csmr-hsm-high](#csmr-hsm-high)
-14. [csmr-import-core-instance](#csmr-import-core-instance)
-15. [csmr-tracks-instance](#csmr-tracks-instance)
-16. [csmr-user-preferences-high](#csmr-user-preferences-high)
-17. [eidas-bridge](#eidas-bridge)
-18. [mock-data-provider](#mock-data-provider)
-19. [mock-datapass-instance](#mock-datapass-instance)
-20. [mock-identity-provider-fcp-high](#mock-identity-provider-fcp-high)
-21. [mock-identity-provider-fcp-low](#mock-identity-provider-fcp-low)
-22. [mock-proconnect](#mock-proconnect)
-23. [mock-rnipp](#mock-rnipp)
-24. [mock-service-provider-fcp-high](#mock-service-provider-fcp-high)
-25. [mock-service-provider-fcp-legacy](#mock-service-provider-fcp-legacy)
-26. [mock-service-provider-fcp-low](#mock-service-provider-fcp-low)
+3. [command-pre-deploy](#command-pre-deploy)
+4. [command-runner-instance](#command-runner-instance)
+5. [command-support-ticket](#command-support-ticket)
+6. [core-fcp-high](#core-fcp-high)
+7. [core-fcp-low](#core-fcp-low)
+8. [csmr-account-instance](#csmr-account-instance)
+9. [csmr-config-partners](#csmr-config-partners)
+10. [csmr-config-sandbox-low](#csmr-config-sandbox-low)
+11. [csmr-fraud-instance](#csmr-fraud-instance)
+12. [csmr-hsm-high](#csmr-hsm-high)
+13. [csmr-import-core-instance](#csmr-import-core-instance)
+14. [csmr-tracks-instance](#csmr-tracks-instance)
+15. [csmr-user-preferences-high](#csmr-user-preferences-high)
+16. [eidas-bridge](#eidas-bridge)
+17. [mock-data-provider](#mock-data-provider)
+18. [mock-datapass-instance](#mock-datapass-instance)
+19. [mock-identity-provider-fcp-high](#mock-identity-provider-fcp-high)
+20. [mock-identity-provider-fcp-low](#mock-identity-provider-fcp-low)
+21. [mock-proconnect](#mock-proconnect)
+22. [mock-rnipp](#mock-rnipp)
+23. [mock-service-provider-fcp-high](#mock-service-provider-fcp-high)
+24. [mock-service-provider-fcp-legacy](#mock-service-provider-fcp-legacy)
+25. [mock-service-provider-fcp-low](#mock-service-provider-fcp-low)
+26. [mock-wallet](#mock-wallet)
 27. [partners](#partners)
 28. [user-dashboard](#user-dashboard)
 29. [wallet-bridge](#wallet-bridge)
@@ -47,6 +47,7 @@
 | ElasticControl_HIGH_TRACKS_INDEX | string |
 | ElasticControl_LOW_TRACKS_INDEX | string |
 | ElasticControl_METRICS_INDEX | string |
+| ElasticControl_RUNNING_OPERATIONS_MAX_SIZE | number |
 | Elasticsearch_NODES | json |
 | Elasticsearch_PASSWORD | string |
 | Elasticsearch_TRACKS_INDEX | string |
@@ -64,32 +65,6 @@
 | Logger_THRESHOLD | string |
 | WebhooksPartners_SECRET | string |
 | WebhooksPartners_URL | string |
-
-### command-import-sp-sandbox
-
-| Var Name | Inferred type |
-|---|---|
-| AdapterMongo_CLIENT_SECRET_CIPHER_PASS | string |
-| AdapterMongo_PLATFORM | string |
-| App_DS_CSV_PATH | string |
-| App_ENVIRONMENT | string |
-| App_INVITATION_ENDPOINT | string |
-| App_TEST_EMAIL | string |
-| App_TEST_INSTANCE_ID | string |
-| Logger_THRESHOLD | string |
-| MicroserviceConfigSandboxLow_MESSAGE_TTL | number |
-| MicroserviceConfigSandboxLow_QUEUE | string |
-| MicroserviceConfigSandboxLow_URLS | json |
-| Mongoose_DATABASE | string |
-| Mongoose_HOSTS | string |
-| Mongoose_PASSWORD | string |
-| Mongoose_TLS | boolean |
-| Mongoose_TLS_ALLOW_INVALID_HOST_NAME | boolean |
-| Mongoose_TLS_CA_FILE | string |
-| Mongoose_TLS_INSECURE | boolean |
-| Mongoose_USER | string |
-| REQUEST_TIMEOUT | string |
-| WebhooksInvitation_SECRET | string |
 
 ### command-pre-deploy
 
@@ -133,6 +108,7 @@
 | App_HTTPS_SERVER_KEY | file |
 | App_SHOW_EXCLUDED_IDP | boolean |
 | App_VIEWS_PATHS | json |
+| App_WALLET_BRIDGE_UID | string |
 | Core_ALLOWED_IDP_HINTS | json |
 | Core_SUPPORT_FORM_URL | string |
 | CryptographyBroker_MESSAGE_TTL | number |
@@ -214,6 +190,7 @@
 | App_HTTPS_SERVER_KEY | file |
 | App_SHOW_EXCLUDED_IDP | boolean |
 | App_VIEWS_PATHS | json |
+| App_WALLET_BRIDGE_UID | string |
 | Core_ALLOWED_IDP_HINTS | json |
 | Core_SUPPORT_FORM_URL | string |
 | Cryptography_SUB_SECRET | string |
@@ -484,6 +461,7 @@
 | App_VIEWS_PATHS | json |
 | Cog_CITY_FILE | string |
 | Cog_COUNTRY_FILE | string |
+| Cog_ISO_COUNTRY_FILE | string |
 | Cryptography_CRYPTO_SUB_SECRET | string |
 | EidasClient_CONNECTOR_REQUEST_CACHE | string |
 | EidasClient_CONNECTOR_REQUEST_ISSUER | string |
@@ -890,6 +868,33 @@
 | Session_COOKIE_SECRETS | json |
 | Session_USERINFO_CRYPT_KEY | string |
 
+### mock-wallet
+
+| Var Name | Inferred type |
+|---|---|
+| App_ALLOWED_ALGS | json |
+| App_ALLOWED_RESPONSE_MODES | json |
+| App_ASSETS_CACHE_TTL | number |
+| App_ASSETS_PATHS | json |
+| App_ASSETS_URL_DOMAIN | string |
+| App_ASSETS_URL_PREFIX | string |
+| App_ENVIRONMENT | string |
+| App_FQDN | string |
+| App_HTTPS_SERVER_CERT | file |
+| App_HTTPS_SERVER_KEY | file |
+| App_HTTP_TIMEOUT_MS | number |
+| App_IDENTITIES_CSV_PATH | string |
+| App_PERMISSIVE_CONTENT_TYPE | boolean |
+| App_RESPONSE_CONTENT_TYPE | string |
+| App_SKIP_SIGNATURE_VERIFICATION | boolean |
+| App_TRUSTED_JWKS | json |
+| App_VIEWS_PATHS | json |
+| Logger_THRESHOLD | string |
+| Mdoc_DEVICE_CERTIFICATE | file |
+| Mdoc_DEVICE_PRIVATE_KEY_JWK | json |
+| Mdoc_ISSUER_CERTIFICATE | file |
+| Mdoc_ISSUER_PRIVATE_KEY | file |
+
 ### partners
 
 | Var Name | Inferred type |
@@ -918,6 +923,13 @@
 | IdentityProviderAdapterEnv_USERINFO_ENCRYPTED_RESPONSE_ENC | string |
 | IdentityProviderAdapterEnv_USERINFO_SIGNED_RESPONSE_ALG | string |
 | Logger_THRESHOLD | string |
+| Mailer_FROM_EMAIL | string |
+| Mailer_FROM_NAME | string |
+| Mailer_HOST | string |
+| Mailer_PORT | number |
+| Mailer_SECURE | boolean |
+| Mailer_TEMPLATES_PATHS | json |
+| Mailer_TRANSPORT | string |
 | MicroserviceConfigSandboxLow_MESSAGE_TTL | number |
 | MicroserviceConfigSandboxLow_QUEUE | string |
 | MicroserviceConfigSandboxLow_URLS | json |
@@ -950,7 +962,6 @@
 | Session_COOKIE_SECRETS | json |
 | Session_ENCRYPTION_KEY | string |
 | WebhooksDatapass_SECRET | string |
-| WebhooksInvitation_SECRET | string |
 
 ### user-dashboard
 
@@ -1024,11 +1035,16 @@
 | App_ASSETS_PATHS | json |
 | App_ASSETS_URL_DOMAIN | string |
 | App_ASSETS_URL_PREFIX | string |
+| App_DEV_TOOLS_MOCK_URL | string |
 | App_ENVIRONMENT | string |
 | App_FQDN | string |
 | App_HTTPS_SERVER_CERT | file |
 | App_HTTPS_SERVER_KEY | file |
+| App_SHOW_DEV_TOOLS | boolean |
 | App_VIEWS_PATHS | json |
+| Cog_CITY_FILE | string |
+| Cog_COUNTRY_FILE | string |
+| Cog_ISO_COUNTRY_FILE | string |
 | LoggerLegacy_FILE | string |
 | Logger_THRESHOLD | string |
 | OidcProvider_COOKIES_KEYS | json |
@@ -1037,7 +1053,11 @@
 | OidcProvider_ISSUER | string |
 | OidcProvider_PREFIX | string |
 | Openid4vp_CLIENT_ID | string |
+| Openid4vp_CLIENT_ID_SCHEME | string |
 | Openid4vp_JWKS | json |
+| Openid4vp_X509_ALG | string |
+| Openid4vp_X509_CERTIFICATE_CHAIN | file |
+| Openid4vp_X509_PRIVATE_KEY | file |
 | REQUEST_TIMEOUT | string |
 | Redis_CACERT | file |
 | Redis_DB | number |

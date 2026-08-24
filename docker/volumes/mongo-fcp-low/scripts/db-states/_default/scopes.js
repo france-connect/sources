@@ -475,6 +475,12 @@ const scopeList = [
       "Adresse du foyer (Caisse nationale des allocations familiales & Mutualité sociale agricole)",
   },
   {
+    scope: "cnav_allocation_rentree_scolaire",
+    fd: "CNAF & MSA",
+    label:
+      "Statut allocation de rentrée scolaire (Caisse nationale des allocations familiales & Mutualité sociale agricole)",
+  },
+  {
     scope: "complementaire_sante_solidaire",
     fd: "DSS",
     label: "Statut bénéficiaire C2S (Sécurité sociale)",

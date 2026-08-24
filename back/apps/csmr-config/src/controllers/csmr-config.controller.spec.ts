@@ -1,7 +1,11 @@
 import { EventBus } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { ConfigMessageDto } from '@fc/csmr-config-client/protocol';
+import {
+  ConfigCreateMessageDto,
+  ConfigDeleteMessageDto,
+  ConfigUpdateMessageDto,
+} from '@fc/csmr-config-client/protocol';
 import { MicroservicesRmqSubscriberService } from '@fc/microservices-rmq';
 
 import { getSubscriberMock } from '@mocks/microservices-rmq';
@@ -16,6 +20,7 @@ describe('CsmrConfigController', () => {
   const configServiceMock = {
     create: jest.fn(),
     update: jest.fn(),
+    delete: jest.fn(),
   };
 
   const eventBusMock = {
@@ -26,12 +31,22 @@ describe('CsmrConfigController', () => {
 
   const createResult = Symbol('createResult');
   const updateResult = Symbol('updateResult');
+  const deleteResult = Symbol('deleteResult');
 
   const messageMock = {
     type: 'MOCK',
     meta: { id: 'meta-mock' },
     payload: { id: 'payload-mock' },
-  } as unknown as ConfigMessageDto;
+  };
+
+  const createMessageMock = messageMock as unknown as ConfigCreateMessageDto;
+  const updateMessageMock = messageMock as unknown as ConfigUpdateMessageDto;
+
+  const deleteMessageMock = {
+    type: 'MOCK',
+    meta: { id: 'meta-mock' },
+    payload: { client_id: 'client-id-mock' },
+  } as unknown as ConfigDeleteMessageDto;
 
   const responseMock = Symbol('responseMock');
 
@@ -59,6 +74,7 @@ describe('CsmrConfigController', () => {
 
     configServiceMock.create.mockResolvedValue(createResult);
     configServiceMock.update.mockResolvedValue(updateResult);
+    configServiceMock.delete.mockResolvedValue(deleteResult);
 
     subscriberMock.response.mockReturnValue(responseMock);
   });
@@ -70,17 +86,17 @@ describe('CsmrConfigController', () => {
   describe('createConfig', () => {
     it('should create config with configDatabaseService', async () => {
       // When
-      await controller.createConfig(messageMock);
+      await controller.createConfig(createMessageMock);
 
       // Then
       expect(configServiceMock.create).toHaveBeenCalledExactlyOnceWith(
-        messageMock,
+        createMessageMock,
       );
     });
 
     it('should publish a ConfigPublishedEvent', async () => {
       // When
-      await controller.createConfig(messageMock);
+      await controller.createConfig(createMessageMock);
 
       // Then
       expect(eventBusMock.publish).toHaveBeenCalledExactlyOnceWith(
@@ -90,7 +106,7 @@ describe('CsmrConfigController', () => {
 
     it('should return result of subscriber.response()', async () => {
       // When
-      const result = await controller.createConfig(messageMock);
+      const result = await controller.createConfig(createMessageMock);
 
       // Then
       expect(result).toBe(responseMock);
@@ -100,17 +116,17 @@ describe('CsmrConfigController', () => {
   describe('updateConfig', () => {
     it('should update config with configDatabaseService', async () => {
       // When
-      await controller.updateConfig(messageMock);
+      await controller.updateConfig(updateMessageMock);
 
       // Then
       expect(configServiceMock.update).toHaveBeenCalledExactlyOnceWith(
-        messageMock,
+        updateMessageMock,
       );
     });
 
     it('should publish a ConfigPublishedEvent', async () => {
       // When
-      await controller.createConfig(messageMock);
+      await controller.createConfig(createMessageMock);
 
       // Then
       expect(eventBusMock.publish).toHaveBeenCalledExactlyOnceWith(
@@ -120,7 +136,37 @@ describe('CsmrConfigController', () => {
 
     it('should return result of subscriber.response()', async () => {
       // When
-      const result = await controller.updateConfig(messageMock);
+      const result = await controller.updateConfig(updateMessageMock);
+
+      // Then
+      expect(result).toBe(responseMock);
+    });
+  });
+
+  describe('deleteConfig', () => {
+    it('should delete config with configService', async () => {
+      // When
+      await controller.deleteConfig(deleteMessageMock);
+
+      // Then
+      expect(configServiceMock.delete).toHaveBeenCalledExactlyOnceWith(
+        deleteMessageMock,
+      );
+    });
+
+    it('should publish a ConfigPublishedEvent', async () => {
+      // When
+      await controller.deleteConfig(deleteMessageMock);
+
+      // Then
+      expect(eventBusMock.publish).toHaveBeenCalledExactlyOnceWith(
+        expect.any(ConfigPublishedEvent),
+      );
+    });
+
+    it('should return result of subscriber.response()', async () => {
+      // When
+      const result = await controller.deleteConfig(deleteMessageMock);
 
       // Then
       expect(result).toBe(responseMock);

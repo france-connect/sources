@@ -146,7 +146,7 @@
   },
   {
     "enabled": true,
-    "criteria": ["sans nom de naissance"],
+    "criteria": ["sans nom de famille"],
     "credentials": [
       {
         "idpId": "default",
@@ -633,6 +633,89 @@
       "birthdate": "1987-07-29",
       "birthcountry": "99100",
       "birthplace": "93051"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "pour les tests wallet EUDI",
+      "avec code ISO de la France"
+    ],
+    "credentials": [
+      {
+        "idpId": "mock-wallet",
+        "username": "0",
+        "password": "par défaut"
+      }
+    ],
+    "claims": {
+      "gender": "female",
+      "given_name": "ALICE",
+      "family_name": "MARTIN",
+      "birthdate": "1992-03-22",
+      "birthcountry": "99100",
+      "birthplace": "Lyon"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "avec code ISO de la Pologne"
+    ],
+    "credentials": [
+      {
+        "idpId": "mock-wallet",
+        "username": "3",
+        "password": "polonais"
+      }
+    ],
+    "claims": {
+      "gender": "female",
+      "given_name": "ZOFIA",
+      "family_name": "KOWALSKI",
+      "birthdate": "1983-02-14",
+      "birthcountry": "99122",
+      "birthplace": "Warszawa"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "sans code ISO reconnu par l'INSEE"
+    ],
+    "credentials": [
+      {
+        "idpId": "mock-wallet",
+        "username": "4",
+        "password": "français né au Zaïre"
+      }
+    ],
+    "claims": {
+      "gender": "male",
+      "given_name": "PAUL",
+      "family_name": "JACQUES",
+      "birthdate": "1973-06-15",
+      "birthplace": "Kinshasa"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "sans country dans l'attribut birth_place"
+    ],
+    "credentials": [
+      {
+        "idpId": "mock-wallet",
+        "username": "1",
+        "password": "sans pays de naissance"
+      }
+    ],
+    "claims": {
+      "gender": "male",
+      "given_name": "JEAN",
+      "family_name": "DUPONT",
+      "birthdate": "1985-06-15",
+      "birthplace": "Paris"
     }
   }
 ]

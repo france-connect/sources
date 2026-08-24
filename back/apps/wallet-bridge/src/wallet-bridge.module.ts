@@ -4,6 +4,8 @@ import { CqrsModule } from '@nestjs/cqrs';
 
 import { AppModule } from '@fc/app';
 import { AsyncLocalStorageModule } from '@fc/async-local-storage';
+import { CogModule } from '@fc/cog';
+import { EudiCogModule } from '@fc/eudi-cog';
 import {
   ExceptionsModule,
   FcWebHtmlExceptionFilter,
@@ -37,13 +39,19 @@ import {
   OpenId4vpApiController,
   OpenId4vpUiController,
 } from './controllers';
-import { OidcMiddlewareService, WalletBridgeIdentityService } from './services';
+import {
+  OidcMiddlewareService,
+  SseService,
+  WalletBridgeIdentityService,
+} from './services';
 
 @Global()
 @Module({
   imports: [
     AppModule,
     AsyncLocalStorageModule,
+    CogModule,
+    EudiCogModule,
     I18nModule,
     SessionModule,
     ExceptionsModule,
@@ -63,6 +71,7 @@ import { OidcMiddlewareService, WalletBridgeIdentityService } from './services';
   providers: [
     WalletBridgeIdentityService,
     OidcMiddlewareService,
+    SseService,
     OidcProviderGrantService,
     FcWebHtmlExceptionFilter,
     OidcProviderRenderedHtmlExceptionFilter,

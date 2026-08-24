@@ -42,7 +42,7 @@ Fonctionnalité: Validation Visuelle - Production
       | tablet portrait  |
       | tablet landscape |
       | desktop          |
-  
+
   @userDashboard
   Plan du Scénario: Validation Visuelle - Préférences FI sur <device>
     Etant donné que j'utilise un compte usager "pour le test de préférences FI"

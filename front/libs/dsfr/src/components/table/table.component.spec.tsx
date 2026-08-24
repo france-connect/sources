@@ -4,10 +4,12 @@ import React from 'react';
 import { Sizes } from '../../enums';
 import { TableCaptionComponent } from './caption';
 import { TableHeaderComponent } from './header';
+import { TableRowComponent } from './row';
 import { TableComponent } from './table.component';
 
 jest.mock('./header/table-header.component');
 jest.mock('./caption/table-caption.component');
+jest.mock('./row/table-row.component');
 
 describe('TableComponent', () => {
   // Given
@@ -40,6 +42,7 @@ describe('TableComponent', () => {
     expect(TableHeaderComponent).toHaveBeenCalledExactlyOnceWith(
       {
         columns: columnsMock,
+        showActionsColumn: false,
         tableId: 'any-table-id-mock',
       },
       undefined,
@@ -86,6 +89,106 @@ describe('TableComponent', () => {
       undefined,
     );
     expect(TableHeaderComponent).not.toHaveBeenCalled();
+  });
+
+  it('should not show actions column if actions are not provided', () => {
+    // Given
+    const sourcesMock = [
+      { column1: 'Data 1', column2: 'Data 2', id: 'id-1', label: 'column-mock-1' },
+      { column1: 'Data 3', column2: 'Data 4', id: 'id-2', label: 'column-mock-2' },
+    ];
+
+    // When
+    render(<TableComponent columns={columnsMock} id="any-table-id-mock" sources={sourcesMock} />);
+
+    // Then
+    expect(TableHeaderComponent).toHaveBeenCalledExactlyOnceWith(
+      {
+        columns: columnsMock,
+        showActionsColumn: false,
+        tableId: 'any-table-id-mock',
+      },
+      undefined,
+    );
+    expect(TableRowComponent).toHaveBeenCalledTimes(2);
+    expect(TableRowComponent).toHaveBeenNthCalledWith(
+      1,
+      {
+        actions: undefined,
+        className: undefined,
+        columns: columnsMock,
+        data: sourcesMock[0],
+        index: 0,
+        tableId: 'any-table-id-mock',
+      },
+      undefined,
+    );
+    expect(TableRowComponent).toHaveBeenNthCalledWith(
+      2,
+      {
+        actions: undefined,
+        className: undefined,
+        columns: columnsMock,
+        data: sourcesMock[1],
+        index: 1,
+        tableId: 'any-table-id-mock',
+      },
+      undefined,
+    );
+  });
+
+  it('should show actions column and propagate actions to rows', () => {
+    // Given
+    const actionsMock = jest.fn(() => <button type="button">action-mock</button>);
+    const sourcesMock = [
+      { column1: 'Data 1', column2: 'Data 2', id: 'id-1', label: 'column-mock-1' },
+      { column1: 'Data 3', column2: 'Data 4', id: 'id-2', label: 'column-mock-2' },
+    ];
+
+    // When
+    render(
+      <TableComponent
+        actions={actionsMock}
+        columns={columnsMock}
+        id="any-table-id-mock"
+        sources={sourcesMock}
+      />,
+    );
+
+    // Then
+    expect(TableHeaderComponent).toHaveBeenCalledExactlyOnceWith(
+      {
+        columns: columnsMock,
+        showActionsColumn: true,
+        tableId: 'any-table-id-mock',
+      },
+      undefined,
+    );
+    expect(TableRowComponent).toHaveBeenCalledTimes(2);
+    expect(TableRowComponent).toHaveBeenNthCalledWith(
+      1,
+      {
+        actions: actionsMock,
+        className: undefined,
+        columns: columnsMock,
+        data: sourcesMock[0],
+        index: 0,
+        tableId: 'any-table-id-mock',
+      },
+      undefined,
+    );
+    expect(TableRowComponent).toHaveBeenNthCalledWith(
+      2,
+      {
+        actions: actionsMock,
+        className: undefined,
+        columns: columnsMock,
+        data: sourcesMock[1],
+        index: 1,
+        tableId: 'any-table-id-mock',
+      },
+      undefined,
+    );
   });
 
   it('should create columns from sources if not provided', () => {

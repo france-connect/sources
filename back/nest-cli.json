@@ -71,15 +71,6 @@
         "tsConfigPath": "libs/cog/tsconfig.lib.json"
       }
     },
-    "command-import-sp-sandbox": {
-      "type": "application",
-      "root": "instances/command-import-sp-sandbox",
-      "entryFile": "main",
-      "sourceRoot": "instances/command-import-sp-sandbox/src",
-      "compilerOptions": {
-        "tsConfigPath": "instances/command-import-sp-sandbox/tsconfig.app.json"
-      }
-    },
     "command-import-datapass": {
       "type": "application",
       "root": "instances/command-import-datapass",
@@ -696,6 +687,15 @@
         "tsConfigPath": "libs/elasticsearch/tsconfig.lib.json"
       }
     },
+    "eudi-cog": {
+      "type": "library",
+      "root": "libs/eudi-cog",
+      "entryFile": "index",
+      "sourceRoot": "libs/eudi-cog/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/eudi-cog/tsconfig.lib.json"
+      }
+    },
     "eudi": {
       "type": "library",
       "root": "libs/eudi",
@@ -847,6 +847,15 @@
       "sourceRoot": "libs/logger-legacy/src",
       "compilerOptions": {
         "tsConfigPath": "libs/logger-legacy/tsconfig.lib.json"
+      }
+    },
+    "logger-oidc-provider-plugin": {
+      "type": "library",
+      "root": "libs/logger-oidc-provider-plugin",
+      "entryFile": "index",
+      "sourceRoot": "libs/logger-oidc-provider-plugin/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/logger-oidc-provider-plugin/tsconfig.lib.json"
       }
     },
     "logger-request-plugin": {
@@ -1031,6 +1040,35 @@
           "../../../instances/mock-proconnect/**/*.csv",
           "../../../instances/mock-proconnect/**/*.png",
           "../../../instances/mock-proconnect/**/*.js"
+        ]
+      }
+    },
+    "mock-wallet": {
+      "type": "library",
+      "root": "apps/mock-wallet",
+      "entryFile": "index",
+      "sourceRoot": "apps/mock-wallet/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/mock-wallet/tsconfig.lib.json"
+      }
+    },
+    "mock-wallet-instance": {
+      "type": "application",
+      "root": "instances/mock-wallet",
+      "entryFile": "main",
+      "sourceRoot": "instances/mock-wallet/src",
+      "compilerOptions": {
+        "tsConfigPath": "instances/mock-wallet/tsconfig.app.json",
+        "assets": [
+          "../../../apps/mock-wallet/**/*.ejs",
+          "../../../apps/mock-wallet/**/*.css",
+          "../../../apps/mock-wallet/**/*.svg",
+          "../../../apps/mock-wallet/**/*.png",
+          {
+            "include": "../../../node_modules/@gouvfr/dsfr/dist/",
+            "outDir": "dist/instances/mock-wallet/public/gouvfr/.",
+            "watchAssets": false
+          }
         ]
       }
     },
@@ -1224,7 +1262,8 @@
       "entryFile": "main",
       "sourceRoot": "instances/partners/src",
       "compilerOptions": {
-        "tsConfigPath": "instances/partners/tsconfig.app.json"
+        "tsConfigPath": "instances/partners/tsconfig.app.json",
+        "assets": ["../../../instances/partners/**/*.ejs"]
       }
     },
     "partners-organization": {

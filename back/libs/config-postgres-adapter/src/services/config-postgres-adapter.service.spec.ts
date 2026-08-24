@@ -2,7 +2,12 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { PartnersServiceProviderInstance } from '@entities/typeorm';
 
-import { ConfigMessageDto } from '@fc/csmr-config-client';
+import {
+  ConfigCreateMessageDto,
+  ConfigDeleteMessageDto,
+  ConfigMessageDto,
+  ConfigUpdateMessageDto,
+} from '@fc/csmr-config-client';
 import { PartnersServiceProviderInstanceService } from '@fc/partners-service-provider-instance';
 import { PartnersServiceProviderInstanceVersionService } from '@fc/partners-service-provider-instance-version';
 import { TypeormService } from '@fc/typeorm';
@@ -20,6 +25,9 @@ describe('ConfigPostgresAdapterService', () => {
   const instancesMock = {
     getByIdWithQueryRunner: jest.fn(),
     save: jest.fn(),
+    removeInstancePermissionsWithQueryRunner: jest.fn(),
+    clearCurrentVersionWithQueryRunner: jest.fn(),
+    deleteWithQueryRunner: jest.fn(),
   };
 
   const versionsMock = {
@@ -35,6 +43,9 @@ describe('ConfigPostgresAdapterService', () => {
       versionId: Symbol('versionId'),
     },
   } as unknown as ConfigMessageDto;
+
+  const createMessageMock = messageMock as ConfigCreateMessageDto;
+  const updateMessageMock = messageMock as ConfigUpdateMessageDto;
 
   beforeEach(async () => {
     jest.clearAllMocks();
@@ -74,7 +85,7 @@ describe('ConfigPostgresAdapterService', () => {
       service['save'] = jest.fn().mockResolvedValueOnce(saveResult);
 
       // When
-      const result = await service.create(messageMock);
+      const result = await service.create(createMessageMock);
 
       // Then
       expect(result).toBe(saveResult);
@@ -89,10 +100,74 @@ describe('ConfigPostgresAdapterService', () => {
       service['save'] = jest.fn().mockResolvedValueOnce(saveResult);
 
       // When
-      const result = await service.update(messageMock);
+      const result = await service.update(updateMessageMock);
 
       // Then
       expect(result).toBe(saveResult);
+    });
+  });
+
+  describe('delete', () => {
+    const instanceId = Symbol('instanceId');
+    const deleteMessageMock = {
+      meta: { instanceId },
+    } as unknown as ConfigDeleteMessageDto;
+
+    beforeEach(() => {
+      typeormServiceMock.withTransaction.mockImplementationOnce((callback) =>
+        callback(queryRunnerMock),
+      );
+    });
+
+    it('should remove the instance permissions within the transaction', async () => {
+      // When
+      await service.delete(deleteMessageMock);
+
+      // Then
+      expect(
+        instancesMock.removeInstancePermissionsWithQueryRunner,
+      ).toHaveBeenCalledExactlyOnceWith(queryRunnerMock, instanceId);
+    });
+
+    it('should clear the current version within the transaction', async () => {
+      // When
+      await service.delete(deleteMessageMock);
+
+      // Then
+      expect(
+        instancesMock.clearCurrentVersionWithQueryRunner,
+      ).toHaveBeenCalledExactlyOnceWith(queryRunnerMock, instanceId);
+    });
+
+    it('should delete the instance within the transaction', async () => {
+      // When
+      await service.delete(deleteMessageMock);
+
+      // Then
+      expect(
+        instancesMock.deleteWithQueryRunner,
+      ).toHaveBeenCalledExactlyOnceWith(queryRunnerMock, instanceId);
+    });
+
+    it('should clear the current version before deleting the instance', async () => {
+      // When
+      await service.delete(deleteMessageMock);
+
+      // Then
+      const clearOrder =
+        instancesMock.clearCurrentVersionWithQueryRunner.mock
+          .invocationCallOrder[0];
+      const deleteOrder =
+        instancesMock.deleteWithQueryRunner.mock.invocationCallOrder[0];
+      expect(clearOrder).toBeLessThan(deleteOrder);
+    });
+
+    it('should return the deleted instanceId as id', async () => {
+      // When
+      const result = await service.delete(deleteMessageMock);
+
+      // Then
+      expect(result).toEqual({ id: instanceId });
     });
   });
 

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Partners - System Testing using Cypress/Cucumber",
   "private": true,
-  "type":"module",
+  "type": "module",
   "keywords": [
     "Cypress",
     "QA",

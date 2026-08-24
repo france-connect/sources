@@ -25,14 +25,14 @@ function getCurrentGivenName(claims): string[] {
 }
 
 /**
- * Get the oidc preferred username or family name in the claims to return as
+ * Get the oidc family name in the claims to return as
  * eidas current family name
  *
  * @param claims The oidc claims retrieved from the userinfos endpoint
  * @return The eidas current family name
  */
 function getCurrentFamilyName(claims): string[] {
-  return [claims.preferred_username || claims.family_name];
+  return [claims.family_name];
 }
 
 /**

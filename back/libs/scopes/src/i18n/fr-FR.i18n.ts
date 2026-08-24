@@ -113,6 +113,8 @@ export const frFR = {
   'claim.cnaf_allocataires': ' Identités allocataire et conjoint',
   'claim.cnaf_enfants': 'Identités enfants',
   'claim.cnaf_adresse': 'Adresse du foyer',
+  'claim.cnav_allocation_rentree_scolaire':
+    'Statut allocation de rentrée scolaire',
 
   // Direction du Service National et de la Jeunesse
   'claim.dsnj_statut_service_national': 'Statut Service National',
@@ -141,7 +143,7 @@ export const frFR = {
   'claim.gender': 'Sexe',
   'claim.given_name': 'Prénom(s)',
   'claim.given_name_array': '',
-  'claim.family_name': 'Nom de naissance',
+  'claim.family_name': 'Nom de famille',
   'claim.preferred_username': 'Nom d’usage',
   'claim.idp_birthdate': '',
   'claim.birthdate': 'Date de naissance',

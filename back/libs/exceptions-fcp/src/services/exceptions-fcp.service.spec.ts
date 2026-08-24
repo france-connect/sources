@@ -139,6 +139,33 @@ describe('ExceptionsFcpService', () => {
         title: 'any_actionTitle_mock',
       });
     });
+
+    it('should return the input message if error code is defined and active but has no custom error message', () => {
+      // given
+      jest.mocked(configMock.get).mockReturnValueOnce({
+        items: [
+          {
+            active: true,
+            actionButtonLabel: 'any_actionButtonLabel_mock',
+            actionHref: 'any_href_mock',
+            actionTitle: 'any_actionTitle_mock',
+            errorCode: 'Y010001',
+          },
+        ],
+      });
+
+      // when
+      const result = service.getCustomErrorAction({
+        code: 'Y010001',
+        message: 'default_error_message',
+      });
+
+      // then
+      expect(result).toStrictEqual({
+        message: 'default_error_message',
+        title: 'any_actionTitle_mock',
+      });
+    });
   });
 
   describe('getCustomErrorSupport', () => {

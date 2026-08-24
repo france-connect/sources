@@ -3,7 +3,10 @@ import { In, QueryRunner, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { PartnersServiceProviderInstance } from '@entities/typeorm';
+import {
+  PartnersAccountPermission,
+  PartnersServiceProviderInstance,
+} from '@entities/typeorm';
 
 import { PermissionInterface, RelatedEntitiesHelper } from '@fc/access-control';
 import {
@@ -42,6 +45,7 @@ export class PartnersServiceProviderInstanceService {
           serviceProvider: {
             id: In(serviceProviderIds),
           },
+          markedForDeletion: false,
         },
         {
           serviceProvider: {
@@ -50,6 +54,7 @@ export class PartnersServiceProviderInstanceService {
           creator: {
             id: accountId,
           },
+          markedForDeletion: false,
         },
         {
           serviceProvider: {
@@ -58,6 +63,7 @@ export class PartnersServiceProviderInstanceService {
           creator: {
             id: accountId,
           },
+          markedForDeletion: false,
         },
       ],
       order: {
@@ -73,7 +79,7 @@ export class PartnersServiceProviderInstanceService {
     instanceId: string,
   ): Promise<PartnersServiceProviderInstance | null> {
     const instance = await this.repository.findOne({
-      where: { id: instanceId },
+      where: { id: instanceId, markedForDeletion: false },
       relations: ['currentVersion', 'creator', 'serviceProvider'],
       select: {
         creator: {
@@ -95,7 +101,7 @@ export class PartnersServiceProviderInstanceService {
     const instance = await queryRunner.manager.findOne(
       PartnersServiceProviderInstance,
       {
-        where: { id: instanceId },
+        where: { id: instanceId, markedForDeletion: false },
         relations: ['currentVersion', 'creator', 'serviceProvider'],
         select: {
           creator: {
@@ -116,7 +122,7 @@ export class PartnersServiceProviderInstanceService {
     instanceIds: string[],
   ): Promise<PartnersServiceProviderInstance[]> {
     return await queryRunner.manager.find(PartnersServiceProviderInstance, {
-      where: { id: In(instanceIds) },
+      where: { id: In(instanceIds), markedForDeletion: false },
       relations: ['currentVersion', 'creator', 'serviceProvider'],
     });
   }
@@ -144,9 +150,53 @@ export class PartnersServiceProviderInstanceService {
       where: {
         serviceProvider: { id: defaultServiceProviderId },
         creator: { id: accountId },
+        markedForDeletion: false,
       },
       order: { createdAt: 'DESC' },
       relations: ['currentVersion', 'creator', 'serviceProvider'],
+    });
+  }
+
+  async markForDeletion(
+    queryRunner: QueryRunner,
+    instanceId: string,
+  ): Promise<void> {
+    await queryRunner.manager
+      .createQueryBuilder()
+      .update(PartnersServiceProviderInstance)
+      .set({ markedForDeletion: true })
+      .where({ id: instanceId })
+      .execute();
+  }
+
+  async clearCurrentVersionWithQueryRunner(
+    queryRunner: QueryRunner,
+    instanceId: string,
+  ): Promise<void> {
+    await queryRunner.manager
+      .createQueryBuilder()
+      .update(PartnersServiceProviderInstance)
+      .set({ currentVersion: null })
+      .where({ id: instanceId })
+      .execute();
+  }
+
+  async deleteWithQueryRunner(
+    queryRunner: QueryRunner,
+    instanceId: string,
+  ): Promise<void> {
+    await queryRunner.manager.delete(PartnersServiceProviderInstance, {
+      id: instanceId,
+    });
+  }
+
+  async removeInstancePermissionsWithQueryRunner(
+    queryRunner: QueryRunner,
+    instanceId: string,
+  ): Promise<void> {
+    await queryRunner.manager.delete(PartnersAccountPermission, {
+      entity: AccessControlEntity.SP_INSTANCE,
+      entityId: instanceId,
     });
   }
 
@@ -161,11 +211,5 @@ export class PartnersServiceProviderInstanceService {
       .set({ serviceProvider: { id: serviceProviderId } })
       .where({ id: In(instanceIds) })
       .execute();
-  }
-
-  async delete(id: string): Promise<number> {
-    const result = await this.repository.delete(id);
-
-    return result.affected;
   }
 }

@@ -34,10 +34,12 @@ import {
   CreatedBy,
 } from '../enums';
 import {
+  InstancePublicationInterface,
   ServiceProviderCreationResultInterface,
   WebhookResponseInterface,
 } from '../interfaces';
 import { PartnersInstanceService } from './partners-instance.service';
+import { PartnerPublicationService } from './partners-publication.service';
 
 @Injectable()
 export class PartnersDatapassService {
@@ -57,6 +59,7 @@ export class PartnersDatapassService {
     @InjectRepository(PartnersPlatform)
     private readonly platformRepository: Repository<PartnersPlatform>,
     private readonly instance: PartnersInstanceService,
+    private readonly publication: PartnerPublicationService,
   ) {}
 
   // Mapping of DataPass events to their handling methods
@@ -113,9 +116,13 @@ export class PartnersDatapassService {
           },
         );
 
-      await this.typeorm.withTransaction(async (queryRunner) => {
-        await this.updateInstances(queryRunner, serviceProviderId);
+      const publications = await this.typeorm.withTransaction<
+        InstancePublicationInterface[]
+      >(async (queryRunner) => {
+        return await this.updateInstances(queryRunner, serviceProviderId);
       });
+
+      await this.publishInstances(publications, serviceProviderId);
 
       this.logger.info({
         message:
@@ -455,28 +462,58 @@ export class PartnersDatapassService {
   private async updateInstances(
     queryRunner: QueryRunner,
     serviceProviderId: string,
-  ): Promise<void> {
+  ): Promise<InstancePublicationInterface[]> {
     const serviceProvider =
       await this.serviceProviderService.getByIdTransactional(
         queryRunner,
         serviceProviderId,
       );
 
+    const publications: InstancePublicationInterface[] = [];
+
     for (const instance of serviceProvider.instances) {
       try {
-        await this.instance.update(
+        const publication = await this.instance.update(
           queryRunner,
           instance.currentVersion.data,
           instance,
           serviceProviderId,
           CreatedBy.DATAPASS,
         );
+
+        publications.push(publication);
       } catch (error) {
         this.logger.warning({
           message: 'Failed to update instances',
           error: error.message,
           stack: error.stack,
           instance,
+          serviceProviderId,
+        });
+      }
+    }
+
+    return publications;
+  }
+
+  private async publishInstances(
+    publications: InstancePublicationInterface[],
+    serviceProviderId: string,
+  ): Promise<void> {
+    for (const publication of publications) {
+      try {
+        await this.publication.publish(
+          publication.instanceId,
+          publication.versionId,
+          publication.payload,
+          publication.type,
+        );
+      } catch (error) {
+        this.logger.warning({
+          message: 'Failed to publish instances',
+          error: error.message,
+          stack: error.stack,
+          publication,
           serviceProviderId,
         });
       }

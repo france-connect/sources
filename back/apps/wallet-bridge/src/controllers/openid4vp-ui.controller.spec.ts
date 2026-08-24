@@ -1,15 +1,18 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
+import { Observable, of } from 'rxjs';
 
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
-import { EudiPresentationId } from '@fc/eudi';
 import { Openid4vpService } from '@fc/openid4vp';
-import { QrcodeService } from '@fc/qrcode';
+import { QrcodeErrorCorrectionLevel, QrcodeService } from '@fc/qrcode';
 
 import { getConfigMock } from '@mocks/config';
 
-import { Routes } from '../enums';
+import { QRCODE_WIDTH_PX } from '../constants';
+import { WalletBridgeRoutes } from '../enums';
+import { SseService } from '../services';
+import { WalletBridgeIdentityService } from '../services/wallet-bridge-identity.service';
 import { OpenId4vpUiController } from './openid4vp-ui.controller';
 
 describe('OpenId4vpUiController', () => {
@@ -21,15 +24,26 @@ describe('OpenId4vpUiController', () => {
     createAuthorizationRequest: jest.fn(),
     getInteractionById: jest.fn(),
     getAuthorizeRequestUri: jest.fn(),
+    getUserInteractionById: jest.fn(),
   };
   const qrcodeServiceMock = {
     generateDataUrl: jest.fn(),
+  };
+  const sseMock = {
+    buildSseStream: jest.fn(),
+  };
+  const walletBridgeIdentityServiceMock = {
+    finishInteraction: jest.fn(),
   };
 
   const urlPrefixMock = 'https://wallet-bridge.example';
   const appConfigMock = { urlPrefix: urlPrefixMock };
   const openid4vpConfigMock = {
-    relayingParty: { interactionTtl: 600 },
+    relayingParty: {
+      interactionTtl: 600,
+      redirectDelay: 2,
+      requestUri: '/api/authorize-request-object/:interactionId',
+    },
   };
 
   const interactionIdMock = '11111111-1111-1111-1111-111111111111';
@@ -39,7 +53,13 @@ describe('OpenId4vpUiController', () => {
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [OpenId4vpUiController],
-      providers: [ConfigService, Openid4vpService, QrcodeService],
+      providers: [
+        ConfigService,
+        Openid4vpService,
+        QrcodeService,
+        SseService,
+        WalletBridgeIdentityService,
+      ],
     })
       .overrideProvider(ConfigService)
       .useValue(configMock)
@@ -47,6 +67,10 @@ describe('OpenId4vpUiController', () => {
       .useValue(openid4vpServiceMock)
       .overrideProvider(QrcodeService)
       .useValue(qrcodeServiceMock)
+      .overrideProvider(SseService)
+      .useValue(sseMock)
+      .overrideProvider(WalletBridgeIdentityService)
+      .useValue(walletBridgeIdentityServiceMock)
       .compile();
 
     controller = module.get<OpenId4vpUiController>(OpenId4vpUiController);
@@ -54,62 +78,6 @@ describe('OpenId4vpUiController', () => {
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
-  });
-
-  describe('authorizeRequest', () => {
-    const resMock = {
-      redirect: jest.fn(),
-    } as unknown as Response;
-    const requestMock = { presentationId: 'pid-full' };
-
-    beforeEach(() => {
-      configMock.get.mockReturnValue(appConfigMock);
-      openid4vpServiceMock.getRequestById.mockReturnValue(requestMock);
-      openid4vpServiceMock.createAuthorizationRequest.mockResolvedValue(
-        interactionIdMock,
-      );
-    });
-
-    it('should resolve the App configuration', async () => {
-      // When
-      await controller.authorizeRequest(resMock);
-
-      // Then
-      expect(configMock.get).toHaveBeenCalledExactlyOnceWith('App');
-    });
-
-    it('should resolve the request configuration with the pid-full identifier', async () => {
-      // When
-      await controller.authorizeRequest(resMock);
-
-      // Then
-      expect(
-        openid4vpServiceMock.getRequestById,
-      ).toHaveBeenCalledExactlyOnceWith(EudiPresentationId.PID_FC);
-    });
-
-    it('should create a new authorization request from the resolved request configuration', async () => {
-      // When
-      await controller.authorizeRequest(resMock);
-
-      // Then
-      expect(
-        openid4vpServiceMock.createAuthorizationRequest,
-      ).toHaveBeenCalledExactlyOnceWith(requestMock);
-    });
-
-    it('should redirect to the authorize-request-uri route with the new interaction id', async () => {
-      // When
-      await controller.authorizeRequest(resMock);
-
-      // Then
-      expect(resMock.redirect).toHaveBeenCalledExactlyOnceWith(
-        `${urlPrefixMock}${Routes.OPENID4VP_AUTHORIZE_REQUEST_URI.replace(
-          ':interactionId',
-          interactionIdMock,
-        )}`,
-      );
-    });
   });
 
   describe('authorizeRequestUri', () => {
@@ -162,7 +130,7 @@ describe('OpenId4vpUiController', () => {
       ).toHaveBeenCalledExactlyOnceWith(interactionMock);
     });
 
-    it('should generate a QRcode for the request URI with a high error-correction level', async () => {
+    it('should generate a QRcode for the request URI with a low error-correction level', async () => {
       // When
       await controller.authorizeRequestUri({
         interactionId: interactionIdMock,
@@ -171,7 +139,11 @@ describe('OpenId4vpUiController', () => {
       // Then
       expect(qrcodeServiceMock.generateDataUrl).toHaveBeenCalledExactlyOnceWith(
         requestUriMock,
-        { errorCorrectionLevel: 'H' },
+        {
+          errorCorrectionLevel: QrcodeErrorCorrectionLevel.LOW,
+          margin: 0,
+          width: QRCODE_WIDTH_PX,
+        },
       );
     });
 
@@ -198,7 +170,7 @@ describe('OpenId4vpUiController', () => {
 
       // Then
       expect(result.successUrl).toBe(
-        `${urlPrefixMock}${Routes.OPENID4VP_AUTHORIZE_REDIRECT.replace(
+        `${urlPrefixMock}${WalletBridgeRoutes.OPENID4VP_AUTHORIZE_REDIRECT.replace(
           ':interactionId',
           interactionIdMock,
         )}`,
@@ -213,7 +185,7 @@ describe('OpenId4vpUiController', () => {
 
       // Then
       expect(result.statusUrl).toBe(
-        `${urlPrefixMock}${Routes.OPENID4VP_AUTHORIZE_REQUEST_STATUS.replace(
+        `${urlPrefixMock}${WalletBridgeRoutes.OPENID4VP_AUTHORIZE_REQUEST_STATUS.replace(
           ':interactionId',
           interactionIdMock,
         )}`,
@@ -232,7 +204,19 @@ describe('OpenId4vpUiController', () => {
       );
     });
 
-    it('should expose the request_uri search parameter as httpRequestUri', async () => {
+    it('should return the configured redirectDelay', async () => {
+      // When
+      const result = await controller.authorizeRequestUri({
+        interactionId: interactionIdMock,
+      });
+
+      // Then
+      expect(result.redirectDelay).toBe(
+        openid4vpConfigMock.relayingParty.redirectDelay,
+      );
+    });
+
+    it('should expose the request_uri built from config and interactionId as httpRequestUri', async () => {
       // When
       const result = await controller.authorizeRequestUri({
         interactionId: interactionIdMock,
@@ -240,28 +224,80 @@ describe('OpenId4vpUiController', () => {
 
       // Then
       expect(result.httpRequestUri).toBe(
-        new URL(requestUriMock).searchParams.get('request_uri'),
+        openid4vpConfigMock.relayingParty.requestUri.replace(
+          ':interactionId',
+          interactionIdMock,
+        ),
       );
     });
   });
 
   describe('authorizeRedirect', () => {
-    it('should return the "Hello World" placeholder', () => {
+    // Given
+
+    const paramsMock = {
+      interactionId: interactionIdMock,
+    };
+    const reqMock = {} as Request;
+    const resMock = {} as Response;
+    const interactionMock = {
+      id: interactionIdMock,
+      presentationId: 'presentationIdMock',
+    };
+
+    it('should fetch the interaction for the user based on the interactionId', async () => {
       // When
-      const result = controller.authorizeRedirect();
+      await controller.authorizeRedirect(paramsMock, reqMock, resMock);
 
       // Then
-      expect(result).toBe('Hello World');
+      expect(
+        openid4vpServiceMock.getUserInteractionById,
+      ).toHaveBeenCalledExactlyOnceWith(interactionIdMock);
+    });
+
+    it('should finish the interaction for the user', async () => {
+      // Given
+      openid4vpServiceMock.getUserInteractionById.mockResolvedValue(
+        interactionMock,
+      );
+
+      // When
+      await controller.authorizeRedirect(paramsMock, reqMock, resMock);
+
+      // Then
+      expect(
+        walletBridgeIdentityServiceMock.finishInteraction,
+      ).toHaveBeenCalledExactlyOnceWith(reqMock, resMock, interactionMock);
     });
   });
 
   describe('authorizeRequestStatus', () => {
-    it('should return the "Hello World" placeholder', () => {
+    beforeEach(() => {
+      sseMock.buildSseStream.mockReturnValue(of());
+    });
+
+    it('should delegate to SseService.buildSseStream', () => {
       // When
-      const result = controller.authorizeRequestStatus();
+      controller.authorizeRequestStatus({ interactionId: interactionIdMock });
 
       // Then
-      expect(result).toBe('Hello World');
+      expect(sseMock.buildSseStream).toHaveBeenCalledExactlyOnceWith(
+        interactionIdMock,
+      );
+    });
+
+    it('should return the Observable from SseService.buildSseStream', () => {
+      // Given
+      const streamMock = new Observable();
+      sseMock.buildSseStream.mockReturnValue(streamMock);
+
+      // When
+      const result = controller.authorizeRequestStatus({
+        interactionId: interactionIdMock,
+      });
+
+      // Then
+      expect(result).toBe(streamMock);
     });
   });
 });

@@ -18,7 +18,7 @@ Fonctionnalité: Mon Fournisseur de Service
     Et les scopes Datapass suivants sont affichés:
       | Identifiant technique |
       | Prénoms               |
-      | Nom de naissance      |
+      | Nom de famille        |
       | Adresse électronique  |
       | Sexe                  |
       | Date de naissance     |

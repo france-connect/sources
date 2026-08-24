@@ -256,6 +256,57 @@ describe('CsvService', () => {
     });
   });
 
+  describe('createIndex()', () => {
+    it('should create an index for the collection', () => {
+      // Given
+      const collectionMock = [
+        {
+          alpha: 'omega',
+          dummy: 'dummyValue',
+        },
+      ];
+      const indexMock = { dummyValue: collectionMock[0] };
+      service['collection'] = collectionMock as unknown as MockInterface[];
+
+      // When
+      service.createIndex('dummy');
+
+      // Then
+      expect(service['indexes']).toEqual({ dummy: indexMock });
+    });
+  });
+
+  describe('getByIndex()', () => {
+    it('should get a row by index', () => {
+      // Given
+      const inputMock = {
+        alpha: 'omega',
+        dummy: 'dummyValue',
+      };
+      service['indexes'] = { dummy: { dummyValue: inputMock } };
+
+      // When
+      const result = service.getByIndex('dummy', 'dummyValue');
+
+      // Then
+      expect(result).toEqual(inputMock);
+    });
+
+    it('should return null if the index is not found', () => {
+      // Given
+      const inputMock = {
+        alpha: 'omega',
+        dummy: 'dummyValue',
+      };
+      service['indexes'] = { dummy: { dummyValue: inputMock } };
+
+      // When
+      const result = service.getByIndex('dummy', 'noValue');
+      // Then
+      expect(result).toEqual(null);
+    });
+  });
+
   describe('find()', () => {
     it('should find in database with criteria', async () => {
       // Given

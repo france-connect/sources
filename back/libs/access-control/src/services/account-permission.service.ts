@@ -29,6 +29,20 @@ export class AccountPermissionService<
     private readonly logger: LoggerService,
   ) {}
 
+  hasPermission(
+    email: string,
+    permissionTypes: PermissionType[],
+    entity: EntityType,
+    entityId: string,
+  ): Promise<boolean> {
+    return this.accountPermission.hasPermission(
+      email,
+      permissionTypes,
+      entity,
+      entityId,
+    );
+  }
+
   getPermissionsFromSession(): PermissionInterface<
     EntityType,
     PermissionType

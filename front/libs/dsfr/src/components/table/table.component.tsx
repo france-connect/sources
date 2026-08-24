@@ -4,7 +4,11 @@ import React, { useMemo } from 'react';
 import { ucfirst } from '@fc/common';
 
 import { Sizes } from '../../enums';
-import type { TableColumnInterface, TableDataSourceInterface } from '../../interfaces';
+import type {
+  TableColumnActionsInterface,
+  TableColumnInterface,
+  TableDataSourceInterface,
+} from '../../interfaces';
 import { TableCaptionComponent } from './caption';
 import { TableHeaderComponent } from './header';
 import { TableRowComponent } from './row';
@@ -28,9 +32,11 @@ interface TableComponentProps<T extends TableDataSourceInterface> {
   noScroll?: boolean;
   columns?: TableColumnInterface<T>[];
   multiline?: boolean;
+  actions?: TableColumnActionsInterface<T>;
 }
 
 function TableComponentInner<T extends TableDataSourceInterface>({
+  actions,
   bordered = false,
   caption,
   columns,
@@ -53,6 +59,8 @@ function TableComponentInner<T extends TableDataSourceInterface>({
     return result;
   }, [columns, sources]);
 
+  const hasActions = !!actions;
+
   return (
     <div
       className={classnames(`fr-table--${size} fr-table`, styles.table, {
@@ -69,13 +77,20 @@ function TableComponentInner<T extends TableDataSourceInterface>({
           <div className="fr-table__content">
             <table id={`${id}--table`}>
               {caption && <TableCaptionComponent caption={caption} />}
-              {!hideHeader && <TableHeaderComponent columns={tableColumns} tableId={id} />}
+              {!hideHeader && (
+                <TableHeaderComponent
+                  columns={tableColumns}
+                  showActionsColumn={hasActions}
+                  tableId={id}
+                />
+              )}
               <tbody>
                 {sources.map((item, index) => {
                   const key = `${id}--row-${index}`;
                   return (
                     <TableRowComponent<T>
                       key={key}
+                      actions={actions}
                       className={styles.row}
                       columns={tableColumns}
                       data={item}

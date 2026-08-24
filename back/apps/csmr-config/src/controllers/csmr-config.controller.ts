@@ -4,8 +4,10 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 
 import {
   ActionTypes,
-  ConfigMessageDto,
+  ConfigCreateMessageDto,
+  ConfigDeleteMessageDto,
   ConfigResponseDto,
+  ConfigUpdateMessageDto,
 } from '@fc/csmr-config-client/protocol';
 import {
   MicroservicesRmqMessageValidationPipe,
@@ -28,7 +30,7 @@ export class CsmrConfigController {
   @MessagePattern(ActionTypes.CONFIG_CREATE)
   @UsePipes(MicroservicesRmqMessageValidationPipe)
   async createConfig(
-    @Payload() message: ConfigMessageDto,
+    @Payload() message: ConfigCreateMessageDto,
   ): Promise<ConfigResponseDto> {
     const result = await this.csmrConfigService.create(message);
 
@@ -48,12 +50,37 @@ export class CsmrConfigController {
   @MessagePattern(ActionTypes.CONFIG_UPDATE)
   @UsePipes(MicroservicesRmqMessageValidationPipe)
   async updateConfig(
-    @Payload() message: ConfigMessageDto,
+    @Payload() message: ConfigUpdateMessageDto,
   ): Promise<ConfigResponseDto> {
     const result = await this.csmrConfigService.update(message);
 
     const properties: ConfigPublishedEventPropertiesInterface = {
       type: ActionTypes.CONFIG_UPDATE,
+      payload: {
+        message,
+      },
+      meta: result,
+    };
+
+    this.eventBus.publish(new ConfigPublishedEvent(properties));
+
+    return this.subscriber.response(message);
+  }
+
+  // @NOTE the deletion tolerates the extra properties of an outdated instance
+  // instead of rejecting them, they are stripped and only the client
+  // identifier is validated
+  @MessagePattern(ActionTypes.CONFIG_DELETE)
+  @UsePipes(
+    new MicroservicesRmqMessageValidationPipe({ forbidNonWhitelisted: false }),
+  )
+  async deleteConfig(
+    @Payload() message: ConfigDeleteMessageDto,
+  ): Promise<ConfigResponseDto> {
+    const result = await this.csmrConfigService.delete(message);
+
+    const properties: ConfigPublishedEventPropertiesInterface = {
+      type: ActionTypes.CONFIG_DELETE,
       payload: {
         message,
       },

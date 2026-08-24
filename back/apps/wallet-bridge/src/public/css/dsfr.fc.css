@@ -1,0 +1,181 @@
+/*
+DSFR Breakpoints :
+ - sm: 576px
+ - md: 768px
+ - lg: 992px
+ - xl: 1440px
+*/
+
+/* -----------------------------------------------------------------
+
+  GENERAL
+
+----------------------------------------------------------------- */
+.fc-text--title-mention-grey {
+  color: var(--text-mention-grey);
+}
+
+.fc-text--title-blue-france {
+  color: var(--text-title-blue-france);
+}
+
+.fc-btn--full-width {
+  display: block;
+  width: 100%;
+}
+
+.fr-collapse::before {
+  display: inline !important;
+}
+
+/* -----------------------------------------------------------------
+
+  Display
+
+----------------------------------------------------------------- */
+
+.fc-display--inline {
+  display: inline;
+}
+
+/* -----------------------------------------------------------------
+
+  TEXT ALIGN
+
+----------------------------------------------------------------- */
+
+.fc-text--left {
+  text-align: left;
+}
+
+.fc-text--center {
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .fc-text-md--left {
+    text-align: left;
+  }
+
+  .fc-text-md--center {
+    text-align: center;
+  }
+}
+
+@media (min-width: 992px) {
+  .fc-text-lg--left {
+    text-align: left;
+  }
+
+  .fc-text-lg--center {
+    text-align: center;
+  }
+}
+
+/* -----------------------------------------------------------------
+
+  GRID
+
+----------------------------------------------------------------- */
+
+@media (min-width: 62em) {
+  .fr-col-offset-lg-0:not(.fr-col-offset-md-0--right) {
+    /*
+    @NOTE keep the :not selector
+    .fr-col-offset-md-1, override this rule because of the :not priority
+    */
+    margin-left: 0;
+  }
+}
+
+/* -----------------------------------------------------------------
+
+  OVERRIDES
+
+----------------------------------------------------------------- */
+.fc-footer {
+  /* CL-349 : change border coolor hack */
+  box-shadow:
+    inset 0 1px 0 0 var(--border-default-grey),
+    inset 0 -1px 0 0 var(--border-default-grey);
+}
+
+.fc-footer .fr-container .fr-footer__bottom {
+  /* CL-349 : remove border hack */
+  box-shadow: inherit;
+}
+
+
+.fr-footer__bottom-link {
+  white-space: nowrap;
+}
+
+button.fc-btn--as-link {
+  padding-left: 0;
+  padding-right: 0;
+  display: inline;
+  line-height: normal;
+}
+
+button.fc-btn--as-link:not(:disabled):hover {
+  background-color: transparent;
+  --underline-hover-width: var(--underline-max-width);
+}
+
+button.fc-btn--as-link {
+  background-image: var(--underline-img), var(--underline-img);
+  background-position:
+    var(--underline-x) 100%,
+    var(--underline-x) calc(100% - var(--underline-thickness));
+  background-repeat: no-repeat, no-repeat;
+  background-size:
+    var(--underline-hover-width) calc(var(--underline-thickness) * 2),
+    var(--underline-idle-width) var(--underline-thickness);
+  transition: background-size 0s;
+}
+
+
+
+/* -----------------------------------------------------------------
+
+  MODAL
+
+----------------------------------------------------------------- */
+
+@media (max-width: 768px) {
+  #loading-modal .fr-container {
+    max-width: 26rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+#loading-modal .fr-modal__body {
+  padding: 2rem;
+}
+
+#loading-modal .fr-modal-title__flex {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-auto-rows: auto;
+  column-gap: 1rem;
+  align-items: center;
+  margin-bottom: 0;
+}
+
+#loading-modal .fr-modal-title__flex > :first-child {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+}
+
+#loading-modal .fr-modal-title__flex > :nth-child(2) {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+#loading-modal .fr-modal-title__flex > :nth-child(3) {
+  grid-column: 2;
+  grid-row: 2;
+}

@@ -11,7 +11,12 @@ import {
   diffKeys,
 } from '@fc/config-abstract-adapter';
 import { CryptographyService } from '@fc/cryptography';
-import { ConfigMessageDto } from '@fc/csmr-config-client';
+import {
+  ConfigCreateMessageDto,
+  ConfigDeleteMessageDto,
+  ConfigMessageDto,
+  ConfigUpdateMessageDto,
+} from '@fc/csmr-config-client';
 import {
   OidcClientInterface,
   OidcClientLegacyInterface,
@@ -34,12 +39,26 @@ export class ConfigMongoAdapterService implements ConfigDatabaseServiceInterface
     private readonly serviceProvider: ServiceProviderService,
   ) {}
 
-  async create(message: ConfigMessageDto): Promise<ConfigSaveResultInterface> {
+  async create(
+    message: ConfigCreateMessageDto,
+  ): Promise<ConfigSaveResultInterface> {
     return await this.save(message);
   }
 
-  async update(message: ConfigMessageDto): Promise<ConfigSaveResultInterface> {
+  async update(
+    message: ConfigUpdateMessageDto,
+  ): Promise<ConfigSaveResultInterface> {
     return await this.save(message);
+  }
+
+  async delete(
+    message: ConfigDeleteMessageDto,
+  ): Promise<ConfigSaveResultInterface> {
+    const { client_id: key } = message.payload;
+
+    await this.serviceProviderModel.findOneAndDelete({ key });
+
+    return { id: key };
   }
 
   async findOneSpByQuery(

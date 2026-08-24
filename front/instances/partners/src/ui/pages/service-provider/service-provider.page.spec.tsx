@@ -5,9 +5,9 @@ import type {
   ServiceProviderPermissionInterface,
 } from '@fc/core-partners';
 import {
+  ServiceProviderContributorsComponent,
   ServiceProviderDatapassComponent,
   ServiceProviderNameComponent,
-  ServiceProviderPermissionsComponent,
   ServiceProviderSandboxesComponent,
   ServiceProviderScopesComponent,
 } from '@fc/core-partners';
@@ -89,12 +89,12 @@ describe('ServiceProviderPage', () => {
     );
   });
 
-  it('should render ServiceProviderPermissionsComponent with permissions', () => {
+  it('should render ServiceProviderContributorsComponent with permissions', () => {
     // When
     render(<ServiceProviderPage />);
 
     // Then
-    expect(ServiceProviderPermissionsComponent).toHaveBeenCalledExactlyOnceWith(
+    expect(ServiceProviderContributorsComponent).toHaveBeenCalledExactlyOnceWith(
       {
         permissions: permissionsMock,
       },

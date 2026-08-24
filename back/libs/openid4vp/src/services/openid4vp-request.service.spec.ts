@@ -16,7 +16,11 @@ import {
   Openid4vpInteractionDto,
   Openid4vpRequestConfig,
 } from '../dto';
-import { Openid4vpInteractionStatus } from '../enums';
+import {
+  Openid4vpClientIdPrefixEnum,
+  Openid4vpClientIdSchemeEnum,
+  Openid4vpInteractionStatus,
+} from '../enums';
 import { Openid4vpCryptoService } from './openid4vp-crypto.service';
 import { Openid4vpRequestService } from './openid4vp-request.service';
 
@@ -28,6 +32,8 @@ jest.mock('@fc/common', () => ({
 }));
 
 describe('Openid4vpRequestService', () => {
+  jest.resetAllMocks();
+
   let service: Openid4vpRequestService;
 
   const configMock = getConfigMock();
@@ -39,6 +45,7 @@ describe('Openid4vpRequestService', () => {
     requestCallbacks: Symbol('requestCallbacks'),
     getJwtSigner: jest.fn(),
     getPublicJwks: jest.fn(),
+    getX509ClientId: jest.fn(),
   };
 
   const uuidMock = uuid as unknown as jest.Mock;
@@ -153,8 +160,14 @@ describe('Openid4vpRequestService', () => {
       service.getAuthorizeRequestUri(interactionMock);
 
       // Then
-      expect(parameterizedPathMock).toHaveBeenCalledExactlyOnceWith(
+      expect(parameterizedPathMock).toHaveBeenNthCalledWith(
+        1,
         relayingPartyMock.requestUri,
+        { interactionId: interactionMock.id },
+      );
+      expect(parameterizedPathMock).toHaveBeenNthCalledWith(
+        2,
+        relayingPartyMock.clientId,
         { interactionId: interactionMock.id },
       );
     });
@@ -198,6 +211,7 @@ describe('Openid4vpRequestService', () => {
     const nonceMock = 'nonceValue';
     const uuidValue = 'uuidValue';
     const nowMock = 10000000;
+    const interactionIdMock = 'interactionIdMock';
 
     beforeEach(() => {
       uuidMock.mockReturnValue(uuidValue);
@@ -210,7 +224,10 @@ describe('Openid4vpRequestService', () => {
 
     it('should retrieve the session id', () => {
       // When
-      service.generateInteractionParams('presentationIdMock');
+      service.generateInteractionParams(
+        interactionIdMock,
+        'presentationIdMock',
+      );
 
       // Then
       expect(sessionMock.getId).toHaveBeenCalledExactlyOnceWith();
@@ -218,7 +235,10 @@ describe('Openid4vpRequestService', () => {
 
     it('should generate the state with the configured length', () => {
       // When
-      service.generateInteractionParams('presentationIdMock');
+      service.generateInteractionParams(
+        interactionIdMock,
+        'presentationIdMock',
+      );
 
       // Then
       expect(cryptoServiceMock.genRandomString).toHaveBeenNthCalledWith(
@@ -229,7 +249,10 @@ describe('Openid4vpRequestService', () => {
 
     it('should generate the nonce with the configured length', () => {
       // When
-      service.generateInteractionParams('presentationIdMock');
+      service.generateInteractionParams(
+        interactionIdMock,
+        'presentationIdMock',
+      );
 
       // Then
       expect(cryptoServiceMock.genRandomString).toHaveBeenNthCalledWith(
@@ -240,11 +263,14 @@ describe('Openid4vpRequestService', () => {
 
     it('should return the interaction params with the generated identifiers', () => {
       // When
-      const result = service.generateInteractionParams('presentationIdMock');
+      const result = service.generateInteractionParams(
+        interactionIdMock,
+        'presentationIdMock',
+      );
 
       // Then
       expect(result).toStrictEqual({
-        id: uuidValue,
+        id: interactionIdMock,
         presentationId: 'presentationIdMock',
         state: stateMock,
         nonce: nonceMock,
@@ -278,8 +304,7 @@ describe('Openid4vpRequestService', () => {
 
     it('should interpolate every relaying-party URL with the interaction id', async () => {
       // Given
-      const { clientId, responseUri, redirectUri, requestUri } =
-        relayingPartyMock;
+      const { clientId, responseUri, requestUri } = relayingPartyMock;
       const params = { interactionId: interactionMock.id };
 
       // When
@@ -301,11 +326,6 @@ describe('Openid4vpRequestService', () => {
       );
       expect(parameterizedPathMock).toHaveBeenNthCalledWith(
         3,
-        redirectUri,
-        params,
-      );
-      expect(parameterizedPathMock).toHaveBeenNthCalledWith(
-        4,
         requestUri,
         params,
       );
@@ -539,6 +559,65 @@ describe('Openid4vpRequestService', () => {
 
       // Then
       expect(result).toEqual(['y', 'z']);
+    });
+  });
+
+  describe('resolveClientId', () => {
+    const x509ClientIdMock = `${Openid4vpClientIdPrefixEnum.X509_HASH}x509ClientIdMock`;
+    const parameterizedPathMockValue =
+      'https://example.com/clientId/:interactionId';
+
+    beforeEach(() => {
+      openid4vpCryptoMock.getX509ClientId.mockReturnValue(x509ClientIdMock);
+      parameterizedPathMock.mockReturnValueOnce(parameterizedPathMockValue);
+    });
+
+    it('should return the client id when the client id scheme is redirect_uri', () => {
+      // Given
+      configMock.get.mockReturnValueOnce({
+        relayingParty: {
+          clientIdScheme: Openid4vpClientIdSchemeEnum.REDIRECT_URI,
+        },
+      });
+
+      // When
+      const result = service['resolveClientId'](interactionMock);
+
+      // Then
+      expect(result).toBe(parameterizedPathMockValue);
+    });
+
+    it('should compute the parametrized path for redirect_uri with client id', () => {
+      // Given
+      configMock.get.mockReturnValueOnce({
+        relayingParty: {
+          clientIdScheme: Openid4vpClientIdSchemeEnum.REDIRECT_URI,
+          clientId: 'clientIdMock',
+        },
+      });
+
+      // When
+      service['resolveClientId'](interactionMock);
+
+      // Then
+      expect(parameterizedPathMock).toHaveBeenCalledWith('clientIdMock', {
+        interactionId: interactionMock.id,
+      });
+    });
+
+    it('should return the client id when the client id scheme is x509_hash', () => {
+      // Given
+      configMock.get.mockReturnValueOnce({
+        relayingParty: {
+          clientIdScheme: Openid4vpClientIdSchemeEnum.X509_HASH,
+        },
+      });
+
+      // When
+      const result = service['resolveClientId'](interactionMock);
+
+      // Then
+      expect(result).toBe(x509ClientIdMock);
     });
   });
 });

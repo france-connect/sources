@@ -9,6 +9,7 @@ Fonctionnalité: Connexion eIDAS - FS français
   Scénario: Connexion FS français - avec claim AMR eidas
     Etant donné que j'utilise un compte usager "pour les tests eidas-bridge"
     Et que le fournisseur de service requiert le claim "amr"
+    Et que le fournisseur de service requiert l'accès aux informations des scopes "eidas"
     Et que je navigue sur la page fournisseur de service
     Et que je clique sur le bouton FranceConnect
     Et que je suis redirigé vers la page sélection du fournisseur d'identité

@@ -13,19 +13,16 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 
-import { OidcSession } from '@fc/oidc';
 import { OidcProviderRoutes, OidcProviderService } from '@fc/oidc-provider';
 import { SessionService } from '@fc/session';
 
 import { AuthorizeParamsDto } from '../dto';
-import { WalletBridgeIdentityService } from '../services';
 
 @Controller()
 export class OidcProviderController {
   constructor(
     private readonly oidcProvider: OidcProviderService,
     private readonly session: SessionService,
-    private readonly identityService: WalletBridgeIdentityService,
   ) {}
 
   @Get(OidcProviderRoutes.AUTHORIZATION)
@@ -62,11 +59,5 @@ export class OidcProviderController {
   ) {
     await this.session.reset(res);
     await this.oidcProvider.callback(req, res);
-  }
-
-  @Get('/interaction/:uid')
-  @Header('cache-control', 'no-store')
-  async getInteraction(@Req() req: Request, @Res() res: Response) {
-    await this.identityService.finishInteraction(req, res, {} as OidcSession);
   }
 }

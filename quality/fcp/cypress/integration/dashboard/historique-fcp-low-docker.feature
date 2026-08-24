@@ -102,7 +102,7 @@ Fonctionnalité: Historique Connexion sur FranceConnect(v2) (docker)
     Et la date et heure de l'évènement correspondent à maintenant
     Et l'évènement concerne 8 données "FCP_LOW"
     Et les données "FCP_LOW" de l'évènement contiennent "Prénom(s)"
-    Et les données "FCP_LOW" de l'évènement contiennent "Nom de naissance"
+    Et les données "FCP_LOW" de l'évènement contiennent "Nom de famille"
     Et les données "FCP_LOW" de l'évènement contiennent "Date de naissance"
     Et les données "FCP_LOW" de l'évènement contiennent "Sexe"
     Et les données "FCP_LOW" de l'évènement contiennent "Nom d’usage"

@@ -1,0 +1,5 @@
+export enum SseLogEvent {
+  SSE_CLOSED = 'SSE_CLOSED',
+  SSE_OPENED = 'SSE_OPENED',
+  SSE_STREAM_ERROR = 'SSE_STREAM_ERROR',
+}

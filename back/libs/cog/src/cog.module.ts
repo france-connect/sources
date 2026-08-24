@@ -4,18 +4,13 @@ import { CsvService } from '@fc/csv/services';
 import { LoggerService } from '@fc/logger';
 
 import { CogService } from './cog.service';
-import { CityDto, CountryDto } from './dto';
-import { COG_CITY, COG_COUNTRY } from './tokens';
+import { CityDto, CountryDto, IsoCogCountryDto } from './dto';
+import { COG_CITY, COG_COUNTRY, COG_ISO_COUNTRY } from './tokens';
 
 @Module({
   exports: [CogService],
   providers: [
     CogService,
-    /**
-     * we need 2 instances of CSV Repository Services
-     * each one corresponds to a database validated
-     * by its own Dto.
-     */
     {
       inject: [LoggerService],
       provide: COG_CITY,
@@ -25,6 +20,12 @@ import { COG_CITY, COG_COUNTRY } from './tokens';
       inject: [LoggerService],
       provide: COG_COUNTRY,
       useFactory: (logger: LoggerService) => new CsvService(logger, CountryDto),
+    },
+    {
+      inject: [LoggerService],
+      provide: COG_ISO_COUNTRY,
+      useFactory: (logger: LoggerService) =>
+        new CsvService(logger, IsoCogCountryDto),
     },
   ],
 })

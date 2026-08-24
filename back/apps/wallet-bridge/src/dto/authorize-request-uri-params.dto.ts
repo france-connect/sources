@@ -1,6 +1,7 @@
-import { IsUUID } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class AuthorizeRequestUriParamsDto {
-  @IsUUID('4')
+  @IsNotEmpty()
+  @IsString()
   readonly interactionId: string;
 }

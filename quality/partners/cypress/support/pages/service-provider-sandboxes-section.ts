@@ -7,7 +7,7 @@ import {
 
 export default class ServiceProviderSandboxesSection {
   getServiceProviderSandboxesSuccessAlert(): ChainableElement {
-    return cy.get('[data-testid="service-provider-instance-success-alert"]');
+    return cy.get('[data-testid="service-provider-instance-alert"]');
   }
 
   getSandboxesEmptyAlert(): ChainableElement {

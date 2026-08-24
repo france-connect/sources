@@ -22,8 +22,8 @@ export default defineConfig({
     ...baseConfig.env,
     APP_LABEL: 'FranceConnect',
     // Base Configuration
-    PLATFORM: 'fcp-low',
     TAGS: '@fcpLow and @validationVisuelle and not @ignore',
     TEST_ENV: 'docker',
+    TEST_PLATFORM: 'fcp-low',
   },
 });

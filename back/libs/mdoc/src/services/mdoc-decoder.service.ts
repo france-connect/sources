@@ -123,8 +123,16 @@ export class MdocDecoderService {
     return items.map((item) => ({
       digestID: item.digestId,
       elementIdentifier: item.elementIdentifier,
-      elementValue: item.elementValue,
+      elementValue: this.mapToObject(item.elementValue),
     }));
+  }
+
+  private mapToObject(value: unknown): unknown {
+    if (value instanceof Map) {
+      return Object.fromEntries(value);
+    }
+
+    return value as Record<string, unknown>;
   }
 
   private mapMso(issuerAuth: IssuerAuth): MdocMsoInterface {

@@ -51,7 +51,7 @@ Fonctionnalité: Instance - Modification
     Quand je clique sur le bouton "copier le client_id"
     Alors le "client_id" est dans le presse papier
 
-   Scénario: Instance Modification - Copier le client_secret
+  Scénario: Instance Modification - Copier le client_secret
     Etant donné que je me connecte à l'espace partenaires
     Et que je navigue sur la page liste des instances de l'espace partenaires
     Et que je suis sur la page liste des instances
@@ -60,3 +60,49 @@ Fonctionnalité: Instance - Modification
     Et que je suis sur la page modification d'instance
     Quand je clique sur le bouton "copier le client_secret"
     Alors le "client_secret" est dans le presse papier
+
+  Scénario: Instance Modification - Vidage des champs optionnels
+    Etant donné que je me connecte à l'espace partenaires
+    Et que je navigue sur la page liste des instances de l'espace partenaires
+    Et que je suis sur la page liste des instances
+    Et que je crée une instance "avec entityId" avec le nom "bdd vidage champs optionnels" et demande Datapass "54321"
+    Et que je clique sur l'instance "bdd vidage champs optionnels"
+    Et que je suis sur la page modification d'instance
+    Et que j'entre les valeurs dans les champs suivants du formulaire de modification d'instance
+      | name                          | value                                |
+      | signupId                      | 54321                                |
+      | site[0]                       | https://test.franceconnect.gouv.fr   |
+      | sector_identifier_uri         | https://test.com/sector-identifier   |
+      | IPServerAddressesAndRanges[0] | 37.65.14.169                         |
+      | entityId                      | 4a858a99-5baf-4068-bd59-ff551ede3619 |
+    Et que je valide le formulaire de modification d'instance
+    Et que je suis redirigé vers la page liste des instances
+    Et que la confirmation de modification de l'instance est affichée
+    Et que je clique sur l'instance "bdd vidage champs optionnels"
+    Et que je suis sur la page modification d'instance
+    Et les champs suivants sont initialisés dans le formulaire de modification d'instance
+      | name                          | value                                |
+      | signupId                      | 54321                                |
+      | site[0]                       | https://test.franceconnect.gouv.fr   |
+      | sector_identifier_uri         | https://test.com/sector-identifier   |
+      | IPServerAddressesAndRanges[0] | 37.65.14.169                         |
+      | entityId                      | 4a858a99-5baf-4068-bd59-ff551ede3619 |
+    Quand j'entre les valeurs dans les champs suivants du formulaire de modification d'instance
+      | name                          | value |
+      | signupId                      |       |
+      | site[0]                       |       |
+      | sector_identifier_uri         |       |
+      | IPServerAddressesAndRanges[0] |       |
+      | entityId                      |       |
+    Et je valide le formulaire de modification d'instance
+    Alors je suis redirigé vers la page liste des instances
+    Et la confirmation de modification de l'instance est affichée
+    Et je clique sur l'instance "bdd vidage champs optionnels"
+    Et je suis sur la page modification d'instance
+    Et les champs suivants sont initialisés dans le formulaire de modification d'instance
+      | name                          | value |
+      | signupId                      |       |
+      | site[0]                       |       |
+      | sector_identifier_uri         |       |
+      | IPServerAddressesAndRanges[0] |       |
+      | entityId                      |       |

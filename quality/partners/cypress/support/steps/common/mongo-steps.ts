@@ -43,6 +43,19 @@ Then(
   },
 );
 
+Then(
+  "le fournisseur de service avec le clientId {string} n'existe plus dans MongoDB",
+  function (key: string) {
+    const args = {
+      collection: 'client',
+      query: { key },
+    };
+    cy.task('mongoFindOne', args).then((result: object) => {
+      expect(result).to.be.null;
+    });
+  },
+);
+
 Then('le fournisseur de service est au bon format dans MongoDB', function () {
   expect(this.mongoServiceProvider).to.exist;
   expect(this.mongoServiceProvider).to.haveOwnProperty('_id');

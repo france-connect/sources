@@ -1,0 +1,50 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ModalShellComponent should match the snapshot 1`] = `
+<body>
+  <div />
+  <dialog
+    aria-labelledby="any-resolved-title-id-mock"
+    class="fr-modal fr-modal--opened"
+    data-testid="any-modal-testid-mock"
+    id="any-modal-id-mock"
+  >
+    <div
+      class="fr-container fr-container--fluid fr-container-md"
+    >
+      <div
+        class="fr-grid-row fr-grid-row--center fr-grid-row--gutters"
+      >
+        <div
+          class="fr-col-12 fr-col-md-8 fr-col-lg-6"
+        >
+          <div
+            class="fr-modal__body"
+          >
+            <div
+              data-mockid="ModalHeaderComponent"
+            />
+            <div
+              class="fr-modal__content"
+            >
+              <div
+                data-mockid="ModalTitleComponent"
+              >
+                any-title-mock
+              </div>
+              any-children-mock
+            </div>
+            <div
+              data-mockid="ModalFooterComponent"
+            >
+              <span>
+                any-footer-mock
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </dialog>
+</body>
+`;

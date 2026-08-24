@@ -51,8 +51,9 @@ describe('ElasticControlReindexService', () => {
   };
 
   const taskIdMock = 'ABC123:12345';
+  const taskStatusTotalMock = 20;
   const sourceIndexMock = '2025-08_sp_franceconnect_plus_month';
-  const pipelineIdMock = 'nbOfConnections_sp_franceconnect_plus_month_2025-08';
+  const pipelineIdMock = 'nbOfConnections_sp_franceconnect_plus_month';
   const dryRun = false;
 
   const elasticControlConfigMock = {
@@ -105,12 +106,26 @@ describe('ElasticControlReindexService', () => {
         .mockResolvedValue(totalReindexMock);
     });
 
-    it('should call getReindexedMetrics', async () => {
+    it('should not call getReindexedMetrics on nominal path', async () => {
       // Given
       elasticClientMock.getTask.mockResolvedValue({
         completed: false,
+        task: { status: { total: taskStatusTotalMock } },
         response: {},
       });
+
+      // When
+      await service.findTask(taskIdMock, optionsMock);
+
+      // Then
+      expect(service['getReindexedMetrics']).not.toHaveBeenCalled();
+    });
+
+    it('should call getReindexedMetrics when task is not found', async () => {
+      // Given
+      const error = new Error('not found');
+      elasticClientMock.getTask.mockRejectedValue(error);
+      isNotFoundMock.mockReturnValue(true);
 
       // When
       await service.findTask(taskIdMock, optionsMock);
@@ -125,6 +140,7 @@ describe('ElasticControlReindexService', () => {
       // Given
       elasticClientMock.getTask.mockResolvedValue({
         completed: false,
+        task: { status: { total: taskStatusTotalMock } },
         response: {},
       });
 
@@ -141,6 +157,7 @@ describe('ElasticControlReindexService', () => {
       // Given
       const taskResponseMock = {
         completed: false,
+        task: { status: { total: taskStatusTotalMock } },
         response: { failures: [] },
       };
       elasticClientMock.getTask.mockResolvedValue(taskResponseMock);
@@ -152,7 +169,7 @@ describe('ElasticControlReindexService', () => {
       expect(result).toEqual({
         id: taskIdMock,
         completed: false,
-        total: totalReindexMock,
+        total: taskStatusTotalMock,
         failures: failuresMock,
       });
     });
@@ -162,6 +179,7 @@ describe('ElasticControlReindexService', () => {
       const responseMock = { failures: [] };
       elasticClientMock.getTask.mockResolvedValue({
         completed: true,
+        task: { status: { total: taskStatusTotalMock } },
         response: responseMock,
       });
 
@@ -248,6 +266,7 @@ describe('ElasticControlReindexService', () => {
       expect(service['startReindex']).toHaveBeenCalledExactlyOnceWith(
         sourceIndexMock,
         pipelineIdMock,
+        optionsMock,
         dryRun,
       );
     });
@@ -353,7 +372,12 @@ describe('ElasticControlReindexService', () => {
       elasticClientMock.reindex.mockResolvedValue({ task: taskIdMock });
 
       // When
-      await service['startReindex'](sourceIndexMock, pipelineIdMock, dryRun);
+      await service['startReindex'](
+        sourceIndexMock,
+        pipelineIdMock,
+        optionsMock,
+        dryRun,
+      );
 
       // Then
       expect(configMock.get).toHaveBeenCalledExactlyOnceWith('ElasticControl');
@@ -364,7 +388,12 @@ describe('ElasticControlReindexService', () => {
       elasticClientMock.reindex.mockResolvedValue({ task: taskIdMock });
 
       // When
-      await service['startReindex'](sourceIndexMock, pipelineIdMock, dryRun);
+      await service['startReindex'](
+        sourceIndexMock,
+        pipelineIdMock,
+        optionsMock,
+        dryRun,
+      );
 
       // Then
       expect(elasticClientMock.reindex).toHaveBeenCalledExactlyOnceWith({
@@ -376,12 +405,82 @@ describe('ElasticControlReindexService', () => {
       });
     });
 
+    it('should inject period via script when range is SEMESTER', async () => {
+      // Given
+      elasticClientMock.reindex.mockResolvedValue({ task: taskIdMock });
+      const semesterOptionsMock = {
+        ...optionsMock,
+        range: ElasticControlRangeEnum.SEMESTER,
+        period: '2024-07',
+      };
+
+      // When
+      await service['startReindex'](
+        sourceIndexMock,
+        pipelineIdMock,
+        semesterOptionsMock,
+        dryRun,
+      );
+
+      // Then
+      expect(elasticClientMock.reindex).toHaveBeenCalledExactlyOnceWith({
+        source: { index: [sourceIndexMock] },
+        dest: {
+          index: elasticControlConfigMock.metricsIndex,
+          pipeline: pipelineIdMock,
+        },
+        script: {
+          source: 'ctx._source.period = params.period',
+          params: { period: '2024-07' },
+        },
+      });
+    });
+
+    it('should not inject script when range is MONTH', async () => {
+      // Given
+      elasticClientMock.reindex.mockResolvedValue({ task: taskIdMock });
+
+      // When
+      await service['startReindex'](
+        sourceIndexMock,
+        pipelineIdMock,
+        { ...optionsMock, range: ElasticControlRangeEnum.MONTH },
+        dryRun,
+      );
+
+      // Then
+      const [body] = elasticClientMock.reindex.mock.calls[0];
+      expect(body).not.toHaveProperty('script');
+    });
+
+    it('should not inject script when range is YEAR', async () => {
+      // Given
+      elasticClientMock.reindex.mockResolvedValue({ task: taskIdMock });
+
+      // When
+      await service['startReindex'](
+        sourceIndexMock,
+        pipelineIdMock,
+        { ...optionsMock, range: ElasticControlRangeEnum.YEAR, period: '2024' },
+        dryRun,
+      );
+
+      // Then
+      const [body] = elasticClientMock.reindex.mock.calls[0];
+      expect(body).not.toHaveProperty('script');
+    });
+
     it('should log reindex start', async () => {
       // Given
       elasticClientMock.reindex.mockResolvedValue({ task: taskIdMock });
 
       // When
-      await service['startReindex'](sourceIndexMock, pipelineIdMock, dryRun);
+      await service['startReindex'](
+        sourceIndexMock,
+        pipelineIdMock,
+        optionsMock,
+        dryRun,
+      );
 
       // Then
       expect(loggerMock.info).toHaveBeenCalledExactlyOnceWith(
@@ -397,6 +496,7 @@ describe('ElasticControlReindexService', () => {
       const result = await service['startReindex'](
         sourceIndexMock,
         pipelineIdMock,
+        optionsMock,
         dryRun,
       );
 
@@ -412,6 +512,7 @@ describe('ElasticControlReindexService', () => {
       const result = await service['startReindex'](
         sourceIndexMock,
         pipelineIdMock,
+        optionsMock,
         dryRun,
       );
 
@@ -430,28 +531,30 @@ describe('ElasticControlReindexService', () => {
 
       // When / Then
       await expect(
-        service['startReindex'](sourceIndexMock, pipelineIdMock, dryRun),
+        service['startReindex'](
+          sourceIndexMock,
+          pipelineIdMock,
+          optionsMock,
+          dryRun,
+        ),
       ).rejects.toThrow(ElasticControlInvalidRequestException);
     });
   });
 
   describe('buildPipelineId', () => {
-    it('should return a sorted, underscore-joined string', () => {
+    it('should return an underscore-joined string of key, pivot, product, range', () => {
       // When
       const result = service['buildPipelineId'](optionsMock);
 
       // Then
-      // Sorted keys: key, period, pivot, product, range
-      expect(result).toBe(
-        'nbOfConnections_2025-08_sp_franceconnect_plus_month',
-      );
+      expect(result).toBe('nbOfConnections_sp_franceconnect_plus_month');
     });
   });
 
   describe('buildPipelineBody', () => {
     it('should return a correctly structured pipeline body', () => {
       // Given
-      const keyToOmmit = OTHER_BY_KEY[optionsMock.key];
+      const keyToOmit = OTHER_BY_KEY[optionsMock.key];
       const { groupFields, nameFields } = PIVOT_FIELDS[optionsMock.pivot];
 
       // When
@@ -461,7 +564,13 @@ describe('ElasticControlReindexService', () => {
       expect(result).toEqual({
         description: `create and format metrics for ${optionsMock.key}`,
         processors: [
-          { set: { field: 'date', value: '2025-08-01' } },
+          {
+            rename: {
+              field: 'period',
+              // eslint-disable-next-line @typescript-eslint/naming-convention
+              target_field: 'date',
+            },
+          },
           { set: { field: 'key', value: optionsMock.key } },
           { set: { field: 'range', value: optionsMock.range } },
           { set: { field: 'product', value: optionsMock.product } },
@@ -502,7 +611,7 @@ describe('ElasticControlReindexService', () => {
               target_field: nameFields[1],
             },
           },
-          { remove: { field: [keyToOmmit] } },
+          { remove: { field: [keyToOmit] } },
           { remove: { field: ['info'] } },
         ],
       });
@@ -587,43 +696,35 @@ describe('ElasticControlReindexService', () => {
 
   describe('getReindexedMetrics', () => {
     beforeEach(() => {
+      transformServiceMock.buildTransformId.mockReturnValue(sourceIndexMock);
       elasticClientMock.countDocuments.mockResolvedValue({
         count: totalReindexMock,
       });
     });
 
-    it('should get config', async () => {
+    it('should call transform.buildTransformId with omitted key', async () => {
       // When
       await service['getReindexedMetrics'](optionsMock);
 
       // Then
-      expect(configMock.get).toHaveBeenCalledWith('ElasticControl');
+      expect(
+        transformServiceMock.buildTransformId,
+      ).toHaveBeenCalledExactlyOnceWith({
+        product: optionsMock.product,
+        range: optionsMock.range,
+        pivot: optionsMock.pivot,
+        period: optionsMock.period,
+      });
     });
 
-    it('should call elastic.countDocuments with correct body', async () => {
-      // Given
-      const { groupFields } = PIVOT_FIELDS[optionsMock.pivot];
-
+    it('should call elastic.countDocuments with source index and empty body', async () => {
       // When
       await service['getReindexedMetrics'](optionsMock);
 
       // Then
       expect(elasticClientMock.countDocuments).toHaveBeenCalledExactlyOnceWith(
-        elasticControlConfigMock.metricsIndex,
-        {
-          query: {
-            bool: {
-              filter: [
-                { term: { key: optionsMock.key } },
-                { term: { product: optionsMock.product } },
-                { term: { range: optionsMock.range } },
-                { term: { date: '2025-08-01' } },
-                { term: { pivot: optionsMock.pivot } },
-                ...groupFields.map((field) => ({ exists: { field } })),
-              ],
-            },
-          },
-        },
+        sourceIndexMock,
+        {},
       );
     });
 
@@ -657,41 +758,6 @@ describe('ElasticControlReindexService', () => {
       await expect(service['getReindexedMetrics'](optionsMock)).rejects.toThrow(
         ElasticControlInvalidRequestException,
       );
-    });
-
-    describe('with SP_IDP_PAIR pivot', () => {
-      it('should add exists filters for both spId and idpId', async () => {
-        // Given
-        const options: ElasticControlReindexOptionsDto = {
-          ...optionsMock,
-          pivot: ElasticControlPivotEnum.SP_IDP_PAIR,
-        };
-
-        // When
-        await service['getReindexedMetrics'](options);
-
-        // Then
-        expect(
-          elasticClientMock.countDocuments,
-        ).toHaveBeenCalledExactlyOnceWith(
-          elasticControlConfigMock.metricsIndex,
-          {
-            query: {
-              bool: {
-                filter: [
-                  { term: { key: options.key } },
-                  { term: { product: options.product } },
-                  { term: { range: options.range } },
-                  { term: { date: '2025-08-01' } },
-                  { term: { pivot: options.pivot } },
-                  { exists: { field: 'spId' } },
-                  { exists: { field: 'idpId' } },
-                ],
-              },
-            },
-          },
-        );
-      });
     });
   });
 });

@@ -131,12 +131,12 @@ describe('OidcToEidasService', () => {
       mapRequestedAttributesFromClaimsMock.mockReturnValueOnce(
         partialSuccessResponseMock.attributes,
       );
-      eidasCogServiceMock.injectLabelsForCogs.mockResolvedValueOnce([cogMock]);
+      eidasCogServiceMock.injectLabelsForCogs.mockReturnValueOnce([cogMock]);
     });
 
-    it('should map the attributes with the claims and the requestedAttributes', async () => {
+    it('should map the attributes with the claims and the requestedAttributes', () => {
       // When
-      await service.mapPartialResponseSuccess(
+      service.mapPartialResponseSuccess(
         claimsMock,
         acrMock,
         requestedAttributesMock,
@@ -150,9 +150,9 @@ describe('OidcToEidasService', () => {
       );
     });
 
-    it('should return the partial response', async () => {
+    it('should return the partial response', () => {
       // When
-      const result = await service.mapPartialResponseSuccess(
+      const result = service.mapPartialResponseSuccess(
         claimsMock,
         acrMock,
         requestedAttributesMock,
@@ -163,7 +163,7 @@ describe('OidcToEidasService', () => {
       expect(eidasCogServiceMock.injectLabelsForCogs).toHaveBeenCalledTimes(0);
     });
 
-    it('should return the partial response with cogs updated', async () => {
+    it('should return the partial response with cogs updated', () => {
       // Given
       const placeOfBirth = ['75011'];
 
@@ -177,7 +177,7 @@ describe('OidcToEidasService', () => {
         [EidasAttributes.PLACE_OF_BIRTH]: [cogMock],
       };
       // When
-      const result = await service.mapPartialResponseSuccess(
+      const result = service.mapPartialResponseSuccess(
         claimsMock,
         acrMock,
         requestedAttributesMock,

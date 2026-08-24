@@ -89,6 +89,40 @@ export class FormValidationPipe implements PipeTransform {
     );
   }
 
+  private isClearedOptionalValue(value: unknown): boolean {
+    if (value === '') {
+      return true;
+    }
+    return Array.isArray(value) && value.length === 1 && value[0] === '';
+  }
+
+  private shouldSkipFieldValidation(
+    fieldMetadata: FieldAttributes,
+    value: unknown,
+  ): boolean {
+    return (
+      fieldMetadata.readonly ||
+      (!fieldMetadata.required && this.isClearedOptionalValue(value))
+    );
+  }
+
+  private buildInvalidKeyError(name: string): MetadataDtoInterface {
+    return {
+      name,
+      validators: [
+        {
+          name,
+          errorMessage: {
+            content: `${name}_invalidKey_error`,
+            level: MessageLevelEnum.ERROR,
+            priority: MessagePriorityEnum.ERROR,
+          },
+          validationArgs: [],
+        },
+      ],
+    };
+  }
+
   private async validateField(
     target: Record<string, unknown>,
     metadata: FieldAttributes[],
@@ -96,26 +130,12 @@ export class FormValidationPipe implements PipeTransform {
   ): Promise<MetadataDtoInterface> {
     const fieldMetadata = metadata.find((field) => field.name === name);
 
-    const fieldErrors: MetadataDtoInterface = {
-      name,
-      validators: [],
-    };
-
     if (!fieldMetadata) {
-      fieldErrors.validators.push({
-        name,
-        errorMessage: {
-          content: `${name}_invalidKey_error`,
-          level: MessageLevelEnum.ERROR,
-          priority: MessagePriorityEnum.ERROR,
-        },
-        validationArgs: [],
-      });
-      return fieldErrors;
+      return this.buildInvalidKeyError(name);
     }
 
-    if (fieldMetadata.readonly) {
-      return fieldErrors;
+    if (this.shouldSkipFieldValidation(fieldMetadata, target[name])) {
+      return { name, validators: [] };
     }
 
     const shouldValidate = await this.shouldValidate(
@@ -125,17 +145,18 @@ export class FormValidationPipe implements PipeTransform {
     );
 
     if (!shouldValidate) {
-      return fieldErrors;
+      return { name, validators: [] };
     }
 
-    fieldErrors.validators = await this.handleFieldValidation(
-      fieldErrors,
-      target,
-      fieldMetadata,
+    return {
       name,
-    );
-
-    return fieldErrors;
+      validators: await this.handleFieldValidation(
+        { name, validators: [] },
+        target,
+        fieldMetadata,
+        name,
+      ),
+    };
   }
 
   private async handleFieldValidation(
@@ -223,7 +244,7 @@ export class FormValidationPipe implements PipeTransform {
   private async shouldValidate(
     value: unknown,
     target: Record<string, unknown>,
-    validateIf: FieldValidateIfRule[],
+    validateIf?: FieldValidateIfRule[],
   ): Promise<boolean> {
     if (!Array.isArray(validateIf)) {
       return true;

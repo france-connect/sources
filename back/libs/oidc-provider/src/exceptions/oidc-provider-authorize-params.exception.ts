@@ -9,7 +9,7 @@ export class OidcProviderAuthorizeParamsException extends FcException {
 
   static CODE = ErrorCode.AUTHORIZATION_ERROR;
   static DOCUMENTATION =
-    "Un ou plusieurs `params` de la route `authorize` n'a/ont pas été validé par le DTO";
+    'Un ou plusieurs `params` de la route `authorize` n’a/ont pas été validé par le DTO.';
   static ERROR = 'invalid_request';
   static ERROR_DESCRIPTION = 'invalid parameter';
   static HTTP_STATUS_CODE = HttpStatus.BAD_REQUEST;

@@ -78,6 +78,7 @@
   },
   "scripts": {
     "prettier": "prettier --no-parallel --experimental-cli -c \"{.,data,fcp,partners,plugins,scripts}/{.,cypress,scripts}/**/*.ts\" --config-path .prettierrc",
+    "prettier:write": "prettier --no-parallel --experimental-cli --write \"{.,data,fcp,partners,plugins,scripts}/{.,cypress,scripts}/**/*.ts\" --config-path .prettierrc",
     "lint": "eslint --concurrency=off '**/*.ts'",
     "test": "jest"
   }

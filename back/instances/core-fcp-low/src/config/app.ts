@@ -22,6 +22,7 @@ export default {
   minAcrForContextRequest: 'eidas2',
   eidasBridgeUid: env.string('EIDAS_BRIDGE_UID'),
   aidantsConnectUid: env.string('AIDANTS_CONNECT_UID'),
+  walletBridgeUid: env.string('WALLET_BRIDGE_UID'),
   sortedClaims: [
     'family_name',
     'preferred_username',

@@ -443,6 +443,62 @@ describe('MdocDecoderService', () => {
         },
       ]);
     });
+
+    it('should map issuer signed items to mdoc issuer signed item interface when elementValue is a Map', () => {
+      // Given
+      const items = [
+        {
+          digestId: 1,
+          elementIdentifier: 'given_name',
+          elementValue: new Map([
+            ['first', 'ADAM'],
+            ['second', 'JOHN'],
+          ]),
+          random: 'ignored',
+        },
+      ];
+
+      // When
+      const result = service['mapIssuerSignedItems'](
+        items as unknown as IssuerSignedItem[],
+      );
+
+      // Then
+      expect(result).toEqual([
+        {
+          digestID: 1,
+          elementIdentifier: 'given_name',
+          elementValue: { first: 'ADAM', second: 'JOHN' },
+        },
+      ]);
+    });
+  });
+
+  describe('mapToObject', () => {
+    it('should map Map to object', () => {
+      // Given
+      const map = new Map([
+        ['first', 'ADAM'],
+        ['second', 'JOHN'],
+      ]);
+
+      // When
+      const result = service['mapToObject'](map);
+
+      // Then
+      expect(result).toEqual({ first: 'ADAM', second: 'JOHN' });
+    });
+
+    it('should return the value if it is not a Map', () => {
+      // Given
+      const value = 'ADAM';
+
+      // When
+      const result = service['mapToObject'](value);
+
+      // Then
+      expect(result).toEqual(value);
+    });
   });
 
   describe('mapMso', () => {

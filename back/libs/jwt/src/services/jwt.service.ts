@@ -1,4 +1,5 @@
 import { AxiosResponse } from 'axios';
+import { instanceToPlain } from 'class-transformer';
 import {
   compactDecrypt,
   CompactEncrypt,
@@ -177,7 +178,8 @@ export class JwtService {
   private async importJwk(jwk: JWK): Promise<Uint8Array | KeyLike> {
     let key: Uint8Array | KeyLike;
     try {
-      key = await importJWK(jwk);
+      const plainJwk = instanceToPlain(jwk) as JWK;
+      key = await importJWK(plainJwk);
     } catch (error) {
       throw new CanNotImportJwkException(error);
     }

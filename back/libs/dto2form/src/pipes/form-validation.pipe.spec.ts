@@ -412,9 +412,8 @@ describe('FormValidationPipe', () => {
       await service['validateField'](targetMock, metadataMock, nameMock);
 
       // Then
-      expect(service['handleFieldValidation']).toHaveBeenCalledTimes(1);
-      expect(service['handleFieldValidation']).toHaveBeenCalledWith(
-        { name: nameMock, validators: [errorMock] },
+      expect(service['handleFieldValidation']).toHaveBeenCalledExactlyOnceWith(
+        { name: nameMock, validators: [] },
         targetMock,
         metadataMock[0],
         nameMock,
@@ -459,6 +458,55 @@ describe('FormValidationPipe', () => {
         name: nameMock,
         validators: [],
       });
+    });
+
+    it('should skip validation for optional field with empty string', async () => {
+      // Given
+      const metadataMock = [getFieldAttributesMock('name1', false)];
+      const target = { name1: '' };
+
+      // When
+      const result = await service['validateField'](
+        target,
+        metadataMock,
+        'name1',
+      );
+
+      // Then
+      expect(result).toEqual({ name: 'name1', validators: [] });
+      expect(service['shouldValidate']).not.toHaveBeenCalled();
+      expect(service['handleFieldValidation']).not.toHaveBeenCalled();
+    });
+
+    it('should skip validation for optional field with [""]', async () => {
+      // Given
+      const metadataMock = [getFieldAttributesMock('name1', false, true)];
+      const target = { name1: [''] };
+
+      // When
+      const result = await service['validateField'](
+        target,
+        metadataMock,
+        'name1',
+      );
+
+      // Then
+      expect(result).toEqual({ name: 'name1', validators: [] });
+      expect(service['shouldValidate']).not.toHaveBeenCalled();
+      expect(service['handleFieldValidation']).not.toHaveBeenCalled();
+    });
+
+    it('should validate optional field when value is not cleared', async () => {
+      // Given
+      const metadataMock = [getFieldAttributesMock('name1', false)];
+      const target = { name1: 'https://a.fr' };
+
+      // When
+      await service['validateField'](target, metadataMock, 'name1');
+
+      // Then
+      expect(service['shouldValidate']).toHaveBeenCalledOnce();
+      expect(service['handleFieldValidation']).toHaveBeenCalledOnce();
     });
   });
 

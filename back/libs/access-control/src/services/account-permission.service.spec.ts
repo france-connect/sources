@@ -30,6 +30,7 @@ describe('AccountPermissionService', () => {
   const accountPermissionRepositoryMock = {
     insert: jest.fn(),
     getAccountsByPermissions: jest.fn(),
+    hasPermission: jest.fn(),
   };
 
   const loggerMock = getLoggerMock();
@@ -282,6 +283,34 @@ describe('AccountPermissionService', () => {
         'entityId = :entityId',
         { entityId: NO_ENTITY_ID },
       );
+    });
+  });
+
+  describe('hasPermission', () => {
+    it('should delegate to accountPermission repository', async () => {
+      // Given
+      const emailMock = 'foo@bar.com';
+      const permissionTypesMock = [PermissionsType.PERMISSION_VALUE];
+      accountPermissionRepositoryMock.hasPermission.mockResolvedValue(true);
+
+      // When
+      const result = await service.hasPermission(
+        emailMock,
+        permissionTypesMock,
+        EntityType.ENTITY_VALUE,
+        'entity-id',
+      );
+
+      // Then
+      expect(
+        accountPermissionRepositoryMock.hasPermission,
+      ).toHaveBeenCalledExactlyOnceWith(
+        emailMock,
+        permissionTypesMock,
+        EntityType.ENTITY_VALUE,
+        'entity-id',
+      );
+      expect(result).toBe(true);
     });
   });
 

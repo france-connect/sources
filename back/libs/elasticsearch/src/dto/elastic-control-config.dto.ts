@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsNumber, IsString } from 'class-validator';
 
 export class ElasticControlConfig {
   @IsString()
@@ -12,4 +12,7 @@ export class ElasticControlConfig {
 
   @IsString()
   readonly highTracksIndex: string;
+
+  @IsNumber()
+  readonly runningOperationsMaxSize: number;
 }

@@ -110,8 +110,7 @@ const fip = {
     active: true,
     display: true,
     isBeta: false,
-    title:
-      "FIP3 - eIDAS substantiel - RSA - nodiscov",
+    title: "FIP3 - eIDAS substantiel - RSA - nodiscov",
     image: "fi-mock-substantiel.svg",
     imageFocus: "fi-mock-substantiel.svg",
     alt: "FIP3 - eIDAS substantiel - RSA - nodiscov",
@@ -159,8 +158,7 @@ const fip = {
     active: true,
     display: true,
     isBeta: true,
-    title:
-      "FIP4 - eIDAS substantiel - beta - nodiscov - no crypt",
+    title: "FIP4 - eIDAS substantiel - beta - nodiscov - no crypt",
     image: "fi-mock-substantiel.svg",
     imageFocus: "fi-mock-substantiel.svg",
     alt: "FIP4 - eIDAS substantiel - beta - nodiscov - no crypt",
@@ -208,8 +206,7 @@ const fip = {
     active: true,
     display: true,
     isBeta: false,
-    title:
-      "FIP5 - eIDAS élevé - eidas3 seulement",
+    title: "FIP5 - eIDAS élevé - eidas3 seulement",
     image: "fi-mock-eleve.svg",
     imageFocus: "fi-mock-eleve.svg",
     alt: "FIP5 - eIDAS élevé - eidas3 seulement",
@@ -263,8 +260,7 @@ const fip = {
     active: true,
     display: true,
     isBeta: false,
-    title:
-      "FIP51 - Mauvais Format - Attribut discovery manquant",
+    title: "FIP51 - Mauvais Format - Attribut discovery manquant",
     image: "",
     imageFocus: "",
     alt: "FIP51 - Mauvais Format - Attribut discovery manquant",
@@ -309,8 +305,7 @@ const fip = {
     active: true,
     display: true,
     isBeta: false,
-    title:
-      "FIP52 - Mauvais Format - Attribut authzURL avec discovery",
+    title: "FIP52 - Mauvais Format - Attribut authzURL avec discovery",
     image: "",
     imageFocus: "",
     alt: "FIP52 - Mauvais Format - Attribut authzURL avec discovery",
@@ -501,8 +496,7 @@ const fip = {
     active: true,
     display: true,
     isBeta: false,
-    title:
-      "FIP56 - Blacklisté par FSP2 et non whitelisté par FSP5",
+    title: "FIP56 - Blacklisté par FSP2 et non whitelisté par FSP5",
     image: "",
     imageFocus: "",
     alt: "FIP56 - Blacklisté par FSP2 et non whitelisté par FSP5",
@@ -547,8 +541,7 @@ const fip = {
     active: true,
     display: true,
     isBeta: false,
-    title:
-      "FIP57 - Mauvais format - attribut discoveryUrl manquant",
+    title: "FIP57 - Mauvais format - attribut discoveryUrl manquant",
     image: "",
     imageFocus: "",
     alt: "FIP57 - Mauvais format - attribut discoveryUrl manquant",
@@ -593,8 +586,7 @@ const fip = {
     active: true,
     display: true,
     isBeta: false,
-    title:
-      "FIP58 - eIDAS élevé - avec modale",
+    title: "FIP58 - eIDAS élevé - avec modale",
     image: "",
     imageFocus: "",
     alt: "FIP58 - eIDAS élevé - avec modale",
@@ -650,8 +642,7 @@ const fip = {
     active: true,
     display: true,
     isBeta: false,
-    title:
-      "FIP59 - Mauvais format - attribut authzURL manquant",
+    title: "FIP59 - Mauvais format - attribut authzURL manquant",
     image: "",
     imageFocus: "",
     alt: "FIP59 - Mauvais format - attribut authzURL manquant",
@@ -700,8 +691,7 @@ const fip = {
     active: true,
     display: true,
     isBeta: false,
-    title:
-      "FIP60 - Mauvais format - acr eidas1",
+    title: "FIP60 - Mauvais format - acr eidas1",
     image: "",
     imageFocus: "",
     alt: "FIP60 - Mauvais format - acr eidas1",
@@ -798,9 +788,9 @@ const fip = {
 
   // Wallet Bridge as Identity Provider (EUDI wallet, standard OIDC, signing only — no encryption)
   WALLETBRIDGE: {
-    uid: "31505144-8da5-49f4-a507-c6352eaf34a5",
-    url: "https://wallet-bridge-high.docker.dev-franceconnect.fr",
-    name: "wallet-bridge-high",
+    uid: "wallet-bridge",
+    url: "https://wallet-bridge.docker.dev-franceconnect.fr",
+    name: "wallet-bridge",
     image: "fi-mock-eleve.svg",
     imageFocus: "fi-mock-eleve.svg",
     alt: "Wallet Bridge",
@@ -809,9 +799,9 @@ const fip = {
     display: true,
     isBeta: false,
     featureHandlers: {
-      coreVerify: "core-fcp-default-verify",
+      coreVerify: "core-fcp-eidas-verify",
       authenticationEmail: null,
-      idpIdentityCheck: "core-fcp-default-identity-check",
+      idpIdentityCheck: "core-fcp-eidas-identity-check",
       coreAuthorization: "core-fcp-default-authorization",
     },
     clientID: "wallet-bridge-high-client-id",
@@ -822,13 +812,11 @@ const fip = {
     token_endpoint_auth_method: "client_secret_post",
     discovery: false,
     authzURL:
-      "https://wallet-bridge-high.docker.dev-franceconnect.fr/authorize",
-    tokenURL:
-      "https://wallet-bridge-high.docker.dev-franceconnect.fr/token",
+      "https://wallet-bridge.docker.dev-franceconnect.fr/authorize",
+    tokenURL: "https://wallet-bridge.docker.dev-franceconnect.fr/token",
     userInfoURL:
-      "https://wallet-bridge-high.docker.dev-franceconnect.fr/userinfo",
-    jwksURL:
-      "https://wallet-bridge-high.docker.dev-franceconnect.fr/jwks",
+      "https://wallet-bridge.docker.dev-franceconnect.fr/userinfo",
+    jwksURL: "https://wallet-bridge.docker.dev-franceconnect.fr/jwks",
     id_token_signed_response_alg: "ES256",
     // Encryption is out of scope — wallet-bridge signs only (ES256)
     id_token_encrypted_response_alg: "",

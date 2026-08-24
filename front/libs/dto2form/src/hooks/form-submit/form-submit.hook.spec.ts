@@ -27,7 +27,7 @@ describe('useFormSubmit', () => {
     await result.current(valuesMock, formApiMock);
 
     // Then
-    expect(onPreSubmitMock).toHaveBeenCalledExactlyOnceWith(valuesMock);
+    expect(onPreSubmitMock).toHaveBeenCalledExactlyOnceWith(valuesMock, formApiMock);
   });
 
   it('should call onSubmit with arg values if onPreSubmit is not provided', async () => {

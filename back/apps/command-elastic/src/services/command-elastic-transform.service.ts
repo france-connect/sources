@@ -82,6 +82,43 @@ export class CommandElasticTransformService {
     );
   }
 
+  async actualizeAllTransforms(dryRun: boolean): Promise<boolean> {
+    this.logger.debug(`[Command] Actualizing all transforms`);
+
+    const docs = await this.controlDocument.findRunningOperations(
+      ElasticOperationsEnum.TRANSFORM,
+    );
+
+    await Promise.all(
+      docs.map(async (doc) => {
+        const options = doc.options as ElasticControlTransformOptionsDto;
+        const existing = await this.transform.findTransform(options);
+        const nextState = this.getNextState(existing);
+
+        this.logger.debug(
+          `[Command] Transform "${doc.id}": ${doc.state} -> ${nextState}`,
+        );
+
+        await this.controlDocument.updateControlDoc(
+          doc,
+          nextState,
+          existing,
+          dryRun,
+        );
+      }),
+    );
+
+    const remaining = await this.controlDocument.countNonFinalOperations(
+      ElasticOperationsEnum.TRANSFORM,
+    );
+
+    this.logger.debug(
+      `[Command] Remaining non-final transform operations: ${remaining}`,
+    );
+
+    return remaining === 0;
+  }
+
   async actualizeTransform(
     options: ElasticControlTransformOptionsDto,
     dryRun: boolean,

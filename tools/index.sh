@@ -35,7 +35,7 @@ _command_register "reset-mongo-as-prod" "_reset_mongodb_as_prod" "reset-mongo-as
 _command_register "redis" "_redis_cli" "Connect to redis cli: redis <db>"
 
 ### Elastic
-_command_register "init-stats" "_init_stats" "Initialize statistics stack: clean ES data, switch to kibana, init ES indices"
+_command_register "init-stats" "_init_stats" "Initialize statistics stack: switch to kibana, reset ES indices, create ingest pipeline (geo). Use --clean to also wipe Elasticsearch data before init (e.g. docker-stack init-stats --clean)"
 _command_register "init-ud" "_init_ud" "init-ud => Initialize data for user dashboard"
 _command_register "reset-stats" "_reset_stats" "reset-stats => drop stats index"
 _command_register "es-create-ingest-pipeline" "_create_es_ingest_pipeline" "" # Description to be defined
@@ -105,6 +105,9 @@ _command_register "bdd-support-test" "_bdd_support_test" "Run Cypress tests on F
 _command_register "bdd-ud-open" "_bdd_ud_open" "Open Cypress UI for User-Dashboard"
 _command_register "bdd-ud-test" "_bdd_ud_test" "Run Cypress tests on User-Dashboard"
 _command_register "bdd-ud-test-visual" "_bdd_ud_test_visual" "Run Cypress visual tests on User-Dashboard"
+_command_register "bdd-wallet-open" "_bdd_wallet_open" "Open Cypress UI for Wallet Bridge"
+_command_register "bdd-wallet-test" "_bdd_wallet_test" "Run Cypress tests on Wallet bridge"
+_command_register "bdd-wallet-test-visual" "_bdd_wallet_test_visual" "Run Cypress visual tests on Wallet bridge"
 _command_register "bdd-partners-report" "_bdd_partners_report" "Generate the test report for partners workspace"
 _command_register "bdd-partners-open" "_bdd_partners_open" "Open Cypress UI for Partners"
 _command_register "bdd-partners-test" "_bdd_partners_test" "Run Cypress tests on Partners"
@@ -128,6 +131,7 @@ _command_register "docker-image-retag" "_docker_image_retag" "Retag a docker ima
 
 # Buildx Bake
 _command_register "bake-nodejs-app" "_bake_nodejs_app" "Buildx bake for nodejs applications"
+_command_register "bake-mongodb-fixtures" "_bake_mongodb_fixtures" "Buildx bake mongodb fixtures"
 _command_register "bake-ci-cd-slim" "_bake_ci_cd_slim" "Buildx bake for CI-CD base image (used main builds)"
 _command_register "bake-ci-cd-full" "_bake_ci_cd_full" "Buildx bake for CI-CD base image (used for BDD tests)"
 _command_register "bake-dev-generic" "_bake_dev_generic" "Buildx bake for dev-generic image (used main builds)"

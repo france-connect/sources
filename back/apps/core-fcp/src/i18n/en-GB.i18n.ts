@@ -37,6 +37,13 @@ export const enGB: I18nTranslationsMapType = {
   'interaction.choose_provider': 'Choose an account to connect with:',
   'interaction.modal.cancel_text': 'Choose another account',
 
+  'interaction.wallet.or': 'or',
+  'interaction.wallet.title': 'With your European digital identity wallet',
+  'interaction.wallet.description':
+    'Do you have a European digital wallet? You can now use it to log in to {platform}, just like with your other accounts.',
+  'interaction.wallet.details':
+    'All digital wallets provided by the European Union member states are compatible. In France, the France Identité application fulfils this role.',
+
   // Consent
   'consent.page_title':
     'Connection - Continue to {spName} Service - {platform}',

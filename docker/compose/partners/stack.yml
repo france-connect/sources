@@ -8,6 +8,7 @@ services:
       - "mock-datapass"
       - "csmr-config-sandbox-low"
       - "csmr-config-partners"
+      - "maildev"
 
   bdd-partners:
     image: ${DOCKER_HUB_PROXY}alpine

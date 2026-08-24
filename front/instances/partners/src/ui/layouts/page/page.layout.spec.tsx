@@ -1,8 +1,6 @@
 import { render } from '@testing-library/react';
 import { Outlet } from 'react-router';
 
-import { NoticeComponent } from '@fc/dsfr';
-
 import { PageLayout } from './page.layout';
 
 describe('PageLayout', () => {
@@ -20,19 +18,5 @@ describe('PageLayout', () => {
 
     // Then
     expect(Outlet).toHaveBeenCalledExactlyOnceWith({}, undefined);
-  });
-
-  it('should call NoticeComponent with arguments', () => {
-    // When
-    render(<PageLayout />);
-
-    // Then
-    expect(NoticeComponent).toHaveBeenCalledExactlyOnceWith(
-      {
-        description: 'Partners.layout.noticeDescription',
-        title: 'Partners.layout.noticeTitle',
-      },
-      undefined,
-    );
   });
 });

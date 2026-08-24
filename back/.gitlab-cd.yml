@@ -1,7 +1,6 @@
 build-back-staging:
+  extends: .build_job
   stage: 'Build Staging'
-  rules:
-    - if: '$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME == "staging" || $CI_COMMIT_BRANCH == "staging"'
   image:  ${FC_DOCKER_REGISTRY}/ci-cd-slim:${DOCKER_VERSION}
   services:
     - name: docker:28-dind
@@ -15,7 +14,7 @@ build-back-staging:
     DOCKER_HOST: tcp://docker:2375
     DOCKER_TLS_CERTDIR: ''
     RELEASE_VERSION: ${CI_COMMIT_REF_NAME}
-    APP_VERSION: staging
+    APP_VERSION: "staging-${CI_COMMIT_SHA}"
     # Proxy
     PROXY_EXPLOITATION: ${HTTPS_PROXY}
     INTERNET_PROXY: ${HTTPS_PROXY}
@@ -24,34 +23,6 @@ build-back-staging:
     - echo "$CI_DEPENDENCY_PROXY_PASSWORD" | docker login "$CI_DEPENDENCY_PROXY_SERVER" -u "$CI_DEPENDENCY_PROXY_USER" --password-stdin
     - echo $FC_DOCKER_REGISTRY_PASS | docker login -u $FC_DOCKER_REGISTRY_USER --password-stdin $FC_DOCKER_REGISTRY
   script:
-    - docker-stack bake-nodejs-app prod-deps prod-base prod-generic csmr-hsm-high
+    - docker-stack bake-nodejs-app prod-deps prod-generic csmr-hsm-high command-pre-deploy command-elastic-instance
+    - docker-stack bake-mongodb-fixtures
   interruptible: true
-  needs:
-    # Pre-build
-    - job: build-dependencies
-      artifacts: false
-    # Security jobs
-    - job: gemnasium-dependency_scanning
-      artifacts: false
-    - job: semgrep-sast
-      artifacts: false
-    # Back tests jobs
-    - job: validate-code-back
-      artifacts: false
-    # Front tests jobs
-    - job: validate-code-front
-      artifacts: false
-    # Quality tests jobs
-    - job: validate-code-quality
-      artifacts: false
-    # E2E jobs
-    - job: bdd-fcp-high
-      artifacts: false
-    - job: bdd-fcp-low
-      artifacts: false
-    - job: bdd-user-dashboard
-      artifacts: false
-    - job: bdd-partners
-      artifacts: false
-    - job: bdd-eidas
-      artifacts: false

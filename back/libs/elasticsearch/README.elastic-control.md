@@ -15,13 +15,12 @@ This service acts as a high-level orchestrator for managing the lifecycle of Ela
 
 ## 🆔 Deterministic ID Generation
 
-A core concept of this service is its ability to generate a consistent identifier for a transform based on its configuration options. The private `buildTransformId` method sorts the option values alphabetically and joins them.
+A core concept of this service is its ability to generate a consistent identifier for a transform based on its configuration options. The `buildTransformId` method assembles the ID from the options following the convention `runner_stats_<product>_<pivot>_<range>_<period>`.
 
 **Example:**
 
 - **Options**: `{ product: 'franceconnect', pivot: 'sp', range: 'month', period: '2025-08' }`
-- **Sorted Values**: `['2025-08', 'franceconnect', 'month', 'sp']`
-- **Resulting ID**: `2025-08_franceconnect_month_sp`
+- **Resulting ID**: `runner_stats_franceconnect_sp_month_2025-08`
 
 ---
 
@@ -62,7 +61,7 @@ graph LR
 
     subgraph "Output: Transform Body (JSON)"
         B["<b>source</b>: {<br/>  <b>index</b>: 'high-tracks-index',<br/>  <b>query</b>: { range: { time: { ... } } }<br/>}<br/>..."]
-        C["<b>dest</b>: {<br/>  <b>index</b>: '2025-08_franceconnect_plus_semester_sp'<br/>}<br/>..."]
+        C["<b>dest</b>: {<br/>  <b>index</b>: 'runner_stats_franceconnect_plus_sp_semester_2025-08'<br/>}<br/>..."]
         D["<b>pivot</b>: {<br/>  <b>group_by</b>: { spId: { ... } },<br/>  <b>aggregations</b>: { ... }<br/>}"]
     end
 
@@ -219,6 +218,11 @@ This interface defines the structure of the state-tracking documents stored in t
 - **Signature**: `getControlDocById(id: string): Promise<ControlDocumentInterface | null>`
 - **Returns**: The document's source if found, otherwise `null`.
 
+#### findRunningOperations
+
+- **Description**: Returns all control documents in `RUNNING` state for a given operation type and period. Used by watchers to actualize all in-progress operations in a single pass.
+- **Signature**: `findRunningOperations(operation: ElasticOperationsEnum, period: string): Promise<ControlDocumentInterface[]>`
+
 #### buildControlDocId
 
 - **Description**: The public utility function that generates the deterministic SHA-256 hash for an operation.
@@ -339,6 +343,12 @@ This section details each method, its purpose, its corresponding API endpoint, a
 - **Description**: Retrieves a single document by its ID from a specified index.
 - **Endpoint**: `GET /{index}/_doc/{id}`
 - **Response Type**: Returns a `Promise<ElasticDocumentResponse>`, containing the document's content in the `_source` property.
+
+#### searchDocuments
+
+- **Description**: Searches for documents matching a given query. Supports pagination via the `size` parameter.
+- **Endpoint**: `POST /{index}/_search`
+- **Response Type**: Returns a `Promise<ElasticSearchResponse>` containing `hits.hits` as an array of matched documents.
 
 #### countDocuments
 

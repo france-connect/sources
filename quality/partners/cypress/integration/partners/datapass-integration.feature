@@ -45,7 +45,7 @@ Fonctionnalité: Datapass - Création / Modification d'un fournisseur de service
     Et les scopes Datapass suivants sont affichés:
       | Identifiant technique |
       | Prénoms               |
-      | Nom de naissance      |
+      | Nom de famille        |
       | Adresse électronique  |
       | Nom d'usage           |
 
@@ -71,7 +71,7 @@ Fonctionnalité: Datapass - Création / Modification d'un fournisseur de service
     Et les scopes Datapass suivants sont affichés:
       | Identifiant technique |
       | Prénoms               |
-      | Nom de naissance      |
+      | Nom de famille        |
       | Adresse électronique  |
 
   Scénario: Datapass Modifié - FS existant avec nouvelle organisation et comptes existants
@@ -137,7 +137,7 @@ Fonctionnalité: Datapass - Création / Modification d'un fournisseur de service
     Et les scopes Datapass suivants sont affichés:
       | Identifiant technique |
       | Prénoms               |
-      | Nom de naissance      |
+      | Nom de famille        |
       | Adresse électronique  |
       | Sexe                  |
       | Date de naissance     |

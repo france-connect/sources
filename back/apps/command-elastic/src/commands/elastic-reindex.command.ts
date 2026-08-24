@@ -1,7 +1,7 @@
 import { Command, CommandRunner, Option } from 'nest-commander';
 
 import {
-  DEFAULT_TIMEZONE,
+  derivePeriod,
   ElasticControlKeyEnum,
   ElasticControlPivotEnum,
   ElasticControlProductEnum,
@@ -11,7 +11,6 @@ import { LoggerService } from '@fc/logger';
 
 import { ElasticReindexCommandOptionsInterface } from '../interfaces';
 import { CommandElasticReindexService } from '../services';
-import { getPreviousMonth } from '../utils';
 
 @Command({
   name: 'elastic-reindex',
@@ -35,11 +34,10 @@ export class ElasticReindexCommand extends CommandRunner {
     const product = options.product as ElasticControlProductEnum;
     const range = options.range as ElasticControlRangeEnum;
     const pivot = options.pivot as ElasticControlPivotEnum;
-    const period = options?.period ?? getPreviousMonth();
-    const timezone = DEFAULT_TIMEZONE;
+    const period = options?.period ?? derivePeriod(range);
 
     await this.reindex.safeInitializeReindex(
-      { key, period, product, range, pivot, timezone },
+      { key, period, product, range, pivot },
       !!options.dryRun,
       !!options.force,
     );
@@ -90,7 +88,8 @@ export class ElasticReindexCommand extends CommandRunner {
   @Option({
     flags: '--period <period>',
     description:
-      'Period (optional). If omitted, defaults to the previous month. Example: 2025-08',
+      'Period (optional). Format depends on --range: YYYY-MM for MONTH, YYYY for YEAR, YYYY-01 or YYYY-07 for SEMESTER. ' +
+      'If omitted, defaults to the previous period for the selected range.',
   })
   parsePeriod(val: string): string {
     return val;

@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import {
-  DEFAULT_TIMEZONE,
+  derivePeriod,
   ElasticControlKeyEnum,
   ElasticControlPivotEnum,
   ElasticControlProductEnum,
@@ -13,17 +13,22 @@ import { getLoggerMock } from '@mocks/logger';
 
 import { ElasticReindexCommandOptionsInterface } from '../interfaces';
 import { CommandElasticReindexService } from '../services';
-import { getPreviousMonth } from '../utils';
 import { ElasticReindexCommand } from './elastic-reindex.command';
 
-jest.mock('../utils');
+jest.mock('@fc/elasticsearch', () => ({
+  ...jest.requireActual('@fc/elasticsearch'),
+  derivePeriod: jest.fn(),
+}));
 
 describe('ElasticReindexCommand', () => {
   let command: ElasticReindexCommand;
   const loggerMock = getLoggerMock();
   const periodMock = '2025-08';
 
+  const yearPeriodMock = '2024';
+  const semesterPeriodMock = '2025-01';
   const reindexMock = { safeInitializeReindex: jest.fn() };
+  const derivePeriodMock = jest.mocked(derivePeriod);
 
   beforeEach(async () => {
     jest.resetAllMocks();
@@ -42,7 +47,16 @@ describe('ElasticReindexCommand', () => {
       .useValue(reindexMock)
       .compile();
 
-    jest.mocked(getPreviousMonth).mockReturnValue(periodMock);
+    derivePeriodMock.mockImplementation((range) => {
+      switch (range) {
+        case ElasticControlRangeEnum.YEAR:
+          return yearPeriodMock;
+        case ElasticControlRangeEnum.SEMESTER:
+          return semesterPeriodMock;
+        default:
+          return periodMock;
+      }
+    });
 
     command = module.get<ElasticReindexCommand>(ElasticReindexCommand);
   });
@@ -75,12 +89,96 @@ describe('ElasticReindexCommand', () => {
       );
     });
 
-    it('should call getPreviousMonth', async () => {
+    it('should call derivePeriod with MONTH range when no period is provided', async () => {
       // When
       await command.run([], baseOptions);
 
       // Then
-      expect(getPreviousMonth).toHaveBeenCalledTimes(1);
+      expect(derivePeriodMock).toHaveBeenCalledExactlyOnceWith(
+        ElasticControlRangeEnum.MONTH,
+      );
+    });
+
+    it('should call derivePeriod with YEAR range when no period is provided', async () => {
+      // Given
+      const options: ElasticReindexCommandOptionsInterface = {
+        ...baseOptions,
+        range: ElasticControlRangeEnum.YEAR,
+      };
+
+      // When
+      await command.run([], options);
+
+      // Then
+      expect(derivePeriodMock).toHaveBeenCalledExactlyOnceWith(
+        ElasticControlRangeEnum.YEAR,
+      );
+    });
+
+    it('should call derivePeriod with SEMESTER range and forward the derived period', async () => {
+      // Given
+      const options: ElasticReindexCommandOptionsInterface = {
+        ...baseOptions,
+        range: ElasticControlRangeEnum.SEMESTER,
+      };
+
+      // When
+      await command.run([], options);
+
+      // Then
+      expect(derivePeriodMock).toHaveBeenCalledExactlyOnceWith(
+        ElasticControlRangeEnum.SEMESTER,
+      );
+      expect(reindexMock.safeInitializeReindex).toHaveBeenCalledExactlyOnceWith(
+        {
+          key: options.key,
+          period: semesterPeriodMock,
+          product: options.product,
+          range: options.range,
+          pivot: options.pivot,
+        },
+        false,
+        false,
+      );
+    });
+
+    it('should call safeInitializeReindex with derived year period when range is YEAR', async () => {
+      // Given
+      const options: ElasticReindexCommandOptionsInterface = {
+        ...baseOptions,
+        range: ElasticControlRangeEnum.YEAR,
+      };
+
+      // When
+      await command.run([], options);
+
+      // Then
+      expect(reindexMock.safeInitializeReindex).toHaveBeenCalledExactlyOnceWith(
+        {
+          key: options.key,
+          period: yearPeriodMock,
+          product: options.product,
+          range: options.range,
+          pivot: options.pivot,
+        },
+        false,
+        false,
+      );
+    });
+
+    it('should not call derivePeriod when period is explicitly provided', async () => {
+      // Given
+      const options: ElasticReindexCommandOptionsInterface = {
+        ...baseOptions,
+        range: ElasticControlRangeEnum.YEAR,
+        period: '2023',
+      };
+
+      // When
+      await command.run([], options);
+
+      // Then
+      expect(derivePeriodMock).not.toHaveBeenCalled();
     });
 
     it('should call safeInitializeReindex with default period and no flags', async () => {
@@ -99,7 +197,6 @@ describe('ElasticReindexCommand', () => {
           product: baseOptions.product,
           range: baseOptions.range,
           pivot: baseOptions.pivot,
-          timezone: DEFAULT_TIMEZONE,
         },
         dryRunMock,
         forceMock,
@@ -132,7 +229,6 @@ describe('ElasticReindexCommand', () => {
           product: options.product,
           range: options.range,
           pivot: options.pivot,
-          timezone: DEFAULT_TIMEZONE,
         },
         dryRunMock,
         forceMock,

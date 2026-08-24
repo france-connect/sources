@@ -11,6 +11,7 @@ import { AppBoundaryComponent } from '@fc/exceptions';
 import { I18nService } from '@fc/i18n';
 import type { MatomoConfig } from '@fc/matomo';
 import { MatomoOptions, useMatomo } from '@fc/matomo';
+import { ModalProvider } from '@fc/modal';
 import { StylesProvider } from '@fc/styles';
 
 import { AppConfig } from '../config';
@@ -31,7 +32,9 @@ export function Application() {
           <HelmetProvider>
             <StylesProvider>
               <Dto2FormServiceProvider>
-                <ApplicationRoutes />
+                <ModalProvider>
+                  <ApplicationRoutes />
+                </ModalProvider>
               </Dto2FormServiceProvider>
             </StylesProvider>
           </HelmetProvider>

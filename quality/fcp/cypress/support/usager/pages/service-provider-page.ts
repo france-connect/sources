@@ -128,10 +128,14 @@ export default class ServiceProviderPage {
   }
 
   getMockSubText(): Cypress.Chainable<string> {
+    return this.getMockClaimText('sub');
+  }
+
+  getMockClaimText(claimName: string): Cypress.Chainable<string> {
     return this.getUserInfo()
-      .its('sub')
+      .its(claimName)
       .should('exist')
-      .then((sub) => `${sub}`);
+      .then((text) => String(text));
   }
 
   checkMandatoryData(): void {

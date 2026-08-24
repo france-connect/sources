@@ -1,3 +1,4 @@
+export * from './accessibility';
 export * from './home';
 export * from './instance-create';
 export * from './instance-update';
@@ -5,6 +6,7 @@ export * from './instances';
 export * from './legal-notices';
 export * from './login';
 export * from './service-provider';
+export * from './service-provider-create-contributor';
 export * from './service-provider-create-instance';
 export * from './service-provider-error';
 export * from './service-provider-link-instances';

@@ -65,19 +65,7 @@ describe('OidcToEidasMapper', () => {
         ).toBeInstanceOf(Function);
       });
 
-      it('should return the preferred_username within claims as an Array if present', () => {
-        // Given
-        const expected = [claims.preferred_username];
-
-        // When
-        const result =
-          ClaimsToAttributesMap[EidasAttributes.CURRENT_FAMILY_NAME](claims);
-
-        // Then
-        expect(result).toStrictEqual(expected);
-      });
-
-      it('should return the family_name within claims as an Array if preferred_username is not present', () => {
+      it('should return the family_name within claims as an Array', () => {
         // Given
         const claimsWithoutPreferredUsername = {
           ...claims,
@@ -89,6 +77,23 @@ describe('OidcToEidasMapper', () => {
         const result = ClaimsToAttributesMap[
           EidasAttributes.CURRENT_FAMILY_NAME
         ](claimsWithoutPreferredUsername);
+
+        // Then
+        expect(result).toStrictEqual(expected);
+      });
+
+      it('should return the family_name within claims as an Array even if preferred_username is present', () => {
+        // Given
+        const claimsWithPreferredUsername = {
+          ...claims,
+          preferred_username: 'DUMEUBLE',
+        };
+        const expected = [claims.family_name];
+
+        // When
+        const result = ClaimsToAttributesMap[
+          EidasAttributes.CURRENT_FAMILY_NAME
+        ](claimsWithPreferredUsername);
 
         // Then
         expect(result).toStrictEqual(expected);

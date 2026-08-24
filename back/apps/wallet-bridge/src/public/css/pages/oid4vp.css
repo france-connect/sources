@@ -1,0 +1,53 @@
+/*
+DSFR Breakpoints :
+ - sm: 576px
+ - md: 768px
+ - lg: 992px
+ - xl: 1440px
+*/
+
+.wb-qrcode {
+  display: block;
+  width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+}
+
+.wb-qrcode-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  max-width: 16rem;
+}
+
+.wb-qrcode-wrapper--pending {
+  outline: 1px solid var(--border-plain-info);
+}
+
+.wb-qrcode-wrapper--success {
+  outline: 1px solid var(--border-plain-success);
+}
+
+.wb-qrcode-wrapper--error {
+  outline: 1px solid var(--border-plain-error);
+}
+
+.wb-qrcode-wrapper--pending .wb-qrcode,
+.wb-qrcode-wrapper--success .wb-qrcode,
+.wb-qrcode-wrapper--error .wb-qrcode {
+  opacity: 0.08;
+}
+
+.wb-qrcode-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+}
+
+.wb-text--error {
+  color: var(--text-default-error);
+}

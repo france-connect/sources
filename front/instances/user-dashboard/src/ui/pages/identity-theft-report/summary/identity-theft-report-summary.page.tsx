@@ -52,8 +52,8 @@ export const IdentityTheftReportSummaryPage = React.memo(() => {
           caption="Etat civil"
           id="identity-theft-report-summary--etat-civil"
           sources={[
-            { label: 'Nom de naissance', value: identity.family_name },
-            { label: 'Prénom de naissance', value: identity.given_name },
+            { label: 'Nom de famille', value: identity.family_name },
+            { label: 'Prénom', value: identity.given_name },
             { label: 'Date de naissance', value: identity.rawBirthdate },
             { label: 'Pays de naissance', value: identity.rawBirthcountry },
             { label: 'Ville de naissance', value: identity.rawBirthplace },

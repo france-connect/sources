@@ -10,7 +10,7 @@ import {
 } from '@fc/dsfr';
 import { t } from '@fc/i18n';
 
-import { CreateLinkedInstanceButton, LinkInstancesButton } from '../../../components';
+import { CreateLinkedInstanceButton, LinkInstancesButton, SandboxAlert } from '../../../components';
 import { ServiceProviderSandboxesTable } from '../../../components/tables';
 import { useServiceProviderSandboxes } from '../../../hooks';
 import type { InstanceInterface } from '../../../interfaces';
@@ -21,7 +21,7 @@ interface ServiceProviderSandboxesComponentProps {
 
 export const ServiceProviderSandboxesComponent = React.memo(
   ({ instances }: ServiceProviderSandboxesComponentProps) => {
-    const { cleanupRouteState, hasUnlinkedInstances, spConfigurationDocUrl, submitState } =
+    const { deleteInstanceHandler, hasUnlinkedInstances, spConfigurationDocUrl } =
       useServiceProviderSandboxes();
 
     const hasSandboxes = instances.length > 0;
@@ -30,16 +30,7 @@ export const ServiceProviderSandboxesComponent = React.memo(
       <div className="fr-col-12 fr-col-lg-10 fr-col-xl-8 fr-mt-4w">
         <h2>{t('Partners.serviceProviderPage.sandboxes.title')}</h2>
         <hr />
-        {submitState && (
-          <AlertComponent
-            className="fr-mb-3w"
-            dataTestId="service-provider-instance-success-alert"
-            title={t(submitState.title, { instanceName: submitState.instanceName })}
-            type={submitState.type}
-            onClose={cleanupRouteState}>
-            {(submitState.message && t(submitState.message)) || ''}
-          </AlertComponent>
-        )}
+        <SandboxAlert />
         <p>
           {t('Partners.serviceProviderPage.sandboxes.description')}
           {Strings.WHITE_SPACE}
@@ -57,7 +48,9 @@ export const ServiceProviderSandboxesComponent = React.memo(
             type={MessageTypes.INFO}>
             {t('Partners.serviceProviderPage.sandboxes.empty')}
           </AlertComponent>
-        )) || <ServiceProviderSandboxesTable sandboxes={instances} />}
+        )) || (
+          <ServiceProviderSandboxesTable sandboxes={instances} onDelete={deleteInstanceHandler} />
+        )}
       </div>
     );
   },

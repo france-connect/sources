@@ -12,6 +12,7 @@ export const dto2FormServiceCommit = async <T>(
   method: HttpMethods,
   url: string,
   data: HttpClientDataInterface,
+  contentType: ContentType = ContentType.FORM_URL_ENCODED,
 ): Promise<SubmissionErrors> => {
   try {
     const { csrfToken } = await getCSRF();
@@ -19,7 +20,7 @@ export const dto2FormServiceCommit = async <T>(
     await makeRequest<T>(method, url, datas, {
       headers: {
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        'Content-Type': ContentType.FORM_URL_ENCODED,
+        'Content-Type': contentType,
         // eslint-disable-next-line @typescript-eslint/naming-convention
         'x-csrf-token': csrfToken,
       },

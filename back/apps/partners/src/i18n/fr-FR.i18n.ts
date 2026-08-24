@@ -19,6 +19,15 @@ export const frFR: I18nTranslationsMapType = {
   ...frViewTemplates,
   ...datapassScopesFrFR,
 
+  // form add contributor
+  'Form.label.email': 'E-mail de la personne à ajouter',
+  'Form.hint.email': 'Veuillez saisir l’adresse e-mail du contributeur',
+  'Form.isFilled_error.email': 'Champ obligatoire',
+  'Form.isEmail_error.email':
+    'Veuillez saisir une adresse e-mail valide (ex: nom@exemple.com)',
+  'Form.isNewContributor_error.email':
+    'Cette adresse e-mail appartient déjà à une personne ayant accès à ce fournisseur de service',
+
   // form text
   'Form.label.nameSection': '1. Nom de l’instance',
   'Form.label.configurationSection':

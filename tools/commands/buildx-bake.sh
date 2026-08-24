@@ -9,7 +9,7 @@ set -e
 BUILDX_DRIVER_NAME="docker-container-driver"
 
 # Applications that do not use the generic matrix and have specific bake targets
-SPECIFIC_TARGETS="csmr-hsm-high command-runner command-import-sp-sandbox command-import-datapass command-pre-deploy"
+SPECIFIC_TARGETS="csmr-hsm-high command-runner command-import-sp-sandbox command-import-datapass command-pre-deploy command-elastic-instance"
 
 # ===========================
 # Helper Functions
@@ -143,6 +143,11 @@ _bake_dev_generic() {
   # Bake for CI/CD full image used in main builds
   _bake_file ${FC_ROOT}/fc/docker/builds/ci-cd/docker-bake.hcl "dev-generic"
 }
+
+_bake_mongodb_fixtures() {
+  _bake_file ${FC_ROOT}/fc/docker/builds/mongodb/docker-bake.hcl "mongodb-fixtures"
+}
+
 
 # Execute bake for root docker-bake.hcl (with app list and node versions)
 _bake_nodejs_app() {

@@ -6,7 +6,12 @@ import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger';
 
 import { ElasticControlConfig, ElasticControlReindexOptionsDto } from '../dto';
-import { ElasticControlKeyEnum, OTHER_BY_KEY, PIVOT_FIELDS } from '../enums';
+import {
+  ElasticControlKeyEnum,
+  ElasticControlRangeEnum,
+  OTHER_BY_KEY,
+  PIVOT_FIELDS,
+} from '../enums';
 import { ElasticControlInvalidRequestException } from '../exceptions';
 import { ReindexStatusInterface } from '../interfaces';
 import { isNotFound, mapReindexFailures } from '../utils';
@@ -26,21 +31,21 @@ export class ElasticControlReindexService {
     taskId: string,
     options: ElasticControlReindexOptionsDto,
   ): Promise<ReindexStatusInterface> {
-    const totalReindex = await this.getReindexedMetrics(options);
-
     try {
-      const { completed, response } = await this.elastic.getTask(taskId);
+      const { completed, task, response } = await this.elastic.getTask(taskId);
 
       return {
         id: taskId,
         completed: completed,
-        total: totalReindex,
+        total: task.status.total,
         failures: mapReindexFailures(response),
       };
     } catch (error) {
       if (!isNotFound(error)) {
         throw new ElasticControlInvalidRequestException(error);
       }
+
+      const totalReindex = await this.getReindexedMetrics(options);
       return { id: taskId, completed: true, total: totalReindex, failures: [] };
     }
   }
@@ -53,7 +58,12 @@ export class ElasticControlReindexService {
     const sourceIndex = this.transform.buildTransformId(transformOptions);
 
     const pipelineId = await this.createPipeline(options, dryRun);
-    const taskId = await this.startReindex(sourceIndex, pipelineId, dryRun);
+    const taskId = await this.startReindex(
+      sourceIndex,
+      pipelineId,
+      options,
+      dryRun,
+    );
 
     return { id: taskId, completed: false, total: 0, failures: [] };
   }
@@ -85,6 +95,7 @@ export class ElasticControlReindexService {
   private async startReindex(
     sourceIndex: string,
     pipelineId: string,
+    options: ElasticControlReindexOptionsDto,
     dryRun: boolean,
   ): Promise<string> {
     const { metricsIndex } =
@@ -98,10 +109,20 @@ export class ElasticControlReindexService {
     }
 
     try {
-      const body = {
+      const body: Record<string, unknown> = {
         source: { index: [sourceIndex] },
         dest: { index: metricsIndex, pipeline: pipelineId },
       };
+
+      // SEMESTER has no date_histogram in the transform, so the source
+      // documents lack a `period` field. Inject it here for the ingest
+      // pipeline's `rename: period -> date` to work.
+      if (options.range === ElasticControlRangeEnum.SEMESTER) {
+        body.script = {
+          source: 'ctx._source.period = params.period',
+          params: { period: options.period },
+        };
+      }
 
       const { task: taskId } = await this.elastic.reindex(body);
 
@@ -113,23 +134,25 @@ export class ElasticControlReindexService {
   }
 
   private buildPipelineId(options: ElasticControlReindexOptionsDto): string {
-    const { timezone: _timezone, ...optionsWithoutTimezone } = options;
-    const optionsKeys = Object.keys(optionsWithoutTimezone);
-    const sortedOptions = optionsKeys
-      .sort()
-      .map((k) => optionsWithoutTimezone[k]);
-    return sortedOptions.join('_');
+    const { key, pivot, product, range } = options;
+    return [key, pivot, product, range].join('_');
   }
 
   private buildPipelineBody(
     options: ElasticControlReindexOptionsDto,
   ): Record<string, any> {
-    const date = `${options.period}-01`;
-    const keyToOmmit: ElasticControlKeyEnum = OTHER_BY_KEY[options.key];
+    const keyToOmit: ElasticControlKeyEnum = OTHER_BY_KEY[options.key];
     const { groupFields, nameFields } = PIVOT_FIELDS[options.pivot];
 
     const processors: Array<Record<string, unknown>> = [
-      { set: { field: 'date', value: date } },
+      {
+        rename: {
+          field: 'period',
+          // elastic defined property
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          target_field: 'date',
+        },
+      },
       { set: { field: 'key', value: options.key } },
       { set: { field: 'range', value: options.range } },
       { set: { field: 'product', value: options.product } },
@@ -165,7 +188,7 @@ export class ElasticControlReindexService {
     });
 
     processors.push(
-      { remove: { field: [keyToOmmit] } },
+      { remove: { field: [keyToOmit] } },
       { remove: { field: ['info'] } },
     );
 
@@ -178,35 +201,11 @@ export class ElasticControlReindexService {
   private async getReindexedMetrics(
     options: ElasticControlReindexOptionsDto,
   ): Promise<number> {
-    const { metricsIndex } =
-      this.config.get<ElasticControlConfig>('ElasticControl');
-
-    const date = `${options.period}-01`;
-    const { groupFields } = PIVOT_FIELDS[options.pivot];
-
-    // Build exists filters for all group fields
-    const existsFilters = groupFields.map((field) => ({ exists: { field } }));
-
-    const body = {
-      query: {
-        bool: {
-          filter: [
-            { term: { key: options.key } },
-            { term: { product: options.product } },
-            { term: { range: options.range } },
-            { term: { date } },
-            { term: { pivot: options.pivot } },
-            ...existsFilters,
-          ],
-        },
-      },
-    };
+    const transformOptions = omit(options, 'key');
+    const sourceIndex = this.transform.buildTransformId(transformOptions);
 
     try {
-      const { count = 0 } = await this.elastic.countDocuments(
-        metricsIndex,
-        body,
-      );
+      const { count = 0 } = await this.elastic.countDocuments(sourceIndex, {});
       return count;
     } catch (error) {
       throw new ElasticControlInvalidRequestException(error);

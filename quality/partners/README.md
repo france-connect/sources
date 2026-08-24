@@ -17,7 +17,7 @@ Partners validation with system tests implemented using a Test Framework (based 
 
 | Environment Variable | Description         | Comment                                   |
 | -------------------- | ------------------- | ----------------------------------------- |
-| PLATFORM             | Platform under test | `partners`                                |
+| TEST_PLATFORM             | Platform under test | `partners`                                |
 | TEST_ENV             | Test environment    | `docker` or `recette`, etc.               |
 | TAGS                 | Tags expression     | Voir tableau des TAGS utilisés ci-dessous |
 
@@ -62,7 +62,7 @@ docker-stack bdd-partners-open
 #### Generate the Cucumber HTML report
 
 ```shell
-CYPRESS_PLATFORM=partners CYPRESS_TEST_ENV=docker docker-stack bdd-partners-report
+CYPRESS_TEST_PLATFORM=partners CYPRESS_TEST_ENV=docker docker-stack bdd-partners-report
 ```
 
 ## Visual Validation

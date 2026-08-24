@@ -2,10 +2,15 @@ import { render } from '@testing-library/react';
 
 import type { ISODate } from '@fc/common';
 import { getFullName, isoToDate, PublicationStatus, truncateMiddle } from '@fc/common';
+import type { TableColumnActionsInterface, TableColumnInterface } from '@fc/dsfr';
 import { TableComponent } from '@fc/dsfr';
 
 import { PartnersEnvironment } from '../../../enums';
+import type { InstanceInterface } from '../../../interfaces';
+import { DeleteInstanceButton } from '../../buttons';
 import { ServiceProviderSandboxesTable } from './service-provider-sandboxes.table';
+
+jest.mock('../../buttons/delete-instance/delete-instance.button');
 
 describe('ServiceProviderSandboxesTable', () => {
   // Given
@@ -36,11 +41,32 @@ describe('ServiceProviderSandboxesTable', () => {
     },
   ];
 
-  const getTableColumns = () => jest.mocked(TableComponent).mock.calls[0][0].columns;
+  const onDeleteMock = jest.fn();
+
+  type TableProps = {
+    actions?: TableColumnActionsInterface<InstanceInterface>;
+    columns?: TableColumnInterface<InstanceInterface>[];
+    sources?: InstanceInterface[];
+  };
+
+  const renderTable = (sandboxes: InstanceInterface[] = sandboxesMock) => {
+    let tableProps = {} as TableProps;
+
+    jest.mocked(TableComponent).mockImplementationOnce((props) => {
+      tableProps = props as TableProps;
+      return <div>TableComponent</div>;
+    });
+
+    render(<ServiceProviderSandboxesTable sandboxes={sandboxes} onDelete={onDeleteMock} />);
+
+    return tableProps;
+  };
 
   it('should match snapshot', () => {
     // When
-    const { container } = render(<ServiceProviderSandboxesTable sandboxes={sandboxesMock} />);
+    const { container } = render(
+      <ServiceProviderSandboxesTable sandboxes={sandboxesMock} onDelete={onDeleteMock} />,
+    );
 
     // Then
     expect(container).toMatchSnapshot();
@@ -48,11 +74,12 @@ describe('ServiceProviderSandboxesTable', () => {
 
   it('should render TableComponent with params', () => {
     // When
-    render(<ServiceProviderSandboxesTable sandboxes={sandboxesMock} />);
+    render(<ServiceProviderSandboxesTable sandboxes={sandboxesMock} onDelete={onDeleteMock} />);
 
     // Then
     expect(TableComponent).toHaveBeenCalledExactlyOnceWith(
       {
+        actions: expect.any(Function),
         columns: [
           {
             key: 'currentVersion.data.name',
@@ -82,14 +109,29 @@ describe('ServiceProviderSandboxesTable', () => {
     );
   });
 
-  it('should call truncateMiddle with sandbox client_id', () => {
+  it('should render a delete button for the row instance through the actions render prop', () => {
     // Given
-    const sandboxes = [{ ...sandboxesMock[0], id: 'sandbox-truncate' }];
+    const { actions } = renderTable();
 
     // When
-    render(<ServiceProviderSandboxesTable sandboxes={sandboxes} />);
-    const clientIdColumn = getTableColumns()?.[2];
-    clientIdColumn?.format!('a1b2c3d4e5f67890abcdef1234567890');
+    render(<div>{actions?.(sandboxesMock[0], 0)}</div>);
+
+    // Then
+    expect(DeleteInstanceButton).toHaveBeenCalledExactlyOnceWith(
+      {
+        instance: sandboxesMock[0],
+        onDelete: onDeleteMock,
+      },
+      undefined,
+    );
+  });
+
+  it('should call truncateMiddle with sandbox client_id', () => {
+    // Given
+    const { columns } = renderTable([{ ...sandboxesMock[0], id: 'sandbox-truncate' }]);
+
+    // When
+    columns?.[2]?.format!('a1b2c3d4e5f67890abcdef1234567890');
 
     // Then
     expect(truncateMiddle).toHaveBeenCalledWith('a1b2c3d4e5f67890abcdef1234567890');
@@ -98,11 +140,10 @@ describe('ServiceProviderSandboxesTable', () => {
   it('should display creator full name in table', () => {
     // Given
     const sandbox = { ...sandboxesMock[0], id: 'sandbox-creator' };
+    const { columns } = renderTable([sandbox]);
 
     // When
-    render(<ServiceProviderSandboxesTable sandboxes={[sandbox]} />);
-    const createdByColumn = getTableColumns()?.[1];
-    createdByColumn?.getValue!(sandbox);
+    columns?.[1]?.getValue!(sandbox);
 
     // Then
     expect(getFullName).toHaveBeenCalledWith('John', 'Doe');
@@ -111,11 +152,10 @@ describe('ServiceProviderSandboxesTable', () => {
   it('should call getFullName with undefined names when creator is undefined', () => {
     // Given
     const sandbox = { ...sandboxesMock[0], creator: undefined, id: 'sandbox-no-creator' };
+    const { columns } = renderTable([sandbox]);
 
     // When
-    render(<ServiceProviderSandboxesTable sandboxes={[sandbox]} />);
-    const createdByColumn = getTableColumns()?.[1];
-    createdByColumn?.getValue!(sandbox);
+    columns?.[1]?.getValue!(sandbox);
 
     // Then
     expect(getFullName).toHaveBeenCalledWith(undefined, undefined);
@@ -123,12 +163,10 @@ describe('ServiceProviderSandboxesTable', () => {
 
   it('should call isoToDate with sandbox createdAt', () => {
     // Given
-    const sandboxes = [{ ...sandboxesMock[0], id: 'sandbox-created-at' }];
+    const { columns } = renderTable([{ ...sandboxesMock[0], id: 'sandbox-created-at' }]);
 
     // When
-    render(<ServiceProviderSandboxesTable sandboxes={sandboxes} />);
-    const createdAtColumn = getTableColumns()?.[3];
-    createdAtColumn?.format!('2024-01-15T10:00:00.000Z' as ISODate);
+    columns?.[3]?.format!('2024-01-15T10:00:00.000Z' as ISODate);
 
     // Then
     expect(isoToDate).toHaveBeenCalledWith('2024-01-15T10:00:00.000Z');
@@ -136,14 +174,10 @@ describe('ServiceProviderSandboxesTable', () => {
 
   it('should pass sandbox instance name in table sources', () => {
     // When
-    render(
-      <ServiceProviderSandboxesTable sandboxes={[{ ...sandboxesMock[0], id: 'sandbox-name' }]} />,
-    );
+    const { sources } = renderTable([{ ...sandboxesMock[0], id: 'sandbox-name' }]);
 
     // Then
-    const tableSources = jest.mocked(TableComponent).mock.calls[0][0].sources;
-
-    expect(tableSources[0]).toMatchObject({
+    expect(sources?.[0]).toMatchObject({
       id: 'sandbox-name',
       name: 'Sandbox 1',
     });

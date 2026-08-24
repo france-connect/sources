@@ -180,3 +180,27 @@ items:
     createdAt: '2022-02-06T06:00:00.000Z'
     updatedAt: '2022-05-02T22:00:00.000Z'
 
+  # sp dedicated to the contributor-add API test (asserted by no other test)
+  sp7-low:
+    id: '6df27f42-3a02-4edc-8e9e-fec8f99328f3'
+    name: 'SP7 - FS dédié à l’ajout de contributeur'
+    datapassRequestId: '9900007'
+    datapassAuthorizationId: '10007'
+    datapassEidasLevel: 'eidas_1'
+    datapassScopes:
+      [
+        'openid',
+        'given_name',
+        'family_name',
+        'email',
+        'gender',
+        'birthdate',
+        'birthplace',
+        'birthcountry',
+        'preferred_username',
+      ]
+    platform: '@france-connect-low'
+    organization: '@orga-1'
+    createdAt: '2022-02-07T07:00:00.000Z'
+    updatedAt: '2022-05-02T22:00:00.000Z'
+

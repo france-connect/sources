@@ -16,8 +16,8 @@ export default defineConfig({
     ...baseConfig.env,
     APP_LABEL: 'eIDAS Bridge',
     // Base Configuration
-    PLATFORM: 'fcp-high',
     TAGS: '@eidasBridge and @validationVisuelle and not @ignore',
     TEST_ENV: 'docker',
+    TEST_PLATFORM: 'fcp-high',
   },
 });

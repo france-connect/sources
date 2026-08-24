@@ -5,6 +5,7 @@ import { ExceptionsConfig } from '@fc/exceptions/dto';
 import { I18nConfig } from '@fc/i18n';
 import { IdentityProviderAdapterEnvConfig } from '@fc/identity-provider-adapter-env';
 import { LoggerConfig } from '@fc/logger';
+import { MailerConfig } from '@fc/mailer';
 import { MicroservicesRmqConfig } from '@fc/microservices-rmq';
 import { OidcAcrConfig } from '@fc/oidc-acr';
 import { OidcClientConfig } from '@fc/oidc-client';
@@ -32,6 +33,11 @@ export class PartnersConfig {
   @ValidateNested()
   @Type(() => LoggerConfig)
   readonly Logger: LoggerConfig;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => MailerConfig)
+  readonly Mailer: MailerConfig;
 
   @IsObject()
   @ValidateNested()
@@ -87,9 +93,4 @@ export class PartnersConfig {
   @ValidateNested()
   @Type(() => WebhooksConfig)
   readonly WebhooksDatapass: WebhooksConfig;
-
-  @IsObject()
-  @ValidateNested()
-  @Type(() => WebhooksConfig)
-  readonly WebhooksInvitation: WebhooksConfig;
 }

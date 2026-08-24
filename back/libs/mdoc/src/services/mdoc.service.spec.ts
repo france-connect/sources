@@ -1,10 +1,18 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { MdocAlgorithmsEnum } from '../enums';
-import { MdocValidityInfoInterface } from '../interfaces';
+import { buildMdocVpToken as buildMdocVpTokenHelper } from '../helpers';
+import {
+  BuildMdocVpTokenOptions,
+  MdocValidityInfoInterface,
+} from '../interfaces';
 import { MdocService } from './mdoc.service';
 import { MdocDecoderService } from './mdoc-decoder.service';
 import { MdocVerifierService } from './mdoc-verifier.service';
+
+jest.mock('../helpers/build-mdoc-vp-token.helper', () => ({
+  buildMdocVpToken: jest.fn(),
+}));
 
 describe('MdocService', () => {
   let service: MdocService;
@@ -16,6 +24,8 @@ describe('MdocService', () => {
     assertAlgorithmAllowed: jest.fn(),
     verifyValidityInfo: jest.fn(),
   };
+
+  const buildMdocVpTokenMock = jest.mocked(buildMdocVpTokenHelper);
 
   beforeEach(async () => {
     jest.resetAllMocks();
@@ -87,6 +97,39 @@ describe('MdocService', () => {
         validityInfo,
         now,
       );
+    });
+  });
+
+  describe('buildMdocVpToken', () => {
+    it('should delegate to the mdoc builder helper', async () => {
+      // Given
+      const options: BuildMdocVpTokenOptions = {
+        docType: 'eu.europa.ec.eudi.pid.1',
+        claims: {
+          family_name: 'DUPONT',
+          given_name: 'JEAN',
+          birth_date: '1985-06-15',
+          birth_place: 'Paris',
+          nationality: 'FR',
+        },
+        issuerPrivateKeyPem: 'issuer-key-pem',
+        issuerCertificatePem: 'issuer-cert-pem',
+        devicePrivateKeyJwk: { kty: 'EC', d: 'private' },
+        deviceCertificatePem: 'device-cert-pem',
+        openid4vpSession: {
+          clientId: 'https://verifier.example/response',
+          nonce: 'nonce-mock',
+          responseUri: 'https://verifier.example/response',
+        },
+      };
+      buildMdocVpTokenMock.mockResolvedValue('vp-token-mock');
+
+      // When
+      const result = await service.buildMdocVpToken(options);
+
+      // Then
+      expect(result).toBe('vp-token-mock');
+      expect(buildMdocVpTokenMock).toHaveBeenCalledExactlyOnceWith(options);
     });
   });
 });

@@ -76,6 +76,17 @@ export class PartnersServiceProviderService {
       throw new PartnersServiceProviderNotFoundException();
     }
 
+    /**
+     * @NOTE the instance deletion is asynchronous: the instance is first marked
+     * for deletion, then removed once the config consumer acknowledged it.
+     * It must not be listed in between.
+     * The filtering is done in memory, a `where` clause on the relation would
+     * discard the service providers having no instance left.
+     */
+    serviceProvider.instances = serviceProvider.instances.filter(
+      ({ markedForDeletion }) => !markedForDeletion,
+    );
+
     return serviceProvider;
   }
 

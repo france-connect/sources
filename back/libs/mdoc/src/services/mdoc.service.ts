@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 
 import { MdocAlgorithmsEnum } from '../enums';
+import { buildMdocVpToken as buildMdocVpTokenHelper } from '../helpers';
 import {
+  BuildMdocVpTokenOptions,
   MdocDocumentInterface,
   MdocValidityInfoInterface,
 } from '../interfaces';
@@ -32,5 +34,10 @@ export class MdocService {
     now?: Date,
   ): void {
     this.verifier.verifyValidityInfo(validityInfo, now);
+  }
+
+  /** Dev/mock helper: build a base64url mdoc `vp_token` (DeviceResponse). */
+  buildMdocVpToken(options: BuildMdocVpTokenOptions): Promise<string> {
+    return buildMdocVpTokenHelper(options);
   }
 }

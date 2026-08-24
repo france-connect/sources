@@ -104,6 +104,7 @@ const config: Config = {
     '^@fc/eidas-oidc-mapper(|/.*)$': '<rootDir>/libs/eidas-oidc-mapper/src/$1',
     '^@fc/eidas-provider(|/.*)$': '<rootDir>/libs/eidas-provider/src/$1',
     '^@fc/elasticsearch(|/.*)$': '<rootDir>/libs/elasticsearch/src/$1',
+    '^@fc/eudi-cog(|/.*)$': '<rootDir>/libs/eudi-cog/src/$1',
     '^@fc/eudi(|/.*)$': '<rootDir>/libs/eudi/src/$1',
     '^@fc/exceptions(|/.*)$': '<rootDir>/libs/exceptions/src/$1',
     '^@fc/exceptions-fcp(|/.*)$': '<rootDir>/libs/exceptions-fcp/src/$1',
@@ -125,6 +126,8 @@ const config: Config = {
     '^@fc/logger-legacy(|/.*)$': '<rootDir>/libs/logger-legacy/src$1',
     '^@fc/logger-debug-plugin(|/.*)$':
       '<rootDir>/libs/logger-debug-plugin/src/$1',
+    '^@fc/logger-oidc-provider-plugin(|/.*)$':
+      '<rootDir>/libs/logger-oidc-provider-plugin/src/$1',
     '^@fc/logger-request-plugin(|/.*)$':
       '<rootDir>/libs/logger-request-plugin/src/$1',
     '^@fc/logger-session-plugin(|/.*)$':
@@ -152,8 +155,6 @@ const config: Config = {
     '^@fc/openid4vp(|/.*)$': '<rootDir>/libs/openid4vp/src$1',
     '^@fc/override-code(|/.*)$': '<rootDir>/libs/override-code/src/$1',
     '^@fc/partners(|/.*)$': '<rootDir>/apps/partners/src/$1',
-    '^@fc/command-import-sp-sandbox(|/.*)$':
-      '<rootDir>/instances/import-sp-sandbox/src/$1',
     '^@mocks/dto2form(|/.*)$': '<rootDir>/libs/dto2form/.mocks/$1',
     '^@mocks/common(|/.*)$': '<rootDir>/libs/common/.mocks/$1',
     '^@mocks/typeorm(|/.*)$': '<rootDir>/libs/typeorm/.mocks/$1',

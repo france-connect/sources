@@ -10,7 +10,10 @@ import {
 
 import { SimpleDocumentInterface } from '@fc/mdoc';
 
-import { Openid4vpInteractionStatus } from '../enums';
+import {
+  Openid4vpAuthorizationError,
+  Openid4vpInteractionStatus,
+} from '../enums';
 
 export class Openid4vpInteractionDto {
   @IsString()
@@ -45,4 +48,12 @@ export class Openid4vpInteractionDto {
   @IsArray()
   @IsOptional()
   readonly response?: Array<SimpleDocumentInterface<unknown>>;
+
+  @IsEnum(Openid4vpAuthorizationError)
+  @IsOptional()
+  readonly error?: Openid4vpAuthorizationError;
+
+  @IsString()
+  @IsOptional()
+  readonly errorDescription?: string;
 }

@@ -3,6 +3,7 @@ export interface Environment {
   exploitAppId: string;
   exploitRootUrl: string;
   fcRootUrl: string;
+  mockWalletUrl?: string;
   name: string;
   udAppId?: string;
   udRootUrl?: string;

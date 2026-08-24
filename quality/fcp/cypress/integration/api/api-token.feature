@@ -166,7 +166,7 @@ Fonctionnalité: API - token
     Et le corps de la réponse a une propriété "error_description" égale à "client authentication failed (invalid secret provided)"
     Et le corps de la réponse a une propriété "error_uri" contenant "https://docs.partenaires.franceconnect.gouv.fr/fs/fs-technique/fs-technique-erreurs/?code=Y0434A7B&id="
 
-  @fcpLow @fcpHigh @exceptions
+  @fcpLow @fcpHigh @exceptions @clearTechnicalLogs
   Scénario: API token - erreur code manquant
     Etant donné que je navigue sur la page fournisseur de service
     Et que je me connecte au fournisseur d'identité via FranceConnect
@@ -183,8 +183,9 @@ Fonctionnalité: API - token
     Et le corps de la réponse a une propriété "error" égale à "invalid_request"
     Et le corps de la réponse a une propriété "error_description" égale à "missing required parameter 'code' (undefined)"
     Et le corps de la réponse a une propriété "error_uri" contenant "https://docs.partenaires.franceconnect.gouv.fr/fs/fs-technique/fs-technique-erreurs/?code=Y048017B&id="
+    Et le log technique de code "Y048017B" est journalisé avec "clientId" "6925fb8143c76eded44d32b40c0cb1006065f7f003de52712b78985704f39950"
 
-  @fcpLow @fcpHigh @exceptions
+  @fcpLow @fcpHigh @exceptions @clearTechnicalLogs
   Scénario: API token - erreur code expiré ou non trouvé
     Etant donné que je prépare une requête "token"
     Quand je lance la requête
@@ -195,3 +196,24 @@ Fonctionnalité: API - token
     Et le corps de la réponse a une propriété "error" égale à "invalid_grant"
     Et le corps de la réponse a une propriété "error_description" égale à "grant request is invalid (authorization code not found)"
     Et le corps de la réponse a une propriété "error_uri" contenant "https://docs.partenaires.franceconnect.gouv.fr/fs/fs-technique/fs-technique-erreurs/?code=Y049E20B&id="
+    Et le log technique de code "Y049E20B" est journalisé avec "clientId" "6925fb8143c76eded44d32b40c0cb1006065f7f003de52712b78985704f39950"
+
+  @fcpLow @fcpHigh @exceptions @clearTechnicalLogs
+  Scénario: API token - erreur code déjà utilisé
+    Etant donné que je navigue sur la page fournisseur de service
+    Et que je me connecte au fournisseur d'identité via FranceConnect
+    Et que je suis redirigé vers la page d'information
+    Et que je paramètre un intercepteur pour l'appel à la redirect_uri du fournisseur de service
+    Et que je continue sur le fournisseur de service
+    Et que je prépare une requête "token"
+    Et que je mets le code renvoyé par FC au FS dans la propriété "code" du corps de la requête
+    Et que je lance la requête
+    Et que le statut de la réponse est 200
+    Quand je lance la requête
+    Alors le statut de la réponse est 400
+    Et l'entête de la réponse a une propriété "content-type" contenant "application/json"
+    Et l'entête de la réponse n'a pas de propriété "set-cookie"
+    Et le corps de la réponse contient une erreur
+    Et le corps de la réponse a une propriété "error" égale à "invalid_grant"
+    Et le corps de la réponse a une propriété "error_uri" contenant "https://docs.partenaires.franceconnect.gouv.fr/fs/fs-technique/fs-technique-erreurs/?code=Y0416228&id="
+    Et le log technique de code "Y0416228" est journalisé avec "clientId" "6925fb8143c76eded44d32b40c0cb1006065f7f003de52712b78985704f39950"

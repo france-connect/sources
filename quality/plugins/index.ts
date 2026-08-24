@@ -11,8 +11,8 @@ import { initEsPlugin, searchElastic } from './elasticsearch-plugin';
 import { getFixturePath } from './fixture-plugin';
 import { getJwtContent, isJwsValid, verifyJwsSignature } from './jwt-plugin';
 import {
-  clearBusinessLog,
-  getAllBusinessLogs,
+  clearAllLogs,
+  getAllLogs,
   getBusinessLogs,
   hasBusinessLog,
 } from './log-plugin';
@@ -46,9 +46,9 @@ const pluginConfig = async (
 
   on('task', {
     addTracks,
-    clearBusinessLog,
+    clearAllLogs,
     createHexaHash,
-    getAllBusinessLogs,
+    getAllLogs,
     getBusinessLogs,
     getFixturePath,
     getJwtContent,

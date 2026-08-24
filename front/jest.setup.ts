@@ -28,6 +28,15 @@ const originalGetComputedStyle = window.getComputedStyle;
 window.getComputedStyle = (elt: Element, _pseudoElt?: string | null) =>
   originalGetComputedStyle(elt);
 
+// @NOTE jsdom does not implement the native <dialog> showModal()/close() APIs,
+// so we polyfill them (toggling the `open` state) for components relying on them.
+HTMLDialogElement.prototype.showModal = function showModal(this: HTMLDialogElement) {
+  this.open = true;
+};
+HTMLDialogElement.prototype.close = function close(this: HTMLDialogElement) {
+  this.open = false;
+};
+
 expect.extend({
   toBeFalse,
   toBeTrue,

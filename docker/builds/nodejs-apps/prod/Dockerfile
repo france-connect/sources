@@ -48,6 +48,7 @@ RUN update-ca-certificates --fresh;
 FROM ${DOCKER_HUB_PROXY}node:${NODE_VERSION}-${DEBIAN_VERSION}-slim AS prod-base
 
 ARG INTERNET_PROXY
+ARG EXTRA_PACKAGES=""
 
 ENV \
   DEBIAN_FRONTEND=noninteractive \
@@ -55,16 +56,52 @@ ENV \
   NODE_ENV=production \
   APP_NAME=NO_APP_NAME_PROVIDED
 
+COPY --from=ca-build /etc/ssl/certs/ /etc/ssl/certs/
+
+RUN \
+  # Fix the cache to non-persistent locations
+  --mount=type=cache,target=/var/cache/apt,sharing=locked \
+  --mount=type=cache,target=/var/lib/apt,sharing=locked \
+  set -eux; \
+  \
+  # Enforce HTTPS for Debian APT sources (PRA requirement)
+  if [ -f /etc/apt/sources.list.d/debian.sources ]; then \
+    sed -i 's|http://|https://|g' /etc/apt/sources.list.d/debian.sources; \
+  fi; \
+  \
+   # Configure temporary APT proxy
+  export http_proxy="${INTERNET_PROXY}" https_proxy="${INTERNET_PROXY}"; \
+  echo 'Acquire::http::Proxy "'"${INTERNET_PROXY}"'";' > /etc/apt/apt.conf.d/01proxy; \
+  echo 'Acquire::https::Proxy "'"${INTERNET_PROXY}"'";' >> /etc/apt/apt.conf.d/01proxy; \
+  \
+  # Update APT index
+  apt-get update 2>&1 | tee /tmp/update.log; \
+  if grep -qE '^(W: Failed to fetch|W: Some index files failed|E: )' /tmp/update.log; then \
+    echo "FATAL: apt-get update failed to fetch one or more repositories" >&2; \
+    exit 1; \
+  fi; \
+  \
+  # Install last security patches
+  apt-get -y --no-install-recommends upgrade; \
+  \
+  if [ -n "${EXTRA_PACKAGES}" ]; then \
+    apt-get install -y --no-install-recommends ${EXTRA_PACKAGES}; \
+  fi && \
+  \
+  # Cleanup
+  apt-get -y autoremove; \
+  apt-get clean; \
+  rm -rf /var/lib/apt/lists/* /etc/apt/apt.conf.d/01proxy
+
 RUN \
   yarn config set proxy ${INTERNET_PROXY} && \
   yarn config set https-proxy ${INTERNET_PROXY} && \
   yarn global add pm2 && \
+  yarn cache clean --all && \
   yarn config delete proxy && \
   yarn config delete https-proxy
 
 COPY --from=pm2 . /etc/pm2
-
-COPY --from=ca-build /etc/ssl/certs/ /etc/ssl/certs/
 
 VOLUME ["/data/log", "/etc/ssl/client_certs"]
 
@@ -133,7 +170,20 @@ RUN rm -rf /var/www/app/node_modules
 COPY --chown=node:node --from=dev-back-deps /opt/dependencies/back/node_modules /var/www/app/node_modules
 
 ########################################
-# Stage 4.4: Command pre-deploy app image
+# Stage 4.4: CLI command image driven by an external runner (e.g. GitLab CI)
+########################################
+FROM prod-generic AS command-cli-generic
+
+# Empty entrypoint so an external runner (e.g. GitLab CI Docker executor) keeps
+# full control of the container: it attaches and feeds its own script through
+# the shell stdin. The inherited pm2-runtime entrypoint would otherwise take
+# over the container and prevent the runner from executing its operations.
+# Empty value is the recommended override for Docker 17.06+.
+# @see https://docs.gitlab.com/ci/docker/using_docker_images/#override-the-entrypoint-of-an-image
+ENTRYPOINT []
+
+########################################
+# Stage 4.5: Command pre-deploy app image
 ########################################
 FROM command-runner-generic AS command-pre-deploy
 

@@ -48,8 +48,7 @@ const scopeMandatoryEidasAttributesMap: ScopeEidasAttributesMapInterface = {
   },
   family_name: {
     name: 'FamilyName',
-    transform: (claims) =>
-      claims['preferred_username'] || claims['family_name'],
+    transform: (claims) => claims['family_name'],
   },
   gender: {
     name: 'Gender',
@@ -62,11 +61,6 @@ const scopeMandatoryEidasAttributesMap: ScopeEidasAttributesMapInterface = {
   openid: {
     name: 'PersonIdentifier',
     transform: (claims) => claims['PersonIdentifier'],
-  },
-  preferred_username: {
-    name: 'FamilyName',
-    transform: (claims) =>
-      claims['preferred_username'] || claims['family_name'],
   },
 };
 
@@ -176,13 +170,6 @@ export default class SpEidasMockPage {
     scopes: string[],
     claims: UserEidasClaimsInterface,
   ): IdentityAttributeInterface[] {
-    // Add empty string preferred_username claim when scope not requested
-    const PREFERRED_USERNAME_SCOPE = 'preferred_username';
-    if (!scopes.includes(PREFERRED_USERNAME_SCOPE)) {
-      claims[PREFERRED_USERNAME_SCOPE] = '';
-      scopes.push(PREFERRED_USERNAME_SCOPE);
-    }
-
     // Retrieve the expected value for the eIDAS claims
     const identity: IdentityAttributeInterface[] = scopes.map((scope) => {
       expect(scopeMandatoryEidasAttributesMap[scope]).to.exist;

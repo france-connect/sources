@@ -12,7 +12,7 @@ import { CsmrHsmBaseException } from './csmr-hsm-base.exception';
 
 export class CsmrHsmRandomException extends CsmrHsmBaseException {
   static DOCUMENTATION =
-    "Une erreur s'est produite lors de la génération d'un aléa par le HSM. Contacter le support N3. Cette erreur n'est normalement pas remontée aux utilisateurs";
+    'Une erreur s’est produite lors de la génération d’un aléa par le HSM. Contacter le support N3. Cette erreur n’est normalement pas remontée aux utilisateurs.';
   static CODE = ErrorCode.HSM_RANDOM_GENERATE;
   static UI = 'CsmrHsm.exceptions.csmrHsmRandom';
 

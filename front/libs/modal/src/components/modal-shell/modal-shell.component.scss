@@ -1,0 +1,13 @@
+/* @NOTE reset the native <dialog> default margins and border,
+   they conflict with the DSFR modal layout */
+dialog {
+  border: none;
+  margin: 0;
+  max-height: 100vh;
+  max-width: 100vw;
+  padding: 0;
+}
+
+dialog::backdrop {
+  filter: blur(0.25rem);
+}

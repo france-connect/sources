@@ -81,6 +81,18 @@ _bdd_ud_test_visual() {
   _cypress "fcp" "yarn test:ud:snapshot $@"
 }
 
+_bdd_wallet_open() {
+  _cypress "fcp" "yarn start:wallet $@"
+}
+
+_bdd_wallet_test() {
+  _cypress "fcp" "yarn test:wallet $@"
+}
+
+_bdd_wallet_test_visual() {
+  _cypress "fcp" "yarn test:wallet:snapshot $@"
+}
+
 ## partners workspace
 
 _bdd_partners_report() {

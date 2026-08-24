@@ -11,17 +11,24 @@ import {
   Openid4vpInteractionDto,
   Openid4vpSessionDto,
 } from '../dto';
-import { Openid4vpInteractionStatus } from '../enums';
+import {
+  Openid4vpAuthorizationError,
+  Openid4vpInteractionStatus,
+} from '../enums';
 import { Openid4vpAuthorizationNotFoundException } from '../exceptions';
 import { CONFIG_NAMESPACE, SESSION_NAMESPACE } from '../tokens';
+import { Openid4vpInteractionStatusService } from './openid4vp-interaction-status.service';
 
 @Injectable()
 export class Openid4vpSessionService {
+  // allowed for DI
+  // eslint-disable-next-line max-params
   constructor(
     private readonly session: SessionService,
     private readonly redis: RedisService,
     private readonly config: ConfigService,
     private readonly logger: LoggerService,
+    private readonly interactionStatus: Openid4vpInteractionStatusService,
   ) {}
 
   bindRequestToSession(requestId: string): void {
@@ -88,6 +95,48 @@ export class Openid4vpSessionService {
     this.logger.debug('redis.multi.exec');
 
     await multi.exec();
+
+    await this.interactionStatus.publishStatus(
+      interaction.id,
+      Openid4vpInteractionStatus.REQUEST_OBJECT_PROVIDED,
+    );
+  }
+
+  async bindInteractionToBackendId(
+    backendId: string,
+    interaction: Openid4vpInteractionDto,
+  ): Promise<string> {
+    const {
+      relayingParty: { responseDelay },
+    } = this.config.get<Openid4vpConfig>(CONFIG_NAMESPACE);
+
+    const key = this.getBackendIdRedisKey(backendId);
+    const multi = this.redis.client.multi();
+    multi.set(key, interaction.id);
+    multi.expire(key, responseDelay);
+
+    await multi.exec();
+
+    return backendId;
+  }
+
+  async unbindInteractionFromBackendId(backendId: string): Promise<void> {
+    const key = this.getBackendIdRedisKey(backendId);
+    await this.redis.client.del(key);
+  }
+
+  async getInteractionByBackendId(
+    backendId: string,
+  ): Promise<Openid4vpInteractionDto | undefined> {
+    const key = this.getBackendIdRedisKey(backendId);
+
+    const interactionId = await this.redis.client.get(key);
+
+    if (!interactionId) {
+      throw new Openid4vpAuthorizationNotFoundException();
+    }
+
+    return await this.getInteractionById(interactionId);
   }
 
   async getInteractionByState(
@@ -126,6 +175,28 @@ export class Openid4vpSessionService {
       response,
       status: Openid4vpInteractionStatus.RESPONSE_RECEIVED,
     };
+
+    await this.persistTerminalState(updatedInteraction);
+  }
+
+  async saveError(
+    interaction: Openid4vpInteractionDto,
+    error: Openid4vpAuthorizationError,
+    errorDescription: string,
+  ): Promise<void> {
+    const updatedInteraction: Openid4vpInteractionDto = {
+      ...interaction,
+      error,
+      errorDescription,
+      status: Openid4vpInteractionStatus.ERROR,
+    };
+
+    await this.persistTerminalState(updatedInteraction);
+  }
+
+  private async persistTerminalState(
+    interaction: Openid4vpInteractionDto,
+  ): Promise<void> {
     const stateKey = this.getStateRedisKey(interaction.state);
     const idKey = this.getInteractionRedisKey(interaction.id);
 
@@ -136,13 +207,18 @@ export class Openid4vpSessionService {
     const multi = this.redis.client.multi();
 
     /** @todo #2630 serialization and encryption */
-    multi.set(idKey, JSON.stringify(updatedInteraction));
+    multi.set(idKey, JSON.stringify(interaction));
     multi.expire(idKey, interactionTtl);
     multi.del(stateKey);
 
     this.logger.debug('redis.multi.exec');
 
     await multi.exec();
+
+    await this.interactionStatus.publishStatus(
+      interaction.id,
+      interaction.status,
+    );
   }
 
   private getInteractionRedisKey(requestId: string): string {
@@ -151,5 +227,9 @@ export class Openid4vpSessionService {
 
   private getStateRedisKey(state: string): string {
     return `oid4vp:state:${state}`;
+  }
+
+  private getBackendIdRedisKey(backendId: string): string {
+    return `oid4vp:backend:${backendId}`;
   }
 }

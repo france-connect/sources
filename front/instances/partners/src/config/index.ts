@@ -4,6 +4,7 @@ import { ExternalUrls } from './external-urls';
 import { HttpClient } from './http-client';
 import { Layout } from './layout';
 import { Matomo } from './matomo';
+import { Modal } from './modal';
 import { Partners } from './partners';
 
 export const AppConfig = {
@@ -13,5 +14,6 @@ export const AppConfig = {
   HttpClient,
   Layout,
   Matomo,
+  Modal,
   Partners,
 };

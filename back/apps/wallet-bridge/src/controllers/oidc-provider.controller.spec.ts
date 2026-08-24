@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { OidcSession } from '@fc/oidc';
 import { OidcProviderService } from '@fc/oidc-provider';
 import { SessionService } from '@fc/session';
 
@@ -114,18 +113,6 @@ describe('OidcProviderController', () => {
 
       // Then
       expect(sessionServiceMock.reset).toHaveBeenCalledExactlyOnceWith(resMock);
-    });
-  });
-
-  describe('getInteraction()', () => {
-    it('should call identityService.finishInteraction with req, res and empty session', async () => {
-      // When
-      await controller.getInteraction(reqMock, resMock);
-
-      // Then
-      expect(
-        identityServiceMock.finishInteraction,
-      ).toHaveBeenCalledExactlyOnceWith(reqMock, resMock, {} as OidcSession);
     });
   });
 });

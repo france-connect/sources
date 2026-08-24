@@ -48,6 +48,36 @@ Fonctionnalité: Validation Visuelle - Espace Partenaires - Fournisseurs de Serv
       | device           |
       | desktop          |
 
+  Plan du Scénario: Validation Visuelle - Formulaire d'ajout d'un contributeur depuis le FS sur  <device>
+    Etant donné que j'utilise un navigateur web sur "<device>"
+    Et que je me connecte à l'espace partenaires avec un utilisateur "partenaire avec au moins un fournisseur de service"
+    Et que je navigue sur la page fournisseurs de service de l'espace partenaires
+    Et que je clique sur le fournisseur de service "SP4 - Fournisseur de service par défaut"
+    Quand je clique sur le bouton "ajouter un contributeur"
+    Alors je suis redirigé vers la page ajout d'un contributeur
+    Et la copie d'écran "fournisseur-de-service-ajout-contributeur" correspond à la page actuelle sur "<device>"
+
+    Exemples:
+      | device           |
+      | desktop          |
+
+  Plan du Scénario: Validation Visuelle - Mail d'ajout d'un contributeur sur <device>
+    Etant donné que j'utilise un navigateur web sur "<device>"
+    Et que je me connecte à l'espace partenaires avec un utilisateur "partenaire avec au moins un fournisseur de service"
+    Et que je navigue sur la page fournisseurs de service de l'espace partenaires
+    Et que je clique sur le fournisseur de service "SP4 - Fournisseur de service par défaut"
+    Et que je clique sur le bouton "ajouter un contributeur"
+    Et que je suis redirigé vers la page ajout d'un contributeur
+    Et que je supprime les mails envoyés à "contributeur-visuel@yopmail.com"
+    Quand j'entre "contributeur-visuel@yopmail.com" dans le champ "email" du formulaire d'ajout d'un contributeur
+    Et je clique sur le bouton "sauvegarder" du formulaire d'ajout d'un contributeur
+    Alors le mail "ajout de contributeur" est envoyé à "contributeur-visuel@yopmail.com"
+    Et la copie d'écran "fournisseur-de-service-ajout-contributeur-email" correspond à la page actuelle sur "<device>"
+
+    Exemples:
+      | device           |
+      | desktop          |
+
   Plan du Scénario: Validation Visuelle - Page d'un fournisseur de service avec boutons créer un accès et relier les instances sur <device>
     Etant donné que j'utilise un navigateur web sur "<device>"
     Et que je me connecte à l'espace partenaires avec un utilisateur "partenaire avec au moins un fournisseur de service"

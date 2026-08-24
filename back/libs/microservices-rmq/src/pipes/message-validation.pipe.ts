@@ -1,9 +1,9 @@
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, ValidationPipeOptions } from '@nestjs/common';
 
 import { MicroservicesRmqMessageValidationException } from '../exceptions'; // Remplace par ton propre chemin
 
 export class MicroservicesRmqMessageValidationPipe extends ValidationPipe {
-  constructor() {
+  constructor(options: ValidationPipeOptions = {}) {
     super({
       whitelist: true,
       forbidNonWhitelisted: true,
@@ -11,6 +11,7 @@ export class MicroservicesRmqMessageValidationPipe extends ValidationPipe {
       exceptionFactory: (errors) => {
         throw new MicroservicesRmqMessageValidationException(errors);
       },
+      ...options,
     });
   }
 }

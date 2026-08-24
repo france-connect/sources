@@ -1,5 +1,3 @@
-import { plainToInstance } from 'class-transformer';
-
 import { Injectable } from '@nestjs/common';
 
 import { validateDto } from '@fc/common';
@@ -10,7 +8,6 @@ import {
   ElasticControlDocumentService,
   ElasticControlReindexOptionsDto,
   ElasticControlReindexService,
-  ElasticControlTransformOptionsDto,
   ElasticOperationsEnum,
   ReindexStatusInterface,
 } from '@fc/elasticsearch';
@@ -25,6 +22,45 @@ export class CommandElasticReindexService {
     private readonly controlDocument: ElasticControlDocumentService,
     private readonly reindex: ElasticControlReindexService,
   ) {}
+
+  async actualizeAllReindexes(dryRun: boolean): Promise<boolean> {
+    this.logger.info(`[Command] Actualizing all reindexes`);
+
+    const docs = await this.controlDocument.findRunningOperations(
+      ElasticOperationsEnum.REINDEX,
+    );
+
+    await Promise.all(
+      docs.map(async (doc) => {
+        const options = doc.options as ElasticControlReindexOptionsDto;
+        const target = await this.getReindexTarget(options);
+        const taskId = doc?.status?.id as string;
+        const task = await this.reindex.findTask(taskId, options);
+        const nextState = this.getNextState(task, target);
+
+        this.logger.info(
+          `[Command] Reindex "${doc.id}": ${doc.state} -> ${nextState}`,
+        );
+
+        await this.controlDocument.updateControlDoc(
+          doc,
+          nextState,
+          task,
+          dryRun,
+        );
+      }),
+    );
+
+    const remaining = await this.controlDocument.countNonFinalOperations(
+      ElasticOperationsEnum.REINDEX,
+    );
+
+    this.logger.info(
+      `[Command] Remaining non-final reindex operations: ${remaining}`,
+    );
+
+    return remaining === 0;
+  }
 
   async safeInitializeReindex(
     options: ElasticControlReindexOptionsDto,
@@ -146,17 +182,19 @@ export class CommandElasticReindexService {
     );
   }
 
+  // all state transition logic belongs together in a single method
+  // eslint-disable-next-line complexity
   private getNextState(
     reindex: ReindexStatusInterface,
     target: number,
   ): ControlStatesEnum {
-    if (reindex.completed === true) {
-      if (reindex.total === target) {
-        return ControlStatesEnum.COMPLETED;
-      }
-      return ControlStatesEnum.FAILED;
+    if (!reindex.completed) {
+      return ControlStatesEnum.RUNNING;
     }
-    return ControlStatesEnum.RUNNING;
+    if (!reindex.failures?.length && reindex.total === target) {
+      return ControlStatesEnum.COMPLETED;
+    }
+    return ControlStatesEnum.FAILED;
   }
 
   private async getReindexTarget(
@@ -171,15 +209,9 @@ export class CommandElasticReindexService {
   private async fetchTransformDoc(
     options: ElasticControlReindexOptionsDto,
   ): Promise<ControlDocumentInterface | null> {
-    const transformOptions = plainToInstance(
-      ElasticControlTransformOptionsDto,
-      options,
-      { excludeExtraneousValues: true },
-    );
-
     const transformDocId = this.controlDocument.buildControlDocId(
       ElasticOperationsEnum.TRANSFORM,
-      transformOptions,
+      options,
     );
 
     const transformDoc =

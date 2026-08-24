@@ -1,6 +1,6 @@
 import classnames from 'classnames';
 import type { PropsWithChildren } from 'react';
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import type { PropsWithClassName } from '@fc/common';
 import { HeadingTag, MessageTypes, Strings } from '@fc/common';
@@ -9,6 +9,11 @@ import { t } from '@fc/i18n';
 import { Sizes } from '../../enums';
 
 interface AlertComponentProps extends PropsWithClassName, PropsWithChildren {
+  // @NOTE [RGAA] moves the focus onto the alert, the browser scrolls it into view
+  // and assistive technologies announce its content
+  // - should be defined if the Component renders the outcome of a user action
+  // - should NOT be defined for a static alert, it would steal the focus on page load
+  autoFocus?: boolean;
   // @NOTE [DSFR] attribute role="alert"
   // - should be defined if the Component is injected dynamicly into the page
   // - should NOT be defined if the Component is not injected dynamicly into the page
@@ -25,6 +30,7 @@ interface AlertComponentProps extends PropsWithClassName, PropsWithChildren {
 
 export const AlertComponent = React.memo(
   ({
+    autoFocus = false,
     children: description,
     className,
     dataTestId = 'AlertComponent',
@@ -38,14 +44,26 @@ export const AlertComponent = React.memo(
   }: AlertComponentProps) => {
     const closeLabel = (onClose && t('DSFR.alert.close')) || undefined;
 
+    // @NOTE the callback ref must stay stable, an inline one would refocus on every render
+    const focusAlert = useCallback(
+      (element: HTMLDivElement | null) => {
+        if (autoFocus && element) {
+          element.focus();
+        }
+      },
+      [autoFocus],
+    );
+
     return (
       <div
+        ref={focusAlert}
         className={classnames(
           className,
           `fr-alert fr-alert--${type} fr-alert--${size} ${icon ?? Strings.EMPTY_STRING}`,
         )}
         data-testid={dataTestId}
-        role={noRole ? undefined : 'alert'}>
+        role={noRole ? undefined : 'alert'}
+        tabIndex={autoFocus ? -1 : undefined}>
         {title && (
           <Heading className="fr-alert__title" data-testid={`${dataTestId}-title`}>
             {title}

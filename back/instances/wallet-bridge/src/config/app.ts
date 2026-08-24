@@ -1,5 +1,5 @@
-import { AppConfig } from '@fc/app';
 import { ConfigParser } from '@fc/config';
+import { AppConfig } from '@fc/wallet-bridge';
 
 const env = new ConfigParser(process.env, 'App');
 
@@ -18,4 +18,6 @@ export default {
   fqdn: env.string('FQDN'),
   timezone: 'Europe/Paris',
   environment: env.string('ENVIRONMENT'),
+  showDevTools: env.boolean('SHOW_DEV_TOOLS'),
+  devToolsMockUrl: env.string('DEV_TOOLS_MOCK_URL'),
 } as AppConfig;

@@ -37,7 +37,7 @@ Fonctionnalité: Connexion eIDAS - Validation des claims renvoyés par le fourni
     Et je suis redirigé vers la page confirmation de connexion
     Et je continue sur le fournisseur de service
     Et je suis redirigé vers la page fournisseur de service eidas mock
-    Et le fournisseur de service eidas mock a accès aux informations des scopes "eidas sans preferred_username"
+    Et le fournisseur de service eidas mock a accès aux informations des scopes "eidas"
     Et le sub transmis au fournisseur de service eidas commence par "FR/CB"
 
   Scénario: Connexion FS Européen - Pas d'erreur si FI FR ne renvoit pas un claim inconnu

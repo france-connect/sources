@@ -7,7 +7,7 @@ interface MailFrom {
 
 interface MailTo {
   readonly email: string;
-  readonly name: string;
+  readonly name?: string;
 }
 
 interface ReplyTo {

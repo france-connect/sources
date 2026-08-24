@@ -11,6 +11,7 @@ import { getLoggerMock } from '@mocks/logger';
 import { ElasticControlTransformOptionsDto } from '../dto';
 import {
   ControlStatesEnum,
+  ElasticControlKeyEnum,
   ElasticControlPivotEnum,
   ElasticControlProductEnum,
   ElasticControlRangeEnum,
@@ -45,6 +46,8 @@ describe('ElasticControlDocumentService', () => {
     getDocument: jest.fn(),
     getIndex: jest.fn(),
     createIndex: jest.fn(),
+    countDocuments: jest.fn(),
+    searchDocuments: jest.fn(),
   };
 
   const updateMock = jest.fn();
@@ -60,7 +63,11 @@ describe('ElasticControlDocumentService', () => {
   const operationMock = ElasticOperationsEnum.TRANSFORM;
   const controlDocIdMock = 'controlDocIdMock';
   const controlIndexMock = 'controlIndexMock';
-  const configDataMock = { controlIndex: controlIndexMock };
+  const runningOperationsMaxSizeMock = 500;
+  const configDataMock = {
+    controlIndex: controlIndexMock,
+    runningOperationsMaxSize: runningOperationsMaxSizeMock,
+  };
 
   const controlDocMock: ControlDocumentInterface = {
     id: controlDocIdMock,
@@ -125,6 +132,161 @@ describe('ElasticControlDocumentService', () => {
   it('should set controlIndex', () => {
     // Then
     expect(service['controlIndex']).toBe(controlIndexMock);
+  });
+
+  describe('countNonFinalOperations', () => {
+    const buildExpectedQuery = (operation: ElasticOperationsEnum) => ({
+      query: {
+        bool: {
+          must: [
+            { term: { operation } },
+            {
+              terms: {
+                state: [ControlStatesEnum.PENDING, ControlStatesEnum.RUNNING],
+              },
+            },
+          ],
+        },
+      },
+    });
+
+    describe.each([
+      [ElasticOperationsEnum.TRANSFORM],
+      [ElasticOperationsEnum.REINDEX],
+    ])('with operation %s', (operationMock) => {
+      it('should call elastic.countDocuments with the correct query', async () => {
+        // Given
+        elasticClientMock.countDocuments.mockResolvedValue({ count: 3 });
+
+        // When
+        await service.countNonFinalOperations(operationMock);
+
+        // Then
+        expect(
+          elasticClientMock.countDocuments,
+        ).toHaveBeenCalledExactlyOnceWith(
+          controlIndexMock,
+          buildExpectedQuery(operationMock),
+        );
+      });
+
+      it('should return the count', async () => {
+        // Given
+        elasticClientMock.countDocuments.mockResolvedValue({ count: 3 });
+
+        // When
+        const result = await service.countNonFinalOperations(operationMock);
+
+        // Then
+        expect(result).toBe(3);
+      });
+
+      it('should log the count', async () => {
+        // Given
+        elasticClientMock.countDocuments.mockResolvedValue({ count: 3 });
+
+        // When
+        await service.countNonFinalOperations(operationMock);
+
+        // Then
+        expect(loggerMock.debug).toHaveBeenCalledExactlyOnceWith(
+          `[control] Non-final ${operationMock} operations: 3`,
+        );
+      });
+
+      it('should throw ElasticControlInvalidRequestException on error', async () => {
+        // Given
+        const error = new Error('test error');
+        elasticClientMock.countDocuments.mockRejectedValueOnce(error);
+
+        // When / Then
+        await expect(
+          service.countNonFinalOperations(operationMock),
+        ).rejects.toThrow(ElasticControlInvalidRequestException);
+      });
+    });
+  });
+
+  describe('findRunningOperations', () => {
+    const buildExpectedQuery = (operation: ElasticOperationsEnum) => ({
+      size: runningOperationsMaxSizeMock,
+      query: {
+        bool: {
+          must: [
+            { term: { operation } },
+            { term: { state: ControlStatesEnum.RUNNING } },
+          ],
+        },
+      },
+    });
+
+    const hitsMock = [
+      { _source: { ...controlDocMock, state: ControlStatesEnum.RUNNING } },
+      {
+        _source: {
+          ...controlDocMock,
+          id: 'otherId',
+          state: ControlStatesEnum.RUNNING,
+        },
+      },
+    ];
+    const searchResponseMock = { hits: { hits: hitsMock } };
+
+    describe.each([
+      [ElasticOperationsEnum.TRANSFORM],
+      [ElasticOperationsEnum.REINDEX],
+    ])('with operation %s', (operationMock) => {
+      it('should call elastic.searchDocuments with the correct query', async () => {
+        // Given
+        elasticClientMock.searchDocuments.mockResolvedValue(searchResponseMock);
+
+        // When
+        await service.findRunningOperations(operationMock);
+
+        // Then
+        expect(
+          elasticClientMock.searchDocuments,
+        ).toHaveBeenCalledExactlyOnceWith(
+          controlIndexMock,
+          buildExpectedQuery(operationMock),
+        );
+      });
+
+      it('should return the documents from hits', async () => {
+        // Given
+        elasticClientMock.searchDocuments.mockResolvedValue(searchResponseMock);
+
+        // When
+        const result = await service.findRunningOperations(operationMock);
+
+        // Then
+        expect(result).toEqual(hitsMock.map((h) => h._source));
+      });
+
+      it('should log the count', async () => {
+        // Given
+        elasticClientMock.searchDocuments.mockResolvedValue(searchResponseMock);
+
+        // When
+        await service.findRunningOperations(operationMock);
+
+        // Then
+        expect(loggerMock.debug).toHaveBeenCalledExactlyOnceWith(
+          `[control] Found ${hitsMock.length} running ${operationMock} operations`,
+        );
+      });
+
+      it('should throw ElasticControlInvalidRequestException on error', async () => {
+        // Given
+        const error = new Error('test error');
+        elasticClientMock.searchDocuments.mockRejectedValueOnce(error);
+
+        // When / Then
+        await expect(
+          service.findRunningOperations(operationMock),
+        ).rejects.toThrow(ElasticControlInvalidRequestException);
+      });
+    });
   });
 
   describe('getOrCreateControlDoc', () => {
@@ -372,18 +534,62 @@ describe('ElasticControlDocumentService', () => {
       expect(createHashMock).toHaveBeenCalledWith('sha256');
     });
 
-    it('should call update with sorted, joined payload', () => {
+    it('should call update with sorted, joined payload excluding period for TRANSFORM', () => {
       // Given
       const expectedPayload = [
-        operationMock,
-        optionsMock.period,
+        ElasticOperationsEnum.TRANSFORM,
         optionsMock.pivot,
         optionsMock.product,
         optionsMock.range,
       ].join('.');
 
       // When
-      service.buildControlDocId(operationMock, optionsMock);
+      service.buildControlDocId(ElasticOperationsEnum.TRANSFORM, optionsMock);
+
+      // Then
+      expect(updateMock).toHaveBeenCalledWith(expectedPayload, 'utf8');
+    });
+
+    it('should call update with sorted, joined payload excluding period and key for TRANSFORM even when given reindex options', () => {
+      // Given
+      const reindexOptions = {
+        ...optionsMock,
+        key: ElasticControlKeyEnum.CONNECTIONS,
+      };
+      const expectedPayload = [
+        ElasticOperationsEnum.TRANSFORM,
+        reindexOptions.pivot,
+        reindexOptions.product,
+        reindexOptions.range,
+      ].join('.');
+
+      // When
+      service.buildControlDocId(
+        ElasticOperationsEnum.TRANSFORM,
+        reindexOptions,
+      );
+
+      // Then
+      expect(updateMock).toHaveBeenCalledWith(expectedPayload, 'utf8');
+    });
+
+    it('should call update with full sorted, joined payload for REINDEX', () => {
+      // Given
+      const reindexOptions = {
+        ...optionsMock,
+        key: ElasticControlKeyEnum.CONNECTIONS,
+      };
+      const expectedPayload = [
+        ElasticOperationsEnum.REINDEX,
+        reindexOptions.key,
+        reindexOptions.period,
+        reindexOptions.pivot,
+        reindexOptions.product,
+        reindexOptions.range,
+      ].join('.');
+
+      // When
+      service.buildControlDocId(ElasticOperationsEnum.REINDEX, reindexOptions);
 
       // Then
       expect(updateMock).toHaveBeenCalledWith(expectedPayload, 'utf8');

@@ -12,17 +12,17 @@ export const enGB: I18nTranslationsMapType = {
   'Session.exceptions.sessionCannotCommitUndefinedSession':
     'Your session has expired. Please close your browser tab and reconnect.',
   'Session.exceptions.sessionInvalidSessionData':
-    'Your session is invalid. Please close your browser tab and reconnect.',
+    'Your session has expired or is invalid. Please close your browser tab and reconnect.',
   'Session.exceptions.sessionInvalidSession':
     'Your session has expired or is invalid. Please close your browser tab and reconnect.',
   'Session.exceptions.sessionInvalidSetCall':
-    'A technical error has occurred. Please close your browser tab and reconnect. If the problem persists, please contact support.',
+    'Your session has expired or is invalid. Please close your browser tab and reconnect.',
   'Session.exceptions.sessionNoSessionId':
     'Your session has expired or is invalid. Please close your browser tab and reconnect.',
   'Session.exceptions.sessionNotFound':
     'Your session has expired or is invalid. Please close your browser tab and reconnect.',
   'Session.exceptions.sessionStorage':
-    'Your session has expired or is invalid. Please close your browser tab and reconnect. If the problem persists, please contact support.',
+    'Your session has expired or is invalid. Please close your browser tab and reconnect.',
   'Session.exceptions.sessionSubNotFound':
     'Your session has expired or is invalid. Please close your browser tab and reconnect.',
 };

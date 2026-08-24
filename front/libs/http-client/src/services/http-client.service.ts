@@ -105,3 +105,35 @@ export const post = async <T>(
     throw new AxiosException(error);
   }
 };
+
+/**
+ *
+ * @param endpoint Relative leading slashed string to a single API entry point (eg: '/hello-world')
+ * @param axiosOptions AxiosRequestConfig
+ * @returns
+ */
+export const del = async <T>(
+  endpoint: string,
+  options?: HttpClientOptionsInterface,
+): Promise<AxiosResponse<T>> => {
+  try {
+    const { csrfToken } = await getCSRF();
+    const response = await makeRequest<T>(
+      HttpMethods.DELETE,
+      endpoint,
+      {},
+      {
+        headers: {
+          // Conventional header name
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          'x-csrf-token': csrfToken,
+        },
+        ...options,
+      },
+    );
+    return response;
+  } catch (err) {
+    const error = err as AxiosError;
+    throw new AxiosException(error);
+  }
+};

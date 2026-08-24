@@ -31,7 +31,7 @@ export const frFR = {
   'Form.isFilled_error.family_name':
     "Veuillez renseigner l'information demandée.",
 
-  'Form.label.given_name': 'Prénoms de naissance',
+  'Form.label.given_name': 'Prénoms',
   'Form.hint.given_name':
     'Comme inscrit sur l’acte de naissance \nEcrivez l’ensemble du prénom si celui-ci est composé de plusieurs prénoms',
   'Form.isNotEmpty_error.given_name':

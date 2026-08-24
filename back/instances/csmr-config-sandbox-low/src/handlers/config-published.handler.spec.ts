@@ -5,7 +5,10 @@ import { PublicationStatusEnum } from '@entities/typeorm';
 import { ConfigService } from '@fc/config';
 import { diffKeys } from '@fc/config-abstract-adapter';
 import { ConfigPublishedEvent } from '@fc/csmr-config';
-import { ConfigPublishedEventPropertiesInterface } from '@fc/csmr-config/interfaces';
+import {
+  ConfigDeletePublishedEventPropertiesInterface,
+  ConfigWritePublishedEventPropertiesInterface,
+} from '@fc/csmr-config/interfaces';
 import { ActionTypes } from '@fc/csmr-config-client';
 import { ActionTypes as ProxyActionTypes } from '@fc/csmr-proxy-client';
 
@@ -30,9 +33,15 @@ describe('ConfigPublishedEventHandler', () => {
     type: 'CONFIG_PUBLISHED',
     meta: { id: 'meta-mock', diff: ['som-prop'] },
     payload: { message: { payload: 'payload-mock', meta: {} } },
-  } as unknown as ConfigPublishedEventPropertiesInterface;
+  } as unknown as ConfigWritePublishedEventPropertiesInterface;
+
+  const deleteMessageMock = {
+    ...messageMock,
+    type: ActionTypes.CONFIG_DELETE,
+  } as unknown as ConfigDeletePublishedEventPropertiesInterface;
 
   const eventMock = new ConfigPublishedEvent(messageMock);
+  const deleteEventMock = new ConfigPublishedEvent(deleteMessageMock);
 
   beforeEach(async () => {
     jest.resetAllMocks();
@@ -72,10 +81,38 @@ describe('ConfigPublishedEventHandler', () => {
   describe('handle', () => {
     beforeEach(() => {
       handler['updateProxy'] = jest.fn();
-      handler['updatePartner'] = jest.fn();
+      handler['updateConfigOnPartner'] = jest.fn();
+      handler['deleteConfigOnPartner'] = jest.fn();
     });
 
-    it('should call updateProxy and updatePartner', async () => {
+    it('should call deleteConfigOnPartner and return early for a CONFIG_DELETE event', async () => {
+      // When
+      await handler.handle(deleteEventMock);
+
+      // Then
+      expect(handler['deleteConfigOnPartner']).toHaveBeenCalledExactlyOnceWith(
+        deleteMessageMock,
+      );
+    });
+
+    it('should not update proxy nor partner for a CONFIG_DELETE event', async () => {
+      // When
+      await handler.handle(deleteEventMock);
+
+      // Then
+      expect(handler['updateProxy']).not.toHaveBeenCalled();
+      expect(handler['updateConfigOnPartner']).not.toHaveBeenCalled();
+    });
+
+    it('should not call deleteConfigOnPartner for a non CONFIG_DELETE event', async () => {
+      // When
+      await handler.handle(eventMock);
+
+      // Then
+      expect(handler['deleteConfigOnPartner']).not.toHaveBeenCalled();
+    });
+
+    it('should call updateProxy and updateConfigOnPartner', async () => {
       // Given
       configMock.get.mockReturnValue({
         updateProxy: true,
@@ -85,28 +122,30 @@ describe('ConfigPublishedEventHandler', () => {
       await handler.handle(eventMock);
 
       // Then
-      expect(handler['updateProxy']).toHaveBeenCalledExactlyOnceWith(eventMock);
-      expect(handler['updatePartner']).toHaveBeenCalledExactlyOnceWith(
-        eventMock,
+      expect(handler['updateProxy']).toHaveBeenCalledExactlyOnceWith(
+        messageMock,
+      );
+      expect(handler['updateConfigOnPartner']).toHaveBeenCalledExactlyOnceWith(
+        messageMock,
       );
     });
 
-    it('should call only updatePartner', async () => {
+    it('should call only updateConfigOnPartner', async () => {
       // Given
       await handler.handle(eventMock);
 
       // When
       expect(handler['updateProxy']).not.toHaveBeenCalled();
-      expect(handler['updatePartner']).toHaveBeenCalledExactlyOnceWith(
-        eventMock,
+      expect(handler['updateConfigOnPartner']).toHaveBeenCalledExactlyOnceWith(
+        messageMock,
       );
     });
   });
 
-  describe('updatePartner', () => {
+  describe('updateConfigOnPartner', () => {
     it('should publish a message to the config partners', async () => {
       // When
-      await handler['updatePartner'](eventMock);
+      await handler['updateConfigOnPartner'](messageMock);
 
       // Then
       expect(configClientMock.publish).toHaveBeenCalledWith({
@@ -120,6 +159,18 @@ describe('ConfigPublishedEventHandler', () => {
     });
   });
 
+  describe('deleteConfigOnPartner', () => {
+    it('should publish the delete message to the config partners', async () => {
+      // When
+      await handler['deleteConfigOnPartner'](deleteMessageMock);
+
+      // Then
+      expect(configClientMock.publish).toHaveBeenCalledExactlyOnceWith(
+        messageMock.payload.message,
+      );
+    });
+  });
+
   describe('updateProxy', () => {
     it('should broadcast a message to the proxy', async () => {
       // Given
@@ -128,7 +179,7 @@ describe('ConfigPublishedEventHandler', () => {
       handler['hasProxyRelatedDiff'] = jest.fn().mockReturnValue(true);
 
       // When
-      await handler['updateProxy'](eventMock);
+      await handler['updateProxy'](messageMock);
 
       // Then
       expect(proxyClientMock.broadcast).toHaveBeenCalledExactlyOnceWith({
@@ -148,7 +199,7 @@ describe('ConfigPublishedEventHandler', () => {
       handler['hasProxyRelatedDiff'] = jest.fn().mockReturnValue(false);
 
       // When
-      await handler['updateProxy'](eventMock);
+      await handler['updateProxy'](messageMock);
 
       // Then
       expect(proxyClientMock.broadcast).not.toHaveBeenCalled();

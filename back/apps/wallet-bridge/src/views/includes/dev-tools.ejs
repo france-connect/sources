@@ -1,0 +1,21 @@
+<div class="fr-callout fr-mt-10v" data-testid="wallet-dev-tools">
+  <h3 class="fr-callout__title">Outils de développement</h3>
+  <p class="fr-callout__text">Requête à copier coller dans le wallet</p>
+
+  <div>
+    <form>
+      <textarea rows="4" cols="40" name="requestUri" class="fr-input  "><%= requestUri %></textarea
+      >
+      <input type="hidden" name="httpRequestUri" value="<%= httpRequestUri %>" />
+    </form>
+  </div>
+
+  <p class="fr-mt-8v"> OU </p>
+  <div >
+    <a
+      href="<%= $config('App.devToolsMockUrl') %>?deepLink=<%= encodeURIComponent(requestUri) %>&flow=same-device"
+      class="fr-btn"
+      >Simuler un flow same-device</a
+    >
+  </div>
+</div>

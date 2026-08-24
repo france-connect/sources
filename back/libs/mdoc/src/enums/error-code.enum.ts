@@ -4,4 +4,5 @@ export const enum ErrorCode {
   VALIDITY_WINDOW = 3,
   VALIDITY_PERIOD = 4,
   DOCUMENT_TYPE_NOT_FOUND = 5,
+  NOT_IMPLEMENTED = 6,
 }

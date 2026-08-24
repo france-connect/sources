@@ -1,7 +1,7 @@
 import { Then } from '@badeball/cypress-cucumber-preprocessor';
 
 import { getUserByDescription } from '../../helpers';
-import ServiceProviderPermissionsSection from '../../pages/service-provider-permissions-section';
+import ServiceProviderPermissionsSection from '../../pages/service-provider-permissions';
 
 const serviceProviderPermissionsSection =
   new ServiceProviderPermissionsSection();

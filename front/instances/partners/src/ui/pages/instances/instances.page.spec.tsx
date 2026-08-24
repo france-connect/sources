@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 import { type MessageTypes, useScrollTo } from '@fc/common';
 import type { InstanceInterface, LocationWithSubmitStateInterface } from '@fc/core-partners';
 import { CreateUnlinkedInstanceButton, InstancesListComponent } from '@fc/core-partners';
-import { AlertComponent, LinkEmailComponent, TileComponent } from '@fc/dsfr';
+import { AlertComponent, TileComponent } from '@fc/dsfr';
 import { t } from '@fc/i18n';
 
 import { useInstances } from '../../../hooks';
@@ -79,41 +79,9 @@ describe('InstancesPage', () => {
     // Then
     expect(container).toMatchSnapshot();
     expect(titleElt).toBeInTheDocument();
-    expect(CreateUnlinkedInstanceButton).toHaveBeenCalledOnce();
-    expect(CreateUnlinkedInstanceButton).toHaveBeenCalledWith({}, undefined);
+    expect(CreateUnlinkedInstanceButton).toHaveBeenCalledExactlyOnceWith({}, undefined);
     expect(InstancesListComponent).toHaveBeenCalledOnce();
     expect(InstancesListComponent).toHaveBeenCalledWith({ items: itemsMock }, undefined);
-  });
-
-  it('should call AlertComponent to display help', () => {
-    // When
-    const { getByText } = render(<InstancesPage />);
-    const firstElt = getByText(
-      'Si vous n’aviez pas renseigné de numéro d’habilitation (Datapass), nous vous invitons à créer une nouvelle instance depuis cet espace.',
-    );
-    const secondElt = getByText(
-      /Si vous aviez saisi un numéro de demande d’habilitation, vous pouvez soit contacter le support partenaire à l’adresse/,
-    );
-    const thirdElt = getByText(/soit créer à nouveau votre instance depuis cet espace./);
-
-    // Then
-    expect(firstElt).toBeInTheDocument();
-    expect(secondElt).toBeInTheDocument();
-    expect(thirdElt).toBeInTheDocument();
-    expect(LinkEmailComponent).toHaveBeenCalledExactlyOnceWith(
-      {
-        email: 'support.partenaires@franceconnect.gouv.fr',
-      },
-      undefined,
-    );
-    expect(AlertComponent).toHaveBeenCalledExactlyOnceWith(
-      {
-        children: expect.any(Object),
-        title:
-          'Vous ne trouvez pas l’instance de votre fournisseur de service, bien que la demande de création ait été faite via Démarches Simplifiées ?',
-      },
-      undefined,
-    );
   });
 
   it('should match snapshot, when the alert component is displayed', () => {
@@ -141,9 +109,7 @@ describe('InstancesPage', () => {
 
     // Then
     expect(container).toMatchSnapshot();
-    expect(AlertComponent).toHaveBeenCalledTimes(2);
-    expect(AlertComponent).toHaveBeenNthCalledWith(
-      2,
+    expect(AlertComponent).toHaveBeenCalledExactlyOnceWith(
       {
         dataTestId: 'instances-page-alert-top',
         onClose: cleanupRouteStateMock,

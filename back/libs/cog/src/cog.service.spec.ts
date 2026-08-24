@@ -4,7 +4,7 @@ import { ConfigService } from '@fc/config';
 
 import { CogService } from './cog.service';
 import { CityInterface, CountryInterface } from './interfaces';
-import { COG_CITY, COG_COUNTRY } from './tokens';
+import { COG_CITY, COG_COUNTRY, COG_ISO_COUNTRY } from './tokens';
 
 describe('CogService', () => {
   let service: CogService;
@@ -16,11 +16,22 @@ describe('CogService', () => {
   const cityRepositoryMock = {
     find: jest.fn(),
     parse: jest.fn(),
+    createIndex: jest.fn(),
+    getByIndex: jest.fn(),
   };
 
   const countryRepositoryMock = {
     find: jest.fn(),
     parse: jest.fn(),
+    createIndex: jest.fn(),
+    getByIndex: jest.fn(),
+  };
+
+  const isoCogCountryRepositoryMock = {
+    find: jest.fn(),
+    parse: jest.fn(),
+    createIndex: jest.fn(),
+    getByIndex: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -39,6 +50,10 @@ describe('CogService', () => {
           provide: COG_COUNTRY,
           useValue: countryRepositoryMock,
         },
+        {
+          provide: COG_ISO_COUNTRY,
+          useValue: isoCogCountryRepositoryMock,
+        },
       ],
     })
       .overrideProvider(ConfigService)
@@ -56,6 +71,7 @@ describe('CogService', () => {
     const configMock = {
       [COG_CITY]: 'cogCityValue',
       [COG_COUNTRY]: 'cogCountryValue',
+      [COG_ISO_COUNTRY]: 'cogIsoCountryValue',
     };
 
     beforeEach(() => {
@@ -83,6 +99,10 @@ describe('CogService', () => {
       expect(countryRepositoryMock.parse).toHaveBeenCalledTimes(1);
       expect(countryRepositoryMock.parse).toHaveBeenCalledWith(
         configMock[COG_COUNTRY],
+      );
+      expect(isoCogCountryRepositoryMock.parse).toHaveBeenCalledTimes(1);
+      expect(isoCogCountryRepositoryMock.parse).toHaveBeenCalledWith(
+        configMock[COG_ISO_COUNTRY],
       );
     });
 
@@ -119,76 +139,118 @@ describe('CogService', () => {
     const labelEuMock = 'le meilleur pays du monde (CB)';
 
     beforeEach(() => {
-      cityRepositoryMock.find.mockResolvedValueOnce(cityMock);
-      countryRepositoryMock.find.mockResolvedValueOnce(countryMock);
+      cityRepositoryMock.getByIndex.mockReturnValueOnce(cityMock);
+      countryRepositoryMock.getByIndex.mockReturnValueOnce(countryMock);
     });
 
-    it('should transform French Cog to label with city', async () => {
-      const result = await service.getLabelFromCog(franceCog);
-      const filterSearch = { com: franceCog };
+    it('should transform French Cog to label with city', () => {
+      // When
+      const result = service.getLabelFromCog(franceCog);
+
+      // Then
       expect(result).toEqual(labelFrMock);
 
-      expect(cityRepositoryMock.find).toHaveBeenCalledTimes(1);
-      expect(cityRepositoryMock.find).toHaveBeenCalledWith(filterSearch);
+      expect(cityRepositoryMock.getByIndex).toHaveBeenCalledTimes(1);
+      expect(cityRepositoryMock.getByIndex).toHaveBeenCalledWith(
+        'com',
+        franceCog,
+      );
 
-      expect(countryRepositoryMock.find).toHaveBeenCalledTimes(0);
+      expect(countryRepositoryMock.getByIndex).toHaveBeenCalledTimes(0);
     });
-    it('should transform foreign cog to label with Country', async () => {
-      const result = await service.getLabelFromCog(foreignCog);
-      const filterSearch = { cog: foreignCog };
+
+    it('should transform foreign cog to label with Country', () => {
+      // When
+      const result = service.getLabelFromCog(foreignCog);
+
+      // Then
       expect(result).toEqual(labelEuMock);
 
-      expect(cityRepositoryMock.find).toHaveBeenCalledTimes(0);
+      expect(cityRepositoryMock.getByIndex).toHaveBeenCalledTimes(0);
 
-      expect(countryRepositoryMock.find).toHaveBeenCalledTimes(1);
-      expect(countryRepositoryMock.find).toHaveBeenCalledWith(filterSearch);
-    });
-
-    it('should fail if the City repository failed', async () => {
-      const errorMock = new Error('Unknown Error');
-      cityRepositoryMock.find.mockReset().mockRejectedValueOnce(errorMock);
-      await expect(service.getLabelFromCog(franceCog)).rejects.toThrow(
-        errorMock,
+      expect(countryRepositoryMock.getByIndex).toHaveBeenCalledTimes(1);
+      expect(countryRepositoryMock.getByIndex).toHaveBeenCalledWith(
+        'cog',
+        foreignCog,
       );
-      expect(cityRepositoryMock.find).toHaveBeenCalledTimes(1);
-      expect(countryRepositoryMock.find).toHaveBeenCalledTimes(0);
-    });
-
-    it('should fail if the Country repository failed', async () => {
-      const errorMock = new Error('Unknown Error');
-      countryRepositoryMock.find.mockReset().mockRejectedValueOnce(errorMock);
-      await expect(service.getLabelFromCog(foreignCog)).rejects.toThrow(
-        errorMock,
-      );
-      expect(cityRepositoryMock.find).toHaveBeenCalledTimes(0);
-      expect(countryRepositoryMock.find).toHaveBeenCalledTimes(1);
     });
   });
+
   describe('injectLabelsForCogs()', () => {
-    let getLabelFromCogMock: jest.SpyInstance;
     const mockCogs = ['1', '2', '3'];
 
     beforeEach(() => {
-      getLabelFromCogMock = jest.spyOn<CogService, any>(
-        service,
-        'getLabelFromCog',
-      );
+      service['getLabelFromCog'] = jest.fn();
     });
-    it('should transform all cogs to labels', async () => {
-      getLabelFromCogMock
-        .mockResolvedValueOnce('a')
-        .mockResolvedValueOnce('b')
-        .mockResolvedValueOnce('c');
-      const results = await service.injectLabelsForCogs(mockCogs);
+
+    it('should transform all cogs to labels', () => {
+      // Given
+      service['getLabelFromCog'] = jest
+        .fn()
+        .mockReturnValueOnce('a')
+        .mockReturnValueOnce('b')
+        .mockReturnValueOnce('c');
+
+      // When
+      const results = service.injectLabelsForCogs(mockCogs);
+
+      // Then
       expect(results).toEqual(['a', 'b', 'c']);
     });
-    it('should fail to transform cogs into labels', async () => {
+
+    it('should fail to transform cogs into labels', () => {
+      // Given
       const errorMock = new Error('Unknown Error');
 
-      getLabelFromCogMock.mockReset().mockRejectedValueOnce(errorMock);
-      await expect(service.injectLabelsForCogs(mockCogs)).rejects.toThrow(
-        errorMock,
-      );
+      // When
+      service['getLabelFromCog'] = jest.fn().mockImplementationOnce(() => {
+        throw errorMock;
+      });
+
+      // Then
+      expect(() => service.injectLabelsForCogs(mockCogs)).toThrow(errorMock);
+    });
+  });
+
+  describe('getCountryCogFromIso()', () => {
+    it('should query for the country cog with the provided iso in the "iso" index', () => {
+      // Given
+      const iso = 'FR';
+      const cog = '99135';
+      isoCogCountryRepositoryMock.getByIndex.mockReturnValueOnce({ cog });
+
+      // When
+      service.getCountryCogFromIso(iso);
+
+      // Then
+      expect(
+        isoCogCountryRepositoryMock.getByIndex,
+      ).toHaveBeenCalledExactlyOnceWith('iso', iso);
+    });
+
+    it('should return the country cog from the iso', () => {
+      // Given
+      const iso = 'FR';
+      const cog = '99135';
+      isoCogCountryRepositoryMock.getByIndex.mockReturnValueOnce({ cog });
+
+      // When
+      const result = service.getCountryCogFromIso(iso);
+
+      // Then
+      expect(result).toEqual(cog);
+    });
+
+    it('should return null if the iso is not found', () => {
+      // Given
+      const iso = 'FR';
+      isoCogCountryRepositoryMock.getByIndex.mockReturnValueOnce(null);
+
+      // When
+      const result = service.getCountryCogFromIso(iso);
+
+      // Then
+      expect(result).toEqual(undefined);
     });
   });
 });

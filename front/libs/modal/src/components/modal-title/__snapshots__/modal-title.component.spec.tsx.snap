@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ModalTitleComponent should match the snapshot 1`] = `
+<div>
+  <h1
+    class="fr-modal__title"
+    id="any-modal-id-mock-title"
+  >
+    any-title-mock
+  </h1>
+</div>
+`;

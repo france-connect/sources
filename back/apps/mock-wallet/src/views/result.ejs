@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="fr" data-fr-scheme="light">
+  <head>
+    <%- include('includes/head.ejs') %>
+  </head>
+  <body id="wb-error-page">
+    <div class="fc-sticky-wrapper">
+      <div class="fc-sticky-body">
+        <%- include('includes/header.ejs') %>
+        <main
+          role="main"
+          id="main-content"
+          class="fr-container fr-mt-10v fr-mt-md-16v"
+        >
+          <div class="fr-grid-row fr-grid-row--gutters">
+            <section
+              data-testid="error-section"
+              class="fr-col-12 fr-col-offset-md-1 fr-col-md-9 fr-mb-6v fr-mb-md-10v"
+            >
+              <h1>✅ Document envoyé</h1>
+              <p>Status HTTP: <strong><%= statusCode %></strong></p>
+              <details open>
+                <summary>Corps de réponse</summary>
+                <pre><%= responseBody %></pre>
+              </details>
+              <p><a href="<%= indexUrl %>">Nouvelle demande</a></p>
+            </section>
+          </div>
+          <div class="fr-grid-row fr-grid-row--gutters"></div>
+        </main>
+      </div>
+      <%- include('includes/footer.ejs') %>
+    </div>
+  </body>
+</html>

@@ -13,6 +13,8 @@ export const useSubmitHandler = jest.fn();
 
 export const removeEmptyValues = jest.fn();
 
+export const normalizeEmptyValues = jest.fn();
+
 export const loadData = jest.fn();
 
 export const Dto2FormOptions = {

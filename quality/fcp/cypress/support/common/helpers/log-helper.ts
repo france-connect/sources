@@ -6,9 +6,9 @@ export enum LogResult {
   EventMismatch,
 }
 
-export function clearBusinessLog(logPath?: string): void {
+export function clearAllLogs(logPath?: string): void {
   const logFilePath: string = logPath || Cypress.env('LOG_FILE_PATH');
-  cy.task('clearBusinessLog', { logFilePath }).should('eq', 0);
+  cy.task('clearAllLogs', { logFilePath }).should('eq', 0);
 }
 
 export function hasBusinessLog(
@@ -37,11 +37,11 @@ export function getBusinessLogs(
   });
 }
 
-export function getAllBusinessLogs(
+export function getAllLogs(
   logPath?: string,
 ): Cypress.Chainable<Record<string, string>[]> {
   const logFilePath: string = logPath || Cypress.env('LOG_FILE_PATH');
-  return cy.task<Record<string, string>[]>('getAllBusinessLogs', {
+  return cy.task<Record<string, string>[]>('getAllLogs', {
     logFilePath,
   });
 }

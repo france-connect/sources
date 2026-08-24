@@ -77,6 +77,7 @@ describe('HttpClientService', () => {
       // Given
       const requestOptionsMock = { data, method, url: endpoint };
       jest.mocked(getRequestOptionsMock).mockReturnValueOnce(requestOptionsMock);
+
       // When
       await HttpClientService.makeRequest(method, endpoint, data);
 
@@ -122,8 +123,7 @@ describe('HttpClientService', () => {
         await HttpClientService.getCSRF();
 
         // Then
-        expect(HttpClientService.makeRequest).toHaveBeenCalledOnce();
-        expect(HttpClientService.makeRequest).toHaveBeenCalledWith(
+        expect(HttpClientService.makeRequest).toHaveBeenCalledExactlyOnceWith(
           'get',
           '/any-csrf-token-endpoint',
         );
@@ -147,8 +147,7 @@ describe('HttpClientService', () => {
         await HttpClientService.get(endpoint, data, axiosOptions);
 
         // Then
-        expect(HttpClientService.makeRequest).toHaveBeenCalledOnce();
-        expect(HttpClientService.makeRequest).toHaveBeenCalledWith(
+        expect(HttpClientService.makeRequest).toHaveBeenCalledExactlyOnceWith(
           'get',
           endpoint,
           data,
@@ -196,8 +195,7 @@ describe('HttpClientService', () => {
         await HttpClientService.post(endpoint, data, axiosOptions);
 
         // Then
-        expect(HttpClientService.makeRequest).toHaveBeenCalledOnce();
-        expect(HttpClientService.makeRequest).toHaveBeenCalledWith(
+        expect(HttpClientService.makeRequest).toHaveBeenCalledExactlyOnceWith(
           'post',
           endpoint,
           { ...data },
@@ -224,6 +222,60 @@ describe('HttpClientService', () => {
         await expect(HttpClientService.post(endpoint, data, axiosOptions)).rejects.toThrow(
           AxiosException,
         );
+      });
+    });
+
+    describe('del', () => {
+      const csrfTokenMock = 'any-csrf-token';
+
+      beforeEach(() => {
+        // Given
+        jest.spyOn(HttpClientService, 'getCSRF');
+      });
+
+      it('should call getCSRF', async () => {
+        // Given
+        jest.mocked(HttpClientService.makeRequest).mockResolvedValueOnce(responseMock);
+        jest.mocked(HttpClientService.getCSRF).mockResolvedValueOnce({ csrfToken: csrfTokenMock });
+
+        // When
+        await HttpClientService.del(endpoint, axiosOptions);
+
+        // Then
+        expect(HttpClientService.getCSRF).toHaveBeenCalledOnce();
+      });
+
+      it('should call makeRequest with parameters', async () => {
+        // Given
+        jest.mocked(HttpClientService.makeRequest).mockResolvedValueOnce(responseMock);
+        jest.mocked(HttpClientService.getCSRF).mockResolvedValueOnce({ csrfToken: csrfTokenMock });
+
+        // When
+        await HttpClientService.del(endpoint, axiosOptions);
+
+        // Then
+        expect(HttpClientService.makeRequest).toHaveBeenCalledExactlyOnceWith(
+          'delete',
+          endpoint,
+          {},
+          {
+            ...axiosOptions,
+            headers: {
+              // Conventional header name
+              // eslint-disable-next-line @typescript-eslint/naming-convention
+              'x-csrf-token': csrfTokenMock,
+            },
+          },
+        );
+      });
+
+      it('should throw an AxiosException on error', async () => {
+        // Given
+        jest.mocked(HttpClientService.makeRequest).mockRejectedValueOnce(errorMock);
+        jest.mocked(HttpClientService.getCSRF).mockResolvedValueOnce({ csrfToken: csrfTokenMock });
+
+        // When / Then
+        await expect(HttpClientService.del(endpoint, axiosOptions)).rejects.toThrow(AxiosException);
       });
     });
   });

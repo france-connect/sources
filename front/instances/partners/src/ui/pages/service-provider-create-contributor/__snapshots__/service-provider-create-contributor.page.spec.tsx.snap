@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ServiceProviderCreateContributorPage should match the snapshot 1`] = `
+<div>
+  <h1
+    class="fr-col-12 fr-col-md-8"
+    data-testid="service-provider-create-contributor-page-title"
+  >
+    Partners.serviceProviderPage.usersSection.contributorCreate.title
+  </h1>
+  <div
+    data-mockid="InstancePageFormComponent"
+  />
+</div>
+`;

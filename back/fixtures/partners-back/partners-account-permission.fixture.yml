@@ -76,6 +76,14 @@ items:
     entityId: '9ed086cd-4c35-4156-94c0-75c356747698'
     account: '@user-bdd-default'
 
+  permissions-bdd-default-sp7-admin:
+    id: 'd545b8c2-a82f-42ad-b4de-47e2523c2b4e'
+    permissionType: 'SP_ADMIN'
+    entity: 'SERVICE_PROVIDER'
+    # @sp7-low
+    entityId: '6df27f42-3a02-4edc-8e9e-fec8f99328f3'
+    account: '@user-bdd-default'
+
   permissions-bdd-default-spi3-contributor:
     id: 'b0b5dc53-1f51-45e9-aab4-e9be58973a85'
     permissionType: 'INSTANCE_CONTRIBUTOR'

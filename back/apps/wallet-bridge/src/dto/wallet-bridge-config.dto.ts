@@ -1,7 +1,8 @@
 import { Type } from 'class-transformer';
 import { IsObject, ValidateNested } from 'class-validator';
 
-import { AppConfig } from '@fc/app';
+import { CogConfig } from '@fc/cog';
+import { ConfigConfig } from '@fc/config';
 import { ExceptionsConfig } from '@fc/exceptions';
 import { I18nConfig } from '@fc/i18n';
 import { LoggerConfig } from '@fc/logger';
@@ -13,11 +14,23 @@ import { RedisConfig } from '@fc/redis';
 import { ServiceProviderAdapterEnvConfig } from '@fc/service-provider-adapter-env';
 import { SessionConfig } from '@fc/session';
 
+import { AppConfig } from './app-config.dto';
+
 export class WalletBridgeConfig {
   @IsObject()
   @ValidateNested()
   @Type(() => AppConfig)
   readonly App: AppConfig;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => CogConfig)
+  readonly Cog: CogConfig;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => ConfigConfig)
+  readonly Config: ConfigConfig;
 
   @IsObject()
   @ValidateNested()

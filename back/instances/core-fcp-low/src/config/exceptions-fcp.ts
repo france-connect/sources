@@ -1,25 +1,46 @@
 import { ExceptionsFcpConfig } from '@fc/exceptions-fcp';
 
+const SESSION_FAQ_URL =
+  'https://aide.franceconnect.gouv.fr/faq/erreurs-connexions/j-ai-un-probleme-de-session-que-faire/';
+
+const SESSION_ERROR_CODES = [
+  'Y190001',
+  'Y190002',
+  'Y190003',
+  'Y190004',
+  'Y190005',
+  'Y190008',
+  'Y190009',
+  'Y190010',
+  'Y190011',
+  'Y190012',
+  'Y190013',
+  'Y190014',
+];
+
+const sessionFaqItems = SESSION_ERROR_CODES.map((errorCode) => ({
+  errorCode,
+  active: true,
+  actionTitle: 'error.faq.title',
+  actionButtonLabel: 'error.faq.button_label',
+  actionHref: SESSION_FAQ_URL,
+}));
+
 export default {
   items: [
-    { errorCode: 'Y600007', active: false },
     { errorCode: 'Y010004', active: false },
     { errorCode: 'Y010006', active: false },
     { errorCode: 'Y010007', active: false },
     { errorCode: 'Y010008', active: false },
-    { errorCode: 'Y010015', active: false },
-    { errorCode: 'Y020000', active: false },
-    { errorCode: 'Y100001', active: false },
-    { errorCode: 'Y100002', active: false },
-    { errorCode: 'Y020021', active: false },
-    { errorCode: 'Y020024', active: false },
-    { errorCode: 'Y020025', active: false },
-    { errorCode: 'Y020028', active: false },
-    { errorCode: 'Y020030', active: false },
-    { errorCode: 'Y030002', active: false },
-    { errorCode: 'Y030004', active: false },
-    { errorCode: 'Y030005', active: false },
-    { errorCode: 'Y100009', active: false },
+    { errorCode: 'Y010009', active: false },
+    {
+      errorCode: 'Y010015',
+      active: true,
+      actionTitle: 'error.faq.title',
+      actionButtonLabel: 'error.faq.button_label',
+      actionHref:
+        'https://aide.franceconnect.gouv.fr/faq/erreurs-connexions/je-ne-peux-plus-me-connecter-avec-le-compte-d-une-personne-decedee-que-faire/',
+    },
     {
       errorCode: 'Y100011',
       active: true,
@@ -30,15 +51,25 @@ export default {
         'https://aide.franceconnect.gouv.fr/faq/erreurs-connexions/je-recois-une-erreur-y100011-que-faire/',
     },
     { errorCode: 'Y030026', active: false },
-    { errorCode: 'Y150001', active: false },
-    { errorCode: 'Y150003', active: false },
-    { errorCode: 'Y160004', active: false },
     { errorCode: 'Y180001', active: false },
-    { errorCode: 'Y190005', active: false },
-    { errorCode: 'Y200001', active: false },
-    { errorCode: 'Y200002', active: false },
     { errorCode: 'Y270001', active: false },
     { errorCode: 'Y270002', active: false },
-    { errorCode: 'Y270003', active: false },
+    {
+      errorCode: 'Y420001',
+      active: true,
+      actionTitle: 'error.faq.title',
+      actionButtonLabel: 'error.faq.button_label',
+      actionHref:
+        'https://aide.franceconnect.gouv.fr/faq/erreurs-connexions/je-veux-utiliser-les-fleches-de-navigation-de-mon-navigateur-mais-j-ai-des-erreurs/',
+    },
+    {
+      errorCode: 'Y420002',
+      active: true,
+      actionTitle: 'error.faq.title',
+      actionButtonLabel: 'error.faq.button_label',
+      actionHref:
+        'https://aide.franceconnect.gouv.fr/faq/erreurs-connexions/je-veux-utiliser-les-fleches-de-navigation-de-mon-navigateur-mais-j-ai-des-erreurs/',
+    },
+    ...sessionFaqItems,
   ],
 } as ExceptionsFcpConfig;

@@ -1,9 +1,11 @@
 import { useCallback } from 'react';
 import { useRevalidator } from 'react-router';
 
+import { PartnersAlertVariants } from '@fc/core-partners';
 import { removeEmptyValues } from '@fc/dto2form';
 import { useDto2FormService } from '@fc/dto2form-service';
 import type { HttpClientDataInterface } from '@fc/http-client';
+import { t } from '@fc/i18n';
 import { useNavigateWithState } from '@fc/routing';
 
 export const useServiceProviderCreateInstance = () => {
@@ -17,8 +19,10 @@ export const useServiceProviderCreateInstance = () => {
   const postSubmit = useCallback(
     (values: HttpClientDataInterface) => {
       const submitState = {
-        instanceName: values.name,
-        title: 'Partners.serviceProvider.createInstance.success',
+        title: t('Partners.serviceProvider.createInstance.success', {
+          instanceName: String(values.name),
+        }),
+        variant: PartnersAlertVariants.INSTANCE,
       };
       revalidate();
       goBackWithSuccess(submitState);

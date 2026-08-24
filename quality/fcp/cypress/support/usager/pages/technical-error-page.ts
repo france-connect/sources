@@ -23,7 +23,9 @@ export default class TechnicalErrorPage {
 
   checkIsSupportButtonVisible(buttonType: 'support' | 'faq'): void {
     const label =
-      buttonType === 'support' ? 'Contactez-nous' : 'Consulter la page d’aide';
+      buttonType === 'support'
+        ? 'Contacter le support'
+        : 'Consulter la page d’aide';
     cy.get('[data-testid="error-support-button"]').contains(label);
   }
 

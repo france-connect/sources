@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="fr" data-fr-scheme="light">
+  <head>
+    <%- include('includes/head.ejs') %>
+  </head>
+  <body id="wb-error-page">
+    <div class="fc-sticky-wrapper">
+      <div class="fc-sticky-body">
+        <%- include('includes/header.ejs') %>
+        <main
+          role="main"
+          id="main-content"
+          class="fr-container fr-mt-10v fr-mt-md-16v"
+        >
+          <div class="fr-grid-row fr-grid-row--gutters">
+            <section
+              data-testid="error-section"
+              class="fr-col-12 fr-col-offset-md-1 fr-col-md-9 fr-mb-6v fr-mb-md-10v"
+            >
+              <h1>Mock Wallet OpenID4VP</h1>
+              <form method="get" action="<%= selectIdentityUrl %>">
+                <label for="deepLink">Deep link</label><br />
+                <textarea
+                  id="deepLink"
+                  name="deepLink"
+                  rows="6"
+                  cols="100"
+                  required
+                  class="fr-input"
+                  placeholder="openid4vp://authorize?..."
+                ></textarea>
+                <input type="hidden" name="flow" value="cross-device" />
+                <br />
+                <button type="submit" class="fr-btn">
+                  Résoudre la demande
+                </button>
+              </form>
+            </section>
+          </div>
+          <div class="fr-grid-row fr-grid-row--gutters"></div>
+        </main>
+      </div>
+      <%- include('includes/footer.ejs') %>
+    </div>
+  </body>
+</html>

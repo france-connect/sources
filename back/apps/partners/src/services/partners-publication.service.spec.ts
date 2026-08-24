@@ -21,7 +21,15 @@ describe('PartnerPublicationService', () => {
     updateStatus: jest.fn(),
   };
 
+  const instanceId = 'instanceId';
+  const versionId = 'versionId';
+  const payload = {
+    key: 'value',
+  } as unknown as ConfigCreateViaMessageDtoPayload;
+
   beforeEach(async () => {
+    jest.resetAllMocks();
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         PartnerPublicationService,
@@ -44,52 +52,81 @@ describe('PartnerPublicationService', () => {
   });
 
   describe('publish', () => {
-    it('should call csmrConfigClient.publish with correct params', async () => {
+    it.each([
+      ActionTypes.CONFIG_CREATE,
+      ActionTypes.CONFIG_UPDATE,
+      ActionTypes.CONFIG_DELETE,
+    ])(
+      'should call csmrConfigClient.publish with a %s message',
+      async (type) => {
+        // When
+        await service.publish(instanceId, versionId, payload, type);
+
+        // Then
+        expect(csmrConfigClientMock.publish).toHaveBeenCalledExactlyOnceWith({
+          type,
+          meta: {
+            instanceId,
+            versionId,
+            publicationStatus: PublicationStatusEnum.PENDING,
+          },
+          payload,
+        });
+      },
+    );
+
+    it('should return the result of csmrConfigClient.publish', async () => {
       // Given
-      const instanceId = 'instanceId';
-      const versionId = 'versionId';
-      const payload = {
-        key: 'value',
-      } as unknown as ConfigCreateViaMessageDtoPayload;
-      const type = ActionTypes.CONFIG_CREATE;
+      const publishResult = Symbol('publishResult');
+      csmrConfigClientMock.publish.mockResolvedValueOnce(publishResult);
 
       // When
-      await service.publish(instanceId, versionId, payload, type);
+      const result = await service.publish(
+        instanceId,
+        versionId,
+        payload,
+        ActionTypes.CONFIG_CREATE,
+      );
 
       // Then
-      expect(csmrConfigClientMock.publish).toHaveBeenCalledWith({
-        type,
-        meta: {
+      expect(result).toBe(publishResult);
+    });
+
+    it('should update the version status to FAILED if publication fails', async () => {
+      // Given
+      csmrConfigClientMock.publish.mockRejectedValueOnce(new Error('error'));
+
+      // When
+      await expect(
+        service.publish(
           instanceId,
           versionId,
-          publicationStatus: PublicationStatusEnum.PENDING,
-        },
-        payload,
+          payload,
+          ActionTypes.CONFIG_CREATE,
+        ),
+      ).rejects.toThrow('error');
+
+      // Then
+      expect(versionMock.updateStatus).toHaveBeenCalledExactlyOnceWith({
+        id: versionId,
+        publicationStatus: PublicationStatusEnum.FAILED,
       });
     });
 
-    it('should update status if publication fails', async () => {
+    it('should rethrow the error if publication fails', async () => {
       // Given
-      const instanceId = 'instanceId';
-      const versionId = 'versionId';
-      const payload = {
-        key: 'value',
-      } as unknown as ConfigCreateViaMessageDtoPayload;
-      const type = ActionTypes.CONFIG_CREATE;
-      csmrConfigClientMock.publish.mockRejectedValue(new Error('error'));
+      const errorMock = new Error('error');
+      csmrConfigClientMock.publish.mockRejectedValueOnce(errorMock);
 
-      // When
-      try {
-        await service.publish(instanceId, versionId, payload, type);
-        // You can't remove the catch argument, it's mandatory
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      } catch (error) {
-        // Then
-        expect(versionMock.updateStatus).toHaveBeenCalledExactlyOnceWith({
-          id: versionId,
-          publicationStatus: PublicationStatusEnum.FAILED,
-        });
-      }
+      // When / Then
+      await expect(
+        service.publish(
+          instanceId,
+          versionId,
+          payload,
+          ActionTypes.CONFIG_CREATE,
+        ),
+      ).rejects.toThrow(errorMock);
     });
   });
 });

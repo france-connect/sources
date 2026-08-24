@@ -11,7 +11,12 @@ import {
   ConfigDatabaseServiceInterface,
   ConfigSaveResultInterface,
 } from '@fc/config-abstract-adapter';
-import { ConfigMessageDto } from '@fc/csmr-config-client';
+import {
+  ConfigCreateMessageDto,
+  ConfigDeleteMessageDto,
+  ConfigMessageDto,
+  ConfigUpdateMessageDto,
+} from '@fc/csmr-config-client';
 import { PartnersServiceProviderInstanceService } from '@fc/partners-service-provider-instance';
 import { PartnersServiceProviderInstanceVersionService } from '@fc/partners-service-provider-instance-version';
 import { OidcClientInterface } from '@fc/service-provider';
@@ -25,12 +30,40 @@ export class ConfigPostgresAdapterService implements ConfigDatabaseServiceInterf
     private readonly typeorm: TypeormService, // Assuming typeorm is a QueryRunner instance
   ) {}
 
-  async create(message: ConfigMessageDto): Promise<ConfigSaveResultInterface> {
+  async create(
+    message: ConfigCreateMessageDto,
+  ): Promise<ConfigSaveResultInterface> {
     return await this.save(message);
   }
 
-  async update(message: ConfigMessageDto): Promise<ConfigSaveResultInterface> {
+  async update(
+    message: ConfigUpdateMessageDto,
+  ): Promise<ConfigSaveResultInterface> {
     return await this.save(message);
+  }
+
+  async delete(
+    message: ConfigDeleteMessageDto,
+  ): Promise<ConfigSaveResultInterface> {
+    const { instanceId } = message.meta;
+
+    await this.typeorm.withTransaction(async (queryRunner: QueryRunner) => {
+      await this.instances.removeInstancePermissionsWithQueryRunner(
+        queryRunner,
+        instanceId,
+      );
+
+      // The currentVersion foreign key is ON DELETE NO ACTION, so it must be
+      // cleared before deleting the instance and its versions (CASCADE).
+      await this.instances.clearCurrentVersionWithQueryRunner(
+        queryRunner,
+        instanceId,
+      );
+
+      await this.instances.deleteWithQueryRunner(queryRunner, instanceId);
+    });
+
+    return { id: instanceId };
   }
 
   private async save(

@@ -9,11 +9,14 @@ import {
   IsString,
   IsUrl,
   Min,
+  ValidateIf,
   ValidateNested,
 } from 'class-validator';
 
+import { KekAlg } from '@fc/cryptography';
 import { JwksDto } from '@fc/jwt';
 
+import { X509_CLIENT_ID_SCHEMES } from '../constants';
 import {
   Openid4vpClientIdSchemeEnum,
   Openid4vpFormat,
@@ -34,6 +37,17 @@ export class ClientMetadata {
 
   @IsObject()
   readonly formats: Formats;
+}
+
+export class Openid4vpX509Config {
+  @IsString()
+  readonly certificateChainPem: string;
+
+  @IsString()
+  readonly privateKeyPem: string;
+
+  @IsEnum(KekAlg)
+  readonly alg: KekAlg;
 }
 
 export class Openid4vpRequestConfig {
@@ -64,7 +78,8 @@ export class Openid4vpRequestConfig {
 }
 
 export class Openid4vpRelayingPartyConfig {
-  @IsString()
+  @IsUrl()
+  @ValidateIf(Openid4vpRelayingPartyConfig.shouldValidateClientId)
   readonly clientId: string;
 
   @IsEnum(Openid4vpClientIdSchemeEnum)
@@ -99,10 +114,18 @@ export class Openid4vpRelayingPartyConfig {
   @Min(1)
   readonly responseDelay: number;
 
+  @IsNumber()
+  @Min(0)
+  readonly redirectDelay: number;
+
   @IsObject()
   @ValidateNested()
   @Type(() => ClientMetadata)
   readonly clientMetadata: ClientMetadata;
+
+  static shouldValidateClientId(config: Openid4vpRelayingPartyConfig) {
+    return !X509_CLIENT_ID_SCHEMES.includes(config.clientIdScheme);
+  }
 }
 
 export class Openid4vpConfig {
@@ -110,6 +133,12 @@ export class Openid4vpConfig {
   @ValidateNested()
   @Type(() => Openid4vpRelayingPartyConfig)
   readonly relayingParty: Openid4vpRelayingPartyConfig;
+
+  @ValidateIf(Openid4vpConfig.shouldValidateX509Config)
+  @IsObject()
+  @ValidateNested()
+  @Type(() => Openid4vpX509Config)
+  readonly x509?: Openid4vpX509Config;
 
   @IsObject()
   @ValidateNested()
@@ -120,4 +149,8 @@ export class Openid4vpConfig {
   @Type(() => Openid4vpRequestConfig)
   @ValidateNested({ each: true })
   readonly requests: Openid4vpRequestConfig[];
+
+  static shouldValidateX509Config(config: Openid4vpConfig) {
+    return X509_CLIENT_ID_SCHEMES.includes(config.relayingParty.clientIdScheme);
+  }
 }

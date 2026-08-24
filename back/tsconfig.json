@@ -116,6 +116,8 @@
       "@fc/eidas/*": ["libs/eidas/src/*"],
       "@fc/elasticsearch": ["libs/elasticsearch/src"],
       "@fc/elasticsearch/*": ["libs/elasticsearch/src/*"],
+      "@fc/eudi-cog": ["libs/eudi-cog/src"],
+      "@fc/eudi-cog/*": ["libs/eudi-cog/src/*"],
       "@fc/eudi": ["libs/eudi/src"],
       "@fc/eudi/*": ["libs/eudi/src/*"],
       "@fc/exceptions": ["libs/exceptions/src"],
@@ -157,6 +159,12 @@
       "@fc/logger-debug-plugin/*": ["libs/logger-debug-plugin/src/*"],
       "@fc/logger-legacy": ["libs/logger-legacy/src"],
       "@fc/logger-legacy/*": ["libs/logger-legacy/src/*"],
+      "@fc/logger-oidc-provider-plugin": [
+        "libs/logger-oidc-provider-plugin/src"
+      ],
+      "@fc/logger-oidc-provider-plugin/*": [
+        "libs/logger-oidc-provider-plugin/src/*"
+      ],
       "@fc/logger-request-plugin": ["libs/logger-request-plugin/src"],
       "@fc/logger-request-plugin/*": ["libs/logger-request-plugin/src/*"],
       "@fc/logger-session-plugin": ["libs/logger-session-plugin/src"],
@@ -178,6 +186,8 @@
       "@fc/mock-identity-provider/*": ["apps/mock-identity-provider/src/*"],
       "@fc/mock-rnipp": ["apps/mock-rnipp/src"],
       "@fc/mock-rnipp/*": ["apps/mock-rnipp/src/*"],
+      "@fc/mock-wallet": ["apps/mock-wallet/src"],
+      "@fc/mock-wallet/*": ["apps/mock-wallet/src/*"],
       "@fc/mock-service-provider": ["apps/mock-service-provider/src"],
       "@fc/mock-service-provider/*": ["apps/mock-service-provider/src/*"],
       "@fc/mongoose": ["libs/mongoose/src"],

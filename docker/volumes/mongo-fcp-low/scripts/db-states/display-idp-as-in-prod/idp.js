@@ -63,23 +63,23 @@ const PRODUCTION_IDPS_LOW = {
     title: "MSA",
     image: "fi-msa.svg",
   },
-  YRIS: {
-    order: 5,
-    uid: "f5f97e5a-0f73-4ac8-8da7-b1d015cb5a7e",
-    title: "YRIS",
-    image: "fi-yris.svg",
-  },
   FRANCE_IDENTITE: {
-    order: 6,
+    order: 5,
     uid: "0b2d3258-0ef4-42d8-981f-083175368c92",
     title: "France Identité",
     image: "fi-france-identite.svg",
   },
   TRUSTME: {
-    order: 7,
+    order: 6,
     uid: "84b31772-0510-4d98-8ad8-d179919f7305",
     title: "TrustMe",
     image: "fi-trustme.svg",
+  },
+  APCV: {
+    order: 7,
+    uid: "f5f97e5a-0f73-4ac8-8da7-b1d015cb5a7e", // the previous YRIS uid has been used
+    title: "APCV",
+    image: "fi-apcv.svg",
   },
   AIDANTS_CONNECT: {
     order: 98,

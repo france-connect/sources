@@ -103,7 +103,6 @@ export class DatapassApiService {
         this.httpService.get<unknown[]>(url, {
           params: {
             state: 'validated',
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             definition_id: 'france_connect',
             limit: DATAPASS_PAGE_SIZE,
             offset,

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="fr" data-fr-scheme="light">
+  <head>
+    <%- include('includes/head.ejs') %>
+  </head>
+  <body id="wb-error-page">
+    <div class="fc-sticky-wrapper">
+      <div class="fc-sticky-body">
+        <%- include('includes/header.ejs') %>
+        <main
+          role="main"
+          id="main-content"
+          class="fr-container fr-mt-10v fr-mt-md-16v"
+        >
+          <div class="fr-grid-row fr-grid-row--gutters">
+            <section
+              data-testid="identity-select-section"
+              class="fr-col-12 fr-col-offset-md-1 fr-col-md-9 fr-mb-6v fr-mb-md-10v"
+            >
+              <h1>Choisir une identité</h1>
+              <p>Sélectionnez l'identité mock à utiliser pour cette présentation.</p>
+
+              <% if (identities.length) { %>
+              <div class="fr-grid-row fr-grid-row--gutters">
+                <% identities.forEach(function (identity) {
+                  var givenName = identity.attributes.given_name;
+                  var familyName = identity.attributes.family_name;
+                  var label =
+                    givenName && familyName
+                      ? givenName + ' ' + familyName
+                      : 'Identité ' + identity.index;
+                %>
+                <div class="fr-col-12 fr-col-md-6">
+                  <div class="fr-card fr-enlarge-link">
+                    <div class="fr-card__body">
+                      <div class="fr-card__content">
+                        <h3 class="fr-card__title">
+                          <a
+                            href="<%= authorizeUrl %>?deepLink=<%= encodeURIComponent(url) %>&identityIndex=<%= identity.index %>&flow=<%= flow %>"
+                          >
+                            <%= label %>
+                          </a>
+                        </h3>
+                        <p class="fr-card__desc">
+                          Type de document :
+                          <code><%= identity.docType %></code>
+                        </p>
+                        <p class="fr-card__desc">
+                          Cas de test :
+                          <code>"<%= identity.attributes.test_case %>"</code>
+                        </p>
+                        <div class="fr-card__start">
+                          <p class="fr-card__detail">
+                            Index CSV : <code><%= identity.index %></code>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <% }) %>
+              </div>
+              <% } else { %>
+              <p>Aucune identité mock chargée.</p>
+              <% } %>
+            </section>
+          </div>
+        </main>
+      </div>
+      <%- include('includes/footer.ejs') %>
+    </div>
+  </body>
+</html>

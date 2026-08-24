@@ -2,52 +2,134 @@
 <html lang="<%= $translate('meta.lang') %>" data-fr-scheme="light">
   <head>
     <%- include('includes/head.ejs') %>
-    <!-- <script src="<%= $asset('/js/oid4vp.js') %>" defer></script> -->
-    <!-- <link rel="stylesheet" href="<%= $asset('/css/pages/oid4vp.css') %>" /> -->
-    <!-- <%- include('pages/error/error.page-title.ejs') %> -->
+    <script src="<%= $asset('/js/oid4vp.js') %>" defer></script>
+    <link rel="stylesheet" href="<%= $asset('/css/pages/oid4vp.css') %>" />
+    <title><%= $translate('interaction.page_title') %></title>
   </head>
   <body id="wb-interaction-page">
     <div class="fc-sticky-wrapper">
       <div class="fc-sticky-body">
+        <%- include('includes/skiplinks.ejs') %>
         <%- include('includes/header.ejs') %>
         <main
           role="main"
           id="main-content"
-          class="fr-container fr-mt-5w fr-mt-md-8w"
+          class="fr-container fr-mt-10v fr-mt-md-16v"
         >
-          <h1>🇪🇺🔒🪪 Connexion OpenID4VP</h1>
-          <div class="fr-grid-row">
-            <div class="fr-grid-col-12">
-              <a href="<%= httpRequestUri %>" class="fr-link">
-                <img src="<%= qrcodeDataUrl %>" alt="QR Code" />
-              </a>
-            </div>
-
-            <div class="fr-grid-col-12">
-              <div class="fc-text--center qr-state" id="countDown"></div>
-              <div class="fc-text--center qr-state pending" id="readSuccess">
-                ✅
-              </div>
-            </div>
-          </div>
           <div class="fr-grid-row fr-grid-row--gutters">
-            <form>
-              <input
-                type="text"
-                name="requestUri"
-                value="<%= requestUri %>"
-                class="fr-input"
-              />
-              <input
-                type="text"
-                name="httpRequestUri"
-                value="<%= httpRequestUri %>"
-                class="fr-input"
-              />
-              <input type="text" name="successUrl" value="<%= successUrl %>" />
-              <input type="hidden" name="statusUrl" value="<%= statusUrl %>" />
-              <input type="hidden" name="timeout" value="<%= timeout %>" />
-            </form>
+            <div class="fr-col-12 fr-col-md-8 fr-col-offset-md-2">
+              <h1>
+                <%= $translate('interaction.title') %>
+              </h1>
+
+              <div class="fr-hidden-md">
+                <a
+                  href="<%= requestUri %>"
+                  class="fr-btn fc-btn--full-width fr-mb-4v"
+                  data-testid="wallet-open-app-button"
+                >
+                  <%= $translate('interaction.open_app') %>
+                </a>
+                <p><%= $translate('interaction.scan_fallback_mobile') %></p>
+              </div>
+
+              <p class="fr-hidden fr-unhidden-md">
+                <%= $translate('interaction.scan_instructions') %>
+              </p>
+
+              <div class="fc-text--center">
+                <div class="wb-qrcode-wrapper" id="wb-qrcode-wrapper">
+                  <img
+                    class="wb-qrcode"
+                    src="<%= qrcodeDataUrl %>"
+                    alt="<%= $translate('interaction.qr_code_alt') %>"
+                    data-testid="wallet-qrcode"
+                  />
+                  <div role="status" id="wb-status-live-region"></div>
+                  <div role="alert" id="wb-alert-live-region"></div>
+                </div>
+              </div>
+
+              <template id="wb-status-pending-template">
+                <div
+                  class="wb-qrcode-overlay"
+                  data-testid="wallet-status-pending"
+                >
+                  <p
+                    class="fr-badge fr-badge--info fr-badge--sm fr-badge--no-icon fr-mb-0"
+                  >
+                    <span
+                      class="fr-icon-timer-fill fr-icon--xs fr-mr-1v"
+                      aria-hidden="true"
+                    ></span>
+                    <%= $translate('interaction.status.pending') %>
+                  </p>
+                </div>
+              </template>
+              <template id="wb-status-success-template">
+                <div
+                  class="wb-qrcode-overlay"
+                  data-testid="wallet-status-success"
+                >
+                  <p class="fr-badge fr-badge--success fr-badge--sm fr-mb-2v">
+                    <%= $translate('interaction.status.success') %>
+                  </p>
+                  <p class="fr-text--sm fr-mb-0">
+                    <%= $translate('interaction.status.success_redirect') %>
+                  </p>
+                </div>
+              </template>
+              <template id="wb-status-error-template">
+                <div
+                  class="wb-qrcode-overlay"
+                  data-testid="wallet-status-error"
+                >
+                  <p class="fr-badge fr-badge--error fr-badge--sm fr-mb-2v">
+                    <%= $translate('interaction.status.error') %>
+                  </p>
+                  <p class="fr-text--sm wb-text--error fr-mb-0">
+                    <%= $translate('interaction.status.error_retry') %>
+                  </p>
+                </div>
+              </template>
+
+              <h2 class="fr-mt-6v fr-mt-md-8v">
+                <%= $translate('interaction.how_to.title') %>
+              </h2>
+              <ol class="fr-mb-0">
+                <li><%= $translate('interaction.how_to.step1') %></li>
+                <li><%= $translate('interaction.how_to.step2') %></li>
+                <li><%= $translate('interaction.how_to.step3') %></li>
+              </ol>
+
+              <div class="fr-callout fr-icon-info-line fr-mt-8v">
+                <h2 class="fr-callout__title">
+                  <%= $translate('interaction.about.title') %>
+                </h2>
+                <p class="fr-callout__text">
+                  <%= $translate('interaction.about.body') %>
+                </p>
+                <a
+                  href="https://franceconnect.gouv.fr/"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  class="fr-btn fr-btn--secondary fr-btn--icon-right fr-icon-external-link-line"
+                  title="<%= $translate('interaction.about.link_label') %> - <%= $translate('common.new_window') %>"
+                  data-testid="wallet-about-link"
+                >
+                  <%= $translate('interaction.about.link_label') %>
+                </a>
+              </div>
+
+              <input type="hidden" id="wb-sse-success-url" value="<%= successUrl %>" />
+              <input type="hidden" id="wb-sse-status-url" value="<%= statusUrl %>" />
+              <input type="hidden" id="wb-sse-timeout" value="<%= timeout %>" />
+              <input type="hidden" id="wb-sse-redirect-delay" value="<%= redirectDelay %>" />
+
+              <% if($config('App.showDevTools') === true) { %>
+                <%- include('includes/dev-tools.ejs') %>
+              <% } %>
+            </div>
           </div>
         </main>
       </div>

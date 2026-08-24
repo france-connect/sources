@@ -11,21 +11,19 @@ import {
 
 import { parameterizedPath, validateDto } from '@fc/common';
 import { ConfigService } from '@fc/config';
-import { EudiDocTypes, EudiPidInterface } from '@fc/eudi';
-import { extractSimpleDocument } from '@fc/mdoc';
+import { EudiDocTypes, EudiPidDto, EudiPidInterface } from '@fc/eudi';
+import { extractSimpleDocument, SimpleDocumentInterface } from '@fc/mdoc';
 import {
   CONFIG_NAMESPACE,
   Openid4vpConfig,
+  Openid4vpInteractionDto,
   Openid4vpInteractionStatus,
   Openid4vpService,
 } from '@fc/openid4vp';
 
-import {
-  AuthorizeRequestUriParamsDto,
-  AuthorizeResponseBodyDto,
-  EudiPidDto,
-} from '../dto';
-import { Routes } from '../enums';
+import { DEFAULT_ERROR, DEFAULT_ERROR_DESCRIPTION } from '../constants';
+import { AuthorizeRequestUriParamsDto, AuthorizeResponseBodyDto } from '../dto';
+import { WalletBridgeRoutes } from '../enums';
 import {
   WalletBridgeInvalidInteractionStatusException,
   WalletBridgeInvalidPidException,
@@ -42,7 +40,7 @@ export class OpenId4vpApiController {
    * @todo Consume requestObject ?
    * Check the spec to see if the requestObject should be used only once.
    */
-  @Get(Routes.OPENID4VP_AUTHORIZE_REQUEST_OBJECT)
+  @Get(WalletBridgeRoutes.OPENID4VP_AUTHORIZE_REQUEST_OBJECT)
   @UsePipes(new ValidationPipe({ whitelist: true }))
   @Header('cache-control', 'no-store')
   @Header('content-type', 'application/oauth-authz-req+jwt')
@@ -57,12 +55,12 @@ export class OpenId4vpApiController {
     return requestObject.jar.authorizationRequestJwt;
   }
 
-  @Post(Routes.OPENID4VP_AUTHORIZE_RESPONSE)
+  @Post(WalletBridgeRoutes.OPENID4VP_AUTHORIZE_RESPONSE)
   @Header('cache-control', 'no-store')
   @Header('content-type', 'application/json;charset=UTF-8')
   @UsePipes(new ValidationPipe({ whitelist: true }))
   async authorizeResponse(@Body() body: AuthorizeResponseBodyDto) {
-    const { state } = body;
+    const { state, error } = body;
 
     const interaction = await this.openid4vp.getInteractionByState(state);
 
@@ -72,17 +70,25 @@ export class OpenId4vpApiController {
       throw new WalletBridgeInvalidInteractionStatusException();
     }
 
-    const documents = await this.openid4vp.parseResponse(body, interaction);
+    /** @todo #2676 Handle errors sent inside the encrypted JWE response */
+    if (error) {
+      await this.saveWalletError(interaction, body);
 
-    const identity = extractSimpleDocument<EudiPidInterface>(
-      documents,
-      EudiDocTypes.PID,
-    );
+      return {};
+    }
 
-    const errors = await validateDto(identity, EudiPidDto, { whitelist: true });
+    let identity: SimpleDocumentInterface<EudiPidInterface>;
 
-    if (errors.length > 0) {
-      throw new WalletBridgeInvalidPidException();
+    try {
+      identity = await this.extractIdentity(body, interaction);
+    } catch (exception) {
+      await this.openid4vp.saveError(
+        interaction,
+        DEFAULT_ERROR,
+        DEFAULT_ERROR_DESCRIPTION,
+      );
+
+      throw exception;
     }
 
     await this.openid4vp.saveResponse(interaction, [identity]);
@@ -95,5 +101,40 @@ export class OpenId4vpApiController {
         interactionId: interaction.id,
       }),
     };
+  }
+
+  private async saveWalletError(
+    interaction: Openid4vpInteractionDto,
+    body: AuthorizeResponseBodyDto,
+  ): Promise<void> {
+    const { error, error_description: errorDescription } = body;
+
+    await this.openid4vp.saveError(
+      interaction,
+      error,
+      errorDescription || DEFAULT_ERROR_DESCRIPTION,
+    );
+  }
+
+  private async extractIdentity(
+    body: AuthorizeResponseBodyDto,
+    interaction: Openid4vpInteractionDto,
+  ): Promise<SimpleDocumentInterface<EudiPidInterface>> {
+    const documents = await this.openid4vp.parseResponse(body, interaction);
+
+    const identity = extractSimpleDocument<EudiPidInterface>(
+      documents,
+      EudiDocTypes.PID,
+    );
+
+    const errors = await validateDto(identity, EudiPidDto, {
+      whitelist: true,
+    });
+
+    if (errors.length > 0) {
+      throw new WalletBridgeInvalidPidException(errors);
+    }
+
+    return identity;
   }
 }

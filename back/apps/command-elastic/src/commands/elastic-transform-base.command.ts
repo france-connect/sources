@@ -56,7 +56,8 @@ export abstract class ElasticTransformBaseCommand extends CommandRunner {
   @Option({
     flags: '--period <period>',
     description:
-      'Period (optional). If omitted, defaults to the previous month. Example: 2025-08',
+      'Period (optional). Format depends on --range: YYYY-MM for MONTH, YYYY for YEAR, YYYY-01 or YYYY-07 for SEMESTER. ' +
+      'If omitted, defaults to the previous period for the selected range.',
   })
   parsePeriod(val: string): string {
     return val;

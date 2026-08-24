@@ -1,7 +1,7 @@
 import { Strings } from '@fc/common';
 import type { HttpClientDataInterface } from '@fc/http-client';
 
-export const removeEmptyValues = async (values: HttpClientDataInterface) => {
+export const removeEmptyValues = (values: HttpClientDataInterface): HttpClientDataInterface => {
   const filteredValues = Object.entries(values).reduce((acc, [key, value]) => {
     const isEmptyString = value === Strings.EMPTY_STRING;
 
@@ -15,5 +15,5 @@ export const removeEmptyValues = async (values: HttpClientDataInterface) => {
     return { ...acc, [key]: value };
   }, {});
 
-  return Promise.resolve(filteredValues);
+  return filteredValues;
 };

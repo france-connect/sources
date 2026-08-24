@@ -16,6 +16,7 @@ const VALIDATOR_OPTIONS = {
 @Injectable()
 export class CsvService<T> implements RepositoryInterface<T> {
   private collection: T[];
+  private indexes: Record<string, Record<string, T>> = {};
 
   constructor(
     private readonly logger: LoggerService,
@@ -72,6 +73,18 @@ export class CsvService<T> implements RepositoryInterface<T> {
     } catch (error) {
       throw new CsvParsingException();
     }
+  }
+
+  createIndex(column: string): void {
+    this.indexes[column] = {};
+
+    this.collection.forEach((row) => {
+      this.indexes[column][row[column]] = row;
+    });
+  }
+
+  getByIndex(index: string, key: string): T | null {
+    return this.indexes[index][key] || null;
   }
 
   // Needed to match the interface

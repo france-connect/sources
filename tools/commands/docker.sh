@@ -153,19 +153,45 @@ _get_env() {
 }
 
 _init_stats() {
+  local clean=false
+  if [ "${1:-}" = "--clean" ]; then
+    clean=true
+  fi
+
   echo "========================================="
   echo "  Initializing Statistics Stack"
   echo "========================================="
 
-  # Step 1: Initialize Kibana stack
+  if [ "$clean" = true ]; then
+    echo ""
+    echo "Removing Elasticsearch data..."
+    [ -n "${DOCKER_DIR}" ] || { echo "DOCKER_DIR is not set"; exit 1; }
+    sudo rm -rf "${DOCKER_DIR}/volumes/elasticsearch/data/nodes"
+  fi
+
   echo ""
-  echo "Step 1/2: Switching to Kibana stack..."
+  echo "Switching to Kibana stack..."
   _switch "kibana"
 
-  # Step 2: Reset or clears statistics related to Elasticsearch
   echo ""
-  echo "Step 2/2: Resets or clears statistics related to Elasticsearch."
+  _wait_for_es || exit 1
+
+  echo ""
+  echo "Setting kibana_system password..."
+  $DOCKER_COMPOSE exec $NO_TTY elasticsearch curl -sk -u docker-stack:docker-stack -XPOST "https://elasticsearch:9200/_security/user/kibana_system/_password" -H 'Content-Type: application/json' -d '{"password":"kibana_system_pwd"}' >/dev/null
+  echo "  kibana_system password set."
+
+  echo ""
+  echo "Recreating Kibana to apply credentials..."
+  $DOCKER_COMPOSE up -d --force-recreate --no-deps kibana
+
+  echo ""
+  echo "Resets statistics related to Elasticsearch."
   _reset_stats
+
+  echo ""
+  echo "Creating Elasticsearch ingest pipeline..."
+  _create_es_ingest_pipeline
 
   echo ""
   echo "========================================="

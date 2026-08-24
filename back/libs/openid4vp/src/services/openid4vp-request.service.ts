@@ -1,5 +1,4 @@
 import { createOpenid4vpAuthorizationRequest } from '@openid4vc/openid4vp';
-import { v4 as uuid } from 'uuid';
 
 import { Injectable } from '@nestjs/common';
 
@@ -8,6 +7,7 @@ import { ConfigService } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
 import { SessionService } from '@fc/session';
 
+import { X509_CLIENT_ID_SCHEMES } from '../constants';
 import {
   Openid4vpConfig,
   Openid4vpInteractionDto,
@@ -41,7 +41,7 @@ export class Openid4vpRequestService {
     });
 
     const url = new URL('openid4vp://authorize');
-    url.searchParams.set('client_id', relayingParty.clientId);
+    url.searchParams.set('client_id', this.resolveClientId(interaction));
     url.searchParams.set('request_uri', requestUri);
     url.searchParams.set('response_type', request.responseType);
 
@@ -58,7 +58,10 @@ export class Openid4vpRequestService {
     return request;
   }
 
-  generateInteractionParams(presentationId: string): Openid4vpInteractionDto {
+  generateInteractionParams(
+    id: string,
+    presentationId: string,
+  ): Openid4vpInteractionDto {
     const { relayingParty } =
       this.config.get<Openid4vpConfig>(CONFIG_NAMESPACE);
 
@@ -66,7 +69,7 @@ export class Openid4vpRequestService {
     const now = Math.floor(Date.now() / 1000);
 
     return {
-      id: uuid(),
+      id,
       presentationId,
       state: this.crypto.genRandomString(relayingParty.stateLength),
       nonce: this.crypto.genRandomString(relayingParty.nonceLength),
@@ -98,9 +101,8 @@ export class Openid4vpRequestService {
        * @todo #2622 change by a more secure client_id_scheme
        */
       client_id_scheme: relayingParty.clientIdScheme,
-      client_id: parameterizedPath(relayingParty.clientId, urlParams),
+      client_id: this.resolveClientId(interaction),
       response_uri: parameterizedPath(relayingParty.responseUri, urlParams),
-      redirect_uri: parameterizedPath(relayingParty.redirectUri, urlParams),
       request_uri: parameterizedPath(relayingParty.requestUri, urlParams),
       response_type: request.responseType,
       response_mode: request.responseMode,
@@ -160,6 +162,19 @@ export class Openid4vpRequestService {
     });
 
     return requestObject;
+  }
+
+  private resolveClientId(interaction: Openid4vpInteractionDto): string {
+    const { relayingParty } =
+      this.config.get<Openid4vpConfig>(CONFIG_NAMESPACE);
+
+    if (X509_CLIENT_ID_SCHEMES.includes(relayingParty.clientIdScheme)) {
+      return this.openid4vpCrypto.getX509ClientId();
+    }
+
+    return parameterizedPath(relayingParty.clientId, {
+      interactionId: interaction.id,
+    });
   }
 
   private generateConstraintField(

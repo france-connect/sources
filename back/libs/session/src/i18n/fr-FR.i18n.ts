@@ -12,17 +12,17 @@ export const frFR: I18nTranslationsMapType = {
   'Session.exceptions.sessionCannotCommitUndefinedSession':
     'Votre session a expiré, fermez l’onglet de votre navigateur et reconnectez-vous.',
   'Session.exceptions.sessionInvalidSessionData':
-    'Votre session est invalide, fermez l’onglet de votre navigateur et reconnectez-vous.',
+    'Votre session a expiré ou est invalide, fermez l’onglet de votre navigateur et reconnectez-vous.',
   'Session.exceptions.sessionInvalidSession':
     'Votre session a expiré ou est invalide, fermez l’onglet de votre navigateur et reconnectez-vous.',
   'Session.exceptions.sessionInvalidSetCall':
-    'Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous. Si le problème persiste, contacter le support.',
+    'Votre session a expiré ou est invalide, fermez l’onglet de votre navigateur et reconnectez-vous.',
   'Session.exceptions.sessionNoSessionId':
     'Votre session a expiré ou est invalide, fermez l’onglet de votre navigateur et reconnectez-vous.',
   'Session.exceptions.sessionNotFound':
     'Votre session a expiré ou est invalide, fermez l’onglet de votre navigateur et reconnectez-vous.',
   'Session.exceptions.sessionStorage':
-    'Votre session a expiré ou est invalide, fermez l’onglet de votre navigateur et reconnectez-vous. Si le problème persiste, contacter le support',
+    'Votre session a expiré ou est invalide, fermez l’onglet de votre navigateur et reconnectez-vous.',
   'Session.exceptions.sessionSubNotFound':
     'Votre session a expiré ou est invalide, fermez l’onglet de votre navigateur et reconnectez-vous.',
 };

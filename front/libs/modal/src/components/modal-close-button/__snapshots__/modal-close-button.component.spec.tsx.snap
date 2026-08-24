@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ModalCloseButtonComponent should match the snapshot 1`] = `
+<div>
+  <button
+    aria-controls="any-modal-id-mock"
+    class="fr-btn--close fr-btn"
+    data-testid="any-modal-id-mock-close-button"
+    title="FC.Common.close.mock_value"
+    type="button"
+  >
+    FC.Common.close.mock_value
+  </button>
+</div>
+`;

@@ -17,6 +17,10 @@ import {
   AccountPermissionService,
 } from '@fc/access-control';
 import { CryptographyService } from '@fc/cryptography';
+import {
+  ActionTypes,
+  ConfigCreateViaMessageDtoPayload,
+} from '@fc/csmr-config-client';
 import { DatapassEvents, SimplifiedDatapassPayload } from '@fc/datapass';
 import { LoggerService } from '@fc/logger';
 import { PartnersAccountService } from '@fc/partners-account';
@@ -42,7 +46,10 @@ import {
   AccessControlPermission,
   CreatedBy,
 } from '../enums';
-import { ServiceProviderCreationResultInterface } from '../interfaces';
+import {
+  InstancePublicationInterface,
+  ServiceProviderCreationResultInterface,
+} from '../interfaces';
 import { PartnersDatapassService } from './partners-datapass.service';
 import { PartnersInstanceService } from './partners-instance.service';
 import { PartnersInstanceVersionFormService } from './partners-instance-version-form.service';
@@ -123,6 +130,24 @@ describe('PartnersDatapassService', () => {
       },
     },
   } as PartnersServiceProviderInstance;
+
+  const publication1Mock: InstancePublicationInterface = {
+    instanceId: instance1Mock.id,
+    versionId: 'version-1-id',
+    payload: {
+      name: 'instance name 1',
+    } as ConfigCreateViaMessageDtoPayload,
+    type: ActionTypes.CONFIG_UPDATE,
+  };
+
+  const publication2Mock: InstancePublicationInterface = {
+    instanceId: instance2Mock.id,
+    versionId: 'version-2-id',
+    payload: {
+      name: 'instance name 2',
+    } as ConfigCreateViaMessageDtoPayload,
+    type: ActionTypes.CONFIG_UPDATE,
+  };
 
   const serviceProviderMock: PartnersServiceProvider = {
     id: 'service-provider-id',
@@ -330,7 +355,10 @@ describe('PartnersDatapassService', () => {
         .fn()
         .mockResolvedValue(creationResultMock);
 
-      service['updateInstances'] = jest.fn().mockResolvedValue(undefined);
+      service['updateInstances'] = jest
+        .fn()
+        .mockResolvedValue([publication1Mock, publication2Mock]);
+      service['publishInstances'] = jest.fn().mockResolvedValue(undefined);
     });
 
     it('should call upsertServiceProviderTransactional within a transaction', async () => {
@@ -365,6 +393,68 @@ describe('PartnersDatapassService', () => {
         queryRunnerMock,
         serviceProviderMock.id,
       );
+    });
+
+    it('should update the instances in a dedicated transaction', async () => {
+      // When
+      await service['handleApproveEvent'](simplifiedDatapassPayloadMock);
+
+      // Then
+      expect(typeormServiceMock.withTransaction).toHaveBeenCalledTimes(2);
+    });
+
+    it('should publish the instances updates returned by the transaction', async () => {
+      // When
+      await service['handleApproveEvent'](simplifiedDatapassPayloadMock);
+
+      // Then
+      expect(service['publishInstances']).toHaveBeenCalledExactlyOnceWith(
+        [publication1Mock, publication2Mock],
+        serviceProviderMock.id,
+      );
+    });
+
+    it('should publish the instances updates once the transaction is over', async () => {
+      // Given
+      const callsMock: string[] = [];
+
+      typeormServiceMock.withTransaction.mockImplementation(
+        async (callback) => {
+          callsMock.push('transaction:start');
+          const result = await callback(queryRunnerMock);
+          callsMock.push('transaction:end');
+
+          return result;
+        },
+      );
+      service['publishInstances'] = jest.fn().mockImplementation(() => {
+        callsMock.push('publish');
+      });
+
+      // When
+      await service['handleApproveEvent'](simplifiedDatapassPayloadMock);
+
+      // Then
+      expect(callsMock).toStrictEqual([
+        'transaction:start',
+        'transaction:end',
+        'transaction:start',
+        'transaction:end',
+        'publish',
+      ]);
+    });
+
+    it('should not publish the instances updates if the update transaction fails', async () => {
+      // Given
+      typeormServiceMock.withTransaction
+        .mockImplementationOnce((callback) => callback(queryRunnerMock))
+        .mockRejectedValueOnce(new Error('transaction failed'));
+
+      // When / Then
+      await expect(
+        service['handleApproveEvent'](simplifiedDatapassPayloadMock),
+      ).rejects.toThrow(PartnersServiceProviderCreationFailureException);
+      expect(service['publishInstances']).not.toHaveBeenCalled();
     });
 
     it('should log success message', async () => {
@@ -1092,6 +1182,12 @@ describe('PartnersDatapassService', () => {
   });
 
   describe('updateInstances', () => {
+    beforeEach(() => {
+      instanceServiceMock.update
+        .mockResolvedValueOnce(publication1Mock)
+        .mockResolvedValueOnce(publication2Mock);
+    });
+
     it('should update instances successfully', async () => {
       // When
       await service['updateInstances'](queryRunnerMock, serviceProviderMock.id);
@@ -1115,10 +1211,30 @@ describe('PartnersDatapassService', () => {
       );
     });
 
+    it('should return the publication descriptors of the updated instances', async () => {
+      // When
+      const result = await service['updateInstances'](
+        queryRunnerMock,
+        serviceProviderMock.id,
+      );
+
+      // Then
+      expect(result).toEqual([publication1Mock, publication2Mock]);
+    });
+
+    it('should not publish the updates, publication happening after the transaction', async () => {
+      // When
+      await service['updateInstances'](queryRunnerMock, serviceProviderMock.id);
+
+      // Then
+      expect(publicationServiceMock.publish).not.toHaveBeenCalled();
+    });
+
     it('should log warning message on failure', async () => {
       // Given
       const error = new Error('Database error');
-      instanceServiceMock.update = jest.fn().mockRejectedValue(error);
+      instanceServiceMock.update.mockReset();
+      instanceServiceMock.update.mockRejectedValue(error);
 
       // When
       await service['updateInstances'](queryRunnerMock, serviceProviderMock.id);
@@ -1131,6 +1247,100 @@ describe('PartnersDatapassService', () => {
         instance: instance1Mock,
         serviceProviderId: serviceProviderMock.id,
       });
+    });
+
+    it('should keep updating the remaining instances and return only the successful descriptors when one update fails', async () => {
+      // Given
+      instanceServiceMock.update.mockReset();
+      instanceServiceMock.update
+        .mockRejectedValueOnce(new Error('Database error'))
+        .mockResolvedValueOnce(publication2Mock);
+
+      // When
+      const result = await service['updateInstances'](
+        queryRunnerMock,
+        serviceProviderMock.id,
+      );
+
+      // Then
+      expect(result).toEqual([publication2Mock]);
+    });
+  });
+
+  describe('publishInstances', () => {
+    it('should publish each given publication descriptor', async () => {
+      // When
+      await service['publishInstances'](
+        [publication1Mock, publication2Mock],
+        serviceProviderMock.id,
+      );
+
+      // Then
+      expect(publicationServiceMock.publish).toHaveBeenNthCalledWith(
+        1,
+        publication1Mock.instanceId,
+        publication1Mock.versionId,
+        publication1Mock.payload,
+        publication1Mock.type,
+      );
+      expect(publicationServiceMock.publish).toHaveBeenNthCalledWith(
+        2,
+        publication2Mock.instanceId,
+        publication2Mock.versionId,
+        publication2Mock.payload,
+        publication2Mock.type,
+      );
+    });
+
+    it('should not publish anything when there is no publication descriptor', async () => {
+      // When
+      await service['publishInstances']([], serviceProviderMock.id);
+
+      // Then
+      expect(publicationServiceMock.publish).not.toHaveBeenCalled();
+    });
+
+    it('should log warning message on failure', async () => {
+      // Given
+      const error = new Error('Broker error');
+      publicationServiceMock.publish.mockRejectedValue(error);
+
+      // When
+      await service['publishInstances'](
+        [publication1Mock],
+        serviceProviderMock.id,
+      );
+
+      // Then
+      expect(loggerServiceMock.warning).toHaveBeenCalledExactlyOnceWith({
+        message: 'Failed to publish instances',
+        error: error.message,
+        stack: error.stack,
+        publication: publication1Mock,
+        serviceProviderId: serviceProviderMock.id,
+      });
+    });
+
+    it('should keep publishing the remaining descriptors when one publication fails', async () => {
+      // Given
+      publicationServiceMock.publish.mockRejectedValueOnce(
+        new Error('Broker error'),
+      );
+
+      // When
+      await service['publishInstances'](
+        [publication1Mock, publication2Mock],
+        serviceProviderMock.id,
+      );
+
+      // Then
+      expect(publicationServiceMock.publish).toHaveBeenNthCalledWith(
+        2,
+        publication2Mock.instanceId,
+        publication2Mock.versionId,
+        publication2Mock.payload,
+        publication2Mock.type,
+      );
     });
   });
 });

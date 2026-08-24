@@ -113,6 +113,8 @@ export const enGB = {
   'claim.cnaf_allocataires': ' Identités allocataire et conjoint',
   'claim.cnaf_enfants': 'Identités enfants',
   'claim.cnaf_adresse': 'Adresse du foyer',
+  'claim.cnav_allocation_rentree_scolaire':
+    'Statut allocation de rentrée scolaire',
 
   // Direction du Service National et de la Jeunesse
   'claim.dsnj_statut_service_national': 'Statut Service National',

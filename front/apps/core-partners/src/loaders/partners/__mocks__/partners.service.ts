@@ -1,4 +1,5 @@
 export const PartnersService = {
+  deleteInstance: jest.fn(),
   linkInstancesToServiceProvider: jest.fn(),
   loadAllInstances: jest.fn(),
   loadAllServiceProviders: jest.fn(),

@@ -25,10 +25,12 @@ import { OidcClientInterface } from '@fc/service-provider';
 import { TypeormService } from '@fc/typeorm';
 
 import { AccessControlEntity, AccessControlPermission } from '../enums';
+import { PartnersInstanceNotFoundException } from '../exceptions';
 import {
   InstanceCreationContextInterface,
   InstanceCreationOptionsInterface,
   InstanceCreationResultInterface,
+  InstancePublicationInterface,
   InstanceVersionFromSpPayloadInterface,
 } from '../interfaces';
 import { PartnersInstanceVersionFormService } from './partners-instance-version-form.service';
@@ -97,7 +99,7 @@ export class PartnersInstanceService {
     instance: PartnersServiceProviderInstance,
     serviceProviderId: string,
     updatedBy: string,
-  ): Promise<void> {
+  ): Promise<InstancePublicationInterface> {
     const fullData = await this.form.fromFormValues(
       data,
       serviceProviderId,
@@ -115,12 +117,34 @@ export class PartnersInstanceService {
       updatedBy,
     };
 
-    await this.publication.publish(
-      instance.id,
+    return {
+      instanceId: instance.id,
       versionId,
-      fullDataWithCreatedInfo,
-      ActionTypes.CONFIG_UPDATE,
-    );
+      payload: fullDataWithCreatedInfo,
+      type: ActionTypes.CONFIG_UPDATE,
+    };
+  }
+
+  async delete(instanceId: string): Promise<void> {
+    await this.typeorm.withTransaction(async (queryRunner) => {
+      const instance = await this.instance.getByIdWithQueryRunner(
+        queryRunner,
+        instanceId,
+      );
+
+      if (!instance) {
+        throw new PartnersInstanceNotFoundException();
+      }
+
+      await this.instance.markForDeletion(queryRunner, instanceId);
+
+      await this.publication.publish(
+        instance.id,
+        instance.currentVersion.id,
+        { client_id: instance.currentVersion.data.client_id },
+        ActionTypes.CONFIG_DELETE,
+      );
+    });
   }
 
   private async createInstanceWithVersion(

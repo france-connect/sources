@@ -2,9 +2,6 @@
 
 exports[`Login Page shoud match the snapshot, when user session has expired 1`] = `
 <div>
-  <div>
-    NoticeComponent
-  </div>
   <main
     class="fr-container fr-py-8v"
   >
@@ -31,12 +28,12 @@ exports[`Login Page shoud match the snapshot, when user session has expired 1`] 
         class="fr-col-9"
       >
         <h1>
-          Partners.loginpage.title-mock
+          Partners.loginpage.title
         </h1>
         <h2
           class="fr-mt-4w"
         >
-          Partners.loginpage.description-mock
+          Partners.loginpage.description
         </h2>
         <div
           data-mockid="LoginFormComponent"
@@ -49,9 +46,6 @@ exports[`Login Page shoud match the snapshot, when user session has expired 1`] 
 
 exports[`Login Page should match the snapshot 1`] = `
 <div>
-  <div>
-    NoticeComponent
-  </div>
   <main
     class="fr-container fr-py-8v"
   >
@@ -62,12 +56,12 @@ exports[`Login Page should match the snapshot 1`] = `
         class="fr-col-9"
       >
         <h1>
-          Partners.loginpage.title-mock
+          Partners.loginpage.title
         </h1>
         <h2
           class="fr-mt-4w"
         >
-          Partners.loginpage.description-mock
+          Partners.loginpage.description
         </h2>
         <div
           data-mockid="LoginFormComponent"

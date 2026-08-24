@@ -225,16 +225,15 @@ export class FrIdentityToEuController {
 
     identity.sub = this.computePairwisedSub(identity.sub, spCountryCode);
 
-    const partialEidasResponse =
-      await this.oidcToEidas.mapPartialResponseSuccess(
-        identity,
-        /**
-         * @todo #412 Apply strong typing to acr values in other libs and apps
-         * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/412
-         */
-        acr as AcrValues,
-        requestedAttributes,
-      );
+    const partialEidasResponse = this.oidcToEidas.mapPartialResponseSuccess(
+      identity,
+      /**
+       * @todo #412 Apply strong typing to acr values in other libs and apps
+       * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/412
+       */
+      acr as AcrValues,
+      requestedAttributes,
+    );
 
     return partialEidasResponse;
   }

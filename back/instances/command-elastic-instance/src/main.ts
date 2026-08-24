@@ -18,6 +18,9 @@ async function bootstrap() {
 
   const app = await CommandFactory.createWithoutRunning(appModule, {
     bufferLogs: true,
+    serviceErrorHandler: (err) => {
+      throw err;
+    },
   });
 
   const logger = await app.resolve(NestLoggerService);

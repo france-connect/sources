@@ -7,6 +7,7 @@ import Exceptions from './exceptions';
 import I18n from './i18n';
 import IdentityProviderAdapterEnv from './identity-provider-adapter-env';
 import Logger from './logger';
+import Mailer from './mailer';
 import OidcAcr from './oidc-acr';
 import OidcClient from './oidc-client';
 import Postgres from './postgres';
@@ -14,13 +15,13 @@ import Redis from './redis';
 import Scopes from './scopes';
 import Session from './session';
 import WebhooksDatapass from './webhooks-datapass';
-import WebhooksInvitation from './webhooks-invitation';
 
 export default {
   App,
   Exceptions,
   IdentityProviderAdapterEnv,
   Logger,
+  Mailer,
   OidcAcr,
   OidcClient,
   Postgres,
@@ -31,5 +32,4 @@ export default {
   ConfigSandboxLowMicroService,
   DefaultServiceProviderLowValue,
   WebhooksDatapass,
-  WebhooksInvitation,
 } as PartnersConfig;

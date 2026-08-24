@@ -74,6 +74,17 @@ describe('SimpleButton', () => {
     expect(element).toHaveAttribute('disabled');
   });
 
+  it('should have the aria-label attribute', () => {
+    // When
+    const { getByRole } = render(
+      <SimpleButton ariaLabel="any-aria-label-mock">any-label-mock</SimpleButton>,
+    );
+    const element = getByRole('button');
+
+    // Then
+    expect(element).toHaveAttribute('aria-label', 'any-aria-label-mock');
+  });
+
   it('should have the title attribute', () => {
     // When
     const { getByRole } = render(

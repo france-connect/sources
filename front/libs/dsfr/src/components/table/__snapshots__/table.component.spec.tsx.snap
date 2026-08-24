@@ -23,35 +23,11 @@ exports[`TableComponent should match the snapshot with optionnals props 1`] = `
             />
             <tbody>
               <tr
-                data-row-key="0"
-                id="any-table-id-mock--row-0"
-              >
-                <td
-                  class=""
-                >
-                  Data 1
-                </td>
-                <td
-                  class=""
-                >
-                  Data 2
-                </td>
-              </tr>
+                data-mockid="TableRowComponent"
+              />
               <tr
-                data-row-key="1"
-                id="any-table-id-mock--row-1"
-              >
-                <td
-                  class=""
-                >
-                  Data 3
-                </td>
-                <td
-                  class=""
-                >
-                  Data 4
-                </td>
-              </tr>
+                data-mockid="TableRowComponent"
+              />
             </tbody>
           </table>
         </div>
@@ -84,35 +60,11 @@ exports[`TableComponent should match the snapshot with required props 1`] = `
             />
             <tbody>
               <tr
-                data-row-key="0"
-                id="any-table-id-mock--row-0"
-              >
-                <td
-                  class=""
-                >
-                  Data 1
-                </td>
-                <td
-                  class=""
-                >
-                  Data 2
-                </td>
-              </tr>
+                data-mockid="TableRowComponent"
+              />
               <tr
-                data-row-key="1"
-                id="any-table-id-mock--row-1"
-              >
-                <td
-                  class=""
-                >
-                  Data 3
-                </td>
-                <td
-                  class=""
-                >
-                  Data 4
-                </td>
-              </tr>
+                data-mockid="TableRowComponent"
+              />
             </tbody>
           </table>
         </div>

@@ -18,7 +18,7 @@ const setFixtureContext = (
 
 Before(function () {
   // Load environment config and test data
-  const platform: string = Cypress.env('PLATFORM');
+  const platform: string = Cypress.env('TEST_PLATFORM');
   const testEnv: string = Cypress.env('TEST_ENV');
   const pathArray = [platform, testEnv];
   setFixtureContext('environment.json', pathArray, 'env');

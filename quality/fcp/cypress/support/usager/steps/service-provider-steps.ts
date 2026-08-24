@@ -130,7 +130,7 @@ Then(
   function (type: string) {
     const { allClaims } = this.user;
     if (this.serviceProvider.mocked === true) {
-      const platform: string = Cypress.env('PLATFORM');
+      const platform: string = Cypress.env('TEST_PLATFORM');
       const scope = getScopeByType(this.scopes, type);
       const userClaims = getUserClaimsByPlatform(allClaims, platform);
       const expectedClaims = getExpectedClaimsByPlatform(scope, platform);
@@ -139,6 +139,24 @@ Then(
       serviceProviderPage.checkExpectedUserClaims(expectedClaims, userClaims);
       serviceProviderPage.checkNoExtraClaims(expectedClaims);
     }
+  },
+);
+
+Then(
+  'le claim {string} contient {string} dans la réponse userinfo',
+  function (claimName: string, expectedValue: string) {
+    serviceProviderPage
+      .getMockClaimText(claimName)
+      .should('be.equal', expectedValue);
+  },
+);
+
+Then(
+  'le claim {string} est absent de la réponse userinfo',
+  function (claimName: string) {
+    serviceProviderPage.getUserInfo().then((responseBody) => {
+      expect(responseBody[claimName]).to.be.undefined;
+    });
   },
 );
 

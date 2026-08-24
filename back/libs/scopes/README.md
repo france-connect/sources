@@ -114,7 +114,7 @@ The table below provides a clear view of the technical keys used by the library 
   },
   "family_name": {
     "identifier": "family_name",
-    "label": "Nom de naissance",
+    "label": "Nom de famille",
     "dataProvider": {
       "identifier": "FCP_LEGACY",
       "label": "FranceConnect"

@@ -43,7 +43,7 @@ Then(
 );
 
 Then('les cookies FranceConnect sont présents', function () {
-  const platform: string = Cypress.env('PLATFORM');
+  const platform: string = Cypress.env('TEST_PLATFORM');
   const { fcRootUrl, name } = this.env;
   const url = new URL(fcRootUrl);
   const domain = url.hostname;

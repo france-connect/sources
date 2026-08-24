@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 
-import { ButtonTypes, SimpleButton } from '@fc/dsfr';
+import { ButtonTypes, Priorities, SimpleButton } from '@fc/dsfr';
 import { t } from '@fc/i18n';
 
 import { FormActionsComponent } from './form-actions.component';
@@ -117,6 +117,28 @@ describe('FormActionsComponent', () => {
           size: 'md',
           type: 'button',
         },
+        undefined,
+      );
+    });
+
+    it('should forward the onClick handler and priority to SimpleButton', () => {
+      // Given
+      const onClickMock = jest.fn();
+      const actionsWithOnClick = [
+        {
+          label: 'Any.i18n.translation.key',
+          onClick: onClickMock,
+          priority: Priorities.SECONDARY,
+          type: ButtonTypes.BUTTON,
+        },
+      ];
+
+      // When
+      render(<FormActionsComponent canSubmit actions={actionsWithOnClick} />);
+
+      // Then
+      expect(SimpleButton).toHaveBeenCalledExactlyOnceWith(
+        expect.objectContaining({ onClick: onClickMock, priority: Priorities.SECONDARY }),
         undefined,
       );
     });

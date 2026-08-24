@@ -5,6 +5,7 @@ import {
   ElasticCountDocumentsResponse,
   ElasticDocumentResponse,
   ElasticReindexResponse,
+  ElasticSearchResponse,
   ElasticTaskResponse,
   ElasticTransformStatsResponse,
 } from '../interfaces';
@@ -83,6 +84,17 @@ export class ElasticControlClientService {
     return this.elastic.transport.request({
       method: 'GET',
       path: `/${encodeURIComponent(index)}/_doc/${encodeURIComponent(id)}`,
+    });
+  }
+
+  searchDocuments(
+    index: string,
+    body: unknown,
+  ): Promise<ElasticSearchResponse> {
+    return this.elastic.transport.request({
+      method: 'POST',
+      path: `/${encodeURIComponent(index)}/_search`,
+      body,
     });
   }
 

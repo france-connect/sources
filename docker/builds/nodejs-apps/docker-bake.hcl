@@ -192,28 +192,11 @@ target "prod-base" {
   dockerfile = "./docker/builds/nodejs-apps/prod/Dockerfile"
   target = "prod-base"
 
-  cache-from = [
-    {
-      type = "registry"
-      ref  = "${REGISTRY_URL}/nodejs-apps/prod-base:${DEBIAN_VERSION}-cache"
-    }
-  ]
-
-  cache-to = [
-    merge(
-      REGISTRY_CACHE_COMMON,
-      { ref = "${REGISTRY_URL}/nodejs-apps/prod-base:${DEBIAN_VERSION}-cache" }
-    )
-  ]
-
   contexts = {
     pm2 = "./docker/builds/nodejs-apps/prod/includes/pm2"
     tls = "./docker/builds/tls"
   }
-
-  output = ["type=cacheonly"]
 }
-
 
 # ---------------------------
 # Target: prod-generic-commons
@@ -230,20 +213,9 @@ target "prod-generic-commons" {
   cache-from = [
     {
       type = "registry"
-      ref  = "${REGISTRY_URL}/nodejs-apps/prod-base:${DEBIAN_VERSION}-cache"
-    },
-    {
-      type = "registry"
-      ref  = "${REGISTRY_URL}/nodejs-apps/dev-deps:${NODE_MODULE_BACK_VERSION}-cache"
-    },
-    {
-      type = "registry"
       ref  = "${REGISTRY_URL}/nodejs-apps/prod-deps:${NODE_MODULE_BACK_VERSION}-cache"
     }
   ]
-
-  cache-to = []
-  output = []
 }
 
 # ---------------------------
@@ -281,6 +253,7 @@ target "csmr-hsm-high" {
 
   args = {
     APP_NAME = "csmr-hsm-high"
+    EXTRA_PACKAGES = "libssl3"
   }
 
   contexts = {
@@ -316,31 +289,6 @@ target "command-runner" {
     merge(
       REGISTRY_OUTPUT_COMMON,
       { name = "${REGISTRY_URL}/nodejs-apps/command-runner:${APP_VERSION}" }
-    )
-  ]
-}
-
-# ---------------------------
-# Target: command-import-sp-sandbox (specific)
-# ---------------------------
-
-target "command-import-sp-sandbox" {
-  inherits = ["prod-base"]
-  target = "command-runner-generic"
-
-  args = {
-    APP_NAME  = "command-import-sp-sandbox"
-    COMMAND_ARGS = "import-sp-sandbox"
-  }
-  
-  contexts = {
-    pm2 = "./docker/builds/command-apps/includes/pm2"
-  }
-
-  output = [
-    merge(
-      REGISTRY_OUTPUT_COMMON,
-      { name = "${REGISTRY_URL}/nodejs-apps/command-import-sp-sandbox:${APP_VERSION}" }
     )
   ]
 }
@@ -402,6 +350,26 @@ target "command-pre-deploy" {
   ]
 }
 
+
+# ---------------------------
+# Target: command-elastic-instance (specific)
+# ---------------------------
+
+target "command-elastic-instance" {
+  inherits = ["prod-generic-commons"]
+  target = "command-cli-generic"
+
+  args = {
+    APP_NAME = "command-elastic-instance"
+  }
+
+  output = [
+    merge(
+      REGISTRY_OUTPUT_COMMON,
+      { name = "${REGISTRY_URL}/nodejs-apps/command-elastic-instance:${APP_VERSION}" }
+    )
+  ]
+}
 
 # ---------------------------
 # Groups

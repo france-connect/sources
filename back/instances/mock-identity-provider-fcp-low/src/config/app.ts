@@ -34,7 +34,7 @@ export default {
     },
     {
       name: 'family_name',
-      label: 'Nom de famille de naissance',
+      label: 'Nom de famille',
       mandatory: true,
       type: 'text',
     },

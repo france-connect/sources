@@ -1,7 +1,9 @@
+const os = require("os");
+
 module.exports = {
   apps: [
     {
-      name: process.env.APP_NAME,
+      name: os.hostname(),
       script: "main.js",
       error_file: "/data/log/app/error.log",
       out_file: "/data/log/app/out.log",

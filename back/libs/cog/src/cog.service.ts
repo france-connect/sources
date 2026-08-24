@@ -4,8 +4,12 @@ import { ConfigService } from '@fc/config';
 import { RepositoryInterface } from '@fc/csv/interfaces';
 
 import { CogConfig } from './dto';
-import { CityInterface, CountryInterface } from './interfaces';
-import { COG_CITY, COG_COUNTRY } from './tokens';
+import {
+  CityInterface,
+  CountryInterface,
+  IsoCogCountryInterface,
+} from './interfaces';
+import { COG_CITY, COG_COUNTRY, COG_ISO_COUNTRY } from './tokens';
 
 @Injectable()
 export class CogService {
@@ -15,27 +19,37 @@ export class CogService {
     private readonly cityManager: RepositoryInterface<CityInterface>,
     @Inject(COG_COUNTRY)
     private readonly countryManager: RepositoryInterface<CountryInterface>,
+    @Inject(COG_ISO_COUNTRY)
+    private readonly isoCogCountryManager: RepositoryInterface<IsoCogCountryInterface>,
   ) {}
 
   async onModuleInit() {
-    const { [COG_CITY]: city, [COG_COUNTRY]: country } =
-      this.config.get<CogConfig>('Cog');
+    const {
+      [COG_CITY]: city,
+      [COG_COUNTRY]: country,
+      [COG_ISO_COUNTRY]: isoCogCountry,
+    } = this.config.get<CogConfig>('Cog');
     await this.cityManager.parse(city);
+    this.cityManager.createIndex('com');
     await this.countryManager.parse(country);
+    this.countryManager.createIndex('cog');
+    await this.isoCogCountryManager.parse(isoCogCountry);
+    this.isoCogCountryManager.createIndex('iso');
   }
 
   /**
    * @param {string} cog
    * @returns {string} label
    */
-  async getLabelFromCog(cog: string): Promise<string> {
+  getLabelFromCog(cog: string): string {
     const isFrance = !cog.startsWith('99');
-    let label;
+    let label: string;
+
     if (isFrance) {
-      const { com, libelle } = await this.cityManager.find({ com: cog });
+      const { com, libelle } = this.cityManager.getByIndex('com', cog);
       label = `${libelle} - ${com}, FRANCE (FR)`;
     } else {
-      const { codeiso2, libcog } = await this.countryManager.find({ cog });
+      const { codeiso2, libcog } = this.countryManager.getByIndex('cog', cog);
       label = `${libcog} (${codeiso2})`;
     }
     return label;
@@ -46,10 +60,15 @@ export class CogService {
    * @param {string[]} cogs
    * @returns {string[]} labels
    */
-  async injectLabelsForCogs(cogs: string[]): Promise<string[]> {
-    const labels = await Promise.all(
-      cogs.map((cog) => this.getLabelFromCog(cog)),
-    );
+  injectLabelsForCogs(cogs: string[]): string[] {
+    const labels = cogs.map((cog) => this.getLabelFromCog(cog));
+
     return labels;
+  }
+
+  getCountryCogFromIso(iso: string): string | undefined {
+    const row = this.isoCogCountryManager.getByIndex('iso', iso);
+
+    return row?.cog;
   }
 }

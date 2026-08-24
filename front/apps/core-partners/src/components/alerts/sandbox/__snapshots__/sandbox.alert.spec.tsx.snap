@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`SandboxAlert should match the snapshot for the instance variant 1`] = `
+<div>
+  <div
+    data-mockid="AlertComponent"
+  >
+    <div>
+      AlertComponent
+    </div>
+    <div />
+  </div>
+</div>
+`;

@@ -9,7 +9,7 @@ interface InstancePageFormComponentProps<T extends HttpClientDataInterface> {
   config: FormConfigInterface;
   initialValues: T;
   postSubmit: (values: T) => void | Promise<void>;
-  preSubmit: (values: T) => Promise<T>;
+  preSubmit: (values: T) => T | Promise<T>;
   schema: BaseAttributes[];
   submitHandler: FormInterface<T>['onSubmit'];
 }

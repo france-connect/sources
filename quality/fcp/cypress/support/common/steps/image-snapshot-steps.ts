@@ -40,6 +40,12 @@ const blackout = [
       '[data-testid="TrackCardConnexionDetailsComponent-connection-datetime-label"]',
     width: 200,
   },
+  {
+    selector: '[data-testid="wallet-qrcode"]',
+  },
+  {
+    selector: '[data-testid="wallet-dev-tools"] [name="requestUri"]',
+  },
 ];
 const blackoutDiv = (width) => {
   const style = width ? ` style="width: ${width}px"` : '';
@@ -51,6 +57,7 @@ const prepareScreenshot = () => {
     const style = doc.createElement('style');
     style.innerHTML = `.blackout { background-color: black !important; }
        .blackout * { color: black !important; }
+       .blackout img { visibility: hidden !important; }
        body { caret-color: transparent !important; }`;
     doc.head.appendChild(style);
   });

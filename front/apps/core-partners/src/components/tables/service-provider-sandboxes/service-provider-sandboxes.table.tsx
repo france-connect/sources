@@ -1,19 +1,21 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 
 import type { ISODate } from '@fc/common';
 import { getFullName, isoToDate, truncateMiddle } from '@fc/common';
-import type { TableColumnInterface } from '@fc/dsfr';
+import type { TableColumnActionsInterface, TableColumnInterface } from '@fc/dsfr';
 import { TableComponent } from '@fc/dsfr';
 import { t } from '@fc/i18n';
 
 import type { InstanceInterface } from '../../../interfaces';
+import { DeleteInstanceButton } from '../../buttons';
 
 interface ServiceProviderSandboxesTableProps {
   sandboxes: InstanceInterface[];
+  onDelete: (instance: InstanceInterface) => void;
 }
 
 export const ServiceProviderSandboxesTable = React.memo(
-  ({ sandboxes }: ServiceProviderSandboxesTableProps) => {
+  ({ onDelete, sandboxes }: ServiceProviderSandboxesTableProps) => {
     const tableColumns: TableColumnInterface<InstanceInterface>[] = useMemo(
       () => [
         {
@@ -42,9 +44,17 @@ export const ServiceProviderSandboxesTable = React.memo(
       [],
     );
 
+    const tableActions: TableColumnActionsInterface<InstanceInterface> = useCallback(
+      (instance: InstanceInterface) => (
+        <DeleteInstanceButton instance={instance} onDelete={onDelete} />
+      ),
+      [onDelete],
+    );
+
     return (
       <TableComponent<InstanceInterface>
         multiline
+        actions={tableActions}
         columns={tableColumns}
         id="service-provider-sandboxes-table"
         sources={sandboxes}

@@ -35,8 +35,7 @@ function _init_hooks() {
     _hook_fc_apps "fc-support"
     ;;
   *"elasticsearch"*)
-    # Waiting for ES to be up
-    sleep 15
+    _wait_for_es
     echo "Initialize user-dashboard data..."
     _init_ud
     ;;

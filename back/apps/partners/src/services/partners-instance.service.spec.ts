@@ -21,6 +21,7 @@ import { TypeormService } from '@fc/typeorm';
 import { getQueryRunnerMock, getTypeormServiceMock } from '@mocks/typeorm';
 
 import { AccessControlEntity, AccessControlPermission } from '../enums';
+import { PartnersInstanceNotFoundException } from '../exceptions';
 import {
   InstanceCreationContextInterface,
   InstanceCreationOptionsInterface,
@@ -62,6 +63,8 @@ describe('PartnersInstanceService', () => {
 
   const instanceServiceMock = {
     save: jest.fn(),
+    getByIdWithQueryRunner: jest.fn(),
+    markForDeletion: jest.fn(),
   };
 
   const versionServiceMock = {
@@ -286,13 +289,29 @@ describe('PartnersInstanceService', () => {
       );
     });
 
-    it('should publish a CONFIG_UPDATE message with the updater info', async () => {
-      // Given
-      const dataWithUpdatedInfo = {
-        ...dataMock,
+    it('should return a CONFIG_UPDATE publication descriptor holding the updater info', async () => {
+      // When
+      const result = await service['update'](
+        queryRunnerMock,
+        dataMock,
+        instance1Mock,
+        serviceProviderId,
         updatedBy,
-      };
+      );
 
+      // Then
+      expect(result).toEqual({
+        instanceId: instance1Mock.id,
+        versionId,
+        payload: {
+          ...dataMock,
+          updatedBy,
+        },
+        type: ActionTypes.CONFIG_UPDATE,
+      });
+    });
+
+    it('should not publish the update, publication being the caller responsibility', async () => {
       // When
       await service['update'](
         queryRunnerMock,
@@ -303,12 +322,124 @@ describe('PartnersInstanceService', () => {
       );
 
       // Then
-      expect(publicationServiceMock.publish).toHaveBeenCalledExactlyOnceWith(
-        instance1Mock.id,
-        versionId,
-        dataWithUpdatedInfo,
-        ActionTypes.CONFIG_UPDATE,
+      expect(publicationServiceMock.publish).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('delete', () => {
+    const currentVersionMock = {
+      id: 'current-version-id',
+      data: {
+        client_id: 'client-id-mock',
+        client_secret: 'client-secret-mock',
+        name: 'name-mock',
+      },
+    };
+    const instanceToDeleteMock = {
+      id: instanceId,
+      currentVersion: currentVersionMock,
+    } as unknown as PartnersServiceProviderInstance;
+
+    beforeEach(() => {
+      typeormServiceMock.withTransaction.mockImplementation((callback) =>
+        callback(queryRunnerMock),
       );
+      instanceServiceMock.getByIdWithQueryRunner.mockResolvedValue(
+        instanceToDeleteMock,
+      );
+    });
+
+    it('should fetch the instance within the transaction', async () => {
+      // When
+      await service.delete(instanceId);
+
+      // Then
+      expect(
+        instanceServiceMock.getByIdWithQueryRunner,
+      ).toHaveBeenCalledExactlyOnceWith(queryRunnerMock, instanceId);
+    });
+
+    it('should throw PartnersInstanceNotFoundException if the instance does not exist', async () => {
+      // Given
+      instanceServiceMock.getByIdWithQueryRunner.mockResolvedValue(null);
+
+      // When / Then
+      await expect(service.delete(instanceId)).rejects.toThrow(
+        PartnersInstanceNotFoundException,
+      );
+    });
+
+    it('should not mark for deletion if the instance does not exist', async () => {
+      // Given
+      instanceServiceMock.getByIdWithQueryRunner.mockResolvedValue(null);
+
+      // When
+      await service.delete(instanceId).catch(() => undefined);
+
+      // Then
+      expect(instanceServiceMock.markForDeletion).not.toHaveBeenCalled();
+    });
+
+    it('should mark the instance for deletion within the transaction', async () => {
+      // When
+      await service.delete(instanceId);
+
+      // Then
+      expect(
+        instanceServiceMock.markForDeletion,
+      ).toHaveBeenCalledExactlyOnceWith(queryRunnerMock, instanceId);
+    });
+
+    it('should publish a CONFIG_DELETE message with the client identifier only', async () => {
+      // When
+      await service.delete(instanceId);
+
+      // Then
+      expect(publicationServiceMock.publish).toHaveBeenCalledExactlyOnceWith(
+        instanceToDeleteMock.id,
+        currentVersionMock.id,
+        { client_id: currentVersionMock.data.client_id },
+        ActionTypes.CONFIG_DELETE,
+      );
+    });
+
+    it('should publish the deletion within the transaction', async () => {
+      // Given
+      const callsMock: string[] = [];
+
+      typeormServiceMock.withTransaction.mockImplementation(
+        async (callback) => {
+          callsMock.push('transaction:start');
+          await callback(queryRunnerMock);
+          callsMock.push('transaction:end');
+        },
+      );
+      publicationServiceMock.publish.mockImplementation(() => {
+        callsMock.push('publish');
+      });
+
+      // When
+      await service.delete(instanceId);
+
+      // Then
+      expect(callsMock).toStrictEqual([
+        'transaction:start',
+        'publish',
+        'transaction:end',
+      ]);
+    });
+
+    it('should not publish the deletion if the transaction fails', async () => {
+      // Given
+      typeormServiceMock.withTransaction.mockRejectedValue(
+        new Error('transaction failed'),
+      );
+
+      // When / Then
+      await expect(service.delete(instanceId)).rejects.toThrow(
+        'transaction failed',
+      );
+      expect(publicationServiceMock.publish).not.toHaveBeenCalled();
     });
   });
 

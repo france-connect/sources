@@ -8,6 +8,8 @@ export const CreateLinkedInstanceButton = jest.fn(() => (
 
 export const LinkInstancesButton = jest.fn(() => <div data-mockid="LinkInstancesButton" />);
 
+export const CreateContributorButton = jest.fn(() => <div data-mockid="CreateContributorButton" />);
+
 export const InstancesListComponent = jest.fn(() => <div data-mockid="InstancesListComponent" />);
 
 export const ServiceProvidersListComponent = jest.fn(() => (
@@ -26,6 +28,18 @@ export const InstancePageNoticeComponent = jest.fn(() => (
   <div data-mockid="InstancePageNoticeComponent" />
 ));
 
+export const DeleteInstanceModalComponent = jest.fn(() => (
+  <div data-mockid="DeleteInstanceModalComponent" />
+));
+
+export const DeleteInstanceModalFooterComponent = jest.fn(() => (
+  <div data-mockid="DeleteInstanceModalFooterComponent" />
+));
+
+export const ContributorAlert = jest.fn(() => <div data-mockid="ContributorAlert" />);
+
+export const SandboxAlert = jest.fn(() => <div data-mockid="SandboxAlert" />);
+
 export const ServiceProviderNameComponent = jest.fn(() => (
   <div data-mockid="ServiceProviderNameComponent" />
 ));
@@ -42,9 +56,8 @@ export const ServiceProviderSandboxesComponent = jest.fn(() => (
   <div data-mockid="ServiceProviderSandboxesComponent" />
 ));
 
-// @NOTE should be renamed to ServiceProviderContributorsComponent
-export const ServiceProviderPermissionsComponent = jest.fn(() => (
-  <div data-mockid="ServiceProviderPermissionsComponent" />
+export const ServiceProviderContributorsComponent = jest.fn(() => (
+  <div data-mockid="ServiceProviderContributorsComponent" />
 ));
 
 export const ServiceProvidersPageNoticeComponent = jest.fn(() => (
@@ -62,6 +75,8 @@ export const PartnersService = {
   loadLinkableInstancesByServiceProviderId: jest.fn(),
   loadServiceProviderById: jest.fn(),
 };
+
+export const useCanCreateContributor = jest.fn();
 
 export const useHasServiceProviders = jest.fn();
 
@@ -94,4 +109,9 @@ export enum PublicationStatus {
   DRAFT = 'DRAFT',
   PENDING = 'PENDING',
   PUBLISHED = 'PUBLISHED',
+}
+
+export enum PartnersAlertVariants {
+  CONTRIBUTOR = 'contributor',
+  INSTANCE = 'instance',
 }

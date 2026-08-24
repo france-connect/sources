@@ -1,7 +1,7 @@
 import { act, renderHook } from '@testing-library/react';
 import { useLoaderData, useRevalidator } from 'react-router';
 
-import { PartnersService } from '@fc/core-partners';
+import { PartnersAlertVariants, PartnersService } from '@fc/core-partners';
 import { useNavigateWithState } from '@fc/routing';
 
 import { useLinkableInstancesToServiceProvider } from './service-provider-link-instances.hook';
@@ -136,6 +136,7 @@ describe('useLinkableInstancesToServiceProvider', () => {
       expect(goBackWithSuccessMock).toHaveBeenCalledExactlyOnceWith({
         message: 'Partners.serviceProviderPage.linkInstances.success.description',
         title: 'Partners.instances.successLink',
+        variant: PartnersAlertVariants.INSTANCE,
       });
     });
 

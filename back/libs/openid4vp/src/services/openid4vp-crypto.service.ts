@@ -1,3 +1,5 @@
+import { createPrivateKey, KeyObject } from 'crypto';
+
 import type {
   DecryptJweCallback,
   DecryptJweCallbackOptions,
@@ -12,7 +14,14 @@ import {
   CreateOpenid4vpAuthorizationRequestOptions,
   ParseOpenid4vpAuthorizationResponseOptions,
 } from '@openid4vc/openid4vp';
-import { importJWK, JWK, JWTHeaderParameters, JWTPayload, SignJWT } from 'jose';
+import {
+  exportJWK,
+  importJWK,
+  JWK,
+  JWTHeaderParameters,
+  JWTPayload,
+  SignJWT,
+} from 'jose';
 
 import { Injectable } from '@nestjs/common';
 
@@ -21,13 +30,19 @@ import { ConfigService } from '@fc/config';
 import { KekAlg, Use } from '@fc/cryptography';
 import { JwkHelper, JwksDto, JwtService } from '@fc/jwt';
 
+import { X509_CLIENT_ID_SCHEMES } from '../constants';
 import { Openid4vpConfig } from '../dto';
-import { JwtSignerInterface, VerifyJwtJwtInterface } from '../interfaces';
+import { loadX509SigningMaterial } from '../helpers';
+import { VerifyJwtJwtInterface, X509SigningMaterial } from '../interfaces';
 import { CONFIG_NAMESPACE } from '../tokens';
 
 @Injectable()
 export class Openid4vpCryptoService {
   private jwks: JwksDto;
+
+  private x509SigningMaterial: X509SigningMaterial;
+
+  private privateKey: KeyObject;
 
   constructor(
     private readonly config: ConfigService,
@@ -35,7 +50,22 @@ export class Openid4vpCryptoService {
   ) {}
 
   onModuleInit() {
-    this.jwks = this.config.get<Openid4vpConfig>(CONFIG_NAMESPACE).jwks;
+    const openid4vpConfig = this.config.get<Openid4vpConfig>(CONFIG_NAMESPACE);
+
+    this.jwks = openid4vpConfig.jwks;
+
+    if (this.isX509ClientIdScheme()) {
+      this.x509SigningMaterial = loadX509SigningMaterial(
+        openid4vpConfig.x509.certificateChainPem,
+        openid4vpConfig.x509.privateKeyPem,
+        openid4vpConfig.x509.alg,
+      );
+
+      this.privateKey = createPrivateKey({
+        key: this.x509SigningMaterial.privateKeyPem,
+        format: 'pem',
+      });
+    }
   }
 
   readonly requestCallbacks: CreateOpenid4vpAuthorizationRequestOptions['callbacks'] =
@@ -50,9 +80,28 @@ export class Openid4vpCryptoService {
       verifyJwt: this.verifyJwt.bind(this),
     };
 
-  async getJwtSigner(): Promise<JwtSigner> {
-    const signKey = this.jwt.getFirstRelevantKey(this.jwks, Use.SIG);
+  getX509ClientId(): string {
+    return this.x509SigningMaterial.clientIdHash;
+  }
 
+  async getJwtSigner(): Promise<JwtSigner> {
+    if (this.isX509ClientIdScheme()) {
+      return this.getX509Signer();
+    }
+
+    return await this.getJwkSigner();
+  }
+
+  private getX509Signer(): JwtSigner {
+    return {
+      method: 'x5c',
+      x5c: this.x509SigningMaterial.x5c,
+      alg: this.x509SigningMaterial.alg,
+    };
+  }
+
+  private async getJwkSigner(): Promise<JwtSigner> {
+    const signKey = this.jwt.getFirstRelevantKey(this.jwks, Use.SIG);
     const publicJwk = await JwkHelper.publicFromPrivate(signKey as JWK);
 
     return {
@@ -63,24 +112,14 @@ export class Openid4vpCryptoService {
   }
 
   async signJwt(
-    signer: JwtSignerInterface,
+    signer: JwtSigner,
     jwt: { payload: JWTPayload; header: JWTHeaderParameters },
   ): Promise<ReturnType<SignJwtCallback>> {
-    const jwk = this.jwt.getFirstRelevantKey(
-      this.jwks,
-      Use.SIG,
-      signer.alg as KekAlg,
-    );
+    if (signer.method === 'x5c') {
+      return await this.signJwtWithX5c(signer, jwt);
+    }
 
-    const key = await importJWK(jwk as JWK, signer.alg);
-    const compactJwt = await new SignJWT(jwt.payload)
-      .setProtectedHeader(jwt.header)
-      .sign(key);
-
-    return {
-      jwt: compactJwt,
-      signerJwk: signer.publicJwk as Jwk,
-    };
+    return await this.signJwtWithJwk(signer, jwt);
   }
 
   async verifyJwt(
@@ -136,5 +175,51 @@ export class Openid4vpCryptoService {
     };
 
     return publicJwks;
+  }
+
+  private isX509ClientIdScheme(): boolean {
+    const { relayingParty } =
+      this.config.get<Openid4vpConfig>(CONFIG_NAMESPACE);
+
+    return X509_CLIENT_ID_SCHEMES.includes(relayingParty.clientIdScheme);
+  }
+
+  private async signJwtWithJwk(
+    signer: JwtSigner,
+    jwt: { payload: JWTPayload; header: JWTHeaderParameters },
+  ): Promise<ReturnType<SignJwtCallback>> {
+    const jwk = this.jwt.getFirstRelevantKey(
+      this.jwks,
+      Use.SIG,
+      signer.alg as KekAlg,
+    );
+
+    const key = await importJWK(jwk as JWK, signer.alg);
+    const compactJwt = await new SignJWT(jwt.payload)
+      .setProtectedHeader(jwt.header)
+      .sign(key);
+
+    return {
+      jwt: compactJwt,
+      signerJwk: (signer as { publicJwk: Jwk }).publicJwk,
+    };
+  }
+
+  private async signJwtWithX5c(
+    signer: JwtSigner,
+    jwt: { payload: JWTPayload; header: JWTHeaderParameters },
+  ): Promise<ReturnType<SignJwtCallback>> {
+    const publicJwk = await exportJWK(
+      this.x509SigningMaterial.leafCertificate.publicKey,
+    );
+
+    const compactJwt = await new SignJWT(jwt.payload)
+      .setProtectedHeader(jwt.header)
+      .sign(this.privateKey);
+
+    return {
+      jwt: compactJwt,
+      signerJwk: publicJwk as Jwk,
+    };
   }
 }

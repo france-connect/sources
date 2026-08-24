@@ -31,4 +31,7 @@ export const claims: ClaimsInterface = {
   // OIDC fashion variable name
   // eslint-disable-next-line @typescript-eslint/naming-convention
   revenu_solidarite_active_majoration: 'revenu_solidarite_active_majoration',
+  // OIDC fashion variable name
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  cnav_allocation_rentree_scolaire: 'cnav_allocation_rentree_scolaire',
 };

@@ -22,7 +22,18 @@ describe('AlertComponent', () => {
     expect(container.firstChild).toHaveClass('fr-alert--md');
     expect(container.firstChild).toHaveClass('fr-alert--info');
     expect(container.firstChild).toHaveRole('alert');
+    expect(container.firstChild).not.toHaveAttribute('tabindex');
+    expect(container.firstChild).not.toHaveFocus();
     expect(t).not.toHaveBeenCalledWith('DSFR.alert.close');
+  });
+
+  it('should move the focus onto the alert when autoFocus is defined', () => {
+    // When
+    const { container } = render(<AlertComponent autoFocus />);
+
+    // Then
+    expect(container.firstChild).toHaveAttribute('tabindex', '-1');
+    expect(container.firstChild).toHaveFocus();
   });
 
   it('should match the snapshot with all optional values', () => {

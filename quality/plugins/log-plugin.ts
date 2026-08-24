@@ -7,12 +7,12 @@ const asyncExec = promisify(exec);
 const EXEC_TOOL_PATH = '../scripts/parse-business-log.ts';
 const GET_BUSINESS_LOG_SCRIPT_PATH = '../scripts/get-business-logs.ts';
 
-interface clearBusinessLogArgs {
+interface clearAllLogsArgs {
   logFilePath: string;
 }
 
-export const clearBusinessLog = async (
-  args: clearBusinessLogArgs,
+export const clearAllLogs = async (
+  args: clearAllLogsArgs,
 ): Promise<number> => {
   const { logFilePath } = args;
   const command = `echo "" > '${logFilePath}'`;
@@ -58,7 +58,7 @@ export const getBusinessLogs = async (
   return JSON.parse(stdout);
 };
 
-export const getAllBusinessLogs = async (
+export const getAllLogs = async (
   args: hasBusinessLogArgs,
 ): Promise<Record<string, string>> => {
   const { logFilePath } = args;

@@ -6,5 +6,5 @@ export const frFR: I18nTranslationsMapType = {
   'Mailer.exceptions.noEmail':
     'Les informations sur votre identité sont incomplètes et ne permettent pas de vous connecter à votre service. Veuillez contacter le support.',
   'Mailer.exceptions.templateNotFound':
-    'Une erreur technique est survenue, veuillez contacter le support.',
+    'Une erreur technique est survenue. Veuillez vous reconnecter ultérieurement.',
 };

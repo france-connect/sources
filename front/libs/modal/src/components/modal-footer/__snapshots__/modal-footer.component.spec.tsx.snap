@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ModalFooterComponent should match the snapshot 1`] = `
+<div>
+  <div
+    class="fr-modal__footer"
+  >
+    <button
+      type="button"
+    >
+      any-action-mock
+    </button>
+  </div>
+</div>
+`;

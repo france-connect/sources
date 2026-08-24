@@ -47,7 +47,7 @@ Fonctionnalité: Historique Connexion FC+ (docker)
     Et la date et heure de l'évènement sont affichées
     Et l'évènement concerne 8 données "FCP_HIGH"
     Et les données "FCP_HIGH" de l'évènement contiennent "Prénom(s)"
-    Et les données "FCP_HIGH" de l'évènement contiennent "Nom de naissance"
+    Et les données "FCP_HIGH" de l'évènement contiennent "Nom de famille"
     Et les données "FCP_HIGH" de l'évènement contiennent "Date de naissance"
     Et les données "FCP_HIGH" de l'évènement contiennent "Sexe"
     Et les données "FCP_HIGH" de l'évènement contiennent "Nom d’usage"

@@ -2,7 +2,7 @@ import { renderHook } from '@testing-library/react';
 import { useLoaderData } from 'react-router';
 
 import type { SchemaFieldType } from '@fc/dto2form';
-import { removeEmptyValues } from '@fc/dto2form';
+import { normalizeEmptyValues } from '@fc/dto2form';
 import { parseInitialValues, useDto2FormService } from '@fc/dto2form-service';
 import { useNavigateWithState } from '@fc/routing';
 
@@ -17,7 +17,9 @@ describe('useInstanceUpdate', () => {
   };
 
   const schemaMock = Symbol('any-acme-schema') as unknown as SchemaFieldType[];
-  const initialValuesMock = currentVersionMock.data;
+  const schemaInitialValuesMock = { defaultField: 'default-value' };
+  const formInitialValuesMock = currentVersionMock.data;
+  const preSubmitMock = jest.fn();
   const submitHandlerMock = jest.fn();
   const formMock = {
     id: 'any-acme-form-id',
@@ -25,14 +27,18 @@ describe('useInstanceUpdate', () => {
 
   const UseDto2FormServiceResult = {
     form: formMock,
-    initialValues: initialValuesMock,
+    initialValues: formInitialValuesMock,
     schema: schemaMock,
     submitHandler: submitHandlerMock,
   };
 
   beforeEach(() => {
     // Given
-    jest.mocked(parseInitialValues).mockReturnValue(initialValuesMock);
+    jest
+      .mocked(parseInitialValues)
+      .mockReturnValueOnce(formInitialValuesMock)
+      .mockReturnValueOnce(schemaInitialValuesMock);
+    jest.mocked(normalizeEmptyValues).mockReturnValue(preSubmitMock);
     jest.mocked(useDto2FormService).mockReturnValue(UseDto2FormServiceResult);
     jest.mocked(useLoaderData).mockReturnValue({
       data: {
@@ -87,12 +93,22 @@ describe('useInstanceUpdate', () => {
     });
   });
 
-  it('should call parseInitialValues with parameters', () => {
+  it('should call parseInitialValues for schema defaults and form values', () => {
     // When
     renderHook(() => useInstanceUpdate());
 
     // Then
-    expect(parseInitialValues).toHaveBeenCalledExactlyOnceWith(schemaMock, currentVersionMock.data);
+    expect(parseInitialValues).toHaveBeenCalledTimes(2);
+    expect(parseInitialValues).toHaveBeenNthCalledWith(1, schemaMock, currentVersionMock.data);
+    expect(parseInitialValues).toHaveBeenNthCalledWith(2, schemaMock);
+  });
+
+  it('should call normalizeEmptyValues with parsed schema defaults', () => {
+    // When
+    renderHook(() => useInstanceUpdate());
+
+    // Then
+    expect(normalizeEmptyValues).toHaveBeenCalledExactlyOnceWith(schemaInitialValuesMock);
   });
 
   it('should return the correct configuration', () => {
@@ -105,9 +121,9 @@ describe('useInstanceUpdate', () => {
         ...formMock,
         title: currentVersionMock.data.name,
       },
-      initialValues: initialValuesMock,
+      initialValues: formInitialValuesMock,
       postSubmit: expect.any(Function),
-      preSubmit: removeEmptyValues,
+      preSubmit: preSubmitMock,
       schema: schemaMock,
       submitHandler: submitHandlerMock,
     });

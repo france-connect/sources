@@ -12,7 +12,7 @@ const config: Partial<Cypress.ResolvedConfigOptions<never>> = {
   },
   env: {
     // Base Configuration
-    PLATFORM: 'fcp-low',
+    TEST_PLATFORM: 'fcp-low',
     TEST_ENV: 'docker',
     TAGS: '@fcpLow and not @ignoreLow and not @validationVisuelle',
     // Test environment access
@@ -38,6 +38,7 @@ const config: Partial<Cypress.ResolvedConfigOptions<never>> = {
     ELASTICSEARCH_PASSWORD: 'docker-stack',
     // Other Configuration
     LOG_FILE_PATH: `${process.env.LOG_VOLUMES_DIR}/core-fcp-low.log`,
+    TECHNICAL_LOG_FILE_PATH: `${process.env.LOG_VOLUMES_DIR}/core-fcp-low-out.log`,
     EIDAS_LOG_FILE_PATH: `${process.env.LOG_VOLUMES_DIR}/eidas-bridge.log`,
     EXPLOIT_LOG_FILE_PATH: `${process.env.LOG_VOLUMES_DIR}/fcexploitation.log`,
     // Keys used on the local stack

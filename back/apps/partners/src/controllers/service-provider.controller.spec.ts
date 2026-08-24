@@ -113,7 +113,7 @@ describe('ServiceProviderController', () => {
       datapassScopes: [
         'Identifiant technique',
         'Prénoms',
-        'Nom de naissance',
+        'Nom de famille',
         'Adresse électronique',
       ],
       fcScopes: ['openid', 'profile', 'email'],

@@ -20,7 +20,7 @@ FCP validation with system tests implemented using a Test Framework (based on Cy
 
 | Environment Variable | Description                       | Comment                                      |
 | -------------------- | --------------------------------- | -------------------------------------------- |
-| PLATFORM             | Platform under test               | `fcp-high` or `fcp-low`                      |
+| TEST_PLATFORM        | Platform under test               | `fcp-high` or `fcp-low`                      |
 | TEST_ENV             | Test environment                  | `docker` or `integ01`, etc.                  |
 | TAGS                 | Tags expression                   | `@fcpLow and not @ignoreLow`                 |
 | EXPLOIT_ADMIN_NAME   | Exploitation admin username       | needed only for integ01/preprod              |
@@ -226,7 +226,7 @@ docker-stack bdd-eidas-open
 
 ```shell
 # Generate the report for fcp-high integ01
-CYPRESS_PLATFORM=fcp-high CYPRESS_TEST_ENV=integ01 docker-stack bdd-fcp-report
+CYPRESS_TEST_PLATFORM=fcp-high CYPRESS_TEST_ENV=integ01 docker-stack bdd-fcp-report
 ```
 
 ## Accessibility Validation
@@ -281,6 +281,12 @@ docker-stack bdd-ud-test-visual
 # docker-stack reset-db-core-fcp-high
 docker-stack bdd-eidas-test-visual
 ```
+
+- WALLET-BRIDGE
+
+```shell
+docker-stack bdd-wallet-test-visual
+```
 ##### X Server error when running headless Cypress test
 
 When Cypress launches a browser in non-headless mode, it needs access to the X server to display the graphical interface. However, depending on the system configuration, the X server only allows the current user to open a window. 
@@ -321,6 +327,12 @@ docker-stack reset-mongo-as-prod mongo-fcp-low
 CYPRESS_TAGS='@userDashboard and @validationVisuelleProduction and not @ignore' docker-stack bdd-ud-test-visual
 ```
 
+- WALLET-BRIDGE
+
+```shell
+CYPRESS_TAGS='@walletBridge and @validationVisuelleProduction and not @ignore' docker-stack bdd-wallet-test-visual
+```
+
 ### Update the base image files for all of your tests
 
 #### In a development environment
@@ -353,6 +365,12 @@ docker-stack bdd-ud-test-visual --env updateSnapshots=true
 docker-stack bdd-eidas-test-visual --env updateSnapshots=true
 ```
 
+- WALLET-BRIDGE
+
+```shell
+docker-stack bdd-wallet-test-visual --env updateSnapshots=true
+```
+
 #### As in a production environment
 
 > :warning: Don't forget to reset the database afterward, if you want to run tests against the development environment
@@ -376,6 +394,12 @@ CYPRESS_TAGS='@fcpLow and @validationVisuelleProduction and not @ignore' docker-
 ```shell
 docker-stack reset-mongo-as-prod mongo-fcp-low
 CYPRESS_TAGS='@userDashboard and @validationVisuelleProduction and not @ignore' docker-stack bdd-ud-test-visual --env updateSnapshots=true
+```
+
+- WALLET-BRIDGE
+
+```shell
+CYPRESS_TAGS='@walletBridge and @validationVisuelleProduction and not @ignore' docker-stack bdd-wallet-test-visual --env updateSnapshots=true
 ```
 
 ### Prevent test failures when an image diff does not pass
@@ -427,6 +451,7 @@ You can create a test pipeline in Gitlab from a merge request or from the stagin
 | BDD_TAGS_FCP_HIGH                   | tags for the fcp-high BDD tests                                              | by default '@fcpHigh and not @ignoreHigh and @ci'                |
 | BDD_TAGS_EIDAS                      | tags for the eidas-bridge BDD tests                                          | by default '@ci and not @ignore'                                 |
 | BDD_TAGS_UD                         | tags for the user-dashboard BDD tests                                        | by default '@ci and not @ignore'                                 |
+| BDD_TAGS_WALLET                     | tags for the wallet-bridge BDD tests                                        | by default '@ci and not @ignore'                                 |
 
 ## Plugins VSCode
 

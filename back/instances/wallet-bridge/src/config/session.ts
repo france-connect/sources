@@ -1,7 +1,7 @@
 import { ConfigParser } from '@fc/config';
 import { OidcProviderRoutes } from '@fc/oidc-provider';
 import { SessionConfig, SessionCookieOptionsInterface } from '@fc/session';
-import { Routes, WalletBridgeSession } from '@fc/wallet-bridge';
+import { WalletBridgeRoutes, WalletBridgeSession } from '@fc/wallet-bridge';
 
 import App from './app';
 import I18nConfig from './i18n';
@@ -28,11 +28,10 @@ export default {
   slidingExpiration: true,
   middlewareExcludedRoutes: [],
   middlewareIncludedRoutes: [
-    Routes.OPENID4VP_AUTHORIZE_CREATE_INTERACTION,
-    Routes.OPENID4VP_AUTHORIZE_REQUEST_URI,
-    Routes.OPENID4VP_AUTHORIZE_REQUEST_STATUS,
-    Routes.OPENID4VP_AUTHORIZE_REDIRECT,
-    Routes.OIDC_INTERACTION,
+    WalletBridgeRoutes.OPENID4VP_AUTHORIZE_REQUEST_URI,
+    WalletBridgeRoutes.OPENID4VP_AUTHORIZE_REQUEST_STATUS,
+    WalletBridgeRoutes.OPENID4VP_AUTHORIZE_REDIRECT,
+    WalletBridgeRoutes.OIDC_INTERACTION,
     OidcProviderRoutes.AUTHORIZATION,
     OidcProviderRoutes.USERINFO,
   ],
@@ -41,7 +40,7 @@ export default {
     I18n: {
       language: I18nConfig.defaultLanguage,
     },
-    openid4vp: {
+    Openid4vp: {
       interactions: [],
     },
   },

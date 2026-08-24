@@ -13,8 +13,12 @@ exports[`Application should match snapshot 1`] = `
           data-mockid="HelmetProvider"
         >
           <div>
-            <div>
-              ApplicationRoutes
+            <div
+              data-mockid="ModalProvider"
+            >
+              <div>
+                ApplicationRoutes
+              </div>
             </div>
           </div>
         </div>

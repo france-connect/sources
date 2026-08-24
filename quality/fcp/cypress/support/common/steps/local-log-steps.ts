@@ -1,6 +1,8 @@
 import { Then, When } from '@badeball/cypress-cucumber-preprocessor';
 
 import {
+  filterLogs,
+  getAllLogs,
   getBusinessLogs,
   getValueByKeyFromFirstEvent,
   hasBusinessLog,
@@ -85,6 +87,48 @@ Then(
     }).then((logs) => {
       const value = getValueByKeyFromFirstEvent(key, logs);
       cy.get(`@log:${key}`).should(equalNotEqual, value);
+    });
+  },
+);
+
+Then(
+  /^le log technique de code "([^"]+)" est journalisé avec "([^"]+)" "([^"]*)"$/,
+  function (code: string, key: string, value: string) {
+    const { name } = this.env;
+    if (name !== 'docker') {
+      cy.log(
+        'aucune validation des événements dans les logs possible en dehors de la stack locale',
+      );
+      return;
+    }
+
+    const valueMapping = {
+      false: false,
+      'non null': 'RegExp:^.+$',
+      null: null,
+      true: true,
+      undefined: undefined,
+    };
+
+    const DELIMITOR = ' et ';
+    const expectedEvent = {
+      code,
+      ...prepareEventVerification(
+        `"${key}" "${value}"`,
+        DELIMITOR,
+        {},
+        valueMapping,
+      ),
+    };
+
+    const technicalLogFilePath = Cypress.env('TECHNICAL_LOG_FILE_PATH');
+
+    getAllLogs(technicalLogFilePath).then((logs) => {
+      const foundLogs = filterLogs(logs, expectedEvent);
+      expect(
+        foundLogs.length,
+        `aucun log technique de code "${code}" avec "${key}" "${value}" n'a été trouvé`,
+      ).to.be.greaterThan(0);
     });
   },
 );

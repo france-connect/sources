@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="fr" data-fr-scheme="light">
+  <head>
+    <%- include('includes/head.ejs') %>
+  </head>
+  <body id="wb-error-page">
+    <div class="fc-sticky-wrapper">
+      <div class="fc-sticky-body">
+        <%- include('includes/header.ejs') %>
+        <main
+          role="main"
+          id="main-content"
+          class="fr-container fr-mt-10v fr-mt-md-16v"
+        >
+          <div class="fr-grid-row fr-grid-row--gutters">
+            <section
+              data-testid="error-section"
+              class="fr-col-12 fr-col-offset-md-1 fr-col-md-9 fr-mb-6v fr-mb-md-10v"
+            >
+            <h1>Présentation demandée</h1>
+            <p>Response URI: <code><%= responseUri %></code></p>
+
+            <h2>Attributs Disponibles (parmi les attributs demandés)</h2>
+            <% if (availableClaims.length) { %>
+            <ul>
+              <% availableClaims.forEach(function (claim) { %>
+              <li><code><%= claim %></code></li>
+              <% }) %>
+            </ul>
+            <% } else { %>
+            <p>Aucun attribut extrait de la presentation definition.</p>
+            <% } %>
+
+            <details>
+              <summary>Définition de la présentation</summary>
+              <textarea rows="12" cols="100" readonly class="fr-input"><%= presentationDefinition %></textarea>
+            </details>
+
+            <details>
+              <summary>Réponse JSON qui sera envoyée</summary>
+              <textarea rows="12" cols="100" readonly class="fr-input"><%= responsePreview %></textarea>
+            </details>
+
+            <details>
+              <summary>Request JSON</summary>
+              <textarea rows="12" cols="100" readonly class="fr-input"><%= requestPayload %></textarea>
+            </details>
+
+            <form method="post" action="<%= submitUrl %>">
+              <input type="hidden" name="responseUri" value="<%= responseUri %>" />
+              <input
+                type="hidden"
+                name="requestPayload"
+                value="<%= requestPayload %>"
+              />
+              <input
+                type="hidden"
+                name="responsePayload"
+                value="<%= responsePayload %>"
+              />
+              <input type="hidden" name="flow" value="<%= flow %>" />
+              <button
+                type="submit"
+                class="fr-btn"
+                data-testid="wallet-submit-button"
+              >Soumettre la réponse au RP</button>
+            </form>
+
+            <form method="post" action="<%= submitErrorUrl %>" class="fr-mt-2v">
+              <input type="hidden" name="responseUri" value="<%= responseUri %>" />
+              <input
+                type="hidden"
+                name="requestPayload"
+                value="<%= requestPayload %>"
+              />
+              <input type="hidden" name="flow" value="<%= flow %>" />
+              <button
+                type="submit"
+                class="fr-btn fr-btn--secondary"
+                data-testid="wallet-cancel-button"
+              >Annuler l'authentification</button>
+            </form>
+            </section>
+          </div>
+          <div class="fr-grid-row fr-grid-row--gutters"></div>
+        </main>
+      </div>
+      <%- include('includes/footer.ejs') %>
+    </div>
+  </body>
+</html>

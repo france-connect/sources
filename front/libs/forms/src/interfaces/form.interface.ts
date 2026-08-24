@@ -1,6 +1,6 @@
-import type { Decorator } from 'final-form';
+import type { Decorator, FormApi } from 'final-form';
 
-import type { HeadingTag } from '@fc/common';
+import type { ContentType, HeadingTag } from '@fc/common';
 import type { HttpClientDataInterface } from '@fc/http-client';
 
 import type { FormOnSubmitType, FormValidateType } from '../types';
@@ -18,6 +18,7 @@ export interface FormConfigInterface {
   noRequired?: boolean;
   scrollTopOnSubmit?: boolean;
   actions?: FormActionsInterface[];
+  contentType?: ContentType;
 }
 
 export interface FormInterface<T extends HttpClientDataInterface> {
@@ -26,6 +27,6 @@ export interface FormInterface<T extends HttpClientDataInterface> {
   decorators?: Decorator<T, Partial<T>>[];
   onValidate?: FormValidateType<T>;
   onSubmit: FormOnSubmitType<T>;
-  onPreSubmit?: (values: T) => Promise<T>;
+  onPreSubmit?: (values: T, form: FormApi<T, Partial<T>>) => T | Promise<T>;
   onPostSubmit?: FormOnSubmitType<T>;
 }

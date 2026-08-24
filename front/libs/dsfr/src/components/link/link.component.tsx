@@ -2,6 +2,9 @@ import classnames from 'classnames';
 import React from 'react';
 import { Link } from 'react-router';
 
+import { Strings } from '@fc/common';
+import { t } from '@fc/i18n';
+
 import { IconPlacement, Sizes } from '../../enums';
 import type { LinkInterface } from '../../interfaces';
 
@@ -25,25 +28,33 @@ export const LinkComponent = React.memo(
     size = Sizes.MEDIUM,
     target,
     title,
-  }: LinkComponentProps) => (
-    <Link
-      className={classnames(
-        `fr-link fr-link--${size}`,
-        {
+  }: LinkComponentProps) => {
+    const linkTarget = target || (external ? '_blank' : undefined);
+    const isNewWindow = linkTarget === '_blank';
+
+    const linkTitle =
+      title && isNewWindow
+        ? `${title}${Strings.WHITE_SPACE}${Strings.DASH}${Strings.WHITE_SPACE}${t('FC.Common.newWindow')}`
+        : title;
+
+    const linkRel = rel || (external ? 'noopener noreferrer external' : undefined);
+
+    return (
+      <Link
+        className={classnames(className || `fr-link fr-link--${size}`, {
           [`fr-icon-${icon}`]: !!icon,
           [`fr-link--icon-${iconPlacement}`]: !!icon,
-        },
-        className,
-      )}
-      data-testid={dataTestId}
-      rel={rel || (external ? 'noopener noreferrer external' : undefined)}
-      reloadDocument={external}
-      target={target || (external ? '_blank' : undefined)}
-      title={title}
-      to={href}>
-      {label || children}
-    </Link>
-  ),
+        })}
+        data-testid={dataTestId}
+        rel={linkRel}
+        reloadDocument={external}
+        target={linkTarget}
+        title={linkTitle}
+        to={href}>
+        {label || children}
+      </Link>
+    );
+  },
 );
 
 LinkComponent.displayName = 'LinkComponent';

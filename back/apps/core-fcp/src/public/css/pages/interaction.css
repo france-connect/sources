@@ -93,6 +93,24 @@
 
 /* -----------------------------------------------------------------
 
+  WALLET (EUDI)
+
+----------------------------------------------------------------- */
+
+@media (max-width: 47.99em) {
+  #fc-interaction-page .fc-tile--wallet {
+    flex-direction: column;
+  }
+
+  #fc-interaction-page .fc-tile--wallet .fr-tile__header {
+    align-self: center;
+    margin-right: 0;
+    margin-bottom: 1rem;
+  }
+}
+
+/* -----------------------------------------------------------------
+
   BUTTON : HOVER
 
 ----------------------------------------------------------------- */

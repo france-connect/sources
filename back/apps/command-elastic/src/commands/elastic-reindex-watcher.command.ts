@@ -1,21 +1,14 @@
 import { Command, CommandRunner, Option } from 'nest-commander';
 
-import {
-  DEFAULT_TIMEZONE,
-  ElasticControlKeyEnum,
-  ElasticControlPivotEnum,
-  ElasticControlProductEnum,
-  ElasticControlRangeEnum,
-} from '@fc/elasticsearch';
 import { LoggerService } from '@fc/logger';
 
-import { ElasticReindexCommandOptionsInterface } from '../interfaces';
+import { ElasticWatcherCommandOptionsInterface } from '../interfaces';
 import { CommandElasticReindexService } from '../services';
-import { getPreviousMonth } from '../utils';
 
 @Command({
   name: 'elastic-reindex-watcher',
-  description: 'Update the reindex state.',
+  description:
+    'Actualize all running reindexes. Exits with code 0 if all are done, 1 otherwise.',
 })
 export class ElasticReindexWatcherCommand extends CommandRunner {
   constructor(
@@ -27,72 +20,25 @@ export class ElasticReindexWatcherCommand extends CommandRunner {
 
   async run(
     _passedParams: string[],
-    options?: ElasticReindexCommandOptionsInterface,
+    options?: ElasticWatcherCommandOptionsInterface,
   ): Promise<void> {
     this.logger.info('--- Start ElasticReindexWatcherCommand ---');
 
-    const key = options.key as ElasticControlKeyEnum;
-    const product = options.product as ElasticControlProductEnum;
-    const range = options.range as ElasticControlRangeEnum;
-    const pivot = options.pivot as ElasticControlPivotEnum;
-    const period = options?.period || getPreviousMonth();
-    const timezone = DEFAULT_TIMEZONE;
+    const dryRun = Boolean(options?.dryRun);
 
-    await this.reindex.actualizeReindex(
-      { period, product, range, pivot, key, timezone },
-      !!options.dryRun,
-    );
+    const allCompleted = await this.reindex.actualizeAllReindexes(dryRun);
+
+    if (!allCompleted) {
+      this.logger.info(
+        '[Command] Some reindex operations are still pending or running',
+      );
+      process.exitCode = 1;
+      return;
+    }
+
+    this.logger.info('[Command] All reindex operations are in a final state');
 
     this.logger.info('--- End ElasticReindexWatcherCommand ---');
-  }
-
-  @Option({
-    flags: '--key <key>',
-    description:
-      'Product (required). One of: ' +
-      Object.keys(ElasticControlKeyEnum).join(', '),
-  })
-  parseKey(val: string): string {
-    return val;
-  }
-
-  @Option({
-    flags: '--product <product>',
-    description:
-      'Product (required). One of: ' +
-      Object.keys(ElasticControlProductEnum).join(', '),
-  })
-  parseProduct(val: string): string {
-    return val;
-  }
-
-  @Option({
-    flags: '--range <range>',
-    description:
-      'Range (required). One of: ' +
-      Object.keys(ElasticControlRangeEnum).join(', '),
-  })
-  parseRange(val: string): string {
-    return val;
-  }
-
-  @Option({
-    flags: '--pivot <pivot>',
-    description:
-      'Pivot (required). One of: ' +
-      Object.keys(ElasticControlPivotEnum).join(', '),
-  })
-  parsePivot(val: string): string {
-    return val;
-  }
-
-  @Option({
-    flags: '--period <period>',
-    description:
-      'Period (optional). If omitted, defaults to the previous month. Example: 2025-08',
-  })
-  parsePeriod(val: string): string {
-    return val;
   }
 
   @Option({

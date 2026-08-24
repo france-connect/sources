@@ -5,7 +5,7 @@ export const getRmqMessage = <T extends object = object>(
   messageName: string,
 ): Cypress.Chainable<RmqMessage<T>> => {
   return cy
-    .fixture(`${Cypress.env('PLATFORM')}/${service}-messages.json`)
+    .fixture(`${Cypress.env('TEST_PLATFORM')}/${service}-messages.json`)
     .then((fixtures) => {
       const rmqMessage = fixtures[messageName] as RmqMessage<T>;
       expect(rmqMessage, `no message found with ${messageName}`).to.exist;

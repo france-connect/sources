@@ -42,6 +42,8 @@ describe('CommandElasticTransformService', () => {
     updateControlDoc: jest.fn(),
     buildControlDocId: jest.fn(),
     getControlDocById: jest.fn(),
+    findRunningOperations: jest.fn(),
+    countNonFinalOperations: jest.fn(),
   };
 
   const optionsMock: ElasticControlTransformOptionsDto = {
@@ -96,6 +98,132 @@ describe('CommandElasticTransformService', () => {
 
   it('should be defined', () => {
     expect(service).toBeDefined();
+  });
+
+  describe('actualizeAllTransforms', () => {
+    const runningDocMock: ControlDocumentInterface = {
+      ...controlDocMock,
+      state: ControlStatesEnum.RUNNING,
+    };
+
+    beforeEach(() => {
+      service['getNextState'] = jest
+        .fn()
+        .mockReturnValue(ControlStatesEnum.COMPLETED);
+
+      controlDocumentMock.findRunningOperations.mockResolvedValue([
+        runningDocMock,
+      ]);
+      controlDocumentMock.updateControlDoc.mockResolvedValue(undefined);
+      controlDocumentMock.countNonFinalOperations.mockResolvedValue(0);
+      transformServiceMock.findTransform.mockResolvedValue(transformMock);
+    });
+
+    it('should call controlDocument.findRunningOperations', async () => {
+      // When
+      await service.actualizeAllTransforms(dryRun);
+
+      // Then
+      expect(
+        controlDocumentMock.findRunningOperations,
+      ).toHaveBeenCalledExactlyOnceWith(ElasticOperationsEnum.TRANSFORM);
+    });
+
+    it('should call transform.findTransform for each doc', async () => {
+      // When
+      await service.actualizeAllTransforms(dryRun);
+
+      // Then
+      expect(
+        transformServiceMock.findTransform,
+      ).toHaveBeenCalledExactlyOnceWith(runningDocMock.options);
+    });
+
+    it('should call getNextState for each doc', async () => {
+      // When
+      await service.actualizeAllTransforms(dryRun);
+
+      // Then
+      expect(service['getNextState']).toHaveBeenCalledExactlyOnceWith(
+        transformMock,
+      );
+    });
+
+    it('should call controlDocument.updateControlDoc for each doc', async () => {
+      // When
+      await service.actualizeAllTransforms(dryRun);
+
+      // Then
+      expect(
+        controlDocumentMock.updateControlDoc,
+      ).toHaveBeenCalledExactlyOnceWith(
+        runningDocMock,
+        ControlStatesEnum.COMPLETED,
+        transformMock,
+        dryRun,
+      );
+    });
+
+    it('should call controlDocument.countNonFinalOperations', async () => {
+      // When
+      await service.actualizeAllTransforms(dryRun);
+
+      // Then
+      expect(
+        controlDocumentMock.countNonFinalOperations,
+      ).toHaveBeenCalledExactlyOnceWith(ElasticOperationsEnum.TRANSFORM);
+    });
+
+    it('should return true when remaining is 0', async () => {
+      // Given
+      controlDocumentMock.countNonFinalOperations.mockResolvedValue(0);
+
+      // When
+      const result = await service.actualizeAllTransforms(dryRun);
+
+      // Then
+      expect(result).toBe(true);
+    });
+
+    it('should return false when remaining is > 0', async () => {
+      // Given
+      controlDocumentMock.countNonFinalOperations.mockResolvedValue(3);
+
+      // When
+      const result = await service.actualizeAllTransforms(dryRun);
+
+      // Then
+      expect(result).toBe(false);
+    });
+
+    it('should handle empty docs list', async () => {
+      // Given
+      controlDocumentMock.findRunningOperations.mockResolvedValue([]);
+
+      // When
+      const result = await service.actualizeAllTransforms(dryRun);
+
+      // Then
+      expect(transformServiceMock.findTransform).not.toHaveBeenCalled();
+      expect(controlDocumentMock.updateControlDoc).not.toHaveBeenCalled();
+      expect(result).toBe(true);
+    });
+
+    it('should log messages', async () => {
+      // When
+      await service.actualizeAllTransforms(dryRun);
+
+      // Then
+      expect(loggerMock.debug).toHaveBeenCalledWith(
+        `[Command] Actualizing all transforms`,
+      );
+      expect(loggerMock.debug).toHaveBeenCalledWith(
+        `[Command] Transform "${runningDocMock.id}": ${runningDocMock.state} -> ${ControlStatesEnum.COMPLETED}`,
+      );
+      expect(loggerMock.debug).toHaveBeenCalledWith(
+        `[Command] Remaining non-final transform operations: 0`,
+      );
+    });
   });
 
   describe('safeInitializeTransform', () => {

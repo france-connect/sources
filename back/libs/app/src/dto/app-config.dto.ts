@@ -90,6 +90,10 @@ export class AppConfig {
   aidantsConnectUid?: string;
 
   @IsOptional()
+  @IsString()
+  walletBridgeUid?: string;
+
+  @IsOptional()
   @IsEnum(Environment)
   environment?: Environment;
 }

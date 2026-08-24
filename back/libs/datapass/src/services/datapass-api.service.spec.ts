@@ -397,7 +397,6 @@ describe('DatapassApiService', () => {
       expect(httpServiceMock.get).toHaveBeenCalledExactlyOnceWith(urlMock, {
         params: {
           state: 'validated',
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           definition_id: 'france_connect',
           limit: 1000,
           offset: offsetMock,

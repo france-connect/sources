@@ -6,6 +6,10 @@ Given("j'utilise un compte usager {string}", function (description: string) {
   this.user = getUserByCriteria(this.users, [description]);
 });
 
+Given("j'utilise un PID {string}", function (description: string) {
+  this.user = getUserByCriteria(this.users, [description]);
+});
+
 Given(
   "j'utilise un compte usager actif pour ce fournisseur d'identité",
   function () {

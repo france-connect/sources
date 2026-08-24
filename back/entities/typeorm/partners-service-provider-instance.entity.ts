@@ -31,6 +31,12 @@ export class PartnersServiceProviderInstance {
   })
   environment: EnvironmentEnum;
 
+  @Column({
+    type: 'boolean',
+    default: false,
+  })
+  markedForDeletion: boolean;
+
   @OneToMany(
     () => PartnersServiceProviderInstanceVersion,
     (version: PartnersServiceProviderInstanceVersion) => version.instance,

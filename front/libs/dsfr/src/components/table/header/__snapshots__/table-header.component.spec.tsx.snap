@@ -26,6 +26,37 @@ exports[`TableHeaderComponent should match the snapshot 1`] = `
 </table>
 `;
 
+exports[`TableHeaderComponent should match the snapshot with showActionsColumn true 1`] = `
+<table>
+  <thead
+    class="any-classname-mock"
+  >
+    <tr>
+      <th
+        scope="col"
+      >
+        column-mock-1
+      </th>
+      <th
+        scope="col"
+      >
+        column-mock-2
+      </th>
+      <th
+        scope="col"
+      >
+        column-mock-3
+      </th>
+      <th
+        scope="col"
+      >
+        DSFR.table.columnActions.label
+      </th>
+    </tr>
+  </thead>
+</table>
+`;
+
 exports[`TableHeaderComponent should match the snapshot without classnames 1`] = `
 <table>
   <thead>

@@ -763,9 +763,9 @@ const fip = {
 
   // Wallet Bridge as Identity Provider (EUDI wallet, standard OIDC, signing only — no encryption)
   "wallet-bridge": {
-    uid: "b6d907cf-3552-41f3-80d7-a7685badc3a9",
-    url: "https://wallet-bridge-low.docker.dev-franceconnect.fr",
-    name: "wallet-bridge-low",
+    uid: "wallet-bridge",
+    url: "https://wallet-bridge.docker.dev-franceconnect.fr",
+    name: "wallet-bridge",
     image: "fi-mock-eleve.svg",
     imageFocus: "fi-mock-eleve.svg",
     alt: "Wallet Bridge",
@@ -774,9 +774,9 @@ const fip = {
     display: true,
     isBeta: false,
     featureHandlers: {
-      coreVerify: "core-fcp-default-verify",
+      coreVerify: "core-fcp-eidas-verify",
       authenticationEmail: null,
-      idpIdentityCheck: "core-fcp-default-identity-check",
+      idpIdentityCheck: "core-fcp-eidas-identity-check",
       coreAuthorization: "core-fcp-default-authorization",
     },
     clientID: "wallet-bridge-low-client-id",
@@ -787,14 +787,11 @@ const fip = {
     token_endpoint_auth_method: "client_secret_post",
     discovery: false,
     order: 9,
-    authzURL:
-      "https://wallet-bridge-low.docker.dev-franceconnect.fr/authorize",
-    tokenURL:
-      "https://wallet-bridge-low.docker.dev-franceconnect.fr/token",
+    authzURL: "https://wallet-bridge.docker.dev-franceconnect.fr/authorize",
+    tokenURL: "https://wallet-bridge.docker.dev-franceconnect.fr/token",
     userInfoURL:
-      "https://wallet-bridge-low.docker.dev-franceconnect.fr/userinfo",
-    jwksURL:
-      "https://wallet-bridge-low.docker.dev-franceconnect.fr/jwks",
+      "https://wallet-bridge.docker.dev-franceconnect.fr/userinfo",
+    jwksURL: "https://wallet-bridge.docker.dev-franceconnect.fr/jwks",
     id_token_signed_response_alg: "ES256",
     // Encryption is out of scope — wallet-bridge signs only (ES256)
     id_token_encrypted_response_alg: "",

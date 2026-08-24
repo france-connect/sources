@@ -1,5 +1,5 @@
 import { Expose } from 'class-transformer';
-import { IsEnum, IsString, Matches } from 'class-validator';
+import { IsEnum, IsString } from 'class-validator';
 
 import {
   ElasticControlKeyEnum,
@@ -7,8 +7,7 @@ import {
   ElasticControlProductEnum,
   ElasticControlRangeEnum,
 } from '../enums';
-
-const PERIOD_REGEX = /^\d{4}-(0[1-9]|1[0-2])$/;
+import { IsPeriodMatchingRange } from '../validators';
 
 export class ElasticControlReindexOptionsDto {
   @Expose()
@@ -25,14 +24,8 @@ export class ElasticControlReindexOptionsDto {
 
   @Expose()
   @IsString()
-  @Matches(PERIOD_REGEX, {
-    message: 'period must be in the format YYYY-MM',
-  })
+  @IsPeriodMatchingRange()
   readonly period: string;
-
-  @Expose()
-  @IsString()
-  readonly timezone?: string;
 
   @Expose()
   @IsEnum(ElasticControlKeyEnum)

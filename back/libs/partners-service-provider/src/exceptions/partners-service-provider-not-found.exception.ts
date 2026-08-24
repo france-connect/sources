@@ -5,7 +5,7 @@ import { PartnersServiceProviderBaseException } from './partners-service-provide
 
 export class PartnersServiceProviderNotFoundException extends PartnersServiceProviderBaseException {
   static CODE = ErrorCode.SERVICE_PROVIDER_NOT_FOUND;
-  static DOCUMENTATION = "Le fournisseur de service n'a pas été trouvé.";
+  static DOCUMENTATION = 'Le fournisseur de service n’a pas été trouvé.';
   static UI =
     'PartnersServiceProvider.exceptions.PartnersServiceProviderNotFoundException';
 

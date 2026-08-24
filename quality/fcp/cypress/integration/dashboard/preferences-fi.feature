@@ -43,7 +43,7 @@ Fonctionnalité: Préférences FI
     Quand je me connecte au fournisseur d'identité via FranceConnect
     Alors je suis redirigé vers la page erreur technique FranceConnect
     Et le code d'erreur FranceConnect est "Y100011"
-    Et le message d'erreur FranceConnect est "Vous avez bloqué l'utilisation de ce fournisseur d'identité. Pour pouvoir l'utiliser à nouveau, merci de consulter notre page d'aide FranceConnect. Dans le cas où vous ne parviendriez pas à débloquer votre accès, veuillez nous contacter et nous transmettre un justificatif d'identité."
+    Et le message d'erreur FranceConnect est "Vous avez bloqué l’utilisation de ce fournisseur d’identité. Pour pouvoir l’utiliser à nouveau, merci de consulter notre page d’aide FranceConnect. Dans le cas où vous ne parviendriez pas à débloquer votre accès, veuillez nous contacter et nous transmettre un justificatif d’identité."
     Et le bouton "consulter la faq" est affiché
     Et le lien vers la faq contient le code d'erreur "Y100011"
 
@@ -63,7 +63,7 @@ Fonctionnalité: Préférences FI
     Quand je me connecte au fournisseur d'identité via FranceConnect
     Alors je suis redirigé vers la page erreur technique FranceConnect
     Et le code d'erreur FranceConnect est "Y100011"
-    Et le message d'erreur FranceConnect est "Vous avez bloqué l'utilisation de ce fournisseur d'identité. Pour pouvoir l'utiliser à nouveau, merci de consulter notre page d'aide FranceConnect. Dans le cas où vous ne parviendriez pas à débloquer votre accès, veuillez nous contacter et nous transmettre un justificatif d'identité."
+    Et le message d'erreur FranceConnect est "Vous avez bloqué l’utilisation de ce fournisseur d’identité. Pour pouvoir l’utiliser à nouveau, merci de consulter notre page d’aide FranceConnect. Dans le cas où vous ne parviendriez pas à débloquer votre accès, veuillez nous contacter et nous transmettre un justificatif d’identité."
     Et le bouton "consulter la faq" est affiché
     Et le lien vers la faq contient le code d'erreur "Y100011"
 
@@ -131,7 +131,7 @@ Fonctionnalité: Préférences FI
     Quand je me connecte au fournisseur d'identité via FranceConnect
     Alors je suis redirigé vers la page erreur technique FranceConnect
     Et le code d'erreur FranceConnect est "Y100011"
-    Et le message d'erreur FranceConnect est "Vous avez bloqué l'utilisation de ce fournisseur d'identité. Pour pouvoir l'utiliser à nouveau, merci de consulter notre page d'aide FranceConnect. Dans le cas où vous ne parviendriez pas à débloquer votre accès, veuillez nous contacter et nous transmettre un justificatif d'identité."
+    Et le message d'erreur FranceConnect est "Vous avez bloqué l’utilisation de ce fournisseur d’identité. Pour pouvoir l’utiliser à nouveau, merci de consulter notre page d’aide FranceConnect. Dans le cas où vous ne parviendriez pas à débloquer votre accès, veuillez nous contacter et nous transmettre un justificatif d’identité."
     Et le bouton "consulter la faq" est affiché
     Et le lien vers la faq contient le code d'erreur "Y100011"
 
@@ -185,7 +185,7 @@ Fonctionnalité: Préférences FI
     Quand je me connecte au fournisseur d'identité via FranceConnect
     Alors je suis redirigé vers la page erreur technique FranceConnect
     Et le code d'erreur FranceConnect est "Y100011"
-    Et le message d'erreur FranceConnect est "Vous avez bloqué l'utilisation de ce fournisseur d'identité. Pour pouvoir l'utiliser à nouveau, merci de consulter notre page d'aide FranceConnect. Dans le cas où vous ne parviendriez pas à débloquer votre accès, veuillez nous contacter et nous transmettre un justificatif d'identité."
+    Et le message d'erreur FranceConnect est "Vous avez bloqué l’utilisation de ce fournisseur d’identité. Pour pouvoir l’utiliser à nouveau, merci de consulter notre page d’aide FranceConnect. Dans le cas où vous ne parviendriez pas à débloquer votre accès, veuillez nous contacter et nous transmettre un justificatif d’identité."
     Et le bouton "consulter la faq" est affiché
     Et le lien vers la faq contient le code d'erreur "Y100011"
 

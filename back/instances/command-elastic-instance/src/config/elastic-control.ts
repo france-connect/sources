@@ -8,4 +8,5 @@ export default {
   controlIndex: env.string('CONTROL_INDEX'),
   lowTracksIndex: env.string('LOW_TRACKS_INDEX'),
   highTracksIndex: env.string('HIGH_TRACKS_INDEX'),
+  runningOperationsMaxSize: env.number('RUNNING_OPERATIONS_MAX_SIZE'),
 } as ElasticControlConfig;

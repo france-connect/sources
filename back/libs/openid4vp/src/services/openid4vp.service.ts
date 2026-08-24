@@ -1,14 +1,21 @@
+import { Observable } from 'rxjs';
+
 import { Injectable } from '@nestjs/common';
 
 import { nowInSeconds } from '@fc/common';
 import { MdocDocumentInterface, SimpleDocumentInterface } from '@fc/mdoc';
 
 import { Openid4vpInteractionDto, Openid4vpRequestConfig } from '../dto';
+import {
+  Openid4vpAuthorizationError,
+  Openid4vpInteractionStatus,
+} from '../enums';
 import { Openid4vpAuthorizationNotFoundException } from '../exceptions';
 import {
   AuthorizationRequestObjectInterface,
   AuthorizationRequestPayload,
 } from '../interfaces';
+import { Openid4vpInteractionStatusService } from './openid4vp-interaction-status.service';
 import { Openid4vpRequestService } from './openid4vp-request.service';
 import { Openid4vpResponseService } from './openid4vp-response.service';
 import { Openid4vpSessionService } from './openid4vp-session.service';
@@ -19,12 +26,15 @@ export class Openid4vpService {
     private readonly request: Openid4vpRequestService,
     private readonly session: Openid4vpSessionService,
     private readonly response: Openid4vpResponseService,
+    private readonly interactionStatus: Openid4vpInteractionStatusService,
   ) {}
 
   async createAuthorizationRequest(
+    id: string,
     options: Openid4vpRequestConfig,
   ): Promise<string> {
     const params = this.request.generateInteractionParams(
+      id,
       options.presentationId,
     );
 
@@ -70,6 +80,30 @@ export class Openid4vpService {
     return interaction;
   }
 
+  async bindInteractionToBackendId(
+    backendId: string,
+    interaction: Openid4vpInteractionDto,
+  ): Promise<string> {
+    return await this.session.bindInteractionToBackendId(
+      backendId,
+      interaction,
+    );
+  }
+
+  async unbindInteractionFromBackendId(backendId: string): Promise<void> {
+    return await this.session.unbindInteractionFromBackendId(backendId);
+  }
+
+  async getInteractionByBackendId(
+    backendId: string,
+  ): Promise<Openid4vpInteractionDto> {
+    const interaction = await this.session.getInteractionByBackendId(backendId);
+
+    this.checkInteraction(interaction);
+
+    return interaction;
+  }
+
   async getInteractionByState(state: string): Promise<Openid4vpInteractionDto> {
     const interaction = await this.session.getInteractionByState(state);
 
@@ -107,6 +141,20 @@ export class Openid4vpService {
     response: SimpleDocumentInterface<unknown>[],
   ): Promise<void> {
     return await this.session.saveResponse(interaction, response);
+  }
+
+  async saveError(
+    interaction: Openid4vpInteractionDto,
+    error: Openid4vpAuthorizationError,
+    errorDescription: string,
+  ): Promise<void> {
+    return await this.session.saveError(interaction, error, errorDescription);
+  }
+
+  subscribeToStatusChanges(
+    interactionId: string,
+  ): Observable<Openid4vpInteractionStatus> {
+    return this.interactionStatus.subscribeToStatusChanges(interactionId);
   }
 
   private checkInteraction(interaction: Openid4vpInteractionDto): void {

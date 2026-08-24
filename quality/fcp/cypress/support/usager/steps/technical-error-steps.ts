@@ -48,7 +48,7 @@ Then(
 );
 
 Then(
-  "le lien vers la faq contient le code d'erreur {string}",
+  /^le lien vers (?:la faq|le support) contient le code d'erreur "([^"]*)"$/,
   function (errorCode: string) {
     technicalErrorPage.checkSupportLinkHref(errorCode);
   },

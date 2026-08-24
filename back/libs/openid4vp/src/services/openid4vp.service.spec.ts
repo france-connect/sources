@@ -1,10 +1,14 @@
+import { of } from 'rxjs';
+
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { SimpleDocumentInterface } from '@fc/mdoc';
 
 import { Openid4vpInteractionDto, Openid4vpRequestConfig } from '../dto';
+import { Openid4vpAuthorizationError } from '../enums';
 import { Openid4vpAuthorizationNotFoundException } from '../exceptions';
 import { Openid4vpService } from './openid4vp.service';
+import { Openid4vpInteractionStatusService } from './openid4vp-interaction-status.service';
 import { Openid4vpRequestService } from './openid4vp-request.service';
 import { Openid4vpResponseService } from './openid4vp-response.service';
 import { Openid4vpSessionService } from './openid4vp-session.service';
@@ -21,16 +25,24 @@ describe('Openid4vpService', () => {
 
   const sessionServiceMock = {
     bindRequestToSession: jest.fn(),
+    bindInteractionToBackendId: jest.fn(),
+    unbindInteractionFromBackendId: jest.fn(),
     saveInteraction: jest.fn(),
     setAuthorizationRequestObjectAsRead: jest.fn(),
     getInteractionById: jest.fn(),
     getInteractionByState: jest.fn(),
     getSessionAuthorizationRequests: jest.fn(),
     saveResponse: jest.fn(),
+    saveError: jest.fn(),
+    getInteractionByBackendId: jest.fn(),
   };
 
   const responseServiceMock = {
     parseAuthorizationResponse: jest.fn(),
+  };
+
+  const interactionStatusServiceMock = {
+    subscribeToStatusChanges: jest.fn(),
   };
 
   const interactionMock = {
@@ -48,6 +60,8 @@ describe('Openid4vpService', () => {
     presentationId: 'presentationIdMock',
   } as unknown as Openid4vpRequestConfig;
 
+  const interactionIdMock = 'interactionIdMock';
+
   beforeEach(async () => {
     jest.resetAllMocks();
 
@@ -57,6 +71,7 @@ describe('Openid4vpService', () => {
         Openid4vpRequestService,
         Openid4vpSessionService,
         Openid4vpResponseService,
+        Openid4vpInteractionStatusService,
       ],
     })
       .overrideProvider(Openid4vpRequestService)
@@ -65,6 +80,8 @@ describe('Openid4vpService', () => {
       .useValue(sessionServiceMock)
       .overrideProvider(Openid4vpResponseService)
       .useValue(responseServiceMock)
+      .overrideProvider(Openid4vpInteractionStatusService)
+      .useValue(interactionStatusServiceMock)
       .compile();
 
     service = module.get<Openid4vpService>(Openid4vpService);
@@ -83,17 +100,26 @@ describe('Openid4vpService', () => {
 
     it('should generate the interaction params from the request presentationId', async () => {
       // When
-      await service.createAuthorizationRequest(requestConfigMock);
+      await service.createAuthorizationRequest(
+        interactionIdMock,
+        requestConfigMock,
+      );
 
       // Then
       expect(
         requestServiceMock.generateInteractionParams,
-      ).toHaveBeenCalledExactlyOnceWith(requestConfigMock.presentationId);
+      ).toHaveBeenCalledExactlyOnceWith(
+        interactionIdMock,
+        requestConfigMock.presentationId,
+      );
     });
 
     it('should bind the generated interaction id to the session', async () => {
       // When
-      await service.createAuthorizationRequest(requestConfigMock);
+      await service.createAuthorizationRequest(
+        interactionIdMock,
+        requestConfigMock,
+      );
 
       // Then
       expect(
@@ -103,7 +129,10 @@ describe('Openid4vpService', () => {
 
     it('should save the interaction params', async () => {
       // When
-      await service.createAuthorizationRequest(requestConfigMock);
+      await service.createAuthorizationRequest(
+        interactionIdMock,
+        requestConfigMock,
+      );
 
       // Then
       expect(
@@ -113,8 +142,10 @@ describe('Openid4vpService', () => {
 
     it('should return the generated interaction id', async () => {
       // When
-      const result =
-        await service.createAuthorizationRequest(requestConfigMock);
+      const result = await service.createAuthorizationRequest(
+        interactionIdMock,
+        requestConfigMock,
+      );
 
       // Then
       expect(result).toBe(interactionMock.id);
@@ -268,6 +299,92 @@ describe('Openid4vpService', () => {
 
       // Then
       expect(service['checkInteraction']).toHaveBeenCalledWith(interactionMock);
+    });
+  });
+
+  describe('bindInteractionToBackendId', () => {
+    // Given
+    const backendIdMock = 'backendIdMock';
+
+    it('should delegate to the session service', async () => {
+      // When
+      await service.bindInteractionToBackendId(backendIdMock, interactionMock);
+
+      // Then
+      expect(
+        sessionServiceMock.bindInteractionToBackendId,
+      ).toHaveBeenCalledExactlyOnceWith(backendIdMock, interactionMock);
+    });
+
+    it('should return the backend id', async () => {
+      // Given
+      sessionServiceMock.bindInteractionToBackendId.mockResolvedValueOnce(
+        backendIdMock,
+      );
+
+      // When
+      const result = await service.bindInteractionToBackendId(
+        backendIdMock,
+        interactionMock,
+      );
+
+      // Then
+      expect(result).toBe(backendIdMock);
+    });
+  });
+
+  describe('unbindInteractionFromBackendId', () => {
+    // Given
+    const backendIdMock = 'backendIdMock';
+
+    it('should delegate to the session service', async () => {
+      // When
+      await service.unbindInteractionFromBackendId(backendIdMock);
+
+      // Then
+      expect(
+        sessionServiceMock.unbindInteractionFromBackendId,
+      ).toHaveBeenCalledExactlyOnceWith(backendIdMock);
+    });
+  });
+
+  describe('getInteractionByBackendId', () => {
+    // Given
+    const backendIdMock = 'backendIdMock';
+
+    beforeEach(() => {
+      sessionServiceMock.getInteractionByBackendId.mockResolvedValueOnce(
+        interactionMock,
+      );
+      service['checkInteraction'] = jest.fn();
+    });
+
+    it('should delegate to the session service', async () => {
+      // When
+      await service.getInteractionByBackendId(backendIdMock);
+
+      // Then
+      expect(
+        sessionServiceMock.getInteractionByBackendId,
+      ).toHaveBeenCalledExactlyOnceWith(backendIdMock);
+    });
+
+    it('should check the interaction', async () => {
+      // When
+      await service.getInteractionByBackendId(backendIdMock);
+
+      // Then
+      expect(service['checkInteraction']).toHaveBeenCalledExactlyOnceWith(
+        interactionMock,
+      );
+    });
+
+    it('should return the interaction when found', async () => {
+      // When
+      const result = await service.getInteractionByBackendId(backendIdMock);
+
+      // Then
+      expect(result).toBe(interactionMock);
     });
   });
 
@@ -427,6 +544,31 @@ describe('Openid4vpService', () => {
     });
   });
 
+  describe('saveError', () => {
+    it('should delegate to the session service', async () => {
+      // Given
+      const errorMock = Openid4vpAuthorizationError.ACCESS_DENIED;
+      const errorDescriptionMock = 'errorDescriptionMock';
+      const expectedResult = Symbol('result');
+      sessionServiceMock.saveError.mockResolvedValueOnce(expectedResult);
+
+      // When
+      const result = await service.saveError(
+        interactionMock,
+        errorMock,
+        errorDescriptionMock,
+      );
+
+      // Then
+      expect(sessionServiceMock.saveError).toHaveBeenCalledExactlyOnceWith(
+        interactionMock,
+        errorMock,
+        errorDescriptionMock,
+      );
+      expect(result).toBe(expectedResult);
+    });
+  });
+
   describe('checkInteraction', () => {
     it('should throw when the interaction is not found', () => {
       //When / When
@@ -459,6 +601,25 @@ describe('Openid4vpService', () => {
       expect(() =>
         service['checkInteraction'](notExpiredInteractionMock),
       ).not.toThrow();
+    });
+  });
+
+  describe('subscribeToStatusChanges', () => {
+    it('should delegate to interactionStatus.subscribeToStatusChanges', () => {
+      // Given
+      const expectedObservable$ = of(0);
+      interactionStatusServiceMock.subscribeToStatusChanges.mockReturnValue(
+        expectedObservable$,
+      );
+
+      // When
+      const result = service.subscribeToStatusChanges(interactionMock.id);
+
+      // Then
+      expect(
+        interactionStatusServiceMock.subscribeToStatusChanges,
+      ).toHaveBeenCalledExactlyOnceWith(interactionMock.id);
+      expect(result).toBe(expectedObservable$);
     });
   });
 });

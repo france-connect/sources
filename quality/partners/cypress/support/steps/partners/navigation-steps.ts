@@ -51,3 +51,7 @@ Then(/^je suis (redirigé vers|sur) la page plan du site$/, function () {
 Then(/^je suis (redirigé vers|sur) la page mentions légales$/, function () {
   cy.url().should('include', '/mentions-legales');
 });
+
+Then(/^je suis (redirigé vers|sur) la page accessibilité$/, function () {
+  cy.url().should('include', '/accessibilite');
+});

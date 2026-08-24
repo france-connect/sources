@@ -4,7 +4,7 @@ import type { SchemaFieldType } from '@fc/dto2form';
 
 export const parseInitialValues = <T>(
   schema: SchemaFieldType[] | undefined,
-  values: T | null,
+  values?: T | null,
 ): T => {
   if (!schema) {
     return {} as T;

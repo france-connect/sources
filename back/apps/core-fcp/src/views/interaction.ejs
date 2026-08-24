@@ -34,18 +34,23 @@
                 %>
               </ul>
 
+              <div class="fr-container">
+                <%- include('pages/interaction/interaction.wallet.ejs'); %>
+              </div>
+
               <div class="fr-container fr-col-12 fc-text--center">
                 <%- include('pages/interaction/interaction.eidas.ejs'); %>
               </div>
+
+              <% if (locals.walletBridge) { %>
+              <div class="fr-container">
+                <hr class="fr-hr fr-mt-2w fr-mt-md-4w" />
+              </div>
+              <% } %>
             </section>
           </div>
 
           <div class="fr-container">
-            <section class="fr-grid-row">
-              <div class="fr-col-12 fr-mt-4w fr-mt-md-5w fc-text--center">
-                <%- include('includes/back-button.ejs') %>
-              </div>
-            </section>
             <section
               class="fr-grid-row fr-grid-row--gutters fr-grid-row--center"
             >
@@ -53,6 +58,11 @@
                 <%-
                 include('pages/interaction/interaction.aidants-connect.ejs'); %>
                 <%- include('pages/interaction/interaction.tuto.ejs'); %>
+              </div>
+            </section>
+            <section class="fr-grid-row">
+              <div class="fr-col-12 fc-text--center">
+                <%- include('includes/back-button.ejs') %>
               </div>
             </section>
           </div>

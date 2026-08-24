@@ -9,6 +9,7 @@ import { Dto2FormServiceProvider } from '@fc/dto2form-service';
 import { AppBoundaryComponent } from '@fc/exceptions';
 import { I18nService } from '@fc/i18n';
 import { useMatomo } from '@fc/matomo';
+import { ModalProvider } from '@fc/modal';
 
 import i18n from '../__fixtures__/i18n.fr.json';
 import { AppConfig } from '../config';
@@ -107,6 +108,14 @@ describe('Application', () => {
 
     // Then
     expect(Dto2FormServiceProvider).toHaveBeenCalledOnce();
+  });
+
+  it('should call ModalProvider', () => {
+    // When
+    render(<Application />);
+
+    // Then
+    expect(ModalProvider).toHaveBeenCalledOnce();
   });
 
   it('should call ApplicationRoutes', () => {

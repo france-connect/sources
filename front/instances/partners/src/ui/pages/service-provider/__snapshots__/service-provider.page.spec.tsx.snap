@@ -12,7 +12,7 @@ exports[`ServiceProviderPage should match snapshot 1`] = `
     data-mockid="ServiceProviderScopesComponent"
   />
   <div
-    data-mockid="ServiceProviderPermissionsComponent"
+    data-mockid="ServiceProviderContributorsComponent"
   />
   <div
     data-mockid="ServiceProviderSandboxesComponent"

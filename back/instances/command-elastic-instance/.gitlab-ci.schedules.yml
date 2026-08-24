@@ -1,0 +1,190 @@
+# --- ANCRES YAML ---
+.stats_variables: &stats_variables
+  # Runtime image & command
+  STATS_IMAGE_TAG: 'latest'
+  IMAGE_STATS: '${FC_DOCKER_REGISTRY}/nodejs-apps/command-elastic-instance:${STATS_IMAGE_TAG}'
+  BASE_CMD: 'node /var/www/app/main.js'
+  App_NAME: 'command-elastic'
+  Logger_THRESHOLD: 'info'
+
+  # Network & TLS
+  NO_PROXY: 'docker,.docker.dev-franceconnect.fr,localhost,elasticsearch,*.fcp-pa4'
+  NODE_EXTRA_CA_CERTS: '/etc/ssl/certs/ca-certificates.crt'
+
+  # Vault authentication
+  VAULT_AUTH_PATH: 'gitlab_cicd'
+  VAULT_AUTH_ROLE: 'gitlab_runner'
+  VAULT_SERVER_URL: '$VAULT_SERVER_URL_PREPROD'
+
+  # Runner selection. Defaults to the preprod runner; override per schedule to
+  # target another runner (e.g. a prod runner).
+  RUNNER_TAG: 'poc_stats'
+
+  # Watcher polling (transform & reindex)
+  CHECK_INTERVAL: '30'
+  CHECK_TIMEOUT: '3600'
+
+  # Elastic control behaviour
+  ElasticControl_RUNNING_OPERATIONS_MAX_SIZE: '1000'
+
+  # Extra command flags, forwarded as-is (e.g. '--dry-run --force'). Empty by default.
+  OPTIONS: ''
+
+.vault_secrets: &vault_secrets
+  id_tokens:
+    VAULT_ID_TOKEN:
+      aud: 'https://gitlab.dev-franceconnect.fr'
+  secrets:
+    Elasticsearch_TRACKS_INDEX:
+      vault: cicd/${CI_PROJECT_ID}/preprod/elasticsearch/tracks-index@secret
+      token: $VAULT_ID_TOKEN
+      file: false
+    Elasticsearch_NODES:
+      vault: cicd/${CI_PROJECT_ID}/preprod/elasticsearch/nodes@secret
+      token: $VAULT_ID_TOKEN
+      file: false
+    Elasticsearch_USERNAME:
+      vault: cicd/${CI_PROJECT_ID}/preprod/elasticsearch/username@secret
+      token: $VAULT_ID_TOKEN
+      file: false
+    Elasticsearch_PASSWORD:
+      vault: cicd/${CI_PROJECT_ID}/preprod/elasticsearch/password@secret
+      token: $VAULT_ID_TOKEN
+      file: false
+    ElasticControl_METRICS_INDEX:
+      vault: cicd/${CI_PROJECT_ID}/preprod/elasticsearch/metrics-index@secret
+      token: $VAULT_ID_TOKEN
+      file: false
+    ElasticControl_CONTROL_INDEX:
+      vault: cicd/${CI_PROJECT_ID}/preprod/elasticsearch/control-index@secret
+      token: $VAULT_ID_TOKEN
+      file: false
+    ElasticControl_LOW_TRACKS_INDEX:
+      vault: cicd/${CI_PROJECT_ID}/preprod/elasticsearch/low-tracks-index@secret
+      token: $VAULT_ID_TOKEN
+      file: false
+    ElasticControl_HIGH_TRACKS_INDEX:
+      vault: cicd/${CI_PROJECT_ID}/preprod/elasticsearch/high-tracks-index@secret
+      token: $VAULT_ID_TOKEN
+      file: false
+
+.stats_job: &stats_job
+  variables:
+    <<: *stats_variables
+  image:
+    name: ${IMAGE_STATS}
+  tags:
+    - ${RUNNER_TAG}
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
+
+.watch_script: &watch_script
+  script:
+    - |
+      elapsed=0
+      until ${BASE_CMD} elastic-transform-watcher ${PERIOD:+--period=${PERIOD}}; do
+        if [ "$elapsed" -ge "$CHECK_TIMEOUT" ]; then
+          echo "Timeout: some transforms did not complete within ${CHECK_TIMEOUT}s"
+          exit 1
+        fi
+        echo "Transforms still running, retrying in ${CHECK_INTERVAL}s (elapsed: ${elapsed}s)"
+        sleep ${CHECK_INTERVAL}
+        elapsed=$((elapsed + CHECK_INTERVAL))
+      done
+
+.reindex_watch_script: &reindex_watch_script
+  script:
+    - |
+      elapsed=0
+      until ${BASE_CMD} elastic-reindex-watcher ${PERIOD:+--period=${PERIOD}}; do
+        if [ "$elapsed" -ge "$CHECK_TIMEOUT" ]; then
+          echo "Timeout: some reindexes did not complete within ${CHECK_TIMEOUT}s"
+          exit 1
+        fi
+        echo "Reindexes still running, retrying in ${CHECK_INTERVAL}s (elapsed: ${elapsed}s)"
+        sleep ${CHECK_INTERVAL}
+        elapsed=$((elapsed + CHECK_INTERVAL))
+      done
+
+# --- REPLAY MODE (TASK=replay) ---
+# Replays the complete cycle transform → watch → reindex → watch for a single combination.
+# Required variables: PRODUCT, RANGE, PIVOT, KEY, PERIOD (optional).
+
+stats/replay-transform:
+  <<: [*stats_job, *vault_secrets]
+  stage: Stats Transform
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule" && $TASK == "replay"'
+  script:
+    - ${BASE_CMD} elastic-transform --product=${PRODUCT} --range=${RANGE} --pivot=${PIVOT} ${PERIOD:+--period=${PERIOD}} ${OPTIONS}
+
+stats/replay-transform-watch:
+  <<: [*stats_job, *vault_secrets, *watch_script]
+  stage: Stats Transform Watch
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule" && $TASK == "replay"'
+  needs:
+    - job: stats/replay-transform
+
+stats/replay-reindex:
+  <<: [*stats_job, *vault_secrets]
+  stage: Stats Reindex
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule" && $TASK == "replay"'
+  needs:
+    - job: stats/replay-transform-watch
+  script:
+    - ${BASE_CMD} elastic-reindex --product=${PRODUCT} --range=${RANGE} --pivot=${PIVOT} --key=${KEY} ${PERIOD:+--period=${PERIOD}} ${OPTIONS}
+
+stats/replay-reindex-watch:
+  <<: [*stats_job, *vault_secrets, *reindex_watch_script]
+  stage: Stats Reindex Watch
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule" && $TASK == "replay"'
+  needs:
+    - job: stats/replay-reindex
+
+# --- AUTO MODE (TASK=auto) ---
+# Runs all PRODUCT × PIVOT combinations in parallel for a given RANGE and chains automatically.
+# Required variable: RANGE (month, semester, year).
+# Optional variable: PERIOD (defaults to previous month/semester/year depending on RANGE).
+
+stats/auto-transform:
+  <<: [*stats_job, *vault_secrets]
+  stage: Stats Transform
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule" && $TASK == "auto"'
+  parallel:
+    matrix:
+      - PRODUCT: ['franceconnect', 'franceconnect_plus']
+        PIVOT: ['sp', 'idp', 'sp_idp_pair', 'idp_public_sp', 'idp_private_sp']
+  script:
+    - ${BASE_CMD} elastic-transform --product=${PRODUCT} --range=${RANGE} --pivot=${PIVOT} ${PERIOD:+--period=${PERIOD}} ${OPTIONS}
+
+stats/auto-transform-watch:
+  <<: [*stats_job, *vault_secrets, *watch_script]
+  stage: Stats Transform Watch
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule" && $TASK == "auto"'
+
+stats/auto-reindex:
+  <<: [*stats_job, *vault_secrets]
+  stage: Stats Reindex
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule" && $TASK == "auto"'
+  parallel:
+    matrix:
+      - PRODUCT: ['franceconnect', 'franceconnect_plus']
+        PIVOT: ['sp', 'idp', 'sp_idp_pair', 'idp_public_sp', 'idp_private_sp']
+        KEY: ['nbOfIdentities', 'nbOfConnections']
+  script:
+    - ${BASE_CMD} elastic-reindex --product=${PRODUCT} --range=${RANGE} --pivot=${PIVOT} --key=${KEY} ${PERIOD:+--period=${PERIOD}} ${OPTIONS}
+
+stats/auto-reindex-watch:
+  <<: [*stats_job, *vault_secrets, *reindex_watch_script]
+  stage: Stats Reindex Watch
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule" && $TASK == "auto"'

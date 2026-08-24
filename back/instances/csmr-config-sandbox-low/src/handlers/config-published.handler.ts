@@ -5,7 +5,11 @@ import { PublicationStatusEnum } from '@entities/typeorm';
 
 import { ConfigService } from '@fc/config';
 import { diffKeys } from '@fc/config-abstract-adapter';
-import { ConfigPublishedEvent } from '@fc/csmr-config';
+import {
+  ConfigDeletePublishedEventPropertiesInterface,
+  ConfigPublishedEvent,
+  ConfigWritePublishedEventPropertiesInterface,
+} from '@fc/csmr-config';
 import {
   ActionTypes as ConfigActionTypes,
   CsmrConfigClientService,
@@ -30,21 +34,28 @@ export class ConfigPublishedEventHandler {
   ) {}
 
   async handle(event: ConfigPublishedEvent) {
+    // @NOTE aliased so the type discriminates the deletion properties, they
+    // carry a reduced payload
+    const { properties } = event;
+
+    if (properties.type === ConfigActionTypes.CONFIG_DELETE) {
+      await this.deleteConfigOnPartner(properties);
+      return;
+    }
+
     const { updateProxy } = this.config.get<AppConfig>('App');
 
     if (updateProxy) {
-      await this.updateProxy(event);
+      await this.updateProxy(properties);
     }
 
-    await this.updatePartner(event);
+    await this.updateConfigOnPartner(properties);
   }
 
-  private async updatePartner(event: ConfigPublishedEvent) {
-    const {
-      payload: {
-        message: { meta, payload },
-      },
-    } = event.properties;
+  private async updateConfigOnPartner(
+    properties: ConfigWritePublishedEventPropertiesInterface,
+  ) {
+    const { meta, payload } = properties.payload.message;
 
     const statusMessage = {
       type: ConfigActionTypes.CONFIG_UPDATE,
@@ -58,13 +69,23 @@ export class ConfigPublishedEventHandler {
     await this.partnerClient.publish(statusMessage);
   }
 
-  private async updateProxy(event: ConfigPublishedEvent) {
+  private async deleteConfigOnPartner(
+    properties: ConfigDeletePublishedEventPropertiesInterface,
+  ) {
     const {
-      payload: {
-        message: { payload },
-      },
+      payload: { message },
+    } = properties;
+
+    await this.partnerClient.publish(message);
+  }
+
+  private async updateProxy(
+    properties: ConfigWritePublishedEventPropertiesInterface,
+  ) {
+    const {
       meta: { diff, id },
-    } = event.properties;
+    } = properties;
+    const { payload } = properties.payload.message;
 
     if (!this.hasProxyRelatedDiff(diff)) {
       return;

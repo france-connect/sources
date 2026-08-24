@@ -6,6 +6,7 @@ import { type PropsWithClassName, Strings } from '@fc/common';
 
 import type {
   TableCellValue,
+  TableColumnActionsInterface,
   TableColumnInterface,
   TableDataSourceInterface,
 } from '../../../interfaces';
@@ -15,15 +16,19 @@ interface TableRowComponentProps<T> extends PropsWithClassName {
   index: number;
   tableId: string;
   columns: TableColumnInterface<T>[];
+  actions?: TableColumnActionsInterface<T>;
 }
 
 function TableRowComponentInner<T extends TableDataSourceInterface>({
+  actions,
   columns,
   data,
   index,
   tableId,
 }: TableRowComponentProps<T>) {
   const rowid = `${tableId}--row-${index}`;
+  const hasActions = !!actions;
+
   return (
     <tr data-row-key={index} id={rowid}>
       {columns.map((item, idx) => {
@@ -44,6 +49,7 @@ function TableRowComponentInner<T extends TableDataSourceInterface>({
           </td>
         );
       })}
+      {hasActions && <td>{actions(data, index)}</td>}
     </tr>
   );
 }

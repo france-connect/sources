@@ -1,13 +1,12 @@
 import { Expose } from 'class-transformer';
-import { IsEnum, IsString, Matches } from 'class-validator';
+import { IsEnum, IsOptional, IsString } from 'class-validator';
 
 import {
   ElasticControlPivotEnum,
   ElasticControlProductEnum,
   ElasticControlRangeEnum,
 } from '../enums';
-
-const PERIOD_REGEX = /^\d{4}-(0[1-9]|1[0-2])$/;
+import { IsPeriodMatchingRange } from '../validators';
 
 export class ElasticControlTransformOptionsDto {
   @Expose()
@@ -23,13 +22,8 @@ export class ElasticControlTransformOptionsDto {
   readonly pivot: ElasticControlPivotEnum;
 
   @Expose()
+  @IsOptional()
   @IsString()
-  @Matches(PERIOD_REGEX, {
-    message: 'period must be in the format YYYY-MM',
-  })
-  readonly period: string;
-
-  @Expose()
-  @IsString()
-  readonly timezone?: string;
+  @IsPeriodMatchingRange()
+  readonly period?: string;
 }

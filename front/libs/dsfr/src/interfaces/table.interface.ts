@@ -1,6 +1,10 @@
+import type { ReactNode } from 'react';
+
 export type TableCellValue = string | number | boolean | null | undefined;
 
 export type TableDataSourceInterface = object;
+
+export type TableColumnActionsInterface<T = unknown> = (row: T, index: number) => ReactNode;
 
 type TableColumnBase = {
   label: string;

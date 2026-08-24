@@ -8,12 +8,7 @@ describe('useServiceProviders', () => {
   const itemMock1 = {
     createdAt: '2022-02-22T23:00:00.000Z',
     datapassRequestId: 'DP2024001',
-    datapassScopes: [
-      'Identifiant technique',
-      'Prénoms',
-      'Nom de naissance',
-      'Adresse électronique',
-    ],
+    datapassScopes: ['Identifiant technique', 'Prénoms', 'Nom de famille', 'Adresse électronique'],
     id: 'd7d36b81-0b68-4c26-a399-854848164f29',
     name: "Groupement de coopération sanitaire Système d'information santé Auvergne-Rhône-Alpes",
     organizationName: 'Ministère de la Transition Écologique',
@@ -22,12 +17,7 @@ describe('useServiceProviders', () => {
   const itemMock2 = {
     createdAt: '2022-02-22T23:00:00.000Z',
     datapassRequestId: 'DP2024001',
-    datapassScopes: [
-      'Identifiant technique',
-      'Prénoms',
-      'Nom de naissance',
-      'Adresse électronique',
-    ],
+    datapassScopes: ['Identifiant technique', 'Prénoms', 'Nom de famille', 'Adresse électronique'],
     id: 'b43628dc-83a8-4bb6-8c0b-0234b7aa8e14',
     name: 'Espace Numerique Maritime - Espace marin',
     organizationName: 'Ministère de la Transition Écologique',

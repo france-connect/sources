@@ -5,11 +5,13 @@ import { ButtonTypes, IconPlacement, Priorities, Sizes } from '../../../enums';
 import type { ButtonInterface } from '../../../interfaces';
 
 export interface SimpleButtonProps extends ButtonInterface {
+  ariaLabel?: string;
   hideLabel?: boolean | undefined;
 }
 
 export const SimpleButton = React.memo(
   ({
+    ariaLabel,
     children: label,
     className,
     dataTestId,
@@ -25,6 +27,7 @@ export const SimpleButton = React.memo(
     type: nativeButtonType = ButtonTypes.BUTTON,
   }: SimpleButtonProps) => (
     <button
+      aria-label={ariaLabel}
       className={classnames(
         `fr-btn fr-btn--${size}`,
         {

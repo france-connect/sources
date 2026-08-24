@@ -1,47 +1,54 @@
-import { Command } from 'nest-commander';
+import { Command, CommandRunner, Option } from 'nest-commander';
 
-import {
-  DEFAULT_TIMEZONE,
-  ElasticControlPivotEnum,
-  ElasticControlProductEnum,
-  ElasticControlRangeEnum,
-} from '@fc/elasticsearch';
 import { LoggerService } from '@fc/logger';
 
-import { ElasticTransformCommandOptionsInterface } from '../interfaces';
+import { ElasticWatcherCommandOptionsInterface } from '../interfaces';
 import { CommandElasticTransformService } from '../services';
-import { getPreviousMonth } from '../utils';
-import { ElasticTransformBaseCommand } from './elastic-transform-base.command';
 
 @Command({
   name: 'elastic-transform-watcher',
-  description: 'Update the transform state.',
+  description:
+    'Actualize all running transforms. Exits with code 0 if all are done, 1 otherwise.',
 })
-export class ElasticTransformWatcherCommand extends ElasticTransformBaseCommand {
+export class ElasticTransformWatcherCommand extends CommandRunner {
   constructor(
-    protected readonly logger: LoggerService,
-    protected readonly transform: CommandElasticTransformService,
+    private readonly logger: LoggerService,
+    private readonly transform: CommandElasticTransformService,
   ) {
-    super(logger, transform);
+    super();
   }
 
   async run(
     _passedParams: string[],
-    options?: ElasticTransformCommandOptionsInterface,
+    options?: ElasticWatcherCommandOptionsInterface,
   ): Promise<void> {
     this.logger.debug('--- Start ElasticTransformWatcherCommand ---');
 
-    const product = options.product as ElasticControlProductEnum;
-    const range = options.range as ElasticControlRangeEnum;
-    const pivot = options.pivot as ElasticControlPivotEnum;
-    const period = options?.period || getPreviousMonth();
-    const timezone = DEFAULT_TIMEZONE;
+    const dryRun = Boolean(options?.dryRun);
 
-    await this.transform.actualizeTransform(
-      { period, product, range, pivot, timezone },
-      Boolean(options.dryRun),
+    const allCompleted = await this.transform.actualizeAllTransforms(dryRun);
+
+    if (!allCompleted) {
+      this.logger.debug(
+        '[Command] Some transform operations are still pending or running',
+      );
+      process.exitCode = 1;
+      return;
+    }
+
+    this.logger.debug(
+      '[Command] All transform operations are in a final state',
     );
 
     this.logger.debug('--- End ElasticTransformWatcherCommand ---');
+  }
+
+  @Option({
+    flags: '-d, --dry-run',
+    description:
+      "Don't perform any write operation; just print intended actions.",
+  })
+  parseDryRun(): boolean {
+    return true;
   }
 }

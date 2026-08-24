@@ -1,9 +1,9 @@
 services:
   ####################
-  # Wallet Bridge - FC+ (high)
+  # Wallet Bridge
   ####################
-  wallet-bridge-high:
-    hostname: wallet-bridge-high
+  wallet-bridge:
+    hostname: wallet-bridge
     image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
     user: ${CURRENT_UID}
     working_dir: /var/www/app
@@ -20,10 +20,10 @@ services:
       - "${VOLUMES_DIR}/log:/var/log/app"
       - "${VOLUMES_DIR}/.home:/home"
       - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
+      - "${VOLUMES_DIR}/wallet-bridge/databases/insee:/var/databases"
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/wallet-bridge/.env/wallet-bridge.env"
-      - "${COMPOSE_DIR}/wallet-bridge/.env/wallet-bridge-high.env"
     tty: true
     networks:
       - public
@@ -31,34 +31,8 @@ services:
     init: true
     command: "pm2 logs"
 
-  ####################
-  # Wallet Bridge - FC (low)
-  ####################
-  wallet-bridge-low:
-    hostname: wallet-bridge-low
-    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
-    user: ${CURRENT_UID}
-    working_dir: /var/www/app
-    depends_on:
-      node-modules-back:
-        condition: service_completed_successfully
-      redis-pwd:
-        condition: service_healthy
-      squid:
-        condition: service_started
-    volumes:
-      - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
-      - "${VOLUMES_DIR}/app:/opt/scripts"
-      - "${VOLUMES_DIR}/log:/var/log/app"
-      - "${VOLUMES_DIR}/.home:/home"
-      - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
+  wallet-bridge-devtools:
+    extends:
+      service: wallet-bridge
     env_file:
-      - "${COMPOSE_DIR}/shared/.env/base-app.env"
-      - "${COMPOSE_DIR}/wallet-bridge/.env/wallet-bridge.env"
-      - "${COMPOSE_DIR}/wallet-bridge/.env/wallet-bridge-low.env"
-    tty: true
-    networks:
-      - public
-      - data
-    init: true
-    command: "pm2 logs"
+      - "${COMPOSE_DIR}/wallet-bridge/.env/wallet-bridge-devtools.env"

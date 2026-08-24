@@ -1,3 +1,4 @@
+import { deleteInstance } from './delete-instance';
 import { linkInstancesToServiceProvider } from './link-instances-to-service-provider';
 import { loadAllInstances } from './load-all-instances';
 import { loadAllServiceProviders } from './load-all-service-providers';
@@ -7,6 +8,7 @@ import { PartnersService } from './partners.service';
 
 describe('PartnersService', () => {
   it('should expose partner loader functions', () => {
+    expect(PartnersService.deleteInstance).toBe(deleteInstance);
     expect(PartnersService.linkInstancesToServiceProvider).toBe(linkInstancesToServiceProvider);
     expect(PartnersService.loadAllInstances).toBe(loadAllInstances);
     expect(PartnersService.loadAllServiceProviders).toBe(loadAllServiceProviders);

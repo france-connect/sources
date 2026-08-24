@@ -32,7 +32,7 @@ export class WalletBridgeModule {}
 ```typescript
 import { Injectable } from '@nestjs/common';
 
-import { QrcodeService } from '@fc/qrcode';
+import { QrcodeErrorCorrectionLevel, QrcodeService } from '@fc/qrcode';
 
 @Injectable()
 export class MyUiService {
@@ -40,7 +40,9 @@ export class MyUiService {
 
   async buildQrForUri(requestUri: string) {
     return this.qrcode.generateDataUrl(requestUri, {
-      errorCorrectionLevel: 'H',
+      errorCorrectionLevel: QrcodeErrorCorrectionLevel.LOW,
+      margin: 0,
+      width: 512,
     });
   }
 }
@@ -52,9 +54,9 @@ The second argument is forwarded to `qrcode.toDataURL`. Common options:
 
 | Option | Example | Notes |
 | --- | --- | --- |
-| `errorCorrectionLevel` | `'H'` | Used by wallet-bridge for long `openid4vp://` URIs |
-| `width` | `256` | Pixel width of the output image |
-| `margin` | `2` | Quiet zone modules |
+| `errorCorrectionLevel` | `QrcodeErrorCorrectionLevel.LOW` | Enum mapping to the `qrcode` levels (`L`/`M`/`Q`/`H`). Wallet-bridge uses `LOW`: on-screen QR codes are pristine, and minimal redundancy keeps the module count low for long `openid4vp://` URIs, easing the scan (FC-2733) |
+| `width` | `512` | Pixel width of the output image (`QRCODE_WIDTH_PX` in wallet-bridge) |
+| `margin` | `0` | Quiet zone modules — wallet-bridge sets `0`, the page layout provides the whitespace around the code |
 
 See the [qrcode package documentation](https://www.npmjs.com/package/qrcode#options-1) for the full list.
 

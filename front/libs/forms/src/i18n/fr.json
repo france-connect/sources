@@ -1,6 +1,7 @@
 {
   "Form.FORM_ERROR": "Veuillez réessayer ultérieurement",
   "Form.button.copy": "Copier",
+  "Form.cancel": "Annuler",
   "Form.label.seeAlso": "Plus d’informations",
   "Form.message.requestFailed": "Le message n’a pas pu être envoyé",
   "Form.message.required": "Ce champs est obligatoire",

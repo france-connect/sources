@@ -10,12 +10,14 @@ import { AuthedRoute, RouterErrorBoundaryComponent, UnauthedRoute } from '@fc/ro
 
 import { PageLayout } from './layouts';
 import {
+  AccessibilityPage,
   HomePage,
   InstanceCreatePage,
   InstancesPage,
   InstanceUpdatePage,
   LegalNoticesPage,
   LoginPage,
+  ServiceProviderCreateContributorPage,
   ServiceProviderCreateInstancePage,
   ServiceProviderErrorPage,
   ServiceProviderLinkInstancesPage,
@@ -53,6 +55,12 @@ export const ApplicationRoutes = React.memo(() => {
                 path="creer-instance"
               />
               <Route
+                element={<ServiceProviderCreateContributorPage />}
+                id={getConfigFormById('ContributorCreate').id}
+                loader={loadData('ContributorCreate')}
+                path="ajouter-contributeur"
+              />
+              <Route
                 index
                 element={<ServiceProviderPage />}
                 loader={PartnersService.loadLinkableInstancesByServiceProviderId}
@@ -83,6 +91,7 @@ export const ApplicationRoutes = React.memo(() => {
         <Route index element={<HomePage />} />
       </Route>
       <Route element={<PageLayout />}>
+        <Route element={<AccessibilityPage />} path="accessibilite" />
         <Route element={<LegalNoticesPage />} path="mentions-legales" />
         <Route element={<SitemapPage />} path="plan-du-site" />
       </Route>

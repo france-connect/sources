@@ -87,4 +87,25 @@ describe('TableHeaderComponent', () => {
     expect(col3Element).toBeInTheDocument();
     expect(thElements.item(2)).toBe(col3Element);
   });
+
+  it('should match the snapshot with showActionsColumn true', () => {
+    // When
+    const { container, getByText } = render(
+      <TableHeaderComponent
+        showActionsColumn
+        className="any-classname-mock"
+        columns={columnsMock}
+        tableId="any-table-id-mock"
+      />,
+      { container: document.body.appendChild(table) },
+    );
+    const thElements = container.querySelectorAll('th');
+
+    // Then
+    expect(container).toMatchSnapshot();
+
+    const colActionsElement = getByText('DSFR.table.columnActions.label');
+
+    expect(thElements.item(3)).toBe(colActionsElement);
+  });
 });

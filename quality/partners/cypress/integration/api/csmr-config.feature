@@ -79,3 +79,22 @@ Fonctionnalité: Csmr-Config
     Exemples:
       | clientId                                                         | url                                       |
       | a0f11c8e0fe358a058b571092f902725e17c1b0f8972979ef68ebf640425af58 | https://test.fr/updated-sector-identifier |
+
+  Plan du Scénario: Csmr-Config - Suppression d'un FS - succès
+    Etant donné que j'utilise le message RabbitMQ "CONFIG_CREATE" pour "csmr-config"
+    Et que je mets "bdd test csmr-config suppression" dans la propriété "name" du message RabbitMQ
+    Et que je mets "<clientId>" dans la propriété "client_id" du message RabbitMQ
+    Et que je publie le message RabbitMQ dans la queue "config-sandbox-low"
+    Et que je récupère le fournisseur de service avec le clientId "<clientId>" dans MongoDB
+    Et que le fournisseur de service est au bon format dans MongoDB
+    Et que j'utilise le message RabbitMQ "CONFIG_DELETE" pour "csmr-config"
+    Et que j'initialise la queue RabbitMQ "config-partners"
+    Et que je mets "<clientId>" dans la propriété "client_id" du message RabbitMQ
+    Quand je publie le message RabbitMQ dans la queue "config-sandbox-low"
+    Alors le fournisseur de service avec le clientId "<clientId>" n'existe plus dans MongoDB
+    Et je consomme un message de la queue "config-partners"
+    Et la propriété "type" est "CONFIG_DELETE" dans message RabbitMQ récupéré
+
+    Exemples:
+      | clientId                                                         |
+      | a0f11c8e0fe358a058b571092f902725e17c1b0f8972979ef68ebf640425af58 |

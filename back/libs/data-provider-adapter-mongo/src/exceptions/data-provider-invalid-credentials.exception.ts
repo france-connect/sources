@@ -6,7 +6,7 @@ import { DataProviderAdapterMongoBaseException } from './data-provider-adapter-m
 export class DataProviderInvalidCredentialsException extends DataProviderAdapterMongoBaseException {
   static CODE = ErrorCode.INVALID_CREDENTIALS;
   static DOCUMENTATION =
-    "Le client_id ou le client_secret ne correspond pas à celui d'un fournisseur de données.";
+    'Le client_id ou le client_secret ne correspond pas à celui d’un fournisseur de données.';
   static ERROR = 'invalid_client';
   static ERROR_DESCRIPTION = 'Client authentication failed.';
   static HTTP_STATUS_CODE = HttpStatus.UNAUTHORIZED;

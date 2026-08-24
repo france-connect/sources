@@ -46,7 +46,7 @@ const CLAIM_LABELS = {
   birthdate: 'Date de naissance',
   birthplace: 'Lieu de naissance',
   email: 'Adresse email',
-  family_name: 'Nom de naissance',
+  family_name: 'Nom de famille',
   gender: 'Sexe',
   given_name: 'Prénom(s)',
   given_name_array: 'Prénom(s)',

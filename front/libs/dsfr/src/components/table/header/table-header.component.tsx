@@ -1,15 +1,22 @@
 import React from 'react';
 
 import type { PropsWithClassName } from '@fc/common';
+import { t } from '@fc/i18n';
 
 import type { TableColumnInterface } from '../../../interfaces';
 
 interface TableHeaderComponentProps extends PropsWithClassName {
   columns: Array<Pick<TableColumnInterface, 'label'>>;
   tableId: string;
+  showActionsColumn?: boolean;
 }
 
-function TableHeaderComponentInner({ className, columns, tableId }: TableHeaderComponentProps) {
+function TableHeaderComponentInner({
+  className,
+  columns,
+  showActionsColumn = false,
+  tableId,
+}: TableHeaderComponentProps) {
   return (
     <thead className={className}>
       <tr>
@@ -21,6 +28,7 @@ function TableHeaderComponentInner({ className, columns, tableId }: TableHeaderC
             </th>
           );
         })}
+        {showActionsColumn && <th scope="col">{t('DSFR.table.columnActions.label')}</th>}
       </tr>
     </thead>
   );

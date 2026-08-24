@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ServiceProviderContributorsComponent should match snapshot 1`] = `
+<div>
+  <div
+    class="fr-col-12 fr-col-lg-10 fr-col-xl-8 fr-mt-4w"
+  >
+    <h2>
+      Partners.serviceProviderPage.usersSection.title
+    </h2>
+    <hr />
+    <div
+      data-mockid="ContributorAlert"
+    />
+    <p>
+      Partners.serviceProviderPage.usersSection.description
+       
+      <span
+        data-mockid="LinkComponent"
+      />
+    </p>
+    <div
+      data-mockid="ButtonGroupComponent"
+    >
+      <div
+        data-mockid="CreateContributorButton"
+      />
+    </div>
+    <div
+      data-mockid="ServiceProviderPermissionsTable"
+    />
+  </div>
+</div>
+`;

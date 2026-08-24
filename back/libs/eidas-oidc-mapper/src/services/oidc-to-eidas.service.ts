@@ -52,11 +52,11 @@ export class OidcToEidasService {
    * @param requestedAttributes The eIDAS requested attributes
    * @return A partial eidas response
    */
-  async mapPartialResponseSuccess(
+  mapPartialResponseSuccess(
     claims: Partial<IOidcIdentity>,
     acr: AcrValues,
     requestedAttributes: EidasAttributes[],
-  ): Promise<Partial<EidasResponse>> {
+  ): Partial<EidasResponse> {
     const attributes = this.mapRequestedAttributesFromClaims(
       claims,
       requestedAttributes,
@@ -66,7 +66,7 @@ export class OidcToEidasService {
     const cogs = attributes[EidasAttributes.PLACE_OF_BIRTH];
     if (cogs && cogs.length) {
       attributes[EidasAttributes.PLACE_OF_BIRTH] =
-        await this.eidasCog.injectLabelsForCogs(cogs);
+        this.eidasCog.injectLabelsForCogs(cogs);
     }
 
     const subject = claims.sub;

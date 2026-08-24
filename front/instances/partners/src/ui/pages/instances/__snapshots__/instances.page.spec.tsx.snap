@@ -19,34 +19,6 @@ exports[`InstancesPage should match snapshot, when items are empties 1`] = `
     </p>
   </div>
   <div
-    class="fr-col-12 fr-col-lg-10 fr-col-xl-8 fr-mb-3w fr-mt-4v"
-  >
-    <div
-      data-mockid="AlertComponent"
-    >
-      <div>
-        AlertComponent
-      </div>
-      <div>
-        <ul>
-          <li>
-            Si vous n’aviez pas renseigné de numéro d’habilitation (Datapass), nous vous invitons à créer une nouvelle instance depuis cet espace.
-          </li>
-          <li>
-            Si vous aviez saisi un numéro de demande d’habilitation, vous pouvez soit contacter le support partenaire à l’adresse
-             
-            <span
-              data-mockid="LinkComponent"
-            >
-              support.partenaires@franceconnect.gouv.fr
-            </span>
-            , soit créer à nouveau votre instance depuis cet espace.
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-  <div
     class="fr-col-12 fr-col-lg-10 fr-col-xl-8"
   >
     <div>
@@ -73,34 +45,6 @@ exports[`InstancesPage should match snapshot, when items are not empties 1`] = `
         data-mockid="SeeAlsoElement"
       />
     </p>
-  </div>
-  <div
-    class="fr-col-12 fr-col-lg-10 fr-col-xl-8 fr-mb-3w fr-mt-4v"
-  >
-    <div
-      data-mockid="AlertComponent"
-    >
-      <div>
-        AlertComponent
-      </div>
-      <div>
-        <ul>
-          <li>
-            Si vous n’aviez pas renseigné de numéro d’habilitation (Datapass), nous vous invitons à créer une nouvelle instance depuis cet espace.
-          </li>
-          <li>
-            Si vous aviez saisi un numéro de demande d’habilitation, vous pouvez soit contacter le support partenaire à l’adresse
-             
-            <span
-              data-mockid="LinkComponent"
-            >
-              support.partenaires@franceconnect.gouv.fr
-            </span>
-            , soit créer à nouveau votre instance depuis cet espace.
-          </li>
-        </ul>
-      </div>
-    </div>
   </div>
   <div
     class="fr-col-12 fr-col-lg-10 fr-col-xl-8 fr-mb-3w"
@@ -136,34 +80,6 @@ exports[`InstancesPage should match snapshot, when the alert component is displa
         data-mockid="SeeAlsoElement"
       />
     </p>
-  </div>
-  <div
-    class="fr-col-12 fr-col-lg-10 fr-col-xl-8 fr-mb-3w fr-mt-4v"
-  >
-    <div
-      data-mockid="AlertComponent"
-    >
-      <div>
-        AlertComponent
-      </div>
-      <div>
-        <ul>
-          <li>
-            Si vous n’aviez pas renseigné de numéro d’habilitation (Datapass), nous vous invitons à créer une nouvelle instance depuis cet espace.
-          </li>
-          <li>
-            Si vous aviez saisi un numéro de demande d’habilitation, vous pouvez soit contacter le support partenaire à l’adresse
-             
-            <span
-              data-mockid="LinkComponent"
-            >
-              support.partenaires@franceconnect.gouv.fr
-            </span>
-            , soit créer à nouveau votre instance depuis cet espace.
-          </li>
-        </ul>
-      </div>
-    </div>
   </div>
   <div
     class="fr-col-12 fr-col-lg-10 fr-col-xl-8 fr-mb-3w"

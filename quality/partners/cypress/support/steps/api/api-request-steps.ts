@@ -49,6 +49,19 @@ Given(
 );
 
 Given(
+  "je mets la donnée mémorisée {string} dans le chemin {string} de l'url de la requête",
+  function (dataKey: string, basePath: string) {
+    cy.get(`@api:${dataKey}`)
+      .should('exist')
+      .then((value) => {
+        const url = new URL(this.apiRequest.url);
+        url.pathname = `${basePath}${value}`;
+        this.apiRequest.url = url.toString();
+      });
+  },
+);
+
+Given(
   'je retire le paramètre {string} de la requête',
   function (property: string) {
     expect(this.apiRequest.qs[property]).to.exist;

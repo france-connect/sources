@@ -4,19 +4,27 @@ import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger';
 import { CoreInstance } from '@fc/tracks-adapter-elasticsearch';
 
+import { DEFAULT_TIMEZONE } from '../constants';
 import {
   ElasticControlConfig,
   ElasticControlTransformOptionsDto,
 } from '../dto';
 import {
+  ElasticControlPivotEnum,
   ElasticControlProductEnum,
+  ElasticControlRangeEnum,
   PIVOT_FIELDS,
+  RANGE_TO_CALENDAR_INTERVAL,
   TransformStatesEnum,
 } from '../enums';
 import { ElasticControlInvalidRequestException } from '../exceptions';
-import { TransformStatusInterface } from '../interfaces';
 import {
-  computeWindowFromPeriod,
+  TransformSourceInterface,
+  TransformStatusInterface,
+} from '../interfaces';
+import {
+  derivePeriod,
+  getPeriodWindow,
   getTransformDocIndexed,
   getTransformLastCheckpoint,
   isNotFound,
@@ -148,64 +156,16 @@ export class ElasticControlTransformService {
   private buildTransformBody(
     options: ElasticControlTransformOptionsDto,
   ): Record<string, unknown> {
-    const { highTracksIndex, lowTracksIndex } =
-      this.config.get<ElasticControlConfig>('ElasticControl');
-
-    const PRODUCT_TO_INDEX = {
-      [ElasticControlProductEnum.HIGH]: highTracksIndex,
-      [ElasticControlProductEnum.LOW]: lowTracksIndex,
-    };
-
-    const PRODUCT_TO_SERVICE = {
-      [ElasticControlProductEnum.HIGH]: CoreInstance.FCP_HIGH,
-      [ElasticControlProductEnum.LOW]: CoreInstance.FCP_LOW,
-    };
-
     const destIndex = this.buildTransformId(options);
-    const service = PRODUCT_TO_SERVICE[options.product];
 
     const pivotConfig = PIVOT_FIELDS[options.pivot];
     const { groupFields, nameFields } = pivotConfig;
-    const filterField = pivotConfig['filterField'];
-    const filterValue = pivotConfig['filterValue'];
 
-    const sourceIndex = PRODUCT_TO_INDEX[options.product];
-
-    const { gte, lt } = computeWindowFromPeriod(
-      options.period,
-      options.range,
-      options.timezone,
-    );
-
-    const filters: Array<Record<string, unknown>> = [
-      { term: { event: 'FC_VERIFIED' } },
-      { term: { service } },
-      {
-        range: {
-          time: {
-            format: 'strict_date_optional_time',
-            gte,
-            lt,
-            // elastic defined property
-            // eslint-disable-next-line @typescript-eslint/naming-convention
-            time_zone: options.timezone,
-          },
-        },
-      },
-    ];
-
-    if (filterField && filterValue) {
-      filters.push({ term: { [filterField]: filterValue } });
-    }
-
+    const { sourceIndex, filters } = this.buildSource(options, pivotConfig);
     // elastic defined property
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    const group_by: Record<string, unknown> = {};
-    groupFields.forEach((field) => {
-      group_by[field] = { terms: { field } };
-    });
+    const group_by = this.buildGroupBy(groupFields, options);
 
-    // Build top_metrics dynamically to support multiple fields
     const metrics = nameFields.map((field) => ({ field }));
 
     return {
@@ -240,12 +200,98 @@ export class ElasticControlTransformService {
     };
   }
 
+  private buildSource(
+    options: ElasticControlTransformOptionsDto,
+    pivotConfig: (typeof PIVOT_FIELDS)[ElasticControlPivotEnum],
+  ): TransformSourceInterface {
+    const { highTracksIndex, lowTracksIndex } =
+      this.config.get<ElasticControlConfig>('ElasticControl');
+
+    const PRODUCT_TO_INDEX = {
+      [ElasticControlProductEnum.HIGH]: highTracksIndex,
+      [ElasticControlProductEnum.LOW]: lowTracksIndex,
+    };
+
+    const PRODUCT_TO_SERVICE = {
+      [ElasticControlProductEnum.HIGH]: CoreInstance.FCP_HIGH,
+      [ElasticControlProductEnum.LOW]: CoreInstance.FCP_LOW,
+    };
+
+    const sourceIndex = PRODUCT_TO_INDEX[options.product];
+    const service = PRODUCT_TO_SERVICE[options.product];
+
+    const filters: Array<Record<string, unknown>> = [
+      { term: { event: 'FC_VERIFIED' } },
+      { term: { service } },
+    ];
+
+    const filterField = pivotConfig['filterField'];
+    const filterValue = pivotConfig['filterValue'];
+
+    if (filterField && filterValue) {
+      filters.push({ term: { [filterField]: filterValue } });
+    }
+
+    filters.push(this.buildPeriodRangeFilter(options.range, options.period));
+
+    return { sourceIndex, filters };
+  }
+
+  private buildPeriodRangeFilter(
+    range: ElasticControlRangeEnum,
+    period: string | undefined,
+  ): Record<string, unknown> {
+    const resolvedPeriod = period ?? derivePeriod(range);
+    const { gte, lt } = getPeriodWindow(range, resolvedPeriod);
+
+    return {
+      range: {
+        time: { gte: gte.getTime(), lt: lt.getTime() },
+      },
+    };
+  }
+
+  private buildGroupBy(
+    groupFields: ReadonlyArray<string>,
+    options: ElasticControlTransformOptionsDto,
+  ): Record<string, unknown> {
+    const groupBy: Record<string, unknown> = {};
+
+    groupFields.forEach((field) => {
+      groupBy[field] = { terms: { field } };
+    });
+
+    if (options.range !== ElasticControlRangeEnum.SEMESTER) {
+      groupBy['period'] = this.buildDateHistogram(options.range);
+    }
+
+    return groupBy;
+  }
+
+  private buildDateHistogram(
+    range: ElasticControlRangeEnum,
+  ): Record<string, unknown> {
+    const interval = RANGE_TO_CALENDAR_INTERVAL[range];
+
+    if (!interval) {
+      throw new ElasticControlInvalidRequestException();
+    }
+
+    return {
+      // elastic defined property
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      date_histogram: {
+        field: 'time',
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        calendar_interval: interval,
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        time_zone: DEFAULT_TIMEZONE,
+      },
+    };
+  }
+
   buildTransformId(options: ElasticControlTransformOptionsDto): string {
-    const { timezone: _timezone, ...optionsWithoutTimezone } = options;
-    const optionsKeys = Object.keys(optionsWithoutTimezone);
-    const sortedOptions = optionsKeys
-      .sort()
-      .map((k) => optionsWithoutTimezone[k]);
-    return sortedOptions.join('_');
+    const { product, pivot, range } = options;
+    return `runner_stats_${product}_${pivot}_${range}`;
   }
 }

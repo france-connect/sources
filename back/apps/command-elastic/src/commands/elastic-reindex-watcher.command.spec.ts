@@ -1,29 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import {
-  DEFAULT_TIMEZONE,
-  ElasticControlKeyEnum,
-  ElasticControlPivotEnum,
-  ElasticControlProductEnum,
-  ElasticControlRangeEnum,
-} from '@fc/elasticsearch';
 import { LoggerService } from '@fc/logger';
 
 import { getLoggerMock } from '@mocks/logger';
 
-import { ElasticReindexCommandOptionsInterface } from '../interfaces';
 import { CommandElasticReindexService } from '../services';
-import { getPreviousMonth } from '../utils';
 import { ElasticReindexWatcherCommand } from './elastic-reindex-watcher.command';
-
-jest.mock('../utils');
 
 describe('ElasticReindexWatcherCommand', () => {
   let command: ElasticReindexWatcherCommand;
   const loggerMock = getLoggerMock();
-  const periodMock = '2025-08';
 
-  const reindexMock = { actualizeReindex: jest.fn() };
+  const reindexMock = { actualizeAllReindexes: jest.fn() };
 
   beforeEach(async () => {
     jest.resetAllMocks();
@@ -42,8 +30,6 @@ describe('ElasticReindexWatcherCommand', () => {
       .useValue(reindexMock)
       .compile();
 
-    jest.mocked(getPreviousMonth).mockReturnValue(periodMock);
-
     command = module.get<ElasticReindexWatcherCommand>(
       ElasticReindexWatcherCommand,
     );
@@ -54,153 +40,131 @@ describe('ElasticReindexWatcherCommand', () => {
   });
 
   describe('run', () => {
-    const baseOptions: ElasticReindexCommandOptionsInterface = {
-      key: ElasticControlKeyEnum.CONNECTIONS,
-      product: ElasticControlProductEnum.HIGH,
-      range: ElasticControlRangeEnum.MONTH,
-      pivot: ElasticControlPivotEnum.SP,
-    };
+    it('should call actualizeAllReindexes with dryRun=false when no options provided', async () => {
+      // Given
+      reindexMock.actualizeAllReindexes.mockResolvedValue(true);
 
-    it('should log start and end messages', async () => {
       // When
-      await command.run([], baseOptions);
+      await command.run([]);
 
       // Then
-      expect(loggerMock.info).toHaveBeenCalledTimes(2);
-      expect(loggerMock.info).toHaveBeenNthCalledWith(
-        1,
+      expect(reindexMock.actualizeAllReindexes).toHaveBeenCalledExactlyOnceWith(
+        false,
+      );
+    });
+
+    it('should call actualizeAllReindexes with dryRun=false when options is empty', async () => {
+      // Given
+      reindexMock.actualizeAllReindexes.mockResolvedValue(true);
+
+      // When
+      await command.run([], {});
+
+      // Then
+      expect(reindexMock.actualizeAllReindexes).toHaveBeenCalledExactlyOnceWith(
+        false,
+      );
+    });
+
+    it('should call actualizeAllReindexes with dryRun=true when flag is set', async () => {
+      // Given
+      reindexMock.actualizeAllReindexes.mockResolvedValue(true);
+
+      // When
+      await command.run([], { dryRun: true });
+
+      // Then
+      expect(reindexMock.actualizeAllReindexes).toHaveBeenCalledExactlyOnceWith(
+        true,
+      );
+    });
+
+    it('should log start message', async () => {
+      // Given
+      reindexMock.actualizeAllReindexes.mockResolvedValue(true);
+
+      // When
+      await command.run([], {});
+
+      // Then
+      expect(loggerMock.info).toHaveBeenCalledWith(
         '--- Start ElasticReindexWatcherCommand ---',
       );
-      expect(loggerMock.info).toHaveBeenNthCalledWith(
-        2,
+    });
+
+    it('should log end message when all completed', async () => {
+      // Given
+      reindexMock.actualizeAllReindexes.mockResolvedValue(true);
+
+      // When
+      await command.run([], {});
+
+      // Then
+      expect(loggerMock.info).toHaveBeenCalledWith(
         '--- End ElasticReindexWatcherCommand ---',
       );
     });
 
-    it('should call getPreviousMonth', async () => {
-      // When
-      await command.run([], baseOptions);
-
-      // Then
-      expect(getPreviousMonth).toHaveBeenCalledTimes(1);
-    });
-
-    it('should call actualizeReindex with default period and no dry-run flag', async () => {
+    it('should log all reindex final state message when all completed', async () => {
       // Given
-      const dryRunMock = false;
+      reindexMock.actualizeAllReindexes.mockResolvedValue(true);
 
       // When
-      await command.run([], baseOptions);
+      await command.run([], {});
 
       // Then
-      expect(reindexMock.actualizeReindex).toHaveBeenCalledExactlyOnceWith(
-        {
-          key: baseOptions.key,
-          period: periodMock,
-          product: baseOptions.product,
-          range: baseOptions.range,
-          pivot: baseOptions.pivot,
-          timezone: DEFAULT_TIMEZONE,
-        },
-        dryRunMock,
+      expect(loggerMock.info).toHaveBeenCalledWith(
+        '[Command] All reindex operations are in a final state',
       );
     });
 
-    it('should call actualizeReindex with all provided options', async () => {
+    it('should set process.exitCode to 1 when not all completed', async () => {
       // Given
-      const dryRunMock = true;
-      const options: ElasticReindexCommandOptionsInterface = {
-        key: ElasticControlKeyEnum.IDENTITIES,
-        product: ElasticControlProductEnum.LOW,
-        range: ElasticControlRangeEnum.YEAR,
-        pivot: ElasticControlPivotEnum.IDP,
-        period: '2024-01',
-        dryRun: dryRunMock,
-      };
+      reindexMock.actualizeAllReindexes.mockResolvedValue(false);
 
       // When
-      await command.run([], options);
+      await command.run([], {});
 
       // Then
-      expect(reindexMock.actualizeReindex).toHaveBeenCalledTimes(1);
-      expect(reindexMock.actualizeReindex).toHaveBeenCalledWith(
-        {
-          key: options.key,
-          period: options.period,
-          product: options.product,
-          range: options.range,
-          pivot: options.pivot,
-          timezone: DEFAULT_TIMEZONE,
-        },
-        dryRunMock,
+      expect(process.exitCode).toBe(1);
+    });
+
+    it('should log pending message when not all completed', async () => {
+      // Given
+      reindexMock.actualizeAllReindexes.mockResolvedValue(false);
+
+      // When
+      await command.run([], {});
+
+      // Then
+      expect(loggerMock.info).toHaveBeenCalledWith(
+        '[Command] Some reindex operations are still pending or running',
       );
     });
 
-    it('should convert dryRun to boolean', async () => {
+    it('should not log end message when not all completed', async () => {
       // Given
-      const options: ElasticReindexCommandOptionsInterface = {
-        ...baseOptions,
-        dryRun: true,
-      };
+      reindexMock.actualizeAllReindexes.mockResolvedValue(false);
 
       // When
-      await command.run([], options);
+      await command.run([], {});
 
       // Then
-      expect(reindexMock.actualizeReindex).toHaveBeenCalledWith(
-        expect.anything(),
-        true,
+      expect(loggerMock.info).not.toHaveBeenCalledWith(
+        '--- End ElasticReindexWatcherCommand ---',
       );
     });
-  });
 
-  describe('parseKey', () => {
-    it('should return the value as-is', () => {
+    it('should not set process.exitCode when all completed', async () => {
+      // Given
+      reindexMock.actualizeAllReindexes.mockResolvedValue(true);
+      process.exitCode = undefined;
+
       // When
-      const result = command.parseKey('nbOfConnections');
+      await command.run([], {});
 
       // Then
-      expect(result).toBe('nbOfConnections');
-    });
-  });
-
-  describe('parseProduct', () => {
-    it('should return the value as-is', () => {
-      // When
-      const result = command.parseProduct('franceconnect_plus');
-
-      // Then
-      expect(result).toBe('franceconnect_plus');
-    });
-  });
-
-  describe('parseRange', () => {
-    it('should return the value as-is', () => {
-      // When
-      const result = command.parseRange('month');
-
-      // Then
-      expect(result).toBe('month');
-    });
-  });
-
-  describe('parsePivot', () => {
-    it('should return the value as-is', () => {
-      // When
-      const result = command.parsePivot('sp');
-
-      // Then
-      expect(result).toBe('sp');
-    });
-  });
-
-  describe('parsePeriod', () => {
-    it('should return the value as-is', () => {
-      // When
-      const result = command.parsePeriod('2025-08');
-
-      // Then
-      expect(result).toBe('2025-08');
+      expect(process.exitCode).toBeUndefined();
     });
   });
 

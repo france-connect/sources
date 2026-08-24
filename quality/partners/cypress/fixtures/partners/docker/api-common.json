@@ -41,6 +41,13 @@
     "method": "PUT",
     "url": "https://partners.docker.dev-franceconnect.fr/api/instances/acfacfcf-291b-43bd-abe7-fb234b3d879e"
   },
+  "instance-deletion": {
+    "headers": {
+      "x-csrf-token": "49fbf16dd64a32216a6fb639426b41e11d678590e2879a55a41705368163aa97"
+    },
+    "method": "DELETE",
+    "url": "https://partners.docker.dev-franceconnect.fr/api/instances/acfacfcf-291b-43bd-abe7-fb234b3d879e"
+  },
   "authorize": {
     "qs": {
       "scope": "openid profile",
@@ -156,5 +163,31 @@
   "linkable-instances-get": {
     "method": "GET",
     "url": "https://partners.docker.dev-franceconnect.fr/api/linkable-instances/25c4e41c-a97d-4bc9-8e05-e353c91eaef5"
+  },
+  "contributor-creation": {
+    "headers": {
+      "x-csrf-token": "49fbf16dd64a32216a6fb639426b41e11d678590e2879a55a41705368163aa97"
+    },
+    "body": {
+      "email": "newcontributor@yopmail.com"
+    },
+    "form": true,
+    "method": "POST",
+    "url": "https://partners.docker.dev-franceconnect.fr/api/service-providers/25c4e41c-a97d-4bc9-8e05-e353c91eaef5/contributors"
+  },
+  "contributor-creation-success": {
+    "headers": {
+      "x-csrf-token": "49fbf16dd64a32216a6fb639426b41e11d678590e2879a55a41705368163aa97"
+    },
+    "body": {
+      "email": "addedcontributor@yopmail.com"
+    },
+    "form": true,
+    "method": "POST",
+    "url": "https://partners.docker.dev-franceconnect.fr/api/service-providers/6df27f42-3a02-4edc-8e9e-fec8f99328f3/contributors"
+  },
+  "contributor-form-metadata": {
+    "method": "GET",
+    "url": "https://partners.docker.dev-franceconnect.fr/api/contributors/form-metadata"
   }
 }

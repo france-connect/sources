@@ -44,6 +44,23 @@ _reset_stats() {
   echo "# reset stats done !"
 }
 
+_wait_for_es() {
+  local max_attempts=24
+  local attempt=1
+
+  echo "Waiting for Elasticsearch to be ready..."
+  until $DOCKER_COMPOSE exec $NO_TTY elasticsearch curl -sk -u docker-stack:docker-stack https://elasticsearch:9200/_cluster/health | grep -Eq '"status":"(green|yellow)"'; do
+    if [ "$attempt" -ge "$max_attempts" ]; then
+      echo "  Elasticsearch did not become ready after $((max_attempts * 5))s, aborting."
+      return 1
+    fi
+    echo "  Elasticsearch not ready yet, retrying in 5s... ($attempt/$max_attempts)"
+    attempt=$((attempt + 1))
+    sleep 5
+  done
+  echo "  Elasticsearch is ready."
+}
+
 _create_es_ingest_pipeline() {
   $DOCKER_COMPOSE exec $NO_TTY elasticsearch curl -u docker-stack:docker-stack -k -XPUT -H 'Content-Type:application/json' https://elasticsearch:9200/_ingest/pipeline/geo -d "@/ingest_pipelines/geo.json"
 }

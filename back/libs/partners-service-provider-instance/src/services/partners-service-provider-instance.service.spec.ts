@@ -3,7 +3,10 @@ import { In, Repository } from 'typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 
-import { PartnersServiceProviderInstance } from '@entities/typeorm';
+import {
+  PartnersAccountPermission,
+  PartnersServiceProviderInstance,
+} from '@entities/typeorm';
 
 import { PermissionInterface, RelatedEntitiesHelper } from '@fc/access-control';
 import {
@@ -139,7 +142,7 @@ describe('PartnersServiceProviderInstanceService', () => {
       // Then
       expect(repositoryMock.findOne).toHaveBeenCalledTimes(1);
       expect(repositoryMock.findOne).toHaveBeenCalledWith({
-        where: { id: idMock },
+        where: { id: idMock, markedForDeletion: false },
         relations: ['currentVersion', 'creator', 'serviceProvider'],
         select: {
           creator: {
@@ -190,7 +193,7 @@ describe('PartnersServiceProviderInstanceService', () => {
       expect(queryRunnerMock.manager.findOne).toHaveBeenCalledExactlyOnceWith(
         PartnersServiceProviderInstance,
         {
-          where: { id: idMock },
+          where: { id: idMock, markedForDeletion: false },
           relations: ['currentVersion', 'creator', 'serviceProvider'],
           select: {
             creator: {
@@ -284,7 +287,7 @@ describe('PartnersServiceProviderInstanceService', () => {
       expect(queryRunnerMock.manager.find).toHaveBeenCalledExactlyOnceWith(
         PartnersServiceProviderInstance,
         {
-          where: { id: In(instanceIdsMock) },
+          where: { id: In(instanceIdsMock), markedForDeletion: false },
           relations: ['currentVersion', 'creator', 'serviceProvider'],
         },
       );
@@ -315,6 +318,7 @@ describe('PartnersServiceProviderInstanceService', () => {
         where: {
           serviceProvider: { id: defaultSpIdMock },
           creator: { id: accountIdMock },
+          markedForDeletion: false,
         },
         order: { createdAt: 'DESC' },
         relations: ['currentVersion', 'creator', 'serviceProvider'],
@@ -410,19 +414,149 @@ describe('PartnersServiceProviderInstanceService', () => {
     });
   });
 
-  describe('delete', () => {
-    it('should delete instance by id', async () => {
-      // Given
-      const id = 'id';
-      const affected = Symbol('1');
-      repositoryMock.delete.mockResolvedValue({ affected });
+  describe('markForDeletion', () => {
+    let qbMock: {
+      update: jest.Mock;
+      set: jest.Mock;
+      where: jest.Mock;
+      execute: jest.Mock;
+    };
 
+    beforeEach(() => {
+      qbMock = {
+        update: jest.fn().mockReturnThis(),
+        set: jest.fn().mockReturnThis(),
+        where: jest.fn().mockReturnThis(),
+        execute: jest.fn().mockResolvedValue(undefined),
+      };
+      queryRunnerMock.manager.createQueryBuilder.mockReturnValue(qbMock);
+    });
+
+    it('should build the update query with the instance entity', async () => {
       // When
-      const result = await service.delete(id);
+      await service.markForDeletion(queryRunnerMock, idMock);
 
       // Then
-      expect(repositoryMock.delete).toHaveBeenCalledExactlyOnceWith(id);
-      expect(result).toBe(affected);
+      expect(qbMock.update).toHaveBeenCalledExactlyOnceWith(expect.anything());
+    });
+
+    it('should set markedForDeletion to true', async () => {
+      // When
+      await service.markForDeletion(queryRunnerMock, idMock);
+
+      // Then
+      expect(qbMock.set).toHaveBeenCalledExactlyOnceWith({
+        markedForDeletion: true,
+      });
+    });
+
+    it('should filter on the given instance id', async () => {
+      // When
+      await service.markForDeletion(queryRunnerMock, idMock);
+
+      // Then
+      expect(qbMock.where).toHaveBeenCalledExactlyOnceWith({ id: idMock });
+    });
+
+    it('should execute the query', async () => {
+      // When
+      await service.markForDeletion(queryRunnerMock, idMock);
+
+      // Then
+      expect(qbMock.execute).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('clearCurrentVersionWithQueryRunner', () => {
+    let qbMock: {
+      update: jest.Mock;
+      set: jest.Mock;
+      where: jest.Mock;
+      execute: jest.Mock;
+    };
+
+    beforeEach(() => {
+      qbMock = {
+        update: jest.fn().mockReturnThis(),
+        set: jest.fn().mockReturnThis(),
+        where: jest.fn().mockReturnThis(),
+        execute: jest.fn().mockResolvedValue(undefined),
+      };
+      queryRunnerMock.manager.createQueryBuilder.mockReturnValue(qbMock);
+    });
+
+    it('should build the update query with the instance entity', async () => {
+      // When
+      await service.clearCurrentVersionWithQueryRunner(queryRunnerMock, idMock);
+
+      // Then
+      expect(qbMock.update).toHaveBeenCalledExactlyOnceWith(expect.anything());
+    });
+
+    it('should set currentVersion to null', async () => {
+      // When
+      await service.clearCurrentVersionWithQueryRunner(queryRunnerMock, idMock);
+
+      // Then
+      expect(qbMock.set).toHaveBeenCalledExactlyOnceWith({
+        currentVersion: null,
+      });
+    });
+
+    it('should filter on the given instance id', async () => {
+      // When
+      await service.clearCurrentVersionWithQueryRunner(queryRunnerMock, idMock);
+
+      // Then
+      expect(qbMock.where).toHaveBeenCalledExactlyOnceWith({ id: idMock });
+    });
+
+    it('should execute the query', async () => {
+      // When
+      await service.clearCurrentVersionWithQueryRunner(queryRunnerMock, idMock);
+
+      // Then
+      expect(qbMock.execute).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('deleteWithQueryRunner', () => {
+    beforeEach(() => {
+      queryRunnerMock.manager.delete = jest.fn();
+    });
+
+    it('should delete the instance by id with the query runner', async () => {
+      // When
+      await service.deleteWithQueryRunner(queryRunnerMock, idMock);
+
+      // Then
+      expect(queryRunnerMock.manager.delete).toHaveBeenCalledExactlyOnceWith(
+        PartnersServiceProviderInstance,
+        { id: idMock },
+      );
+    });
+  });
+
+  describe('removeInstancePermissionsWithQueryRunner', () => {
+    beforeEach(() => {
+      queryRunnerMock.manager.delete = jest.fn();
+    });
+
+    it('should delete the instance permissions with the query runner', async () => {
+      // When
+      await service.removeInstancePermissionsWithQueryRunner(
+        queryRunnerMock,
+        idMock,
+      );
+
+      // Then
+      expect(queryRunnerMock.manager.delete).toHaveBeenCalledExactlyOnceWith(
+        PartnersAccountPermission,
+        {
+          entity: AccessControlEntity.SP_INSTANCE,
+          entityId: idMock,
+        },
+      );
     });
   });
 });

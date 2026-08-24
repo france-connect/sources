@@ -3,7 +3,8 @@ import { useLoaderData, useRevalidator } from 'react-router';
 
 import type { FSAInterface, UUIDType } from '@fc/common';
 import type { InstanceInterface } from '@fc/core-partners';
-import { PartnersService } from '@fc/core-partners';
+import { PartnersAlertVariants, PartnersService } from '@fc/core-partners';
+import { t } from '@fc/i18n';
 import { useNavigateWithState } from '@fc/routing';
 
 // @NOTE investigate to know why we need this interface here
@@ -58,8 +59,9 @@ export const useLinkableInstancesToServiceProvider = () => {
       // @NOTE should be done into form.postSubmit
       revalidate();
       goBackWithSuccess({
-        message: 'Partners.serviceProviderPage.linkInstances.success.description',
-        title: 'Partners.instances.successLink',
+        message: t('Partners.serviceProviderPage.linkInstances.success.description'),
+        title: t('Partners.instances.successLink'),
+        variant: PartnersAlertVariants.INSTANCE,
       });
     },
     [goBackWithSuccess, revalidate, serviceProviderId],

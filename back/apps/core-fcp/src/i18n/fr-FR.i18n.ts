@@ -20,8 +20,8 @@ import { frFR as frSession } from '@fc/session/i18n';
 import { frFR as frTrackingContext } from '@fc/tracking-context/i18n';
 import { frFR as frViewTemplates } from '@fc/view-templates/i18n';
 
-const ERROR_CONTACT_US =
-  'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
+const ERROR_RETRY_LATER =
+  'Une erreur technique est survenue. Veuillez vous reconnecter ultérieurement.';
 
 const ERROR_RECONNECT =
   'Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous.';
@@ -57,10 +57,11 @@ export const frFR: I18nTranslationsMapType = {
     'Une erreur de communication avec le fournisseur de service est survenue. Veuillez réessayer ultérieurement.',
 
   'CoreFcp.exceptions.coreFcpFailedAbortSession': ERROR_RECONNECT,
-  'CoreFcp.exceptions.coreFcpInvalidEventKey': ERROR_CONTACT_US,
+  'CoreFcp.exceptions.coreFcpInvalidEventKey': ERROR_RETRY_LATER,
   'CoreFcp.exceptions.coreFcpInvalidIdentity':
     'Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous',
-  'CoreFcp.exceptions.coreFcpInvalidRepScope': ERROR_RECONNECT,
+  'CoreFcp.exceptions.coreFcpInvalidRepScope':
+    'Le mandat que vous utilisez pour vous connecter ne vous autorise pas à vous connecter à ce service.',
 
   // App specific keys
   'meta.lang': 'fr',
@@ -92,6 +93,13 @@ export const frFR: I18nTranslationsMapType = {
   'interaction.choose_provider': 'Choisissez un compte pour vous connecter :',
   'interaction.modal.cancel_text': 'Utiliser un autre compte',
 
+  'interaction.wallet.or': 'ou',
+  'interaction.wallet.title':
+    'Utilisez votre portefeuille européen d’identité numérique',
+  'interaction.wallet.description':
+    'Vous avez un portefeuille numérique européen ? Vous pouvez désormais l’utiliser pour vous connecter à {platform}, comme avec vos autres comptes.',
+  'interaction.wallet.details':
+    'Tous les portefeuilles numériques proposés par les États membres de l’Union européenne sont compatibles. En France, c’est l’application France Identité qui remplit ce rôle.',
   'consent.page_title':
     'Connexion - Continuer sur Service {spName} - {platform}',
   'consent.error_page_title':
@@ -122,10 +130,10 @@ export const frFR: I18nTranslationsMapType = {
   'error.faq.button_label': 'Consulter la page d’aide',
   'error.faq.body': 'Merci de consulter notre page d’aide FranceConnect.',
   'error.faq.y100011.body':
-    "Vous avez bloqué l'utilisation de ce fournisseur d'identité. Pour pouvoir l'utiliser à nouveau, merci de consulter notre page d'aide FranceConnect. Dans le cas où vous ne parviendriez pas à débloquer votre accès, veuillez nous contacter et nous transmettre un justificatif d'identité.",
+    'Vous avez bloqué l’utilisation de ce fournisseur d’identité. Pour pouvoir l’utiliser à nouveau, merci de consulter notre page d’aide FranceConnect. Dans le cas où vous ne parviendriez pas à débloquer votre accès, veuillez nous contacter et nous transmettre un justificatif d’identité.',
 
   'exceptions.default_message':
-    "Une erreur s'est produite, veuillez réessayer ultérieurement",
+    'Une erreur s’est produite, veuillez réessayer ultérieurement',
 
   'exceptions.http.404': 'Page non trouvée',
   'loading_modal.redirecting': 'Redirection en cours...',

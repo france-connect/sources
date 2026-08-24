@@ -1,4 +1,5 @@
-import { render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
+import React from 'react';
 
 import { TableRowComponent } from './table-row.component';
 
@@ -24,6 +25,7 @@ describe('TableRowComponent', () => {
     column1: 'value1',
     column2: 'value2',
     column3: 'value3',
+    id: 'itemIdKey-mock',
     label: 'any-label-mock',
   };
 
@@ -197,5 +199,77 @@ describe('TableRowComponent', () => {
 
     // Then
     expect(col2Element).toBeInTheDocument();
+  });
+
+  it('should not render actions cell if actions is not provided', () => {
+    // When
+    const { container } = render(
+      <TableRowComponent
+        className="any-classname-mock"
+        columns={columnsMock}
+        data={dataMock}
+        index={0}
+        tableId="any-table-id-mock"
+      />,
+      { container: document.body.appendChild(tbody) },
+    );
+
+    // Then
+    expect(container.querySelectorAll('td')).toHaveLength(3);
+  });
+
+  it('should render actions returned by actions renderer', () => {
+    // Given
+    const actionsMock = jest.fn(() => (
+      <React.Fragment>
+        <button type="button">action-1-mock</button>
+        <button type="button">action-2-mock</button>
+      </React.Fragment>
+    ));
+
+    // When
+    const { getByText } = render(
+      <TableRowComponent
+        actions={actionsMock}
+        className="any-classname-mock"
+        columns={columnsMock}
+        data={dataMock}
+        index={0}
+        tableId="any-table-id-mock"
+      />,
+      { container: document.body.appendChild(tbody) },
+    );
+
+    // Then
+    expect(actionsMock).toHaveBeenCalledExactlyOnceWith(dataMock, 0);
+    expect(getByText('action-1-mock')).toBeInTheDocument();
+    expect(getByText('action-2-mock')).toBeInTheDocument();
+  });
+
+  it('should call action handler when clicking rendered action', () => {
+    // Given
+    const onActionClickMock = jest.fn();
+    const actionsMock = () => (
+      <button type="button" onClick={onActionClickMock}>
+        action-mock
+      </button>
+    );
+
+    // When
+    const { getByText } = render(
+      <TableRowComponent
+        actions={actionsMock}
+        className="any-classname-mock"
+        columns={columnsMock}
+        data={dataMock}
+        index={0}
+        tableId="any-table-id-mock"
+      />,
+      { container: document.body.appendChild(tbody) },
+    );
+    fireEvent.click(getByText('action-mock'));
+
+    // Then
+    expect(onActionClickMock).toHaveBeenCalledOnce();
   });
 });

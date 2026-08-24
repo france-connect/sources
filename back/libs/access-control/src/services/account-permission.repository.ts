@@ -61,6 +61,24 @@ export class AccountPermissionRepository<
     return rows;
   }
 
+  async hasPermission(
+    email: string,
+    permissionTypes: PermissionType[],
+    entity: EntityType,
+    entityId: string,
+  ): Promise<boolean> {
+    const count = await this.accountPermission.count({
+      where: {
+        account: { email },
+        permissionType: In(permissionTypes),
+        entity,
+        entityId,
+      },
+    });
+
+    return count > 0;
+  }
+
   async getAccountsByPermissions<A extends AccessControlIdentityDto, T>(
     permissions: T[],
     entity?: EntityType,

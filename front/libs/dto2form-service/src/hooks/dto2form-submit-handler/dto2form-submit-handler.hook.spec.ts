@@ -1,6 +1,7 @@
 import { renderHook } from '@testing-library/react';
 import { generatePath, useParams } from 'react-router';
 
+import { ContentType } from '@fc/common';
 import type { Dto2FormFormConfigInterface } from '@fc/dto2form';
 
 import { dto2FormServiceCommit } from '../../services';
@@ -42,7 +43,12 @@ describe('useDto2FormSubmitHandler', () => {
     await result.current(dataMock);
 
     // Then
-    expect(dto2FormServiceCommit).toHaveBeenCalledWith('POST', '/test/submit/123', dataMock);
+    expect(dto2FormServiceCommit).toHaveBeenCalledExactlyOnceWith(
+      'POST',
+      '/test/submit/123',
+      dataMock,
+      undefined,
+    );
   });
 
   it('should return errors if any', async () => {
@@ -69,5 +75,24 @@ describe('useDto2FormSubmitHandler', () => {
 
     // Then
     expect(errors).toBeUndefined();
+  });
+
+  it('should call dto2FormServiceCommit with the correct content type if the content type is provided', async () => {
+    // Given
+    const dataMock = { field1: 'value1', field2: 'value2' };
+
+    // When
+    const { result } = renderHook(() =>
+      useDto2FormSubmitHandler(formMock.endpoints, ContentType.JSON),
+    );
+    await result.current(dataMock);
+
+    // Then
+    expect(dto2FormServiceCommit).toHaveBeenCalledExactlyOnceWith(
+      'POST',
+      '/test/submit/123',
+      dataMock,
+      ContentType.JSON,
+    );
   });
 });

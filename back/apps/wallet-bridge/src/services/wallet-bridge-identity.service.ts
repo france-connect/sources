@@ -1,63 +1,87 @@
 import { KoaContextWithOIDC } from 'oidc-provider';
+import { v4 as uuid } from 'uuid';
 
 import { Injectable } from '@nestjs/common';
 
+import { AssetsService } from '@fc/app';
 import { AsyncFunctionSafe, nowInSeconds } from '@fc/common';
-import { OidcSession } from '@fc/oidc';
+import { ConfigService } from '@fc/config';
+import { EudiDocTypes, EudiGenders, EudiPidClaimsDto } from '@fc/eudi';
+import { EudiCogService } from '@fc/eudi-cog';
+import { LoggerService } from '@fc/logger';
+import { OidcIdentityDto } from '@fc/oidc';
 import {
   OidcProviderAppConfigLibService,
+  OidcProviderErrorService,
+  OidcProviderGrantService,
   OidcProviderRuntimeException,
 } from '@fc/oidc-provider';
+import { Openid4vpInteractionDto, Openid4vpService } from '@fc/openid4vp';
+import { SessionService } from '@fc/session';
 
-/**
- * Static test identity returned unconditionally by the wallet-bridge.
- * No user interaction is required: the bridge always authenticates as this account at eidas3.
- * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/2574
- */
-const TEST_IDENTITY = {
-  sub: '17ea2fcfdffc94b43ae8abdf399a4e1fe05a9869b8b197ce451c9a1ac6210584v1',
-  given_name: 'Angela Claire Louise',
-  family_name: 'DUBOIS',
-  birthdate: '1962-08-24',
-  gender: 'female',
-  email: 'wossewodda-3728@yopmail.com',
-  birthplace: '75107',
-  birthcountry: '99100',
-};
+import {
+  WalletBridgeMultipleDocumentsFoundException,
+  WalletBridgeNoDocumentFoundException,
+} from '../exceptions';
 
 @Injectable()
 export class WalletBridgeIdentityService extends OidcProviderAppConfigLibService {
-  /**
-   * Returns the static test identity regardless of the provided sessionId.
-   * The wallet-bridge does not persist identity in session — no session lookup is needed.
-   * @see https://github.com/panva/node-oidc-provider/blob/main/docs/README.md#accounts
-   */
-  findAccount(
-    _ctx: KoaContextWithOIDC,
-    _sessionId: string,
-  ): Promise<{ accountId: string; claims: AsyncFunctionSafe }> {
-    return Promise.resolve({
-      accountId: TEST_IDENTITY.sub,
-      claims: () => Promise.resolve(TEST_IDENTITY),
-    });
+  // Dependency injection can require more than 4 parameters
+  // eslint-disable-next-line max-params
+  constructor(
+    protected readonly _logger: LoggerService,
+    protected readonly sessionService: SessionService,
+    protected readonly errorService: OidcProviderErrorService,
+    protected readonly grantService: OidcProviderGrantService,
+    protected readonly config: ConfigService,
+    protected readonly assetsService: AssetsService,
+    private readonly openid4vp: Openid4vpService,
+    private readonly eudiCogService: EudiCogService,
+  ) {
+    super(
+      _logger,
+      sessionService,
+      errorService,
+      grantService,
+      config,
+      assetsService,
+    );
   }
 
-  /**
-   * Completes the OIDC interaction unconditionally with the static test identity.
-   * Session is not read: accountId and acr are always hardcoded to TEST_IDENTITY.sub and eidas3.
-   * Called from GET /interaction/:uid — no user input step.
-   * @see https://github.com/panva/node-oidc-provider/blob/main/docs/README.md#user-flows
-   */
+  async findAccount(
+    _ctx: KoaContextWithOIDC,
+    backendSessionId: string,
+  ): Promise<{ accountId: string; claims: AsyncFunctionSafe }> {
+    const interaction =
+      await this.openid4vp.getInteractionByBackendId(backendSessionId);
+
+    const openid4vpIdentity = this.extractIdentity(interaction);
+
+    const oidcIdentity = this.convertPidToOidc(openid4vpIdentity);
+
+    const sub = this.computeSub(backendSessionId, oidcIdentity);
+
+    return {
+      accountId: sub,
+      claims: () => Promise.resolve({ sub, ...oidcIdentity }),
+    };
+  }
+
   async finishInteraction(
     req: any,
     res: any,
-    _session: OidcSession,
+    interaction: Openid4vpInteractionDto,
   ): Promise<void> {
+    /**
+     * @todo compute more robust unique and secret id
+     */
+    const backendSessionId = uuid();
+
     const grant = await this.grantService.generateGrant(
       this.provider,
       req,
       res,
-      TEST_IDENTITY.sub,
+      backendSessionId,
     );
 
     const grantId = await this.grantService.saveGrant(grant);
@@ -65,7 +89,7 @@ export class WalletBridgeIdentityService extends OidcProviderAppConfigLibService
     const result = {
       login: {
         acr: 'eidas3',
-        accountId: TEST_IDENTITY.sub,
+        accountId: backendSessionId,
         ts: nowInSeconds(),
         remember: false,
       },
@@ -74,10 +98,71 @@ export class WalletBridgeIdentityService extends OidcProviderAppConfigLibService
       },
     };
 
+    await this.openid4vp.bindInteractionToBackendId(
+      backendSessionId,
+      interaction,
+    );
+
     try {
       await this.provider.interactionFinished(req, res, result);
     } catch (error) {
+      await this.openid4vp.unbindInteractionFromBackendId(backendSessionId);
       throw new OidcProviderRuntimeException(error);
+    }
+  }
+
+  /**
+   * @todo compute a real sub ? business rules to be defined
+   */
+  private computeSub(
+    backendSessionId: string,
+    _identity: OidcIdentityDto,
+  ): string {
+    return backendSessionId;
+  }
+
+  private extractIdentity(
+    interaction: Openid4vpInteractionDto,
+  ): EudiPidClaimsDto {
+    if (interaction.response.length === 0) {
+      throw new WalletBridgeNoDocumentFoundException();
+    } else if (interaction.response.length > 1) {
+      throw new WalletBridgeMultipleDocumentsFoundException();
+    }
+
+    const document = interaction.response[0].claims as EudiPidClaimsDto;
+
+    const claims = document[EudiDocTypes.PID];
+
+    return claims;
+  }
+
+  private convertPidToOidc(pid: EudiPidClaimsDto): OidcIdentityDto {
+    const { birthplace, birthcountry } = this.eudiCogService.resolveCog(
+      pid.birth_place,
+    );
+
+    const result = {
+      given_name: pid.given_name,
+      family_name: pid.family_name,
+      birthdate: pid.birth_date,
+      gender: this.mapGender(pid.sex),
+      birthplace,
+      birthcountry,
+      email: pid.email_address,
+    };
+
+    return result;
+  }
+
+  private mapGender(gender: EudiGenders): string {
+    switch (gender) {
+      case EudiGenders.MALE:
+        return 'male';
+      case EudiGenders.FEMALE:
+        return 'female';
+      default:
+        return 'unspecified';
     }
   }
 }

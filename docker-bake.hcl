@@ -72,10 +72,14 @@ variable "REGISTRY_CACHE_COMMON" {
   )
 }
 
+# For oci-artifact = false (I lost soooo much time...)
+# @see https://github.com/moby/buildkit/issues/7007
+# @see https://gitlab.com/gitlab-org/container-registry/-/work_items/2367
 variable "REGISTRY_OUTPUT_COMMON" {
   default = merge(
     REGISTRY_COMMON,
     {
+      oci-artifact = false
     }
   )
 }
@@ -94,4 +98,8 @@ target "commons" {
     DOCKER_VERSION   = DOCKER_VERSION
     NODE_VERSION     = trim(NODE_VERSION, "v")
   }
+
+  attest = [
+    { type = "provenance", mode = "min" },
+  ]
 }

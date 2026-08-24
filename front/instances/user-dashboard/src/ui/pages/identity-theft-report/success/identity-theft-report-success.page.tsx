@@ -44,7 +44,6 @@ export const IdentityTheftReportSuccessPage = React.memo(() => (
     <p className="fr-mb-3w">
       <LinkComponent
         external
-        className="fr-mb-3w"
         href="https://aide.franceconnect.gouv.fr/faq/securite-confidentialite/articles/blocage-comptes-inutilis%C3%A9s/#faq-securite-confidentialite"
         label="Sécuriser mes accès à partir de mon tableau de bord "
         title="Sécuriser mes accès à partir de mon tableau de bord "

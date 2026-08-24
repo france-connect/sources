@@ -1,0 +1,32 @@
+.base-build-front:
+  extends: .build_job
+  stage: 'Build Staging'
+  image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+  tags:
+    - build-fc
+  environment:
+    name: staging
+  variables:
+    RELEASE_VERSION: 'staging-${CI_COMMIT_SHA}'
+    PACKAGE: ${RELEASE_VERSION}.tar.gz
+    PROXY_EXPLOITATION: http://${EXPLOITATION_PROXY_HOST}:${EXPLOITATION_PROXY_PORT}
+    PACKAGE_REGISTRY_URL: '${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic'
+  script:
+    - cd front
+    - yarn install --immutable --frozen-lockfile --non-interactive --network-concurrency 1
+    - yarn build $APP
+    - tar zcvf ${CI_PROJECT_DIR}/${PACKAGE} -C ${CI_PROJECT_DIR}/front/instances/${APP}/build/ .
+    - curl --header "JOB-TOKEN:$CI_JOB_TOKEN" --upload-file ${CI_PROJECT_DIR}/${PACKAGE} "${PACKAGE_REGISTRY_URL}/${APP}/${RELEASE_VERSION}/${PACKAGE}"
+    - echo -e "\e[1;34m$MSG $RELEASE_VERSION\e[0m"
+
+partners/build-front:
+  extends: .base-build-front
+  variables:
+    APP: partners
+    MSG: "environments/pa4-integ/group_vars/all/versions.yml\npartners_front_version:"
+
+ud/build-front:
+  extends: .base-build-front
+  variables:
+    APP: user-dashboard
+    MSG: "environments/pa4-integ/group_vars/all/versions.yml\nud_front_version:"

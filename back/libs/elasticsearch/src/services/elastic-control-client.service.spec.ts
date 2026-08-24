@@ -4,6 +4,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import {
   ElasticCountDocumentsResponse,
   ElasticDocumentResponse,
+  ElasticSearchResponse,
   ElasticTransformStatsResponse,
 } from '../interfaces';
 import { ElasticControlClientService } from './elastic-control-client.service';
@@ -245,6 +246,28 @@ describe('ElasticControlClientService', () => {
 
       // Then
       expect(result).toBe(responseMock as unknown as ElasticDocumentResponse);
+    });
+  });
+
+  describe('searchDocuments', () => {
+    it('should call transport.request with correct params', async () => {
+      // When
+      await service.searchDocuments(indexMock, bodyMock);
+
+      // Then
+      expect(transportRequestMock).toHaveBeenCalledExactlyOnceWith({
+        method: 'POST',
+        path: `/${indexMock}/_search`,
+        body: bodyMock,
+      });
+    });
+
+    it('should return response', async () => {
+      // When
+      const result = await service.searchDocuments(indexMock, bodyMock);
+
+      // Then
+      expect(result).toBe(responseMock as unknown as ElasticSearchResponse);
     });
   });
 

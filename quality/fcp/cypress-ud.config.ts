@@ -16,8 +16,8 @@ export default defineConfig({
     ...baseConfig.env,
     APP_LABEL: 'Tableau de bord FC',
     // Base Configuration
-    PLATFORM: 'fcp-low',
     TAGS: '@userDashboard and not @ignore',
     TEST_ENV: 'docker',
+    TEST_PLATFORM: 'fcp-low',
   },
 });

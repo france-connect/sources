@@ -332,6 +332,14 @@ describe('CoreFcpController', () => {
       display: true,
     };
 
+    const walletBridgeProviderMock = {
+      allowedAcr: ['eidas1'],
+      name: 'idp-wallet-bridge',
+      uid: 'idp-wallet-bridge-uid',
+      active: true,
+      display: true,
+    };
+
     const idpFilterListMock = [
       {
         allowedAcr: ['eidas1'],
@@ -623,6 +631,7 @@ describe('CoreFcpController', () => {
         params: interactionDetailsMock.params,
         providers: [aidantsConnectProviderMock],
         aidantsConnect: undefined,
+        walletBridge: undefined,
         spName: oidcSessionMock.spName,
         spScope: interactionDetailsMock.params.scope,
         errorContext: { hasError: false, idpLabel: null },
@@ -656,6 +665,7 @@ describe('CoreFcpController', () => {
         params: interactionDetailsMock.params,
         providers: [aidantsConnectProviderMock],
         aidantsConnect: undefined,
+        walletBridge: undefined,
         spName: oidcSessionMock.spName,
         spScope: interactionDetailsMock.params.scope,
         errorContext: { hasError: false, idpLabel: null },
@@ -694,6 +704,124 @@ describe('CoreFcpController', () => {
         params: interactionDetailsMock.params,
         providers: [aidantsConnectProviderMock],
         aidantsConnect: aidantsConnectProviderMock,
+        walletBridge: undefined,
+        spName: oidcSessionMock.spName,
+        spScope: interactionDetailsMock.params.scope,
+        errorContext: { hasError: false, idpLabel: null },
+      });
+    });
+
+    it('should return walletBridge as undefined in response if WalletBridge provider is not displayed', async () => {
+      // Given
+      walletBridgeProviderMock.display = false;
+      walletBridgeProviderMock.active = true;
+
+      configServiceMock.get.mockReturnValue({
+        ...appConfigMock,
+        walletBridgeUid: 'idp-wallet-bridge-uid',
+      });
+
+      identityProviderServiceMock.getFilteredList.mockResolvedValue([
+        walletBridgeProviderMock,
+      ]);
+
+      // When
+      await coreController.getInteraction(
+        req,
+        res,
+        params,
+        oidcSessionServiceMock,
+        deviceSessionServiceMock,
+        csrfToken,
+      );
+
+      // Then
+      expect(res.render).toHaveBeenCalledTimes(1);
+      expect(res.render).toHaveBeenCalledWith('interaction', {
+        csrfToken,
+        notification: notificationMock,
+        params: interactionDetailsMock.params,
+        providers: [walletBridgeProviderMock],
+        aidantsConnect: undefined,
+        walletBridge: undefined,
+        spName: oidcSessionMock.spName,
+        spScope: interactionDetailsMock.params.scope,
+        errorContext: { hasError: false, idpLabel: null },
+      });
+    });
+
+    it('should return walletBridge as undefined in response if WalletBridge provider is not active', async () => {
+      // Given
+      walletBridgeProviderMock.display = true;
+      walletBridgeProviderMock.active = false;
+
+      configServiceMock.get.mockReturnValue({
+        ...appConfigMock,
+        walletBridgeUid: 'idp-wallet-bridge-uid',
+      });
+
+      identityProviderServiceMock.getFilteredList.mockResolvedValue([
+        walletBridgeProviderMock,
+      ]);
+
+      // When
+      await coreController.getInteraction(
+        req,
+        res,
+        params,
+        oidcSessionServiceMock,
+        deviceSessionServiceMock,
+        csrfToken,
+      );
+
+      // Then
+      expect(res.render).toHaveBeenCalledTimes(1);
+      expect(res.render).toHaveBeenCalledWith('interaction', {
+        csrfToken,
+        notification: notificationMock,
+        params: interactionDetailsMock.params,
+        providers: [walletBridgeProviderMock],
+        aidantsConnect: undefined,
+        walletBridge: undefined,
+        spName: oidcSessionMock.spName,
+        spScope: interactionDetailsMock.params.scope,
+        errorContext: { hasError: false, idpLabel: null },
+      });
+    });
+
+    it('should return walletBridge object if WalletBridge is defined into the provider list', async () => {
+      // Given
+      walletBridgeProviderMock.display = true;
+      walletBridgeProviderMock.active = true;
+
+      configServiceMock.get.mockReturnValue({
+        ...appConfigMock,
+        walletBridgeUid: 'idp-wallet-bridge-uid',
+      });
+
+      identityProviderServiceMock.getFilteredList.mockResolvedValue([
+        walletBridgeProviderMock,
+      ]);
+
+      // When
+      await coreController.getInteraction(
+        req,
+        res,
+        params,
+        oidcSessionServiceMock,
+        deviceSessionServiceMock,
+        csrfToken,
+      );
+
+      // Then
+      expect(res.render).toHaveBeenCalledTimes(1);
+      expect(res.render).toHaveBeenCalledWith('interaction', {
+        csrfToken,
+        notification: notificationMock,
+        params: interactionDetailsMock.params,
+        providers: [walletBridgeProviderMock],
+        aidantsConnect: undefined,
+        walletBridge: walletBridgeProviderMock,
         spName: oidcSessionMock.spName,
         spScope: interactionDetailsMock.params.scope,
         errorContext: { hasError: false, idpLabel: null },
@@ -777,6 +905,7 @@ describe('CoreFcpController', () => {
         params: interactionDetailsMock.params,
         providers: idpFilterListMock,
         aidantsConnect: undefined,
+        walletBridge: undefined,
         spName: oidcSessionMock.spName,
         spScope: interactionDetailsMock.params.scope,
         errorContext: { hasError: true, idpLabel: idpLabelMock },
@@ -811,6 +940,7 @@ describe('CoreFcpController', () => {
         params: interactionDetailsMock.params,
         providers: idpFilterListMock,
         aidantsConnect: undefined,
+        walletBridge: undefined,
         spName: oidcSessionMock.spName,
         spScope: interactionDetailsMock.params.scope,
         errorContext: { hasError: false, idpLabel: null },

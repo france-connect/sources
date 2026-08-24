@@ -6,6 +6,7 @@ import {
   AccessControlGuard,
   AccountPermissionService,
 } from '@fc/access-control';
+import { ActionTypes } from '@fc/csmr-config-client';
 import { CsrfTokenGuard } from '@fc/csrf';
 import { FormValidationPipe } from '@fc/dto2form';
 import { PartnersServiceProviderService } from '@fc/partners-service-provider';
@@ -25,6 +26,7 @@ import {
 } from '../enums';
 import { PartnersInstanceNotFoundException } from '../exceptions';
 import {
+  PartnerPublicationService,
   PartnersInstanceService,
   PartnersInstanceVersionFormService,
 } from '../services';
@@ -103,6 +105,11 @@ describe('InstanceController', () => {
   const instanceServiceMock = {
     create: jest.fn(),
     update: jest.fn(),
+    delete: jest.fn(),
+  };
+
+  const publicationServiceMock = {
+    publish: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -119,6 +126,7 @@ describe('InstanceController', () => {
         SessionService,
         PartnersServiceProviderService,
         PartnersInstanceService,
+        PartnerPublicationService,
       ],
     })
       .overrideProvider(PartnersServiceProviderInstanceService)
@@ -143,6 +151,8 @@ describe('InstanceController', () => {
       .useValue(serviceProviderServiceMock)
       .overrideProvider(PartnersInstanceService)
       .useValue(instanceServiceMock)
+      .overrideProvider(PartnerPublicationService)
+      .useValue(publicationServiceMock)
       .compile();
 
     controller = module.get<InstanceController>(InstanceController);
@@ -367,13 +377,29 @@ describe('InstanceController', () => {
       },
     ];
 
+    const publicationsMock = [
+      {
+        instanceId: instanceIdsMock[0],
+        versionId: 'version-id-1',
+        payload: { name: 'instance name 1' },
+        type: ActionTypes.CONFIG_UPDATE,
+      },
+      {
+        instanceId: instanceIdsMock[1],
+        versionId: 'version-id-2',
+        payload: { name: 'instance name 2' },
+        type: ActionTypes.CONFIG_UPDATE,
+      },
+    ];
+
     beforeEach(() => {
       typeormServiceMock.withTransaction.mockImplementationOnce(
-        async (callback) => {
-          await callback(queryRunnerMock);
-        },
+        async (callback) => await callback(queryRunnerMock),
       );
       instanceMock.getByIdsWithQueryRunner.mockResolvedValue(instancesMock);
+      instanceServiceMock.update
+        .mockResolvedValueOnce(publicationsMock[0])
+        .mockResolvedValueOnce(publicationsMock[1]);
     });
 
     it('should call linkToServiceProvider in a transaction', async () => {
@@ -464,6 +490,87 @@ describe('InstanceController', () => {
       });
     });
 
+    it('should publish the update of each instance', async () => {
+      // When
+      await controller.linkInstancesToServiceProvider(
+        {
+          serviceProviderId: serviceProviderIdMock,
+          instanceIds: instanceIdsMock,
+        },
+        sessionPartnersAccountMock,
+      );
+
+      // Then
+      expect(publicationServiceMock.publish).toHaveBeenCalledTimes(
+        publicationsMock.length,
+      );
+      publicationsMock.forEach((publication, index) => {
+        expect(publicationServiceMock.publish).toHaveBeenNthCalledWith(
+          index + 1,
+          publication.instanceId,
+          publication.versionId,
+          publication.payload,
+          publication.type,
+        );
+      });
+    });
+
+    it('should publish the updates once the transaction is over', async () => {
+      // Given
+      const callsMock: string[] = [];
+
+      typeormServiceMock.withTransaction.mockReset();
+      typeormServiceMock.withTransaction.mockImplementationOnce(
+        async (callback) => {
+          callsMock.push('transaction:start');
+          const result = await callback(queryRunnerMock);
+          callsMock.push('transaction:end');
+
+          return result;
+        },
+      );
+      publicationServiceMock.publish.mockImplementation(() => {
+        callsMock.push('publish');
+      });
+
+      // When
+      await controller.linkInstancesToServiceProvider(
+        {
+          serviceProviderId: serviceProviderIdMock,
+          instanceIds: instanceIdsMock,
+        },
+        sessionPartnersAccountMock,
+      );
+
+      // Then
+      expect(callsMock).toStrictEqual([
+        'transaction:start',
+        'transaction:end',
+        'publish',
+        'publish',
+      ]);
+    });
+
+    it('should not publish anything if the transaction fails', async () => {
+      // Given
+      typeormServiceMock.withTransaction.mockReset();
+      typeormServiceMock.withTransaction.mockRejectedValue(
+        new Error('transaction failed'),
+      );
+
+      // When / Then
+      await expect(
+        controller.linkInstancesToServiceProvider(
+          {
+            serviceProviderId: serviceProviderIdMock,
+            instanceIds: instanceIdsMock,
+          },
+          sessionPartnersAccountMock,
+        ),
+      ).rejects.toThrow('transaction failed');
+      expect(publicationServiceMock.publish).not.toHaveBeenCalled();
+    });
+
     it('should return the linked instances as FSA payload', async () => {
       // When
       const result = await controller.linkInstancesToServiceProvider(
@@ -483,22 +590,27 @@ describe('InstanceController', () => {
   });
 
   describe('updateInstance', () => {
-    const versionId = 'versionIdMock';
     const instanceEntityMock = {
       serviceProvider: serviceProviderMock,
     };
 
+    const publicationMock = {
+      instanceId: instanceIdMock,
+      versionId: 'versionIdMock',
+      payload: { name: 'instance name' },
+      type: ActionTypes.CONFIG_UPDATE,
+    };
+
     beforeEach(() => {
       typeormServiceMock.withTransaction.mockImplementationOnce(
-        async (callback) => {
-          await callback(queryRunnerMock);
-          return versionId;
-        },
+        async (callback) => await callback(queryRunnerMock),
       );
 
       instanceMock.getByIdWithQueryRunner.mockResolvedValueOnce(
         instanceEntityMock,
       );
+
+      instanceServiceMock.update.mockResolvedValue(publicationMock);
     });
 
     it('should update instance with session partners account email', async () => {
@@ -532,6 +644,108 @@ describe('InstanceController', () => {
           sessionPartnersAccountMock,
         ),
       ).rejects.toThrow(PartnersInstanceNotFoundException);
+    });
+
+    it('should publish the update returned by the transaction', async () => {
+      // When
+      await controller.updateInstance(
+        body,
+        instanceIdMock,
+        sessionPartnersAccountMock,
+      );
+
+      // Then
+      expect(publicationServiceMock.publish).toHaveBeenCalledExactlyOnceWith(
+        publicationMock.instanceId,
+        publicationMock.versionId,
+        publicationMock.payload,
+        publicationMock.type,
+      );
+    });
+
+    it('should publish the update once the transaction is over', async () => {
+      // Given
+      const callsMock: string[] = [];
+
+      typeormServiceMock.withTransaction.mockReset();
+      typeormServiceMock.withTransaction.mockImplementationOnce(
+        async (callback) => {
+          callsMock.push('transaction:start');
+          const result = await callback(queryRunnerMock);
+          callsMock.push('transaction:end');
+
+          return result;
+        },
+      );
+      publicationServiceMock.publish.mockImplementation(() => {
+        callsMock.push('publish');
+      });
+
+      // When
+      await controller.updateInstance(
+        body,
+        instanceIdMock,
+        sessionPartnersAccountMock,
+      );
+
+      // Then
+      expect(callsMock).toStrictEqual([
+        'transaction:start',
+        'transaction:end',
+        'publish',
+      ]);
+    });
+
+    it('should not publish the update if the instance is not found', async () => {
+      // Given
+      instanceMock.getByIdWithQueryRunner.mockReset();
+      instanceMock.getByIdWithQueryRunner.mockResolvedValueOnce(null);
+
+      // When
+      await controller
+        .updateInstance(body, instanceIdMock, sessionPartnersAccountMock)
+        .catch(() => undefined);
+
+      // Then
+      expect(publicationServiceMock.publish).not.toHaveBeenCalled();
+    });
+
+    it('should return an INSTANCE FSA with an empty payload', async () => {
+      // When
+      const result = await controller.updateInstance(
+        body,
+        instanceIdMock,
+        sessionPartnersAccountMock,
+      );
+
+      // Then
+      expect(result).toEqual({
+        type: 'INSTANCE',
+        payload: {},
+      });
+    });
+  });
+
+  describe('deleteInstance', () => {
+    it('should delegate the deletion to instanceService.delete', async () => {
+      // When
+      await controller.deleteInstance(instanceIdMock);
+
+      // Then
+      expect(instanceServiceMock.delete).toHaveBeenCalledExactlyOnceWith(
+        instanceIdMock,
+      );
+    });
+
+    it('should return an INSTANCE FSA with an empty payload', async () => {
+      // When
+      const result = await controller.deleteInstance(instanceIdMock);
+
+      // Then
+      expect(result).toEqual({
+        type: 'INSTANCE',
+        payload: {},
+      });
     });
   });
 });

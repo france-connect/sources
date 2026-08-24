@@ -5,7 +5,12 @@ import { objectDiff } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { diffKeys } from '@fc/config-abstract-adapter';
 import { CryptographyService } from '@fc/cryptography';
-import { ConfigMessageDto } from '@fc/csmr-config-client';
+import {
+  ConfigCreateMessageDto,
+  ConfigDeleteMessageDto,
+  ConfigMessageDto,
+  ConfigUpdateMessageDto,
+} from '@fc/csmr-config-client';
 import {
   PlatformTechnicalKeyEnum,
   ServiceProviderService,
@@ -40,6 +45,9 @@ describe('ConfigMongoAdapterService', () => {
     },
   } as unknown as ConfigMessageDto;
 
+  const createMessageMock = messageMock as ConfigCreateMessageDto;
+  const updateMessageMock = messageMock as ConfigUpdateMessageDto;
+
   const legacyFormatted = {
     key: 'key',
     client_secret: 'client_secret',
@@ -50,6 +58,7 @@ describe('ConfigMongoAdapterService', () => {
   const modelMock = {
     findOneAndReplace: jest.fn(),
     findOne: jest.fn(),
+    findOneAndDelete: jest.fn(),
   };
 
   const objectIdMock = Symbol('objectId');
@@ -110,7 +119,7 @@ describe('ConfigMongoAdapterService', () => {
       service['save'] = jest.fn().mockResolvedValueOnce(saveResult);
 
       // When
-      const result = await service.create(messageMock);
+      const result = await service.create(createMessageMock);
 
       // Then
       expect(result).toBe(saveResult);
@@ -125,10 +134,36 @@ describe('ConfigMongoAdapterService', () => {
       service['save'] = jest.fn().mockResolvedValueOnce(saveResult);
 
       // When
-      const result = await service.update(messageMock);
+      const result = await service.update(updateMessageMock);
 
       // Then
       expect(result).toBe(saveResult);
+    });
+  });
+
+  describe('delete', () => {
+    const deleteMessageMock = {
+      payload: {
+        client_id: 'key',
+      },
+    } as unknown as ConfigDeleteMessageDto;
+
+    it('should delete the service provider document by its key', async () => {
+      // When
+      await service.delete(deleteMessageMock);
+
+      // Then
+      expect(modelMock.findOneAndDelete).toHaveBeenCalledExactlyOnceWith({
+        key: deleteMessageMock.payload.client_id,
+      });
+    });
+
+    it('should return the deleted document key as id', async () => {
+      // When
+      const result = await service.delete(deleteMessageMock);
+
+      // Then
+      expect(result).toEqual({ id: deleteMessageMock.payload.client_id });
     });
   });
 

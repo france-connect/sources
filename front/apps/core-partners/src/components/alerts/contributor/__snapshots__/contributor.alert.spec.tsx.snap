@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ContributorAlert should match the snapshot when the contributor variant is present 1`] = `
+<div>
+  <div
+    data-mockid="AlertComponent"
+  >
+    <div>
+      AlertComponent
+    </div>
+    <div>
+      any-translated-message-mock
+    </div>
+  </div>
+</div>
+`;

@@ -9,6 +9,9 @@ exports[`ServiceProviderSandboxesComponent should match the snapshot 1`] = `
       Partners.serviceProviderPage.sandboxes.title
     </h2>
     <hr />
+    <div
+      data-mockid="SandboxAlert"
+    />
     <p>
       Partners.serviceProviderPage.sandboxes.description
        
