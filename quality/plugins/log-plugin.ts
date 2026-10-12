@@ -11,9 +11,7 @@ interface clearAllLogsArgs {
   logFilePath: string;
 }
 
-export const clearAllLogs = async (
-  args: clearAllLogsArgs,
-): Promise<number> => {
+export const clearAllLogs = async (args: clearAllLogsArgs): Promise<number> => {
   const { logFilePath } = args;
   const command = `echo "" > '${logFilePath}'`;
   let exitCode = 0;

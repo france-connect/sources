@@ -1,7 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import { ConfigService } from '@fc/config';
-import { t } from '@fc/i18n';
 
 import { ModalOptions } from '../enums';
 import { useModal } from '../hooks';
@@ -24,10 +23,7 @@ describe('ModalProvider', () => {
 
   const registry: ModalRegistryInterface = {
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    'test-modal': {
-      component: RegistryComponentMock,
-      title: 'any-title-key-mock',
-    },
+    'test-modal': RegistryComponentMock,
   };
 
   const ContextReader = () => {
@@ -113,82 +109,29 @@ describe('ModalProvider', () => {
     // Then
     expect(screen.getByTestId('current-modal-id')).toHaveTextContent('test-modal');
     expect(screen.getByTestId('registry-label')).toHaveTextContent('Test label');
+  });
+
+  it('should render the registry component with its own props, the registry key and the close callback', () => {
+    // When
+    render(
+      <ModalProvider>
+        <ContextReader />
+      </ModalProvider>,
+    );
+    fireEvent.click(screen.getByTestId('open-modal'));
+
+    // Then
     expect(RegistryComponentMock).toHaveBeenCalledWith(
-      expect.objectContaining({
+      {
+        id: 'test-modal',
         label: 'Test label',
         onClose: expect.any(Function),
-      }),
-      undefined,
-    );
-  });
-
-  it('should render the registry title into the shell', () => {
-    // Given
-    jest.mocked(t).mockReturnValueOnce('any-translated-title-mock');
-
-    // When
-    render(
-      <ModalProvider>
-        <ContextReader />
-      </ModalProvider>,
-    );
-    fireEvent.click(screen.getByTestId('open-modal'));
-
-    // Then
-    expect(t).toHaveBeenCalledWith('any-title-key-mock');
-
-    const title = screen.getByRole('heading', { name: 'any-translated-title-mock' });
-
-    expect(title).toHaveClass('fr-modal__title');
-    expect(title).toHaveAttribute('id', 'test-modal-title');
-    expect(screen.getByRole('dialog')).toHaveAttribute('aria-labelledby', 'test-modal-title');
-  });
-
-  it('should render the registry footer as a sibling of the modal content', () => {
-    // Given
-    const RegistryFooterComponentMock = jest.fn(
-      ({ label, onClose }: { label: string; onClose: () => void }) => (
-        <button data-testid="registry-footer" type="button" onClick={onClose}>
-          {label}
-        </button>
-      ),
-    );
-    jest.mocked(ConfigService.get).mockReturnValue({
-      registry: {
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        'test-modal': {
-          component: RegistryComponentMock,
-          footer: RegistryFooterComponentMock,
-          title: 'any-title-key-mock',
-        },
       },
-    });
-
-    // When
-    render(
-      <ModalProvider>
-        <ContextReader />
-      </ModalProvider>,
-    );
-    fireEvent.click(screen.getByTestId('open-modal'));
-
-    // Then
-    expect(RegistryFooterComponentMock).toHaveBeenCalledWith(
-      expect.objectContaining({
-        label: 'Test label',
-        onClose: expect.any(Function),
-      }),
       undefined,
     );
-
-    const footer = screen.getByTestId('registry-footer').parentElement;
-
-    expect(footer).toHaveClass('fr-modal__footer');
-    expect(footer!.parentElement).toHaveClass('fr-modal__body');
-    expect(screen.getByTestId('registry-label').closest('.fr-modal__content')).toBeInTheDocument();
   });
 
-  it('should not render a modal footer when the registry entry has none', () => {
+  it('should not render any shell around the registry component', () => {
     // When
     const { baseElement } = render(
       <ModalProvider>
@@ -198,7 +141,7 @@ describe('ModalProvider', () => {
     fireEvent.click(screen.getByTestId('open-modal'));
 
     // Then
-    expect(baseElement.querySelector('.fr-modal__footer')).toBeNull();
+    expect(baseElement.querySelector('.fr-modal')).toBeNull();
   });
 
   it('should not open a modal which is not declared into the registry', () => {
@@ -225,16 +168,12 @@ describe('ModalProvider', () => {
     ));
     const registryWithTwoModals: ModalRegistryInterface = {
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      'another-modal': {
-        component: AnotherRegistryComponentMock,
-        title: 'any-another-title-key-mock',
-      },
+      'another-modal': AnotherRegistryComponentMock,
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      'test-modal': {
-        component: RegistryComponentMock,
-        title: 'any-title-key-mock',
-      },
+      'test-modal': RegistryComponentMock,
     };
+    // @NOTE not mockReturnValueOnce: ModalProvider reads the config on every render,
+    // and this test re-renders on click — the registry must hold for both calls
     jest.mocked(ConfigService.get).mockReturnValue({ registry: registryWithTwoModals });
 
     // When
@@ -267,7 +206,7 @@ describe('ModalProvider', () => {
     expect(screen.queryByTestId('registry-label')).not.toBeInTheDocument();
   });
 
-  it('should close modal from shell close button', () => {
+  it('should close modal from the injected close callback', () => {
     // When
     render(
       <ModalProvider>
@@ -275,7 +214,7 @@ describe('ModalProvider', () => {
       </ModalProvider>,
     );
     fireEvent.click(screen.getByTestId('open-modal'));
-    fireEvent.click(screen.getByTestId('test-modal-close-button'));
+    fireEvent.click(screen.getByTestId('registry-close'));
 
     // Then
     expect(screen.getByTestId('current-modal-id')).toHaveTextContent('none');

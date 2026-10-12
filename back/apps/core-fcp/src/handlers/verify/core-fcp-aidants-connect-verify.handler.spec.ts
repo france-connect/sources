@@ -24,7 +24,9 @@ import { getSessionServiceMock } from '@mocks/session';
 import { CoreFcpAidantsConnectVerifyHandler } from './core-fcp-aidants-connect-verify.handler';
 import { CoreFcpDefaultVerifyHandler } from './core-fcp-default-verify.handler';
 
-describe('CoreFcpDefaultVerifyHandler', () => {
+jest.mock('./core-fcp-default-verify.handler');
+
+describe('CoreFcpAidantsConnectVerifyHandler', () => {
   let service: CoreFcpAidantsConnectVerifyHandler;
 
   const loggerServiceMock = getLoggerMock();
@@ -33,6 +35,9 @@ describe('CoreFcpDefaultVerifyHandler', () => {
   const serviceProviderServiceMock = {
     getById: jest.fn(),
   };
+
+  const coreFcpDefaultVerifyMock = jest.mocked(CoreFcpDefaultVerifyHandler);
+  coreFcpDefaultVerifyMock.prototype.handle = jest.fn();
 
   const trackingServiceMock: TrackingService = {
     track: jest.fn(),
@@ -138,7 +143,10 @@ describe('CoreFcpDefaultVerifyHandler', () => {
     identityProviderAdapterMock.getById.mockResolvedValue({
       allowedAcr: 'allowedAcr',
     });
-    coreAccountServiceMock.computeFederation.mockResolvedValue('accountIdMock');
+
+    accountServiceMock.getAccountByIdentityHash.mockResolvedValue({
+      entityId: 'accountIdMock',
+    });
   });
 
   it('should be defined', () => {
@@ -175,7 +183,6 @@ describe('CoreFcpDefaultVerifyHandler', () => {
         'getConsent service: ##### core-fcp-aidants-connect-verify',
       );
       expect(service['setTrackEvent']).toHaveBeenCalledWith(
-        oidcSessionServiceMock,
         trackingContextMock,
         oidcSessionMock.idpRepresentativeScope,
         trackingServiceMock.TrackedEventsMap.FC_INVALID_REP_SCOPE,
@@ -184,7 +191,7 @@ describe('CoreFcpDefaultVerifyHandler', () => {
 
     it('should not throw an exception and should track valid scope event if idpRepresentativeScope matches spRepresentativeScope', async () => {
       // Given
-      serviceProviderServiceMock.getById.mockResolvedValue({
+      serviceProviderServiceMock.getById.mockResolvedValueOnce({
         rep_scope: repScopeMock,
       });
 
@@ -196,12 +203,34 @@ describe('CoreFcpDefaultVerifyHandler', () => {
 
       // Then
       expect(service['setTrackEvent']).toHaveBeenCalledWith(
-        oidcSessionServiceMock,
         trackingContextMock,
         oidcSessionMock.idpRepresentativeScope,
         trackingServiceMock.TrackedEventsMap.FC_VALID_REP_SCOPE,
       );
       expect(service['setTrackEvent']).toHaveBeenCalledTimes(1);
+    });
+
+    it('should call super.handle with updated trackingContext', async () => {
+      // Given
+      const idpRepresentativeScope = ['scope1', 'scope2'];
+      serviceProviderServiceMock.getById.mockResolvedValueOnce({
+        rep_scope: repScopeMock,
+      });
+
+      // When
+      await service.handle({
+        sessionOidc: oidcSessionServiceMock,
+        trackingContext: trackingContextMock,
+      });
+
+      // Then
+      expect(coreFcpDefaultVerifyMock.prototype.handle).toHaveBeenCalledWith({
+        sessionOidc: oidcSessionServiceMock,
+        trackingContext: {
+          ...trackingContextMock,
+          rep_scope: idpRepresentativeScope,
+        },
+      });
     });
 
     it('should handle cases where spRepresentativeScope is empty and track valid scope event', async () => {
@@ -218,7 +247,6 @@ describe('CoreFcpDefaultVerifyHandler', () => {
 
       // Then
       expect(service['setTrackEvent']).toHaveBeenCalledWith(
-        oidcSessionServiceMock,
         trackingContextMock,
         oidcSessionMock.idpRepresentativeScope,
         trackingServiceMock.TrackedEventsMap.FC_VALID_REP_SCOPE,
@@ -233,11 +261,6 @@ describe('CoreFcpDefaultVerifyHandler', () => {
       const trackEvent =
         trackingServiceMock.TrackedEventsMap.FC_VALID_REP_SCOPE;
 
-      const superHandleMock = jest.spyOn(
-        CoreFcpDefaultVerifyHandler.prototype,
-        'handle',
-      );
-
       serviceProviderServiceMock.getById.mockResolvedValue({
         entityId: 'entityId',
       });
@@ -247,7 +270,6 @@ describe('CoreFcpDefaultVerifyHandler', () => {
 
       // When
       await service['setTrackEvent'](
-        oidcSessionServiceMock,
         trackingContextMock,
         idpRepresentativeScope,
         trackEvent,
@@ -257,13 +279,6 @@ describe('CoreFcpDefaultVerifyHandler', () => {
       expect(trackingServiceMock.track).toHaveBeenCalledWith(trackEvent, {
         ...trackingContextMock,
         rep_scope: idpRepresentativeScope,
-      });
-      expect(superHandleMock).toHaveBeenCalledWith({
-        sessionOidc: oidcSessionServiceMock,
-        trackingContext: {
-          ...trackingContextMock,
-          rep_scope: idpRepresentativeScope,
-        },
       });
     });
   });

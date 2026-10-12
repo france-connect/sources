@@ -1,12 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { DcqlService } from '@fc/dcql';
 import { Openid4vpDeepLinkInterface } from '@fc/openid4vp/interfaces';
 
-import {
-  PresentationDefinition,
-  RequestObjectPayload,
-  WalletIdentity,
-} from '../interfaces';
+import { MockWalletInvalidRequestObjectPayloadException } from '../exceptions';
+import { RequestObjectPayload, WalletIdentity } from '../interfaces';
 import { PresentationService } from './presentation.service';
 import { WalletDocumentService } from './wallet-document.service';
 
@@ -16,21 +14,16 @@ describe('PresentationService', () => {
   const documentMock = {
     buildVpToken: jest.fn(),
   };
-
-  const definition: PresentationDefinition = {
-    id: 'definition-mock',
-    input_descriptors: [
-      {
-        id: 'eu.europa.ec.eudi.pid.1',
-        constraints: {
-          fields: [
-            { path: ["$['eu.europa.ec.eudi.pid.1']['family_name']"] },
-            { path: ["$['eu.europa.ec.eudi.pid.1']['given_name']"] },
-          ],
-        },
-      },
-    ],
+  const dcqlMock = {
+    parse: jest.fn(),
+    extractClaimNames: jest.fn(),
   };
+
+  const dcqlRequest = {
+    dcql_query: {
+      credentials: [{ id: 'pid-fc', format: 'mso_mdoc' }],
+    },
+  } as unknown as RequestObjectPayload;
 
   const identity: WalletIdentity = {
     docType: 'eu.europa.ec.eudi.pid.1',
@@ -41,10 +34,12 @@ describe('PresentationService', () => {
     jest.resetAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [PresentationService, WalletDocumentService],
+      providers: [PresentationService, WalletDocumentService, DcqlService],
     })
       .overrideProvider(WalletDocumentService)
       .useValue(documentMock)
+      .overrideProvider(DcqlService)
+      .useValue(dcqlMock)
       .compile();
 
     service = module.get<PresentationService>(PresentationService);
@@ -55,27 +50,27 @@ describe('PresentationService', () => {
   });
 
   describe('extractRequestedClaims', () => {
-    it('should extract the claim names from the input descriptors paths', () => {
-      // When
-      const result = service.extractRequestedClaims(definition);
-
-      // Then
-      expect(result).toEqual(['family_name', 'given_name']);
+    beforeEach(() => {
+      dcqlMock.parse.mockReturnValue({ credentials: [] });
+      dcqlMock.extractClaimNames.mockReturnValue(['family_name']);
     });
 
-    it('should ignore field paths without a bracketed claim segment', () => {
-      // Given
-      const definitionWithoutBracket: PresentationDefinition = {
-        id: 'def',
-        input_descriptors: [
-          { id: 'desc', constraints: { fields: [{ path: ['$.simple'] }] } },
-        ],
-      };
+    it('should extract DCQL claims from the request', () => {
+      // When
+      const result = service.extractRequestedClaims(dcqlRequest);
 
-      // When / Then
-      expect(service.extractRequestedClaims(definitionWithoutBracket)).toEqual(
-        [],
+      // Then
+      expect(dcqlMock.parse).toHaveBeenCalledExactlyOnceWith(
+        dcqlRequest.dcql_query,
       );
+      expect(result).toEqual(['family_name']);
+    });
+
+    it('should throw when dcql_query is missing', () => {
+      // When / Then
+      expect(() =>
+        service.extractRequestedClaims({} as RequestObjectPayload),
+      ).toThrow(MockWalletInvalidRequestObjectPayloadException);
     });
   });
 
@@ -97,24 +92,6 @@ describe('PresentationService', () => {
 
       // Then
       expect(result).toEqual({});
-    });
-  });
-
-  describe('buildPresentationSubmission', () => {
-    it('should build a mso_mdoc descriptor map pointing to the vp_token', () => {
-      // When
-      const result = service.buildPresentationSubmission(definition);
-
-      // Then
-      expect(result.definition_id).toBe('definition-mock');
-      expect(result.descriptor_map).toEqual([
-        {
-          id: 'eu.europa.ec.eudi.pid.1',
-          format: 'mso_mdoc',
-          path: '$.vp_token',
-        },
-      ]);
-      expect(typeof result.id).toBe('string');
     });
   });
 
@@ -154,19 +131,28 @@ describe('PresentationService', () => {
   });
 
   describe('buildResponsePayload', () => {
-    const request = {
+    const dcqlPayload = {
       state: 'request-state',
-      presentation_definition: definition,
-    } as RequestObjectPayload;
+      vp_token: { 'pid-fc': ['vp-token-mock'] },
+    };
 
     beforeEach(() => {
       documentMock.buildVpToken.mockResolvedValue('vp-token-mock');
+      service.extractRequestedClaims = jest
+        .fn()
+        .mockReturnValue(['family_name', 'given_name']);
+      service.selectClaims = jest
+        .fn()
+        .mockReturnValue({ family_name: 'DUPONT', given_name: 'JEAN' });
+      service['buildDcqlResponsePayload'] = jest
+        .fn()
+        .mockReturnValue(dcqlPayload);
     });
 
     it('should build the vp_token from the selected claims', async () => {
       // When
       await service.buildResponsePayload(
-        request,
+        dcqlRequest,
         {} as Openid4vpDeepLinkInterface,
         identity,
       );
@@ -175,37 +161,76 @@ describe('PresentationService', () => {
       expect(documentMock.buildVpToken).toHaveBeenCalledExactlyOnceWith(
         identity,
         { family_name: 'DUPONT', given_name: 'JEAN' },
-        request,
+        dcqlRequest,
       );
     });
 
-    it('should assemble the full wallet response payload', async () => {
+    it('should assemble the DCQL wallet response payload', async () => {
       // When
       const result = await service.buildResponsePayload(
-        request,
+        dcqlRequest,
         {} as Openid4vpDeepLinkInterface,
         identity,
       );
 
       // Then
-      expect(result.state).toBe('request-state');
-      expect(result.vp_token).toBe('vp-token-mock');
-      expect(result.presentation_submission.definition_id).toBe(
-        'definition-mock',
-      );
+      expect(
+        service['buildDcqlResponsePayload'],
+      ).toHaveBeenCalledExactlyOnceWith(dcqlRequest, {}, 'vp-token-mock');
+      expect(result).toBe(dcqlPayload);
     });
   });
 
-  describe('descriptorPaths', () => {
-    it('should return an empty array when the descriptor has no fields', () => {
+  describe('buildDcqlResponsePayload', () => {
+    beforeEach(() => {
+      service['getDcqlCredentialId'] = jest.fn().mockReturnValue('pid-fc');
+    });
+
+    it('should key an array of presentations by the credential query id', () => {
       // When
-      const result = service['descriptorPaths']({
-        id: 'desc',
-        constraints: {},
-      });
+      const result = service['buildDcqlResponsePayload'](
+        dcqlRequest,
+        { state: 'request-state' } as Openid4vpDeepLinkInterface,
+        'vp-token-mock',
+      );
 
       // Then
-      expect(result).toEqual([]);
+      expect(result).toEqual({
+        state: 'request-state',
+        vp_token: { 'pid-fc': ['vp-token-mock'] },
+      });
+    });
+  });
+
+  describe('getDcqlCredentialId', () => {
+    it('should return the first credential query id', () => {
+      // When
+      const result = service['getDcqlCredentialId'](dcqlRequest);
+
+      // Then
+      expect(result).toBe('pid-fc');
+    });
+
+    it('should throw when the dcql_query has an empty credentials list', () => {
+      // Given
+      const request = {
+        dcql_query: { credentials: [] },
+      } as unknown as RequestObjectPayload;
+
+      // When / Then
+      expect(() => service['getDcqlCredentialId'](request)).toThrow(
+        MockWalletInvalidRequestObjectPayloadException,
+      );
+    });
+
+    it('should throw when the dcql_query has no credentials', () => {
+      // Given
+      const request = { dcql_query: {} } as unknown as RequestObjectPayload;
+
+      // When / Then
+      expect(() => service['getDcqlCredentialId'](request)).toThrow(
+        MockWalletInvalidRequestObjectPayloadException,
+      );
     });
   });
 });

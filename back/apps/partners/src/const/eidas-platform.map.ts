@@ -1,6 +1,5 @@
 import { DatapassEidasLevels } from '@fc/datapass';
-
-import { PartnersPlatformEnum } from '../enums/partners-platform.enum';
+import { PartnersPlatformEnum } from '@fc/partners-service-provider';
 
 export const EidasPlatformMap = {
   [DatapassEidasLevels.EIDAS_1]: PartnersPlatformEnum.FRANCE_CONNECT_LOW,

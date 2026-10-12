@@ -88,6 +88,25 @@ When('je continue sur le fournisseur de service', function () {
   infoConsentPage.getConsentButton().click();
 });
 
+When('je continue sur le fournisseur de service européen', function () {
+  /*
+   ** We need to disable the uncaught:exception handling
+   ** when returning to eidas mock version 3.1.0
+   ** as a bootstrap error is thrown as jquery seems to be absent
+   */
+  cy.window().then((window) => {
+    cy.on('uncaught:exception', (e: Error) => {
+      const isEidasMockLoadingError =
+        window.location.origin.startsWith('https://eidas-mock.') &&
+        e.message.includes(
+          "Cannot read properties of undefined (reading 'fn')",
+        );
+      return !isEidasMockLoadingError;
+    });
+    infoConsentPage.getConsentButton().click();
+  });
+});
+
 When(
   'je double-clique sur le bouton continuer sur le fournisseur de service',
   function () {

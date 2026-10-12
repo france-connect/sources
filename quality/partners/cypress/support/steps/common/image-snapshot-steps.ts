@@ -72,6 +72,23 @@ Then(
   },
 );
 
+// The default `fullPage` capture is assembled by scrolling, a fixed position
+// modal would be duplicated on every band. The `viewport` capture renders the
+// page as displayed, modal and dimmed backdrop included.
+Then(
+  "la copie d'écran {string} correspond à la zone visible de la page actuelle sur {string}",
+  function (name: string, device: string) {
+    const { title: scenarioName } = this.test;
+    // Wait for the page to be still before taking a screenshot
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(750);
+    prepareScreenshot();
+    getSnapshotName(scenarioName, name, device).then((snapshotName) =>
+      cy.matchImageSnapshot(snapshotName, { capture: 'viewport' }),
+    );
+  },
+);
+
 Then(
   "la copie d'écran {string} correspond à l'élément web {string} sur {string}",
   function (name: string, selector: string, device: string) {

@@ -12,12 +12,12 @@ export default defineConfig({
     },
     specPattern: 'cypress/integration/dashboard/*.feature',
   },
-  env: {
-    ...baseConfig.env,
+  expose: {
+    ...baseConfig.expose,
     APP_LABEL: 'Tableau de bord FC',
     // Base Configuration
-    TAGS: '@userDashboard and not @ignore',
     TEST_ENV: 'docker',
     TEST_PLATFORM: 'fcp-low',
+    tags: '@userDashboard and not @ignore',
   },
 });

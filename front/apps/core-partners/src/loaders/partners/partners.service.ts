@@ -1,3 +1,4 @@
+import { deleteContributor } from './delete-contributor';
 import { deleteInstance } from './delete-instance';
 import { linkInstancesToServiceProvider } from './link-instances-to-service-provider';
 import { loadAllInstances } from './load-all-instances';
@@ -6,6 +7,7 @@ import { loadLinkableInstancesByServiceProviderId } from './load-linkable-instan
 import { loadServiceProviderById } from './load-service-provider-by-id';
 
 export const PartnersService = {
+  deleteContributor,
   deleteInstance,
   linkInstancesToServiceProvider,
   loadAllInstances,

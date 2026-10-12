@@ -69,7 +69,11 @@ export class PartnersServiceProviderInstanceService {
       order: {
         createdAt: 'DESC',
       },
-      relations: ['currentVersion', 'creator', 'serviceProvider'],
+      relations: {
+        currentVersion: true,
+        creator: true,
+        serviceProvider: true,
+      },
     });
 
     return instances;
@@ -80,7 +84,11 @@ export class PartnersServiceProviderInstanceService {
   ): Promise<PartnersServiceProviderInstance | null> {
     const instance = await this.repository.findOne({
       where: { id: instanceId, markedForDeletion: false },
-      relations: ['currentVersion', 'creator', 'serviceProvider'],
+      relations: {
+        currentVersion: true,
+        creator: true,
+        serviceProvider: true,
+      },
       select: {
         creator: {
           id: true,
@@ -102,7 +110,11 @@ export class PartnersServiceProviderInstanceService {
       PartnersServiceProviderInstance,
       {
         where: { id: instanceId, markedForDeletion: false },
-        relations: ['currentVersion', 'creator', 'serviceProvider'],
+        relations: {
+          currentVersion: true,
+          creator: true,
+          serviceProvider: true,
+        },
         select: {
           creator: {
             id: true,
@@ -123,7 +135,11 @@ export class PartnersServiceProviderInstanceService {
   ): Promise<PartnersServiceProviderInstance[]> {
     return await queryRunner.manager.find(PartnersServiceProviderInstance, {
       where: { id: In(instanceIds), markedForDeletion: false },
-      relations: ['currentVersion', 'creator', 'serviceProvider'],
+      relations: {
+        currentVersion: true,
+        creator: true,
+        serviceProvider: true,
+      },
     });
   }
 
@@ -153,7 +169,11 @@ export class PartnersServiceProviderInstanceService {
         markedForDeletion: false,
       },
       order: { createdAt: 'DESC' },
-      relations: ['currentVersion', 'creator', 'serviceProvider'],
+      relations: {
+        currentVersion: true,
+        creator: true,
+        serviceProvider: true,
+      },
     });
   }
 

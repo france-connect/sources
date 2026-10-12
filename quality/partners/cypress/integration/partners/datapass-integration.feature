@@ -116,6 +116,10 @@ Fonctionnalité: Datapass - Création / Modification d'un fournisseur de service
     Et les scopes Datapass suivants sont affichés:
       | Identifiant technique |
       | Prénoms               |
+    Et je clique sur l'onglet scopes autorisés
+    Et les scopes FranceConnect suivants sont affichés:
+      | openid     |
+      | given_name |
     Et les instances du fournisseur de service sont à jour avec les informations Datapass
 
   Scénario: Datapass Modifié - FS existant avec scopes mis à jour jusqu'aux accès bac à sable

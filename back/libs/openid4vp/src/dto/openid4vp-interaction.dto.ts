@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import {
   IsArray,
   IsEnum,
@@ -6,14 +7,26 @@ import {
   IsOptional,
   IsString,
   MinLength,
+  ValidateNested,
 } from 'class-validator';
 
 import { SimpleDocumentInterface } from '@fc/mdoc';
 
 import {
   Openid4vpAuthorizationError,
+  Openid4vpFlow,
   Openid4vpInteractionStatus,
 } from '../enums';
+
+export class Openid4vpStateDto {
+  @IsString()
+  @MinLength(32)
+  readonly sameDevice: string;
+
+  @IsString()
+  @MinLength(32)
+  readonly crossDevice: string;
+}
 
 export class Openid4vpInteractionDto {
   @IsString()
@@ -22,11 +35,11 @@ export class Openid4vpInteractionDto {
 
   @IsString()
   @IsNotEmpty()
-  readonly presentationId: string;
+  readonly credentialQueryId: string;
 
-  @IsString()
-  @MinLength(32)
-  readonly state: string;
+  @ValidateNested()
+  @Type(() => Openid4vpStateDto)
+  readonly state: Openid4vpStateDto;
 
   @IsString()
   @MinLength(32)
@@ -44,6 +57,10 @@ export class Openid4vpInteractionDto {
   @IsString()
   @IsNotEmpty()
   readonly sessionId: string;
+
+  @IsEnum(Openid4vpFlow)
+  @IsOptional()
+  readonly flow?: Openid4vpFlow;
 
   @IsArray()
   @IsOptional()

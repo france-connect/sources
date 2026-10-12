@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { ApacheIgniteService } from '@fc/apache-ignite';
 import { ConfigService } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
-import { EidasNameIdFormats, EidasRequest, EidasResponse } from '@fc/eidas';
+import { EidasRequest, EidasResponse } from '@fc/eidas';
 import {
   LightRequestService,
   LightResponseService,
@@ -95,7 +95,13 @@ export class EidasProviderService {
    * @return An complete successful eIDAS response
    */
   completeFcSuccessResponse(
-    { subject, attributes, levelOfAssurance, status }: Partial<EidasResponse>,
+    {
+      subject,
+      attributes,
+      subjectNameIdFormat,
+      levelOfAssurance,
+      status,
+    }: Partial<EidasResponse>,
     eidasRequest: EidasRequest,
   ): EidasResponse {
     const response = {
@@ -104,7 +110,7 @@ export class EidasProviderService {
       inResponseToId: eidasRequest.id,
       relayState: eidasRequest.relayState,
       subject,
-      subjectNameIdFormat: EidasNameIdFormats.PERSISTENT,
+      subjectNameIdFormat,
       levelOfAssurance,
       status,
       attributes,

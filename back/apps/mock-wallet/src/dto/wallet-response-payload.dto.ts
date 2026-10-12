@@ -1,16 +1,14 @@
-import { IsNotEmpty, IsObject, IsString } from 'class-validator';
+import { IsObject, IsOptional, IsString } from 'class-validator';
 
-import { PresentationSubmission, WalletResponsePayload } from '../interfaces';
+import { DcqlVpToken, WalletResponsePayload } from '../interfaces';
+import { IsVpToken } from '../validators';
 
 export class WalletResponsePayloadDto implements WalletResponsePayload {
   @IsString()
-  @IsNotEmpty()
-  readonly state: string;
+  @IsOptional()
+  readonly state?: string;
 
-  @IsString()
-  @IsNotEmpty()
-  readonly vp_token: string;
-
+  @IsVpToken()
   @IsObject()
-  readonly presentation_submission: PresentationSubmission;
+  readonly vp_token: DcqlVpToken;
 }

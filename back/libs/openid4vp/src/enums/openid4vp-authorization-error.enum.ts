@@ -7,8 +7,6 @@ export enum Openid4vpAuthorizationError {
   SERVER_ERROR = 'server_error',
   TEMPORARILY_UNAVAILABLE = 'temporarily_unavailable',
   VP_FORMATS_NOT_SUPPORTED = 'vp_formats_not_supported',
-  INVALID_PRESENTATION_DEFINITION_URI = 'invalid_presentation_definition_uri',
-  INVALID_PRESENTATION_DEFINITION_REFERENCE = 'invalid_presentation_definition_reference',
   INVALID_REQUEST_URI_METHOD = 'invalid_request_uri_method',
   WALLET_UNAVAILABLE = 'wallet_unavailable',
 }

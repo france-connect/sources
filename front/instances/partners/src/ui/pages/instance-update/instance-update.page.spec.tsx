@@ -1,10 +1,6 @@
 import { render } from '@testing-library/react';
 
-import {
-  InstancePageFormComponent,
-  InstancePageHeaderComponent,
-  InstancePageNoticeComponent,
-} from '@fc/core-partners';
+import { InstancePageFormComponent, InstancePageHeaderComponent } from '@fc/core-partners';
 import { t } from '@fc/i18n';
 
 import { useInstanceUpdate } from '../../../hooks';
@@ -73,15 +69,6 @@ describe('InstanceUpdatePage', () => {
       },
       undefined,
     );
-  });
-
-  it('should render InstancePageNoticeComponent with parameters', () => {
-    // When
-    render(<InstanceUpdatePage />);
-
-    // Then
-    expect(InstancePageNoticeComponent).toHaveBeenCalledOnce();
-    expect(InstancePageNoticeComponent).toHaveBeenCalledWith({}, undefined);
   });
 
   it('should render InstancePageFormComponent with parameters', () => {

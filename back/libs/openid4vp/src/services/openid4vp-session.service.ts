@@ -13,6 +13,7 @@ import {
 } from '../dto';
 import {
   Openid4vpAuthorizationError,
+  Openid4vpFlow,
   Openid4vpInteractionStatus,
 } from '../enums';
 import { Openid4vpAuthorizationNotFoundException } from '../exceptions';
@@ -69,9 +70,9 @@ export class Openid4vpSessionService {
 
   async setAuthorizationRequestObjectAsRead(
     interaction: Openid4vpInteractionDto,
+    flow: Openid4vpFlow,
   ): Promise<void> {
     const idKey = this.getInteractionRedisKey(interaction.id);
-    const stateKey = this.getStateRedisKey(interaction.state);
 
     const {
       relayingParty: { responseDelay },
@@ -84,13 +85,11 @@ export class Openid4vpSessionService {
       /** @todo #2630 serialization and encryption */
       JSON.stringify({
         ...interaction,
+        flow,
         status: Openid4vpInteractionStatus.REQUEST_OBJECT_PROVIDED,
       }),
     );
     multi.expire(idKey, responseDelay);
-
-    multi.set(stateKey, interaction.id);
-    multi.expire(stateKey, responseDelay);
 
     this.logger.debug('redis.multi.exec');
 
@@ -131,20 +130,6 @@ export class Openid4vpSessionService {
     const key = this.getBackendIdRedisKey(backendId);
 
     const interactionId = await this.redis.client.get(key);
-
-    if (!interactionId) {
-      throw new Openid4vpAuthorizationNotFoundException();
-    }
-
-    return await this.getInteractionById(interactionId);
-  }
-
-  async getInteractionByState(
-    state: string,
-  ): Promise<Openid4vpInteractionDto | undefined> {
-    const stateKey = this.getStateRedisKey(state);
-
-    const interactionId = await this.redis.client.get(stateKey);
 
     if (!interactionId) {
       throw new Openid4vpAuthorizationNotFoundException();
@@ -197,7 +182,6 @@ export class Openid4vpSessionService {
   private async persistTerminalState(
     interaction: Openid4vpInteractionDto,
   ): Promise<void> {
-    const stateKey = this.getStateRedisKey(interaction.state);
     const idKey = this.getInteractionRedisKey(interaction.id);
 
     const {
@@ -209,7 +193,6 @@ export class Openid4vpSessionService {
     /** @todo #2630 serialization and encryption */
     multi.set(idKey, JSON.stringify(interaction));
     multi.expire(idKey, interactionTtl);
-    multi.del(stateKey);
 
     this.logger.debug('redis.multi.exec');
 
@@ -223,10 +206,6 @@ export class Openid4vpSessionService {
 
   private getInteractionRedisKey(requestId: string): string {
     return `oid4vp:req:${requestId}`;
-  }
-
-  private getStateRedisKey(state: string): string {
-    return `oid4vp:state:${state}`;
   }
 
   private getBackendIdRedisKey(backendId: string): string {

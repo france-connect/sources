@@ -112,7 +112,7 @@ describe('ServiceProviderSandboxesComponent', () => {
 
     // Then
     expect(ServiceProviderSandboxesTable).toHaveBeenCalledExactlyOnceWith(
-      { onDelete: deleteInstanceHandlerMock, sandboxes: instancesMock },
+      { sandboxes: instancesMock },
       undefined,
     );
   });

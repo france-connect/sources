@@ -19,7 +19,7 @@ export class ESHelper {
     try {
       nodes = safelyParseJson(esNodes);
     } catch (error) {
-      throw new Error(`Problem with connection nodes params: ${error}`);
+      throw new Error('Problem with connection nodes params', { cause: error });
     }
 
     if (!(Array.isArray(nodes) && nodes.length)) {

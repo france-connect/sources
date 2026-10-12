@@ -27,6 +27,16 @@ Given(
 );
 
 Given(
+  // "label" will result in nameIdFormat not being requested.
+  /^le fournisseur de service européen a configuré sa requête avec un nameId au format "(label|unspecified|transient|persistent)"$/,
+  function (
+    nameIdFormat: 'label' | 'unspecified' | 'transient' | 'persistent',
+  ) {
+    this.requestedNameIdFormat = nameIdFormat;
+  },
+);
+
+Given(
   /^le fournisseur de service (requiert|ne requiert pas) le claim "([^"]+)"$/,
   function (text: string, currentClaim: string) {
     const isRequested = text === 'requiert';

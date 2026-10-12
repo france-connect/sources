@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`DeleteContributorButton should match the snapshot 1`] = `
+<div>
+  <div>
+    SimpleButton
+  </div>
+</div>
+`;

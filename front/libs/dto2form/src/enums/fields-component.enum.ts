@@ -1,4 +1,5 @@
 import {
+  ArrayField,
   ChoicesField,
   ConsentField,
   FieldTypes,
@@ -8,6 +9,7 @@ import {
 } from '@fc/forms';
 
 export const FieldsCommponentMap = {
+  [FieldTypes.ARRAY]: ArrayField,
   [FieldTypes.CHECKBOX]: ChoicesField,
   [FieldTypes.CONSENT]: ConsentField,
   [FieldTypes.DATE]: InputField,

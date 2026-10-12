@@ -197,7 +197,7 @@ describe('ConfigMongoAdapterService', () => {
           ...patchedData,
           client_secret: encryptedSecret,
         },
-        { upsert: true, new: true },
+        { upsert: true, returnDocument: 'after' },
       );
     });
 

@@ -1,6 +1,6 @@
 import { resolve } from 'path';
 
-import { renderFile } from 'ejs';
+import ejs from 'ejs';
 import { DateTime } from 'luxon';
 
 import { AppConfig } from '../config';
@@ -14,9 +14,11 @@ jest.mock('./safely-parse-json');
 jest.mock('./log', () => ({
   debug: jest.fn(),
 }));
-jest.mock('ejs', () => ({
-  renderFile: jest.fn(),
-}));
+jest.mock('ejs', () =>
+  Object.defineProperty({ default: { renderFile: jest.fn() } }, '__esModule', {
+    value: true,
+  }),
+);
 
 describe('generateMockData', () => {
   const id = '123';
@@ -37,7 +39,7 @@ describe('generateMockData', () => {
   it('should generate mock data correctly', async () => {
     // Given
     const resolvedPaths = mockDataPaths.map((file) => `/resolved/${file}`);
-    jest.mocked(renderFile).mockResolvedValue('<log></log>');
+    jest.mocked(ejs.renderFile).mockResolvedValue('<log></log>');
 
     // When
     const result = await generateMockData(id, mockDataPaths, dates);
@@ -57,9 +59,9 @@ describe('generateMockData', () => {
     expect(debug).toHaveBeenCalledWith(
       `Prepare mock order for ${dates.join(',')}`,
     );
-    expect(renderFile).toHaveBeenCalledTimes(dates.length);
+    expect(ejs.renderFile).toHaveBeenCalledTimes(dates.length);
     dates.forEach((date, index) => {
-      expect(renderFile).toHaveBeenCalledWith(
+      expect(ejs.renderFile).toHaveBeenCalledWith(
         resolvedPaths[index % resolvedPaths.length],
         {
           accountId: id,
@@ -88,7 +90,7 @@ describe('generateMockData', () => {
 
   it('should handle multiple lines in mock data', async () => {
     // Given
-    jest.mocked(renderFile).mockResolvedValue('<log></log>\n<log></log>');
+    jest.mocked(ejs.renderFile).mockResolvedValue('<log></log>\n<log></log>');
     // When
     const result = await generateMockData(id, mockDataPaths, dates);
     // Then
@@ -97,7 +99,7 @@ describe('generateMockData', () => {
 
   it('should handle empty lines in mock data', async () => {
     // Given
-    jest.mocked(renderFile).mockResolvedValue('<log></log>\n\n<log></log>');
+    jest.mocked(ejs.renderFile).mockResolvedValue('<log></log>\n\n<log></log>');
     // When
     const result = await generateMockData(id, mockDataPaths, dates);
     // Then
@@ -106,7 +108,7 @@ describe('generateMockData', () => {
 
   it('should handle empty mock data', async () => {
     // Given
-    jest.mocked(renderFile).mockResolvedValue('');
+    jest.mocked(ejs.renderFile).mockResolvedValue('');
     // When
     const result = await generateMockData(id, mockDataPaths, dates);
     // Then
@@ -115,7 +117,7 @@ describe('generateMockData', () => {
 
   it('should throw if an error occured while parsing the  mock data', async () => {
     // Given
-    jest.mocked(renderFile).mockResolvedValue('<log></log>');
+    jest.mocked(ejs.renderFile).mockResolvedValue('<log></log>');
     const mockError = new Error('Invalid JSON');
     jest.mocked(safelyParseJson).mockImplementation(() => {
       throw mockError;

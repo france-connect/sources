@@ -37,7 +37,7 @@ describe('WalletDocumentService', () => {
       family_name: 'DUPONT',
       given_name: 'JEAN',
       birth_date: '1985-06-15',
-      birth_place: 'Paris',
+      place_of_birth: 'Paris',
       nationality: ['FR'],
     },
   };

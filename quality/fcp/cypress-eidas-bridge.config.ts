@@ -12,12 +12,12 @@ export default defineConfig({
     },
     specPattern: 'cypress/integration/eidas-bridge/*.feature',
   },
-  env: {
-    ...baseConfig.env,
+  expose: {
+    ...baseConfig.expose,
     APP_LABEL: 'eIDAS Bridge',
     // Base Configuration
-    TAGS: '@eidasBridge and not @ignore',
     TEST_ENV: 'docker',
     TEST_PLATFORM: 'fcp-high',
+    tags: '@eidasBridge and not @ignore',
   },
 });

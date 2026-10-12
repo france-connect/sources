@@ -49,4 +49,4 @@ Fonctionnalité: Récupération du lieu de naissance d'un usager via le Wallet B
     Exemples:
       | pidType                                  |
       | sans code ISO reconnu par l'INSEE        |
-      | sans country dans l'attribut birth_place |
+      | sans country dans l'attribut place_of_birth |

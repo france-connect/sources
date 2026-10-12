@@ -42,6 +42,7 @@ describe('TracksV2Formatter', () => {
   const localisationMock = {
     city: Symbol('City') as unknown as string,
     country: Symbol('Country') as unknown as string,
+    region: Symbol('Region') as unknown as string,
   };
 
   const platformMock = Platform.FCP_LOW;

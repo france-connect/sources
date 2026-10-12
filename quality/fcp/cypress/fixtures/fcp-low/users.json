@@ -701,7 +701,7 @@
   {
     "enabled": true,
     "criteria": [
-      "sans country dans l'attribut birth_place"
+      "sans country dans l'attribut place_of_birth"
     ],
     "credentials": [
       {

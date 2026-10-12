@@ -9,8 +9,14 @@ import { IOidcIdentity } from '@fc/oidc';
 
 import { AcrValues } from '../enums';
 
-export const LevelOfAssurancesToAcrValueMap = {
+export const RequestedLevelOfAssurancesToAcrValueMap = {
   [EidasLevelOfAssurances.LOW]: AcrValues.EIDAS2,
+  [EidasLevelOfAssurances.SUBSTANTIAL]: AcrValues.EIDAS2,
+  [EidasLevelOfAssurances.HIGH]: AcrValues.EIDAS3,
+};
+
+export const ObtainedLevelOfAssurancesToAcrValueMap = {
+  [EidasLevelOfAssurances.LOW]: AcrValues.EIDAS1,
   [EidasLevelOfAssurances.SUBSTANTIAL]: AcrValues.EIDAS2,
   [EidasLevelOfAssurances.HIGH]: AcrValues.EIDAS3,
 };

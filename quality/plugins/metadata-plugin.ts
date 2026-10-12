@@ -81,9 +81,9 @@ export const addMetadataPlugin = (
     };
 
     metadata.custom = {
-      app: runResults.config.env.APP_LABEL || 'N/A',
+      app: runResults.config.expose.APP_LABEL || 'N/A',
       runner: process.env.CI ? 'GitLab CI' : 'Local',
-      testEnv: process.env.CYPRESS_TEST_ENV || 'docker',
+      testEnv: runResults.config.expose.TEST_ENV || 'docker',
     };
 
     const outputPath = path.join(

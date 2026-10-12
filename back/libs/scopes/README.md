@@ -50,6 +50,25 @@ The service exposes two methods :
   }
   ```
 
+- **getScopesFromDatapassScopes**
+
+  ```ts
+  ScopesService.getScopesFromDatapassScopes(platformName: PartnersPlatformEnum, datapassScopes: IScope[]): IScope[]
+  ```
+
+  To retrieve the complete list of scopes granted by a DataPass authorization, for the FranceConnect core behind a partners platform (`FRANCE_CONNECT_LOW` or `FRANCE_CONNECT_HIGH`).
+
+  DataPass scopes do not follow the FranceConnect definitions: a DataPass scope may not have the same meaning, nor the same correspondence, as the FranceConnect scope bearing the same name. The optional `datapassScopeMapping` of a provider, next to `claims` and `scopes`, catches up those scopes by declaring which FranceConnect scopes each DataPass scope actually stands for:
+
+  ```ts
+  // data/fcp-low/datapass-fc-low-scope.mapping.ts
+  export const datapassFcLowScopeMapping: DatapassScopeMappingInterface = {
+    birthdate: ['birthdate', 'idp_birthdate'],
+  };
+  ```
+
+  A DataPass scope missing from the mapping is used as the FranceConnect scope of the same name. A new divergence is a new entry in the mapping, not a new condition in the code.
+
 ## Configuration
 
 The service needs to be configured, to know wich `scopes` and `claims` are available in the application.

@@ -6,7 +6,11 @@ import { ConfigService } from '@fc/config';
 import { fetchWithAuthHandling } from '@fc/http-client';
 
 import { CorePartnersOptions } from '../../../enums';
-import type { InstanceInterface, PartnersConfig } from '../../../interfaces';
+import type {
+  InstanceInterface,
+  LinkableInstancesPayloadInterface,
+  PartnersConfig,
+} from '../../../interfaces';
 
 interface LinkableInstancesApiPayloadInterface {
   instances: InstanceInterface[];
@@ -17,18 +21,9 @@ interface LinkableInstancesApiPayloadInterface {
   };
 }
 
-export interface LinkableInstancesByServiceProviderPayloadInterface {
-  datapassRequestId: string;
-  serviceProviderId: UUIDType;
-  serviceProviderName: string;
-  linkableInstances: InstanceInterface[];
-}
-
 export const loadLinkableInstancesByServiceProviderId = async ({
   params,
-}: LoaderFunctionArgs): Promise<
-  FSAInterface<LinkableInstancesByServiceProviderPayloadInterface>
-> => {
+}: LoaderFunctionArgs): Promise<FSAInterface<LinkableInstancesPayloadInterface>> => {
   const { endpoints } = ConfigService.get<PartnersConfig>(CorePartnersOptions.CONFIG_NAME);
   const { linkableInstancesByServiceProviderId } = endpoints;
 

@@ -1,6 +1,6 @@
-import classnames from 'classnames';
 import React, { useMemo } from 'react';
 
+import type { SelectableInterface } from '@fc/common';
 import { ucfirst } from '@fc/common';
 
 import { Sizes } from '../../enums';
@@ -8,18 +8,19 @@ import type {
   TableColumnActionsInterface,
   TableColumnInterface,
   TableDataSourceInterface,
+  TableToolbarInterface,
 } from '../../interfaces';
 import { TableCaptionComponent } from './caption';
 import { TableHeaderComponent } from './header';
 import { TableRowComponent } from './row';
+import { TableWrapperComponent } from './wrapper';
 
 type TableComponentStyles = {
-  table?: string;
-  header?: string;
+  container?: string;
   row?: string;
 };
 
-interface TableComponentProps<T extends TableDataSourceInterface> {
+interface TableComponentProps<T> {
   // @TODO implement alignment, wrap, sort, into the table component
   // @SEE https://www.systeme-de-design.gouv.fr/composants-et-modeles/composants/tableau
   caption?: string;
@@ -33,6 +34,8 @@ interface TableComponentProps<T extends TableDataSourceInterface> {
   columns?: TableColumnInterface<T>[];
   multiline?: boolean;
   actions?: TableColumnActionsInterface<T>;
+  selectable?: SelectableInterface<T>;
+  toolbar?: TableToolbarInterface;
 }
 
 function TableComponentInner<T extends TableDataSourceInterface>({
@@ -44,9 +47,11 @@ function TableComponentInner<T extends TableDataSourceInterface>({
   id,
   multiline = false,
   noScroll = false,
+  selectable,
   size = Sizes.MEDIUM,
   sources,
   styles = {},
+  toolbar,
 }: TableComponentProps<T>) {
   const tableColumns = useMemo(() => {
     if (columns && columns.length > 0) {
@@ -54,7 +59,7 @@ function TableComponentInner<T extends TableDataSourceInterface>({
     }
     const result = Object.keys(sources[0]).map((key) => {
       const label = ucfirst(key);
-      return { key, label } as TableColumnInterface<T>;
+      return { key, label };
     });
     return result;
   }, [columns, sources]);
@@ -62,48 +67,42 @@ function TableComponentInner<T extends TableDataSourceInterface>({
   const hasActions = !!actions;
 
   return (
-    <div
-      className={classnames(`fr-table--${size} fr-table`, styles.table, {
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        'fr-table--bordered': bordered,
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        'fr-table--multiline': multiline,
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        'fr-table--no-scroll': noScroll,
-      })}
-      id={id}>
-      <div className="fr-table__wrapper">
-        <div className="fr-table__container">
-          <div className="fr-table__content">
-            <table id={`${id}--table`}>
-              {caption && <TableCaptionComponent caption={caption} />}
-              {!hideHeader && (
-                <TableHeaderComponent
-                  columns={tableColumns}
-                  showActionsColumn={hasActions}
-                  tableId={id}
-                />
-              )}
-              <tbody>
-                {sources.map((item, index) => {
-                  const key = `${id}--row-${index}`;
-                  return (
-                    <TableRowComponent<T>
-                      key={key}
-                      actions={actions}
-                      className={styles.row}
-                      columns={tableColumns}
-                      data={item}
-                      index={index}
-                      tableId={id}
-                    />
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
+    <div className={styles.container}>
+      <TableWrapperComponent
+        bordered={bordered}
+        id={id}
+        multiline={multiline}
+        noScroll={noScroll}
+        selectable={selectable}
+        size={size}
+        toolbar={toolbar}>
+        {caption && <TableCaptionComponent caption={caption} />}
+        {!hideHeader && (
+          <TableHeaderComponent
+            columns={tableColumns}
+            selectable={selectable}
+            showActionsColumn={hasActions}
+            tableId={id}
+          />
+        )}
+        <tbody>
+          {sources.map((item, index) => {
+            const key = `${id}--row-${index}`;
+            return (
+              <TableRowComponent<T>
+                key={key}
+                actions={actions}
+                className={styles.row}
+                columns={tableColumns}
+                data={item}
+                index={index}
+                selectable={selectable}
+                tableId={id}
+              />
+            );
+          })}
+        </tbody>
+      </TableWrapperComponent>
     </div>
   );
 }

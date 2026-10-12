@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { ComponentTypes } from '../../../enums';
+import { ComponentTypes, FieldTypes } from '../../../enums';
+import { getFieldControlId, getFieldMessagesId } from '../../../helpers';
 import { useFieldMessages, useFieldMeta } from '../../../hooks';
 import type { PropsWithInputConfigType } from '../../../types';
 import { GroupElement, LabelElement, MessagesElement } from '../../elements';
@@ -13,8 +14,8 @@ export const TextAreaInput = React.memo(({ config, input, meta }: PropsWithInput
   const { errorsList, hasError, inputClassname, isValid } = useFieldMeta(meta);
 
   const fieldMessages = useFieldMessages({ errorsList, isValid, messages });
-  const hasMessages = fieldMessages && fieldMessages.length > 0;
 
+  const id = getFieldControlId(FieldTypes.TEXTAREA, name);
   const count = input.value.length;
   const isNumber = typeof maxChars === 'number';
   const maxLength = isNumber ? maxChars + 1 : undefined;
@@ -26,21 +27,20 @@ export const TextAreaInput = React.memo(({ config, input, meta }: PropsWithInput
       hasError={hasError}
       isValid={isValid}
       type={ComponentTypes.INPUT}>
-      <LabelElement hint={hint} label={label} name={name} required={required} seeAlso={seeAlso} />
+      <LabelElement hint={hint} htmlFor={id} label={label} required={required} seeAlso={seeAlso} />
       <textarea
         {...input}
-        aria-describedby={`${name}-messages`}
+        aria-describedby={getFieldMessagesId(name)}
         className={inputClassname}
         data-testid={`form-input-textarea-testid-${name}`}
         disabled={disabled}
+        id={id}
         maxLength={maxLength}
         name={name}
         rows={4}
       />
       {maxLength && <TextAreaMaxlengthComponent count={count} maxLength={maxLength} />}
-      {hasMessages && (
-        <MessagesElement dataTestId={`${name}-messages`} id={name} messages={fieldMessages} />
-      )}
+      <MessagesElement id={name} messages={fieldMessages} />
     </GroupElement>
   );
 });

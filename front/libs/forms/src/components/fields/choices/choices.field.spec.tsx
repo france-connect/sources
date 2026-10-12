@@ -52,18 +52,14 @@ describe('ChoicesField', () => {
 
     // Then
     expect(container).toMatchSnapshot();
-    expect(useField).toHaveBeenCalledOnce();
-    expect(useField).toHaveBeenCalledWith('any-name-mock');
-    expect(useFieldMeta).toHaveBeenCalledOnce();
-    expect(useFieldMeta).toHaveBeenCalledWith(expect.any(Object));
-    expect(useFieldMessages).toHaveBeenCalledOnce();
-    expect(useFieldMessages).toHaveBeenCalledWith({
+    expect(useField).toHaveBeenCalledExactlyOnceWith('any-name-mock');
+    expect(useFieldMeta).toHaveBeenCalledExactlyOnceWith(expect.any(Object));
+    expect(useFieldMessages).toHaveBeenCalledExactlyOnceWith({
       errorsList: [],
       isValid: true,
       messages: undefined,
     });
-    expect(FieldsetElement).toHaveBeenCalledOnce();
-    expect(FieldsetElement).toHaveBeenCalledWith(
+    expect(FieldsetElement).toHaveBeenCalledExactlyOnceWith(
       {
         children: expect.any(Object),
         hasError: false,
@@ -72,8 +68,7 @@ describe('ChoicesField', () => {
       },
       undefined,
     );
-    expect(FieldsetLegendElement).toHaveBeenCalledOnce();
-    expect(FieldsetLegendElement).toHaveBeenCalledWith(
+    expect(FieldsetLegendElement).toHaveBeenCalledExactlyOnceWith(
       {
         hint: 'any-hint-mock',
         label: 'any-label-mock',
@@ -82,7 +77,10 @@ describe('ChoicesField', () => {
       },
       undefined,
     );
-    expect(MessagesElement).not.toHaveBeenCalled();
+    expect(MessagesElement).toHaveBeenCalledExactlyOnceWith(
+      { id: 'any-name-mock', messages: [] },
+      undefined,
+    );
     expect(Field).toHaveBeenCalledTimes(2);
     expect(Field).toHaveBeenNthCalledWith(
       1,
@@ -158,18 +156,14 @@ describe('ChoicesField', () => {
 
     // Then
     expect(container).toMatchSnapshot();
-    expect(useField).toHaveBeenCalledOnce();
-    expect(useField).toHaveBeenCalledWith('any-name-mock');
-    expect(useFieldMeta).toHaveBeenCalledOnce();
-    expect(useFieldMeta).toHaveBeenCalledWith(expect.any(Object));
-    expect(useFieldMessages).toHaveBeenCalledOnce();
-    expect(useFieldMessages).toHaveBeenCalledWith({
+    expect(useField).toHaveBeenCalledExactlyOnceWith('any-name-mock');
+    expect(useFieldMeta).toHaveBeenCalledExactlyOnceWith(expect.any(Object));
+    expect(useFieldMessages).toHaveBeenCalledExactlyOnceWith({
       errorsList: ['any-errorMessage-mock'],
       isValid: false,
       messages: undefined,
     });
-    expect(FieldsetElement).toHaveBeenCalledOnce();
-    expect(FieldsetElement).toHaveBeenCalledWith(
+    expect(FieldsetElement).toHaveBeenCalledExactlyOnceWith(
       {
         children: expect.any(Object),
         hasError: true,
@@ -178,8 +172,7 @@ describe('ChoicesField', () => {
       },
       undefined,
     );
-    expect(FieldsetLegendElement).toHaveBeenCalledOnce();
-    expect(FieldsetLegendElement).toHaveBeenCalledWith(
+    expect(FieldsetLegendElement).toHaveBeenCalledExactlyOnceWith(
       {
         hint: 'any-hint-mock',
         label: 'any-label-mock',
@@ -188,9 +181,8 @@ describe('ChoicesField', () => {
       },
       undefined,
     );
-    expect(MessagesElement).toHaveBeenCalledOnce();
-    expect(MessagesElement).toHaveBeenCalledWith(
-      { dataTestId: 'any-name-mock-messages', id: 'any-name-mock', messages: [errorMessageMock] },
+    expect(MessagesElement).toHaveBeenCalledExactlyOnceWith(
+      { id: 'any-name-mock', messages: [errorMessageMock] },
       undefined,
     );
     expect(Field).toHaveBeenCalledTimes(2);
@@ -269,15 +261,13 @@ describe('ChoicesField', () => {
 
     // Then
     expect(container).toMatchSnapshot();
-    expect(useFieldMessages).toHaveBeenCalledOnce();
-    expect(useFieldMessages).toHaveBeenCalledWith({
+    expect(useFieldMessages).toHaveBeenCalledExactlyOnceWith({
       errorsList: [],
       isValid: true,
       messages: [infoMessageMock],
     });
-    expect(MessagesElement).toHaveBeenCalledOnce();
-    expect(MessagesElement).toHaveBeenCalledWith(
-      { dataTestId: 'any-name-mock-messages', id: 'any-name-mock', messages: [infoMessageMock] },
+    expect(MessagesElement).toHaveBeenCalledExactlyOnceWith(
+      { id: 'any-name-mock', messages: [infoMessageMock] },
       undefined,
     );
   });

@@ -23,7 +23,7 @@ export const ChoiceInput = React.memo(({ choice, config, input }: PropsWithInput
           [`fr-${type}-group--${size}`]: !!size,
         })}>
         <input {...input} data-testid={`${id}--testid`} disabled={disabled} id={id} />
-        <LabelElement hint={hint} label={label} name={id} seeAlso={seeAlso} />
+        <LabelElement hint={hint} htmlFor={id} label={label} seeAlso={seeAlso} />
       </div>
     </div>
   );

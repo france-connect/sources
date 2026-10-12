@@ -11,7 +11,7 @@ export function extractPaths(pathArray: string, platform: string): string[] {
     }
     paths = values;
   } catch (error) {
-    throw new Error(`Paths param must be a JSON array : ${error.message}`);
+    throw new Error('Paths param must be a JSON array', { cause: error });
   }
 
   // Default value

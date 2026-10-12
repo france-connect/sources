@@ -7,7 +7,7 @@ export enum LogResult {
 }
 
 export function clearAllLogs(logPath?: string): void {
-  const logFilePath: string = logPath || Cypress.env('LOG_FILE_PATH');
+  const logFilePath: string = logPath || Cypress.expose('LOG_FILE_PATH');
   cy.task('clearAllLogs', { logFilePath }).should('eq', 0);
 }
 
@@ -16,7 +16,7 @@ export function hasBusinessLog(
   result: LogResult = LogResult.EventFound,
   logPath?: string,
 ): void {
-  const logFilePath: string = logPath || Cypress.env('LOG_FILE_PATH');
+  const logFilePath: string = logPath || Cypress.expose('LOG_FILE_PATH');
   cy.task<number>('hasBusinessLog', { event, logFilePath }).then((exitCode) => {
     const text = result === LogResult.EventFound ? 'be' : 'not be';
     expect(
@@ -30,7 +30,7 @@ export function getBusinessLogs(
   event: Record<string, unknown>,
   logPath?: string,
 ): Cypress.Chainable<Record<string, string>[]> {
-  const logFilePath: string = logPath || Cypress.env('LOG_FILE_PATH');
+  const logFilePath: string = logPath || Cypress.expose('LOG_FILE_PATH');
   return cy.task<Record<string, string>[]>('getBusinessLogs', {
     event,
     logFilePath,
@@ -40,7 +40,7 @@ export function getBusinessLogs(
 export function getAllLogs(
   logPath?: string,
 ): Cypress.Chainable<Record<string, string>[]> {
-  const logFilePath: string = logPath || Cypress.env('LOG_FILE_PATH');
+  const logFilePath: string = logPath || Cypress.expose('LOG_FILE_PATH');
   return cy.task<Record<string, string>[]>('getAllLogs', {
     logFilePath,
   });
@@ -97,7 +97,7 @@ export function filterLogs(
       return actualValue === expectedValue;
     }
 
-    let result = false;
+    let result;
     if (expectedValue.startsWith(REG_EXP_PREFIX)) {
       const regExp = new RegExp(expectedValue.replace(REG_EXP_PREFIX, ''));
       result = typeof actualValue === 'string' && regExp.test(actualValue);

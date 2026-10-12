@@ -68,16 +68,13 @@ describe('TextWithRemoveInput', () => {
 
     // Then
     expect(container).toMatchSnapshot();
-    expect(useFieldMeta).toHaveBeenCalledOnce();
-    expect(useFieldMeta).toHaveBeenCalledWith(metaMock);
-    expect(useFieldMessages).toHaveBeenCalledOnce();
-    expect(useFieldMessages).toHaveBeenCalledWith({
+    expect(useFieldMeta).toHaveBeenCalledExactlyOnceWith(metaMock);
+    expect(useFieldMessages).toHaveBeenCalledExactlyOnceWith({
       errorsList: ['any-error-message-mock'],
       isValid: false,
       messages: undefined,
     });
-    expect(GroupElement).toHaveBeenCalledOnce();
-    expect(GroupElement).toHaveBeenCalledWith(
+    expect(GroupElement).toHaveBeenCalledExactlyOnceWith(
       {
         children: expect.any(Object),
         className: 'any-classname-mock',
@@ -88,8 +85,7 @@ describe('TextWithRemoveInput', () => {
       },
       undefined,
     );
-    expect(InputComponent).toHaveBeenCalledOnce();
-    expect(InputComponent).toHaveBeenCalledWith(
+    expect(InputComponent).toHaveBeenCalledExactlyOnceWith(
       {
         className: 'any-input-classname-mock',
         disabled: false,
@@ -98,8 +94,7 @@ describe('TextWithRemoveInput', () => {
       },
       undefined,
     );
-    expect(ArrayRemoveButton).toHaveBeenCalledOnce();
-    expect(ArrayRemoveButton).toHaveBeenCalledWith(
+    expect(ArrayRemoveButton).toHaveBeenCalledExactlyOnceWith(
       {
         dataTestId: 'any-fieldname-mock-remove',
         disabled: !isRemovableMock,
@@ -107,11 +102,9 @@ describe('TextWithRemoveInput', () => {
       },
       undefined,
     );
-    expect(MessagesElement).toHaveBeenCalledOnce();
-    expect(MessagesElement).toHaveBeenCalledWith(
+    expect(MessagesElement).toHaveBeenCalledExactlyOnceWith(
       {
-        dataTestId: 'any-name-mock-messages',
-        id: 'form-input-array-any-name-mock',
+        id: 'any-name-mock',
         messages: [errorMessageMock],
       },
       undefined,
@@ -155,16 +148,13 @@ describe('TextWithRemoveInput', () => {
 
     // Then
     expect(container).toMatchSnapshot();
-    expect(useFieldMeta).toHaveBeenCalledOnce();
-    expect(useFieldMeta).toHaveBeenCalledWith(metaMock);
-    expect(useFieldMessages).toHaveBeenCalledOnce();
-    expect(useFieldMessages).toHaveBeenCalledWith({
+    expect(useFieldMeta).toHaveBeenCalledExactlyOnceWith(metaMock);
+    expect(useFieldMessages).toHaveBeenCalledExactlyOnceWith({
       errorsList: [],
       isValid: true,
       messages: undefined,
     });
-    expect(GroupElement).toHaveBeenCalledOnce();
-    expect(GroupElement).toHaveBeenCalledWith(
+    expect(GroupElement).toHaveBeenCalledExactlyOnceWith(
       {
         children: expect.any(Object),
         className: 'any-classname-mock',
@@ -175,8 +165,7 @@ describe('TextWithRemoveInput', () => {
       },
       undefined,
     );
-    expect(InputComponent).toHaveBeenCalledOnce();
-    expect(InputComponent).toHaveBeenCalledWith(
+    expect(InputComponent).toHaveBeenCalledExactlyOnceWith(
       {
         className: 'any-input-classname-mock',
         disabled: false,
@@ -185,8 +174,7 @@ describe('TextWithRemoveInput', () => {
       },
       undefined,
     );
-    expect(ArrayRemoveButton).toHaveBeenCalledOnce();
-    expect(ArrayRemoveButton).toHaveBeenCalledWith(
+    expect(ArrayRemoveButton).toHaveBeenCalledExactlyOnceWith(
       {
         dataTestId: 'any-fieldname-mock-remove',
         disabled: !isRemovableMock,
@@ -194,7 +182,10 @@ describe('TextWithRemoveInput', () => {
       },
       undefined,
     );
-    expect(MessagesElement).not.toHaveBeenCalled();
+    expect(MessagesElement).toHaveBeenCalledExactlyOnceWith(
+      { id: 'any-name-mock', messages: [] },
+      undefined,
+    );
   });
 
   it('should match snapshot, with config messages', () => {
@@ -237,18 +228,15 @@ describe('TextWithRemoveInput', () => {
 
     // Then
     expect(container).toMatchSnapshot();
-    expect(useFieldMessages).toHaveBeenCalledOnce();
-    expect(useFieldMessages).toHaveBeenCalledWith({
+    expect(useFieldMessages).toHaveBeenCalledExactlyOnceWith({
       errorsList: [],
       isValid: true,
       messages: [configMessageMock],
     });
 
-    expect(MessagesElement).toHaveBeenCalledOnce();
-    expect(MessagesElement).toHaveBeenCalledWith(
+    expect(MessagesElement).toHaveBeenCalledExactlyOnceWith(
       {
-        dataTestId: 'any-name-mock-messages',
-        id: 'form-input-array-any-name-mock',
+        id: 'any-name-mock',
         messages: [configMessageMock],
       },
       undefined,
@@ -294,7 +282,6 @@ describe('TextWithRemoveInput', () => {
     fireEvent.click(buttonElt);
 
     // Then
-    expect(onRemoveMock).toHaveBeenCalledOnce();
-    expect(onRemoveMock).toHaveBeenCalledWith(indexMock);
+    expect(onRemoveMock).toHaveBeenCalledExactlyOnceWith(indexMock);
   });
 });

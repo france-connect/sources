@@ -8,10 +8,7 @@ export interface JarmPostBodyInterface {
 export interface VpTokenPostBodyInterface {
   readonly state?: string;
   readonly vp_token: string;
-  readonly presentation_submission: string;
 }
 
 export type WalletPostBodyType =
-  | JarmPostBodyInterface
-  | VpTokenPostBodyInterface
-  | ErrorPostBodyInterface;
+  JarmPostBodyInterface | VpTokenPostBodyInterface | ErrorPostBodyInterface;

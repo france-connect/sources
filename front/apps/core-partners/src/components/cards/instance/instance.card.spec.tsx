@@ -56,7 +56,7 @@ describe('InstanceComponent', () => {
     render(<InstanceCardComponent data={instanceMock} />);
 
     // Then
-    expect(t).toHaveBeenCalledExactlyOnceWith('FC.Common.createdAt.female', {
+    expect(t).toHaveBeenCalledExactlyOnceWith('FC.Common.createdAt.male', {
       date: 'any-iso-date-mock',
     });
   });

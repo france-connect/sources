@@ -1,5 +1,3 @@
-import type * as CSS from 'csstype';
-
 import { useContentHeight } from '@fc/common';
 
 export const useAccordion = (isOpened: boolean) => {
@@ -15,7 +13,7 @@ export const useAccordion = (isOpened: boolean) => {
         // DSFR classname
         // eslint-disable-next-line @typescript-eslint/naming-convention
         '--collapse-max-height': '0',
-      } as CSS.DSFRCustomProperties,
+      },
     };
   }
 
@@ -30,6 +28,6 @@ export const useAccordion = (isOpened: boolean) => {
       // DSFR classname
       // eslint-disable-next-line @typescript-eslint/naming-convention
       '--collapse-max-height': maxHeight,
-    } as CSS.DSFRCustomProperties,
+    },
   };
 };

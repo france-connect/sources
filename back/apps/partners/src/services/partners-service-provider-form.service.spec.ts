@@ -10,7 +10,6 @@ import {
 import { AccountPermissionInterface } from '@fc/access-control';
 import { I18nService } from '@fc/i18n';
 import { LoggerService } from '@fc/logger';
-import { ScopesService } from '@fc/scopes';
 
 import { AccessControlPermission } from '../enums';
 import { PartnersServiceProviderFormService } from './partners-service-provider-form.service';
@@ -25,14 +24,6 @@ describe('PartnersServiceProviderFormService', () => {
   const loggerMock = {
     warning: jest.fn(),
   };
-
-  const scopesServiceMock = {
-    getScopesFromClaims: jest.fn(),
-    getRawClaimsFromScopes: jest.fn(),
-  };
-
-  const defaultScopesFromClaimsReturnValue = ['openid', 'profile', 'email'];
-  const defaultRawClaimsFromScopesReturnValue = ['sub'];
 
   const organizationMock: PartnersOrganization = {
     id: '12345',
@@ -66,15 +57,12 @@ describe('PartnersServiceProviderFormService', () => {
         PartnersServiceProviderFormService,
         I18nService,
         LoggerService,
-        ScopesService,
       ],
     })
       .overrideProvider(I18nService)
       .useValue(i18nMock)
       .overrideProvider(LoggerService)
       .useValue(loggerMock)
-      .overrideProvider(ScopesService)
-      .useValue(scopesServiceMock)
       .compile();
 
     service = module.get<PartnersServiceProviderFormService>(
@@ -82,12 +70,6 @@ describe('PartnersServiceProviderFormService', () => {
     );
 
     i18nMock.translate.mockReturnValue('Label');
-    scopesServiceMock.getScopesFromClaims.mockReturnValue(
-      defaultScopesFromClaimsReturnValue,
-    );
-    scopesServiceMock.getRawClaimsFromScopes.mockReturnValue(
-      defaultRawClaimsFromScopesReturnValue,
-    );
   });
 
   it('should be defined', () => {
@@ -118,7 +100,6 @@ describe('PartnersServiceProviderFormService', () => {
           'Nom de famille',
           'Adresse électronique',
         ],
-        fcScopes: ['openid', 'profile', 'email'],
         createdAt: new Date('2024-01-01'),
         updatedAt: new Date('2024-01-01'),
         instances: [],
@@ -149,7 +130,6 @@ describe('PartnersServiceProviderFormService', () => {
         }
         return 'Label';
       });
-      scopesServiceMock.getScopesFromClaims.mockReturnValue(['profile']);
 
       const serviceProviderWithUnknownClaim = {
         ...serviceProviderMock,
@@ -166,7 +146,6 @@ describe('PartnersServiceProviderFormService', () => {
         organization: organizationMock,
         datapassRequestId: '12345',
         datapassScopes: ['Label', 'unknown_claim'],
-        fcScopes: ['profile'],
         createdAt: new Date('2024-01-01'),
         updatedAt: new Date('2024-01-01'),
         instances: [],
@@ -187,7 +166,6 @@ describe('PartnersServiceProviderFormService', () => {
         organization: organizationMock,
         datapassRequestId: '12345',
         datapassScopes: ['Label', 'Label', 'Label', 'Label'],
-        fcScopes: ['openid', 'profile', 'email'],
         createdAt: new Date('2024-01-01'),
         updatedAt: new Date('2024-01-01'),
         instances: [],
@@ -196,7 +174,6 @@ describe('PartnersServiceProviderFormService', () => {
 
     it('should handle empty datapassScopes array', () => {
       // Given
-      scopesServiceMock.getScopesFromClaims.mockReturnValue([]);
       const serviceProviderWithoutScopes = {
         ...serviceProviderMock,
         datapassScopes: [],
@@ -212,7 +189,6 @@ describe('PartnersServiceProviderFormService', () => {
         organization: organizationMock,
         datapassRequestId: '12345',
         datapassScopes: [],
-        fcScopes: [],
         createdAt: new Date('2024-01-01'),
         updatedAt: new Date('2024-01-01'),
         instances: [],
@@ -221,7 +197,6 @@ describe('PartnersServiceProviderFormService', () => {
 
     it('should handle null datapassScopes', () => {
       // Given
-      scopesServiceMock.getScopesFromClaims.mockReturnValue([]);
       const serviceProviderWithNullScopes = {
         ...serviceProviderMock,
         datapassScopes: null,
@@ -237,64 +212,10 @@ describe('PartnersServiceProviderFormService', () => {
         organization: organizationMock,
         datapassRequestId: '12345',
         datapassScopes: [],
-        fcScopes: [],
         createdAt: new Date('2024-01-01'),
         updatedAt: new Date('2024-01-01'),
         instances: [],
       });
-    });
-
-    it('should call scopesService.getRawClaimsFromScopes with datapass scopes', () => {
-      // When
-      service.toDisplayValue(serviceProviderMock);
-
-      // Then
-      expect(
-        scopesServiceMock.getRawClaimsFromScopes,
-      ).toHaveBeenCalledExactlyOnceWith([
-        'openid',
-        'given_name',
-        'family_name',
-        'email',
-      ]);
-    });
-
-    it('should call scopesService.getScopesFromClaims with base claims', () => {
-      // Given
-      scopesServiceMock.getRawClaimsFromScopes.mockReturnValue(['sub']);
-
-      // When
-      service.toDisplayValue(serviceProviderMock);
-
-      // Then
-      expect(
-        scopesServiceMock.getScopesFromClaims,
-      ).toHaveBeenCalledExactlyOnceWith(['sub']);
-    });
-
-    it('should convert datapass claims to base claims then to FC scopes', () => {
-      // Given
-      scopesServiceMock.getRawClaimsFromScopes.mockReturnValue([
-        'openid',
-        'sub',
-      ]);
-      const serviceProviderWithOpenid = {
-        ...serviceProviderMock,
-        datapassScopes: ['openid', 'given_name'],
-      };
-
-      // When
-      service.toDisplayValue(serviceProviderWithOpenid);
-
-      // Then
-      expect(scopesServiceMock.getRawClaimsFromScopes).toHaveBeenCalledWith([
-        'openid',
-        'given_name',
-      ]);
-      expect(scopesServiceMock.getScopesFromClaims).toHaveBeenCalledWith([
-        'openid',
-        'sub',
-      ]);
     });
 
     it('should expose only firstname and lastname for instance creator', () => {

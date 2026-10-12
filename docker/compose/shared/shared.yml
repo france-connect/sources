@@ -65,7 +65,6 @@ services:
           - eidas-bridge.docker.dev-franceconnect.fr
           - eidas-fr.docker.dev-franceconnect.fr
           - eidas-mock.docker.dev-franceconnect.fr
-          - eidas-be.docker.dev-franceconnect.fr
           # Wallet Bridge
           - wallet-bridge.docker.dev-franceconnect.fr
           - mock-wallet.docker.dev-franceconnect.fr
@@ -387,7 +386,7 @@ services:
       - HTTP_PROXY=${PROXY_EXPLOITATION:-}
       - NO_PROXY
       - DISPLAY
-      - CYPRESS_TAGS
+      - CYPRESS_tags
       - CYPRESS_TEST_PLATFORM
       - CYPRESS_TEST_ENV
       - CYPRESS_EXPLOIT_USER_NAME
@@ -425,7 +424,7 @@ services:
       - HTTP_PROXY=${PROXY_EXPLOITATION:-}
       - NO_PROXY
       - DISPLAY
-      - CYPRESS_TAGS
+      - CYPRESS_tags
       - CYPRESS_TEST_PLATFORM
       - CYPRESS_TEST_ENV
       - CYPRESS_INTERNAL_BROWSER_CONNECT_TIMEOUT
@@ -457,7 +456,7 @@ services:
       - HTTP_PROXY=${PROXY_EXPLOITATION:-}
       - NO_PROXY
       - DISPLAY
-      - CYPRESS_TAGS
+      - CYPRESS_tags
       - CYPRESS_TEST_PLATFORM
       - CYPRESS_TEST_ENV
       - CI
@@ -488,7 +487,7 @@ services:
       - HTTP_PROXY=${PROXY_EXPLOITATION:-}
       - NO_PROXY
       - DISPLAY
-      - CYPRESS_TAGS
+      - CYPRESS_tags
       - CYPRESS_TEST_PLATFORM
       - CYPRESS_TEST_ENV
       - CI

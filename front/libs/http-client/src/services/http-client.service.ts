@@ -109,28 +109,25 @@ export const post = async <T>(
 /**
  *
  * @param endpoint Relative leading slashed string to a single API entry point (eg: '/hello-world')
+ * @param data HttpClientDataInterface
  * @param axiosOptions AxiosRequestConfig
  * @returns
  */
 export const del = async <T>(
   endpoint: string,
+  data?: HttpClientDataInterface,
   options?: HttpClientOptionsInterface,
 ): Promise<AxiosResponse<T>> => {
   try {
     const { csrfToken } = await getCSRF();
-    const response = await makeRequest<T>(
-      HttpMethods.DELETE,
-      endpoint,
-      {},
-      {
-        headers: {
-          // Conventional header name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          'x-csrf-token': csrfToken,
-        },
-        ...options,
+    const response = await makeRequest<T>(HttpMethods.DELETE, endpoint, data, {
+      headers: {
+        // Conventional header name
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        'x-csrf-token': csrfToken,
       },
-    );
+      ...options,
+    });
     return response;
   } catch (err) {
     const error = err as AxiosError;

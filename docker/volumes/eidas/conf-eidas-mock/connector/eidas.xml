@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- # Copyright (c) 2017 European Commission # Licensed under the EUPL,
+	Version 1.2 or – as soon they will be # approved by the European Commission
+	- subsequent versions of the # EUPL (the "Licence"); # You may not use this
+	work except in compliance with the Licence. # You may obtain a copy of the
+	Licence at: # * https://joinup.ec.europa.eu/page/eupl-text-11-12 # * # Unless
+	required by applicable law or agreed to in writing, software # distributed
+	under the Licence is distributed on an "AS IS" basis, # WITHOUT WARRANTIES
+	OR CONDITIONS OF ANY KIND, either express or implied. # See the Licence for
+	the specific language governing permissions and limitations under the Licence. -->
+
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+	<!-- Connector assertion URL (auto-reference, /EidasNode -> /EidasNodeConnector) -->
+	<entry key="connector.assertion.url">https://eidas-mock.docker.dev-franceconnect.fr/EidasNodeConnector/ColleagueResponse</entry>
+
+	<entry key="metadata.node.country">CB</entry>
+
+	<entry key="service.number">2</entry>
+
+	<entry key="service1.id">FR</entry>
+	<entry key="service1.name">EIDAS-FR</entry>
+	<entry key="service1.skew.notbefore">0</entry>
+	<entry key="service1.skew.notonorafter">0</entry>
+	<entry key="service1.metadata.url">https://eidas-fr.docker.dev-franceconnect.fr/EidasNodeProxy/ServiceMetadata</entry>
+
+	<entry key="service2.id">CB</entry>
+	<entry key="service2.name">EIDAS-CB</entry>
+	<entry key="service2.skew.notbefore">0</entry>
+	<entry key="service2.skew.notonorafter">0</entry>
+	<entry key="service2.metadata.url">https://eidas-mock.docker.dev-franceconnect.fr/EidasNodeProxy/ServiceMetadata</entry>
+
+	<entry key="active.module.connector">true</entry>
+
+	<!--connector Metadata (auto-reference) -->
+	<entry key="connector.node.url">https://eidas-mock.docker.dev-franceconnect.fr/EidasNodeConnector/</entry>
+	<entry key="connector.contact.email">test@test.fr</entry>
+	<entry key="connector.metadata.url">https://eidas-mock.docker.dev-franceconnect.fr/EidasNodeConnector/ConnectorMetadata</entry>
+
+	<!-- Feature selector for security headers -->
+	<entry key="security.header.CSP.report.uri">https://eidas-mock.docker.dev-franceconnect.fr/EidasNodeConnector</entry>
+	<entry key="security.header.CSP.fallbackCheckMode">false</entry>
+
+	<entry key="metadata.sector">public</entry>
+	<entry key="hashDigest.className">org.bouncycastle.crypto.digests.SHA512Digest</entry>
+
+	<entry key="tls.enabled.protocols">TLSv1.2, TLSv1.3</entry>
+
+	<entry key="tls.enabled.ciphers">
+		TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256,
+		TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
+		TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384,
+		TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,
+		TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256,
+		TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,
+		TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+		TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384,
+		TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
+		TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256,
+		TLS_DHE_RSA_WITH_AES_128_CBC_SHA256,
+		TLS_DHE_RSA_WITH_AES_128_GCM_SHA256,
+		TLS_DHE_RSA_WITH_AES_256_CBC_SHA256,
+		TLS_DHE_RSA_WITH_AES_256_GCM_SHA384,
+		TLS_AES_128_GCM_SHA256,
+		TLS_AES_256_GCM_SHA384,
+		TLS_CHACHA20_POLY1305_SHA256,
+		TLS_EMPTY_RENEGOTIATION_INFO_SCSV
+	</entry>
+
+	<entry key="node.metadata.not.signed.descriptors"></entry>
+
+	<!-- METADATA configuration -->
+	<entry key="connector.contact.support.email">contact.support@eidas-connector.eu</entry>
+	<entry key="connector.contact.support.company">eIDAS Connector Operator</entry>
+	<entry key="connector.contact.support.givenname">John</entry>
+	<entry key="connector.contact.support.surname">Doe</entry>
+	<entry key="connector.contact.support.phone">+40 123456</entry>
+	<entry key="connector.contact.technical.email">contact.technical@eidas-connector.eu</entry>
+	<entry key="connector.contact.technical.company">eIDAS Connector Operator</entry>
+	<entry key="connector.contact.technical.givenname">John</entry>
+	<entry key="connector.contact.technical.surname">Doe</entry>
+	<entry key="connector.contact.technical.phone">+41 123456</entry>
+	<entry key="connector.organization.name">Sample Country Connector</entry>
+	<entry key="connector.organization.displayname">Connector</entry>
+	<entry key="connector.organization.url">https://connector.sample/info</entry>
+
+	<!--URL for specific-connector response receiver (auto-reference) -->
+	<entry key="specific.connector.response.receiver">https://eidas-mock.docker.dev-franceconnect.fr/SpecificConnector/ConnectorResponse</entry>
+
+	<entry key="connector.nameid.formats">
+		urn:oasis:names:tc:SAML:2.0:nameid-format:persistent;
+		urn:oasis:names:tc:SAML:2.0:nameid-format:transient;
+		urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified;
+	</entry>
+
+	<entry key="eidas.application.identifier">eIDAS-ref:3.1.0</entry>
+</properties>

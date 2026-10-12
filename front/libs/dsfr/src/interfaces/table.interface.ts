@@ -6,11 +6,15 @@ export type TableDataSourceInterface = object;
 
 export type TableColumnActionsInterface<T = unknown> = (row: T, index: number) => ReactNode;
 
+export type TableToolbarInterface = {
+  selectAll?: boolean;
+};
+
 type TableColumnBase = {
   label: string;
   clickable?: boolean;
   sortable?: boolean;
-  styles?: string;
+  className?: string;
   multiline?: boolean;
   format?: (value: unknown) => TableCellValue;
 };

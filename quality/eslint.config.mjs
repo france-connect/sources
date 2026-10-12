@@ -9,7 +9,6 @@ import cypress from 'eslint-plugin-cypress';
 import _import from 'eslint-plugin-import';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import sortDestructureKeys from 'eslint-plugin-sort-destructure-keys';
-import sortKeysFix from 'eslint-plugin-sort-keys-fix';
 import globals from 'globals';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -162,6 +161,8 @@ export default defineConfig([
         ...globals.jest,
         // Add CypressCommandLine namespace as it not included in Cypress globals
         CypressCommandLine: 'readonly',
+        Symbol: 'readonly',
+        Promise: 'readonly',
       },
       parser: tsParser,
       parserOptions: {
@@ -178,7 +179,6 @@ export default defineConfig([
       import: fixupPluginRules(_import),
       'simple-import-sort': simpleImportSort,
       'sort-destructure-keys': sortDestructureKeys,
-      'sort-keys-fix': sortKeysFix,
     },
 
     rules: {
@@ -282,8 +282,6 @@ export default defineConfig([
           natural: false,
         },
       ],
-
-      'sort-keys-fix/sort-keys-fix': 2,
     },
   },
   ...makeTsConfigOverrides(tsProjectEntries),

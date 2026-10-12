@@ -1,14 +1,17 @@
 import { toLower } from 'lodash';
 import { DateTime } from 'luxon';
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 
 import type { ISODate } from '@fc/common';
 import { getFullName, isoToDate } from '@fc/common';
-import type { TableColumnInterface } from '@fc/dsfr';
+import type { TableColumnActionsInterface, TableColumnInterface } from '@fc/dsfr';
 import { TableComponent } from '@fc/dsfr';
 import { t } from '@fc/i18n';
 
+import { AccessControlPermission } from '../../../enums';
+import { useCanManageContributors, useServiceProviderContributors } from '../../../hooks';
 import type { ServiceProviderPermissionInterface } from '../../../interfaces';
+import { DeleteContributorButton } from '../../buttons';
 
 interface ServiceProviderPermissionsTableProps {
   permissions: ServiceProviderPermissionInterface[];
@@ -17,11 +20,15 @@ interface ServiceProviderPermissionsTableProps {
 // @NOTE should be renamed to ServiceProviderContributorsTable
 export const ServiceProviderPermissionsTable = React.memo(
   ({ permissions }: ServiceProviderPermissionsTableProps) => {
+    const canManageContributors = useCanManageContributors();
+    const { deleteContributorHandler } = useServiceProviderContributors();
+
     // @NOTE tableColumns can not be exported as a static
     // because the `t` function is injected at compilation time
     const tableColumns: TableColumnInterface<ServiceProviderPermissionInterface>[] = useMemo(
       () => [
         {
+          className: 'fr-text--bold',
           getValue: (row) => {
             const permission = row;
             const { firstname, lastname } = permission.account;
@@ -57,9 +64,34 @@ export const ServiceProviderPermissionsTable = React.memo(
       [],
     );
 
+    const hasRevocablePermission = useMemo(
+      () =>
+        permissions.some(
+          ({ permissionType }) => permissionType === AccessControlPermission.SP_CONTRIBUTOR,
+        ),
+      [permissions],
+    );
+
+    const tableActions: TableColumnActionsInterface<ServiceProviderPermissionInterface> =
+      useCallback(
+        (permission: ServiceProviderPermissionInterface) => {
+          if (permission.permissionType !== AccessControlPermission.SP_CONTRIBUTOR) {
+            return null;
+          }
+
+          return (
+            <DeleteContributorButton permission={permission} onDelete={deleteContributorHandler} />
+          );
+        },
+        [deleteContributorHandler],
+      );
+
+    const showActions = canManageContributors && hasRevocablePermission;
+
     return (
       <TableComponent<ServiceProviderPermissionInterface>
         multiline
+        actions={showActions ? tableActions : undefined}
         columns={tableColumns}
         id="service-provider-permissions"
         sources={permissions}

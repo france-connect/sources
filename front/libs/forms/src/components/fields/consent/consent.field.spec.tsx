@@ -47,7 +47,10 @@ describe('ConsentField', () => {
 
     // Then
     expect(container).toMatchSnapshot();
-    expect(MessagesElement).not.toHaveBeenCalled();
+    expect(MessagesElement).toHaveBeenCalledExactlyOnceWith(
+      { id: 'any-name-mock', messages: [] },
+      undefined,
+    );
   });
 
   it('should match snapshot, with messages', () => {
@@ -60,10 +63,8 @@ describe('ConsentField', () => {
 
     // Then
     expect(container).toMatchSnapshot();
-    expect(MessagesElement).toHaveBeenCalledOnce();
-    expect(MessagesElement).toHaveBeenCalledWith(
+    expect(MessagesElement).toHaveBeenCalledExactlyOnceWith(
       {
-        dataTestId: 'any-name-mock-messages',
         id: 'any-name-mock',
         messages: [errorMessagesMock],
       },
@@ -76,8 +77,7 @@ describe('ConsentField', () => {
     render(<ConsentField config={configMock} />);
 
     // Then
-    expect(useField).toHaveBeenCalledOnce();
-    expect(useField).toHaveBeenCalledWith('any-name-mock');
+    expect(useField).toHaveBeenCalledExactlyOnceWith('any-name-mock');
   });
 
   it('should call useFieldMeta', () => {
@@ -85,8 +85,7 @@ describe('ConsentField', () => {
     render(<ConsentField config={configMock} />);
 
     // Then
-    expect(useFieldMeta).toHaveBeenCalledOnce();
-    expect(useFieldMeta).toHaveBeenCalledWith(metaMock);
+    expect(useFieldMeta).toHaveBeenCalledExactlyOnceWith(metaMock);
   });
 
   it('should call useFieldMessages', () => {
@@ -94,8 +93,7 @@ describe('ConsentField', () => {
     render(<ConsentField config={configMock} />);
 
     // Then
-    expect(useFieldMessages).toHaveBeenCalledOnce();
-    expect(useFieldMessages).toHaveBeenCalledWith({
+    expect(useFieldMessages).toHaveBeenCalledExactlyOnceWith({
       errorsList: [],
       isValid: true,
       messages: undefined,
@@ -107,8 +105,7 @@ describe('ConsentField', () => {
     render(<ConsentField config={configMock} />);
 
     // Then
-    expect(Field).toHaveBeenCalledOnce();
-    expect(Field).toHaveBeenCalledWith(
+    expect(Field).toHaveBeenCalledExactlyOnceWith(
       {
         choice: {
           label: 'any-label-mock',
@@ -122,6 +119,7 @@ describe('ConsentField', () => {
         },
         name: 'any-name-mock',
         type: FieldTypes.CHECKBOX,
+        validate: validateMock,
       },
       undefined,
     );
@@ -139,8 +137,7 @@ describe('ConsentField', () => {
     );
 
     // Then
-    expect(Field).toHaveBeenCalledOnce();
-    expect(Field).toHaveBeenCalledWith(
+    expect(Field).toHaveBeenCalledExactlyOnceWith(
       expect.objectContaining({
         choice: {
           label: 'any-label-mock *',

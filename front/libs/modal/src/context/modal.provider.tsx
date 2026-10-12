@@ -1,9 +1,7 @@
 import { type PropsWithChildren, useCallback, useMemo, useState } from 'react';
 
 import { ConfigService } from '@fc/config';
-import { t } from '@fc/i18n';
 
-import { ModalShellComponent } from '../components/modal-shell';
 import { ModalOptions } from '../enums';
 import type { ModalConfigInterface, ModalEntryInterface } from '../interfaces';
 import { ModalContext } from './modal.context';
@@ -36,26 +34,14 @@ export const ModalProvider = ({ children }: Required<PropsWithChildren>) => {
     [closeModal, currentModal, openModal],
   );
 
-  const modalEntry = currentModal ? registry[currentModal.id] : null;
+  const ModalComponent = currentModal ? registry[currentModal.id] : null;
 
   return (
     <ModalContext.Provider value={contextValue}>
       {children}
-      {currentModal && modalEntry && (
-        <ModalShellComponent
-          footer={
-            modalEntry.footer && (
-              // eslint-disable-next-line react/jsx-props-no-spreading
-              <modalEntry.footer {...currentModal.props} onClose={closeModal} />
-            )
-          }
-          id={currentModal.id}
-          title={t(modalEntry.title)}
-          titleHeading={modalEntry.titleHeading}
-          onClose={closeModal}>
-          {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-          <modalEntry.component {...currentModal.props} onClose={closeModal} />
-        </ModalShellComponent>
+      {currentModal && ModalComponent && (
+        // eslint-disable-next-line react/jsx-props-no-spreading
+        <ModalComponent {...currentModal.props} id={currentModal.id} onClose={closeModal} />
       )}
     </ModalContext.Provider>
   );

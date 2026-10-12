@@ -5,7 +5,7 @@ import { displayViolations } from '../helpers';
 
 // Change to true to get all the accessibility checks
 // without stopping the test after the first violation
-const skipFailures = typeof Cypress.env('skipFailures') !== 'undefined';
+const skipFailures = typeof Cypress.expose('skipFailures') !== 'undefined';
 
 const injectAxeOnce = (): void => {
   cy.window().then((win) => {

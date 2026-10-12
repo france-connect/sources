@@ -91,7 +91,7 @@ export class ConfigMongoAdapterService implements ConfigDatabaseServiceInterface
       },
       {
         upsert: true,
-        new: true,
+        returnDocument: 'after',
       },
     );
 

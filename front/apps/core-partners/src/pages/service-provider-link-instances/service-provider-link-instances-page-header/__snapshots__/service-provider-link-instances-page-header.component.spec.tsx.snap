@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ServiceProviderLinkInstancesPageHeaderComponent should match the snapshot 1`] = `
+<div>
+  <div
+    class="fr-col-12 fr-col-lg-10 fr-col-xl-8"
+  >
+    <h1
+      class="fr-display--sm"
+    >
+      Partners.linkInstances.title
+    </h1>
+    <p
+      class="fr-text--lead fr-mb-3w"
+    >
+      Partners.linkInstances.description
+    </p>
+  </div>
+</div>
+`;

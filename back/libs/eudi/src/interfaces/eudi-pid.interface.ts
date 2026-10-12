@@ -16,7 +16,7 @@ export interface EudiPidInterface {
   family_name: string;
   given_name: string;
   birth_date: string;
-  birth_place: EudiPidBirthPlaceInterface;
+  place_of_birth: EudiPidBirthPlaceInterface;
 
   nationality?: EidasCountries[];
   age_birth_year?: number;

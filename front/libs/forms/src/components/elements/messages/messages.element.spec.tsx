@@ -39,7 +39,8 @@ describe('MessagesElement', () => {
     // Then
     expect(container).toMatchSnapshot();
     expect(container.firstChild).toHaveAttribute('aria-live', 'assertive');
-    expect(container.firstChild).toHaveAttribute('id', 'id-mock');
+    expect(container.firstChild).toHaveAttribute('data-testid', 'id-mock-messages');
+    expect(container.firstChild).toHaveAttribute('id', 'id-mock-messages');
     expect(container.firstChild).toHaveClass('fr-messages-group');
     expect(MessageElement).not.toHaveBeenCalled();
   });
@@ -54,14 +55,14 @@ describe('MessagesElement', () => {
     // Then
     expect(container).toMatchSnapshot();
     expect(container.firstChild).toHaveAttribute('aria-live', 'assertive');
-    expect(container.firstChild).toHaveAttribute('id', 'id-mock');
+    expect(container.firstChild).toHaveAttribute('data-testid', 'id-mock-messages');
+    expect(container.firstChild).toHaveAttribute('id', 'id-mock-messages');
     expect(container.firstChild).toHaveClass('fr-messages-group');
-    expect(MessageElement).toHaveBeenCalledOnce();
-    expect(MessageElement).toHaveBeenCalledWith(
+    expect(MessageElement).toHaveBeenCalledExactlyOnceWith(
       {
         content: 'mockInfo1',
-        dataTestId: undefined,
-        id: 'id-mock',
+        dataTestId: 'id-mock-info-desc-0',
+        id: 'id-mock-info-desc-0',
         level: 'info',
       },
       undefined,
@@ -78,15 +79,16 @@ describe('MessagesElement', () => {
     // Then
     expect(container).toMatchSnapshot();
     expect(container.firstChild).toHaveAttribute('aria-live', 'assertive');
-    expect(container.firstChild).toHaveAttribute('id', 'id-mock');
+    expect(container.firstChild).toHaveAttribute('data-testid', 'id-mock-messages');
+    expect(container.firstChild).toHaveAttribute('id', 'id-mock-messages');
     expect(container.firstChild).toHaveClass('fr-messages-group');
     expect(MessageElement).toHaveBeenCalledTimes(2);
     expect(MessageElement).toHaveBeenNthCalledWith(
       1,
       {
         content: 'mockInfo1',
-        dataTestId: undefined,
-        id: 'id-mock',
+        dataTestId: 'id-mock-info-desc-0',
+        id: 'id-mock-info-desc-0',
         level: 'info',
       },
       undefined,
@@ -95,8 +97,8 @@ describe('MessagesElement', () => {
       2,
       {
         content: 'mockInfo2',
-        dataTestId: undefined,
-        id: 'id-mock',
+        dataTestId: 'id-mock-info-desc-1',
+        id: 'id-mock-info-desc-1',
         level: 'info',
       },
       undefined,
@@ -113,14 +115,14 @@ describe('MessagesElement', () => {
     // Then
     expect(container).toMatchSnapshot();
     expect(container.firstChild).toHaveAttribute('aria-live', 'assertive');
-    expect(container.firstChild).toHaveAttribute('id', 'id-mock');
+    expect(container.firstChild).toHaveAttribute('data-testid', 'id-mock-messages');
+    expect(container.firstChild).toHaveAttribute('id', 'id-mock-messages');
     expect(container.firstChild).toHaveClass('fr-messages-group');
-    expect(MessageElement).toHaveBeenCalledOnce();
-    expect(MessageElement).toHaveBeenCalledWith(
+    expect(MessageElement).toHaveBeenCalledExactlyOnceWith(
       {
         content: 'mockError',
-        dataTestId: undefined,
-        id: 'id-mock',
+        dataTestId: 'id-mock-error-desc-0',
+        id: 'id-mock-error-desc-0',
         level: 'error',
       },
       undefined,

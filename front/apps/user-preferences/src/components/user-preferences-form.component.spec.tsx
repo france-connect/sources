@@ -32,6 +32,7 @@ describe('UserPreferencesFormComponent', () => {
     hasValidationErrors: undefined,
     pristine: undefined,
     submitting: undefined,
+    values: {},
   };
 
   beforeEach(() => {

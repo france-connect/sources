@@ -439,16 +439,26 @@
 
 | Var Name | Inferred type |
 |---|---|
-| ApacheIgnite_ENDPOINT | string |
-| ApacheIgnite_MAX_RETRY_TIMEOUT | number |
-| ApacheIgnite_PASSWORD | string |
-| ApacheIgnite_SOCKET_KEEP_ALIVE_ENABLE | boolean |
-| ApacheIgnite_SOCKET_KEEP_ALIVE_INITIAL_DELAY | number |
-| ApacheIgnite_TLS_CA | file |
-| ApacheIgnite_TLS_CERT | file |
-| ApacheIgnite_TLS_KEY | file |
-| ApacheIgnite_USERNAME | string |
-| ApacheIgnite_USE_TLS | boolean |
+| ApacheIgniteConnector_ENDPOINT | string |
+| ApacheIgniteConnector_MAX_RETRY_TIMEOUT | number |
+| ApacheIgniteConnector_PASSWORD | string |
+| ApacheIgniteConnector_SOCKET_KEEP_ALIVE_ENABLE | boolean |
+| ApacheIgniteConnector_SOCKET_KEEP_ALIVE_INITIAL_DELAY | number |
+| ApacheIgniteConnector_TLS_CA | file |
+| ApacheIgniteConnector_TLS_CERT | file |
+| ApacheIgniteConnector_TLS_KEY | file |
+| ApacheIgniteConnector_USERNAME | string |
+| ApacheIgniteConnector_USE_TLS | boolean |
+| ApacheIgniteProxy_ENDPOINT | string |
+| ApacheIgniteProxy_MAX_RETRY_TIMEOUT | number |
+| ApacheIgniteProxy_PASSWORD | string |
+| ApacheIgniteProxy_SOCKET_KEEP_ALIVE_ENABLE | boolean |
+| ApacheIgniteProxy_SOCKET_KEEP_ALIVE_INITIAL_DELAY | number |
+| ApacheIgniteProxy_TLS_CA | file |
+| ApacheIgniteProxy_TLS_CERT | file |
+| ApacheIgniteProxy_TLS_KEY | file |
+| ApacheIgniteProxy_USERNAME | string |
+| ApacheIgniteProxy_USE_TLS | boolean |
 | App_ASSETS_CACHE_TTL | number |
 | App_ASSETS_PATHS | json |
 | App_ASSETS_URL_DOMAIN | string |

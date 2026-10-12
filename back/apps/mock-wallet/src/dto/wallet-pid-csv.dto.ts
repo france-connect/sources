@@ -45,7 +45,7 @@ export class WalletPidCsvDto {
   @IsObject()
   @ValidateNested()
   @Type(() => EudiPidBirthPlaceDto)
-  readonly birth_place: EudiPidBirthPlaceInterface;
+  readonly place_of_birth: EudiPidBirthPlaceInterface;
 
   @IsString()
   @IsOptional()

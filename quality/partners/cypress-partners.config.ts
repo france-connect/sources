@@ -14,6 +14,6 @@ export default defineConfig({
   },
   env: {
     ...baseConfig.env,
-    TAGS: 'not @ignore',
+    tags: 'not @ignore',
   },
 });

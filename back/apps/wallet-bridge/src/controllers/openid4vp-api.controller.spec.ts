@@ -6,6 +6,7 @@ import { EudiDocTypes, EudiPidDto } from '@fc/eudi';
 import { extractSimpleDocument } from '@fc/mdoc';
 import {
   Openid4vpAuthorizationError,
+  Openid4vpFlow,
   Openid4vpInteractionDto,
   Openid4vpInteractionStatus,
   Openid4vpService,
@@ -39,10 +40,10 @@ describe('OpenId4vpApiController', () => {
     getInteractionById: jest.fn(),
     getRequestObject: jest.fn(),
     setAuthorizationRequestObjectAsRead: jest.fn(),
-    getInteractionByState: jest.fn(),
     parseResponse: jest.fn(),
     saveResponse: jest.fn(),
     saveError: jest.fn(),
+    getFlow: jest.fn(),
   };
 
   const parameterizedPathMock = jest.mocked(parameterizedPath);
@@ -51,8 +52,11 @@ describe('OpenId4vpApiController', () => {
 
   const interactionMock: Openid4vpInteractionDto = {
     id: 'interactionIdMock',
-    presentationId: 'presentationIdMock',
-    state: 'stateMock',
+    credentialQueryId: 'credentialQueryIdMock',
+    state: {
+      sameDevice: 'sameDeviceStateMock',
+      crossDevice: 'crossDeviceStateMock',
+    },
     nonce: 'nonceMock',
     iat: 1700000000,
     exp: 1700000600,
@@ -92,12 +96,15 @@ describe('OpenId4vpApiController', () => {
       openid4vpServiceMock.getRequestObject.mockResolvedValue(
         requestObjectMock,
       );
+
+      openid4vpServiceMock.getFlow.mockReturnValue(Openid4vpFlow.SAME_DEVICE);
     });
 
     it('should retrieve the interaction from the provided interaction id', async () => {
       // When
       await controller.authorizeRequestObject({
         interactionId: interactionMock.id,
+        state: interactionMock.state.sameDevice,
       });
 
       // Then
@@ -106,34 +113,43 @@ describe('OpenId4vpApiController', () => {
       ).toHaveBeenCalledExactlyOnceWith(interactionMock.id);
     });
 
-    it('should build the request object from the interaction', async () => {
+    it('should build the request object from the interaction and the derived flow', async () => {
       // When
       await controller.authorizeRequestObject({
         interactionId: interactionMock.id,
+        state: interactionMock.state.sameDevice,
       });
 
       // Then
       expect(
         openid4vpServiceMock.getRequestObject,
-      ).toHaveBeenCalledExactlyOnceWith(interactionMock);
+      ).toHaveBeenCalledExactlyOnceWith(
+        interactionMock,
+        Openid4vpFlow.SAME_DEVICE,
+      );
     });
 
-    it('should mark the authorization request object as read', async () => {
+    it('should mark the authorization request object as read with the derived flow', async () => {
       // When
       await controller.authorizeRequestObject({
         interactionId: interactionMock.id,
+        state: interactionMock.state.sameDevice,
       });
 
       // Then
       expect(
         openid4vpServiceMock.setAuthorizationRequestObjectAsRead,
-      ).toHaveBeenCalledExactlyOnceWith(interactionMock);
+      ).toHaveBeenCalledExactlyOnceWith(
+        interactionMock,
+        Openid4vpFlow.SAME_DEVICE,
+      );
     });
 
     it('should return the JAR authorization request JWT', async () => {
       // When
       const result = await controller.authorizeRequestObject({
         interactionId: interactionMock.id,
+        state: interactionMock.state.sameDevice,
       });
 
       // Then
@@ -142,9 +158,15 @@ describe('OpenId4vpApiController', () => {
   });
 
   describe('authorizeResponse', () => {
-    const bodyMock = {
-      state: 'stateMock',
-      response: 'nonsensicalcborencodedstring',
+    const paramsMock = { interactionId: interactionMock.id };
+    const bodyMock = { response: 'nonsensicalcborencodedstring' };
+    const sameDeviceInteractionMock = {
+      ...interactionMock,
+      flow: Openid4vpFlow.SAME_DEVICE,
+    };
+    const crossDeviceInteractionMock = {
+      ...interactionMock,
+      flow: Openid4vpFlow.CROSS_DEVICE,
     };
     const identityMock = {
       docType: EudiDocTypes.PID,
@@ -159,46 +181,61 @@ describe('OpenId4vpApiController', () => {
       controller['saveWalletError'] = jest.fn();
       controller['extractIdentity'] = jest.fn().mockResolvedValue(identityMock);
 
-      openid4vpServiceMock.getInteractionByState.mockResolvedValue(
-        interactionMock,
+      openid4vpServiceMock.getInteractionById.mockResolvedValue(
+        sameDeviceInteractionMock,
       );
       configMock.get.mockReturnValue({
         relayingParty: { redirectUri: redirectUriMock },
       });
+
       parameterizedPathMock.mockReturnValue(interpolatedRedirectUriMock);
     });
 
-    it('should retrieve the interaction from the state', async () => {
+    it('should retrieve the interaction from the interaction id', async () => {
       // When
-      await controller.authorizeResponse(bodyMock);
+      await controller.authorizeResponse(paramsMock, bodyMock);
 
       // Then
       expect(
-        openid4vpServiceMock.getInteractionByState,
-      ).toHaveBeenCalledExactlyOnceWith(bodyMock.state);
+        openid4vpServiceMock.getInteractionById,
+      ).toHaveBeenCalledExactlyOnceWith(interactionMock.id);
     });
 
     it('should throw WalletBridgeInvalidInteractionStatusException when the interaction status is not valid', async () => {
       // Given
-      openid4vpServiceMock.getInteractionByState.mockResolvedValue({
-        ...interactionMock,
+      openid4vpServiceMock.getInteractionById.mockResolvedValue({
+        ...sameDeviceInteractionMock,
         status: Openid4vpInteractionStatus.REQUEST_URI_PROVIDED,
       });
 
       // When / Then
-      await expect(controller.authorizeResponse(bodyMock)).rejects.toThrow(
-        WalletBridgeInvalidInteractionStatusException,
-      );
+      await expect(
+        controller.authorizeResponse(paramsMock, bodyMock),
+      ).rejects.toThrow(WalletBridgeInvalidInteractionStatusException);
     });
 
-    it('should extract the identity from the body and the interaction', async () => {
+    it('should throw WalletBridgeInvalidInteractionStatusException when the flow was not resolved yet', async () => {
+      // Given
+      openid4vpServiceMock.getInteractionById.mockResolvedValue({
+        ...interactionMock,
+        flow: undefined,
+      });
+
+      // When / Then
+      await expect(
+        controller.authorizeResponse(paramsMock, bodyMock),
+      ).rejects.toThrow(WalletBridgeInvalidInteractionStatusException);
+    });
+
+    it('should extract the identity from the body, the interaction and the flow', async () => {
       // When
-      await controller.authorizeResponse(bodyMock);
+      await controller.authorizeResponse(paramsMock, bodyMock);
 
       // Then
       expect(controller['extractIdentity']).toHaveBeenCalledExactlyOnceWith(
         bodyMock,
-        interactionMock,
+        sameDeviceInteractionMock,
+        Openid4vpFlow.SAME_DEVICE,
       );
     });
 
@@ -210,13 +247,13 @@ describe('OpenId4vpApiController', () => {
         .mockRejectedValue(extractionErrorMock);
 
       // When
-      await expect(controller.authorizeResponse(bodyMock)).rejects.toThrow(
-        extractionErrorMock,
-      );
+      await expect(
+        controller.authorizeResponse(paramsMock, bodyMock),
+      ).rejects.toThrow(extractionErrorMock);
 
       // Then
       expect(openid4vpServiceMock.saveError).toHaveBeenCalledExactlyOnceWith(
-        interactionMock,
+        sameDeviceInteractionMock,
         DEFAULT_ERROR,
         DEFAULT_ERROR_DESCRIPTION,
       );
@@ -229,7 +266,9 @@ describe('OpenId4vpApiController', () => {
         .mockRejectedValue(new Error('extraction failed'));
 
       // When
-      await expect(controller.authorizeResponse(bodyMock)).rejects.toThrow();
+      await expect(
+        controller.authorizeResponse(paramsMock, bodyMock),
+      ).rejects.toThrow();
 
       // Then
       expect(openid4vpServiceMock.saveResponse).not.toHaveBeenCalled();
@@ -237,36 +276,80 @@ describe('OpenId4vpApiController', () => {
 
     it('should save the response when the identity extraction succeeds', async () => {
       // When
-      await controller.authorizeResponse(bodyMock);
+      await controller.authorizeResponse(paramsMock, bodyMock);
 
       // Then
       expect(openid4vpServiceMock.saveResponse).toHaveBeenCalledExactlyOnceWith(
-        interactionMock,
+        sameDeviceInteractionMock,
         [identityMock],
       );
     });
 
+    it('should build the redirect uri by interpolating the interaction id', async () => {
+      // When
+      await controller.authorizeResponse(paramsMock, bodyMock);
+
+      // Then
+      expect(parameterizedPathMock).toHaveBeenCalledExactlyOnceWith(
+        redirectUriMock,
+        { interactionId: interactionMock.id },
+      );
+    });
+
+    it('should return the interpolated redirect uri for same-device flow', async () => {
+      // When
+      const result = await controller.authorizeResponse(paramsMock, bodyMock);
+
+      // Then
+      expect(result).toEqual({ redirect_uri: interpolatedRedirectUriMock });
+    });
+
+    it('should return an empty object for cross-device flow', async () => {
+      // Given
+      openid4vpServiceMock.getInteractionById.mockResolvedValue(
+        crossDeviceInteractionMock,
+      );
+
+      // When
+      const result = await controller.authorizeResponse(paramsMock, bodyMock);
+
+      // Then
+      expect(result).toEqual({});
+    });
+
+    it('should not build a redirect_uri for cross-device flow', async () => {
+      // Given
+      openid4vpServiceMock.getInteractionById.mockResolvedValue(
+        crossDeviceInteractionMock,
+      );
+
+      // When
+      await controller.authorizeResponse(paramsMock, bodyMock);
+
+      // Then
+      expect(parameterizedPathMock).not.toHaveBeenCalled();
+    });
+
     describe('when the wallet notifies an authorization error', () => {
       const errorBodyMock = {
-        state: 'stateMock',
         error: Openid4vpAuthorizationError.ACCESS_DENIED,
         error_description: 'User cancelled the authentication',
       };
 
       it('should delegate the error handling to saveWalletError', async () => {
         // When
-        await controller.authorizeResponse(errorBodyMock);
+        await controller.authorizeResponse(paramsMock, errorBodyMock);
 
         // Then
         expect(controller['saveWalletError']).toHaveBeenCalledExactlyOnceWith(
-          interactionMock,
+          sameDeviceInteractionMock,
           errorBodyMock,
         );
       });
 
       it('should not extract the identity nor save a response', async () => {
         // When
-        await controller.authorizeResponse(errorBodyMock);
+        await controller.authorizeResponse(paramsMock, errorBodyMock);
 
         // Then
         expect(controller['extractIdentity']).not.toHaveBeenCalled();
@@ -275,38 +358,15 @@ describe('OpenId4vpApiController', () => {
 
       it('should return an empty object', async () => {
         // When
-        const result = await controller.authorizeResponse(errorBodyMock);
+        const result = await controller.authorizeResponse(
+          paramsMock,
+          errorBodyMock,
+        );
 
         // Then
         expect(result).toEqual({});
       });
     });
-
-    /**
-     * @todo #2619 Same Device Flow
-     *
-     * Those tests should be removed when the same device flow is implemented.
-     *
-     * it('should build the redirect uri by interpolating the interaction id', async () => {
-     *   // When
-     *   await controller.authorizeResponse(bodyMock);
-     *
-     *   // Then
-     *   expect(parameterizedPathMock).toHaveBeenCalledExactlyOnceWith(
-     *     redirectUriMock,
-     *     { interactionId: interactionMock.id },
-     *   );
-     * });
-     *
-     *
-     * it('should return the interpolated redirect uri', async () => {
-     *   // When
-     *   const result = await controller.authorizeResponse(bodyMock);
-     *
-     *   // Then
-     *   expect(result).toEqual({ redirect_uri: interpolatedRedirectUriMock });
-     * });
-     */
   });
 
   describe('saveWalletError', () => {
@@ -346,7 +406,7 @@ describe('OpenId4vpApiController', () => {
 
   describe('extractIdentity', () => {
     const bodyMock = {
-      state: 'stateMock',
+      state: interactionMock.state.sameDevice,
       response: 'nonsensicalcborencodedstring',
     };
     const identityMock = {
@@ -361,19 +421,31 @@ describe('OpenId4vpApiController', () => {
       validateDtoMock.mockResolvedValue([]);
     });
 
-    it('should parse the response payload with the interaction', async () => {
+    it('should parse the response payload with the interaction and flow', async () => {
       // When
-      await controller['extractIdentity'](bodyMock, interactionMock);
+      await controller['extractIdentity'](
+        bodyMock,
+        interactionMock,
+        Openid4vpFlow.SAME_DEVICE,
+      );
 
       // Then
       expect(
         openid4vpServiceMock.parseResponse,
-      ).toHaveBeenCalledExactlyOnceWith(bodyMock, interactionMock);
+      ).toHaveBeenCalledExactlyOnceWith(
+        bodyMock,
+        interactionMock,
+        Openid4vpFlow.SAME_DEVICE,
+      );
     });
 
     it('should extract the PID document from the parsed documents', async () => {
       // When
-      await controller['extractIdentity'](bodyMock, interactionMock);
+      await controller['extractIdentity'](
+        bodyMock,
+        interactionMock,
+        Openid4vpFlow.SAME_DEVICE,
+      );
 
       // Then
       expect(extractSimpleDocumentMock).toHaveBeenCalledExactlyOnceWith(
@@ -384,7 +456,11 @@ describe('OpenId4vpApiController', () => {
 
     it('should validate the extracted PID identity with whitelist option', async () => {
       // When
-      await controller['extractIdentity'](bodyMock, interactionMock);
+      await controller['extractIdentity'](
+        bodyMock,
+        interactionMock,
+        Openid4vpFlow.SAME_DEVICE,
+      );
 
       // Then
       expect(validateDtoMock).toHaveBeenCalledExactlyOnceWith(
@@ -400,7 +476,11 @@ describe('OpenId4vpApiController', () => {
 
       // When / Then
       await expect(
-        controller['extractIdentity'](bodyMock, interactionMock),
+        controller['extractIdentity'](
+          bodyMock,
+          interactionMock,
+          Openid4vpFlow.SAME_DEVICE,
+        ),
       ).rejects.toThrow(WalletBridgeInvalidPidException);
     });
 
@@ -409,6 +489,7 @@ describe('OpenId4vpApiController', () => {
       const result = await controller['extractIdentity'](
         bodyMock,
         interactionMock,
+        Openid4vpFlow.SAME_DEVICE,
       );
 
       // Then

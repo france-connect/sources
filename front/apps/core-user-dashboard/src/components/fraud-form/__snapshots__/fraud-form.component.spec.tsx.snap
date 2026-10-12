@@ -25,21 +25,21 @@ exports[`FraudFormComponent should match the snapshot on desktop layout 1`] = `
       <div
         data-mockid="Field"
       />
-      <div>
-        TextInputComponent
-      </div>
-      <div>
-        TextInputComponent
-      </div>
-      <div>
-        TextInputComponent
-      </div>
-      <div>
-        TextAreaInputComponent
-      </div>
-      <div>
-        CheckboxInput
-      </div>
+      <div
+        data-mockid="TextInputComponent"
+      />
+      <div
+        data-mockid="TextInputComponent"
+      />
+      <div
+        data-mockid="TextInputComponent"
+      />
+      <div
+        data-mockid="TextAreaInputComponent"
+      />
+      <div
+        data-mockid="CheckboxInputComponent"
+      />
       <div
         class="text-right"
       >
@@ -77,21 +77,21 @@ exports[`FraudFormComponent should match the snapshot on mobile layout 1`] = `
       <div
         data-mockid="Field"
       />
-      <div>
-        TextInputComponent
-      </div>
-      <div>
-        TextInputComponent
-      </div>
-      <div>
-        TextInputComponent
-      </div>
-      <div>
-        TextAreaInputComponent
-      </div>
-      <div>
-        CheckboxInput
-      </div>
+      <div
+        data-mockid="TextInputComponent"
+      />
+      <div
+        data-mockid="TextInputComponent"
+      />
+      <div
+        data-mockid="TextInputComponent"
+      />
+      <div
+        data-mockid="TextAreaInputComponent"
+      />
+      <div
+        data-mockid="CheckboxInputComponent"
+      />
       <div
         class="text-right"
       >

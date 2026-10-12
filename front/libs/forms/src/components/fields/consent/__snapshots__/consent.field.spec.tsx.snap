@@ -23,6 +23,9 @@ exports[`ConsentField should match snapshot, without messages 1`] = `
     <div
       data-mockid="Field"
     />
+    <div
+      data-mockid="MessagesElement"
+    />
   </div>
 </div>
 `;

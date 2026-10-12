@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import { IconPlacement, Priorities, SimpleButton } from '@fc/dsfr';
 import { t } from '@fc/i18n';
 
-import { useDeleteInstanceButton } from '../../../hooks';
 import type { InstanceInterface } from '../../../interfaces';
 
 interface DeleteInstanceButtonProps {
@@ -13,7 +12,9 @@ interface DeleteInstanceButtonProps {
 
 export const DeleteInstanceButton = React.memo(
   ({ instance, onDelete }: DeleteInstanceButtonProps) => {
-    const { handleDelete } = useDeleteInstanceButton({ instance, onDelete });
+    const handleDelete = useCallback(() => {
+      onDelete(instance);
+    }, [instance, onDelete]);
 
     return (
       <SimpleButton

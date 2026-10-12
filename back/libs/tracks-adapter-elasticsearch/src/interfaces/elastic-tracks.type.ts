@@ -5,5 +5,4 @@ import { TracksV2FieldsInterface } from './tracks-v2-fields.interface';
  * General type to accept CoreHigh and Legacy type
  */
 export type ElasticTracksType =
-  | TracksLegacyFieldsInterface
-  | TracksV2FieldsInterface;
+  TracksLegacyFieldsInterface | TracksV2FieldsInterface;

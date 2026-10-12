@@ -114,6 +114,20 @@ When('je lance la requête', function () {
   cy.api(requestOptions).as('apiResponse');
 });
 
+When('je renouvelle le csrf-token de la session', function () {
+  // Backup the current request preparation
+  const currentRequest = { ...this.apiRequest };
+
+  // A GET on the csrf-token endpoint renews the session csrf-token without
+  // consuming it (only mutating requests consume it), so the session holds a
+  // valid, unconsumed token for the next request whatever prior scenarios left.
+  Step(this, 'je prépare une requête "csrf-token"');
+  Step(this, 'je lance la requête');
+
+  // Restore current request context
+  this.apiRequest = currentRequest;
+});
+
 When('je lance la requête avec le csrf-token', function () {
   // Backup the current request preparation
   const currentRequest = { ...this.apiRequest };

@@ -15,7 +15,7 @@ export const MessageElement = React.memo(
     <p
       className={classnames(classes.message, `fr-message fr-message--${level}`)}
       data-testid={dataTestId}
-      id={`${id}-messages`}>
+      id={id}>
       {content}
     </p>
   ),

@@ -1,6 +1,6 @@
 import { resolve } from 'path';
 
-import { renderFile } from 'ejs';
+import ejs from 'ejs';
 import { DateTime } from 'luxon';
 
 import { AppConfig } from '../config';
@@ -27,7 +27,7 @@ export async function generateMockData(
 
   debug(`Render ${orders.length} group of mocks`);
   const jobs = orders.map(({ mock, time }) =>
-    renderFile(mock, { accountId: id, time }),
+    ejs.renderFile(mock, { accountId: id, time }),
   );
 
   const data = await Promise.all(jobs);

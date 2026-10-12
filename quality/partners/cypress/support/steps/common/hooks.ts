@@ -18,8 +18,8 @@ const setFixtureContext = (
 
 Before(function () {
   // Load environment config and test data
-  const platform: string = Cypress.env('TEST_PLATFORM');
-  const testEnv: string = Cypress.env('TEST_ENV');
+  const platform: string = Cypress.expose('TEST_PLATFORM');
+  const testEnv: string = Cypress.expose('TEST_ENV');
   const pathArray = [platform, testEnv];
   setFixtureContext('environment.json', pathArray, 'env');
   setFixtureContext('api-common.json', pathArray, 'apiRequests');
@@ -39,25 +39,19 @@ Before(function () {
 });
 
 Before({ tags: '@ignoreDocker' }, function () {
-  if (Cypress.env('TEST_ENV') === 'docker') {
+  if (Cypress.expose('TEST_ENV') === 'docker') {
     this.skip();
   }
 });
 
 Before({ tags: '@ignoreInteg01' }, function () {
-  if (Cypress.env('TEST_ENV') === 'integ01') {
-    this.skip();
-  }
-});
-
-Before({ tags: '@ignoreRecette' }, function () {
-  if (Cypress.env('TEST_ENV') === 'recette') {
+  if (Cypress.expose('TEST_ENV') === 'integ01') {
     this.skip();
   }
 });
 
 Before({ tags: '@ignoreCI' }, function () {
-  if (Cypress.env('CI')) {
+  if (Cypress.expose('CI')) {
     this.skip();
   }
 });

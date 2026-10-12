@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`CheckboxComponent multiple selection should match the snapshot when indeterminate 1`] = `
+<div>
+  <div
+    class="fr-checkbox-group fr-checkbox-group--md"
+  >
+    <input
+      aria-checked="mixed"
+      class="fr-checkbox"
+      id="checkbox-mock"
+      type="checkbox"
+    />
+    <label
+      class="fr-label"
+      for="checkbox-mock"
+    >
+      Checkbox label mock
+    </label>
+  </div>
+</div>
+`;
+
+exports[`CheckboxComponent should match the snapshot with a label 1`] = `
+<div>
+  <div
+    class="fr-checkbox-group fr-checkbox-group--md"
+  >
+    <input
+      class="fr-checkbox"
+      id="checkbox-mock"
+      type="checkbox"
+    />
+    <label
+      class="fr-label"
+      for="checkbox-mock"
+    >
+      Checkbox label mock
+    </label>
+  </div>
+</div>
+`;
+
+exports[`CheckboxComponent should match the snapshot without a label 1`] = `
+<div>
+  <div
+    class="fr-checkbox-group fr-checkbox-group--md"
+  >
+    <input
+      aria-label="Checkbox aria label mock"
+      class="fr-checkbox"
+      id="checkbox-mock"
+      type="checkbox"
+    />
+  </div>
+</div>
+`;

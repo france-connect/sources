@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ Copyright (c) 2018 by European Commission
+  ~
+  ~ Licensed under the EUPL, Version 1.2 or - as soon they will be
+  ~ approved by the European Commission - subsequent versions of the
+  ~ EUPL (the "Licence");
+  ~ You may not use this work except in compliance with the Licence.
+  ~ You may obtain a copy of the Licence at:
+  ~ https://joinup.ec.europa.eu/page/eupl-text-11-12
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the Licence is distributed on an "AS IS" basis,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+  ~ implied.
+  ~ See the Licence for the specific language governing permissions and
+  ~ limitations under the Licence.
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="igniteSpecificCommunication.cfg" class="org.apache.ignite.configuration.IgniteConfiguration">
+
+        <property name="igniteInstanceName" value="igniteSpecificCommunicationTOM"/>
+
+        <property name="cacheConfiguration">
+            <list>
+
+                <bean class="org.apache.ignite.configuration.CacheConfiguration">
+                    <property name="name" value="specificNodeConnectorRequestCache"/>
+                    <property name="atomicityMode" value="ATOMIC"/>
+                    <property name="backups" value="1"/>
+                    <property name="expiryPolicyFactory" ref="7_minutes_duration"/>
+                </bean>
+                <bean class="org.apache.ignite.configuration.CacheConfiguration">
+                    <property name="name" value="nodeSpecificProxyserviceRequestCache"/>
+                    <property name="atomicityMode" value="ATOMIC"/>
+                    <property name="backups" value="1"/>
+                    <property name="expiryPolicyFactory" ref="7_minutes_duration"/>
+                </bean>
+                <bean class="org.apache.ignite.configuration.CacheConfiguration">
+                    <property name="name" value="specificNodeProxyserviceResponseCache"/>
+                    <property name="atomicityMode" value="ATOMIC"/>
+                    <property name="backups" value="1"/>
+                    <property name="expiryPolicyFactory" ref="7_minutes_duration"/>
+                </bean>
+                <bean class="org.apache.ignite.configuration.CacheConfiguration">
+                    <property name="name" value="nodeSpecificConnectorResponseCache"/>
+                    <property name="atomicityMode" value="ATOMIC"/>
+                    <property name="backups" value="1"/>
+                    <property name="expiryPolicyFactory" ref="7_minutes_duration"/>
+                </bean>
+
+            </list>
+        </property>
+
+        <property name="discoverySpi">
+            <bean class="org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpi">
+                <property name="localPort" value="48501"/>
+                <property name="localPortRange" value="1"/>
+                <property name="ipFinder">
+                    <bean class="org.apache.ignite.spi.discovery.tcp.ipfinder.vm.TcpDiscoveryVmIpFinder">
+                        <property name="addresses">
+                            <list>
+                                <value>127.0.0.1:48500</value>
+                                <value>127.0.0.1:48501</value>
+                                <value>127.0.0.1:48502</value>
+                                <value>127.0.0.1:48503</value>
+                            </list>
+                        </property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+
+        <property name="sslContextFactory">
+            <bean class="org.apache.ignite.ssl.SslContextFactory">
+                <property name="keyStoreFilePath" value="${EIDAS_PROXY_CONFIG_REPOSITORY}/ignite/KeyStore/server.jks"/>
+                <property name="keyStorePassword" value="123456"/>
+                <property name="trustStoreFilePath" value="${EIDAS_PROXY_CONFIG_REPOSITORY}/ignite/KeyStore/trust.jks"/>
+                <property name="trustStorePassword" value="123456"/>
+                <property name="protocol" value="TLSv1.2"/>
+            </bean>
+       </property>
+
+        <property name="metricsLogFrequency" value="#{60 * 10 * 1000}"/>
+
+    </bean>
+
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_FALLBACK"/>
+        <property name="searchSystemEnvironment" value="true"/>
+    </bean>
+
+    <bean id="7_minutes_duration" class="javax.cache.expiry.CreatedExpiryPolicy" factory-method="factoryOf" scope="prototype">
+        <constructor-arg>
+            <bean class="javax.cache.expiry.Duration">
+                <constructor-arg value="MINUTES"/>
+                <constructor-arg value="7"/>
+            </bean>
+        </constructor-arg>
+    </bean>
+
+
+</beans>

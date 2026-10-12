@@ -43,7 +43,8 @@ Fonctionnalité: API - Service Provider détail
     Et le corps de la réponse a une propriété "payload.fcScopes[9]" égale à "family_name"
     Et le corps de la réponse a une propriété "payload.fcScopes[10]" égale à "email"
     Et le corps de la réponse a une propriété "payload.fcScopes[11]" égale à "preferred_username"
-    Et le corps de la réponse a une propriété "payload.fcScopes" avec 12 éléments
+    Et le corps de la réponse a une propriété "payload.fcScopes[12]" égale à "idp_birthdate"
+    Et le corps de la réponse a une propriété "payload.fcScopes" avec 13 éléments
     Et le corps de la réponse a une propriété "payload.createdAt"
     Et le corps de la réponse a une propriété "payload.updatedAt"
     Et le corps de la réponse a une propriété "payload.instances"

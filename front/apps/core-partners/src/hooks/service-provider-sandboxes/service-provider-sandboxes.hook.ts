@@ -6,11 +6,11 @@ import { MessageTypes } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { t } from '@fc/i18n';
 import { useModal } from '@fc/modal';
-import { RoutePaths, useNavigateWithState } from '@fc/routing';
 
 import { CorePartnersOptions, PartnersAlertVariants } from '../../enums';
 import type { ExternalUrlsInterface, InstanceInterface } from '../../interfaces';
 import { PartnersService } from '../../loaders';
+import { useDeletionNotifier } from '../deletion-notifier';
 
 export const useServiceProviderSandboxes = () => {
   const { spConfigurationDocUrl } = ConfigService.get<ExternalUrlsInterface>(
@@ -23,43 +23,31 @@ export const useServiceProviderSandboxes = () => {
   const hasUnlinkedInstances = linkableInstances.length > 0;
 
   const { openModal } = useModal();
-  const { navigateWithState } = useNavigateWithState();
+  const { notifyDeletion } = useDeletionNotifier(PartnersAlertVariants.INSTANCE);
 
   const confirmDeleteInstance = useCallback(
     async (instanceId: UUIDType, instanceName: string) => {
       try {
         await PartnersService.deleteInstance(instanceId);
 
-        // @NOTE navigating to the current route replays the loaders,
-        // the sandboxes list is refreshed and the SandboxAlert renders the route state
-        navigateWithState(
-          RoutePaths.CURRENT,
-          {
-            message: t('Partners.serviceProviderPage.sandboxes.deleteModal.success.description', {
-              instanceName,
-            }),
-            title: t('Partners.serviceProviderPage.sandboxes.deleteModal.success.title'),
-            type: MessageTypes.SUCCESS,
-            variant: PartnersAlertVariants.INSTANCE,
-          },
-          true,
+        notifyDeletion(
+          t('Partners.serviceProviderPage.sandboxes.deleteModal.success.description', {
+            instanceName,
+          }),
+          t('Partners.serviceProviderPage.sandboxes.deleteModal.success.title'),
+          MessageTypes.SUCCESS,
         );
       } catch {
-        navigateWithState(
-          RoutePaths.CURRENT,
-          {
-            message: t('Partners.serviceProviderPage.sandboxes.deleteModal.error.description', {
-              instanceName,
-            }),
-            title: t('Partners.serviceProviderPage.sandboxes.deleteModal.error.title'),
-            type: MessageTypes.ERROR,
-            variant: PartnersAlertVariants.INSTANCE,
-          },
-          true,
+        notifyDeletion(
+          t('Partners.serviceProviderPage.sandboxes.deleteModal.error.description', {
+            instanceName,
+          }),
+          t('Partners.serviceProviderPage.sandboxes.deleteModal.error.title'),
+          MessageTypes.ERROR,
         );
       }
     },
-    [navigateWithState],
+    [notifyDeletion],
   );
 
   const deleteInstanceHandler = useCallback(

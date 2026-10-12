@@ -8,12 +8,12 @@ exports[`IdentityTheftReportSummaryPage should match the snapshot 1`] = `
   <div
     class="fr-border-default--grey fr-mt-3w fr-p-3w"
   >
-    <div>
-      TableComponent
-    </div>
-    <div>
-      TableComponent
-    </div>
+    <div
+      data-mockid="SummaryTableComponent"
+    />
+    <div
+      data-mockid="SummaryTableComponent"
+    />
     <h4>
       any-acme-tracks-translation
     </h4>
@@ -27,15 +27,15 @@ exports[`IdentityTheftReportSummaryPage should match the snapshot 1`] = `
         data-mockid="TrackCardComponent"
       />
     </div>
-    <div>
-      TableComponent
-    </div>
-    <div>
-      TableComponent
-    </div>
-    <div>
-      TableComponent
-    </div>
+    <div
+      data-mockid="SummaryTableComponent"
+    />
+    <div
+      data-mockid="SummaryTableComponent"
+    />
+    <div
+      data-mockid="SummaryTableComponent"
+    />
     <div
       data-mockid="Dto2FormComponent"
     />
@@ -51,21 +51,21 @@ exports[`IdentityTheftReportSummaryPage should match the snapshot when tracks is
   <div
     class="fr-border-default--grey fr-mt-3w fr-p-3w"
   >
-    <div>
-      TableComponent
-    </div>
-    <div>
-      TableComponent
-    </div>
-    <div>
-      TableComponent
-    </div>
-    <div>
-      TableComponent
-    </div>
-    <div>
-      TableComponent
-    </div>
+    <div
+      data-mockid="SummaryTableComponent"
+    />
+    <div
+      data-mockid="SummaryTableComponent"
+    />
+    <div
+      data-mockid="SummaryTableComponent"
+    />
+    <div
+      data-mockid="SummaryTableComponent"
+    />
+    <div
+      data-mockid="SummaryTableComponent"
+    />
     <div
       data-mockid="Dto2FormComponent"
     />

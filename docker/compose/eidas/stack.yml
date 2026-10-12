@@ -8,7 +8,6 @@ services:
       - "eidas-bridge"
       - "eidas-fr"
       - "eidas-mock"
-      - "eidas-be"
   min-eidas-high:
     image: ${DOCKER_HUB_PROXY}alpine
     depends_on:
@@ -16,7 +15,6 @@ services:
       - "eidas-bridge"
       - "eidas-fr"
       - "eidas-mock"
-      - "eidas-be"
   min-eidas-low:
     image: ${DOCKER_HUB_PROXY}alpine
     depends_on:
@@ -24,4 +22,4 @@ services:
       - "eidas-bridge"
       - "eidas-fr"
       - "eidas-mock"
-      - "eidas-be"
+

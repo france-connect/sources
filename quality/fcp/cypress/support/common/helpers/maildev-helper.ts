@@ -2,12 +2,12 @@ import { Email } from '../types';
 
 export class MaildevHelper {
   static get baseUrl(): string {
-    let baseUrl = `${Cypress.env('MAILDEV_PROTOCOL')}://${Cypress.env(
+    let baseUrl = `${Cypress.expose('MAILDEV_PROTOCOL')}://${Cypress.expose(
       'MAILDEV_HOST',
     )}`;
 
-    if (Cypress.env('MAILDEV_API_PORT')) {
-      baseUrl += `:${Cypress.env('MAILDEV_API_PORT')}`;
+    if (Cypress.expose('MAILDEV_API_PORT')) {
+      baseUrl += `:${Cypress.expose('MAILDEV_API_PORT')}`;
     }
     return baseUrl;
   }

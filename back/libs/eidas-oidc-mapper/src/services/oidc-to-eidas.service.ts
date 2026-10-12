@@ -5,6 +5,7 @@ import { Injectable } from '@nestjs/common';
 import { CogService } from '@fc/cog';
 import {
   EidasAttributes,
+  EidasNameIdFormats,
   EidasPartialRequest,
   EidasResponse,
   EidasResponseAttributes,
@@ -50,12 +51,18 @@ export class OidcToEidasService {
    * @param claims The oidc claims retrieved from the userinfos endpoint
    * @param acr The eIDAS level used for authentication
    * @param requestedAttributes The eIDAS requested attributes
+   * @param requestedNameIdFormat The requested eIDAS subject name id format used to deduce the response subject format
+   * @param subject The subject to use in the eIDAS response (format depends of the requestedNameIdFormat)
    * @return A partial eidas response
    */
+  // This function is a mapper and needs to map all the parameters, fusing params would only hinder the readability.
+  // eslint-disable-next-line max-params
   mapPartialResponseSuccess(
     claims: Partial<IOidcIdentity>,
     acr: AcrValues,
     requestedAttributes: EidasAttributes[],
+    requestedNameIdFormat: EidasNameIdFormats,
+    subject: string,
   ): Partial<EidasResponse> {
     const attributes = this.mapRequestedAttributesFromClaims(
       claims,
@@ -69,8 +76,11 @@ export class OidcToEidasService {
         this.eidasCog.injectLabelsForCogs(cogs);
     }
 
-    const subject = claims.sub;
     const levelOfAssurance = AcrValuesToLevelOfAssurancesMap[acr];
+
+    const subjectNameIdFormat = this.getResponseNameIdFormat(
+      requestedNameIdFormat,
+    );
 
     return {
       attributes,
@@ -80,6 +90,7 @@ export class OidcToEidasService {
         statusCode: EidasStatusCodes.SUCCESS,
       },
       subject,
+      subjectNameIdFormat,
     };
   }
 
@@ -213,5 +224,14 @@ export class OidcToEidasService {
       });
     }
     return attributesSet;
+  }
+
+  private getResponseNameIdFormat(
+    requestedNameIdFormat?: EidasNameIdFormats,
+  ): EidasNameIdFormats {
+    return requestedNameIdFormat === EidasNameIdFormats.UNSPECIFIED ||
+      requestedNameIdFormat === undefined
+      ? EidasNameIdFormats.PERSISTENT
+      : requestedNameIdFormat;
   }
 }

@@ -4,7 +4,7 @@ import { Observable, of } from 'rxjs';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
-import { Openid4vpService } from '@fc/openid4vp';
+import { Openid4vpFlow, Openid4vpService } from '@fc/openid4vp';
 import { QrcodeErrorCorrectionLevel, QrcodeService } from '@fc/qrcode';
 
 import { getConfigMock } from '@mocks/config';
@@ -42,7 +42,7 @@ describe('OpenId4vpUiController', () => {
     relayingParty: {
       interactionTtl: 600,
       redirectDelay: 2,
-      requestUri: '/api/authorize-request-object/:interactionId',
+      requestUri: '/api/authorize-request-object/:interactionId/:state',
     },
   };
 
@@ -83,10 +83,17 @@ describe('OpenId4vpUiController', () => {
   describe('authorizeRequestUri', () => {
     const interactionMock = {
       id: interactionIdMock,
-      presentationId: 'presentationIdMock',
+      credentialQueryId: 'credentialQueryIdMock',
+      state: {
+        sameDevice: 'sameDeviceStateMock',
+        crossDevice: 'crossDeviceStateMock',
+      },
     };
-    const requestUriMock = `openid4vp://authorize?client_id=clientIdMock&request_uri=${encodeURIComponent(
-      'https://wallet-bridge.example/request/abc',
+    const sameDeviceUriMock = `openid4vp://authorize?client_id=clientIdMock&request_uri=${encodeURIComponent(
+      'https://wallet-bridge.example/request/abc/same_device',
+    )}&response_type=vp_token`;
+    const crossDeviceUriMock = `openid4vp://authorize?client_id=clientIdMock&request_uri=${encodeURIComponent(
+      'https://wallet-bridge.example/request/abc/cross_device',
     )}&response_type=vp_token`;
     const qrcodeDataUrlMock = 'data:image/png;base64,qrcodeMock';
 
@@ -99,9 +106,9 @@ describe('OpenId4vpUiController', () => {
         interactionMock,
       );
 
-      openid4vpServiceMock.getAuthorizeRequestUri.mockReturnValue(
-        requestUriMock,
-      );
+      openid4vpServiceMock.getAuthorizeRequestUri
+        .mockReturnValueOnce(sameDeviceUriMock)
+        .mockReturnValueOnce(crossDeviceUriMock);
 
       qrcodeServiceMock.generateDataUrl.mockResolvedValue(qrcodeDataUrlMock);
     });
@@ -118,19 +125,33 @@ describe('OpenId4vpUiController', () => {
       ).toHaveBeenCalledExactlyOnceWith(interactionIdMock);
     });
 
-    it('should build the authorize request uri from the interaction', async () => {
+    it('should build the same-device authorize request uri', async () => {
       // When
       await controller.authorizeRequestUri({
         interactionId: interactionIdMock,
       });
 
       // Then
-      expect(
-        openid4vpServiceMock.getAuthorizeRequestUri,
-      ).toHaveBeenCalledExactlyOnceWith(interactionMock);
+      expect(openid4vpServiceMock.getAuthorizeRequestUri).toHaveBeenCalledWith(
+        interactionMock,
+        Openid4vpFlow.SAME_DEVICE,
+      );
     });
 
-    it('should generate a QRcode for the request URI with a low error-correction level', async () => {
+    it('should build the cross-device authorize request uri', async () => {
+      // When
+      await controller.authorizeRequestUri({
+        interactionId: interactionIdMock,
+      });
+
+      // Then
+      expect(openid4vpServiceMock.getAuthorizeRequestUri).toHaveBeenCalledWith(
+        interactionMock,
+        Openid4vpFlow.CROSS_DEVICE,
+      );
+    });
+
+    it('should generate a QRcode for the cross-device URI with a low error-correction level', async () => {
       // When
       await controller.authorizeRequestUri({
         interactionId: interactionIdMock,
@@ -138,7 +159,7 @@ describe('OpenId4vpUiController', () => {
 
       // Then
       expect(qrcodeServiceMock.generateDataUrl).toHaveBeenCalledExactlyOnceWith(
-        requestUriMock,
+        crossDeviceUriMock,
         {
           errorCorrectionLevel: QrcodeErrorCorrectionLevel.LOW,
           margin: 0,
@@ -147,7 +168,7 @@ describe('OpenId4vpUiController', () => {
       );
     });
 
-    it('should return the request uri and the QR code', async () => {
+    it('should return the sameDeviceUri, crossDeviceUri and the QR code', async () => {
       // When
       const result = await controller.authorizeRequestUri({
         interactionId: interactionIdMock,
@@ -156,7 +177,8 @@ describe('OpenId4vpUiController', () => {
       // Then
       expect(result).toEqual(
         expect.objectContaining({
-          requestUri: requestUriMock,
+          sameDeviceUri: sameDeviceUriMock,
+          crossDeviceUri: crossDeviceUriMock,
           qrcodeDataUrl: qrcodeDataUrlMock,
         }),
       );
@@ -216,7 +238,7 @@ describe('OpenId4vpUiController', () => {
       );
     });
 
-    it('should expose the request_uri built from config and interactionId as httpRequestUri', async () => {
+    it('should expose the same-device request_uri built from config, interactionId and state as httpRequestUri', async () => {
       // When
       const result = await controller.authorizeRequestUri({
         interactionId: interactionIdMock,
@@ -224,10 +246,7 @@ describe('OpenId4vpUiController', () => {
 
       // Then
       expect(result.httpRequestUri).toBe(
-        openid4vpConfigMock.relayingParty.requestUri.replace(
-          ':interactionId',
-          interactionIdMock,
-        ),
+        `/api/authorize-request-object/${interactionIdMock}/sameDeviceStateMock`,
       );
     });
   });
@@ -242,7 +261,7 @@ describe('OpenId4vpUiController', () => {
     const resMock = {} as Response;
     const interactionMock = {
       id: interactionIdMock,
-      presentationId: 'presentationIdMock',
+      credentialQueryId: 'credentialQueryIdMock',
     };
 
     it('should fetch the interaction for the user based on the interactionId', async () => {

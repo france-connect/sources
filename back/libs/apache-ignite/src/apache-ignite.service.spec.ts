@@ -13,6 +13,7 @@ import { getLoggerMock } from '@mocks/logger';
 import { ApacheIgniteService } from './apache-ignite.service';
 import { ApacheIgniteConfig } from './dto';
 import { ApacheIgniteInvalidSocketException } from './exceptions';
+import { APACHE_IGNITE_CONFIG_NAME } from './tokens';
 
 jest.mock('retry', () => ({
   ...jest.requireActual('retry'),
@@ -21,6 +22,8 @@ jest.mock('retry', () => ({
 
 describe('ApacheIgniteService', () => {
   let service: ApacheIgniteService;
+
+  const configNameMock = 'ApacheIgniteConnector';
 
   const configServiceMock = {
     get: jest.fn(),
@@ -103,7 +106,12 @@ describe('ApacheIgniteService', () => {
       });
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [ApacheIgniteService, ConfigService, LoggerService],
+      providers: [
+        ApacheIgniteService,
+        ConfigService,
+        LoggerService,
+        { provide: APACHE_IGNITE_CONFIG_NAME, useValue: configNameMock },
+      ],
     })
       .overrideProvider(ConfigService)
       .useValue(configServiceMock)
@@ -164,7 +172,7 @@ describe('ApacheIgniteService', () => {
       // then
       expect(loggerServiceMock.debug).toHaveBeenCalledTimes(1);
       expect(loggerServiceMock.debug).toHaveBeenCalledWith(
-        `Apache Ignite client, Connection attempt: ${attemptMock}`,
+        `[${configNameMock}] Apache Ignite client, Connection attempt: ${attemptMock}`,
       );
     });
 
@@ -217,7 +225,7 @@ describe('ApacheIgniteService', () => {
         // then
         expect(loggerServiceMock.debug).toHaveBeenCalledTimes(1);
         expect(loggerServiceMock.debug).toHaveBeenCalledWith(
-          'Apache ignite client failed to connect, create retry process',
+          `[${configNameMock}] Apache ignite client failed to connect, create retry process`,
         );
       });
 
@@ -227,7 +235,7 @@ describe('ApacheIgniteService', () => {
 
         // then
         expect(configServiceMock.get).toHaveBeenCalledTimes(1);
-        expect(configServiceMock.get).toHaveBeenCalledWith('ApacheIgnite');
+        expect(configServiceMock.get).toHaveBeenCalledWith(configNameMock);
       });
 
       it('should setup retryOperation with options', () => {
@@ -270,7 +278,7 @@ describe('ApacheIgniteService', () => {
         // then
         expect(loggerServiceMock.debug).toHaveBeenCalledTimes(1);
         expect(loggerServiceMock.debug).toHaveBeenCalledWith(
-          'Apache ignite client failed to connect, retry new attempt...',
+          `[${configNameMock}] Apache ignite client failed to connect, retry new attempt...`,
         );
       });
 
@@ -311,7 +319,7 @@ describe('ApacheIgniteService', () => {
 
       // then
       expect(configServiceMock.get).toHaveBeenCalledTimes(1);
-      expect(configServiceMock.get).toHaveBeenCalledWith('ApacheIgnite');
+      expect(configServiceMock.get).toHaveBeenCalledWith(configNameMock);
     });
 
     it('should initialize the client ignite with an event callback', async () => {
@@ -421,7 +429,7 @@ describe('ApacheIgniteService', () => {
       // then
       expect(loggerServiceMock.debug).toHaveBeenCalledTimes(1);
       expect(loggerServiceMock.debug).toHaveBeenCalledWith(
-        'Apache ignite client is connected',
+        `[${configNameMock}] Apache ignite client is connected`,
       );
 
       expect(service['clearRetryApacheIgnite']).toHaveBeenCalledTimes(1);

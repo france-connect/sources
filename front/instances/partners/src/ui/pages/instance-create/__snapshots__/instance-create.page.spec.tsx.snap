@@ -6,9 +6,6 @@ exports[`InstanceCreatePage should match the snapshot 1`] = `
     data-mockid="InstancePageHeaderComponent"
   />
   <div
-    data-mockid="InstancePageNoticeComponent"
-  />
-  <div
     data-mockid="InstancePageFormComponent"
   />
 </div>

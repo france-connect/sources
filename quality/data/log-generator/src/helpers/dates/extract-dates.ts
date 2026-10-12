@@ -16,7 +16,7 @@ export function extractDates(datesArray: string): DateTime[] {
       .map((value) => DateTime.fromISO(value, { zone: 'Europe/Paris' }))
       .filter(({ isValid }) => isValid);
   } catch (error) {
-    throw new Error(`Sequences param must be a JSON array : ${error.message}`);
+    throw new Error('Sequences param must be a JSON array', { cause: error });
   }
 
   // Default value

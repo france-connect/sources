@@ -39,7 +39,7 @@ describe('WalletBridgeIdentityService', () => {
   const openid4vpIdentityMock = {
     given_name: 'Angela Claire Louise',
     family_name: 'DUBOIS',
-    birth_place: 'Paris',
+    place_of_birth: 'Paris',
     birth_country: 'FR',
     birth_date: '1962-08-24',
     sex: 2,
@@ -91,7 +91,7 @@ describe('WalletBridgeIdentityService', () => {
 
   const interactionMock = {
     id: 'interactionIdMock',
-    presentationId: 'presentationIdMock',
+    credentialQueryId: 'credentialQueryIdMock',
     state: 'stateMock',
     nonce: 'nonceMock',
     iat: 1700000000,
@@ -420,7 +420,7 @@ describe('WalletBridgeIdentityService', () => {
 
       // Then
       expect(eudiCogServiceMock.resolveCog).toHaveBeenCalledExactlyOnceWith(
-        openid4vpIdentityMock.birth_place,
+        openid4vpIdentityMock.place_of_birth,
       );
     });
   });

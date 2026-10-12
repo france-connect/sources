@@ -85,6 +85,22 @@ export class PartnersContributorService {
     );
   }
 
+  async removeMany(
+    accountIds: string[],
+    serviceProviderId: string,
+  ): Promise<void> {
+    await this.typeorm.withTransaction(async (queryRunner) => {
+      for (const accountId of accountIds) {
+        await this.accessControl.removePermissionTransactional(queryRunner, {
+          accountId,
+          permissionType: AccessControlPermission.SP_CONTRIBUTOR,
+          entity: AccessControlEntity.SERVICE_PROVIDER,
+          entityId: serviceProviderId,
+        });
+      }
+    });
+  }
+
   private async sendAddContributorEmail(
     recipientEmail: string,
     serviceProviderId: string,

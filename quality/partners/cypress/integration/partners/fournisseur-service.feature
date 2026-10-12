@@ -50,6 +50,7 @@ Fonctionnalité: Mon Fournisseur de Service
       | family_name        |
       | email              |
       | preferred_username |
+      | idp_birthdate      |
 
   Scénario: Mon Fournisseur de Service - Absence d'accès au bac à sable
     Etant donné que je me connecte à l'espace partenaires avec un utilisateur "partenaire avec deux fournisseurs de service"

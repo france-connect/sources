@@ -13,7 +13,8 @@ import { Openid4vpAuthorizationError } from '@fc/openid4vp';
 export class AuthorizeResponseBodyDto implements Record<string, unknown> {
   @IsString()
   @MinLength(32)
-  readonly state: string;
+  @IsOptional()
+  readonly state?: string;
 
   @ValidateIf(AuthorizeResponseBodyDto.hasNoError)
   @IsString()

@@ -139,7 +139,7 @@ export class WalletBridgeIdentityService extends OidcProviderAppConfigLibService
 
   private convertPidToOidc(pid: EudiPidClaimsDto): OidcIdentityDto {
     const { birthplace, birthcountry } = this.eudiCogService.resolveCog(
-      pid.birth_place,
+      pid.place_of_birth,
     );
 
     const result = {

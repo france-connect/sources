@@ -1,7 +1,5 @@
 import { Type } from 'class-transformer';
 import {
-  ArrayMinSize,
-  IsArray,
   IsEnum,
   IsInt,
   IsNotEmpty,
@@ -15,6 +13,7 @@ import { JSONWebKeySet } from 'jose';
 
 import { IsIncludedInConfig } from '@fc/common';
 import { DekAlg, KekAlg } from '@fc/cryptography/enums';
+import { DcqlQueryInterface, IsDcqlQuery } from '@fc/dcql';
 import { JwksDto } from '@fc/jwt';
 // Deep import to avoid @fc/session inclusion (TemplateMethod missing service issue)
 import {
@@ -25,50 +24,8 @@ import {
 import { Formats } from '@fc/openid4vp/interfaces';
 import { IsClientId } from '@fc/openid4vp/validators/is-client-id.validator';
 
-import {
-  ClientMetadata,
-  InputDescriptor,
-  PresentationDefinition,
-  RequestObjectPayload,
-} from '../interfaces';
+import { ClientMetadata, RequestObjectPayload } from '../interfaces';
 import { AppConfig } from './app-config.dto';
-
-class InputDescriptorFieldDto {
-  @IsArray()
-  @IsString({ each: true })
-  readonly path: string[];
-}
-
-class InputDescriptorConstraintsDto {
-  @IsArray()
-  @IsOptional()
-  @ValidateNested({ each: true })
-  @Type(() => InputDescriptorFieldDto)
-  readonly fields?: InputDescriptorFieldDto[];
-}
-
-class InputDescriptorDto implements InputDescriptor {
-  @IsString()
-  @IsNotEmpty()
-  readonly id: string;
-
-  @IsObject()
-  @ValidateNested()
-  @Type(() => InputDescriptorConstraintsDto)
-  readonly constraints: InputDescriptorConstraintsDto;
-}
-
-class PresentationDefinitionDto implements PresentationDefinition {
-  @IsString()
-  @IsNotEmpty()
-  readonly id: string;
-
-  @IsArray()
-  @ArrayMinSize(1)
-  @ValidateNested({ each: true })
-  @Type(() => InputDescriptorDto)
-  readonly input_descriptors: InputDescriptorDto[];
-}
 
 export class ClientMetadataDto implements ClientMetadata {
   @IsNotEmpty()
@@ -78,7 +35,7 @@ export class ClientMetadataDto implements ClientMetadata {
   readonly jwks: JSONWebKeySet;
 
   @IsObject()
-  readonly vp_formats: Formats;
+  readonly vp_formats_supported: Formats;
 
   @IsEnum(KekAlg)
   readonly authorization_encrypted_response_alg: KekAlg;
@@ -106,8 +63,6 @@ export class RequestObjectPayloadDto implements RequestObjectPayload {
   readonly client_id: string;
 
   @IsUrl({
-    // Class-validator rule name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     require_protocol: true,
     protocols: ['https'],
   })
@@ -135,7 +90,6 @@ export class RequestObjectPayloadDto implements RequestObjectPayload {
   readonly client_metadata?: ClientMetadataDto;
 
   @IsObject()
-  @ValidateNested()
-  @Type(() => PresentationDefinitionDto)
-  readonly presentation_definition: PresentationDefinitionDto;
+  @IsDcqlQuery()
+  readonly dcql_query: DcqlQueryInterface;
 }

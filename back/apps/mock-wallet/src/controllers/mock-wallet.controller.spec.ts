@@ -204,7 +204,7 @@ describe('MockWalletController', () => {
       responsePreview: '{}',
       requestPayload: JSON.stringify({ foo: 'bar' }),
       responsePayload: JSON.stringify({ baz: 'qux' }),
-      presentationDefinition: '{}',
+      dcqlQuery: '{}',
       submitUrl: MockWalletRoutes.WALLET_SUBMIT,
     } as unknown as ConsentViewModel;
 

@@ -59,7 +59,7 @@ Fonctionnalité: API - création d'instance depuis un fournisseur de service
     Et le corps de la réponse a une propriété "payload" avec 1 attribut
     Et le corps de la réponse a une propriété "payload.name" avec 1 élément
     Et le corps de la réponse a une propriété "payload.name[0]" avec 3 attributs
-    Et le corps de la réponse a une propriété "payload.name[0].content" égale à "Veuillez saisir le nom de votre instance"
+    Et le corps de la réponse a une propriété "payload.name[0].content" égale à "Veuillez saisir le nom de votre bac à sable"
     Et le corps de la réponse a une propriété "payload.name[0].level" égale à "error"
     Et le corps de la réponse a une propriété "payload.name[0].priority" égale à 50
 

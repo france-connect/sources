@@ -59,6 +59,9 @@ exports[`TextWithRemoveInput should match snapshot, without messages 1`] = `
         data-mockid="ArrayRemoveButton"
       />
     </div>
+    <div
+      data-mockid="MessagesElement"
+    />
   </div>
 </div>
 `;

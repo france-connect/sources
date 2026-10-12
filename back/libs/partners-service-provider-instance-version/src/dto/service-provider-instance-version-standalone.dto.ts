@@ -136,6 +136,8 @@ export class ServiceProviderInstanceVersionStandaloneDto
     array: true,
     order: 64,
     validators: [$IsRedirectURL(), $IsLength({ max: 1024 })],
+    seeAlso:
+      'https://docs.partenaires.franceconnect.gouv.fr/fs/devenir-fs/projet-bac-a-sable/#configuration-de-votre-instance-de-test',
   })
   @Expose()
   readonly post_logout_redirect_uris: string[];

@@ -1,6 +1,4 @@
 export interface OperatorUserData {
-  password: string;
+  prefix: string;
   role: string;
-  secretTotp: string;
-  username: string;
 }

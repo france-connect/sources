@@ -49,7 +49,9 @@ export const HiddenInput = jest.fn(() => <div data-mockid="HiddenInput" />);
 export const ChoiceInput = jest.fn(() => <div data-mockid="ChoiceInput" />);
 
 export const FieldTypes = {
+  ARRAY: 'array',
   CHECKBOX: 'checkbox',
+  CONSENT: 'consent',
   DATE: 'date',
   EMAIL: 'email',
   HIDDEN: 'hidden',

@@ -34,8 +34,6 @@ export class CsmrImportCoreServiceProviderDto {
 
   @IsUrl(
     {
-      // class-validator naming convention
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       require_protocol: true,
       protocols: ['https'],
     },
@@ -47,8 +45,6 @@ export class CsmrImportCoreServiceProviderDto {
 
   @IsUrl(
     {
-      // class-validator naming convention
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       require_protocol: true,
       protocols: ['https'],
     },
@@ -60,8 +56,7 @@ export class CsmrImportCoreServiceProviderDto {
 
   @IsEnum([SignatureAlgorithmEnum.ES256, SignatureAlgorithmEnum.RS256])
   readonly signedResponseAlg:
-    | SignatureAlgorithmEnum.ES256
-    | SignatureAlgorithmEnum.RS256;
+    SignatureAlgorithmEnum.ES256 | SignatureAlgorithmEnum.RS256;
 
   @IsEmail({}, { each: true })
   @ArrayNotEmpty()
@@ -73,8 +68,6 @@ export class CsmrImportCoreServiceProviderDto {
 
   @IsUrl(
     {
-      // class-validator naming convention
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       require_protocol: true,
       protocols: ['https'],
     },

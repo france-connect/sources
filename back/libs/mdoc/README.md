@@ -44,7 +44,7 @@ Register a `Mdoc` section in the instance config and validate it with `MdocConfi
 | `devicePrivateKeyJwk`     | Device private JWK used to sign device authentication  |
 | `deviceCertificatePem`    | PEM certificate bundled in the device signature        |
 
-Environment variables (mock-wallet): `Mdoc_ISSUER_PRIVATE_KEY`, `Mdoc_ISSUER_CERTIFICATE`, `Mdoc_DEVICE_PRIVATE_KEY_JWK`, `Mdoc_DEVICE_CERTIFICATE`. See [`back/_doc/env-vars.md`](../../_doc/env-vars.md).
+Environment variables (mock-wallet): see the generated [`back/_doc/env-vars.md`](../../_doc/env-vars.md), `Mdoc_*` prefix.
 
 Example (mock-wallet instance): [`back/instances/mock-wallet/src/config/mdoc.ts`](../../instances/mock-wallet/src/config/mdoc.ts).
 

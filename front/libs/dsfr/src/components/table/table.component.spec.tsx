@@ -1,15 +1,16 @@
 import { render } from '@testing-library/react';
-import React from 'react';
 
 import { Sizes } from '../../enums';
 import { TableCaptionComponent } from './caption';
 import { TableHeaderComponent } from './header';
 import { TableRowComponent } from './row';
 import { TableComponent } from './table.component';
+import { TableWrapperComponent } from './wrapper';
 
 jest.mock('./header/table-header.component');
 jest.mock('./caption/table-caption.component');
 jest.mock('./row/table-row.component');
+jest.mock('./wrapper/table-wrapper.component');
 
 describe('TableComponent', () => {
   // Given
@@ -20,7 +21,7 @@ describe('TableComponent', () => {
 
   it('should match the snapshot with required props', () => {
     // When
-    const { container, getByRole } = render(
+    const { container } = render(
       <TableComponent
         columns={columnsMock}
         id="any-table-id-mock"
@@ -30,18 +31,26 @@ describe('TableComponent', () => {
         ]}
       />,
     );
-    const tableElement = getByRole('table');
 
     // Then
     expect(container).toMatchSnapshot();
-    expect(container.firstChild).not.toHaveClass('fr-table--bordered');
-    expect(container.firstChild).not.toHaveClass('fr-table--no-scroll');
-    expect(container.firstChild).toHaveAttribute('id', 'any-table-id-mock');
-    expect(tableElement).toBeInTheDocument();
-    expect(tableElement).toHaveAttribute('id', 'any-table-id-mock--table');
+    expect(TableWrapperComponent).toHaveBeenCalledExactlyOnceWith(
+      {
+        bordered: false,
+        children: expect.any(Object),
+        id: 'any-table-id-mock',
+        multiline: false,
+        noScroll: false,
+        selectable: undefined,
+        size: Sizes.MEDIUM,
+        toolbar: undefined,
+      },
+      undefined,
+    );
     expect(TableHeaderComponent).toHaveBeenCalledExactlyOnceWith(
       {
         columns: columnsMock,
+        selectable: undefined,
         showActionsColumn: false,
         tableId: 'any-table-id-mock',
       },
@@ -51,14 +60,16 @@ describe('TableComponent', () => {
 
   it('should match the snapshot with optionnals props', () => {
     // Given
-    const rowStyleMock = Symbol('rowStyleMock') as unknown as string;
-    const tableStyleMock = Symbol('tableStyleMock') as unknown as string;
-    const headerStyleMock = Symbol('headerStyleMock') as unknown as string;
+    const containerStyleMock = 'container-classname-mock';
+    const rowStyleMock = 'row-classname-mock';
     const stylesMock = {
-      head: headerStyleMock,
+      container: containerStyleMock,
       row: rowStyleMock,
-      table: tableStyleMock,
     };
+    const sourcesMock = [
+      { column1: 'Data 1', column2: 'Data 2', label: 'column-mock-1' },
+      { column1: 'Data 3', column2: 'Data 4', label: 'column-mock-2' },
+    ];
 
     // When
     const { container } = render(
@@ -70,18 +81,27 @@ describe('TableComponent', () => {
         id="any-table-id-mock"
         noScroll={false}
         size={Sizes.LARGE}
-        sources={[
-          { column1: 'Data 1', column2: 'Data 2', label: 'column-mock-1' },
-          { column1: 'Data 3', column2: 'Data 4', label: 'column-mock-2' },
-        ]}
+        sources={sourcesMock}
         styles={stylesMock}
       />,
     );
 
     // Then
     expect(container).toMatchSnapshot();
-    expect(container.firstChild).toHaveClass('fr-table--bordered');
-    expect(container.firstChild).toHaveClass('fr-table--lg fr-table fr-table--bordered');
+    expect(container.firstChild).toHaveClass(containerStyleMock);
+    expect(TableWrapperComponent).toHaveBeenCalledExactlyOnceWith(
+      {
+        bordered: true,
+        children: expect.any(Object),
+        id: 'any-table-id-mock',
+        multiline: false,
+        noScroll: false,
+        selectable: undefined,
+        size: Sizes.LARGE,
+        toolbar: undefined,
+      },
+      undefined,
+    );
     expect(TableCaptionComponent).toHaveBeenCalledExactlyOnceWith(
       {
         caption: 'Table Caption',
@@ -89,36 +109,16 @@ describe('TableComponent', () => {
       undefined,
     );
     expect(TableHeaderComponent).not.toHaveBeenCalled();
-  });
-
-  it('should not show actions column if actions are not provided', () => {
-    // Given
-    const sourcesMock = [
-      { column1: 'Data 1', column2: 'Data 2', id: 'id-1', label: 'column-mock-1' },
-      { column1: 'Data 3', column2: 'Data 4', id: 'id-2', label: 'column-mock-2' },
-    ];
-
-    // When
-    render(<TableComponent columns={columnsMock} id="any-table-id-mock" sources={sourcesMock} />);
-
-    // Then
-    expect(TableHeaderComponent).toHaveBeenCalledExactlyOnceWith(
-      {
-        columns: columnsMock,
-        showActionsColumn: false,
-        tableId: 'any-table-id-mock',
-      },
-      undefined,
-    );
     expect(TableRowComponent).toHaveBeenCalledTimes(2);
     expect(TableRowComponent).toHaveBeenNthCalledWith(
       1,
       {
         actions: undefined,
-        className: undefined,
+        className: rowStyleMock,
         columns: columnsMock,
         data: sourcesMock[0],
         index: 0,
+        selectable: undefined,
         tableId: 'any-table-id-mock',
       },
       undefined,
@@ -127,10 +127,11 @@ describe('TableComponent', () => {
       2,
       {
         actions: undefined,
-        className: undefined,
+        className: rowStyleMock,
         columns: columnsMock,
         data: sourcesMock[1],
         index: 1,
+        selectable: undefined,
         tableId: 'any-table-id-mock',
       },
       undefined,
@@ -159,6 +160,7 @@ describe('TableComponent', () => {
     expect(TableHeaderComponent).toHaveBeenCalledExactlyOnceWith(
       {
         columns: columnsMock,
+        selectable: undefined,
         showActionsColumn: true,
         tableId: 'any-table-id-mock',
       },
@@ -173,6 +175,7 @@ describe('TableComponent', () => {
         columns: columnsMock,
         data: sourcesMock[0],
         index: 0,
+        selectable: undefined,
         tableId: 'any-table-id-mock',
       },
       undefined,
@@ -185,6 +188,7 @@ describe('TableComponent', () => {
         columns: columnsMock,
         data: sourcesMock[1],
         index: 1,
+        selectable: undefined,
         tableId: 'any-table-id-mock',
       },
       undefined,
@@ -193,24 +197,142 @@ describe('TableComponent', () => {
 
   it('should create columns from sources if not provided', () => {
     // Given
-    const useMemoMock = jest.spyOn(React, 'useMemo');
+    const sourcesMock = [
+      { column1: 'Data 1', column2: 'Data 2', label: 'column-mock-1' },
+      { column1: 'Data 3', column2: 'Data 4', label: 'column-mock-2' },
+    ];
+    const expectedColumns = [
+      { key: 'column1', label: 'column1' },
+      { key: 'column2', label: 'column2' },
+      { key: 'label', label: 'label' },
+    ];
+
+    // When
+    render(<TableComponent id="any-table-id-mock" sources={sourcesMock} />);
+
+    // Then
+    expect(TableHeaderComponent).toHaveBeenCalledExactlyOnceWith(
+      {
+        columns: expectedColumns,
+        selectable: undefined,
+        showActionsColumn: false,
+        tableId: 'any-table-id-mock',
+      },
+      undefined,
+    );
+    expect(TableRowComponent).toHaveBeenNthCalledWith(
+      1,
+      {
+        actions: undefined,
+        className: undefined,
+        columns: expectedColumns,
+        data: sourcesMock[0],
+        index: 0,
+        selectable: undefined,
+        tableId: 'any-table-id-mock',
+      },
+      undefined,
+    );
+  });
+
+  it('should propagate selectable to wrapper, header and rows', () => {
+    // Given
+    const selectableMock = {
+      checkIfItemIsSelected: jest.fn(),
+      isAllItemsSelected: false,
+      selection: new Set<string>(),
+      toggleAllItems: jest.fn(),
+      toggleOneItem: jest.fn(),
+    };
+    const sourcesMock = [
+      { column1: 'Data 1', column2: 'Data 2', id: 'id-1', label: 'column-mock-1' },
+    ];
 
     // When
     render(
       <TableComponent
+        columns={columnsMock}
         id="any-table-id-mock"
-        sources={[
-          { column1: 'Data 1', column2: 'Data 2', label: 'column-mock-1' },
-          { column1: 'Data 3', column2: 'Data 4', label: 'column-mock-2' },
-        ]}
+        selectable={selectableMock}
+        sources={sourcesMock}
       />,
     );
 
     // Then
-    expect(useMemoMock).toHaveReturnedWith([
-      { key: 'column1', label: 'column1' },
-      { key: 'column2', label: 'column2' },
-      { key: 'label', label: 'label' },
-    ]);
+    expect(TableWrapperComponent).toHaveBeenCalledExactlyOnceWith(
+      {
+        bordered: false,
+        children: expect.any(Object),
+        id: 'any-table-id-mock',
+        multiline: false,
+        noScroll: false,
+        selectable: selectableMock,
+        size: Sizes.MEDIUM,
+        toolbar: undefined,
+      },
+      undefined,
+    );
+    expect(TableHeaderComponent).toHaveBeenCalledExactlyOnceWith(
+      {
+        columns: columnsMock,
+        selectable: selectableMock,
+        showActionsColumn: false,
+        tableId: 'any-table-id-mock',
+      },
+      undefined,
+    );
+    expect(TableRowComponent).toHaveBeenCalledExactlyOnceWith(
+      {
+        actions: undefined,
+        className: undefined,
+        columns: columnsMock,
+        data: sourcesMock[0],
+        index: 0,
+        selectable: selectableMock,
+        tableId: 'any-table-id-mock',
+      },
+      undefined,
+    );
+  });
+
+  it('should propagate toolbar to wrapper', () => {
+    // Given
+    const selectableMock = {
+      checkIfItemIsSelected: jest.fn(),
+      isAllItemsSelected: false,
+      selection: new Set<string>(),
+      toggleAllItems: jest.fn(),
+      toggleOneItem: jest.fn(),
+    };
+    const sourcesMock = [
+      { column1: 'Data 1', column2: 'Data 2', id: 'id-1', label: 'column-mock-1' },
+    ];
+    const toolbarMock = { selectAll: true };
+
+    // When
+    render(
+      <TableComponent
+        columns={columnsMock}
+        id="any-table-id-mock"
+        selectable={selectableMock}
+        sources={sourcesMock}
+        toolbar={toolbarMock}
+      />,
+    );
+
+    // Then
+    expect(TableWrapperComponent).toHaveBeenCalledExactlyOnceWith(
+      {
+        bordered: false,
+        children: expect.any(Object),
+        id: 'any-table-id-mock',
+        multiline: false,
+        noScroll: false,
+        selectable: selectableMock,
+        size: Sizes.MEDIUM,
+        toolbar: toolbarMock,
+      },
+      undefined,
+    );
   });
 });

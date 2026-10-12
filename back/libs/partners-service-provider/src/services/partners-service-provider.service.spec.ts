@@ -196,7 +196,7 @@ describe('PartnersServiceProviderService', () => {
       expect(repositoryMock.find).toHaveBeenCalledExactlyOnceWith({
         where: { id: In(serviceProviderIds) },
         order: { createdAt: 'DESC' },
-        relations: ['organization'],
+        relations: { organization: true },
       });
       expect(result).toEqual([serviceProviderMock]);
     });
@@ -210,13 +210,14 @@ describe('PartnersServiceProviderService', () => {
       // Then
       expect(repositoryMock.findOne).toHaveBeenCalledExactlyOnceWith({
         where: { id: serviceProviderIdMock },
-        relations: [
-          'instances',
-          'instances.currentVersion',
-          'instances.creator',
-          'organization',
-          'platform',
-        ],
+        relations: {
+          instances: {
+            currentVersion: true,
+            creator: true,
+          },
+          organization: true,
+          platform: true,
+        },
         order: { instances: { createdAt: 'DESC' } },
       });
     });
@@ -299,12 +300,13 @@ describe('PartnersServiceProviderService', () => {
         PartnersServiceProvider,
         {
           where: { id: serviceProviderIdMock },
-          relations: [
-            'platform',
-            'instances',
-            'instances.currentVersion',
-            'instances.creator',
-          ],
+          relations: {
+            platform: true,
+            instances: {
+              currentVersion: true,
+              creator: true,
+            },
+          },
           order: {
             instances: { createdAt: 'DESC' },
           },

@@ -121,6 +121,9 @@ describe('FraudIdentityTheftService', () => {
       spSub: 'spSubMock',
       idpSub: 'idpSubMock',
       ipAddress: ['ipAddressMock'],
+      port: '45826',
+      region: 'Île-de-France',
+      organization: 'OVH SAS',
     };
 
     const sanitizedTrackMock: SanitizedTrackDto = {

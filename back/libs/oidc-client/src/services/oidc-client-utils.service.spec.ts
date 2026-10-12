@@ -713,8 +713,6 @@ describe('OidcClientUtilsService', () => {
       expect(isURLMock).toHaveBeenCalledTimes(1);
       expect(isURLMock).toHaveBeenCalledWith(endSessionUrlWithParamsMock, {
         protocols: ['https'],
-        // Validator.js defined property
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         require_protocol: true,
       });
       expect(result).toBeTrue();

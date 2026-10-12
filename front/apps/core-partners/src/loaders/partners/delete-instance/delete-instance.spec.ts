@@ -1,7 +1,7 @@
 import { generatePath } from 'react-router';
 
 import { ConfigService } from '@fc/config';
-import { del } from '@fc/http-client';
+import { deleteWithAuthHandling } from '@fc/http-client';
 
 import { deleteInstance } from './delete-instance';
 
@@ -34,18 +34,18 @@ describe('deleteInstance', () => {
     });
   });
 
-  it('should call del with the generated url', async () => {
+  it('should call deleteWithAuthHandling with the generated url', async () => {
     // When
     await deleteInstance('1234');
 
     // Then
-    expect(del).toHaveBeenCalledExactlyOnceWith('any-endpoints-uri-mock/1234');
+    expect(deleteWithAuthHandling).toHaveBeenCalledExactlyOnceWith('any-endpoints-uri-mock/1234');
   });
 
   it('should rethrow API errors', async () => {
     // Given
     const errorMock = { status: 500 };
-    jest.mocked(del).mockRejectedValueOnce(errorMock);
+    jest.mocked(deleteWithAuthHandling).mockRejectedValueOnce(errorMock);
 
     // When / Then
     await expect(deleteInstance('1234')).rejects.toBe(errorMock);

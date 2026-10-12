@@ -13,12 +13,12 @@ export default defineConfig({
     specPattern:
       'cypress/integration/{accessibilité,api,usager,exploitation}/*.feature',
   },
-  env: {
-    ...baseConfig.env,
+  expose: {
+    ...baseConfig.expose,
     APP_LABEL: 'FranceConnect',
     // Base Configuration
-    TAGS: '@fcpLow and not @ignoreLow',
     TEST_ENV: 'docker',
     TEST_PLATFORM: 'fcp-low',
+    tags: '@fcpLow and not @ignoreLow',
   },
 });

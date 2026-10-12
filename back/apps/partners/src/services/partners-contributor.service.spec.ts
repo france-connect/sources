@@ -42,6 +42,7 @@ describe('PartnersContributorService', () => {
   };
   const accountPermissionServiceMock = {
     addPermissionTransactional: jest.fn(),
+    removePermissionTransactional: jest.fn(),
     hasPermission: jest.fn(),
   };
   const typeormServiceMock = getTypeormServiceMock();
@@ -379,6 +380,56 @@ describe('PartnersContributorService', () => {
           expect.any(String),
         );
       });
+    });
+  });
+
+  describe('removeMany', () => {
+    const accountIdsMock = ['account-id-1-mock', 'account-id-2-mock'];
+
+    it('should run the deletion inside a transaction', async () => {
+      // When
+      await service.removeMany(accountIdsMock, serviceProviderId);
+
+      // Then
+      expect(
+        typeormServiceMock.withTransaction,
+      ).toHaveBeenCalledExactlyOnceWith(expect.any(Function));
+    });
+
+    it('should remove the scoped SP_CONTRIBUTOR permission for each account', async () => {
+      // When
+      await service.removeMany(accountIdsMock, serviceProviderId);
+
+      // Then
+      expect(
+        accountPermissionServiceMock.removePermissionTransactional,
+      ).toHaveBeenCalledTimes(2);
+      expect(
+        accountPermissionServiceMock.removePermissionTransactional,
+      ).toHaveBeenNthCalledWith(1, queryRunnerMock, {
+        accountId: accountIdsMock[0],
+        permissionType: AccessControlPermission.SP_CONTRIBUTOR,
+        entity: AccessControlEntity.SERVICE_PROVIDER,
+        entityId: serviceProviderId,
+      });
+      expect(
+        accountPermissionServiceMock.removePermissionTransactional,
+      ).toHaveBeenNthCalledWith(2, queryRunnerMock, {
+        accountId: accountIdsMock[1],
+        permissionType: AccessControlPermission.SP_CONTRIBUTOR,
+        entity: AccessControlEntity.SERVICE_PROVIDER,
+        entityId: serviceProviderId,
+      });
+    });
+
+    it('should not remove any permission when the account list is empty', async () => {
+      // When
+      await service.removeMany([], serviceProviderId);
+
+      // Then
+      expect(
+        accountPermissionServiceMock.removePermissionTransactional,
+      ).not.toHaveBeenCalled();
     });
   });
 });

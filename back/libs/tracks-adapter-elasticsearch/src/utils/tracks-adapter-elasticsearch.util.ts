@@ -62,9 +62,21 @@ export function getLocationFromTracks(track: ElasticTracksType) {
     country_iso_code: country,
     region_name: region,
   } = track.source.geo || {};
-  return { country, city: city || region };
+  return { country, city, region };
 }
 
 export function getIpAddressFromTracks(track: ElasticTracksType): string[] {
   return track.source.address;
+}
+
+export function getPortFromTracks(
+  track: ElasticTracksType,
+): string | undefined {
+  return track.source?.port;
+}
+
+export function getOrganizationFromTracks(
+  track: ElasticTracksType,
+): string | undefined {
+  return track.source?.as?.organization?.name;
 }

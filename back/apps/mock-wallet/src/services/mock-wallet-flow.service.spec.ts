@@ -37,20 +37,14 @@ describe('MockWalletFlowService', () => {
 
   const requestPayload = {
     response_uri: 'https://verifier.example/response',
-    presentation_definition: {
-      id: 'def',
-      input_descriptors: [{ id: 'eu.europa.ec.eudi.pid.1', constraints: {} }],
+    dcql_query: {
+      credentials: [{ id: 'pid-fc' }],
     },
   };
   const identity = { docType: 'pid', attributes: { family_name: 'DUPONT' } };
   const responsePayload = {
     state: 'state-mock',
-    vp_token: 'vp-token-mock',
-    presentation_submission: {
-      id: 'id',
-      definition_id: 'def',
-      descriptor_map: [],
-    },
+    vp_token: { 'pid-fc': ['vp-token-mock'] },
   };
 
   beforeEach(async () => {
@@ -151,6 +145,12 @@ describe('MockWalletFlowService', () => {
         deepLinkMock,
       );
       expect(identityMock.getIdentity).toHaveBeenCalledExactlyOnceWith(0);
+      expect(
+        presentationMock.extractRequestedClaims,
+      ).toHaveBeenCalledExactlyOnceWith(requestPayload);
+      expect(
+        presentationMock.buildResponsePayload,
+      ).toHaveBeenCalledExactlyOnceWith(requestPayload, deepLinkMock, identity);
     });
 
     it('should return a consent view model with the displayed claims and serialized payloads', async () => {
@@ -168,11 +168,7 @@ describe('MockWalletFlowService', () => {
         responsePreview: JSON.stringify(responsePayload, null, 2),
         requestPayload: JSON.stringify(requestPayload, null, 2),
         responsePayload: JSON.stringify(responsePayload, null, 2),
-        presentationDefinition: JSON.stringify(
-          requestPayload.presentation_definition,
-          null,
-          2,
-        ),
+        dcqlQuery: JSON.stringify(requestPayload.dcql_query, null, 2),
         submitUrl: MockWalletRoutes.WALLET_SUBMIT,
         submitErrorUrl: MockWalletRoutes.WALLET_SUBMIT_ERROR,
         flow: Flows.CROSS_DEVICE,

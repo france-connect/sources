@@ -4,4 +4,5 @@ export * from './fsa.interface';
 export * from './local-storage.interface';
 export * from './navigation-link.interface';
 export * from './person.interface';
+export * from './selectable.interface';
 export * from './timestamps.interface';

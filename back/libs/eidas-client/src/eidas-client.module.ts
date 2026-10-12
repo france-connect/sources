@@ -12,7 +12,11 @@ import { EidasClientController } from './eidas-client.controller';
 import { EidasClientService } from './eidas-client.service';
 
 @Module({
-  imports: [ApacheIgniteModule, CryptographyModule, EidasLightProtocolModule],
+  imports: [
+    ApacheIgniteModule.forConfig('ApacheIgniteConnector'),
+    CryptographyModule,
+    EidasLightProtocolModule,
+  ],
   providers: [EidasClientService],
   exports: [EidasClientService],
   controllers: [EidasClientController],

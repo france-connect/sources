@@ -63,6 +63,7 @@ describe('EidasProviderService', () => {
     id: 'waikiki-violet-35-bfi',
     relayState: 'relayState',
     levelOfAssurance: 'levelOfAssurance',
+    nameIdFormat: EidasNameIdFormats.PERSISTENT,
   } as unknown as EidasRequest;
 
   beforeEach(async () => {
@@ -310,6 +311,7 @@ describe('EidasProviderService', () => {
       attributes: {
         [EidasAttributes.BIRTH_NAME]: ['Nanaki'],
       },
+      subjectNameIdFormat: EidasNameIdFormats.PERSISTENT,
     };
 
     beforeEach(() => {

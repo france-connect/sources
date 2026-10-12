@@ -36,11 +36,7 @@ exports[`ModalShellComponent should match the snapshot 1`] = `
             </div>
             <div
               data-mockid="ModalFooterComponent"
-            >
-              <span>
-                any-footer-mock
-              </span>
-            </div>
+            />
           </div>
         </div>
       </div>

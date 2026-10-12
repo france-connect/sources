@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2021 by European Commission
+  ~ Licensed under the EUPL, Version 1.2
+  ~ https://joinup.ec.europa.eu/page/eupl-text-11-12
+  -->
+
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+	<entry key="connector.assertion.url">https://eidas-fr.docker.dev-franceconnect.fr/EidasNodeConnector/ColleagueResponse</entry>
+	<entry key="active.module.connector">true</entry>
+
+	<entry key="connector.node.url">https://eidas-fr.docker.dev-franceconnect.fr/EidasNodeConnector/</entry>
+	<entry key="connector.contact.email">test@test.fr</entry>
+	<entry key="connector.metadata.url">https://eidas-fr.docker.dev-franceconnect.fr/EidasNodeConnector/ConnectorMetadata</entry>
+
+	<entry key="service.number">2</entry>
+
+	<entry key="service1.id">FR</entry>
+	<entry key="service1.name">EIDAS-FR</entry>
+	<entry key="service1.skew.notbefore">0</entry>
+	<entry key="service1.skew.notonorafter">0</entry>
+	<entry key="service1.metadata.url">https://eidas-fr.docker.dev-franceconnect.fr/EidasNodeProxy/ServiceMetadata</entry>
+
+	<entry key="service2.id">CB</entry>
+	<entry key="service2.name">EIDAS-CB</entry>
+	<entry key="service2.skew.notbefore">0</entry>
+	<entry key="service2.skew.notonorafter">0</entry>
+	<entry key="service2.metadata.url">https://eidas-mock.docker.dev-franceconnect.fr/EidasNodeProxy/ServiceMetadata</entry>
+
+	<entry key="security.header.CSP.report.uri">https://eidas-fr.docker.dev-franceconnect.fr/EidasNodeConnector</entry>
+	<entry key="security.header.CSP.fallbackCheckMode">false</entry>
+
+	<entry key="metadata.sector">public</entry>
+	<entry key="hashDigest.className">org.bouncycastle.crypto.digests.SHA512Digest</entry>
+
+	<entry key="tls.enabled.protocols">TLSv1.2, TLSv1.3</entry>
+
+	<entry key="tls.enabled.ciphers">
+		TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256,
+		TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
+		TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384,
+		TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,
+		TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256,
+		TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,
+		TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+		TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384,
+		TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
+		TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256,
+		TLS_DHE_RSA_WITH_AES_128_CBC_SHA256,
+		TLS_DHE_RSA_WITH_AES_128_GCM_SHA256,
+		TLS_DHE_RSA_WITH_AES_256_CBC_SHA256,
+		TLS_DHE_RSA_WITH_AES_256_GCM_SHA384,
+		TLS_AES_128_GCM_SHA256,
+		TLS_AES_256_GCM_SHA384,
+		TLS_CHACHA20_POLY1305_SHA256,
+		TLS_EMPTY_RENEGOTIATION_INFO_SCSV
+	</entry>
+
+	<entry key="node.metadata.not.signed.descriptors"></entry>
+
+	<entry key="connector.contact.support.email">test@test.fr</entry>
+	<entry key="connector.contact.support.company">FranceConnect</entry>
+	<entry key="connector.contact.support.givenname">Customer Support</entry>
+	<entry key="connector.contact.technical.email">test@test.fr</entry>
+	<entry key="connector.contact.technical.company">FranceConnect</entry>
+	<entry key="connector.contact.technical.givenname">Technical Support</entry>
+
+	<entry key="connector.organization.name">FranceConnect</entry>
+	<entry key="connector.organization.displayname">French eIDAS Connector</entry>
+	<entry key="connector.organization.url">https://franceconnect.gouv.fr</entry>
+
+	<entry key="specific.connector.response.receiver">https://eidas-bridge.docker.dev-franceconnect.fr/eidas-client/response-handler</entry>
+
+	<entry key="metadata.node.country">FR</entry>
+
+	<entry key="connector.nameid.formats">
+		urn:oasis:names:tc:SAML:2.0:nameid-format:persistent;
+		urn:oasis:names:tc:SAML:2.0:nameid-format:transient;
+		urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified;
+	</entry>
+
+	<entry key="eidas.application.identifier">eIDAS-ref:3.1.0</entry>
+
+</properties>

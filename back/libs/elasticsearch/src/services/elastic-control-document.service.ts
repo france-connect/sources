@@ -35,8 +35,7 @@ export class ElasticControlDocumentService {
 
   async getOrCreateControlDoc(
     options:
-      | ElasticControlTransformOptionsDto
-      | ElasticControlReindexOptionsDto,
+      ElasticControlTransformOptionsDto | ElasticControlReindexOptionsDto,
     operation: ElasticOperationsEnum,
     dryRun: boolean,
   ): Promise<ControlDocumentInterface> {
@@ -63,8 +62,7 @@ export class ElasticControlDocumentService {
     id: string,
     operation: ElasticOperationsEnum,
     options:
-      | ElasticControlTransformOptionsDto
-      | ElasticControlReindexOptionsDto,
+      ElasticControlTransformOptionsDto | ElasticControlReindexOptionsDto,
     dryRun: boolean,
   ): Promise<ControlDocumentInterface> {
     const now = new Date().toISOString();
@@ -219,8 +217,7 @@ export class ElasticControlDocumentService {
   buildControlDocId(
     operation: ElasticOperationsEnum,
     options:
-      | ElasticControlTransformOptionsDto
-      | ElasticControlReindexOptionsDto,
+      ElasticControlTransformOptionsDto | ElasticControlReindexOptionsDto,
   ): string {
     // A transform is unique per (product, range, pivot) triplet — only one
     // lives at a time and gets overwritten on each run. Excluding `period`

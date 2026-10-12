@@ -88,6 +88,24 @@ describe('EidasToOidcService', () => {
       // Then
       expect(result).toStrictEqual(expectedPartialRequest);
     });
+
+    it('should return acr eidas2 when the requested level of assurance is low', () => {
+      // Given
+      const eidasLowLevelRequestMock = {
+        ...eidasRequestMock,
+        levelOfAssurance: EidasLevelOfAssurances.LOW,
+      };
+      service['mapRequestedAttributesToScopes'] =
+        mapRequestedAttributesToScopesMock.mockReturnValueOnce(
+          expectedPartialRequest.scope,
+        );
+
+      // When
+      const result = service.mapPartialRequest(eidasLowLevelRequestMock);
+
+      // Then
+      expect(result.acr_values).toBe(AcrValues.EIDAS2);
+    });
   });
 
   describe('mapPartialResponseSuccess', () => {
@@ -137,6 +155,22 @@ describe('EidasToOidcService', () => {
         acr: acrMock,
         userinfos: claimsMock,
       });
+    });
+
+    it('should return acr eidas1 when the obtained level of assurance is low', () => {
+      // Given
+      const eidasLowLevelResponseMock = {
+        ...EidasResponseMock,
+        levelOfAssurance: EidasLevelOfAssurances.LOW,
+      } as unknown as EidasResponse;
+
+      // When
+      const result = service.mapPartialResponseSuccess(
+        eidasLowLevelResponseMock,
+      );
+
+      // Then
+      expect(result.acr).toBe(AcrValues.EIDAS1);
     });
   });
 

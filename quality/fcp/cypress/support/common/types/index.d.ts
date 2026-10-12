@@ -57,6 +57,7 @@ declare module 'mocha' {
     operatorUser?: OperatorUser;
     repScopes: ScopeContext[];
     repScope?: ScopeContext;
+    requestedNameIdFormat: 'label' | 'unspecified' | 'transient' | 'persistent';
     requestedScope: ScopeContext;
     scopes: ScopeContext[];
     serviceProvider: ServiceProvider;

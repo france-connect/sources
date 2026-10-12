@@ -8,10 +8,8 @@ import { FeatureHandler } from '@fc/feature-handler';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerService } from '@fc/logger';
 import { OidcAcrService } from '@fc/oidc-acr';
-import { OidcClientSession } from '@fc/oidc-client';
 import { RnippService } from '@fc/rnipp';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
-import { ISessionService } from '@fc/session';
 import { TrackedEventInterface, TrackingService } from '@fc/tracking';
 
 import { CoreFcpInvalidRepScopeException } from '../../exceptions';
@@ -86,7 +84,6 @@ export class CoreFcpAidantsConnectVerifyHandler
        * @action Retrieve the rep_scope directly from the tracking configuration exception.
        */
       await this.setTrackEvent(
-        sessionOidc,
         trackingContext,
         idpRepresentativeScope,
         FC_INVALID_REP_SCOPE,
@@ -96,15 +93,23 @@ export class CoreFcpAidantsConnectVerifyHandler
     }
 
     await this.setTrackEvent(
-      sessionOidc,
       trackingContext,
       idpRepresentativeScope,
       FC_VALID_REP_SCOPE,
     );
+
+    const trackingContextWithRepScope = {
+      ...trackingContext,
+      rep_scope: idpRepresentativeScope,
+    };
+
+    await super.handle({
+      sessionOidc,
+      trackingContext: trackingContextWithRepScope,
+    });
   }
 
   private async setTrackEvent(
-    sessionOidc: ISessionService<OidcClientSession>,
     trackingContext: Record<string, unknown>,
     idpRepresentativeScope: string[],
     trackEvent: TrackedEventInterface,
@@ -115,11 +120,6 @@ export class CoreFcpAidantsConnectVerifyHandler
     };
 
     await this.tracking.track(trackEvent, trackingContextWithRepScope);
-
-    await super.handle({
-      sessionOidc,
-      trackingContext: trackingContextWithRepScope,
-    });
   }
 
   private hasAtLeastOneMatchingRepresentativeScope(

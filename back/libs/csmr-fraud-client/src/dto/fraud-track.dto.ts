@@ -54,8 +54,20 @@ export class FraudTrackDto {
   @IsOptional()
   city?: string;
 
+  @IsString()
+  @IsOptional()
+  region?: string;
+
   @IsArray()
   ipAddress: string[];
+
+  @IsString()
+  @IsOptional()
+  port?: string;
+
+  @IsString()
+  @IsOptional()
+  organization?: string;
 }
 
 export class SanitizedTrackDto {

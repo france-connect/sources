@@ -18,19 +18,64 @@ FCP validation with system tests implemented using a Test Framework (based on Cy
 
 ## Environment Variables
 
-| Environment Variable | Description                       | Comment                                      |
-| -------------------- | --------------------------------- | -------------------------------------------- |
-| TEST_PLATFORM        | Platform under test               | `fcp-high` or `fcp-low`                      |
-| TEST_ENV             | Test environment                  | `docker` or `integ01`, etc.                  |
-| TAGS                 | Tags expression                   | `@fcpLow and not @ignoreLow`                 |
-| EXPLOIT_ADMIN_NAME   | Exploitation admin username       | needed only for integ01/preprod              |
-| EXPLOIT_ADMIN_PASS   | Exploitation admin password       | needed only for integ01/preprod              |
-| EXPLOIT_ADMIN_TOTP   | Exploitation admin totp secret    | needed only for integ01/preprod              |
-| EXPLOIT_USER_NAME    | Exploitation operator username    | needed only for integ01/preprod              |
-| EXPLOIT_USER_PASS    | Exploitation operator password    | needed only for integ01/preprod              |
-| EXPLOIT_USER_TOTP    | Exploitation operator totp secret | needed only for integ01/preprod              |
-| FC_ACCESS_USER       | FranceConnect network username    | needed on recette/integ01 outside FC network |
-| FC_ACCESS_PASS       | FranceConnect network password    | needed on recette/integ01 outside FC network |
+### Overview
+
+Environment variables are passed from your CI/CD system (like GitLab CI) or local environment into Cypress tests. Cypress 15.17+ uses two distinct approaches: `expose` for non-sensitive public config, and `env` for sensitive secrets/keys.
+
+### Accessing Variables in Tests
+
+**`Cypress.expose()` (synchronous) - for non-sensitive configuration:**
+
+- Use this for public, non-secret values like platform names or test environments
+- Access in tests via `Cypress.expose('KEY_NAME')`
+- Recommended for most test configuration
+
+**`cy.env()` (asynchronous) - for sensitive secrets/keys:**
+
+- Use this for sensitive data like API keys, passwords, tokens
+- Access in tests via `cy.env('KEY_NAME')`
+- Easy to override from CI/CD with `CYPRESS_` prefixed environment variables
+- Better security practice for confidential information
+
+> **Note:** This project has `allowCypressEnv: false` in its Cypress configuration, which disables the deprecated `Cypress.env()` method. Only `Cypress.expose()` and `cy.env()` are available.
+
+Learn more in the [Cypress Documentation](https://docs.cypress.io/app/references/migration-guide#Choose-the-right-migration-path).
+
+### Override of expose variables
+
+The Cypress plugin file supports runtime configuration overrides for these three variables: `TEST_ENV`, `TEST_PLATFORM`, and `tags`. Here's how it works:
+
+**Process:**
+
+1. CI/CD system sets environment variables prefixed with `CYPRESS_` (e.g., `CYPRESS_TEST_ENV=docker`)
+2. The plugin code detects these specific variables at startup
+3. The plugin copies the values into `config.expose`, removing the `CYPRESS_` prefix
+4. Tests can then access the exposed values via `Cypress.expose('TEST_ENV')`
+5. No code changes needed — configuration is injected at runtime from the CI/CD environment
+
+**Example flow:**
+
+- Environment: `CYPRESS_TEST_ENV=docker`
+- Plugin copies to: `config.expose.TEST_ENV = 'docker'`
+- Test accesses via: `Cypress.expose('TEST_ENV')` → returns `'docker'`
+
+This pattern allows GitLab CI and other CI/CD systems to dynamically override test configuration without modifying code or Cypress configuration files.
+
+### Available Variables
+
+| Environment Variable       | Description                       | Comment                                      |
+|----------------------------|-----------------------------------|----------------------------------------------|
+| CYPRESS_TEST_PLATFORM      | Platform under test               | `fcp-high` or `fcp-low`                      |
+| CYPRESS_TEST_ENV           | Test environment                  | `docker` or `integ01`, etc.                  |
+| CYPRESS_tags               | Tags expression                   | `@fcpLow and not @ignoreLow`                 |
+| CYPRESS_EXPLOIT_ADMIN_NAME | Exploitation admin username       | needed only for integ01/preprod              |
+| CYPRESS_EXPLOIT_ADMIN_PASS | Exploitation admin password       | needed only for integ01/preprod              |
+| CYPRESS_EXPLOIT_ADMIN_TOTP | Exploitation admin totp secret    | needed only for integ01/preprod              |
+| CYPRESS_EXPLOIT_USER_NAME  | Exploitation operator username    | needed only for integ01/preprod              |
+| CYPRESS_EXPLOIT_USER_PASS  | Exploitation operator password    | needed only for integ01/preprod              |
+| CYPRESS_EXPLOIT_USER_TOTP  | Exploitation operator totp secret | needed only for integ01/preprod              |
+| CYPRESS_FC_ACCESS_USER     | FranceConnect network username    | needed on recette/integ01 outside FC network |
+| CYPRESS_FC_ACCESS_PASS     | FranceConnect network password    | needed on recette/integ01 outside FC network |
 
 ## Cross Domain Testing
 
@@ -237,10 +282,10 @@ Those tests are run alongside the other functional tests on the CI job.
 
 ### Run all the accessibility validations skipping the failures
 
-It is possible to run all the accessibility validations without stopping on the first error, by defining the environment variable `skipFailures` when starting Cypress.
+It is possible to run all the accessibility validations without stopping on the first error, by defining the feature flag `skipFailures` when starting Cypress.
 
 ```shell
-docker-stack bdd-high-test --env skipFailures=true
+docker-stack bdd-high-test --expose skipFailures=true
 
 ```
 
@@ -310,27 +355,27 @@ This enables processes launched by Cypress — even under a different UID or ins
 
 ```shell
 docker-stack reset-mongo-as-prod mongo-fcp-high
-CYPRESS_TAGS='@fcpHigh and @validationVisuelleProduction and not @ignore' docker-stack bdd-high-test-visual
+CYPRESS_tags='@fcpHigh and @validationVisuelleProduction and not @ignore' docker-stack bdd-high-test-visual
 ```
 
 - FCP-LOW
 
 ```shell
 docker-stack reset-mongo-as-prod mongo-fcp-low
-CYPRESS_TAGS='@fcpLow and @validationVisuelleProduction and not @ignore' docker-stack bdd-low-test-visual
+CYPRESS_tags='@fcpLow and @validationVisuelleProduction and not @ignore' docker-stack bdd-low-test-visual
 ```
 
 - USER-DASHBOARD
 
 ```shell
 docker-stack reset-mongo-as-prod mongo-fcp-low
-CYPRESS_TAGS='@userDashboard and @validationVisuelleProduction and not @ignore' docker-stack bdd-ud-test-visual
+CYPRESS_tags='@userDashboard and @validationVisuelleProduction and not @ignore' docker-stack bdd-ud-test-visual
 ```
 
 - WALLET-BRIDGE
 
 ```shell
-CYPRESS_TAGS='@walletBridge and @validationVisuelleProduction and not @ignore' docker-stack bdd-wallet-test-visual
+CYPRESS_tags='@walletBridge and @validationVisuelleProduction and not @ignore' docker-stack bdd-wallet-test-visual
 ```
 
 ### Update the base image files for all of your tests
@@ -341,34 +386,34 @@ CYPRESS_TAGS='@walletBridge and @validationVisuelleProduction and not @ignore' d
 
 ```shell
 # docker-stack reset-db-core-fcp-high
-docker-stack bdd-high-test-visual --env updateSnapshots=true
+docker-stack bdd-high-test-visual --expose updateSnapshots=true
 ```
 
 - FCP-LOW
 
 ```shell
 # docker-stack reset-db-core-fcp-low
-docker-stack bdd-low-test-visual --env updateSnapshots=true
+docker-stack bdd-low-test-visual --expose updateSnapshots=true
 ```
 
 - USER-DASHBOARD
 
 ```shell
 # docker-stack reset-db-core-fcp-low
-docker-stack bdd-ud-test-visual --env updateSnapshots=true
+docker-stack bdd-ud-test-visual --expose updateSnapshots=true
 ```
 
 - eIDAS
 
 ```shell
 # docker-stack reset-db-core-fcp-high
-docker-stack bdd-eidas-test-visual --env updateSnapshots=true
+docker-stack bdd-eidas-test-visual --expose updateSnapshots=true
 ```
 
 - WALLET-BRIDGE
 
 ```shell
-docker-stack bdd-wallet-test-visual --env updateSnapshots=true
+docker-stack bdd-wallet-test-visual --expose updateSnapshots=true
 ```
 
 #### As in a production environment
@@ -379,27 +424,27 @@ docker-stack bdd-wallet-test-visual --env updateSnapshots=true
 
 ```shell
 docker-stack reset-mongo-as-prod mongo-fcp-high
-CYPRESS_TAGS='@fcpHigh and @validationVisuelleProduction and not @ignore' docker-stack bdd-high-test-visual --env updateSnapshots=true
+CYPRESS_tags='@fcpHigh and @validationVisuelleProduction and not @ignore' docker-stack bdd-high-test-visual --expose updateSnapshots=true
 ```
 
 - FCP-LOW
 
 ```shell
 docker-stack reset-mongo-as-prod mongo-fcp-low
-CYPRESS_TAGS='@fcpLow and @validationVisuelleProduction and not @ignore' docker-stack bdd-low-test-visual --env updateSnapshots=true
+CYPRESS_tags='@fcpLow and @validationVisuelleProduction and not @ignore' docker-stack bdd-low-test-visual --expose updateSnapshots=true
 ```
 
 - USER-DASHBOARD
 
 ```shell
 docker-stack reset-mongo-as-prod mongo-fcp-low
-CYPRESS_TAGS='@userDashboard and @validationVisuelleProduction and not @ignore' docker-stack bdd-ud-test-visual --env updateSnapshots=true
+CYPRESS_tags='@userDashboard and @validationVisuelleProduction and not @ignore' docker-stack bdd-ud-test-visual --expose updateSnapshots=true
 ```
 
 - WALLET-BRIDGE
 
 ```shell
-CYPRESS_TAGS='@walletBridge and @validationVisuelleProduction and not @ignore' docker-stack bdd-wallet-test-visual --env updateSnapshots=true
+CYPRESS_tags='@walletBridge and @validationVisuelleProduction and not @ignore' docker-stack bdd-wallet-test-visual --expose updateSnapshots=true
 ```
 
 ### Prevent test failures when an image diff does not pass
@@ -407,25 +452,25 @@ CYPRESS_TAGS='@walletBridge and @validationVisuelleProduction and not @ignore' d
 - FCP-HIGH
 
 ```shell
-docker-stack bdd-high-test-visual --env failOnSnapshotDiff=false
+docker-stack bdd-high-test-visual --expose failOnSnapshotDiff=false
 ```
 
 - FCP-LOW
 
 ```shell
-docker-stack bdd-low-test-visual --env failOnSnapshotDiff=false
+docker-stack bdd-low-test-visual --expose failOnSnapshotDiff=false
 ```
 
 - USER-DASHBOARD
 
 ```shell
-docker-stack bdd-ud-test-visual --env failOnSnapshotDiff=false
+docker-stack bdd-ud-test-visual --expose failOnSnapshotDiff=false
 ```
 
 - eIDAS
 
 ```shell
-docker-stack bdd-eidas-test-visual --env failOnSnapshotDiff=false
+docker-stack bdd-eidas-test-visual --expose failOnSnapshotDiff=false
 ```
 
 ## Gitlab test pipeline

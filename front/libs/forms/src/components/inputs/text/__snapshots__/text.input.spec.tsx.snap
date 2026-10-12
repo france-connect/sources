@@ -47,6 +47,9 @@ exports[`TextInput should match snapshot, without messages and when readonly is 
     <div
       data-mockid="InputComponent"
     />
+    <div
+      data-mockid="MessagesElement"
+    />
   </div>
 </div>
 `;
@@ -61,6 +64,9 @@ exports[`TextInput should match snapshot, without messages and when readonly is 
     />
     <div
       data-mockid="InputWithClipboard"
+    />
+    <div
+      data-mockid="MessagesElement"
     />
   </div>
 </div>

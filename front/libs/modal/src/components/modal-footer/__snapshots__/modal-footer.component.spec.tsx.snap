@@ -5,11 +5,16 @@ exports[`ModalFooterComponent should match the snapshot 1`] = `
   <div
     class="fr-modal__footer"
   >
-    <button
-      type="button"
+    <div
+      data-mockid="ButtonGroupComponent"
     >
-      any-action-mock
-    </button>
+      <div>
+        SimpleButton
+      </div>
+      <div>
+        SimpleButton
+      </div>
+    </div>
   </div>
 </div>
 `;

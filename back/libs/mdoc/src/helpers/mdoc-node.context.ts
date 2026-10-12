@@ -1,4 +1,4 @@
-import { CoseKey, Sign1 } from '@owf/mdoc';
+import { CoseKey, SignatureAlgorithm } from '@owf/mdoc';
 import { exportJWK, JWK } from 'jose';
 import {
   createHmac,
@@ -31,26 +31,24 @@ export function nodeMdocRandom(length: number): Uint8Array {
   return bytes;
 }
 
-export function nodeMdocCalculateEphemeralMacKey(): Promise<CoseKey> {
-  return Promise.reject(
-    new MdocNotImplementedException('calculateEphemeralMacKey'),
-  );
-}
-
-export function nodeMdocMac0Sign(input: {
-  key: CoseKey;
+export function nodeMdocMac0Authenticate(input: {
   toBeAuthenticated: Uint8Array;
+  key: CoseKey | Uint8Array;
 }): Promise<Uint8Array> {
+  const keyBytes =
+    input.key instanceof Uint8Array ? input.key : input.key.privateKey;
+
   return Promise.resolve(
-    createHmac('sha256', Buffer.from(input.key.privateKey))
+    createHmac('sha256', Buffer.from(keyBytes))
       .update(input.toBeAuthenticated)
       .digest(),
   );
 }
 
 export function nodeMdocMac0Verify(_input?: {
-  mac0: unknown;
-  key: CoseKey;
+  toBeAuthenticated: Uint8Array;
+  tag: Uint8Array;
+  key: CoseKey | Uint8Array;
 }): Promise<boolean> {
   return Promise.reject(new MdocNotImplementedException('mac0.verify'));
 }
@@ -75,10 +73,22 @@ export function nodeMdocSign1Sign(input: {
 }
 
 export function nodeMdocSign1Verify(_input?: {
+  toBeVerified: Uint8Array;
+  signature: Uint8Array;
   key: CoseKey;
-  sign1: Sign1;
+  algorithm?: SignatureAlgorithm;
 }): Promise<boolean> {
   return Promise.reject(new MdocNotImplementedException('sign1.verify'));
+}
+
+export function nodeMdocHdkf(_input: {
+  digestAlgorithm?: string;
+  privateKey: Uint8Array;
+  publicKey: Uint8Array;
+  salt: Uint8Array;
+  info: Uint8Array;
+}): Promise<Uint8Array> {
+  return Promise.reject(new MdocNotImplementedException('crypto.hdkf'));
 }
 
 export function nodeMdocGetIssuerNameField(input: {
@@ -141,11 +151,11 @@ export function createNodeMdocContext() {
     crypto: {
       digest: nodeMdocDigest,
       random: nodeMdocRandom,
-      calculateEphemeralMacKey: nodeMdocCalculateEphemeralMacKey,
+      hdkf: nodeMdocHdkf,
     },
     cose: {
       mac0: {
-        sign: nodeMdocMac0Sign,
+        authenticate: nodeMdocMac0Authenticate,
         verify: nodeMdocMac0Verify,
       },
       sign1: {

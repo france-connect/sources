@@ -28,8 +28,12 @@ import {
   MetadataFormService,
 } from '@fc/dto2form';
 import { PartnersAccountSession } from '@fc/partners-account';
-import { PartnersServiceProviderService } from '@fc/partners-service-provider';
+import {
+  PartnersPlatformEnum,
+  PartnersServiceProviderService,
+} from '@fc/partners-service-provider';
 import { ServiceProviderInstanceVersionFromSpDto } from '@fc/partners-service-provider-instance-version';
+import { ScopesService } from '@fc/scopes';
 import { ISessionService, Session } from '@fc/session';
 
 import {
@@ -54,6 +58,7 @@ export class ServiceProviderController {
   constructor(
     private readonly serviceProviderService: PartnersServiceProviderService,
     private readonly formService: PartnersServiceProviderFormService,
+    private readonly scopes: ScopesService,
     private readonly accountPermissionService: AccountPermissionService<
       AccessControlEntity,
       AccessControlPermission
@@ -85,11 +90,9 @@ export class ServiceProviderController {
     const serviceProviders =
       await this.serviceProviderService.getAllowedServiceProviders(permissions);
 
-    const transformedServiceProviders = serviceProviders.map((sp) => {
-      const { fcScopes: _fcScopes, ...rest } =
-        this.formService.toDisplayValue(sp);
-      return rest;
-    });
+    const transformedServiceProviders = serviceProviders.map((sp) =>
+      this.formService.toDisplayValue(sp),
+    );
 
     return {
       type: 'SERVICE_PROVIDER',
@@ -131,8 +134,16 @@ export class ServiceProviderController {
     const serviceProvider =
       await this.serviceProviderService.getById(serviceProviderId);
 
-    const transformedServiceProvider =
-      this.formService.toDisplayValue(serviceProvider);
+    const { datapassScopes, platform } = serviceProvider;
+
+    const displayValue = this.formService.toDisplayValue(serviceProvider);
+
+    const fcScopes = this.scopes.getScopesFromDatapassScopes(
+      platform.name as PartnersPlatformEnum,
+      datapassScopes || [],
+    );
+
+    const transformedServiceProvider = { ...displayValue, fcScopes };
 
     const permissions =
       await this.accountPermissionService.getAccountsByPermissions<

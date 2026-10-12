@@ -2,6 +2,8 @@ export const LoginFormComponent = jest.fn(() => <div data-mockid="LoginFormCompo
 
 export const FraudFormComponent = jest.fn(() => <div data-mockid="FraudFormComponent" />);
 
+export const SummaryTableComponent = jest.fn(() => <div data-mockid="SummaryTableComponent" />);
+
 export const TextInputComponent = jest.fn(() => <div>TextInputComponent</div>);
 export const TextAreaInputComponent = jest.fn(() => <div>TextAreaInputComponent</div>);
 

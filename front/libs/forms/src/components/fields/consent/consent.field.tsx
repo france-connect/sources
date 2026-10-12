@@ -10,18 +10,17 @@ import { FieldsetElement, MessagesElement } from '../../elements';
 import { ChoiceInput } from '../../inputs';
 
 interface ConsentFieldProps {
-  config: FieldConfigInterface;
+  config: FieldConfigInterface<boolean>;
 }
 
 export const ConsentField = React.memo(({ config }: ConsentFieldProps) => {
-  const { label, messages, name, required } = config;
+  const { label, messages, name, required, validate } = config;
 
   const { meta } = useField(name);
 
   const { errorsList, hasError, isValid } = useFieldMeta(meta);
 
   const fieldMessages = useFieldMessages({ errorsList, isValid, messages });
-  const hasMessages = fieldMessages && fieldMessages.length > 0;
 
   let choiceLabel = label;
   if (required) {
@@ -37,10 +36,9 @@ export const ConsentField = React.memo(({ config }: ConsentFieldProps) => {
         config={config}
         name={name}
         type={FieldTypes.CHECKBOX}
+        validate={validate}
       />
-      {hasMessages && (
-        <MessagesElement dataTestId={`${name}-messages`} id={name} messages={fieldMessages} />
-      )}
+      <MessagesElement id={name} messages={fieldMessages} />
     </FieldsetElement>
   );
 });

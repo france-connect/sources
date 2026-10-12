@@ -10,8 +10,6 @@ export class AppConfig extends AppGenericConfig {
   @ValidateIf((config: AppConfig) => config.showDevTools === true)
   @IsNotEmpty()
   @IsUrl({
-    // Class-validator rule name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     require_protocol: true,
     protocols: ['https', 'http'],
   })

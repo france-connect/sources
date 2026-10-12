@@ -5,6 +5,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { parameterizedPath } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
+import { DcqlService } from '@fc/dcql';
 import { SessionService } from '@fc/session';
 
 import { getConfigMock } from '@mocks/config';
@@ -19,6 +20,7 @@ import {
 import {
   Openid4vpClientIdPrefixEnum,
   Openid4vpClientIdSchemeEnum,
+  Openid4vpFlow,
   Openid4vpInteractionStatus,
 } from '../enums';
 import { Openid4vpCryptoService } from './openid4vp-crypto.service';
@@ -46,6 +48,9 @@ describe('Openid4vpRequestService', () => {
     getJwtSigner: jest.fn(),
     getPublicJwks: jest.fn(),
     getX509ClientId: jest.fn(),
+  };
+  const dcqlServiceMock = {
+    buildMdocQuery: jest.fn(),
   };
 
   const uuidMock = uuid as unknown as jest.Mock;
@@ -75,10 +80,10 @@ describe('Openid4vpRequestService', () => {
   const field1Path = '$.path1';
   const field2Path = '$.path2';
   const requestConfigMock = {
-    presentationId: 'presentationIdMock',
+    credentialQueryId: 'credentialQueryIdMock',
     inputDescriptorId: 'inputDescriptorIdMock',
-    inputFieldPaths: [field1Path, field2Path],
-    inputFieldPurpose: 'purposeMock',
+    inputFieldRequiredPaths: [field1Path, field2Path],
+    inputFieldOptionalPaths: [],
     inputFieldIntentToRetain: true,
     responseType: 'vp_token',
     responseMode: 'direct_post.jwt',
@@ -91,8 +96,11 @@ describe('Openid4vpRequestService', () => {
 
   const interactionMock: Openid4vpInteractionDto = {
     id: 'interactionIdMock',
-    presentationId: 'presentationIdMock',
-    state: 'stateMock',
+    credentialQueryId: 'credentialQueryIdMock',
+    state: {
+      sameDevice: 'sameDeviceStateMock',
+      crossDevice: 'crossDeviceStateMock',
+    },
     nonce: 'nonceMock',
     iat: 1700000000,
     exp: 1700000600,
@@ -110,6 +118,7 @@ describe('Openid4vpRequestService', () => {
         Openid4vpCryptoService,
         CryptographyService,
         SessionService,
+        DcqlService,
       ],
     })
       .overrideProvider(ConfigService)
@@ -120,6 +129,8 @@ describe('Openid4vpRequestService', () => {
       .useValue(cryptoServiceMock)
       .overrideProvider(SessionService)
       .useValue(sessionMock)
+      .overrideProvider(DcqlService)
+      .useValue(dcqlServiceMock)
       .compile();
 
     service = module.get<Openid4vpRequestService>(Openid4vpRequestService);
@@ -139,36 +150,81 @@ describe('Openid4vpRequestService', () => {
 
     it('should resolve the openid4vp configuration', () => {
       // When
-      service.getAuthorizeRequestUri(interactionMock);
+      service.getAuthorizeRequestUri(
+        interactionMock,
+        Openid4vpFlow.SAME_DEVICE,
+      );
 
       // Then
       expect(configMock.get).toHaveBeenCalledWith('Openid4vp');
     });
 
-    it('should retrieve the request configuration from the interaction presentationId', () => {
+    it('should retrieve the request configuration from the interaction credentialQueryId', () => {
       // When
-      service.getAuthorizeRequestUri(interactionMock);
+      service.getAuthorizeRequestUri(
+        interactionMock,
+        Openid4vpFlow.SAME_DEVICE,
+      );
 
       // Then
       expect(service.getRequestById).toHaveBeenCalledExactlyOnceWith(
-        interactionMock.presentationId,
+        interactionMock.credentialQueryId,
       );
     });
 
-    it('should build the request URI by interpolating the interaction id', () => {
+    it('should build the request URI by interpolating the interaction id and the state value', () => {
       // When
-      service.getAuthorizeRequestUri(interactionMock);
+      service.getAuthorizeRequestUri(
+        interactionMock,
+        Openid4vpFlow.SAME_DEVICE,
+      );
 
       // Then
       expect(parameterizedPathMock).toHaveBeenNthCalledWith(
         1,
         relayingPartyMock.requestUri,
-        { interactionId: interactionMock.id },
+        {
+          interactionId: interactionMock.id,
+          state: interactionMock.state.sameDevice,
+        },
       );
       expect(parameterizedPathMock).toHaveBeenNthCalledWith(
         2,
         relayingPartyMock.clientId,
         { interactionId: interactionMock.id },
+      );
+    });
+
+    it('should use the crossDevice state value when flow is CROSS_DEVICE', () => {
+      // When
+      service.getAuthorizeRequestUri(
+        interactionMock,
+        Openid4vpFlow.CROSS_DEVICE,
+      );
+
+      // Then
+      expect(parameterizedPathMock).toHaveBeenNthCalledWith(
+        1,
+        relayingPartyMock.requestUri,
+        {
+          interactionId: interactionMock.id,
+          state: interactionMock.state.crossDevice,
+        },
+      );
+    });
+
+    it('should throw when no request configuration matches the credentialQueryId', () => {
+      // Given
+      service.getRequestById = jest.fn().mockReturnValue(undefined);
+
+      // Then
+      expect(() =>
+        service.getAuthorizeRequestUri(
+          interactionMock,
+          Openid4vpFlow.SAME_DEVICE,
+        ),
+      ).toThrow(
+        `No OpenID4VP request configuration matches credentialQueryId "${interactionMock.credentialQueryId}"`,
       );
     });
 
@@ -178,7 +234,10 @@ describe('Openid4vpRequestService', () => {
       parameterizedPathMock.mockReturnValueOnce(interpolatedUri);
 
       // When
-      const result = service.getAuthorizeRequestUri(interactionMock);
+      const result = service.getAuthorizeRequestUri(
+        interactionMock,
+        Openid4vpFlow.SAME_DEVICE,
+      );
 
       // Then
       expect(result).toBe(
@@ -188,9 +247,11 @@ describe('Openid4vpRequestService', () => {
   });
 
   describe('getRequestById', () => {
-    it('should return the request that matches the presentationId', () => {
+    it('should return the request that matches the credentialQueryId', () => {
       // When
-      const result = service.getRequestById(requestConfigMock.presentationId);
+      const result = service.getRequestById(
+        requestConfigMock.credentialQueryId,
+      );
 
       // Then
       expect(result).toBe(requestConfigMock);
@@ -198,7 +259,7 @@ describe('Openid4vpRequestService', () => {
 
     it('should return undefined when no request matches', () => {
       // When
-      const result = service.getRequestById('unknownPresentationIdMock');
+      const result = service.getRequestById('unknownCredentialQueryIdMock');
 
       // Then
       expect(result).toBeUndefined();
@@ -207,7 +268,8 @@ describe('Openid4vpRequestService', () => {
 
   describe('generateInteractionParams', () => {
     const sessionIdMock = 'sessionIdValue';
-    const stateMock = 'stateValue';
+    const sameDeviceStateMock = 'sameDeviceStateValue';
+    const crossDeviceStateMock = 'crossDeviceStateValue';
     const nonceMock = 'nonceValue';
     const uuidValue = 'uuidValue';
     const nowMock = 10000000;
@@ -217,7 +279,8 @@ describe('Openid4vpRequestService', () => {
       uuidMock.mockReturnValue(uuidValue);
       sessionMock.getId.mockReturnValue(sessionIdMock);
       cryptoServiceMock.genRandomString
-        .mockReturnValueOnce(stateMock)
+        .mockReturnValueOnce(sameDeviceStateMock)
+        .mockReturnValueOnce(crossDeviceStateMock)
         .mockReturnValueOnce(nonceMock);
       jest.spyOn(Date, 'now').mockReturnValue(nowMock);
     });
@@ -226,18 +289,18 @@ describe('Openid4vpRequestService', () => {
       // When
       service.generateInteractionParams(
         interactionIdMock,
-        'presentationIdMock',
+        'credentialQueryIdMock',
       );
 
       // Then
       expect(sessionMock.getId).toHaveBeenCalledExactlyOnceWith();
     });
 
-    it('should generate the state with the configured length', () => {
+    it('should generate the sameDevice state with the configured length', () => {
       // When
       service.generateInteractionParams(
         interactionIdMock,
-        'presentationIdMock',
+        'credentialQueryIdMock',
       );
 
       // Then
@@ -247,32 +310,60 @@ describe('Openid4vpRequestService', () => {
       );
     });
 
-    it('should generate the nonce with the configured length', () => {
+    it('should generate the crossDevice state with the configured length', () => {
       // When
       service.generateInteractionParams(
         interactionIdMock,
-        'presentationIdMock',
+        'credentialQueryIdMock',
       );
 
       // Then
       expect(cryptoServiceMock.genRandomString).toHaveBeenNthCalledWith(
         2,
+        relayingPartyMock.stateLength,
+      );
+    });
+
+    it('should generate the nonce with the configured length', () => {
+      // When
+      service.generateInteractionParams(
+        interactionIdMock,
+        'credentialQueryIdMock',
+      );
+
+      // Then
+      expect(cryptoServiceMock.genRandomString).toHaveBeenNthCalledWith(
+        3,
         relayingPartyMock.nonceLength,
       );
+    });
+
+    it('should generate two distinct state values', () => {
+      // When
+      const result = service.generateInteractionParams(
+        interactionIdMock,
+        'credentialQueryIdMock',
+      );
+
+      // Then
+      expect(result.state.sameDevice).not.toBe(result.state.crossDevice);
     });
 
     it('should return the interaction params with the generated identifiers', () => {
       // When
       const result = service.generateInteractionParams(
         interactionIdMock,
-        'presentationIdMock',
+        'credentialQueryIdMock',
       );
 
       // Then
       expect(result).toStrictEqual({
         id: interactionIdMock,
-        presentationId: 'presentationIdMock',
-        state: stateMock,
+        credentialQueryId: 'credentialQueryIdMock',
+        state: {
+          sameDevice: sameDeviceStateMock,
+          crossDevice: crossDeviceStateMock,
+        },
         nonce: nonceMock,
         iat: Math.floor(nowMock / 1000),
         exp: Math.floor(nowMock / 1000) + relayingPartyMock.interactionTtl,
@@ -284,9 +375,13 @@ describe('Openid4vpRequestService', () => {
 
   describe('createAuthorizationRequestPayload', () => {
     const publicJwksMock = { keys: [{ kid: 'kidMock' }] };
+    const attributeQueryMock = { dcql_query: { credentials: [] } };
 
     beforeEach(() => {
       openid4vpCryptoMock.getPublicJwks.mockResolvedValue(publicJwksMock);
+      service['buildAttributeQuery'] = jest
+        .fn()
+        .mockReturnValue(attributeQueryMock);
     });
 
     it('should resolve the JWKs from the crypto service', async () => {
@@ -294,6 +389,7 @@ describe('Openid4vpRequestService', () => {
       await service.createAuthorizationRequestPayload(
         interactionMock,
         requestConfigMock,
+        Openid4vpFlow.SAME_DEVICE,
       );
 
       // Then
@@ -302,23 +398,25 @@ describe('Openid4vpRequestService', () => {
       ).toHaveBeenCalledExactlyOnceWith();
     });
 
-    it('should interpolate every relaying-party URL with the interaction id', async () => {
+    it('should interpolate every relaying-party URL with the interaction id and state value', async () => {
       // Given
       const { clientId, responseUri, requestUri } = relayingPartyMock;
-      const params = { interactionId: interactionMock.id };
+      const params = {
+        interactionId: interactionMock.id,
+        state: interactionMock.state.sameDevice,
+      };
 
       // When
       await service.createAuthorizationRequestPayload(
         interactionMock,
         requestConfigMock,
+        Openid4vpFlow.SAME_DEVICE,
       );
 
       // Then
-      expect(parameterizedPathMock).toHaveBeenNthCalledWith(
-        1,
-        clientId,
-        params,
-      );
+      expect(parameterizedPathMock).toHaveBeenNthCalledWith(1, clientId, {
+        interactionId: interactionMock.id,
+      });
       expect(parameterizedPathMock).toHaveBeenNthCalledWith(
         2,
         responseUri,
@@ -331,11 +429,40 @@ describe('Openid4vpRequestService', () => {
       );
     });
 
-    it('should build a payload with the interaction iat, exp, state and nonce', async () => {
+    it('should use the sameDevice state value when flow is SAME_DEVICE', async () => {
       // When
       const result = await service.createAuthorizationRequestPayload(
         interactionMock,
         requestConfigMock,
+        Openid4vpFlow.SAME_DEVICE,
+      );
+
+      // Then
+      expect(result).toEqual(
+        expect.objectContaining({ state: interactionMock.state.sameDevice }),
+      );
+    });
+
+    it('should use the crossDevice state value when flow is CROSS_DEVICE', async () => {
+      // When
+      const result = await service.createAuthorizationRequestPayload(
+        interactionMock,
+        requestConfigMock,
+        Openid4vpFlow.CROSS_DEVICE,
+      );
+
+      // Then
+      expect(result).toEqual(
+        expect.objectContaining({ state: interactionMock.state.crossDevice }),
+      );
+    });
+
+    it('should build a payload with the interaction iat, exp and nonce', async () => {
+      // When
+      const result = await service.createAuthorizationRequestPayload(
+        interactionMock,
+        requestConfigMock,
+        Openid4vpFlow.SAME_DEVICE,
       );
 
       // Then
@@ -343,7 +470,6 @@ describe('Openid4vpRequestService', () => {
         expect.objectContaining({
           iat: interactionMock.iat,
           exp: interactionMock.exp,
-          state: interactionMock.state,
           nonce: interactionMock.nonce,
         }),
       );
@@ -354,6 +480,7 @@ describe('Openid4vpRequestService', () => {
       const result = await service.createAuthorizationRequestPayload(
         interactionMock,
         requestConfigMock,
+        Openid4vpFlow.SAME_DEVICE,
       );
 
       // Then
@@ -370,11 +497,12 @@ describe('Openid4vpRequestService', () => {
       const result = await service.createAuthorizationRequestPayload(
         interactionMock,
         requestConfigMock,
+        Openid4vpFlow.SAME_DEVICE,
       );
 
       // Then
       expect(result.client_metadata).toEqual({
-        vp_formats: relayingPartyMock.clientMetadata.formats,
+        vp_formats_supported: relayingPartyMock.clientMetadata.formats,
         token_endpoint_auth_method:
           relayingPartyMock.clientMetadata.token_endpoint_auth_method,
         authorization_encrypted_response_alg:
@@ -385,42 +513,30 @@ describe('Openid4vpRequestService', () => {
       });
     });
 
-    it('should build a presentation definition with one input descriptor for each input field path', async () => {
+    it('should build the attribute query from the request', async () => {
+      // When
+      await service.createAuthorizationRequestPayload(
+        interactionMock,
+        requestConfigMock,
+        Openid4vpFlow.SAME_DEVICE,
+      );
+
+      // Then
+      expect(service['buildAttributeQuery']).toHaveBeenCalledExactlyOnceWith(
+        requestConfigMock,
+      );
+    });
+
+    it('should include the attribute query in the payload', async () => {
       // When
       const result = await service.createAuthorizationRequestPayload(
         interactionMock,
         requestConfigMock,
+        Openid4vpFlow.SAME_DEVICE,
       );
 
-      const expectedPurpose = requestConfigMock.inputFieldPurpose;
-      const expectedIntentToRetain = requestConfigMock.inputFieldIntentToRetain;
-      const expectedFields = [
-        {
-          path: [field1Path],
-          purpose: expectedPurpose,
-          intent_to_retain: expectedIntentToRetain,
-        },
-        {
-          path: [field2Path],
-          purpose: expectedPurpose,
-          intent_to_retain: expectedIntentToRetain,
-        },
-      ];
-
       // Then
-      expect(result.presentation_definition).toEqual({
-        id: requestConfigMock.presentationId,
-        input_descriptors: [
-          {
-            id: requestConfigMock.inputDescriptorId,
-            format: relayingPartyMock.clientMetadata.formats,
-            constraints: {
-              limit_disclosure: 'required',
-              fields: expectedFields,
-            },
-          },
-        ],
-      });
+      expect(result).toEqual(expect.objectContaining(attributeQueryMock));
     });
   });
 
@@ -444,17 +560,39 @@ describe('Openid4vpRequestService', () => {
       );
     });
 
-    it('should build the authorization request payload from the interaction and the request config', async () => {
+    it('should build the authorization request payload from the interaction, request config and flow', async () => {
       // When
       await service.createAuthorizeRequestObject(
         interactionMock,
         requestConfigMock,
+        Openid4vpFlow.SAME_DEVICE,
       );
 
       // Then
       expect(
         service.createAuthorizationRequestPayload,
-      ).toHaveBeenCalledExactlyOnceWith(interactionMock, requestConfigMock);
+      ).toHaveBeenCalledExactlyOnceWith(
+        interactionMock,
+        requestConfigMock,
+        Openid4vpFlow.SAME_DEVICE,
+      );
+    });
+
+    it('should build the authorization request with the crossDevice state value when flow is CROSS_DEVICE', async () => {
+      // When
+      await service.createAuthorizeRequestObject(
+        interactionMock,
+        requestConfigMock,
+        Openid4vpFlow.CROSS_DEVICE,
+      );
+
+      // Then
+      expect(parameterizedPath).toHaveBeenCalledWith(
+        relayingPartyMock.requestUri,
+        expect.objectContaining({
+          state: interactionMock.state.crossDevice,
+        }),
+      );
     });
 
     it('should resolve the JWT signer from the crypto service', async () => {
@@ -462,17 +600,19 @@ describe('Openid4vpRequestService', () => {
       await service.createAuthorizeRequestObject(
         interactionMock,
         requestConfigMock,
+        Openid4vpFlow.SAME_DEVICE,
       );
 
       // Then
       expect(openid4vpCryptoMock.getJwtSigner).toHaveBeenCalledOnce();
     });
 
-    it('should call createOpenid4vpAuthorizationRequest with the payload, callbacks and JAR options', async () => {
+    it('should call createOpenid4vpAuthorizationRequest with the payload, callbacks and JAR options including state value', async () => {
       // When
       await service.createAuthorizeRequestObject(
         interactionMock,
         requestConfigMock,
+        Openid4vpFlow.SAME_DEVICE,
       );
 
       // Then
@@ -494,6 +634,7 @@ describe('Openid4vpRequestService', () => {
       const result = await service.createAuthorizeRequestObject(
         interactionMock,
         requestConfigMock,
+        Openid4vpFlow.SAME_DEVICE,
       );
 
       // Then
@@ -501,64 +642,76 @@ describe('Openid4vpRequestService', () => {
     });
   });
 
-  describe('generateConstraintField', () => {
-    it('should generate a constraint field with the provided path, purpose and intent to retain', () => {
+  describe('buildAttributeQuery', () => {
+    const dcqlQueryMock = { credentials: [{ id: 'pid-fc' }] };
+
+    beforeEach(() => {
+      service['buildDcqlQuery'] = jest.fn().mockReturnValue(dcqlQueryMock);
+    });
+
+    it('should build a dcql_query from the request', () => {
       // When
-      const result = service['generateConstraintField'](
-        '$.path1',
-        'purposeMock',
-        true,
-      );
+      const result = service['buildAttributeQuery'](requestConfigMock);
 
       // Then
-      expect(result).toEqual({
-        path: ['$.path1'],
-        purpose: 'purposeMock',
-        intent_to_retain: true,
-      });
+      expect(service['buildDcqlQuery']).toHaveBeenCalledExactlyOnceWith(
+        requestConfigMock,
+      );
+      expect(result).toEqual({ dcql_query: dcqlQueryMock });
     });
   });
 
-  describe('generateConstraintFields', () => {
-    const paths = ['a', 'b'];
+  describe('buildDcqlQuery', () => {
+    const dcqlQueryMock = { credentials: [{ id: 'pid-fc' }] };
 
     beforeEach(() => {
-      service['generateConstraintField'] = jest
-        .fn()
-        .mockReturnValueOnce('y')
-        .mockReturnValueOnce('z');
+      dcqlServiceMock.buildMdocQuery.mockReturnValue(dcqlQueryMock);
     });
 
-    it('should generate constraint fields for each path', () => {
+    it('should build the mdoc DCQL query from the request configuration', () => {
       // When
-      service['generateConstraintFields'](paths, 'purposeMock', true);
+      service['buildDcqlQuery'](requestConfigMock);
 
       // Then
-      expect(service['generateConstraintField']).toHaveBeenCalledTimes(2);
-      expect(service['generateConstraintField']).toHaveBeenNthCalledWith(
-        1,
-        'a',
-        'purposeMock',
-        true,
-      );
-      expect(service['generateConstraintField']).toHaveBeenNthCalledWith(
-        2,
-        'b',
-        'purposeMock',
-        true,
-      );
+      expect(dcqlServiceMock.buildMdocQuery).toHaveBeenCalledWith({
+        id: requestConfigMock.credentialQueryId,
+        doctype: requestConfigMock.inputDescriptorId,
+        requiredPaths: requestConfigMock.inputFieldRequiredPaths,
+        optionalPaths: requestConfigMock.inputFieldOptionalPaths,
+        intentToRetain: requestConfigMock.inputFieldIntentToRetain,
+      });
     });
 
-    it('should return an array of mapped constraint fields', () => {
+    it('should return the query built by the DCQL service', () => {
       // When
-      const result = service['generateConstraintFields'](
-        paths,
-        'purposeMock',
-        true,
+      const result = service['buildDcqlQuery'](requestConfigMock);
+
+      // Then
+      expect(result).toBe(dcqlQueryMock);
+    });
+  });
+
+  describe('getFlowState', () => {
+    it('should return the sameDevice state value when flow is SAME_DEVICE', () => {
+      // When
+      const result = service['getFlowState'](
+        Openid4vpFlow.SAME_DEVICE,
+        interactionMock,
       );
 
       // Then
-      expect(result).toEqual(['y', 'z']);
+      expect(result).toBe(interactionMock.state.sameDevice);
+    });
+
+    it('should return the crossDevice state value when flow is CROSS_DEVICE', () => {
+      // When
+      const result = service['getFlowState'](
+        Openid4vpFlow.CROSS_DEVICE,
+        interactionMock,
+      );
+
+      // Then
+      expect(result).toBe(interactionMock.state.crossDevice);
     });
   });
 

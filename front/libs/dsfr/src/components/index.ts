@@ -7,6 +7,7 @@ export * from './button-group';
 export * from './buttons';
 export * from './callout';
 export * from './card';
+export * from './checkbox';
 export * from './inputs';
 export * from './link';
 export * from './link-email';

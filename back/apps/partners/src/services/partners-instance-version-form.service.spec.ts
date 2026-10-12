@@ -5,15 +5,18 @@ import { PartnersServiceProviderInstance } from '@entities/typeorm';
 import { getTransformed } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
-import { PartnersServiceProviderService } from '@fc/partners-service-provider';
+import {
+  PartnersPlatformEnum,
+  PartnersServiceProviderService,
+} from '@fc/partners-service-provider';
 import { PartnersServiceProviderInstanceService } from '@fc/partners-service-provider-instance';
 import { ServiceProviderInstanceVersionStandaloneDto } from '@fc/partners-service-provider-instance-version';
+import { ScopesService } from '@fc/scopes';
 import { ClientTypeEnum, SignatureAlgorithmEnum } from '@fc/service-provider';
 
 import { getConfigMock } from '@mocks/config';
 
 import { PartnersInstanceVersionFormService } from './partners-instance-version-form.service';
-import { PartnersServiceProviderFormService } from './partners-service-provider-form.service';
 
 describe('PartnersInstanceVersionFormService', () => {
   let service: PartnersInstanceVersionFormService;
@@ -83,17 +86,18 @@ describe('PartnersInstanceVersionFormService', () => {
     name: 'Test Service Provider',
     datapassRequestId: '12345',
     datapassScopes: ['openid', 'given_name'],
-    platform: null,
+    platform: {
+      id: 'platform-id',
+      name: PartnersPlatformEnum.FRANCE_CONNECT_LOW,
+    },
     organization: null,
   };
 
-  const serviceProviderFormServiceMock = {
-    toDisplayValue: jest.fn(),
+  const scopesServiceMock = {
+    getScopesFromDatapassScopes: jest.fn(),
   };
 
-  const spDisplayValueMock = {
-    fcScopes: ['openid', 'given_name'],
-  };
+  const spInstanceScopesMock = ['openid', 'given_name'];
 
   beforeEach(async () => {
     jest.clearAllMocks();
@@ -105,7 +109,7 @@ describe('PartnersInstanceVersionFormService', () => {
         PartnersServiceProviderInstanceService,
         CryptographyService,
         PartnersServiceProviderService,
-        PartnersServiceProviderFormService,
+        ScopesService,
       ],
     })
       .overrideProvider(ConfigService)
@@ -116,8 +120,8 @@ describe('PartnersInstanceVersionFormService', () => {
       .useValue(cryptoMock)
       .overrideProvider(PartnersServiceProviderService)
       .useValue(serviceProviderServiceMock)
-      .overrideProvider(PartnersServiceProviderFormService)
-      .useValue(serviceProviderFormServiceMock)
+      .overrideProvider(ScopesService)
+      .useValue(scopesServiceMock)
       .compile();
 
     service = module.get<PartnersInstanceVersionFormService>(
@@ -130,8 +134,8 @@ describe('PartnersInstanceVersionFormService', () => {
       .mockReturnValueOnce(generatedClientSecretMock);
 
     serviceProviderServiceMock.getById.mockResolvedValue(serviceProviderMock);
-    serviceProviderFormServiceMock.toDisplayValue.mockReturnValue(
-      spDisplayValueMock,
+    scopesServiceMock.getScopesFromDatapassScopes.mockReturnValue(
+      spInstanceScopesMock,
     );
   });
 
@@ -175,6 +179,100 @@ describe('PartnersInstanceVersionFormService', () => {
           scope: getScopesForServiceProviderMock,
         }),
       );
+    });
+
+    it('should normalize an empty sector identifier URI', async () => {
+      // When
+      const result = await service.fromFormValues(
+        {
+          ...formVersionMock,
+          sector_identifier_uri: '',
+        },
+        serviceProviderMock.id,
+      );
+
+      // Then
+      expect(result).toEqual(
+        expect.objectContaining({
+          sector_identifier_uri: undefined,
+          name: formVersionMock.name,
+        }),
+      );
+    });
+  });
+
+  describe('normalizeEmptyStringsToUndefined', () => {
+    it('should normalize empty strings only for the given keys', () => {
+      // Given
+      const payload: Record<string, string> = {
+        sector_identifier_uri: '',
+        name: '',
+        client_id: 'client-id',
+      };
+
+      // When
+      const result = service['normalizeEmptyStringsToUndefined'](payload, [
+        'sector_identifier_uri',
+      ]);
+
+      // Then
+      expect(result).toStrictEqual({
+        sector_identifier_uri: undefined,
+        name: '',
+        client_id: 'client-id',
+      });
+    });
+
+    it('should preserve non-empty values for the given keys', () => {
+      // Given
+      const payload: Record<string, string> = {
+        sector_identifier_uri: 'https://example.com/sector',
+        client_id: 'client-id',
+      };
+
+      // When
+      const result = service['normalizeEmptyStringsToUndefined'](payload, [
+        'sector_identifier_uri',
+      ]);
+
+      // Then
+      expect(result).toStrictEqual(payload);
+    });
+
+    it('should not add keys that are missing from the payload', () => {
+      // Given
+      const payload: Record<string, string> = { client_id: 'client-id' };
+
+      // When
+      const result = service['normalizeEmptyStringsToUndefined'](payload, [
+        'sector_identifier_uri',
+      ]);
+
+      // Then
+      expect(result).toStrictEqual(payload);
+      expect(result).not.toHaveProperty('sector_identifier_uri');
+    });
+
+    it('should normalize empty strings for multiple given keys', () => {
+      // Given
+      const payload: Record<string, string> = {
+        sector_identifier_uri: '',
+        jwks_uri: '',
+        name: '',
+      };
+
+      // When
+      const result = service['normalizeEmptyStringsToUndefined'](payload, [
+        'sector_identifier_uri',
+        'jwks_uri',
+      ]);
+
+      // Then
+      expect(result).toStrictEqual({
+        sector_identifier_uri: undefined,
+        jwks_uri: undefined,
+        name: '',
+      });
     });
   });
 
@@ -271,8 +369,8 @@ describe('PartnersInstanceVersionFormService', () => {
   describe('getScopesForServiceProvider', () => {
     it('should return mix of scopes from config and service provider', async () => {
       // Given
-      serviceProviderFormServiceMock.toDisplayValue.mockReturnValue(
-        spDisplayValueMock,
+      scopesServiceMock.getScopesFromDatapassScopes.mockReturnValue(
+        spInstanceScopesMock,
       );
       configServiceMock.get.mockReturnValue(configDataMock);
 
@@ -282,9 +380,44 @@ describe('PartnersInstanceVersionFormService', () => {
 
       // Then
       expect(result).toEqual([
-        ...spDisplayValueMock.fcScopes,
+        ...spInstanceScopesMock,
         ...configDataMock.scope,
       ]);
+    });
+
+    it('should resolve the scopes from the service provider platform and datapass scopes', async () => {
+      // Given
+      configServiceMock.get.mockReturnValue(configDataMock);
+
+      // When
+      await service['getScopesForServiceProvider']('serviceProviderId');
+
+      // Then
+      expect(
+        scopesServiceMock.getScopesFromDatapassScopes,
+      ).toHaveBeenCalledExactlyOnceWith(
+        PartnersPlatformEnum.FRANCE_CONNECT_LOW,
+        ['openid', 'given_name'],
+      );
+    });
+
+    it('should default to an empty datapass scopes list', async () => {
+      // Given
+      serviceProviderServiceMock.getById.mockResolvedValue({
+        ...serviceProviderMock,
+        datapassScopes: null,
+      });
+
+      // When
+      await service['getScopesForServiceProvider']('serviceProviderId');
+
+      // Then
+      expect(
+        scopesServiceMock.getScopesFromDatapassScopes,
+      ).toHaveBeenCalledExactlyOnceWith(
+        PartnersPlatformEnum.FRANCE_CONNECT_LOW,
+        [],
+      );
     });
   });
 

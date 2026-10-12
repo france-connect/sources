@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { ComponentTypes } from '../../../enums';
+import { ComponentTypes, FieldTypes } from '../../../enums';
+import { getFieldControlId } from '../../../helpers';
 import { useFieldMessages, useFieldMeta } from '../../../hooks';
 import type { PropsWithInputConfigType } from '../../../types';
 import { GroupElement, LabelElement, MessagesElement } from '../../elements';
@@ -9,21 +10,21 @@ import { InputWithClipboard } from './with-clipboard';
 
 export const TextInput = React.memo(({ config, input, meta }: PropsWithInputConfigType) => {
   const { hint, label, messages, readonly, required, seeAlso } = config;
-  const { className, name } = input;
+  const { className, name, type } = input;
 
   const { errorsList, hasError, inputClassname, isValid } = useFieldMeta(meta);
 
+  const fieldType = type || FieldTypes.TEXT;
   const fieldMessages = useFieldMessages({ errorsList, isValid, messages });
-  const hasMessages = fieldMessages && fieldMessages.length > 0;
 
-  const id = `form-input-text-${name}`;
+  const id = getFieldControlId(fieldType, name);
   return (
     <GroupElement
       className={className}
       hasError={hasError}
       isValid={isValid}
       type={ComponentTypes.INPUT}>
-      <LabelElement hint={hint} label={label} name={name} required={required} seeAlso={seeAlso} />
+      <LabelElement hint={hint} htmlFor={id} label={label} required={required} seeAlso={seeAlso} />
       {readonly ? (
         <InputWithClipboard
           className="fr-mt-1w"
@@ -34,9 +35,7 @@ export const TextInput = React.memo(({ config, input, meta }: PropsWithInputConf
       ) : (
         <InputComponent className={inputClassname} id={id} input={input} />
       )}
-      {hasMessages && (
-        <MessagesElement dataTestId={`${name}-messages`} id={name} messages={fieldMessages} />
-      )}
+      <MessagesElement id={name} messages={fieldMessages} />
     </GroupElement>
   );
 });

@@ -6,6 +6,8 @@ import { LoggerService } from '@fc/logger';
 import {
   getIpAddressFromTracks,
   getLocationFromTracks,
+  getOrganizationFromTracks,
+  getPortFromTracks,
   TracksFormatterAbstract,
   TracksFormatterMappingFailedException,
   TracksV2FieldsInterface,
@@ -22,6 +24,9 @@ export class TracksV2Formatter implements TracksFormatterAbstract<TracksFormatte
     private readonly platform: Platform,
   ) {}
 
+  // @NOTE disabling eslint complexity caused by `??`
+  // to fix it we need to refactor the code
+  // eslint-disable-next-line complexity
   formatTrack(
     rawTrack: SearchHit<TracksV2FieldsInterface>,
   ): TracksFormatterOutputInterface {
@@ -42,8 +47,10 @@ export class TracksV2Formatter implements TracksFormatterAbstract<TracksFormatte
         spSub,
         idpSub,
       } = _source;
-      const { country, city } = getLocationFromTracks(_source);
+      const { country, city, region } = getLocationFromTracks(_source);
       const ipAddress = getIpAddressFromTracks(_source);
+      const port = getPortFromTracks(_source) ?? '';
+      const organization = getOrganizationFromTracks(_source) ?? '';
       const date = getReadableDateFromTime(time);
 
       const output: TracksFormatterOutputInterface = {
@@ -63,8 +70,11 @@ export class TracksV2Formatter implements TracksFormatterAbstract<TracksFormatte
         interactionId,
         browsingSessionId,
         city,
+        region: region ?? '',
         country,
         ipAddress,
+        port,
+        organization,
       };
 
       return output;

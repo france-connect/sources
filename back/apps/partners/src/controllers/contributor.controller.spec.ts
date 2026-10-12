@@ -19,6 +19,7 @@ describe('ContributorController', () => {
 
   const partnersContributorServiceMock = {
     addOne: jest.fn(),
+    removeMany: jest.fn(),
   };
 
   const metadataFormServiceMock = {
@@ -103,6 +104,41 @@ describe('ContributorController', () => {
       ).toHaveBeenCalledExactlyOnceWith(bodyMock.email, serviceProviderIdMock, {
         firstname: firstnameMock,
         lastname: lastnameMock,
+      });
+    });
+  });
+
+  describe('deleteContributors', () => {
+    const accountIdsMock = [
+      'aaaaaaaa-aaaa-4aaa-aaaa-aaaaaaaaaaaa',
+      'bbbbbbbb-bbbb-4bbb-bbbb-bbbbbbbbbbbb',
+    ];
+
+    it('should call PartnersContributorService.removeMany with the accountIds and the serviceProviderId', async () => {
+      // When
+      await controller.deleteContributors(serviceProviderIdMock, {
+        accountIds: accountIdsMock,
+      });
+
+      // Then
+      expect(
+        partnersContributorServiceMock.removeMany,
+      ).toHaveBeenCalledExactlyOnceWith(accountIdsMock, serviceProviderIdMock);
+    });
+
+    it('should return the CONTRIBUTOR FSA with an empty payload', async () => {
+      // When
+      const result = await controller.deleteContributors(
+        serviceProviderIdMock,
+        {
+          accountIds: accountIdsMock,
+        },
+      );
+
+      // Then
+      expect(result).toEqual({
+        type: 'CONTRIBUTOR',
+        payload: {},
       });
     });
   });

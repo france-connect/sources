@@ -29,25 +29,23 @@ export const frFR: I18nTranslationsMapType = {
     'Cette adresse e-mail appartient déjà à une personne ayant accès à ce fournisseur de service',
 
   // form text
-  'Form.label.nameSection': '1. Nom de l’instance',
-  'Form.label.configurationSection':
-    '2. Configuration de votre instance de test',
+  'Form.label.nameSection': '1. Nom du bac à sable',
+  'Form.label.configurationSection': '2. Configuration de votre bac à sable',
   'Form.label.subSection':
-    '3. Gestion des subs pour votre Fournisseur de Service',
+    '3. Gestion des subs pour votre fournisseur de service',
   'Form.label.platformSection': '1. Choix de l’environnement',
   'Form.label.spInformationSection':
-    '2. Informations sur votre Fournisseur de Service',
-  'Form.label.spConfigurationSection':
-    '3. Configuration de votre instance de test',
+    '2. Informations sur votre fournisseur de service',
+  'Form.label.spConfigurationSection': '3. Configuration de votre bac à sable',
   'Form.label.spSubSection':
-    '4. Gestion des subs pour votre Fournisseur de Service',
+    '4. Gestion des subs pour votre fournisseur de service',
 
   // form create instance label
-  'Form.label.name': 'Nom de l’instance',
+  'Form.label.name': 'Nom du bac à sable',
   'Form.label.client_id': 'Client ID',
   'Form.label.client_secret': 'Client Secret',
   'Form.label.platform': 'Choix de l’environnement',
-  'Form.label.signupId': 'Numéro de la demande datapass',
+  'Form.label.signupId': 'Numéro de la demande d’habilitation',
   'Form.label.site': 'URL du site',
   'Form.label.redirect_uris': 'URL(s) de redirection de connexion',
   'Form.label.post_logout_redirect_uris':
@@ -58,22 +56,21 @@ export const frFR: I18nTranslationsMapType = {
   'Form.label.entityId': 'Client ID à réutiliser pour générer les subs',
 
   // form create instance label description
-  'Form.hint.name': 'Renseignez ici le nom de votre instance de test',
+  'Form.hint.name': 'Renseignez ici le nom de votre bac à sable',
   'Form.hint.client_id': '',
   'Form.hint.client_secret': '',
   'Form.hint.platform': '',
   'Form.hint.signupId':
-    'Renseignez ici le numéro de la demande Datapass qui a été validée',
+    'Renseignez ici le numéro de la demande d’habilitation qui a été validée',
   'Form.hint.site':
     'Renseignez ici l’URL de la page affichant le bouton FranceConnect',
   'Form.hint.redirect_uris':
     'Renseignez ici vos urls de callback. Si vous souhaitez utiliser des urls sur plusieurs domaines et sous domaines, vous devez déclarer une url d’identifiant de secteur.',
-  'Form.hint.post_logout_redirect_uris':
-    'Renseignez ici vos urls de logout\r\nExemple : https://www.paris.fr/logout',
+  'Form.hint.post_logout_redirect_uris': 'Renseignez ici vos urls de logout',
   'Form.hint.sector_identifier_uri':
     'Renseignez ici votre url d’identifiant de secteur si vous souhaitez utiliser des urls de connexion ayant plusieurs domaines et sous domaines.',
   'Form.hint.IPServerAddressesAndRanges':
-    'Renseignez ici les adresses IP utilisées par votre Fournisseur de Service',
+    'Renseignez ici les adresses IP utilisées par votre fournisseur de service',
   'Form.hint.id_token_signed_response_alg':
     'Renseignez ici votre algorithme de signature que vous souhaitez utiliser pour la signature des jetons transmis par FranceConnect.',
   'Form.hint.entityId':
@@ -81,10 +78,10 @@ export const frFR: I18nTranslationsMapType = {
 
   // common error field
   // name
-  'Form.isFilled_error.name': 'Veuillez saisir le nom de votre instance',
+  'Form.isFilled_error.name': 'Veuillez saisir le nom de votre bac à sable',
   'Form.isString_error.name': 'Veuillez saisir un nom valide',
   'Form.isLength_error.max.name':
-    'Le nom de l’instance doit être de {max} caractères maximum',
+    'Le nom du bac à sable doit être de {max} caractères maximum',
   // client_id
   'Form.isString_error.client_id': 'Veuillez saisir votre client id',
   // client_secret
@@ -95,7 +92,7 @@ export const frFR: I18nTranslationsMapType = {
   // signupId
   'Form.isNumeric_error.signupId': 'Veuillez saisir un numéro valide',
   'Form.isLength_error.max.signupId':
-    'Le numéro de la demande datapass doit être de {max} caractères maximum',
+    'Le numéro de la demande d’habilitation doit être de {max} caractères maximum',
   // site
   'Form.isFilled_error.site': 'Veuillez saisir votre url de site',
   'Form.isWebsiteURL_error.site': 'Veuillez saisir une url valide',

@@ -20,7 +20,7 @@ export default class ServiceProviderCreateContributorPage {
   }
 
   getInputErrorMessagesFromName(name: string): ChainableElement {
-    return cy.get(`[data-testid="${name}-messages"].fr-message--error`);
+    return cy.get(`[data-testid="${name}-messages"] .fr-message--error`);
   }
 
   fillValue(name: string, value: string): void {

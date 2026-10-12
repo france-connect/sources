@@ -21,5 +21,4 @@ import { IFormattedIdpSettingsPayload } from './formatted-idp-settings.interface
  * }]
  */
 export type IFormattedIdpSettingsResponse =
-  | IFormattedIdpSettingsPayload
-  | 'ERROR';
+  IFormattedIdpSettingsPayload | 'ERROR';

@@ -1,6 +1,7 @@
 {
   "FC.Common.cancel": "Annuler",
   "FC.Common.close": "Fermer",
+  "FC.Common.confirm": "Confirmer",
   "FC.Common.createdAt.female": "Créée le{NBSP_UNICODE}: {date}",
   "FC.Common.createdAt.male": "Créé le{NBSP_UNICODE}: {date}",
   "FC.Common.delete": "Supprimer",

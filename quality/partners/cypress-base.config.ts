@@ -1,6 +1,7 @@
 // Disable sort-keys to separate base configuration and access env variables
-/* eslint-disable sort-keys-fix/sort-keys-fix, sort-keys */
+/* eslint-disable sort-keys */
 const config: Partial<Cypress.ResolvedConfigOptions<never>> = {
+  allowCypressEnv: false,
   chromeWebSecurity: false,
   video: false,
   e2e: {
@@ -10,19 +11,21 @@ const config: Partial<Cypress.ResolvedConfigOptions<never>> = {
     experimentalRunAllSpecs: true,
     experimentalMemoryManagement: true,
   },
-  env: {
-    APP_LABEL: 'Espace Partenaires',
+  expose: {
     // Base Configuration
     TEST_PLATFORM: 'partners',
     TEST_ENV: 'docker',
-    TAGS: 'not @ignore',
-    CI: process.env.CI,
+    tags: 'not @ignore',
     // Maildev
     MAILDEV_PROTOCOL: 'https',
     MAILDEV_HOST: 'maildev.docker.dev-franceconnect.fr',
+    MAILDEV_SMTP_PORT: '1025',
     MAILDEV_API_PORT: '443',
+    // Other Configuration
+    APP_LABEL: 'Espace Partenaires',
+    CI: process.env.CI,
   },
 };
-/* eslint-enable sort-keys-fix/sort-keys-fix, sort-keys */
+/* eslint-enable sort-keys */
 
 export default config;

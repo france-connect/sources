@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`TableToolbarComponent should match the snapshot with selectAll 1`] = `
+<div>
+  <div
+    class="fr-table__header any-classname-mock"
+  >
+    <div
+      data-mockid="TableSelectAllComponent"
+    />
+  </div>
+</div>
+`;

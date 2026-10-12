@@ -7,6 +7,7 @@ import {
   IsEqualToConfigConstraint,
   IsIncludedInConfigConstraint,
 } from '@fc/common';
+import { DcqlModule } from '@fc/dcql';
 import {
   ExceptionsModule,
   FcWebHtmlExceptionFilter,
@@ -36,6 +37,7 @@ import {
     ViewTemplatesModule,
     JwtModule,
     MdocModule,
+    DcqlModule,
   ],
   controllers: [MockWalletController],
   providers: [

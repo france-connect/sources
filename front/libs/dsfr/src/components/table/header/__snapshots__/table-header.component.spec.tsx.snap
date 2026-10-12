@@ -56,27 +56,3 @@ exports[`TableHeaderComponent should match the snapshot with showActionsColumn t
   </thead>
 </table>
 `;
-
-exports[`TableHeaderComponent should match the snapshot without classnames 1`] = `
-<table>
-  <thead>
-    <tr>
-      <th
-        scope="col"
-      >
-        column-mock-1
-      </th>
-      <th
-        scope="col"
-      >
-        column-mock-2
-      </th>
-      <th
-        scope="col"
-      >
-        column-mock-3
-      </th>
-    </tr>
-  </thead>
-</table>
-`;

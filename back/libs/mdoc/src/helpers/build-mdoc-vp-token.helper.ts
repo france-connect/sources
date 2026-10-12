@@ -13,7 +13,6 @@ import { exportJWK, importPKCS8 } from 'jose';
 import { BuildMdocVpTokenOptions } from '../interfaces';
 import {
   createNodeMdocContext,
-  getCertificateDerBase64,
   getIssuerCertificateRaw,
   toPublicJwk,
 } from './mdoc-node.context';
@@ -76,7 +75,7 @@ export async function buildMdocVpToken(
       signingKey: deviceSigningKey,
       algorithm: SignatureAlgorithm.ES256,
       sessionTranscript,
-      derCertificate: getCertificateDerBase64(deviceCertificatePem),
+      certificate: getIssuerCertificateRaw(deviceCertificatePem),
     },
   );
 

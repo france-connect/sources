@@ -1,4 +1,17 @@
-import { mustBeEmail, mustBeFilled, mustBePhone, mustBeUUIDv4 } from '../../validators';
+import {
+  mustBeEmail,
+  mustBeFilled,
+  mustBePhone,
+  mustBeUUIDv4,
+  validateCheckbox,
+} from '../../validators';
+
+export const inputAcceptTransmitDataConfig = {
+  label:
+    'Vous acceptez de transmettre ces données à FranceConnect pour traiter votre demande d’aide*.',
+  name: 'acceptTransmitData',
+  validate: validateCheckbox,
+};
 
 export const inputEmailConfig = {
   description: 'Format attendu : nom@domaine.fr',

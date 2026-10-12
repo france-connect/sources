@@ -1,4 +1,4 @@
-import { Then, When } from '@badeball/cypress-cucumber-preprocessor';
+import { Step, Then, When } from '@badeball/cypress-cucumber-preprocessor';
 
 import { getScopeByType, navigateTo } from '../../common/helpers';
 import SpEidasMockPage from '../pages/sp-eidas-mock-page';
@@ -12,24 +12,53 @@ When('je navigue sur la page fournisseur de service eidas', function () {
 });
 
 When('je configure un fournisseur de service sur eidas mock', function () {
-  const { name: testEnvName } = this.env;
   const { scopes } = this.requestedScope;
-  const { name: spName } = this.serviceProvider;
   const params = {
-    citizenCountry: testEnvName === 'integ01' ? 'FR-INTEG' : 'FR',
+    citizenCountry: 'FR',
+    nameId: this.requestedNameIdFormat,
     scopes,
-    spCountry: spName === 'eidas-be' ? 'BE' : 'CB',
+    spCountry: 'CB',
   };
   spEidasMockPage.configureEidasSpMock(params);
 });
 
 Then(
-  'je suis redirigé vers la page fournisseur de service eidas mock',
+  'je suis redirigé vers la page de callback fournisseur de service eidas mock',
   function () {
     spEidasMockPage.isReturnPageDisplayed();
-    spEidasMockPage.retrieveClaims();
   },
 );
+
+Then(
+  "la réponse du fournisseur d'identité eidas mock contient un nameId au format {string}",
+  function (nameIdFormat: string) {
+    spEidasMockPage.checkSubjectNameIdFormat(nameIdFormat);
+  },
+);
+
+Then(
+  "la réponse du fournisseur d'identité eidas mock contient le level of assurance {string}",
+  function (levelOfAssurance: string) {
+    spEidasMockPage
+      .getReturnPageRawResponse()
+      .should(
+        'contain',
+        `"authentication_context_class" : "${levelOfAssurance}",`,
+      );
+  },
+);
+
+When('je continue vers la page fournisseur de service eidas mock', function () {
+  spEidasMockPage.retrieveClaims();
+});
+
+When("j'avance jusqu'à la page fournisseur de service eidas mock", function () {
+  Step(
+    this,
+    'je suis redirigé vers la page de callback fournisseur de service eidas mock',
+  );
+  Step(this, 'je continue vers la page fournisseur de service eidas mock');
+});
 
 Then(
   'le fournisseur de service eidas mock a accès aux informations des scopes {string}',

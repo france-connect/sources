@@ -11,8 +11,11 @@ const CSV_FORMATS = {
     'platform',
     'interactionAcr',
     'city',
+    'region',
     'country',
     'ipAddress',
+    'port',
+    'organization',
   ],
   FS: [
     'date',
@@ -21,8 +24,11 @@ const CSV_FORMATS = {
     'platform',
     'interactionAcr',
     'city',
+    'region',
     'country',
     'ipAddress',
+    'port',
+    'organization',
   ],
 };
 

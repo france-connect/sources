@@ -1,2 +1,2 @@
+export * from './delete-contributor';
 export * from './delete-instance';
-export * from './delete-instance-footer';

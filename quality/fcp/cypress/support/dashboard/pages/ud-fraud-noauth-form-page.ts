@@ -37,7 +37,7 @@ export default class UdFraudNoauthFormPage extends UdFraudFormPage {
   }
 
   getErrorMessageFromName(name: string): ChainableElement {
-    return cy.get(`[data-testid="${name}-messages"]`);
+    return cy.get(`[data-testid="${name}-messages"] .fr-message--error`);
   }
 
   getEnterNewCodeButton(): ChainableElement {

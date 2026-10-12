@@ -58,17 +58,27 @@ Fonctionnalité: Formulaire Usurpation
     Et "interactionAcr" est "eidas1" pour la trace numéro 1 dans le mail "demande de support"
     Et "date" est présent pour la trace numéro 1 dans le mail "demande de support"
     Et "country" est présent pour la trace numéro 1 dans le mail "demande de support"
+    Et "region" est présent pour la trace numéro 1 dans le mail "demande de support"
     Et "city" est présent pour la trace numéro 1 dans le mail "demande de support"
+    Et "ipAddress" est présent pour la trace numéro 1 dans le mail "demande de support"
+    Et "port" est présent pour la trace numéro 1 dans le mail "demande de support"
+    Et "organization" est présent pour la trace numéro 1 dans le mail "demande de support"
     Et le fichier "Service Provider Example_connexions.csv" est joint dans le mail "demande de support"
     Et je télécharge le fichier csv "Service Provider Example_connexions.csv" en pièce jointe
     Et le nombre de ligne est 1 dans le fichier csv "Service Provider Example_connexions.csv"
     Et le fichier csv "Service Provider Example_connexions.csv" contient les traces pour un partenaire de type FS
     Et "spSub" est "bfac09b3bd2d4d729c051b9f63186532ed5410c098c2c9eb10db51c6fe6a9ae9v1" pour la ligne 1 du fichier csv "Service Provider Example_connexions.csv"
+    Et "ipAddress" est "185.24.186.224" pour la ligne 1 du fichier csv "Service Provider Example_connexions.csv"
+    Et "port" est "45826" pour la ligne 1 du fichier csv "Service Provider Example_connexions.csv"
+    Et "organization" est "OVH SAS" pour la ligne 1 du fichier csv "Service Provider Example_connexions.csv"
     Et le fichier "fip1-no-discovery_connexions.csv" est joint dans le mail "demande de support"
     Et je télécharge le fichier csv "fip1-no-discovery_connexions.csv" en pièce jointe
     Et le nombre de ligne est 1 dans le fichier csv "fip1-no-discovery_connexions.csv"
     Et le fichier csv "fip1-no-discovery_connexions.csv" contient les traces pour un partenaire de type FI
     Et "idpSub" est "82" pour la ligne 1 du fichier csv "fip1-no-discovery_connexions.csv"
+    Et "ipAddress" est "185.24.186.224" pour la ligne 1 du fichier csv "fip1-no-discovery_connexions.csv"
+    Et "port" est "45826" pour la ligne 1 du fichier csv "fip1-no-discovery_connexions.csv"
+    Et "organization" est "OVH SAS" pour la ligne 1 du fichier csv "fip1-no-discovery_connexions.csv"
     Et le fichier "support_connexions.csv" n'est pas joint dans le mail "demande de support"
 
   @ignoreInteg01
@@ -103,17 +113,27 @@ Fonctionnalité: Formulaire Usurpation
     Et "interactionAcr" est "eidas3" pour la trace numéro 1 dans le mail "demande de support"
     Et "date" est présent pour la trace numéro 1 dans le mail "demande de support"
     Et "country" est présent pour la trace numéro 1 dans le mail "demande de support"
+    Et "region" est présent pour la trace numéro 1 dans le mail "demande de support"
     Et "city" est présent pour la trace numéro 1 dans le mail "demande de support"
+    Et "ipAddress" est présent pour la trace numéro 1 dans le mail "demande de support"
+    Et "port" est présent pour la trace numéro 1 dans le mail "demande de support"
+    Et "organization" est présent pour la trace numéro 1 dans le mail "demande de support"
     Et le fichier "FSP - FSP1-HIGH_connexions.csv" est joint dans le mail "demande de support"
     Et je télécharge le fichier csv "FSP - FSP1-HIGH_connexions.csv" en pièce jointe
     Et le nombre de ligne est 1 dans le fichier csv "FSP - FSP1-HIGH_connexions.csv"
     Et le fichier csv "FSP - FSP1-HIGH_connexions.csv" contient les traces pour un partenaire de type FS
     Et "spSub" est "bfac09b3bd2d4d729c051b9f63186532ed5410c098c2c9eb10db51c6fe6a9ae9v1" pour la ligne 1 du fichier csv "FSP - FSP1-HIGH_connexions.csv"
+    Et "ipAddress" est "185.24.186.224" pour la ligne 1 du fichier csv "FSP - FSP1-HIGH_connexions.csv"
+    Et "port" est "45826" pour la ligne 1 du fichier csv "FSP - FSP1-HIGH_connexions.csv"
+    Et "organization" est "OVH SAS" pour la ligne 1 du fichier csv "FSP - FSP1-HIGH_connexions.csv"
     Et le fichier "fip1-high_connexions.csv" est joint dans le mail "demande de support"
     Et je télécharge le fichier csv "fip1-high_connexions.csv" en pièce jointe
     Et le nombre de ligne est 1 dans le fichier csv "fip1-high_connexions.csv"
     Et le fichier csv "fip1-high_connexions.csv" contient les traces pour un partenaire de type FI
     Et "idpSub" est "229850d7940580fe24818d574b88bfd98353fe5bd8949232410a86a5964cca74" pour la ligne 1 du fichier csv "fip1-high_connexions.csv"
+    Et "ipAddress" est "185.24.186.224" pour la ligne 1 du fichier csv "fip1-high_connexions.csv"
+    Et "port" est "45826" pour la ligne 1 du fichier csv "fip1-high_connexions.csv"
+    Et "organization" est "OVH SAS" pour la ligne 1 du fichier csv "fip1-high_connexions.csv"
     Et le fichier "support_connexions.csv" n'est pas joint dans le mail "demande de support"
 
   @ignoreInteg01
@@ -148,17 +168,27 @@ Fonctionnalité: Formulaire Usurpation
     Et "interactionAcr" est "eidas1" pour la trace numéro 1 dans le mail "demande de support"
     Et "date" est présent pour la trace numéro 1 dans le mail "demande de support"
     Et "country" est présent pour la trace numéro 1 dans le mail "demande de support"
+    Et "region" est présent pour la trace numéro 1 dans le mail "demande de support"
     Et "city" est présent pour la trace numéro 1 dans le mail "demande de support"
+    Et "ipAddress" est présent pour la trace numéro 1 dans le mail "demande de support"
+    Et "port" est présent pour la trace numéro 1 dans le mail "demande de support"
+    Et "organization" est présent pour la trace numéro 1 dans le mail "demande de support"
     Et le fichier "FSP - FSP1-LOW_connexions.csv" est joint dans le mail "demande de support"
     Et je télécharge le fichier csv "FSP - FSP1-LOW_connexions.csv" en pièce jointe
     Et le nombre de ligne est 1 dans le fichier csv "FSP - FSP1-LOW_connexions.csv"
     Et le fichier csv "FSP - FSP1-LOW_connexions.csv" contient les traces pour un partenaire de type FS
     Et "spSub" est "bfac09b3bd2d4d729c051b9f63186532ed5410c098c2c9eb10db51c6fe6a9ae9v1" pour la ligne 1 du fichier csv "FSP - FSP1-LOW_connexions.csv"
+    Et "ipAddress" est "185.24.186.224" pour la ligne 1 du fichier csv "FSP - FSP1-LOW_connexions.csv"
+    Et "port" est "45826" pour la ligne 1 du fichier csv "FSP - FSP1-LOW_connexions.csv"
+    Et "organization" est "OVH SAS" pour la ligne 1 du fichier csv "FSP - FSP1-LOW_connexions.csv"
     Et le fichier "fip1-low_connexions.csv" est joint dans le mail "demande de support"
     Et je télécharge le fichier csv "fip1-low_connexions.csv" en pièce jointe
     Et le nombre de ligne est 1 dans le fichier csv "fip1-low_connexions.csv"
     Et le fichier csv "fip1-low_connexions.csv" contient les traces pour un partenaire de type FI
     Et "idpSub" est "229850d7940580fe24818d574b88bfd98353fe5bd8949232410a86a5964cca74" pour la ligne 1 du fichier csv "fip1-low_connexions.csv"
+    Et "ipAddress" est "185.24.186.224" pour la ligne 1 du fichier csv "fip1-low_connexions.csv"
+    Et "port" est "45826" pour la ligne 1 du fichier csv "fip1-low_connexions.csv"
+    Et "organization" est "OVH SAS" pour la ligne 1 du fichier csv "fip1-low_connexions.csv"
     Et le fichier "support_connexions.csv" n'est pas joint dans le mail "demande de support"
 
   @ignoreInteg01

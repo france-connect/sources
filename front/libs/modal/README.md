@@ -40,20 +40,12 @@ import { ConfigService } from '@fc/config';
 import { ModalOptions } from '@fc/modal';
 import type { ModalRegistryInterface } from '@fc/modal';
 
-// Each entry declares the component to render and the i18n key of its title.
-// The title is owned by the registry so the shell always renders an accessible
-// `fr-modal__title` bound to the dialog `aria-labelledby`.
+// The registry only maps an identifier to a component: the DSFR shell and its
+// title belong to the modal, which renders whatever its use case requires.
 const modalRegistry: ModalRegistryInterface = {
-  'delete-instance-modal': {
-    component: DeleteInstanceModal,
-    footer: DeleteInstanceModalFooter,
-    title: 'Partners.deleteInstanceModal.title',
-  },
-  'user-details-modal': {
-    component: UserDetailsModal,
-    title: 'Partners.userDetailsModal.title',
-    titleHeading: HeadingTag.H2,
-  },
+  'delete-instance-modal': DeleteInstanceModal,
+  'delete-contributor-modal': DeleteContributorModal,
+  'user-details-modal': UserDetailsModal,
 };
 
 export const ModalConfig: ModalConfigInterface = {
@@ -97,68 +89,59 @@ function DeleteButton({ userId }: { userId: string }) {
 
 ### 3. Implement a modal component in the registry
 
-Each registry entry receives its custom props plus an `onClose` callback injected by the provider.
-
-The title is declared by the registry entry, the component only renders the body.
-
-```tsx
-interface ConfirmDeleteModalProps {
-  userId: string;
-}
-
-function ConfirmDeleteModal({ userId }: ConfirmDeleteModalProps) {
-  return <p>Are you sure you want to delete user {userId}?</p>;
-}
-```
-
-### 4. Implement the modal footer
-
-Action buttons belong to the optional `footer` entry, it receives the same props as the content
-and is rendered by the shell into the DSFR `fr-modal__footer`.
-
-The footer must remain a sibling of `fr-modal__content`: its negative top margin cancels the
-content bottom margin, nesting it into the content makes it overlap the last paragraphs.
+Each registry component receives its custom props plus the `id` and `onClose` values injected by
+the provider. It mounts its own `ModalShellComponent` and owns everything the DSFR exposes: the
+title and its heading level, the content, and whether the modal asks for a confirmation.
 
 ```tsx
-interface ConfirmDeleteModalFooterProps {
-  onClose: () => void;
+import { type ModalContentProps, ModalShellComponent } from '@fc/modal';
+
+interface ConfirmDeleteModalProps extends ModalContentProps {
   userId: string;
+  onConfirm: () => void | Promise<void>;
 }
 
-function ConfirmDeleteModalFooter({ onClose, userId }: ConfirmDeleteModalFooterProps) {
+function ConfirmDeleteModal({ id, userId, onClose, onConfirm }: ConfirmDeleteModalProps) {
   return (
-    <>
-      <button type="button" onClick={onClose}>
-        Cancel
-      </button>
-      <button type="button" onClick={() => handleDelete(userId).then(onClose)}>
-        Confirm
-      </button>
-    </>
+    <ModalShellComponent
+      id={id}
+      title={t('Partners.confirmDeleteModal.title')}
+      onClose={onClose}
+      onConfirm={onConfirm}>
+      <p>Are you sure you want to delete user {userId}?</p>
+    </ModalShellComponent>
   );
 }
 ```
 
+The `id` comes from the registry key, which keeps it the single source of truth: the shell derives
+the `<dialog>` identifier and the `aria-labelledby` title binding from it.
+
+### 4. Ask for a confirmation
+
+Passing `onConfirm` to the shell renders the DSFR `fr-modal__footer` with its cancel/confirm pair.
+The footer awaits `onConfirm` then closes the modal, so a modal only declares what confirming means.
+Leaving `onConfirm` out renders no footer at all.
+
+The footer stays a sibling of `fr-modal__content`: its negative top margin cancels the content
+bottom margin, nesting it into the content makes it overlap the last paragraphs.
+
 ## Modal Registry
 
-The registry maps a string identifier to a registry entry. When `openModal(id, props)` is called:
+The registry maps a string identifier to a component. When `openModal(id, props)` is called:
 
 1. The identifier is checked against the registry, an unknown one is ignored.
-2. The entry component is rendered inside `ModalShellComponent` (DSFR layout, portal to `document.body`).
-3. The shell renders the entry `title` through `ModalTitleComponent` and binds it to the dialog.
-4. The entry `footer`, when declared, is rendered through `ModalFooterComponent`.
-5. The provider injects `onClose` alongside the given `props`.
+2. The registered component is rendered, it mounts the DSFR shell itself.
+3. The provider injects `id` and `onClose` alongside the given `props`.
 
 Only one modal can be open at a time. Opening a new modal replaces the current one.
 
-### Registry entry
+### Injected props
 
-| Property       | Type                 | Description                                                     |
-| -------------- | -------------------- | --------------------------------------------------------------- |
-| `component`    | `ComponentType<any>` | Modal content, receives its own props plus `onClose`            |
-| `footer`       | `ComponentType<any>` | Optional action buttons, receives the same props as `component` |
-| `title`        | `string`             | i18n key rendered as the DSFR `fr-modal__title`                 |
-| `titleHeading` | `HeadingTag`         | Optional heading level, defaults to `HeadingTag.H1`             |
+| Property  | Type         | Description                                                |
+| --------- | ------------ | ---------------------------------------------------------- |
+| `id`      | `string`     | The registry key, to be forwarded to `ModalShellComponent` |
+| `onClose` | `() => void` | Closes the modal, to be forwarded to `ModalShellComponent` |
 
 ## Components
 
@@ -169,7 +152,7 @@ Low-level DSFR building blocks are also exported for standalone use or custom mo
 | `ModalShellComponent`       | DSFR modal shell using `<dialog>`, portal, backdrop and escape handling |
 | `ModalHeaderComponent`      | Modal header with close button                                          |
 | `ModalTitleComponent`       | Accessible modal title (`<h1>` with `fr-modal__title`)                  |
-| `ModalFooterComponent`      | Modal footer wrapper (`fr-modal__footer`)                               |
+| `ModalFooterComponent`      | DSFR cancel/confirm footer, closes the modal once `onConfirm` resolves  |
 | `ModalCloseButtonComponent` | DSFR close button with i18n label                                       |
 
 ### Standalone shell example
@@ -179,15 +162,7 @@ import { ModalShellComponent } from '@fc/modal';
 
 function CustomModal({ onClose }: { onClose: () => void }) {
   return (
-    <ModalShellComponent
-      footer={
-        <button type="button" onClick={onClose}>
-          Close
-        </button>
-      }
-      id="custom-modal"
-      title="My modal"
-      onClose={onClose}>
+    <ModalShellComponent id="custom-modal" title="My modal" onClose={onClose}>
       <p>Modal content</p>
     </ModalShellComponent>
   );
@@ -210,7 +185,7 @@ React provider that manages modal state and renders the active modal from the re
 
 - Reads the modal registry from `ConfigService.get(ModalOptions.CONFIG_NAME)`
 - Exposes `openModal`, `closeModal`, and `currentModal` through context
-- Renders the active modal component inside `ModalShellComponent`
+- Renders the active modal component with its `id` and `onClose` props
 
 ### `useModal`
 
@@ -228,26 +203,25 @@ interface ModalContextStateInterface {
 
 Lower-level hook used by `ModalShellComponent` to manage `<dialog>` behavior (open/close, backdrop, cancel).
 
+### `useModalFooter`
+
+Hook used by `ModalFooterComponent`, it awaits `onConfirm` before calling `onClose` so the modal
+stays open until the confirmed action settles.
+
 ## Types and Interfaces
 
 ### `ModalRegistryInterface`
 
 ```typescript
 interface ModalContentProps {
+  id: string;
   onClose: () => void;
 }
 
-interface ModalRegistryEntryInterface {
-  // The registry holds heterogeneous modals: each one may require its own props
-  // on top of `onClose`. Props contravariance rules out a strict shared type,
-  // so any component is accepted.
-  component: ComponentType<any>;
-  footer?: ComponentType<any>;
-  title: string;
-  titleHeading?: HeadingTag;
-}
-
-type ModalRegistryInterface = Record<string, ModalRegistryEntryInterface>;
+// The registry holds heterogeneous modals: each one may declare its own props
+// on top of the injected ones. Props contravariance rules out a strict shared
+// type, so any component is accepted.
+type ModalRegistryInterface = Record<string, ComponentType<any>>;
 ```
 
 ### `ModalEntryInterface`
@@ -273,7 +247,8 @@ This library depends on:
 
 - `@fc/common`: For `useSafeContext`
 - `@fc/config`: For registry configuration
-- `@fc/i18n`: For close button label (`FC.Common.close`)
+- `@fc/dsfr`: For the footer buttons
+- `@fc/i18n`: For the close button and the footer labels
 
 ## See Also
 

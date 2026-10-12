@@ -5,14 +5,15 @@ import { MessageTypes } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { t } from '@fc/i18n';
 import { useModal } from '@fc/modal';
-import { RoutePaths, useNavigateWithState } from '@fc/routing';
 
 import { CorePartnersOptions, PartnersAlertVariants } from '../../enums';
 import type { InstanceInterface } from '../../interfaces';
 import { PartnersService } from '../../loaders';
+import { useDeletionNotifier } from '../deletion-notifier';
 import { useServiceProviderSandboxes } from './service-provider-sandboxes.hook';
 
 jest.mock('../../loaders/partners/partners.service');
+jest.mock('../deletion-notifier/deletion-notifier.hook');
 
 describe('useServiceProviderSandboxes', () => {
   // Given
@@ -28,7 +29,7 @@ describe('useServiceProviderSandboxes', () => {
   } as unknown as InstanceInterface;
 
   const openModalMock = jest.fn();
-  const navigateWithStateMock = jest.fn();
+  const notifyDeletionMock = jest.fn();
 
   beforeEach(() => {
     // Given
@@ -43,12 +44,7 @@ describe('useServiceProviderSandboxes', () => {
       currentModal: null,
       openModal: openModalMock,
     });
-    jest.mocked(useNavigateWithState).mockReturnValue({
-      goBack: jest.fn(),
-      goBackWithError: jest.fn(),
-      goBackWithSuccess: jest.fn(),
-      navigateWithState: navigateWithStateMock,
-    });
+    jest.mocked(useDeletionNotifier).mockReturnValue({ notifyDeletion: notifyDeletionMock });
   });
 
   it('should call ConfigService.get with ExternalUrls', () => {
@@ -59,6 +55,14 @@ describe('useServiceProviderSandboxes', () => {
     expect(ConfigService.get).toHaveBeenCalledExactlyOnceWith(
       CorePartnersOptions.CONFIG_EXTERNAL_URLS,
     );
+  });
+
+  it('should call useDeletionNotifier with the sandbox alert variant', () => {
+    // When
+    renderHook(() => useServiceProviderSandboxes());
+
+    // Then
+    expect(useDeletionNotifier).toHaveBeenCalledExactlyOnceWith(PartnersAlertVariants.INSTANCE);
   });
 
   it('should call useLoaderData', () => {
@@ -153,7 +157,7 @@ describe('useServiceProviderSandboxes', () => {
       );
     });
 
-    it('should navigate to the current route with the success state', async () => {
+    it('should notify the successful deletion', async () => {
       // Given
       const { result } = renderHook(() => useServiceProviderSandboxes());
 
@@ -165,19 +169,14 @@ describe('useServiceProviderSandboxes', () => {
         'Partners.serviceProviderPage.sandboxes.deleteModal.success.description',
         { instanceName: 'any-instance-name-mock' },
       );
-      expect(navigateWithStateMock).toHaveBeenCalledExactlyOnceWith(
-        RoutePaths.CURRENT,
-        {
-          message: 'Partners.serviceProviderPage.sandboxes.deleteModal.success.description',
-          title: 'Partners.serviceProviderPage.sandboxes.deleteModal.success.title',
-          type: MessageTypes.SUCCESS,
-          variant: PartnersAlertVariants.INSTANCE,
-        },
-        true,
+      expect(notifyDeletionMock).toHaveBeenCalledExactlyOnceWith(
+        'Partners.serviceProviderPage.sandboxes.deleteModal.success.description',
+        'Partners.serviceProviderPage.sandboxes.deleteModal.success.title',
+        MessageTypes.SUCCESS,
       );
     });
 
-    it('should navigate to the current route with the error state when the deletion fails', async () => {
+    it('should notify the failed deletion', async () => {
       // Given
       const { result } = renderHook(() => useServiceProviderSandboxes());
       jest
@@ -192,15 +191,10 @@ describe('useServiceProviderSandboxes', () => {
         'Partners.serviceProviderPage.sandboxes.deleteModal.error.description',
         { instanceName: 'any-instance-name-mock' },
       );
-      expect(navigateWithStateMock).toHaveBeenCalledExactlyOnceWith(
-        RoutePaths.CURRENT,
-        {
-          message: 'Partners.serviceProviderPage.sandboxes.deleteModal.error.description',
-          title: 'Partners.serviceProviderPage.sandboxes.deleteModal.error.title',
-          type: MessageTypes.ERROR,
-          variant: PartnersAlertVariants.INSTANCE,
-        },
-        true,
+      expect(notifyDeletionMock).toHaveBeenCalledExactlyOnceWith(
+        'Partners.serviceProviderPage.sandboxes.deleteModal.error.description',
+        'Partners.serviceProviderPage.sandboxes.deleteModal.error.title',
+        MessageTypes.ERROR,
       );
     });
   });

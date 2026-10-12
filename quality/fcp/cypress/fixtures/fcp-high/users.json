@@ -26,7 +26,6 @@
     },
     "eidasClaims": {
       "PersonIdentifier-docker-eidas-mock": "FR/CB/954ad0d34787a2616211a192741aa524aee08166185c36cc4cee035ab529df38v1",
-      "PersonIdentifier-docker-eidas-be": "FR/BE/d0c1ba904bee63e5bfad3b0f60d049479e2c9dd5d6e9c9941e069887af733aefv1",
       "PersonIdentifier-integ01-eidas-mock": "FR/CB/812873d9d8491ff8cd11d99557ee84cbca1e38bb02152b10d4ab706f8450eac0v1",
       "PlaceOfBirth": "Paris 7e Arrondissement - 75107, FRANCE (FR)"
     }
@@ -708,7 +707,7 @@
   {
     "enabled": true,
     "criteria": [
-      "sans country dans l'attribut birth_place"
+      "sans country dans l'attribut place_of_birth"
     ],
     "credentials": [
       {

@@ -1,3 +1,1 @@
-export const ModalFooterComponent = jest.fn(({ children }) => (
-  <div data-mockid="ModalFooterComponent">{children}</div>
-));
+export const ModalFooterComponent = jest.fn(() => <div data-mockid="ModalFooterComponent" />);

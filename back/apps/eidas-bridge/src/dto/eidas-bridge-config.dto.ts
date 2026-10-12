@@ -115,7 +115,12 @@ export class EidasBridgeConfig {
   @IsObject()
   @ValidateNested()
   @Type(() => ApacheIgniteConfig)
-  readonly ApacheIgnite: ApacheIgniteConfig;
+  readonly ApacheIgniteConnector: ApacheIgniteConfig;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => ApacheIgniteConfig)
+  readonly ApacheIgniteProxy: ApacheIgniteConfig;
 
   @IsObject()
   @ValidateNested()

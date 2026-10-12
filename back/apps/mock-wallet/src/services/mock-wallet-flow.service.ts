@@ -55,9 +55,7 @@ export class MockWalletFlowService {
 
     const identity = this.identity.getIdentity(identityIndex);
 
-    const requestedClaims = this.presentation.extractRequestedClaims(
-      request.presentation_definition,
-    );
+    const requestedClaims = this.presentation.extractRequestedClaims(request);
     const availableClaims = this.presentation.selectClaims(
       requestedClaims,
       identity,
@@ -75,11 +73,7 @@ export class MockWalletFlowService {
       responsePreview: JSON.stringify(responsePayload, null, 2),
       requestPayload: JSON.stringify(request, null, 2),
       responsePayload: JSON.stringify(responsePayload, null, 2),
-      presentationDefinition: JSON.stringify(
-        request.presentation_definition,
-        null,
-        2,
-      ),
+      dcqlQuery: JSON.stringify(request.dcql_query, null, 2),
       submitUrl: MockWalletRoutes.WALLET_SUBMIT,
       submitErrorUrl: MockWalletRoutes.WALLET_SUBMIT_ERROR,
       flow,

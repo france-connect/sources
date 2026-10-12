@@ -8,11 +8,7 @@ import { RequestObjectPayloadDto } from './request-object-payload.dto';
 
 export class SubmitErrorBodyDto {
   @IsUrl({
-    // Class-validator rule name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     require_tld: false,
-    // Class-validator rule name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     require_protocol: true,
     protocols: ['https', 'http'],
   })

@@ -10,10 +10,13 @@ export const useGetFraudSurveyOrigin = (options: FraudConfigInterface) => {
 
   const [searchParams] = useSearchParams();
 
-  const [localFraudData, setLocalFraudData, removeLocalFraudData] = useLocalStorage(
-    surveyOriginQueryParam,
-    { createdAt: Date.now(), value: Strings.EMPTY_STRING as string },
-  );
+  const [localFraudData, setLocalFraudData, removeLocalFraudData] = useLocalStorage<{
+    createdAt: number;
+    value: string;
+  }>(surveyOriginQueryParam, {
+    createdAt: Date.now(),
+    value: Strings.EMPTY_STRING,
+  });
 
   const { createdAt, value: localFraudSurveyOrigin } = localFraudData;
 

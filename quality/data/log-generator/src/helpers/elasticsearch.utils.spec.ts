@@ -53,11 +53,21 @@ describe('ESHelper', () => {
       jest.mocked(safelyParseJson).mockImplementation(() => {
         throw new Error('Invalid JSON');
       });
+      let caughtError: unknown;
 
-      // When / Then
-      expect(() => new ESHelper(esNodes, username, password)).toThrow(
-        'Problem with connection nodes params: Error: Invalid JSON',
-      );
+      // When
+      try {
+        new ESHelper(esNodes, username, password);
+      } catch (error) {
+        caughtError = error;
+      }
+      // Then
+      expect(caughtError).toBeInstanceOf(Error);
+      const actualError = caughtError as Error;
+      expect(actualError.message).toBe('Problem with connection nodes params');
+      expect(actualError.cause).toBeInstanceOf(Error);
+      const causeError = actualError.cause as Error;
+      expect(causeError.message).toBe('Invalid JSON');
     });
   });
 

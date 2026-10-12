@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2021 by European Commission
+  ~ Licensed under the EUPL, Version 1.2
+  ~ https://joinup.ec.europa.eu/page/eupl-text-11-12
+  -->
+
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+	<entry key="service.id">FR</entry>
+	<entry key="service.countrycode">FR</entry>
+
+	<entry key="active.module.service">true</entry>
+
+	<entry key="service.node.url">https://eidas-fr.docker.dev-franceconnect.fr/EidasNodeProxy/</entry>
+	<entry key="service.contact.email">test@test.fr</entry>
+	<entry key="service.metadata.url">https://eidas-fr.docker.dev-franceconnect.fr/EidasNodeProxy/ServiceMetadata</entry>
+
+	<entry key="ssos.serviceMetadataGeneratorIDP.redirect.location">https://eidas-fr.docker.dev-franceconnect.fr/EidasNodeProxy/ColleagueRequest</entry>
+	<entry key="ssos.serviceMetadataGeneratorIDP.post.location">https://eidas-fr.docker.dev-franceconnect.fr/EidasNodeProxy/ColleagueRequest</entry>
+
+	<entry key="security.header.CSP.report.uri">https://eidas-fr.docker.dev-franceconnect.fr/EidasNodeProxy</entry>
+	<entry key="security.header.CSP.fallbackCheckMode">false</entry>
+
+	<entry key="metadata.sector">public</entry>
+	<entry key="hashDigest.className">org.bouncycastle.crypto.digests.SHA512Digest</entry>
+
+	<entry key="tls.enabled.protocols">TLSv1.2, TLSv1.3</entry>
+
+	<entry key="tls.enabled.ciphers">
+		TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256,
+		TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
+		TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384,
+		TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,
+		TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256,
+		TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,
+		TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+		TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384,
+		TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
+		TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256,
+		TLS_DHE_RSA_WITH_AES_128_CBC_SHA256,
+		TLS_DHE_RSA_WITH_AES_128_GCM_SHA256,
+		TLS_DHE_RSA_WITH_AES_256_CBC_SHA256,
+		TLS_DHE_RSA_WITH_AES_256_GCM_SHA384,
+		TLS_AES_128_GCM_SHA256,
+		TLS_AES_256_GCM_SHA384,
+		TLS_CHACHA20_POLY1305_SHA256,
+		TLS_EMPTY_RENEGOTIATION_INFO_SCSV
+	</entry>
+
+	<entry key="service.LoA">http://eidas.europa.eu/LoA/high;http://eidas.europa.eu/LoA/substantial</entry>
+
+	<entry key="node.metadata.not.signed.descriptors"></entry>
+
+	<entry key="service.contact.support.email">test@test.fr</entry>
+	<entry key="service.contact.support.company">FranceConnect</entry>
+	<entry key="service.contact.support.givenname">Customer Support</entry>
+	<entry key="service.contact.technical.email">test@test.fr</entry>
+	<entry key="service.contact.technical.company">FranceConnect</entry>
+	<entry key="service.contact.technical.givenname">Technical Support</entry>
+
+	<entry key="service.organization.name">FranceConnect</entry>
+	<entry key="service.organization.displayname">French eIDAS ProxyService</entry>
+	<entry key="service.organization.url">https://franceconnect.gouv.fr</entry>
+
+	<entry key="specific.proxyservice.request.receiver">https://eidas-bridge.docker.dev-franceconnect.fr/eidas-provider/request-handler</entry>
+
+	<entry key="metadata.node.country">FR</entry>
+
+	<entry key="eidas.application.identifier">eIDAS-ref:3.1.0</entry>
+
+	<entry key="unsupported.attributes">
+		http://eidas.europa.eu/attributes/legalperson/D-2012-17-EUIdentifier;
+		http://eidas.europa.eu/attributes/legalperson/EORI;
+		http://eidas.europa.eu/attributes/legalperson/LEI;
+		http://eidas.europa.eu/attributes/legalperson/LegalAdditionalAttribute;
+		http://eidas.europa.eu/attributes/legalperson/LegalEmailAddress;
+		http://eidas.europa.eu/attributes/legalperson/LegalName;
+		http://eidas.europa.eu/attributes/legalperson/LegalPersonAddress;
+		http://eidas.europa.eu/attributes/legalperson/LegalPersonIdentifier;
+		http://eidas.europa.eu/attributes/legalperson/LegalPhoneNumber;
+		http://eidas.europa.eu/attributes/legalperson/SEED;
+		http://eidas.europa.eu/attributes/legalperson/SIC;
+		http://eidas.europa.eu/attributes/legalperson/TaxReference;
+		http://eidas.europa.eu/attributes/legalperson/VATRegistrationNumber;
+		http://eidas.europa.eu/attributes/legalperson/representative/D-2012-17-EUIdentifier;
+		http://eidas.europa.eu/attributes/legalperson/representative/EORI;
+		http://eidas.europa.eu/attributes/legalperson/representative/LEI;
+		http://eidas.europa.eu/attributes/legalperson/representative/LegalEmailAddress;
+		http://eidas.europa.eu/attributes/legalperson/representative/LegalName;
+		http://eidas.europa.eu/attributes/legalperson/representative/LegalPersonAddress;
+		http://eidas.europa.eu/attributes/legalperson/representative/LegalPersonIdentifier;
+		http://eidas.europa.eu/attributes/legalperson/representative/LegalPhoneNumber;
+		http://eidas.europa.eu/attributes/legalperson/representative/SEED;
+		http://eidas.europa.eu/attributes/legalperson/representative/SIC;
+		http://eidas.europa.eu/attributes/legalperson/representative/TaxReference;
+		http://eidas.europa.eu/attributes/legalperson/representative/VATRegistrationNumber;
+		http://eidas.europa.eu/attributes/naturalperson/representative/BirthName;
+		http://eidas.europa.eu/attributes/naturalperson/representative/CountryOfBirth;
+		http://eidas.europa.eu/attributes/naturalperson/representative/CountryOfResidence;
+		http://eidas.europa.eu/attributes/naturalperson/representative/CurrentAddress;
+		http://eidas.europa.eu/attributes/naturalperson/representative/CurrentFamilyName;
+		http://eidas.europa.eu/attributes/naturalperson/representative/CurrentGivenName;
+		http://eidas.europa.eu/attributes/naturalperson/representative/DateOfBirth;
+		http://eidas.europa.eu/attributes/naturalperson/representative/EmailAddress;
+		http://eidas.europa.eu/attributes/naturalperson/representative/Gender;
+		http://eidas.europa.eu/attributes/naturalperson/representative/Nationality;
+		http://eidas.europa.eu/attributes/naturalperson/representative/PersonIdentifier;
+		http://eidas.europa.eu/attributes/naturalperson/representative/PhoneNumber;
+		http://eidas.europa.eu/attributes/naturalperson/representative/PlaceOfBirth;
+		http://eidas.europa.eu/attributes/naturalperson/representative/TownOfBirth
+	</entry>
+</properties>

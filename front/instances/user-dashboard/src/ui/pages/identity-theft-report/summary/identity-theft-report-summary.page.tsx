@@ -1,8 +1,7 @@
 import React from 'react';
 
 import type { TrackInterface } from '@fc/core-user-dashboard';
-import { TrackCardComponent } from '@fc/core-user-dashboard';
-import { TableComponent } from '@fc/dsfr';
+import { SummaryTableComponent, TrackCardComponent } from '@fc/core-user-dashboard';
 import { Dto2FormComponent } from '@fc/dto2form';
 import { t } from '@fc/i18n';
 
@@ -21,16 +20,14 @@ export const IdentityTheftReportSummaryPage = React.memo(() => {
     <React.Fragment>
       <h2>Récapitulatif des informations saisies</h2>
       <div className="fr-border-default--grey fr-mt-3w fr-p-3w">
-        <TableComponent
-          hideHeader
+        <SummaryTableComponent
           multiline
           caption="Décrivez votre cas d’usurpation en quelques mots"
           id="identity-theft-report-summary--description"
           sources={[{ label: description.description }]}
         />
 
-        <TableComponent
-          hideHeader
+        <SummaryTableComponent
           caption="Code d’identification de la connexion frauduleuse"
           id="identity-theft-report-summary--code-identification"
           sources={[{ label: connection.code }]}
@@ -47,8 +44,7 @@ export const IdentityTheftReportSummaryPage = React.memo(() => {
           </React.Fragment>
         )}
 
-        <TableComponent
-          hideHeader
+        <SummaryTableComponent
           caption="Etat civil"
           id="identity-theft-report-summary--etat-civil"
           sources={[
@@ -60,15 +56,13 @@ export const IdentityTheftReportSummaryPage = React.memo(() => {
           ]}
         />
 
-        <TableComponent
-          hideHeader
+        <SummaryTableComponent
           caption="Adresse électronique"
           id="identity-theft-report-summary--email"
           sources={[{ label: contact.email }]}
         />
 
-        <TableComponent
-          hideHeader
+        <SummaryTableComponent
           caption="Numéro de téléphone"
           id="identity-theft-report-summary--phone"
           sources={[{ label: phonevalue }]}

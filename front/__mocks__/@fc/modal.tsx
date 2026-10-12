@@ -20,9 +20,7 @@ export const ModalTitleComponent = jest.fn(({ children }) => (
   <div data-mockid="ModalTitleComponent">{children}</div>
 ));
 
-export const ModalFooterComponent = jest.fn(({ children }) => (
-  <div data-mockid="ModalFooterComponent">{children}</div>
-));
+export const ModalFooterComponent = jest.fn(() => <div data-mockid="ModalFooterComponent" />);
 
 export const useModal = jest.fn(() => ({
   closeModal: jest.fn(),

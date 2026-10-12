@@ -2,7 +2,7 @@ import React from 'react';
 
 import { useSafeContext } from '@fc/common';
 import { Sizes } from '@fc/dsfr';
-import { ArrayField, FormConfigContext } from '@fc/forms';
+import { FieldTypes, FormConfigContext } from '@fc/forms';
 
 import { FieldsCommponentMap } from '../../enums';
 import { useFieldValidate } from '../../hooks';
@@ -64,9 +64,11 @@ export const Dto2InputComponent = React.memo(({ field }: Dto2InputComponentProps
     value,
   };
 
-  // @TODO create a array field into FieldTypes
-  // get the component using the same cas as others components
-  const Component = array ? ArrayField : FieldsCommponentMap[type];
+  // @NOTE FieldsCommponentMap is a heterogeneous union; TS intersects config value types.
+  const Component = FieldsCommponentMap[array ? FieldTypes.ARRAY : type] as React.ComponentType<{
+    choices: typeof choices;
+    config: typeof config;
+  }>;
 
   return <Component choices={choices} config={config} />;
 });

@@ -3,6 +3,8 @@ import { useFieldArray } from 'react-final-form-arrays';
 
 import { Strings } from '@fc/common';
 
+import { FieldTypes } from '../../../enums';
+import { getFieldControlId } from '../../../helpers';
 import type { FieldConfigInterface } from '../../../interfaces';
 import { ArrayAddButton, LabelElement } from '../../elements';
 import { TextWithRemoveInput } from '../../inputs';
@@ -27,13 +29,18 @@ export const ArrayField = React.memo(({ config }: ArrayFieldProps) => {
     [fields],
   );
 
+  let firstInputId: string | undefined;
+  if (fields.length > 0) {
+    firstInputId = getFieldControlId(FieldTypes.ARRAY, `${name}[0]`);
+  }
+
   return (
     <div className="fr-input-group">
       <LabelElement
         className="fr-label fr-mb-2v"
         hint={hint}
+        htmlFor={firstInputId}
         label={label}
-        name={name}
         required={required}
         seeAlso={seeAlso}
       />

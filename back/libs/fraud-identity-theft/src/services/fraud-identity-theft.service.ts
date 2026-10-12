@@ -95,7 +95,10 @@ export class FraudIdentityTheftService {
       'browsingSessionId',
       'country',
       'city',
+      'region',
       'ipAddress',
+      'port',
+      'organization',
     ];
 
     const sanitizedTracks: SanitizedTrackDto[] = fraudTracks.map(

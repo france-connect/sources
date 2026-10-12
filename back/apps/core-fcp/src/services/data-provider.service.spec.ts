@@ -142,9 +142,7 @@ describe('DataProviderService', () => {
           'jClItOnQiSZdE4kxm7EWzJbz4ckfD89k1e3NJw/pbGRHD/Jp6ooupqmHTyc3b62L9wqyF2TlR/5hJejE',
         token: 'acces_token',
       };
-      validateDtoMock.mockResolvedValueOnce([
-        /* No error */
-      ]);
+      validateDtoMock.mockResolvedValueOnce([/* No error */]);
 
       // When / Then
       await expect(

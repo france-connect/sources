@@ -6,7 +6,6 @@ import {
   getExpectedClaimsByPlatform,
   getScopeByType,
   getUserClaimsByPlatform,
-  isUsingFCBasicAuthorization,
   navigateTo,
 } from '../../common/helpers';
 import ServiceProviderPage from '../pages/service-provider-page';
@@ -37,9 +36,13 @@ When('je clique sur le bouton FranceConnect', function () {
   }
   serviceProviderPage.getFcButton().click();
 
-  if (isUsingFCBasicAuthorization()) {
-    checkFCBasicAuthorization();
-  }
+  cy.env(['FC_ACCESS_PASS', 'FC_ACCESS_USER']).then(
+    ({ ['FC_ACCESS_PASS']: password, ['FC_ACCESS_USER']: username }) => {
+      if (username && password) {
+        checkFCBasicAuthorization(username, password);
+      }
+    },
+  );
 });
 
 When("je redemande les informations de l'usager", function () {
@@ -68,9 +71,13 @@ When(
 
     serviceProviderPage.getFcButton().click();
 
-    if (isUsingFCBasicAuthorization()) {
-      checkFCBasicAuthorization();
-    }
+    cy.env(['FC_ACCESS_PASS', 'FC_ACCESS_USER']).then(
+      ({ ['FC_ACCESS_PASS']: password, ['FC_ACCESS_USER']: username }) => {
+        if (username && password) {
+          checkFCBasicAuthorization(username, password);
+        }
+      },
+    );
   },
 );
 
@@ -130,7 +137,7 @@ Then(
   function (type: string) {
     const { allClaims } = this.user;
     if (this.serviceProvider.mocked === true) {
-      const platform: string = Cypress.env('TEST_PLATFORM');
+      const platform: string = Cypress.expose('TEST_PLATFORM');
       const scope = getScopeByType(this.scopes, type);
       const userClaims = getUserClaimsByPlatform(allClaims, platform);
       const expectedClaims = getExpectedClaimsByPlatform(scope, platform);
@@ -213,11 +220,14 @@ Then(
   'le token retourné au FS est signé avec la clé provenant du HSM',
   function () {
     serviceProviderPage.getMockIdTokenText().then((idToken: string) => {
-      const es256SigPubKey = Cypress.env('ES256_SIG_PUB_KEY');
-      cy.task('isJwsValid', {
-        jws: idToken,
-        sigPubKey: es256SigPubKey,
-      }).should('be.true');
+      cy.env(['ES256_SIG_PUB_KEY']).then(
+        ({ ['ES256_SIG_PUB_KEY']: sigPubKey }) => {
+          cy.task('isJwsValid', {
+            jws: idToken,
+            sigPubKey,
+          }).should('be.true');
+        },
+      );
     });
   },
 );

@@ -8,7 +8,6 @@ import {
   getDefaultIdentityProvider,
   getDefaultServiceProvider,
   getDefaultUser,
-  isUsingFCBasicAuthorization,
 } from '../helpers';
 import { IdentityProviderInterface, ServiceProvider, UserData } from '../types';
 
@@ -60,14 +59,21 @@ const setupTestFramework = (
   // Stores CSV files content used in scenarios
   ctx.csvFiles = {};
 
+  // Setup default requested nameIdFormat for eidas mock page
+  ctx.requestedNameIdFormat = 'persistent';
+
   // Setup interceptions to add basic authorization header on FC requests
-  if (isUsingFCBasicAuthorization()) {
-    addFCBasicAuthorization();
-  }
+  cy.env(['FC_ACCESS_USER', 'FC_ACCESS_PASS']).then(
+    ({ ['FC_ACCESS_PASS']: password, ['FC_ACCESS_USER']: username }) => {
+      if (username && password) {
+        addFCBasicAuthorization(username, password);
+      }
+    },
+  );
 
   if (testEnv === 'docker') {
     clearAllLogs();
-    const eidasLogPath = Cypress.env('EIDAS_LOG_FILE_PATH');
+    const eidasLogPath = Cypress.expose('EIDAS_LOG_FILE_PATH');
     if (eidasLogPath) {
       clearAllLogs(eidasLogPath);
     }
@@ -84,8 +90,8 @@ const setupTestFramework = (
 
 Before(function () {
   // Load environment config and test data
-  const platform: string = Cypress.env('TEST_PLATFORM');
-  const testEnv: string = Cypress.env('TEST_ENV');
+  const platform: string = Cypress.expose('TEST_PLATFORM');
+  const testEnv: string = Cypress.expose('TEST_ENV');
   setupTestFramework(platform, testEnv, this);
 });
 
@@ -97,7 +103,7 @@ Given(
       'FranceConnect+': 'fcp-high',
     };
     const platform = platformMapping[plateformName];
-    const testEnv: string = Cypress.env('TEST_ENV');
+    const testEnv: string = Cypress.expose('TEST_ENV');
     setupTestFramework(platform, testEnv, this);
   },
 );
@@ -117,27 +123,33 @@ After(function () {
 });
 
 Before({ tags: '@ignoreDocker' }, function () {
-  if (['docker', 'recette'].includes(Cypress.env('TEST_ENV'))) {
+  if (Cypress.expose('TEST_ENV') === 'docker') {
     this.skip();
   }
 });
 
 Before({ tags: '@ignoreInteg01' }, function () {
-  if (Cypress.env('TEST_ENV') === 'integ01') {
+  if (Cypress.expose('TEST_ENV') === 'integ01') {
+    this.skip();
+  }
+});
+
+Before({ tags: '@ignoreCI' }, function () {
+  if (Cypress.expose('CI')) {
     this.skip();
   }
 });
 
 Before({ tags: '@clearExploitBusinessLogs' }, function () {
-  if (Cypress.env('TEST_ENV') === 'docker') {
-    const logPath = Cypress.env('EXPLOIT_LOG_FILE_PATH');
+  if (Cypress.expose('TEST_ENV') === 'docker') {
+    const logPath = Cypress.expose('EXPLOIT_LOG_FILE_PATH');
     clearAllLogs(logPath);
   }
 });
 
 Before({ tags: '@clearTechnicalLogs' }, function () {
-  if (Cypress.env('TEST_ENV') === 'docker') {
-    const technicalLogPath = Cypress.env('TECHNICAL_LOG_FILE_PATH');
+  if (Cypress.expose('TEST_ENV') === 'docker') {
+    const technicalLogPath = Cypress.expose('TECHNICAL_LOG_FILE_PATH');
     clearAllLogs(technicalLogPath);
   }
 });

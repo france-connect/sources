@@ -1,3 +1,5 @@
+import { v4 as uuidV4 } from 'uuid';
+
 import { Injectable } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
@@ -37,5 +39,14 @@ export class CryptographyEidasService {
     const data = [providerRef, identityHash, subSecretKey];
 
     return `${this.crypto.hash(data.join(''))}v1`;
+  }
+
+  /**
+   * Generate a transient sub. Transient sub should not be linked to any identity
+   * and should be used for one time use only.
+   * @returns a random uuid v4
+   */
+  generateTransientSub(): string {
+    return uuidV4();
   }
 }

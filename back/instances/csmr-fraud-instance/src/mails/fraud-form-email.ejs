@@ -77,7 +77,11 @@
             <th>Plateforme</th>
             <th>Niveau de garantie</th>
             <th>Pays</th>
+            <th>Région</th>
             <th>Ville</th>
+            <th>Adresse IP</th>
+            <th>Port</th>
+            <th>Organisation</th>
           </tr>
         </thead>
         <tbody>
@@ -90,7 +94,11 @@
               <td data-testid="fraud-form-email-platform"><%= track.platform %></td>
               <td data-testid="fraud-form-email-interactionAcr"><%= track.interactionAcr %></td>
               <td data-testid="fraud-form-email-country"><%= track.country %></td>
+              <td data-testid="fraud-form-email-region"><%= track.region %></td>
               <td data-testid="fraud-form-email-city"><%= track.city %></td>
+              <td data-testid="fraud-form-email-ipAddress"><%= Array.isArray(track.ipAddress) ? track.ipAddress.join(';') : track.ipAddress %></td>
+              <td data-testid="fraud-form-email-port"><%= track.port %></td>
+              <td data-testid="fraud-form-email-organization"><%= track.organization %></td>
             </tr>
           <% }); %>
         </tbody>

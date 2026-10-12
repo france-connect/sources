@@ -1,8 +1,6 @@
 volumes/log/*
 !volumes/log/.gitkeep
 !volumes/log/eidas
-volumes/log/eidas/eidas-be/*
-!volumes/log/eidas/eidas-be/.gitkeep
 volumes/log/eidas/eidas-fr/*
 !volumes/log/eidas/eidas-fr/.gitkeep
 volumes/log/eidas/eidas-mock/*

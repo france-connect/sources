@@ -10,6 +10,7 @@ export enum FieldTypes {
   CHECKBOX = 'checkbox',
 
   /* custom types */
+  ARRAY = 'array',
   CONSENT = 'consent',
 
   /* not yet implemented */

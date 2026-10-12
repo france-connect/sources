@@ -7,15 +7,9 @@ export class ElasticsearchConfig {
   @IsArray()
   @IsUrl(
     {
-      // Validator.js defined property
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       require_protocol: true,
       protocols: ['https'],
-      // Validator.js defined property
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       require_tld: false,
-      // Validator.js defined property
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       require_port: true,
     },
     {

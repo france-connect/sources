@@ -1,37 +1,29 @@
-import { randomUUID } from 'crypto';
-
 import { Injectable } from '@nestjs/common';
 
+import { DcqlService } from '@fc/dcql';
 import { Openid4vpDeepLinkInterface } from '@fc/openid4vp/interfaces';
 
+import { MockWalletInvalidRequestObjectPayloadException } from '../exceptions';
 import {
-  InputDescriptor,
-  PresentationDefinition,
-  PresentationSubmission,
   RequestObjectPayload,
   WalletIdentity,
   WalletResponsePayload,
 } from '../interfaces';
 import { WalletDocumentService } from './wallet-document.service';
 
-const MDOC_FORMAT = 'mso_mdoc';
-
 @Injectable()
 export class PresentationService {
-  constructor(private readonly document: WalletDocumentService) {}
+  constructor(
+    private readonly document: WalletDocumentService,
+    private readonly dcql: DcqlService,
+  ) {}
 
-  extractRequestedClaims(definition: PresentationDefinition): string[] {
-    const claims: string[] = [];
-
-    for (const path of this.collectFieldPaths(definition)) {
-      const claim = this.extractClaimName(path);
-
-      if (claim && !claims.includes(claim)) {
-        claims.push(claim);
-      }
+  extractRequestedClaims(request: RequestObjectPayload): string[] {
+    if (!request.dcql_query) {
+      throw new MockWalletInvalidRequestObjectPayloadException();
     }
 
-    return claims;
+    return this.dcql.extractClaimNames(this.dcql.parse(request.dcql_query));
   }
 
   selectClaims(
@@ -49,24 +41,6 @@ export class PresentationService {
     return selected;
   }
 
-  buildPresentationSubmission(
-    definition: PresentationDefinition,
-  ): PresentationSubmission {
-    const descriptor = definition.input_descriptors[0];
-
-    return {
-      id: randomUUID(),
-      definition_id: definition.id,
-      descriptor_map: [
-        {
-          id: descriptor.id,
-          format: MDOC_FORMAT,
-          path: '$.vp_token',
-        },
-      ],
-    };
-  }
-
   resolveState(
     request: RequestObjectPayload,
     deepLink: Openid4vpDeepLinkInterface,
@@ -79,40 +53,33 @@ export class PresentationService {
     deepLink: Openid4vpDeepLinkInterface,
     identity: WalletIdentity,
   ): Promise<WalletResponsePayload> {
-    const { presentation_definition } = request;
-    const requestedClaims = this.extractRequestedClaims(
-      presentation_definition,
-    );
+    const requestedClaims = this.extractRequestedClaims(request);
     const claims = this.selectClaims(requestedClaims, identity);
-
     const vpToken = await this.document.buildVpToken(identity, claims, request);
 
+    return this.buildDcqlResponsePayload(request, deepLink, vpToken);
+  }
+
+  private buildDcqlResponsePayload(
+    request: RequestObjectPayload,
+    deepLink: Openid4vpDeepLinkInterface,
+    vpToken: string,
+  ): WalletResponsePayload {
+    const state = this.resolveState(request, deepLink);
+
     return {
-      state: this.resolveState(request, deepLink),
-      vp_token: vpToken,
-      presentation_submission: this.buildPresentationSubmission(
-        presentation_definition,
-      ),
+      state,
+      vp_token: { [this.getDcqlCredentialId(request)]: [vpToken] },
     };
   }
 
-  private collectFieldPaths(definition: PresentationDefinition): string[] {
-    return definition.input_descriptors.flatMap((descriptor) =>
-      this.descriptorPaths(descriptor),
-    );
-  }
+  private getDcqlCredentialId(request: RequestObjectPayload): string {
+    const credentialId = request.dcql_query.credentials?.[0]?.id;
 
-  private descriptorPaths(descriptor: InputDescriptor): string[] {
-    const fields = descriptor.constraints.fields ?? [];
+    if (!credentialId) {
+      throw new MockWalletInvalidRequestObjectPayloadException();
+    }
 
-    return fields.flatMap((field) => field.path);
-  }
-
-  private extractClaimName(path: string): string | undefined {
-    const matches = [...path.matchAll(/\['([^']+)'\]/g)];
-
-    const [, claimName] = matches.at(-1) || [];
-
-    return claimName;
+    return credentialId;
   }
 }

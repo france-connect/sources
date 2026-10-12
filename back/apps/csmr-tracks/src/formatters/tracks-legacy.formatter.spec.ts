@@ -41,6 +41,7 @@ describe('TracksLegacyFormatter', () => {
   const localisationMock = {
     city: Symbol('City') as unknown as string,
     country: Symbol('Country') as unknown as string,
+    region: Symbol('Region') as unknown as string,
   };
 
   beforeEach(async () => {

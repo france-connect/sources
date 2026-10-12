@@ -8,6 +8,7 @@ import { MdocDocumentInterface, SimpleDocumentInterface } from '@fc/mdoc';
 import { Openid4vpInteractionDto, Openid4vpRequestConfig } from '../dto';
 import {
   Openid4vpAuthorizationError,
+  Openid4vpFlow,
   Openid4vpInteractionStatus,
 } from '../enums';
 import { Openid4vpAuthorizationNotFoundException } from '../exceptions';
@@ -35,7 +36,7 @@ export class Openid4vpService {
   ): Promise<string> {
     const params = this.request.generateInteractionParams(
       id,
-      options.presentationId,
+      options.credentialQueryId,
     );
 
     this.session.bindRequestToSession(params.id);
@@ -45,31 +46,40 @@ export class Openid4vpService {
     return params.id;
   }
 
-  getRequestById(presentationId: string): Openid4vpRequestConfig | undefined {
-    return this.request.getRequestById(presentationId);
+  getRequestById(
+    credentialQueryId: string,
+  ): Openid4vpRequestConfig | undefined {
+    return this.request.getRequestById(credentialQueryId);
   }
 
-  getAuthorizeRequestUri(interaction: Openid4vpInteractionDto) {
-    const uri = this.request.getAuthorizeRequestUri(interaction);
-
-    return uri;
+  getAuthorizeRequestUri(
+    interaction: Openid4vpInteractionDto,
+    flow: Openid4vpFlow,
+  ): string {
+    return this.request.getAuthorizeRequestUri(interaction, flow);
   }
 
   async getRequestObject(
     interaction: Openid4vpInteractionDto,
+    flow: Openid4vpFlow,
   ): Promise<AuthorizationRequestObjectInterface> {
-    const request = this.getRequestById(interaction.presentationId);
+    const request = this.getRequestById(interaction.credentialQueryId);
 
     return await this.request.createAuthorizeRequestObject(
       interaction,
       request,
+      flow,
     );
   }
 
   async setAuthorizationRequestObjectAsRead(
     interaction: Openid4vpInteractionDto,
+    flow: Openid4vpFlow,
   ): Promise<void> {
-    return await this.session.setAuthorizationRequestObjectAsRead(interaction);
+    return await this.session.setAuthorizationRequestObjectAsRead(
+      interaction,
+      flow,
+    );
   }
 
   async getInteractionById(id: string): Promise<Openid4vpInteractionDto> {
@@ -78,6 +88,12 @@ export class Openid4vpService {
     this.checkInteraction(interaction);
 
     return interaction;
+  }
+
+  getFlow(interaction: Openid4vpInteractionDto, state: string): Openid4vpFlow {
+    return state === interaction.state.sameDevice
+      ? Openid4vpFlow.SAME_DEVICE
+      : Openid4vpFlow.CROSS_DEVICE;
   }
 
   async bindInteractionToBackendId(
@@ -104,14 +120,6 @@ export class Openid4vpService {
     return interaction;
   }
 
-  async getInteractionByState(state: string): Promise<Openid4vpInteractionDto> {
-    const interaction = await this.session.getInteractionByState(state);
-
-    this.checkInteraction(interaction);
-
-    return interaction;
-  }
-
   async getUserInteractionById(id: string): Promise<Openid4vpInteractionDto> {
     const interactions = this.session.getSessionAuthorizationRequests();
 
@@ -125,12 +133,14 @@ export class Openid4vpService {
   async parseResponse(
     response: Record<string, unknown>,
     interaction: Openid4vpInteractionDto,
+    flow: Openid4vpFlow,
   ): Promise<MdocDocumentInterface[]> {
-    const requestObject = await this.getRequestObject(interaction);
+    const requestObject = await this.getRequestObject(interaction, flow);
 
     const parsed = await this.response.parseAuthorizationResponse(
       response,
       requestObject.authorizationRequestPayload as AuthorizationRequestPayload,
+      interaction.credentialQueryId,
     );
 
     return parsed;

@@ -2,7 +2,8 @@ import React, { useMemo } from 'react';
 
 import { t } from '@fc/i18n';
 
-import { ComponentTypes } from '../../../enums';
+import { ComponentTypes, FieldTypes } from '../../../enums';
+import { getFieldControlId, getFieldMessagesId } from '../../../helpers';
 import { useFieldMessages, useFieldMeta } from '../../../hooks';
 import type { PropsWithInputChoicesType } from '../../../types';
 import { GroupElement, LabelElement, MessagesElement } from '../../elements';
@@ -15,7 +16,8 @@ export const SelectInput = React.memo(
     const { errorsList, hasError, isValid } = useFieldMeta(meta);
 
     const fieldMessages = useFieldMessages({ errorsList, isValid, messages });
-    const hasMessages = fieldMessages && fieldMessages.length > 0;
+
+    const id = getFieldControlId(FieldTypes.SELECT, name);
 
     const childs = useMemo(
       () =>
@@ -34,18 +36,26 @@ export const SelectInput = React.memo(
         hasError={hasError}
         isValid={isValid}
         type={ComponentTypes.SELECT}>
-        <LabelElement hint={hint} label={label} name={name} required={required} seeAlso={seeAlso} />
-        {/* @NOTE input is coming from react-final-form */}
-        {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-        <select {...input} className="fr-select fr-select--valid">
+        <LabelElement
+          hint={hint}
+          htmlFor={id}
+          label={label}
+          required={required}
+          seeAlso={seeAlso}
+        />
+        <select
+          // @NOTE input is coming from react-final-form
+          // eslint-disable-next-line react/jsx-props-no-spreading
+          {...input}
+          aria-describedby={getFieldMessagesId(name)}
+          className="fr-select fr-select--valid"
+          id={id}>
           <option disabled hidden value="">
             {t('Form.select.placeholder')}
           </option>
           {childs}
         </select>
-        {hasMessages && (
-          <MessagesElement dataTestId={`${name}-messages`} id={name} messages={fieldMessages} />
-        )}
+        <MessagesElement id={name} messages={fieldMessages} />
       </GroupElement>
     );
   },

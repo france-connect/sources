@@ -5,7 +5,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { SimpleDocumentInterface } from '@fc/mdoc';
 
 import { Openid4vpInteractionDto, Openid4vpRequestConfig } from '../dto';
-import { Openid4vpAuthorizationError } from '../enums';
+import { Openid4vpAuthorizationError, Openid4vpFlow } from '../enums';
 import { Openid4vpAuthorizationNotFoundException } from '../exceptions';
 import { Openid4vpService } from './openid4vp.service';
 import { Openid4vpInteractionStatusService } from './openid4vp-interaction-status.service';
@@ -30,7 +30,6 @@ describe('Openid4vpService', () => {
     saveInteraction: jest.fn(),
     setAuthorizationRequestObjectAsRead: jest.fn(),
     getInteractionById: jest.fn(),
-    getInteractionByState: jest.fn(),
     getSessionAuthorizationRequests: jest.fn(),
     saveResponse: jest.fn(),
     saveError: jest.fn(),
@@ -47,8 +46,11 @@ describe('Openid4vpService', () => {
 
   const interactionMock = {
     id: 'interactionIdMock',
-    presentationId: 'presentationIdMock',
-    state: 'stateMock',
+    credentialQueryId: 'credentialQueryIdMock',
+    state: {
+      sameDevice: 'sameDeviceStateMock',
+      crossDevice: 'crossDeviceStateMock',
+    },
     nonce: 'nonceMock',
     iat: 1700000000,
     exp: 1700000600,
@@ -57,7 +59,7 @@ describe('Openid4vpService', () => {
   } as unknown as Openid4vpInteractionDto;
 
   const requestConfigMock = {
-    presentationId: 'presentationIdMock',
+    credentialQueryId: 'credentialQueryIdMock',
   } as unknown as Openid4vpRequestConfig;
 
   const interactionIdMock = 'interactionIdMock';
@@ -98,7 +100,7 @@ describe('Openid4vpService', () => {
       );
     });
 
-    it('should generate the interaction params from the request presentationId', async () => {
+    it('should generate the interaction params from the request credentialQueryId', async () => {
       // When
       await service.createAuthorizationRequest(
         interactionIdMock,
@@ -110,7 +112,7 @@ describe('Openid4vpService', () => {
         requestServiceMock.generateInteractionParams,
       ).toHaveBeenCalledExactlyOnceWith(
         interactionIdMock,
-        requestConfigMock.presentationId,
+        requestConfigMock.credentialQueryId,
       );
     });
 
@@ -153,18 +155,18 @@ describe('Openid4vpService', () => {
   });
 
   describe('getRequestById', () => {
-    const presentationId = 'presentationIdMock';
+    const credentialQueryId = 'credentialQueryIdMock';
 
     it('should forward call to the request service', () => {
       // Given
       requestServiceMock.getRequestById.mockReturnValueOnce(requestConfigMock);
 
       // When
-      service.getRequestById(presentationId);
+      service.getRequestById(credentialQueryId);
 
       // Then
       expect(requestServiceMock.getRequestById).toHaveBeenCalledExactlyOnceWith(
-        presentationId,
+        credentialQueryId,
       );
     });
 
@@ -173,7 +175,7 @@ describe('Openid4vpService', () => {
       requestServiceMock.getRequestById.mockReturnValueOnce(requestConfigMock);
 
       // When
-      const result = service.getRequestById(presentationId);
+      const result = service.getRequestById(credentialQueryId);
 
       // Then
       expect(result).toBe(requestConfigMock);
@@ -181,18 +183,24 @@ describe('Openid4vpService', () => {
   });
 
   describe('getAuthorizeRequestUri', () => {
-    it('should forward call to the request service', () => {
+    it('should forward call to the request service with the flow', () => {
       // Given
       const uriMock = 'openid4vp://authorize?foo=bar';
       requestServiceMock.getAuthorizeRequestUri.mockReturnValueOnce(uriMock);
 
       // When
-      service.getAuthorizeRequestUri(interactionMock);
+      service.getAuthorizeRequestUri(
+        interactionMock,
+        Openid4vpFlow.SAME_DEVICE,
+      );
 
       // Then
       expect(
         requestServiceMock.getAuthorizeRequestUri,
-      ).toHaveBeenCalledExactlyOnceWith(interactionMock);
+      ).toHaveBeenCalledExactlyOnceWith(
+        interactionMock,
+        Openid4vpFlow.SAME_DEVICE,
+      );
     });
 
     it('should return the URI provided by the request service', () => {
@@ -201,7 +209,10 @@ describe('Openid4vpService', () => {
       requestServiceMock.getAuthorizeRequestUri.mockReturnValueOnce(uriMock);
 
       // When
-      const result = service.getAuthorizeRequestUri(interactionMock);
+      const result = service.getAuthorizeRequestUri(
+        interactionMock,
+        Openid4vpFlow.SAME_DEVICE,
+      );
 
       // Then
       expect(result).toBe(uriMock);
@@ -213,17 +224,20 @@ describe('Openid4vpService', () => {
       requestServiceMock.getRequestById.mockReturnValue(requestConfigMock);
     });
 
-    it('should resolve the request config from the interaction presentationId', async () => {
+    it('should resolve the request config from the interaction credentialQueryId', async () => {
       // When
-      await service.getRequestObject(interactionMock);
+      await service.getRequestObject(
+        interactionMock,
+        Openid4vpFlow.SAME_DEVICE,
+      );
 
       // Then
       expect(requestServiceMock.getRequestById).toHaveBeenCalledExactlyOnceWith(
-        interactionMock.presentationId,
+        interactionMock.credentialQueryId,
       );
     });
 
-    it('should create the authorize request object with the interaction and the request config', async () => {
+    it('should create the authorize request object with the interaction, config and flow', async () => {
       // Given
       const requestObjectMock = Symbol('requestObject');
       requestServiceMock.createAuthorizeRequestObject.mockReturnValueOnce(
@@ -231,12 +245,19 @@ describe('Openid4vpService', () => {
       );
 
       // When
-      await service.getRequestObject(interactionMock);
+      await service.getRequestObject(
+        interactionMock,
+        Openid4vpFlow.SAME_DEVICE,
+      );
 
       // Then
       expect(
         requestServiceMock.createAuthorizeRequestObject,
-      ).toHaveBeenCalledExactlyOnceWith(interactionMock, requestConfigMock);
+      ).toHaveBeenCalledExactlyOnceWith(
+        interactionMock,
+        requestConfigMock,
+        Openid4vpFlow.SAME_DEVICE,
+      );
     });
 
     it('should return the request object built by the library', async () => {
@@ -247,7 +268,10 @@ describe('Openid4vpService', () => {
       );
 
       // When
-      const result = await service.getRequestObject(interactionMock);
+      const result = await service.getRequestObject(
+        interactionMock,
+        Openid4vpFlow.SAME_DEVICE,
+      );
 
       // Then
       expect(result).toBe(requestObjectMock);
@@ -255,7 +279,7 @@ describe('Openid4vpService', () => {
   });
 
   describe('setAuthorizationRequestObjectAsRead', () => {
-    it('should delegate to the session service', async () => {
+    it('should delegate to the session service with the flow', async () => {
       // Given
       const expectedResult = Symbol('result');
       sessionServiceMock.setAuthorizationRequestObjectAsRead.mockResolvedValueOnce(
@@ -263,14 +287,51 @@ describe('Openid4vpService', () => {
       );
 
       // When
-      const result =
-        await service.setAuthorizationRequestObjectAsRead(interactionMock);
+      const result = await service.setAuthorizationRequestObjectAsRead(
+        interactionMock,
+        Openid4vpFlow.CROSS_DEVICE,
+      );
 
       // Then
       expect(
         sessionServiceMock.setAuthorizationRequestObjectAsRead,
-      ).toHaveBeenCalledExactlyOnceWith(interactionMock);
+      ).toHaveBeenCalledExactlyOnceWith(
+        interactionMock,
+        Openid4vpFlow.CROSS_DEVICE,
+      );
       expect(result).toBe(expectedResult);
+    });
+  });
+
+  describe('getFlow', () => {
+    // Given
+    const interactionMock = {
+      state: {
+        sameDevice: 'sameDeviceStateMock',
+        crossDevice: 'crossDeviceStateMock',
+      },
+    } as unknown as Openid4vpInteractionDto;
+
+    it('should return the same device flow based on the interaction state', () => {
+      // Given
+      const stateMock = 'sameDeviceStateMock';
+
+      // When
+      const result = service.getFlow(interactionMock, stateMock);
+
+      // Then
+      expect(result).toBe(Openid4vpFlow.SAME_DEVICE);
+    });
+
+    it('should return the cross device flow based on the interaction state', () => {
+      // Given
+      const stateMock = 'crossDeviceStateMock';
+
+      // When
+      const result = service.getFlow(interactionMock, stateMock);
+
+      // Then
+      expect(result).toBe(Openid4vpFlow.CROSS_DEVICE);
     });
   });
 
@@ -388,36 +449,6 @@ describe('Openid4vpService', () => {
     });
   });
 
-  describe('getInteractionByState', () => {
-    beforeEach(() => {
-      sessionServiceMock.getInteractionByState.mockResolvedValueOnce(
-        interactionMock,
-      );
-      service['checkInteraction'] = jest.fn();
-    });
-
-    it('should check the interaction', async () => {
-      // When
-      await service.getInteractionByState('stateMock');
-
-      // Then
-      expect(service['checkInteraction']).toHaveBeenCalledExactlyOnceWith(
-        interactionMock,
-      );
-    });
-
-    it('should return the interaction when found', async () => {
-      // When
-      const result = await service.getInteractionByState('stateMock');
-
-      // Then
-      expect(
-        sessionServiceMock.getInteractionByState,
-      ).toHaveBeenCalledExactlyOnceWith('stateMock');
-      expect(result).toBe(interactionMock);
-    });
-  });
-
   describe('getUserInteractionById', () => {
     beforeEach(() => {
       service['checkInteraction'] = jest.fn();
@@ -491,19 +522,28 @@ describe('Openid4vpService', () => {
       );
     });
 
-    it('should build the request object from the interaction', async () => {
+    it('should build the request object from the interaction and flow', async () => {
       // When
-      await service.parseResponse(responseMock, interactionMock);
+      await service.parseResponse(
+        responseMock,
+        interactionMock,
+        Openid4vpFlow.SAME_DEVICE,
+      );
 
       // Then
       expect(service.getRequestObject).toHaveBeenCalledExactlyOnceWith(
         interactionMock,
+        Openid4vpFlow.SAME_DEVICE,
       );
     });
 
-    it('should delegate the parsing to the response service with the request payload', async () => {
+    it('should delegate the parsing to the response service with the request payload and the presentation id as credential id', async () => {
       // When
-      await service.parseResponse(responseMock, interactionMock);
+      await service.parseResponse(
+        responseMock,
+        interactionMock,
+        Openid4vpFlow.SAME_DEVICE,
+      );
 
       // Then
       expect(
@@ -511,12 +551,17 @@ describe('Openid4vpService', () => {
       ).toHaveBeenCalledExactlyOnceWith(
         responseMock,
         authorizationRequestPayloadMock,
+        interactionMock.credentialQueryId,
       );
     });
 
     it('should return the parsed documents', async () => {
       // When
-      const result = await service.parseResponse(responseMock, interactionMock);
+      const result = await service.parseResponse(
+        responseMock,
+        interactionMock,
+        Openid4vpFlow.SAME_DEVICE,
+      );
 
       // Then
       expect(result).toBe(documentsMock);

@@ -16,33 +16,37 @@
 
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
-	<!-- issuer name -->
 	<entry key="issuer.name">specificProxyServiceBE</entry>
-	<!--hazelcast distributed maps activation-->
-	<entry key="distributedMapsSpecificProxyService">false</entry>
-	<!-- the IdP's url to where the simple protocol request is send -->
+	<!-- intra-conteneur, inchange -->
 	<entry key="idp.url">https://eidas-mock.docker.dev-franceconnect.fr/IdP/AuthenticateCitizen</entry>
-	<!--specific service URL for processing IdP simple protocol responses-->
 	<entry key="specific.proxyservice.idp.response.service.url">https://eidas-mock.docker.dev-franceconnect.fr/SpecificProxyService/IdpResponse</entry>
-	<!-- the specific service URL for processing IdP simple protocol responses: when specific modules are included in node as JAR-->
-	<entry key="default.specific.proxyservice.idp.response.service.url">https://eidas-mock.docker.dev-franceconnect.fr/EidasNode/IdpResponse</entry>
-	<!-- node's url to send the binary light token related to the request -->
-	<entry key="specific.proxyservice.response.url">https://eidas-mock.docker.dev-franceconnect.fr/EidasNode/SpecificProxyServiceResponse</entry>
-	<!-- ask consent for the request attributes -->
+
+	<entry key="default.specific.proxyservice.idp.response.service.url">https://eidas-mock.docker.dev-franceconnect.fr/EidasNodeProxy/IdpResponse</entry>
+	<entry key="specific.proxyservice.response.url">https://eidas-mock.docker.dev-franceconnect.fr/EidasNodeProxy/SpecificProxyServiceResponse</entry>
+
 	<entry key="ask.consent.request">true</entry>
-	<!-- ask consent for the response -->
 	<entry key="ask.consent.response">true</entry>
-	<!-- ask consent for the response: displaying or not eIDAS attributes-->
 	<entry key="ask.consent.response.show.only.eidas.attributes">true</entry>
-	<!-- ask consent for the response: displaying or not the attributes values-->
 	<entry key="ask.consent.response.show.attribute.values">true</entry>
-	<!--secrets and algorithms for request consent token-->
 	<entry key="consent.Request.LightToken.Secret">mySecretRequest</entry>
 	<entry key="consent.Request.LightToken.Algorithm">SHA-256</entry>
-	<!--secrets and algorithms for response consent token-->
 	<entry key="consent.Response.LightToken.Secret">mySecretResponse</entry>
 	<entry key="consent.Response.LightToken.Algorithm">SHA-256</entry>
-	
+
 	<entry key="relaystate.randomize.null">false</entry>
-	
+
+	<entry key="max.requests.sp">-1</entry>
+	<entry key="max.requests.ip">-1</entry>
+	<entry key="max.time.sp">60</entry>
+	<entry key="max.time.ip">60</entry>
+	<entry key="trusted.sp.domains">all</entry>
+	<entry key="security.header.CSP.enabled">true</entry>
+	<entry key="security.header.CSP.report.uri">https://eidas-mock.docker.dev-franceconnect.fr/SpecificProxyService/cspReportHandler</entry>
+	<entry key="security.header.XXssProtection.block">true</entry>
+	<entry key="security.header.XContentTypeOptions.noSniff">true</entry>
+	<entry key="security.header.XFrameOptions.sameOrigin">true</entry>
+	<entry key="security.header.HSTS.includeSubDomains">true</entry>
+	<entry key="security.header.CSP.includeMozillaDirectives">true</entry>
+	<entry key="validation.bypass">true</entry>
+
 </properties>

@@ -6,4 +6,5 @@ export * from './dsfr-options.enum';
 export * from './icon-placement.enum';
 export * from './pagination.enum';
 export * from './priorities.enum';
+export * from './selection-types.enum';
 export * from './sizes.enum';

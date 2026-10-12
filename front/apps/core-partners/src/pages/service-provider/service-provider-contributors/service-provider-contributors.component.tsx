@@ -8,7 +8,7 @@ import { t } from '@fc/i18n';
 import { ContributorAlert, CreateContributorButton } from '../../../components';
 import { ServiceProviderPermissionsTable } from '../../../components/tables';
 import { CorePartnersOptions } from '../../../enums';
-import { useCanCreateContributor } from '../../../hooks';
+import { useCanManageContributors } from '../../../hooks';
 import type { ExternalUrlsInterface, ServiceProviderMetaInterface } from '../../../interfaces';
 
 export interface ServiceProviderContributorsComponentProps {
@@ -21,7 +21,7 @@ export const ServiceProviderContributorsComponent = React.memo(
       CorePartnersOptions.CONFIG_EXTERNAL_URLS,
     );
 
-    const canCreateContributor = useCanCreateContributor();
+    const canManageContributors = useCanManageContributors();
 
     return (
       <div className="fr-col-12 fr-col-lg-10 fr-col-xl-8 fr-mt-4w">
@@ -35,7 +35,7 @@ export const ServiceProviderContributorsComponent = React.memo(
             {t('Partners.serviceProviderPage.usersSection.description.link')}
           </LinkComponent>
         </p>
-        {canCreateContributor && (
+        {canManageContributors && (
           <ButtonGroupComponent align={Align.RIGHT} iconPlacement={IconPlacement.LEFT}>
             <CreateContributorButton />
           </ButtonGroupComponent>

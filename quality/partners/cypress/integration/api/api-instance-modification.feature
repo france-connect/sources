@@ -114,7 +114,7 @@ Fonctionnalité: API - instance modification
     Et le corps de la réponse a une propriété "payload" avec 1 attribut
     Et le corps de la réponse a une propriété "payload.name" avec 1 élément
     Et le corps de la réponse a une propriété "payload.name[0]" avec 3 attributs
-    Et le corps de la réponse a une propriété "payload.name[0].content" égale à "Veuillez saisir le nom de votre instance"
+    Et le corps de la réponse a une propriété "payload.name[0].content" égale à "Veuillez saisir le nom de votre bac à sable"
     Et le corps de la réponse a une propriété "payload.name[0].level" égale à "error"
     Et le corps de la réponse a une propriété "payload.name[0].priority" égale à 50
 
@@ -156,7 +156,7 @@ Fonctionnalité: API - instance modification
     Et le corps de la réponse a une propriété "payload" avec 3 attributs
     Et le corps de la réponse a une propriété "payload.name" avec 1 élément
     Et le corps de la réponse a une propriété "payload.name[0]" avec 3 attributs
-    Et le corps de la réponse a une propriété "payload.name[0].content" égale à "Veuillez saisir le nom de votre instance"
+    Et le corps de la réponse a une propriété "payload.name[0].content" égale à "Veuillez saisir le nom de votre bac à sable"
     Et le corps de la réponse a une propriété "payload.signupId" avec 1 élément
     Et le corps de la réponse a une propriété "payload.signupId[0]" avec 3 attributs
     Et le corps de la réponse a une propriété "payload.signupId[0].content" égale à "Veuillez saisir un numéro valide"
@@ -181,6 +181,6 @@ Fonctionnalité: API - instance modification
     Et le corps de la réponse a une propriété "payload" avec 1 attribut
     Et le corps de la réponse a une propriété "payload.signupId" avec 2 éléments
     Et le corps de la réponse a une propriété "payload.signupId[0]" avec 3 attributs
-    Et le corps de la réponse a une propriété "payload.signupId[0].content" égale à "Le numéro de la demande datapass doit être de 7 caractères maximum"
+    Et le corps de la réponse a une propriété "payload.signupId[0].content" égale à "Le numéro de la demande d’habilitation doit être de 7 caractères maximum"
     Et le corps de la réponse a une propriété "payload.signupId[1]" avec 3 attributs
     Et le corps de la réponse a une propriété "payload.signupId[1].content" égale à "Veuillez saisir un numéro valide"

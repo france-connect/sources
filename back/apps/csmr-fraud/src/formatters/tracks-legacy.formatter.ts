@@ -8,6 +8,8 @@ import {
   getContextFromLegacyTracks,
   getIpAddressFromTracks,
   getLocationFromTracks,
+  getOrganizationFromTracks,
+  getPortFromTracks,
   TracksFormatterAbstract,
   TracksFormatterMappingFailedException,
   TracksLegacyFieldsInterface,
@@ -25,6 +27,9 @@ export class TracksLegacyFormatter implements TracksFormatterAbstract<TracksForm
     private readonly config: ConfigService,
   ) {}
 
+  // @NOTE disabling eslint complexity caused by `??`
+  // to fix it we need to refactor the code
+  // eslint-disable-next-line complexity
   formatTrack(
     rawTrack: SearchHit<TracksLegacyFieldsInterface>,
   ): TracksFormatterOutputInterface {
@@ -47,7 +52,9 @@ export class TracksLegacyFormatter implements TracksFormatterAbstract<TracksForm
       const safeIdpLabel = this.getIdpLabel(idpLabel, idpName);
       const date = getReadableDateFromTime(time);
       const ipAddress = getIpAddressFromTracks(_source);
-      const { country, city } = getLocationFromTracks(_source);
+      const port = getPortFromTracks(_source) ?? '';
+      const organization = getOrganizationFromTracks(_source) ?? '';
+      const { country, city, region } = getLocationFromTracks(_source);
       const { accountId } = _source;
 
       const output: TracksFormatterOutputInterface = {
@@ -67,8 +74,11 @@ export class TracksLegacyFormatter implements TracksFormatterAbstract<TracksForm
         interactionId,
         browsingSessionId,
         city,
+        region: region ?? '',
         country,
         ipAddress,
+        port,
+        organization,
       };
 
       return output;

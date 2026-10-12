@@ -62,7 +62,7 @@ items:
 
   # bdd_sp2_contributor_new / 123 / fia1
   user-bdd-sp2-contributor-new:
-    id: 'b2c3d4e5-6f7a-8b9c-0d1e-2f3a4b5c6d7e'
+    id: '4fb86b55-03b8-41fd-a5d6-c3a171172a3f'
     sub: 'e5f6a7b8-c9d0-1e2f-3a4b-5c6d7e8f9a0b'
     email: 'tbernard@yopmail.com'
     firstname: 'Théo'
@@ -72,7 +72,7 @@ items:
 
   # bdd_sp2_contributor_connection / 123 / fia1
   user-bdd-sp2-contributor-connection:
-    id: 'c3d4e5f6-7a8b-9c0d-1e2f-3a4b5c6d7e8f'
+    id: 'efc361d6-524c-4821-958b-4ffd1a79e50f'
     sub: 'f6a7b8c9-d0e1-2f3a-4b5c-6d7e8f9a0b1c'
     email: 'nlaurent@yopmail.com'
     firstname: 'Noémie'
@@ -80,3 +80,13 @@ items:
     createdAt: '2026-06-05'
     updatedAt: '2026-06-05'
     lastConnection: '2026-06-05T11:01:01Z'
+
+  # contributor dedicated to the contributor-deletion API test (asserted by no other test)
+  user-bdd-sp8-contributor-to-delete:
+    id: 'a7b8c9d0-1e2f-4a3b-8c5d-6e7f8a9b0c1d'
+    sub: 'b8c9d0e1-2f3a-4b5c-8d6e-7f8a9b0c1d2e'
+    email: 'contributortodelete@yopmail.com'
+    firstname: 'Camille'
+    lastname: 'DELETO'
+    createdAt: '2026-06-05'
+    updatedAt: '2026-06-05'

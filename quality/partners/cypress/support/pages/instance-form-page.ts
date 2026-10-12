@@ -42,7 +42,7 @@ export default class InstanceFormPage {
   }
 
   protected getInputErrorMessagesFromName(name: string): ChainableElement {
-    return cy.get(`[data-testid="${name}-messages"].fr-message--error`);
+    return cy.get(`[data-testid="${name}-messages"] .fr-message--error`);
   }
 
   getInputAddButton(key: string): ChainableElement {

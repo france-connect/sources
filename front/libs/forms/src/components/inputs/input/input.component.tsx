@@ -3,6 +3,8 @@ import type { FieldInputProps } from 'react-final-form';
 
 import type { PropsWithClassName } from '@fc/common';
 
+import { getFieldMessagesId } from '../../../helpers';
+
 interface InputComponentProps<FieldValue = string> extends PropsWithClassName {
   readOnly?: boolean;
   disabled?: boolean;
@@ -14,7 +16,7 @@ export const InputComponent = React.memo(
   ({ className, disabled = false, id, input, readOnly = false }: InputComponentProps) => (
     <input
       {...input}
-      aria-describedby={`${input.name}-messages`}
+      aria-describedby={getFieldMessagesId(input.name)}
       className={className}
       data-testid={`${id}--testid`}
       disabled={disabled}

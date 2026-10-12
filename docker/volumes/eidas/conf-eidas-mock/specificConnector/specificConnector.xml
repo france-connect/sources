@@ -16,11 +16,23 @@
 
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
-	<!-- issuer name -->
 	<entry key="issuer.name">specificConnectorBE</entry>
-	<!-- node's url to send the binary light token related to the request -->
-	<entry key="specific.connector.request.url">https://eidas-mock.docker.dev-franceconnect.fr/EidasNode/SpecificConnectorRequest</entry>
-	<!--hazelcast distributed maps activation-->
-	<entry key="distributedMapsSpecificConnector">false</entry>
+	<entry key="specific.connector.request.url">https://eidas-mock.docker.dev-franceconnect.fr/EidasNodeConnector/SpecificConnectorRequest</entry>
 	<entry key="relaystate.randomize.null">false</entry>
+
+	<entry key="max.requests.sp">-1</entry>
+	<entry key="max.requests.ip">-1</entry>
+	<entry key="max.time.sp">60</entry>
+	<entry key="max.time.ip">60</entry>
+	<entry key="trusted.sp.domains">all</entry>
+	<entry key="security.header.CSP.enabled">true</entry>
+	<entry key="security.header.CSP.report.uri">https://eidas-mock.docker.dev-franceconnect.fr/SpecificConnector/cspReportHandler</entry>
+	<entry key="security.header.XXssProtection.block">true</entry>
+	<entry key="security.header.XContentTypeOptions.noSniff">true</entry>
+	<entry key="security.header.XFrameOptions.sameOrigin">true</entry>
+	<entry key="security.header.HSTS.includeSubDomains">true</entry>
+	<entry key="security.header.CSP.includeMozillaDirectives">true</entry>
+	<entry key="validation.bypass">true</entry>
+
+	<!-- SUPPRIME : distributedMapsSpecificConnector (Hazelcast 2.x, sans objet sur Ignite) -->
 </properties>

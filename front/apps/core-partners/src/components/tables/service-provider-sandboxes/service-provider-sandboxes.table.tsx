@@ -6,22 +6,24 @@ import type { TableColumnActionsInterface, TableColumnInterface } from '@fc/dsfr
 import { TableComponent } from '@fc/dsfr';
 import { t } from '@fc/i18n';
 
+import { useServiceProviderSandboxes } from '../../../hooks';
 import type { InstanceInterface } from '../../../interfaces';
 import { DeleteInstanceButton } from '../../buttons';
 
 interface ServiceProviderSandboxesTableProps {
   sandboxes: InstanceInterface[];
-  onDelete: (instance: InstanceInterface) => void;
 }
 
 export const ServiceProviderSandboxesTable = React.memo(
-  ({ onDelete, sandboxes }: ServiceProviderSandboxesTableProps) => {
+  ({ sandboxes }: ServiceProviderSandboxesTableProps) => {
+    const { deleteInstanceHandler } = useServiceProviderSandboxes();
+
     const tableColumns: TableColumnInterface<InstanceInterface>[] = useMemo(
       () => [
         {
+          className: 'fr-text--bold',
           key: 'currentVersion.data.name',
           label: t('Partners.serviceProviderPage.sandboxes.columns.instanceName'),
-          styles: 'fr-text--bold',
         },
         {
           getValue: (row) => {
@@ -46,9 +48,9 @@ export const ServiceProviderSandboxesTable = React.memo(
 
     const tableActions: TableColumnActionsInterface<InstanceInterface> = useCallback(
       (instance: InstanceInterface) => (
-        <DeleteInstanceButton instance={instance} onDelete={onDelete} />
+        <DeleteInstanceButton instance={instance} onDelete={deleteInstanceHandler} />
       ),
-      [onDelete],
+      [deleteInstanceHandler],
     );
 
     return (

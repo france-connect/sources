@@ -2,14 +2,15 @@ import classnames from 'classnames';
 import React from 'react';
 import { Field, Form } from 'react-final-form';
 
-import { TextAreaInputComponent, TextInputComponent } from '@fc/core-user-dashboard';
-import { ButtonTypes, CheckboxInput, SimpleButton, Sizes } from '@fc/dsfr';
+import { ButtonTypes, SimpleButton, Sizes } from '@fc/dsfr';
 import { t } from '@fc/i18n';
 import { useStylesQuery, useStylesVariables } from '@fc/styles';
 
 import type { FraudFormValuesInterface } from '../../interfaces';
+import { CheckboxInputComponent, TextAreaInputComponent, TextInputComponent } from '../inputs';
 import styles from './fraud-form.module.scss';
 import {
+  inputAcceptTransmitDataConfig,
   inputAuthenticationEventIdConfig,
   inputEmailConfig,
   inputPhoneConfig,
@@ -29,7 +30,6 @@ export const FraudFormComponent = React.memo(
 
     const title = t('FraudForm.form.title');
     const mention = t('FraudForm.form.mention');
-    const accept = t('FraudForm.form.accept');
     const report = t('FraudForm.form.report');
 
     return (
@@ -66,7 +66,8 @@ export const FraudFormComponent = React.memo(
               <TextInputComponent {...inputPhoneConfig} />
               {/* eslint-disable-next-line react/jsx-props-no-spreading */}
               <TextAreaInputComponent {...inputTextAreaDescriptionConfig} />
-              <CheckboxInput label={accept} name="acceptTransmitData" />
+              {/* eslint-disable-next-line react/jsx-props-no-spreading */}
+              <CheckboxInputComponent {...inputAcceptTransmitDataConfig} />
               <div className="text-right">
                 <SimpleButton
                   className="fr-mt-4w"

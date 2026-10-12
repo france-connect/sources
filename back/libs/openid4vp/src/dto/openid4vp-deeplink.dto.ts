@@ -15,8 +15,6 @@ export class Openid4vpDeepLinkDto {
 
   @IsUrl({
     protocols: ['https'],
-    // Class-validator rule name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     require_protocol: true,
   })
   @IsNotEmpty()

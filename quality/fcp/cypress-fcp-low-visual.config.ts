@@ -18,12 +18,12 @@ export default defineConfig({
     },
     specPattern: 'cypress/integration/visuel/*.feature',
   },
-  env: {
-    ...baseConfig.env,
+  expose: {
+    ...baseConfig.expose,
     APP_LABEL: 'FranceConnect',
     // Base Configuration
-    TAGS: '@fcpLow and @validationVisuelle and not @ignore',
     TEST_ENV: 'docker',
     TEST_PLATFORM: 'fcp-low',
+    tags: '@fcpLow and @validationVisuelle and not @ignore',
   },
 });

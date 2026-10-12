@@ -31,10 +31,10 @@ describe('ModalShellComponent', () => {
     render(
       <ModalShellComponent
         dataTestId="any-modal-testid-mock"
-        footer={<span>any-footer-mock</span>}
         id="any-modal-id-mock"
         title="any-title-mock"
-        onClose={jest.fn()}>
+        onClose={jest.fn()}
+        onConfirm={jest.fn()}>
         any-children-mock
       </ModalShellComponent>,
     );
@@ -168,21 +168,23 @@ describe('ModalShellComponent', () => {
     );
   });
 
-  it('should render the footer when provided', () => {
+  it('should render the footer when a confirmation callback is provided', () => {
     // Given
-    const footer = <span>any-footer-mock</span>;
+    const onCloseMock = jest.fn();
+    const onConfirmMock = jest.fn();
 
     // When
     render(
-      <ModalShellComponent footer={footer} id="any-modal-id-mock" onClose={jest.fn()}>
+      <ModalShellComponent id="any-modal-id-mock" onClose={onCloseMock} onConfirm={onConfirmMock}>
         any-children-mock
       </ModalShellComponent>,
     );
 
     // Then
-    expect(ModalFooterComponent).toHaveBeenCalledOnce();
-    expect(ModalFooterComponent).toHaveBeenCalledWith({ children: footer }, undefined);
-    expect(screen.getByText('any-footer-mock')).toBeInTheDocument();
+    expect(ModalFooterComponent).toHaveBeenCalledExactlyOnceWith(
+      { onClose: onCloseMock, onConfirm: onConfirmMock },
+      undefined,
+    );
   });
 
   it('should call handleCancel when the dialog cancel event is triggered', () => {

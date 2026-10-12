@@ -3,73 +3,45 @@
 exports[`TableComponent should match the snapshot with optionnals props 1`] = `
 <div>
   <div
-    class="fr-table--lg fr-table fr-table--bordered"
-    id="any-table-id-mock"
+    class="container-classname-mock"
   >
-    <div
-      class="fr-table__wrapper"
+    <table
+      data-mockid="TableWrapperComponent"
     >
-      <div
-        class="fr-table__container"
-      >
-        <div
-          class="fr-table__content"
-        >
-          <table
-            id="any-table-id-mock--table"
-          >
-            <caption
-              data-mockid="TableCaptionComponent"
-            />
-            <tbody>
-              <tr
-                data-mockid="TableRowComponent"
-              />
-              <tr
-                data-mockid="TableRowComponent"
-              />
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
+      <caption
+        data-mockid="TableCaptionComponent"
+      />
+      <tbody>
+        <tr
+          data-mockid="TableRowComponent"
+        />
+        <tr
+          data-mockid="TableRowComponent"
+        />
+      </tbody>
+    </table>
   </div>
 </div>
 `;
 
 exports[`TableComponent should match the snapshot with required props 1`] = `
 <div>
-  <div
-    class="fr-table--md fr-table"
-    id="any-table-id-mock"
-  >
-    <div
-      class="fr-table__wrapper"
+  <div>
+    <table
+      data-mockid="TableWrapperComponent"
     >
-      <div
-        class="fr-table__container"
-      >
-        <div
-          class="fr-table__content"
-        >
-          <table
-            id="any-table-id-mock--table"
-          >
-            <thead
-              data-mockid="TableHeaderComponent"
-            />
-            <tbody>
-              <tr
-                data-mockid="TableRowComponent"
-              />
-              <tr
-                data-mockid="TableRowComponent"
-              />
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
+      <thead
+        data-mockid="TableHeaderComponent"
+      />
+      <tbody>
+        <tr
+          data-mockid="TableRowComponent"
+        />
+        <tr
+          data-mockid="TableRowComponent"
+        />
+      </tbody>
+    </table>
   </div>
 </div>
 `;

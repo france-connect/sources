@@ -12,8 +12,9 @@ jest.mock('../../elements/buttons/array-add/array-add.button');
 describe('ArrayField', () => {
   // Given
   const fieldsMock = {
+    length: 1,
     map: jest.fn(),
-  } as unknown as FieldArrayRenderProps<unknown, HTMLElement>['fields'];
+  } as unknown as FieldArrayRenderProps['fields'];
 
   beforeEach(() => {
     // Given
@@ -44,24 +45,52 @@ describe('ArrayField', () => {
 
     // Then
     expect(container).toMatchSnapshot();
-    expect(useFieldArray).toHaveBeenCalledOnce();
-    expect(useFieldArray).toHaveBeenCalledWith('any-name-mock');
-    expect(LabelElement).toHaveBeenCalledOnce();
-    expect(LabelElement).toHaveBeenCalledWith(
+    expect(useFieldArray).toHaveBeenCalledExactlyOnceWith('any-name-mock');
+    expect(LabelElement).toHaveBeenCalledExactlyOnceWith(
       {
         className: 'fr-label fr-mb-2v',
+        htmlFor: 'form-input-array-any-name-mock[0]',
         label: 'any-label-mock',
-        name: 'any-name-mock',
         required: true,
       },
       undefined,
     );
-    expect(ArrayAddButton).toHaveBeenCalledOnce();
-    expect(ArrayAddButton).toHaveBeenCalledWith(
+    expect(ArrayAddButton).toHaveBeenCalledExactlyOnceWith(
       {
         dataTestId: 'any-name-mock-add',
         disabled: false,
         onClick: pushHandlerMock,
+      },
+      undefined,
+    );
+  });
+
+  it('should not associate the label when the array is empty', () => {
+    // Given
+    const emptyFieldsMock = {
+      length: 0,
+      map: jest.fn(),
+    } as unknown as FieldArrayRenderProps['fields'];
+    jest.mocked(useFieldArray).mockReturnValueOnce({ fields: emptyFieldsMock, meta: {} });
+
+    // When
+    render(
+      <ArrayField
+        config={{
+          label: 'any-label-mock',
+          name: 'any-name-mock',
+          required: true,
+        }}
+      />,
+    );
+
+    // Then
+    expect(LabelElement).toHaveBeenCalledWith(
+      {
+        className: 'fr-label fr-mb-2v',
+        htmlFor: undefined,
+        label: 'any-label-mock',
+        required: true,
       },
       undefined,
     );

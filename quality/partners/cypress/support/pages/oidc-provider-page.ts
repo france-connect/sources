@@ -95,7 +95,7 @@ export default class OidcProviderPage {
   }
 
   login(user: UserData, acr: string, withCustomIdentity = false): void {
-    if (Cypress.env('TEST_ENV') === 'docker') {
+    if (Cypress.expose('TEST_ENV') === 'docker') {
       if (withCustomIdentity) {
         this.loginWithIdpMockUsingCustomIdentity(user.claims, acr);
       } else {

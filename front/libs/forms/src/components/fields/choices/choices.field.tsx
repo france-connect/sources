@@ -19,7 +19,6 @@ export const ChoicesField = React.memo(({ choices, config }: ChoicesFieldProps) 
   const { errorsList, hasError, isValid } = useFieldMeta(meta);
 
   const fieldMessages = useFieldMessages({ errorsList, isValid, messages });
-  const hasMessages = fieldMessages && fieldMessages.length > 0;
 
   return (
     <FieldsetElement hasError={hasError} isValid={isValid} name={name}>
@@ -42,9 +41,7 @@ export const ChoicesField = React.memo(({ choices, config }: ChoicesFieldProps) 
           value={choice.value}
         />
       ))}
-      {hasMessages && (
-        <MessagesElement dataTestId={`${name}-messages`} id={name} messages={fieldMessages} />
-      )}
+      <MessagesElement id={name} messages={fieldMessages} />
     </FieldsetElement>
   );
 });

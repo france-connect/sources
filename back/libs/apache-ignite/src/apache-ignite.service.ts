@@ -1,13 +1,14 @@
 import * as IgniteClient from 'apache-ignite-client';
 import { operation, OperationOptions, RetryOperation } from 'retry';
 
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger';
 
 import { ApacheIgniteConfig } from './dto';
 import { ApacheIgniteInvalidSocketException } from './exceptions';
+import { APACHE_IGNITE_CONFIG_NAME } from './tokens';
 
 const { ObjectType, IgniteClientConfiguration, STATE } = IgniteClient;
 
@@ -23,6 +24,7 @@ export class ApacheIgniteService {
    * state change
    */
   constructor(
+    @Inject(APACHE_IGNITE_CONFIG_NAME) private readonly configName: string,
     private readonly config: ConfigService,
     private readonly logger: LoggerService,
   ) {
@@ -52,10 +54,12 @@ export class ApacheIgniteService {
    */
   async connectIgnite(): Promise<void> {
     const { endpoint, socketKeepAlive, tls, auth } =
-      this.config.get<ApacheIgniteConfig>('ApacheIgnite');
+      this.config.get<ApacheIgniteConfig>(this.configName);
     const { key, cert, ca, useTls } = tls;
 
-    this.logger.debug('Connecting to apache-ignite cache...');
+    this.logger.debug(
+      `[${this.configName}] Connecting to apache-ignite cache...`,
+    );
     /* 
     Partition awareness allows the thin client to send query 
     requests directly to the node that owns the queried data.
@@ -77,7 +81,7 @@ export class ApacheIgniteService {
     );
 
     this.logger.debug(
-      `[setSocketKeepAlive]: enable = ${socketKeepAlive.enable} ; initialDelay = ${socketKeepAlive.initialDelay}`,
+      `[${this.configName}] [setSocketKeepAlive]: enable = ${socketKeepAlive.enable} ; initialDelay = ${socketKeepAlive.initialDelay}`,
     );
 
     this.setSocketKeepAlive(
@@ -105,7 +109,9 @@ export class ApacheIgniteService {
   }
 
   async triggerIgnite(attempt): Promise<void> {
-    this.logger.debug(`Apache Ignite client, Connection attempt: ${attempt}`);
+    this.logger.debug(
+      `[${this.configName}] Apache Ignite client, Connection attempt: ${attempt}`,
+    );
     try {
       await this.connectIgnite();
     } catch (err) {
@@ -116,11 +122,12 @@ export class ApacheIgniteService {
   private retryApacheIgnite(fn: () => void, err?: Error): void {
     if (!this.retryOperation) {
       this.logger.debug(
-        'Apache ignite client failed to connect, create retry process',
+        `[${this.configName}] Apache ignite client failed to connect, create retry process`,
       );
 
-      const { maxRetryTimeout } =
-        this.config.get<ApacheIgniteConfig>('ApacheIgnite');
+      const { maxRetryTimeout } = this.config.get<ApacheIgniteConfig>(
+        this.configName,
+      );
       const options: OperationOptions = {
         forever: true,
         maxTimeout: maxRetryTimeout,
@@ -130,7 +137,7 @@ export class ApacheIgniteService {
       this.retryOperation.attempt(fn);
     } else {
       this.logger.debug(
-        'Apache ignite client failed to connect, retry new attempt...',
+        `[${this.configName}] Apache ignite client failed to connect, retry new attempt...`,
       );
       // an Error is required to work!
       this.retryOperation.retry(err);
@@ -153,7 +160,9 @@ export class ApacheIgniteService {
   private onStateChanged(state: number, reason?: string | Error): void {
     // STATE.CONNECTING is mandatory ignored
     if (state === STATE.CONNECTED) {
-      this.logger.debug('Apache ignite client is connected');
+      this.logger.debug(
+        `[${this.configName}] Apache ignite client is connected`,
+      );
       this.clearRetryApacheIgnite();
     } else if (state === STATE.DISCONNECTED) {
       const error = reason instanceof Error ? reason : new Error(reason);

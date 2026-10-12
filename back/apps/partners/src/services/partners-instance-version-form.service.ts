@@ -5,9 +5,13 @@ import { PartnersServiceProviderInstance } from '@entities/typeorm';
 import { getTransformed } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
-import { PartnersServiceProviderService } from '@fc/partners-service-provider';
+import {
+  PartnersPlatformEnum,
+  PartnersServiceProviderService,
+} from '@fc/partners-service-provider';
 import { PartnersServiceProviderInstanceService } from '@fc/partners-service-provider-instance';
 import { ServiceProviderInstanceVersionStandaloneDto } from '@fc/partners-service-provider-instance-version';
+import { ScopesService } from '@fc/scopes';
 import { OidcClientInterface } from '@fc/service-provider';
 
 import { AppConfig, DefaultServiceProviderLowValueConfig } from '../dto';
@@ -15,7 +19,6 @@ import {
   ExistingDataInterface,
   InstanceVersionFromSpPayloadInterface,
 } from '../interfaces';
-import { PartnersServiceProviderFormService } from './partners-service-provider-form.service';
 
 @Injectable()
 export class PartnersInstanceVersionFormService {
@@ -25,7 +28,7 @@ export class PartnersInstanceVersionFormService {
     private readonly config: ConfigService,
     private readonly instance: PartnersServiceProviderInstanceService,
     private readonly crypto: CryptographyService,
-    private readonly serviceProviderFormService: PartnersServiceProviderFormService,
+    private readonly scopes: ScopesService,
     private readonly serviceProvider: PartnersServiceProviderService,
   ) {}
 
@@ -50,10 +53,15 @@ export class PartnersInstanceVersionFormService {
 
     const scope = await this.getScopesForServiceProvider(serviceProviderId);
 
+    // TODO: temporary fix to avoid sector_identifier_uri to be an empty string, which is not allowed by the OIDC spec.
+    const normalizedValues = this.normalizeEmptyStringsToUndefined(values, [
+      'sector_identifier_uri',
+    ]);
+
     const output = {
       ...DefaultServiceProviderLowValue,
       ...mutable,
-      ...values,
+      ...normalizedValues,
       ...immutable,
       scope,
     };
@@ -108,11 +116,13 @@ export class PartnersInstanceVersionFormService {
   private async getScopesForServiceProvider(
     serviceProviderId: string,
   ): Promise<string[]> {
-    const serviceProvider =
+    const { datapassScopes, platform } =
       await this.serviceProvider.getById(serviceProviderId);
 
-    const { fcScopes } =
-      this.serviceProviderFormService.toDisplayValue(serviceProvider);
+    const fcScopes = this.scopes.getScopesFromDatapassScopes(
+      platform.name as PartnersPlatformEnum,
+      datapassScopes || [],
+    );
 
     const DefaultServiceProviderLowValue =
       this.config.get<DefaultServiceProviderLowValueConfig>(
@@ -120,6 +130,18 @@ export class PartnersInstanceVersionFormService {
       );
 
     return [...fcScopes, ...DefaultServiceProviderLowValue.scope];
+  }
+
+  private normalizeEmptyStringsToUndefined<T extends object, K extends keyof T>(
+    payload: T,
+    keys: K[],
+  ): T {
+    return Object.fromEntries(
+      Object.entries(payload).map(([key, value]) => [
+        key,
+        keys.includes(key as K) && value === '' ? undefined : value,
+      ]),
+    ) as T;
   }
 
   /**

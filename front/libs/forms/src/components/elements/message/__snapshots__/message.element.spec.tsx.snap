@@ -4,7 +4,7 @@ exports[`MessageElement should match the snapshot 1`] = `
 <div>
   <p
     class="message fr-message fr-message--any-level"
-    id="id-mock-messages"
+    id="id-mock-error-desc-0"
   >
     any-content
   </p>

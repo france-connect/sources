@@ -1,5 +1,6 @@
 export * from './external-urls.interface';
 export * from './instance.interface';
+export * from './link-instances-payload.interface';
 export * from './location-with-submit-state.interface';
 export * from './organization.interface';
 export * from './partner-user-infos.interface';

@@ -72,7 +72,7 @@ const getParamsByTracksType = (
 const executeTracksCmd = async (
   cmd: string,
   ctx: string[] = [],
-): Promise<void> => {
+): Promise<null> => {
   const BASE_TRACKS_COMMAND = 'yarn traces';
   const command = `${[...ctx, 'export CI=1'].join(' ')}; ${BASE_TRACKS_COMMAND} ${cmd}`;
   // eslint-disable-next-line no-console
@@ -88,15 +88,14 @@ const executeTracksCmd = async (
     console.log(`stdout: ${stdout}`);
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error(error);
-    throw new Error(`Failed to call script ${cmd}`);
+    console.error(`Failed to call script ${cmd}`, error);
   }
   return null;
 };
 
 export const addTracks = async (
   args: AddTracksArgsInterface,
-): Promise<void> => {
+): Promise<null> => {
   const { mockSet = 'high', tracksType } = args;
   const accountId = DEFAULT_ACCOUNT_ID;
   const mocks = DEFAULT_MOCK_FILES[mockSet];
@@ -115,7 +114,7 @@ export const addTracks = async (
 
 export const injectTracks = async (
   args: TracksArgsInterface,
-): Promise<void> => {
+): Promise<null> => {
   const { mockSet } = args;
   const accountId = DEFAULT_ACCOUNT_ID;
   const logFiles = {
@@ -137,7 +136,7 @@ export const injectTracks = async (
   return null;
 };
 
-export const removeAllTracks = async (): Promise<void> => {
+export const removeAllTracks = async (): Promise<null> => {
   await removeTracks({ mockSet: 'high' });
   await removeTracks({ mockSet: 'legacy' });
   await removeTracks({ mockSet: 'low' });
@@ -146,7 +145,7 @@ export const removeAllTracks = async (): Promise<void> => {
 
 export const removeTracks = async (
   args: TracksArgsInterface,
-): Promise<void> => {
+): Promise<null> => {
   const { mockSet } = args;
   // eslint-disable-next-line no-console
   console.log(`Remove tracks ${mockSet}`);

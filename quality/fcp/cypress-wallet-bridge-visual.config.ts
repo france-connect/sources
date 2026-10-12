@@ -12,12 +12,12 @@ export default defineConfig({
     },
     specPattern: 'cypress/integration/visuel/*.feature',
   },
-  env: {
-    ...baseConfig.env,
+  expose: {
+    ...baseConfig.expose,
     APP_LABEL: 'Wallet Bridge',
     // Base Configuration
-    TAGS: '@walletBridge and @validationVisuelle and not @ignore',
     TEST_ENV: 'docker',
     TEST_PLATFORM: 'fcp-low',
+    tags: '@walletBridge and @validationVisuelle and not @ignore',
   },
 });

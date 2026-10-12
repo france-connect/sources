@@ -1,11 +1,17 @@
 import { fireEvent, render } from '@testing-library/react';
 import React from 'react';
 
+import { useContentHeight } from '@fc/common';
+
+import { TableRowSelectComponent } from '../row-select';
 import { TableRowComponent } from './table-row.component';
+
+jest.mock('../row-select/table-row-select.component');
 
 describe('TableRowComponent', () => {
   // Given
   const tbody = document.createElement('tbody');
+  const contentRefMock = React.createRef<HTMLTableRowElement>();
   const columnsMock = [
     {
       key: 'column1',
@@ -29,6 +35,14 @@ describe('TableRowComponent', () => {
     label: 'any-label-mock',
   };
 
+  beforeEach(() => {
+    // Given
+    jest.mocked(useContentHeight).mockReturnValue({
+      contentHeight: 42,
+      contentRef: contentRefMock,
+    });
+  });
+
   it('should match the snapshot', () => {
     // When
     const { container } = render(
@@ -44,24 +58,12 @@ describe('TableRowComponent', () => {
 
     // Then
     expect(container).toMatchSnapshot();
-  });
-
-  it('should set the row id', () => {
-    // when
-    const { container } = render(
-      <TableRowComponent
-        className="any-classname-mock"
-        columns={columnsMock}
-        data={dataMock}
-        index={0}
-        tableId="any-table-id-mock"
-      />,
-      { container: document.body.appendChild(tbody) },
-    );
-
-    // Then
-    expect(container).toMatchSnapshot();
-    expect(container.firstChild).toHaveAttribute('id', 'any-table-id-mock--row-0');
+    expect(container.firstChild).toHaveAttribute('id', 'any-table-id-mock--row-1');
+    expect(container.firstChild).toHaveClass('any-classname-mock');
+    expect(useContentHeight).toHaveBeenCalledWith({ offset: 2 });
+    // DSFR classname
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    expect(container.firstChild).toHaveStyle({ '--row-height': '42px' });
   });
 
   it('should render 3 columns with values', () => {
@@ -169,6 +171,39 @@ describe('TableRowComponent', () => {
     expect(col2Element).toHaveClass('fr-cell--multiline');
   });
 
+  it('should apply className on column cell if className is defined', () => {
+    // Given
+    const columnsWithClassNameMock = [
+      {
+        className: 'column-classname-mock',
+        key: 'column1',
+        label: 'column-mock-1',
+      },
+      {
+        key: 'column2',
+        label: 'column-mock-2',
+      },
+    ];
+
+    // When
+    const { getByText } = render(
+      <TableRowComponent
+        className="any-classname-mock"
+        columns={columnsWithClassNameMock}
+        data={dataMock}
+        index={0}
+        tableId="any-table-id-mock"
+      />,
+      { container: document.body.appendChild(tbody) },
+    );
+    const col1Element = getByText('value1');
+    const col2Element = getByText('value2');
+
+    // Then
+    expect(col1Element).toHaveClass('column-classname-mock');
+    expect(col2Element).not.toHaveClass('column-classname-mock');
+  });
+
   it('should be N/A element if value is undefined', () => {
     // When
     const { getByText } = render(
@@ -201,23 +236,6 @@ describe('TableRowComponent', () => {
     expect(col2Element).toBeInTheDocument();
   });
 
-  it('should not render actions cell if actions is not provided', () => {
-    // When
-    const { container } = render(
-      <TableRowComponent
-        className="any-classname-mock"
-        columns={columnsMock}
-        data={dataMock}
-        index={0}
-        tableId="any-table-id-mock"
-      />,
-      { container: document.body.appendChild(tbody) },
-    );
-
-    // Then
-    expect(container.querySelectorAll('td')).toHaveLength(3);
-  });
-
   it('should render actions returned by actions renderer', () => {
     // Given
     const actionsMock = jest.fn(() => (
@@ -246,30 +264,104 @@ describe('TableRowComponent', () => {
     expect(getByText('action-2-mock')).toBeInTheDocument();
   });
 
-  it('should call action handler when clicking rendered action', () => {
+  it('should render a selectable row with aria-selected and row select checkbox', () => {
     // Given
-    const onActionClickMock = jest.fn();
-    const actionsMock = () => (
-      <button type="button" onClick={onActionClickMock}>
-        action-mock
-      </button>
-    );
+    const toggleOneItemMock = jest.fn();
+    const selectableMock = {
+      checkIfItemIsSelected: jest.fn().mockReturnValue(true),
+      isAllItemsSelected: false,
+      selection: new Set<string>(['itemIdKey-mock']),
+      toggleAllItems: jest.fn(),
+      toggleOneItem: toggleOneItemMock,
+    };
 
     // When
-    const { getByText } = render(
+    const { container } = render(
       <TableRowComponent
-        actions={actionsMock}
         className="any-classname-mock"
         columns={columnsMock}
         data={dataMock}
         index={0}
+        selectable={selectableMock}
         tableId="any-table-id-mock"
       />,
       { container: document.body.appendChild(tbody) },
     );
-    fireEvent.click(getByText('action-mock'));
 
     // Then
-    expect(onActionClickMock).toHaveBeenCalledOnce();
+    expect(container.firstChild).toHaveAttribute('aria-selected', 'true');
+    expect(container.querySelector('th.fr-cell--fixed')).toBeInTheDocument();
+    expect(TableRowSelectComponent).toHaveBeenCalledExactlyOnceWith(
+      {
+        checked: true,
+        id: 'any-table-id-mock--row-1--row-select',
+        label: 'DSFR.table.columnSelect.row',
+        onChange: expect.any(Function),
+      },
+      undefined,
+    );
+  });
+
+  it('should set aria-selected to false when selectable row is not checked', () => {
+    // Given
+    const selectableMock = {
+      checkIfItemIsSelected: jest.fn().mockReturnValue(false),
+      isAllItemsSelected: false,
+      selection: new Set<string>(),
+      toggleAllItems: jest.fn(),
+      toggleOneItem: jest.fn(),
+    };
+
+    // When
+    const { container } = render(
+      <TableRowComponent
+        className="any-classname-mock"
+        columns={columnsMock}
+        data={dataMock}
+        index={0}
+        selectable={selectableMock}
+        tableId="any-table-id-mock"
+      />,
+      { container: document.body.appendChild(tbody) },
+    );
+
+    // Then
+    expect(container.firstChild).toHaveAttribute('aria-selected', 'false');
+  });
+
+  it('should call toggleOneItem when row select checkbox changes', () => {
+    // Given
+    const toggleOneItemMock = jest.fn();
+    const selectableMock = {
+      checkIfItemIsSelected: jest.fn().mockReturnValue(false),
+      isAllItemsSelected: false,
+      selection: new Set<string>(),
+      toggleAllItems: jest.fn(),
+      toggleOneItem: toggleOneItemMock,
+    };
+
+    jest.mocked(TableRowSelectComponent).mockImplementation(({ onChange }) => (
+      <button type="button" onClick={() => onChange(true)}>
+        toggle-row-select
+      </button>
+    ));
+
+    // When
+    const { getByText } = render(
+      <TableRowComponent
+        className="any-classname-mock"
+        columns={columnsMock}
+        data={dataMock}
+        index={0}
+        selectable={selectableMock}
+        tableId="any-table-id-mock"
+      />,
+      { container: document.body.appendChild(tbody) },
+    );
+
+    fireEvent.click(getByText('toggle-row-select'));
+
+    // Then
+    expect(toggleOneItemMock).toHaveBeenCalledExactlyOnceWith(dataMock, true);
   });
 });

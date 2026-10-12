@@ -21,8 +21,7 @@ interface ServiceProviderSandboxesComponentProps {
 
 export const ServiceProviderSandboxesComponent = React.memo(
   ({ instances }: ServiceProviderSandboxesComponentProps) => {
-    const { deleteInstanceHandler, hasUnlinkedInstances, spConfigurationDocUrl } =
-      useServiceProviderSandboxes();
+    const { hasUnlinkedInstances, spConfigurationDocUrl } = useServiceProviderSandboxes();
 
     const hasSandboxes = instances.length > 0;
 
@@ -48,9 +47,7 @@ export const ServiceProviderSandboxesComponent = React.memo(
             type={MessageTypes.INFO}>
             {t('Partners.serviceProviderPage.sandboxes.empty')}
           </AlertComponent>
-        )) || (
-          <ServiceProviderSandboxesTable sandboxes={instances} onDelete={deleteInstanceHandler} />
-        )}
+        )) || <ServiceProviderSandboxesTable sandboxes={instances} />}
       </div>
     );
   },

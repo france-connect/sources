@@ -1,5 +1,6 @@
 import React from 'react';
-import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router';
+import { createBrowserRouter, createRoutesFromElements, Route } from 'react-router';
+import { RouterProvider } from 'react-router/dom';
 
 import { useSafeContext } from '@fc/common';
 import { PartnersService } from '@fc/core-partners';

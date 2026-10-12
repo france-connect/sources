@@ -13,9 +13,9 @@ import { ModalTitleComponent } from '../modal-title';
 
 interface ModalShellProps extends PropsWithChildren {
   dataTestId?: string;
-  footer?: ReactNode;
   id: string;
   onClose: () => void;
+  onConfirm?: () => void | Promise<void>;
   title?: ReactNode;
   titleHeading?: HeadingTag;
   titleId?: string;
@@ -27,9 +27,9 @@ export const ModalShellComponent = React.memo((props: ModalShellProps) => {
   const {
     children,
     dataTestId,
-    footer,
     id,
     onClose,
+    onConfirm,
     title,
     titleHeading = HeadingTag.H1,
     titleId,
@@ -62,7 +62,7 @@ export const ModalShellComponent = React.memo((props: ModalShellProps) => {
                 )}
                 {children}
               </div>
-              {footer && <ModalFooterComponent>{footer}</ModalFooterComponent>}
+              {onConfirm && <ModalFooterComponent onClose={onClose} onConfirm={onConfirm} />}
             </div>
           </div>
         </div>

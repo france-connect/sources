@@ -5,7 +5,6 @@ import { PartnersAccount, PartnersServiceProvider } from '@entities/typeorm';
 import { AccountPermissionInterface } from '@fc/access-control';
 import { I18nService } from '@fc/i18n';
 import { LoggerService } from '@fc/logger';
-import { ScopesService } from '@fc/scopes';
 
 import { AccessControlPermission } from '../enums';
 import { PartnersServiceProviderPayloadInterface } from '../interfaces';
@@ -15,29 +14,23 @@ export class PartnersServiceProviderFormService {
   constructor(
     private readonly i18n: I18nService,
     private readonly logger: LoggerService,
-    private readonly scopesService: ScopesService,
   ) {}
 
   toDisplayValue(
     serviceProvider: PartnersServiceProvider,
-  ): PartnersServiceProviderPayloadInterface {
-    const datapassClaims = serviceProvider.datapassScopes || [];
+  ): Omit<PartnersServiceProviderPayloadInterface, 'fcScopes'> {
+    const datapassScopes = serviceProvider.datapassScopes || [];
 
-    const datapassClaimLabels = datapassClaims
-      .map((claim) => {
+    const datapassScopeLabels = datapassScopes
+      .map((scope) => {
         try {
-          return this.i18n.translate(`datapassScope.${claim}`);
+          return this.i18n.translate(`datapassScope.${scope}`);
         } catch {
-          this.logger.warning(`Missing translation for datapassScope.${claim}`);
-          return claim;
+          this.logger.warning(`Missing translation for datapassScope.${scope}`);
+          return scope;
         }
       })
       .filter(Boolean);
-
-    const baseClaims =
-      this.scopesService.getRawClaimsFromScopes(datapassClaims);
-
-    const fcScopes = this.scopesService.getScopesFromClaims(baseClaims);
 
     const instances = serviceProvider.instances?.map((instance) => ({
       ...instance,
@@ -53,8 +46,7 @@ export class PartnersServiceProviderFormService {
       organization: serviceProvider.organization,
       datapassRequestId: serviceProvider.datapassRequestId,
       instances,
-      datapassScopes: datapassClaimLabels,
-      fcScopes,
+      datapassScopes: datapassScopeLabels,
       createdAt: serviceProvider.createdAt,
       updatedAt: serviceProvider.updatedAt,
     };

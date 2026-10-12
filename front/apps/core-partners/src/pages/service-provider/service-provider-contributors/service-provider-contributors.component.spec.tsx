@@ -7,13 +7,13 @@ import { LinkComponent } from '@fc/dsfr';
 import serviceProviderPermissionsFixture from '../../../__fixtures__/service-provider-permissions.fixture.json';
 import { ContributorAlert, CreateContributorButton } from '../../../components';
 import { ServiceProviderPermissionsTable } from '../../../components/tables';
-import { useCanCreateContributor } from '../../../hooks';
+import { useCanManageContributors } from '../../../hooks';
 import type { ServiceProviderPermissionInterface } from '../../../interfaces';
 import { ServiceProviderContributorsComponent } from './service-provider-contributors.component';
 
 jest.mock('../../../components/buttons/create-contributor/create-contributor.button');
 jest.mock('../../../components/alerts/contributor/contributor.alert');
-jest.mock('../../../hooks/can-create-contributor/can-create-contributor.hook');
+jest.mock('../../../hooks/can-manage-contributors/can-manage-contributors.hook');
 jest.mock(
   '../../../components/tables/service-provider-permissions/service-provider-permissions.table',
 );
@@ -31,7 +31,7 @@ describe('ServiceProviderContributorsComponent', () => {
     });
     jest.mocked(getFullName).mockReturnValue('John Doe');
     jest.mocked(isoToDate).mockReturnValue('01/06/2024 14:00');
-    jest.mocked(useCanCreateContributor).mockReturnValue(true);
+    jest.mocked(useCanManageContributors).mockReturnValue(true);
   });
 
   it('should match snapshot', () => {
@@ -67,9 +67,9 @@ describe('ServiceProviderContributorsComponent', () => {
     );
   });
 
-  it('should render the CreateContributorButton when useCanCreateContributor returns true', () => {
+  it('should render the CreateContributorButton when useCanManageContributors returns true', () => {
     // Given
-    jest.mocked(useCanCreateContributor).mockReturnValueOnce(true);
+    jest.mocked(useCanManageContributors).mockReturnValueOnce(true);
 
     // When
     render(<ServiceProviderContributorsComponent permissions={permissionsMock} />);
@@ -78,9 +78,9 @@ describe('ServiceProviderContributorsComponent', () => {
     expect(CreateContributorButton).toHaveBeenCalledOnce();
   });
 
-  it('should not render the CreateContributorButton when useCanCreateContributor returns false', () => {
+  it('should not render the CreateContributorButton when useCanManageContributors returns false', () => {
     // Given
-    jest.mocked(useCanCreateContributor).mockReturnValueOnce(false);
+    jest.mocked(useCanManageContributors).mockReturnValueOnce(false);
 
     // When
     render(<ServiceProviderContributorsComponent permissions={permissionsMock} />);
@@ -94,7 +94,7 @@ describe('ServiceProviderContributorsComponent', () => {
     render(<ServiceProviderContributorsComponent permissions={permissionsMock} />);
 
     // Then
-    expect(ServiceProviderPermissionsTable).toHaveBeenCalledWith(
+    expect(ServiceProviderPermissionsTable).toHaveBeenCalledExactlyOnceWith(
       { permissions: permissionsMock },
       undefined,
     );

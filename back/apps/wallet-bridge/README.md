@@ -20,7 +20,7 @@ Browser              Wallet Bridge               Mobile wallet
     │                      │                           │
     │  SSE /api/authorize-request-status/:interactionId │
     │─────────────────────▶│                           │
-    │                      │  GET /api/authorize-request-object/:interactionId
+    │                      │  GET /api/authorize-request-object/:interactionId/:state
     │                      │◀──────────────────────────│
     │                      │                           │
     │                      │  POST /api/authorize-response
@@ -37,8 +37,8 @@ Browser              Wallet Bridge               Mobile wallet
 
 1. `GET /ui/authorize-create-interaction` — `OpenId4vpUiController` creates an interaction via `@fc/openid4vp` and redirects to the QR page.
 2. `GET /ui/authorize-request-uri/:interactionId` — renders the QR code containing the `openid4vp://` URI. The browser simultaneously opens an SSE connection on `/api/authorize-request-status/:interactionId`.
-3. `GET /api/authorize-request-object/:interactionId` — the wallet downloads the signed JAR; the interaction moves to `REQUEST_OBJECT_PROVIDED`.
-4. `POST /api/authorize-response` — the wallet submits its VP response. `OpenId4vpApiController` parses the mdoc documents, extracts and validates the EUDI PID, and persists the response. The interaction moves to `RESPONSE_RECEIVED`.
+3. `GET /api/authorize-request-object/:interactionId/:state` — the wallet downloads the signed JAR; `:state` tells which of the two URIs (QR code or same-device link) was used, and the resulting flow is stored on the interaction. The interaction moves to `REQUEST_OBJECT_PROVIDED`.
+4. `POST /api/authorize-response` — the wallet submits its VP response. The flow is read from the interaction, not from the body (see `@fc/openid4vp`). `OpenId4vpApiController` parses the mdoc documents, extracts and validates the EUDI PID, and persists the response. The interaction moves to `RESPONSE_RECEIVED`.
    - If the wallet notifies an authorization error instead (OAuth2 `error` / `error_description` body, e.g. user abort), or if parsing/PID validation fails, the interaction moves to `ERROR` with the error parameters persisted on it (defaults: `access_denied` / `Authentication failed`).
 5. The browser receives the terminal display event via SSE:
    - `RESPONSE_RECEIVED` — a success message is displayed, then the browser is redirected to `/ui/authorize-redirect/:interactionId` after `relayingParty.redirectDelay` seconds.

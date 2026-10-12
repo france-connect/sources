@@ -6,7 +6,7 @@ import classes from './message.module.scss';
 describe('MessageElement', () => {
   it('should match the snapshot', () => {
     // Given
-    const id = 'id-mock';
+    const id = 'id-mock-error-desc-0';
     const level = 'any-level';
     const content = 'any-content';
 
@@ -20,6 +20,6 @@ describe('MessageElement', () => {
     expect(container).toMatchSnapshot();
     expect(contentTextElt).toBeInTheDocument();
     expect(contentTextElt).toHaveClass(`${classes.message} fr-message fr-message--any-level`);
-    expect(contentTextElt).toHaveAttribute('id', 'id-mock-messages');
+    expect(contentTextElt).toHaveAttribute('id', 'id-mock-error-desc-0');
   });
 });

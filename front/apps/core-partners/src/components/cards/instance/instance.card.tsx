@@ -15,7 +15,7 @@ export const InstanceCardComponent = React.memo(
     const { createdAt, currentVersion, id } = data;
 
     const formattedDate = isoToDate(createdAt);
-    const date = t('FC.Common.createdAt.female', { date: formattedDate });
+    const date = t('FC.Common.createdAt.male', { date: formattedDate });
 
     const { client_id: clientId, client_secret: clientSecret, name } = currentVersion.data;
 

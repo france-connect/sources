@@ -36,7 +36,6 @@ jest.mock('jose', () => ({
 
 jest.mock('./mdoc-node.context', () => ({
   createNodeMdocContext: jest.fn(),
-  getCertificateDerBase64: jest.fn(),
   getIssuerCertificateRaw: jest.fn(),
   toPublicJwk: jest.fn(),
 }));
@@ -47,9 +46,6 @@ describe('buildMdocVpToken', () => {
   const createNodeMdocContextMock = jest.mocked(createNodeMdocContext);
   const getIssuerCertificateRawMock = jest.mocked(
     jest.requireMock('./mdoc-node.context').getIssuerCertificateRaw,
-  );
-  const getCertificateDerBase64Mock = jest.mocked(
-    jest.requireMock('./mdoc-node.context').getCertificateDerBase64,
   );
   const toPublicJwkMock = jest.mocked(
     jest.requireMock('./mdoc-node.context').toPublicJwk,
@@ -66,7 +62,7 @@ describe('buildMdocVpToken', () => {
       family_name: 'DUPONT',
       given_name: 'JEAN',
       birth_date: '1985-06-15',
-      birth_place: 'Paris',
+      place_of_birth: 'Paris',
       nationality: ['FR'],
     },
     issuerPrivateKeyPem: 'issuer-key-pem',
@@ -85,7 +81,6 @@ describe('buildMdocVpToken', () => {
 
     createNodeMdocContextMock.mockReturnValue({ context: true } as never);
     getIssuerCertificateRawMock.mockReturnValue(new Uint8Array([1]));
-    getCertificateDerBase64Mock.mockReturnValue('device-cert-der-b64');
     toPublicJwkMock.mockReturnValue({ kty: 'EC' });
     importPKCS8Mock.mockResolvedValue({ privateKey: true } as never);
     exportJWKMock.mockResolvedValue({ kty: 'EC' } as never);
@@ -164,7 +159,7 @@ describe('buildMdocVpToken', () => {
         signingKey: signingKeyMock,
         algorithm: SignatureAlgorithm.ES256,
         sessionTranscript: sessionTranscriptMock,
-        derCertificate: 'device-cert-der-b64',
+        certificate: new Uint8Array([1]),
       }),
     );
   });

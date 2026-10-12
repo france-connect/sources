@@ -33,6 +33,28 @@ describe('generateCSVContent', () => {
     expect(generateCSVContent(data)).toBe(expected);
   });
 
+  it('should keep columns present on later rows when the first row omits them', () => {
+    // Given
+    const data = [
+      { date: '01/01/2026', ipAddress: '1.1.1.1' },
+      {
+        date: '02/01/2026',
+        ipAddress: '2.2.2.2',
+        port: '45826',
+        region: 'Île-de-France',
+        organization: 'OVH SAS',
+      },
+    ];
+    const expected = [
+      'date,ipAddress,port,region,organization',
+      '01/01/2026,1.1.1.1,,,',
+      '02/01/2026,2.2.2.2,45826,Île-de-France,OVH SAS',
+    ].join('\n');
+
+    // When / Then
+    expect(generateCSVContent(data)).toBe(expected);
+  });
+
   it('should handle array values by joining them with semicolons', () => {
     // Given
     const data = [{ col1: ['a', 'b', 'c'] }];

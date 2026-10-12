@@ -6,7 +6,7 @@ services:
   ####################
   eidas-mock:
     hostname: eidas-mock
-    image: ${FC_DOCKER_REGISTRY}/eidas-mock:2.4
+    image: ${FC_DOCKER_REGISTRY}/eidas-mock:3.1.0
     user: ${CURRENT_UID}
     volumes:
       - "${VOLUMES_DIR}/eidas/conf-eidas-mock:/data/conf-eidas:ro"

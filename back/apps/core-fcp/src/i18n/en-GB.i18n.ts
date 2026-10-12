@@ -23,6 +23,8 @@ export const enGB: I18nTranslationsMapType = {
   'nav.back_to_provider': 'Back to {spName}',
   'nav.more_info': 'More info',
 
+  'exceptions.default_message': 'An error occurred, please try again later',
+
   // Interaction
   'interaction.page_title': 'Connection - Choose an account - {platform}',
   'interaction.anonymous_title': 'You will login anonymously',

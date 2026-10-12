@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- # Copyright (c) 2017 European Commission # Licensed under the EUPL,
+	Version 1.2 or – as soon they will be # approved by the European Commission
+	- subsequent versions of the # EUPL (the "Licence"); # You may not use this
+	work except in compliance with the Licence. # You may obtain a copy of the
+	Licence at: # * https://joinup.ec.europa.eu/page/eupl-text-11-12 # * # Unless
+	required by applicable law or agreed to in writing, software # distributed
+	under the Licence is distributed on an "AS IS" basis, # WITHOUT WARRANTIES
+	OR CONDITIONS OF ANY KIND, either express or implied. # See the Licence for
+	the specific language governing permissions and limitations under the Licence. -->
+
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+	<entry key="service.id">CB</entry>
+	<entry key="service.countrycode">CB</entry>
+	<entry key="metadata.node.country">CB</entry>
+
+	<entry key="active.module.service">true</entry>
+
+	<!--service Metadata (auto-reference) -->
+	<entry key="service.node.url">https://eidas-mock.docker.dev-franceconnect.fr/EidasNodeProxy/</entry>
+	<entry key="service.contact.email">test@com</entry>
+	<entry key="service.metadata.url">https://eidas-mock.docker.dev-franceconnect.fr/EidasNodeProxy/ServiceMetadata</entry>
+
+	<!-- Eidas Node Service Metadata Single Sign On locations (auto-reference) -->
+	<entry key="ssos.serviceMetadataGeneratorIDP.redirect.location">https://eidas-mock.docker.dev-franceconnect.fr/EidasNodeProxy/ColleagueRequest</entry>
+	<entry key="ssos.serviceMetadataGeneratorIDP.post.location">https://eidas-mock.docker.dev-franceconnect.fr/EidasNodeProxy/ColleagueRequest</entry>
+
+	<!-- Feature selector for security headers -->
+	<entry key="security.header.CSP.report.uri">https://eidas-mock.docker.dev-franceconnect.fr/EidasNodeProxy</entry>
+	<entry key="security.header.CSP.fallbackCheckMode">false</entry>
+
+	<entry key="metadata.sector">public</entry>
+	<entry key="hashDigest.className">org.bouncycastle.crypto.digests.SHA512Digest</entry>
+
+	<entry key="tls.enabled.protocols">TLSv1.2, TLSv1.3</entry>
+
+	<entry key="tls.enabled.ciphers">
+		TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256,
+		TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
+		TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384,
+		TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,
+		TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256,
+		TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,
+		TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+		TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384,
+		TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
+		TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256,
+		TLS_DHE_RSA_WITH_AES_128_CBC_SHA256,
+		TLS_DHE_RSA_WITH_AES_128_GCM_SHA256,
+		TLS_DHE_RSA_WITH_AES_256_CBC_SHA256,
+		TLS_DHE_RSA_WITH_AES_256_GCM_SHA384,
+		TLS_AES_128_GCM_SHA256,
+		TLS_AES_256_GCM_SHA384,
+		TLS_CHACHA20_POLY1305_SHA256,
+		TLS_EMPTY_RENEGOTIATION_INFO_SCSV
+	</entry>
+
+	<entry key="service.LoA">http://eidas.europa.eu/LoA/high;http://eidas.europa.eu/LoA/substantial;http://eidas.europa.eu/LoA/low</entry>
+
+	<entry key="node.metadata.not.signed.descriptors"></entry>
+
+	<!-- METADATA configuration -->
+	<entry key="service.contact.support.email">contact.support@eidas-proxyservice.eu</entry>
+	<entry key="service.contact.support.company">eIDAS ProxyService Operator</entry>
+	<entry key="service.contact.support.givenname">John</entry>
+	<entry key="service.contact.support.surname">Doe</entry>
+	<entry key="service.contact.support.phone">+42 123456</entry>
+	<entry key="service.contact.technical.email">contact.technical@eidas-proxyservice.eu</entry>
+	<entry key="service.contact.technical.company">eIDAS ProxyService Operator</entry>
+	<entry key="service.contact.technical.givenname">John</entry>
+	<entry key="service.contact.technical.surname">Doe</entry>
+	<entry key="service.contact.technical.phone">+43 123456</entry>
+	<entry key="service.organization.name">Sample Country Proxy Service</entry>
+	<entry key="service.organization.displayname">Service</entry>
+	<entry key="service.organization.url">https://service.sample/info</entry>
+
+	<!--URL for specific-proxyService requests receiver (auto-reference) -->
+	<entry key="specific.proxyservice.request.receiver">https://eidas-mock.docker.dev-franceconnect.fr/SpecificProxyService/ProxyServiceRequest</entry>
+
+	<entry key="eidas.application.identifier">eIDAS-ref:3.1.0</entry>
+
+	<entry key="unsupported.attributes">
+		http://eidas.europa.eu/attributes/legalperson/D-2012-17-EUIdentifier;
+		http://eidas.europa.eu/attributes/legalperson/EORI;
+		http://eidas.europa.eu/attributes/legalperson/LEI;
+		http://eidas.europa.eu/attributes/legalperson/LegalAdditionalAttribute;
+		http://eidas.europa.eu/attributes/legalperson/LegalEmailAddress;
+		http://eidas.europa.eu/attributes/legalperson/LegalName;
+		http://eidas.europa.eu/attributes/legalperson/LegalPersonAddress;
+		http://eidas.europa.eu/attributes/legalperson/LegalPersonIdentifier;
+		http://eidas.europa.eu/attributes/legalperson/LegalPhoneNumber;
+		http://eidas.europa.eu/attributes/legalperson/SEED;
+		http://eidas.europa.eu/attributes/legalperson/SIC;
+		http://eidas.europa.eu/attributes/legalperson/TaxReference;
+		http://eidas.europa.eu/attributes/legalperson/VATRegistrationNumber;
+		http://eidas.europa.eu/attributes/legalperson/representative/D-2012-17-EUIdentifier;
+		http://eidas.europa.eu/attributes/legalperson/representative/EORI;
+		http://eidas.europa.eu/attributes/legalperson/representative/LEI;
+		http://eidas.europa.eu/attributes/legalperson/representative/LegalEmailAddress;
+		http://eidas.europa.eu/attributes/legalperson/representative/LegalName;
+		http://eidas.europa.eu/attributes/legalperson/representative/LegalPersonAddress;
+		http://eidas.europa.eu/attributes/legalperson/representative/LegalPersonIdentifier;
+		http://eidas.europa.eu/attributes/legalperson/representative/LegalPhoneNumber;
+		http://eidas.europa.eu/attributes/legalperson/representative/SEED;
+		http://eidas.europa.eu/attributes/legalperson/representative/SIC;
+		http://eidas.europa.eu/attributes/legalperson/representative/TaxReference;
+		http://eidas.europa.eu/attributes/legalperson/representative/VATRegistrationNumber;
+		http://eidas.europa.eu/attributes/naturalperson/representative/BirthName;
+		http://eidas.europa.eu/attributes/naturalperson/representative/CountryOfBirth;
+		http://eidas.europa.eu/attributes/naturalperson/representative/CountryOfResidence;
+		http://eidas.europa.eu/attributes/naturalperson/representative/CurrentAddress;
+		http://eidas.europa.eu/attributes/naturalperson/representative/CurrentFamilyName;
+		http://eidas.europa.eu/attributes/naturalperson/representative/CurrentGivenName;
+		http://eidas.europa.eu/attributes/naturalperson/representative/DateOfBirth;
+		http://eidas.europa.eu/attributes/naturalperson/representative/EmailAddress;
+		http://eidas.europa.eu/attributes/naturalperson/representative/Gender;
+		http://eidas.europa.eu/attributes/naturalperson/representative/Nationality;
+		http://eidas.europa.eu/attributes/naturalperson/representative/PersonIdentifier;
+		http://eidas.europa.eu/attributes/naturalperson/representative/PhoneNumber;
+		http://eidas.europa.eu/attributes/naturalperson/representative/PlaceOfBirth;
+		http://eidas.europa.eu/attributes/naturalperson/representative/TownOfBirth
+	</entry>
+</properties>

@@ -1,10 +1,6 @@
 import { render } from '@testing-library/react';
 
-import {
-  InstancePageFormComponent,
-  InstancePageHeaderComponent,
-  InstancePageNoticeComponent,
-} from '@fc/core-partners';
+import { InstancePageFormComponent, InstancePageHeaderComponent } from '@fc/core-partners';
 import { t } from '@fc/i18n';
 
 import { useInstanceCreate } from '../../../hooks';
@@ -68,15 +64,6 @@ describe('InstanceCreatePage', () => {
       },
       undefined,
     );
-  });
-
-  it('should render InstancePageNoticeComponent with parameters', () => {
-    // When
-    render(<InstanceCreatePage />);
-
-    // Then
-    expect(InstancePageNoticeComponent).toHaveBeenCalledOnce();
-    expect(InstancePageNoticeComponent).toHaveBeenCalledWith({}, undefined);
   });
 
   it('should render InstancePageFormComponent with parameters', () => {

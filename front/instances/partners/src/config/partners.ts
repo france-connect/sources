@@ -7,6 +7,7 @@ export const Partners: PartnersConfig = {
     linkInstances: '/api/link-instances',
     linkableInstancesByServiceProviderId: '/api/linkable-instances/:serviceProviderId',
     serviceProvider: '/api/service-providers/:id',
+    serviceProviderContributors: '/api/service-providers/:serviceProviderId/contributors',
     serviceProviders: '/api/service-providers',
   },
   schemas: {

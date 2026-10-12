@@ -189,5 +189,13 @@
   "contributor-form-metadata": {
     "method": "GET",
     "url": "https://partners.docker.dev-franceconnect.fr/api/contributors/form-metadata"
+  },
+  "contributor-deletion": {
+    "headers": {
+      "x-csrf-token": "49fbf16dd64a32216a6fb639426b41e11d678590e2879a55a41705368163aa97"
+    },
+    "body": { "accountIds": ["a7b8c9d0-1e2f-4a3b-8c5d-6e7f8a9b0c1d"] },
+    "method": "DELETE",
+    "url": "https://partners.docker.dev-franceconnect.fr/api/service-providers/7e0a1b2c-3d4e-4f5a-8b6c-7d8e9f0a1b2c/contributors"
   }
 }

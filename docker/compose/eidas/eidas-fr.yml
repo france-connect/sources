@@ -6,7 +6,7 @@ services:
   ####################
   eidas-fr:
     hostname: eidas-fr
-    image: ${FC_DOCKER_REGISTRY}/eidas:2.6
+    image: ${FC_DOCKER_REGISTRY}/eidas:3.1.0
     user: ${CURRENT_UID}
     ports:
       - "10900:10900"

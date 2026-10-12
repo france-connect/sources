@@ -24,7 +24,9 @@ import { TextEncoder } from 'node:util';
 
 global.TextEncoder = TextEncoder;
 
-const originalGetComputedStyle = window.getComputedStyle;
+// @NOTE jsdom does not implement getComputedStyle(elt, pseudoElt); ignore the
+// second arg to avoid "Not implemented" console noise while keeping the API.
+const originalGetComputedStyle = window.getComputedStyle.bind(window);
 window.getComputedStyle = (elt: Element, _pseudoElt?: string | null) =>
   originalGetComputedStyle(elt);
 

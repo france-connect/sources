@@ -16,7 +16,7 @@
     "lint": "eslint \"{.,cypress,scripts}/**/*.ts\"",
     "test:base": "cypress run --config-file cypress-partners.config.ts",
     "test:chrome-desktop": "yarn test:base --browser chrome --headless",
-    "test:ci": "yarn test:chrome-desktop --env TAGS='@ci and not @ignore'",
+    "test:ci": "yarn test:chrome-desktop --expose tags='@ci and not @ignore'",
     "test:snapshot": "yarn clean:snapshots:diff && cypress run --headless --config-file cypress-partners-visual.config.ts",
     "test": "yarn clean && yarn test:chrome-desktop",
     "start": "cypress open --e2e --config-file cypress-partners.config.ts",

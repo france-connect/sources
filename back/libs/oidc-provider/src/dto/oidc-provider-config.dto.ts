@@ -281,8 +281,7 @@ class EnabledJWA {
   @IsArray()
   @IsString({ each: true })
   authorizationSigningAlgValues: (
-    | AsymmetricSigningAlgorithm
-    | SymmetricSigningAlgorithm
+    AsymmetricSigningAlgorithm | SymmetricSigningAlgorithm
   )[];
 
   @IsArray()
@@ -300,8 +299,7 @@ class EnabledJWA {
   @IsArray()
   @IsString({ each: true })
   idTokenSigningAlgValues: (
-    | AsymmetricSigningAlgorithm
-    | SymmetricSigningAlgorithm
+    AsymmetricSigningAlgorithm | SymmetricSigningAlgorithm
   )[];
 
   @IsArray()
@@ -315,8 +313,7 @@ class EnabledJWA {
   @IsArray()
   @IsString({ each: true })
   introspectionSigningAlgValues: (
-    | AsymmetricSigningAlgorithm
-    | SymmetricSigningAlgorithm
+    AsymmetricSigningAlgorithm | SymmetricSigningAlgorithm
   )[];
 
   @IsArray()
@@ -330,8 +327,7 @@ class EnabledJWA {
   @IsArray()
   @IsString({ each: true })
   requestObjectSigningAlgValues: (
-    | AsymmetricSigningAlgorithm
-    | SymmetricSigningAlgorithm
+    AsymmetricSigningAlgorithm | SymmetricSigningAlgorithm
   )[];
 
   @IsArray()
@@ -345,8 +341,7 @@ class EnabledJWA {
   @IsArray()
   @IsString({ each: true })
   userinfoSigningAlgValues: (
-    | AsymmetricSigningAlgorithm
-    | SymmetricSigningAlgorithm
+    AsymmetricSigningAlgorithm | SymmetricSigningAlgorithm
   )[];
 }
 

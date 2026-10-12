@@ -4,7 +4,7 @@
 
   <div>
     <form>
-      <textarea rows="4" cols="40" name="requestUri" class="fr-input  "><%= requestUri %></textarea
+      <textarea rows="4" cols="40" name="requestUri" class="fr-input  "><%= sameDeviceUri %></textarea
       >
       <input type="hidden" name="httpRequestUri" value="<%= httpRequestUri %>" />
     </form>
@@ -13,7 +13,7 @@
   <p class="fr-mt-8v"> OU </p>
   <div >
     <a
-      href="<%= $config('App.devToolsMockUrl') %>?deepLink=<%= encodeURIComponent(requestUri) %>&flow=same-device"
+      href="<%= $config('App.devToolsMockUrl') %>?deepLink=<%= encodeURIComponent(sameDeviceUri) %>&flow=same-device"
       class="fr-btn"
       >Simuler un flow same-device</a
     >

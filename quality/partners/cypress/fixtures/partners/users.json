@@ -121,6 +121,22 @@
     }
   },
   {
+    "descriptions": ["contributeur d'un fournisseur de service"],
+    "credentials": {
+      "username": "bdd_sp2_contributor_connection",
+      "password": "123"
+    },
+    "claims": {
+      "uid": "40",
+      "given_name": "Noémie",
+      "usual_name": "LAURENT",
+      "email": "nlaurent@yopmail.com",
+      "phone_number": "0612345678",
+      "is_service_public": "true",
+      "sub": "f6a7b8c9-d0e1-2f3a-4b5c-6d7e8f9a0b1c"
+    }
+  },
+  {
     "descriptions": ["contributeur ajouté par e-mail"],
     "credentials": {
       "username": "bdd_addedcontributor",

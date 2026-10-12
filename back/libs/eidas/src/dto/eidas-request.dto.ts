@@ -35,7 +35,8 @@ export class EidasRequest {
 
   @IsString()
   @IsEnum(EidasNameIdFormats)
-  nameIdFormat: EidasNameIdFormats;
+  @IsOptional()
+  nameIdFormat?: EidasNameIdFormats;
 
   @IsString()
   @MinLength(1)

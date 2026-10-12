@@ -3,7 +3,7 @@ export const generateCSVContent = <T extends object>(data: T[]): string => {
     return '';
   }
 
-  const headers = Object.keys(data[0]);
+  const headers = [...new Set(data.flatMap((entry) => Object.keys(entry)))];
 
   const dataRows = data.map((entry) => {
     // eslint-disable-next-line max-nested-callbacks

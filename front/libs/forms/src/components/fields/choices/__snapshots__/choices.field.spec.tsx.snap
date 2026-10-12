@@ -38,6 +38,9 @@ exports[`ChoicesField should match snapshot, without messages 1`] = `
     <div
       data-mockid="FieldsetLegendElement"
     />
+    <div
+      data-mockid="MessagesElement"
+    />
   </div>
 </div>
 `;

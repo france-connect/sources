@@ -12,12 +12,12 @@ export default defineConfig({
     },
     specPattern: 'cypress/integration/visuel/*.feature',
   },
-  env: {
-    ...baseConfig.env,
+  expose: {
+    ...baseConfig.expose,
     APP_LABEL: 'eIDAS Bridge',
     // Base Configuration
-    TAGS: '@eidasBridge and @validationVisuelle and not @ignore',
     TEST_ENV: 'docker',
     TEST_PLATFORM: 'fcp-high',
+    tags: '@eidasBridge and @validationVisuelle and not @ignore',
   },
 });

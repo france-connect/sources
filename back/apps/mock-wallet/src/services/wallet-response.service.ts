@@ -26,22 +26,26 @@ export class WalletResponseService {
     responsePayload: WalletResponsePayload,
     request: RequestObjectPayload,
   ): Promise<JarmPostBodyInterface | VpTokenPostBodyInterface> {
+    if (request.response_mode === DIRECT_POST_JWT) {
+      const response = await this.crypto.encryptJarm(responsePayload, request);
+
+      return { response };
+    }
+
     const stateParam = responsePayload.state
       ? { state: responsePayload.state }
       : {};
 
-    if (request.response_mode === DIRECT_POST_JWT) {
-      const response = await this.crypto.encryptJarm(responsePayload, request);
+    return this.buildDirectPostBody(responsePayload, stateParam);
+  }
 
-      return { ...stateParam, response };
-    }
-
+  private buildDirectPostBody(
+    responsePayload: WalletResponsePayload,
+    stateParam: { readonly state?: string },
+  ): VpTokenPostBodyInterface {
     return {
       ...stateParam,
-      vp_token: responsePayload.vp_token,
-      presentation_submission: JSON.stringify(
-        responsePayload.presentation_submission,
-      ),
+      vp_token: JSON.stringify(responsePayload.vp_token),
     };
   }
 

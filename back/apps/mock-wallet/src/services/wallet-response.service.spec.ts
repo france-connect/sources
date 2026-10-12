@@ -18,12 +18,7 @@ describe('WalletResponseService', () => {
 
   const responsePayload: WalletResponsePayload = {
     state: 'state-mock',
-    vp_token: 'vp-token-mock',
-    presentation_submission: {
-      id: 'id',
-      definition_id: 'def',
-      descriptor_map: [],
-    },
+    vp_token: { 'pid-fc': ['vp-token-mock'] },
   };
 
   beforeEach(async () => {
@@ -55,7 +50,7 @@ describe('WalletResponseService', () => {
   });
 
   describe('buildPostBody', () => {
-    it('should build the JARM body for direct_post.jwt', async () => {
+    it('should build the JARM body for direct_post.jwt without a top-level state', async () => {
       // Given
       cryptoMock.encryptJarm.mockResolvedValue('jwe-mock');
       const request = {
@@ -66,10 +61,11 @@ describe('WalletResponseService', () => {
       const result = await service.buildPostBody(responsePayload, request);
 
       // Then
-      expect(result).toEqual({ state: 'state-mock', response: 'jwe-mock' });
+      expect(result).toEqual({ response: 'jwe-mock' });
+      expect(result).not.toHaveProperty('state');
     });
 
-    it('should omit state from JARM body when absent', async () => {
+    it('should still encrypt and omit state from the JARM body when the payload has no state', async () => {
       // Given
       cryptoMock.encryptJarm.mockResolvedValue('jwe-mock');
       const request = {
@@ -88,7 +84,7 @@ describe('WalletResponseService', () => {
       expect(result).not.toHaveProperty('state');
     });
 
-    it('should build the clear body for direct_post', async () => {
+    it('should build the clear body for direct_post with a JSON-serialized DCQL vp_token', async () => {
       // Given
       const request = { response_mode: 'direct_post' } as RequestObjectPayload;
 
@@ -98,10 +94,7 @@ describe('WalletResponseService', () => {
       // Then
       expect(result).toEqual({
         state: 'state-mock',
-        vp_token: 'vp-token-mock',
-        presentation_submission: JSON.stringify(
-          responsePayload.presentation_submission,
-        ),
+        vp_token: JSON.stringify({ 'pid-fc': ['vp-token-mock'] }),
       });
       expect(cryptoMock.encryptJarm).not.toHaveBeenCalled();
     });
@@ -119,10 +112,7 @@ describe('WalletResponseService', () => {
 
       // Then
       expect(result).toEqual({
-        vp_token: 'vp-token-mock',
-        presentation_submission: JSON.stringify(
-          responsePayload.presentation_submission,
-        ),
+        vp_token: JSON.stringify({ 'pid-fc': ['vp-token-mock'] }),
       });
       expect(result).not.toHaveProperty('state');
     });

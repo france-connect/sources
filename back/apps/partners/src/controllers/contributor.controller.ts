@@ -1,15 +1,18 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Injectable,
   Param,
   Post,
   UseGuards,
   UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 
 import { AccessControl, AccessControlGuard } from '@fc/access-control';
+import { FSA, FSAMeta } from '@fc/common';
 import { CsrfTokenGuard } from '@fc/csrf';
 import {
   Dto2FormI18nService,
@@ -20,7 +23,7 @@ import {
 import { PartnersAccountSession } from '@fc/partners-account';
 import { ISessionService, Session } from '@fc/session';
 
-import { AddContributorInputDto } from '../dto';
+import { AddContributorInputDto, DeleteContributorsInputDto } from '../dto';
 import {
   AccessControlEntity,
   AccessControlHandler,
@@ -76,6 +79,40 @@ export class ContributorController {
       firstname,
       lastname,
     });
+  }
+
+  @Delete(PartnersBackRoutes.SERVICE_PROVIDER_CONTRIBUTORS)
+  @AccessControl([
+    {
+      permission: AccessControlPermission.SP_ADMIN,
+      entity: AccessControlEntity.SERVICE_PROVIDER,
+      handler: {
+        method: AccessControlHandler.DIRECT_ENTITY,
+      },
+      entityIdLocation: { src: 'params', key: 'serviceProviderId' },
+    },
+    {
+      permission: AccessControlPermission.SP_TECH,
+      entity: AccessControlEntity.SERVICE_PROVIDER,
+      handler: {
+        method: AccessControlHandler.DIRECT_ENTITY,
+      },
+      entityIdLocation: { src: 'params', key: 'serviceProviderId' },
+    },
+  ])
+  @UseGuards(AccessControlGuard)
+  @UseGuards(CsrfTokenGuard)
+  @UsePipes(ValidationPipe)
+  async deleteContributors(
+    @Param('serviceProviderId') serviceProviderId: string,
+    @Body() { accountIds }: DeleteContributorsInputDto,
+  ): Promise<FSA<FSAMeta, unknown>> {
+    await this.partnersContributor.removeMany(accountIds, serviceProviderId);
+
+    return {
+      type: 'CONTRIBUTOR',
+      payload: {},
+    };
   }
 
   @Get(PartnersBackRoutes.SP_CONTRIBUTORS_FORM_METADATA)

@@ -3,6 +3,8 @@ import {
   Controller,
   Get,
   Header,
+  HttpCode,
+  HttpStatus,
   Param,
   Post,
   UsePipes,
@@ -16,18 +18,24 @@ import { extractSimpleDocument, SimpleDocumentInterface } from '@fc/mdoc';
 import {
   CONFIG_NAMESPACE,
   Openid4vpConfig,
+  Openid4vpFlow,
   Openid4vpInteractionDto,
   Openid4vpInteractionStatus,
   Openid4vpService,
 } from '@fc/openid4vp';
 
 import { DEFAULT_ERROR, DEFAULT_ERROR_DESCRIPTION } from '../constants';
-import { AuthorizeRequestUriParamsDto, AuthorizeResponseBodyDto } from '../dto';
+import {
+  AuthorizeRequestObjectParamsDto,
+  AuthorizeRequestUriParamsDto,
+  AuthorizeResponseBodyDto,
+} from '../dto';
 import { WalletBridgeRoutes } from '../enums';
 import {
   WalletBridgeInvalidInteractionStatusException,
   WalletBridgeInvalidPidException,
 } from '../exceptions';
+import { AuthorizeResponseInterface } from '../interfaces';
 
 @Controller()
 export class OpenId4vpApiController {
@@ -45,12 +53,17 @@ export class OpenId4vpApiController {
   @Header('cache-control', 'no-store')
   @Header('content-type', 'application/oauth-authz-req+jwt')
   async authorizeRequestObject(
-    @Param() { interactionId }: AuthorizeRequestUriParamsDto,
-  ) {
+    @Param() { interactionId, state }: AuthorizeRequestObjectParamsDto,
+  ): Promise<string> {
     const interaction = await this.openid4vp.getInteractionById(interactionId);
-    const requestObject = await this.openid4vp.getRequestObject(interaction);
+    const flow = this.openid4vp.getFlow(interaction, state);
 
-    await this.openid4vp.setAuthorizationRequestObjectAsRead(interaction);
+    const requestObject = await this.openid4vp.getRequestObject(
+      interaction,
+      flow,
+    );
+
+    await this.openid4vp.setAuthorizationRequestObjectAsRead(interaction, flow);
 
     return requestObject.jar.authorizationRequestJwt;
   }
@@ -58,20 +71,17 @@ export class OpenId4vpApiController {
   @Post(WalletBridgeRoutes.OPENID4VP_AUTHORIZE_RESPONSE)
   @Header('cache-control', 'no-store')
   @Header('content-type', 'application/json;charset=UTF-8')
+  @HttpCode(HttpStatus.OK)
   @UsePipes(new ValidationPipe({ whitelist: true }))
-  async authorizeResponse(@Body() body: AuthorizeResponseBodyDto) {
-    const { state, error } = body;
-
-    const interaction = await this.openid4vp.getInteractionByState(state);
-
-    if (
-      interaction.status !== Openid4vpInteractionStatus.REQUEST_OBJECT_PROVIDED
-    ) {
-      throw new WalletBridgeInvalidInteractionStatusException();
-    }
+  async authorizeResponse(
+    @Param() { interactionId }: AuthorizeRequestUriParamsDto,
+    @Body() body: AuthorizeResponseBodyDto,
+  ): Promise<AuthorizeResponseInterface> {
+    const interaction = await this.openid4vp.getInteractionById(interactionId);
+    const flow = this.checkInteractionStatus(interaction);
 
     /** @todo #2676 Handle errors sent inside the encrypted JWE response */
-    if (error) {
+    if (body.error) {
       await this.saveWalletError(interaction, body);
 
       return {};
@@ -80,7 +90,7 @@ export class OpenId4vpApiController {
     let identity: SimpleDocumentInterface<EudiPidInterface>;
 
     try {
-      identity = await this.extractIdentity(body, interaction);
+      identity = await this.extractIdentity(body, interaction, flow);
     } catch (exception) {
       await this.openid4vp.saveError(
         interaction,
@@ -93,14 +103,32 @@ export class OpenId4vpApiController {
 
     await this.openid4vp.saveResponse(interaction, [identity]);
 
-    const { relayingParty } =
-      this.config.get<Openid4vpConfig>(CONFIG_NAMESPACE);
+    if (flow === Openid4vpFlow.SAME_DEVICE) {
+      const { relayingParty } =
+        this.config.get<Openid4vpConfig>(CONFIG_NAMESPACE);
 
-    return {
-      redirect_uri: parameterizedPath(relayingParty.redirectUri, {
-        interactionId: interaction.id,
-      }),
-    };
+      return {
+        redirect_uri: parameterizedPath(relayingParty.redirectUri, {
+          interactionId: interaction.id,
+        }),
+      };
+    }
+
+    return {};
+  }
+
+  private checkInteractionStatus(
+    interaction: Openid4vpInteractionDto,
+  ): Openid4vpFlow {
+    if (
+      interaction.status !==
+        Openid4vpInteractionStatus.REQUEST_OBJECT_PROVIDED ||
+      !interaction.flow
+    ) {
+      throw new WalletBridgeInvalidInteractionStatusException();
+    }
+
+    return interaction.flow;
   }
 
   private async saveWalletError(
@@ -119,8 +147,13 @@ export class OpenId4vpApiController {
   private async extractIdentity(
     body: AuthorizeResponseBodyDto,
     interaction: Openid4vpInteractionDto,
+    flow: Openid4vpFlow,
   ): Promise<SimpleDocumentInterface<EudiPidInterface>> {
-    const documents = await this.openid4vp.parseResponse(body, interaction);
+    const documents = await this.openid4vp.parseResponse(
+      body,
+      interaction,
+      flow,
+    );
 
     const identity = extractSimpleDocument<EudiPidInterface>(
       documents,

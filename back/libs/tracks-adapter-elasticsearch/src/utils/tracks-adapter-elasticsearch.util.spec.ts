@@ -207,6 +207,7 @@ describe('getLocationFromTracks()', () => {
     const expected = {
       country: 'CountryCode',
       city: 'CityName',
+      region: 'RegionName',
     };
 
     // When
@@ -216,7 +217,7 @@ describe('getLocationFromTracks()', () => {
     expect(result).toStrictEqual(expected);
   });
 
-  it('should return region as city if city_name is missing', () => {
+  it('should return city as undefined if city_name is missing', () => {
     // Given
     const track = {
       source: {
@@ -233,7 +234,8 @@ describe('getLocationFromTracks()', () => {
 
     const expected = {
       country: 'CountryCode',
-      city: 'RegionName',
+      city: undefined,
+      region: 'RegionName',
     };
 
     // When
@@ -252,6 +254,7 @@ describe('getLocationFromTracks()', () => {
     const expected = {
       country: undefined,
       city: undefined,
+      region: undefined,
     };
 
     // When
@@ -276,5 +279,67 @@ describe('getIpAddressFromTracks()', () => {
 
     // Then
     expect(result).toStrictEqual(['ipAddress']);
+  });
+});
+
+describe('getPortFromTracks()', () => {
+  it('should return track.source.port', () => {
+    // Given
+    const track = {
+      source: {
+        port: '45826',
+      },
+    } as unknown as ElasticTracksType;
+
+    // When
+    const result = utils.getPortFromTracks(track);
+
+    // Then
+    expect(result).toBe('45826');
+  });
+
+  it('should return undefined when source is missing', () => {
+    // Given
+    const track = {} as unknown as ElasticTracksType;
+
+    // When
+    const result = utils.getPortFromTracks(track);
+
+    // Then
+    expect(result).toBeUndefined();
+  });
+});
+
+describe('getOrganizationFromTracks()', () => {
+  it('should return track.source.as.organization.name', () => {
+    // Given
+    const track = {
+      source: {
+        as: {
+          organization: {
+            name: 'OVH SAS',
+          },
+        },
+      },
+    } as unknown as ElasticTracksType;
+
+    // When
+    const result = utils.getOrganizationFromTracks(track);
+
+    // Then
+    expect(result).toBe('OVH SAS');
+  });
+
+  it('should return undefined when as is missing', () => {
+    // Given
+    const track = {
+      source: {},
+    } as unknown as ElasticTracksType;
+
+    // When
+    const result = utils.getOrganizationFromTracks(track);
+
+    // Then
+    expect(result).toBeUndefined();
   });
 });

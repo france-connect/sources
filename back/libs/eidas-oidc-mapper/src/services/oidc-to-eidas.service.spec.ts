@@ -4,6 +4,7 @@ import { CogService } from '@fc/cog';
 import {
   EidasAttributes,
   EidasLevelOfAssurances,
+  EidasNameIdFormats,
   EidasStatusCodes,
   EidasSubStatusCodes,
 } from '@fc/eidas';
@@ -58,6 +59,7 @@ describe('OidcToEidasService', () => {
     status: { failure: false, statusCode: EidasStatusCodes.SUCCESS },
     subject:
       'b155a2129530e5fd3f6b95275b6da72a99ea1a486b8b33148abb4a62ddfb3609v2',
+    subjectNameIdFormat: EidasNameIdFormats.PERSISTENT,
   };
 
   const acrMock = AcrValues.EIDAS2;
@@ -123,6 +125,7 @@ describe('OidcToEidasService', () => {
 
   describe('mapPartialResponseSuccess', () => {
     const mapRequestedAttributesFromClaimsMock = jest.fn();
+    const getResponseNameIdFormatMock = jest.fn();
 
     const cogMock = 'La meilleur ville du monde';
     beforeEach(() => {
@@ -131,6 +134,12 @@ describe('OidcToEidasService', () => {
       mapRequestedAttributesFromClaimsMock.mockReturnValueOnce(
         partialSuccessResponseMock.attributes,
       );
+
+      service['getResponseNameIdFormat'] = getResponseNameIdFormatMock;
+      getResponseNameIdFormatMock.mockReturnValueOnce(
+        EidasNameIdFormats.PERSISTENT,
+      );
+
       eidasCogServiceMock.injectLabelsForCogs.mockReturnValueOnce([cogMock]);
     });
 
@@ -140,6 +149,8 @@ describe('OidcToEidasService', () => {
         claimsMock,
         acrMock,
         requestedAttributesMock,
+        EidasNameIdFormats.PERSISTENT,
+        claimsMock.sub,
       );
 
       // Then
@@ -156,6 +167,8 @@ describe('OidcToEidasService', () => {
         claimsMock,
         acrMock,
         requestedAttributesMock,
+        EidasNameIdFormats.PERSISTENT,
+        claimsMock.sub,
       );
 
       // Then
@@ -181,6 +194,8 @@ describe('OidcToEidasService', () => {
         claimsMock,
         acrMock,
         requestedAttributesMock,
+        EidasNameIdFormats.PERSISTENT,
+        claimsMock.sub,
       );
 
       // Then
@@ -190,6 +205,23 @@ describe('OidcToEidasService', () => {
       );
       expect(result.attributes).toHaveProperty(EidasAttributes.PLACE_OF_BIRTH);
       expect(result.attributes).toMatchObject(cogTransformed);
+    });
+
+    it('should call getResponseNameIdFormat with the requested nameIdFormat to determine the response nameIdFormat', () => {
+      // When
+      service.mapPartialResponseSuccess(
+        claimsMock,
+        acrMock,
+        requestedAttributesMock,
+        EidasNameIdFormats.UNSPECIFIED,
+        claimsMock.sub,
+      );
+
+      // Then
+      expect(getResponseNameIdFormatMock).toHaveBeenCalledTimes(1);
+      expect(getResponseNameIdFormatMock).toHaveBeenCalledWith(
+        EidasNameIdFormats.UNSPECIFIED,
+      );
     });
   });
 
@@ -454,6 +486,37 @@ describe('OidcToEidasService', () => {
 
       // Then
       expect(result).toStrictEqual(attributesSetMock);
+    });
+  });
+
+  describe('getResponseNameIdFormat', () => {
+    it('should return PERSISTENT if requestedNameIdFormat is UNSPECIFIED', () => {
+      // When
+      const result = service['getResponseNameIdFormat'](
+        EidasNameIdFormats.UNSPECIFIED,
+      );
+
+      // Then
+      expect(result).toBe(EidasNameIdFormats.PERSISTENT);
+    });
+
+    it('should return PERSISTENT if requestedNameIdFormat is undefined', () => {
+      // When
+      const result = service['getResponseNameIdFormat'](undefined);
+
+      // Then
+      expect(result).toBe(EidasNameIdFormats.PERSISTENT);
+    });
+
+    it('should return the requestedNameIdFormat if it is not UNSPECIFIED or undefined', () => {
+      // Given
+      const requestedNameIdFormat = EidasNameIdFormats.TRANSIENT;
+
+      // When
+      const result = service['getResponseNameIdFormat'](requestedNameIdFormat);
+
+      // Then
+      expect(result).toBe(requestedNameIdFormat);
     });
   });
 });

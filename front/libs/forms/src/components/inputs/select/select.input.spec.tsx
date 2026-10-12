@@ -53,16 +53,13 @@ describe('SelectInput', () => {
 
     // Then
     expect(container).toMatchSnapshot();
-    expect(useFieldMeta).toHaveBeenCalledOnce();
-    expect(useFieldMeta).toHaveBeenCalledWith({ error: undefined, touched: false });
-    expect(useFieldMessages).toHaveBeenCalledOnce();
-    expect(useFieldMessages).toHaveBeenCalledWith({
+    expect(useFieldMeta).toHaveBeenCalledExactlyOnceWith({ error: undefined, touched: false });
+    expect(useFieldMessages).toHaveBeenCalledExactlyOnceWith({
       errorsList: [],
       isValid: true,
       messages: undefined,
     });
-    expect(GroupElement).toHaveBeenCalledOnce();
-    expect(GroupElement).toHaveBeenCalledWith(
+    expect(GroupElement).toHaveBeenCalledExactlyOnceWith(
       {
         children: expect.any(Object),
         className: 'any-className-mock',
@@ -73,19 +70,20 @@ describe('SelectInput', () => {
       },
       undefined,
     );
-    expect(LabelElement).toHaveBeenCalledOnce();
-    expect(LabelElement).toHaveBeenCalledWith(
+    expect(LabelElement).toHaveBeenCalledExactlyOnceWith(
       {
         hint: 'any-hint-mock',
+        htmlFor: 'form-input-select-any-name-mock',
         label: 'any-label-mock',
-        name: 'any-name-mock',
         required: true,
       },
       undefined,
     );
-    expect(MessagesElement).not.toHaveBeenCalled();
-    expect(t).toHaveBeenCalledOnce();
-    expect(t).toHaveBeenCalledWith('Form.select.placeholder');
+    expect(MessagesElement).toHaveBeenCalledExactlyOnceWith(
+      { id: 'any-name-mock', messages: [] },
+      undefined,
+    );
+    expect(t).toHaveBeenCalledExactlyOnceWith('Form.select.placeholder');
   });
 
   it('should match the snapshot, with error messages', () => {
@@ -116,16 +114,16 @@ describe('SelectInput', () => {
 
     // Then
     expect(container).toMatchSnapshot();
-    expect(useFieldMeta).toHaveBeenCalledOnce();
-    expect(useFieldMeta).toHaveBeenCalledWith({ error: 'any-error-message-mock', touched: false });
-    expect(useFieldMessages).toHaveBeenCalledOnce();
-    expect(useFieldMessages).toHaveBeenCalledWith({
+    expect(useFieldMeta).toHaveBeenCalledExactlyOnceWith({
+      error: 'any-error-message-mock',
+      touched: false,
+    });
+    expect(useFieldMessages).toHaveBeenCalledExactlyOnceWith({
       errorsList: ['any-error-message-mock'],
       isValid: false,
       messages: undefined,
     });
-    expect(GroupElement).toHaveBeenCalledOnce();
-    expect(GroupElement).toHaveBeenCalledWith(
+    expect(GroupElement).toHaveBeenCalledExactlyOnceWith(
       {
         children: expect.any(Object),
         className: 'any-className-mock',
@@ -136,23 +134,20 @@ describe('SelectInput', () => {
       },
       undefined,
     );
-    expect(LabelElement).toHaveBeenCalledOnce();
-    expect(LabelElement).toHaveBeenCalledWith(
+    expect(LabelElement).toHaveBeenCalledExactlyOnceWith(
       {
         hint: 'any-hint-mock',
+        htmlFor: 'form-input-select-any-name-mock',
         label: 'any-label-mock',
-        name: 'any-name-mock',
         required: true,
       },
       undefined,
     );
-    expect(MessagesElement).toHaveBeenCalledOnce();
-    expect(MessagesElement).toHaveBeenCalledWith(
-      { dataTestId: 'any-name-mock-messages', id: 'any-name-mock', messages: [errorMessageMock] },
+    expect(MessagesElement).toHaveBeenCalledExactlyOnceWith(
+      { id: 'any-name-mock', messages: [errorMessageMock] },
       undefined,
     );
-    expect(t).toHaveBeenCalledOnce();
-    expect(t).toHaveBeenCalledWith('Form.select.placeholder');
+    expect(t).toHaveBeenCalledExactlyOnceWith('Form.select.placeholder');
   });
 
   it('should match the snapshot, with config messages', () => {
@@ -188,15 +183,13 @@ describe('SelectInput', () => {
 
     // Then
     expect(container).toMatchSnapshot();
-    expect(useFieldMessages).toHaveBeenCalledOnce();
-    expect(useFieldMessages).toHaveBeenCalledWith({
+    expect(useFieldMessages).toHaveBeenCalledExactlyOnceWith({
       errorsList: [],
       isValid: true,
       messages: [configMessageMock],
     });
-    expect(MessagesElement).toHaveBeenCalledOnce();
-    expect(MessagesElement).toHaveBeenCalledWith(
-      { dataTestId: 'any-name-mock-messages', id: 'any-name-mock', messages: [configMessageMock] },
+    expect(MessagesElement).toHaveBeenCalledExactlyOnceWith(
+      { id: 'any-name-mock', messages: [configMessageMock] },
       undefined,
     );
   });

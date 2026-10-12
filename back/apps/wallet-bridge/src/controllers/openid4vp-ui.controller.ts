@@ -21,6 +21,7 @@ import { ConfigService } from '@fc/config';
 import {
   CONFIG_NAMESPACE,
   Openid4vpConfig,
+  Openid4vpFlow,
   Openid4vpService,
 } from '@fc/openid4vp';
 import { QrcodeErrorCorrectionLevel, QrcodeService } from '@fc/qrcode';
@@ -59,22 +60,34 @@ export class OpenId4vpUiController {
     } = this.config.get<Openid4vpConfig>(CONFIG_NAMESPACE);
 
     const interaction = await this.openid4vp.getInteractionById(interactionId);
-    const requestUri = this.openid4vp.getAuthorizeRequestUri(interaction);
 
-    const qrcodeDataUrl = await this.qrcode.generateDataUrl(requestUri, {
+    const sameDeviceUri = this.openid4vp.getAuthorizeRequestUri(
+      interaction,
+      Openid4vpFlow.SAME_DEVICE,
+    );
+    const crossDeviceUri = this.openid4vp.getAuthorizeRequestUri(
+      interaction,
+      Openid4vpFlow.CROSS_DEVICE,
+    );
+
+    const qrcodeDataUrl = await this.qrcode.generateDataUrl(crossDeviceUri, {
       errorCorrectionLevel: QrcodeErrorCorrectionLevel.LOW,
       margin: 0,
       width: QRCODE_WIDTH_PX,
     });
 
     return {
-      requestUri,
+      sameDeviceUri,
+      crossDeviceUri,
       qrcodeDataUrl,
       successUrl: `${urlPrefix}${parameterizedPath(WalletBridgeRoutes.OPENID4VP_AUTHORIZE_REDIRECT, { interactionId })}`,
       statusUrl: `${urlPrefix}${parameterizedPath(WalletBridgeRoutes.OPENID4VP_AUTHORIZE_REQUEST_STATUS, { interactionId })}`,
       timeout: interactionTtl,
       redirectDelay,
-      httpRequestUri: parameterizedPath(requestObjectUri, { interactionId }),
+      httpRequestUri: parameterizedPath(requestObjectUri, {
+        interactionId,
+        state: interaction.state.sameDevice,
+      }),
     };
   }
 

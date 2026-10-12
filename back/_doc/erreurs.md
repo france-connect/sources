@@ -78,6 +78,7 @@
 |---|---|---|---|
 | [<b>080001</b>](../apps/eidas-bridge/src/exceptions/eidas-bridge-invalid-fr-identity.exception.ts) | L’identité reçue du fournisseur d’identité français n’est pas valide. Contacter le support N3. |  | <b>Classe :</b> [EidasBridgeInvalidFRIdentityException](../apps/eidas-bridge/src/exceptions/eidas-bridge-invalid-fr-identity.exception.ts) <br /><b>Code HTTP :</b> 400 <br /><b>error :</b> access_denied <br /> <b>error_description :</b> user authentication aborted |
 | [<b>080002</b>](../apps/eidas-bridge/src/exceptions/eidas-bridge-invalid-eu-identity.exception.ts) | L’identité reçue du bridge eIDAS ( venant d’un autre état membre ) n’est pas valide. Contacter le support N3. |  | <b>Classe :</b> [EidasBridgeInvalidEUIdentityException](../apps/eidas-bridge/src/exceptions/eidas-bridge-invalid-eu-identity.exception.ts) <br /><b>Code HTTP :</b> 400 <br /><b>error :</b> access_denied <br /> <b>error_description :</b> user authentication aborted |
+| [<b>080003</b>](../apps/eidas-bridge/src/exceptions/eidas-bridge-invalid-name-id-format.exception.ts) | Le NameIDFormat reçu du bridge eIDAS ( venant d’un autre état membre ) n’est pas valide. Contacter le support N3. |  | <b>Classe :</b> [EidasBridgeInvalidNameIdFormatException](../apps/eidas-bridge/src/exceptions/eidas-bridge-invalid-name-id-format.exception.ts) <br /><b>Code HTTP :</b> 400 <br /><b>error :</b> access_denied <br /> <b>error_description :</b> user authentication aborted |
 
 ## @fc/user-dashboard
 | Code d'erreur | Description | Message utilisateur | Infos techniques |
@@ -389,7 +390,7 @@
 | Code d'erreur | Description | Message utilisateur | Infos techniques |
 |---|---|---|---|
 | [<b>860001</b>](../libs/openid4vp/src/exceptions/openid4vp-authorization-not-found.exception.ts) | No OID4VP authorization request matches the provided interaction id (unknown or expired). |  | <b>Classe :</b> [Openid4vpAuthorizationNotFoundException](../libs/openid4vp/src/exceptions/openid4vp-authorization-not-found.exception.ts) <br /><b>Code HTTP :</b> 404 <br /><b>error :</b> invalid_request <br /> <b>error_description :</b> OID4VP authorization request not found |
-| [<b>860002</b>](../libs/openid4vp/src/exceptions/openid4vp-invalid-vp-token.exception.ts) | The OID4VP authorization response does not contain a valid `vp_token`: expected a string. |  | <b>Classe :</b> [Openid4vpInvalidVpTokenException](../libs/openid4vp/src/exceptions/openid4vp-invalid-vp-token.exception.ts) <br /><b>Code HTTP :</b> 400 <br /><b>error :</b> invalid_request <br /> <b>error_description :</b> OID4VP vp_token is missing or not a string |
+| [<b>860002</b>](../libs/openid4vp/src/exceptions/openid4vp-invalid-vp-token.exception.ts) | The OID4VP authorization response does not contain a valid `vp_token`: expected a string or a DCQL object keyed by credential query id. |  | <b>Classe :</b> [Openid4vpInvalidVpTokenException](../libs/openid4vp/src/exceptions/openid4vp-invalid-vp-token.exception.ts) <br /><b>Code HTTP :</b> 400 <br /><b>error :</b> invalid_request <br /> <b>error_description :</b> OID4VP vp_token is missing or invalid |
 | [<b>860003</b>](../libs/openid4vp/src/exceptions/openid4vp-invalid-x509-certificate-chain.exception.ts) | OpenID4VP X.509 configuration must contain at least one PEM certificate. |  | <b>Classe :</b> [Openid4vpInvalidX509CertificateChainException](../libs/openid4vp/src/exceptions/openid4vp-invalid-x509-certificate-chain.exception.ts) <br /><b>Code HTTP :</b> 500 <br /><b>error :</b> server_error <br /> <b>error_description :</b> OID4VP X.509 certificate chain is invalid |
 
 ## @fc/mdoc
@@ -428,3 +429,9 @@
 | Code d'erreur | Description | Message utilisateur | Infos techniques |
 |---|---|---|---|
 | [<b>900001</b>](../libs/eudi-cog/src/exceptions/eudi-cog-invalid-resolver-name.exception.ts) | Le resolver demandé est inconnu (erreur dans le code). |  | <b>Classe :</b> [EudiCogInvalidResolverNameException](../libs/eudi-cog/src/exceptions/eudi-cog-invalid-resolver-name.exception.ts) <br /><b>Code HTTP :</b> 500 <br /><b>error :</b>  <br /> <b>error_description :</b>  |
+
+## @fc/dcql
+| Code d'erreur | Description | Message utilisateur | Infos techniques |
+|---|---|---|---|
+| [<b>910001</b>](../libs/dcql/src/exceptions/dcql-invalid-query.exception.ts) | The DCQL query is structurally invalid or fails content validation. |  | <b>Classe :</b> [DcqlInvalidQueryException](../libs/dcql/src/exceptions/dcql-invalid-query.exception.ts) <br /><b>Code HTTP :</b> 400 <br /><b>error :</b> invalid_request <br /> <b>error_description :</b> DCQL query is invalid |
+| [<b>910002</b>](../libs/dcql/src/exceptions/dcql-invalid-mdoc-path.exception.ts) | A mdoc JSONPath from the OpenID4VP config cannot be converted to a DCQL claims path pointer. |  | <b>Classe :</b> [DcqlInvalidMdocPathException](../libs/dcql/src/exceptions/dcql-invalid-mdoc-path.exception.ts) <br /><b>Code HTTP :</b> 400 <br /><b>error :</b> invalid_request <br /> <b>error_description :</b> Unsupported mdoc JSONPath |

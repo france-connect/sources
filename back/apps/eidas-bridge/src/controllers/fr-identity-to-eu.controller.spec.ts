@@ -6,7 +6,7 @@ import { validateDto } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
 import { CryptographyEidasService } from '@fc/cryptography-eidas';
-import { EidasAttributes, EidasRequest } from '@fc/eidas';
+import { EidasAttributes, EidasNameIdFormats, EidasRequest } from '@fc/eidas';
 import { EidasCountries } from '@fc/eidas-country';
 import {
   AcrValues,
@@ -27,7 +27,10 @@ import { getLoggerMock } from '@mocks/logger';
 import { getSessionServiceMock } from '@mocks/session';
 
 import { EidasBridgeIdentityDto } from '../dto';
-import { EidasBridgeInvalidFRIdentityException } from '../exceptions';
+import {
+  EidasBridgeInvalidFRIdentityException,
+  EidasBridgeInvalidNameIdFormatException,
+} from '../exceptions';
 import { FrIdentityToEuController } from './fr-identity-to-eu.controller';
 
 jest.mock('@fc/common', () => ({
@@ -88,6 +91,7 @@ describe('FrIdentityToEuController', () => {
 
   const cryptographyEidasMock = {
     computeSubV1: jest.fn(),
+    generateTransientSub: jest.fn(),
   };
 
   const sessionMockValue = {
@@ -624,11 +628,11 @@ describe('FrIdentityToEuController', () => {
 
     let accessTokenMock;
     let validateIdentityMock;
-    let computePairwisedSubMock;
 
     const requestMock: Partial<EidasRequest> = {
       requestedAttributes: requestedAttributesMock,
       spCountryCode: countryCodeMock,
+      nameIdFormat: EidasNameIdFormats.PERSISTENT,
     };
     beforeEach(() => {
       sessionServiceEidasMock.get.mockReturnValue(requestMock);
@@ -646,12 +650,7 @@ describe('FrIdentityToEuController', () => {
       );
       validateIdentityMock.mockResolvedValueOnce();
 
-      computePairwisedSubMock = jest.spyOn<FrIdentityToEuController, any>(
-        frIdentityToEuController,
-        'computePairwisedSub',
-      );
-
-      computePairwisedSubMock.mockReturnValueOnce(subPairwisedMock);
+      cryptographyEidasMock.computeSubV1.mockReturnValueOnce(subPairwisedMock);
 
       oidcClientServiceMock.getUserInfosFromProvider.mockResolvedValueOnce({
         ...userInfosMock,
@@ -751,14 +750,14 @@ describe('FrIdentityToEuController', () => {
       );
 
       // Then
-      expect(computePairwisedSubMock).toHaveBeenCalledTimes(1);
-      expect(computePairwisedSubMock).toHaveBeenCalledWith(
-        userInfosMock.sub,
+      expect(cryptographyEidasMock.computeSubV1).toHaveBeenCalledTimes(1);
+      expect(cryptographyEidasMock.computeSubV1).toHaveBeenCalledWith(
         countryCodeMock,
+        userInfosMock.sub,
       );
     });
 
-    it('should call mapPartialResponseSuccess with the idp identity, the idp acr and the requested eidas attributes', async () => {
+    it('should call mapPartialResponseSuccess with everything needed to map the response', async () => {
       // When
       await frIdentityToEuController['handleOidcCallbackAuthCode'](
         req,
@@ -776,6 +775,8 @@ describe('FrIdentityToEuController', () => {
         { sub: subPairwisedMock },
         acrMock,
         requestedAttributesMock,
+        EidasNameIdFormats.PERSISTENT,
+        subPairwisedMock,
       );
     });
   });
@@ -824,36 +825,71 @@ describe('FrIdentityToEuController', () => {
     });
   });
 
-  describe('computePairwisedSub()', () => {
-    const countryMock = 'FR';
-    const idpSubMock = 'subMockValue';
-    const subComputedMock = Symbol('subv1');
+  describe('computeSamlSubject()', () => {
+    const subComputedMock = Symbol('subv1') as unknown as string;
+    const transientSubComputedMock = Symbol('transientSub');
 
     beforeEach(() => {
-      cryptographyEidasMock.computeSubV1.mockReturnValueOnce(subComputedMock);
-    });
-
-    it('should compute Sub with Identityhash and country', () => {
-      // When
-      frIdentityToEuController['computePairwisedSub'](idpSubMock, countryMock);
-
-      // Then
-      expect(cryptographyEidasMock.computeSubV1).toHaveBeenCalledTimes(1);
-      expect(cryptographyEidasMock.computeSubV1).toHaveBeenCalledWith(
-        countryMock,
-        idpSubMock,
+      cryptographyEidasMock.generateTransientSub.mockReturnValueOnce(
+        transientSubComputedMock,
       );
     });
 
-    it('should return a pairwised sub based on original idp sub and country code', () => {
+    it('should return the computed sub when nameIdFormat is PERSISTENT', () => {
       // When
-      const result = frIdentityToEuController['computePairwisedSub'](
-        idpSubMock,
-        countryMock,
+      const result = frIdentityToEuController['computeSamlSubject'](
+        subComputedMock,
+        EidasNameIdFormats.PERSISTENT,
       );
 
       // Then
       expect(result).toBe(subComputedMock);
+    });
+    it('should return a transient sub when nameIdFormat is TRANSIENT', () => {
+      // When
+      const result = frIdentityToEuController['computeSamlSubject'](
+        subComputedMock,
+        EidasNameIdFormats.TRANSIENT,
+      );
+
+      // Then
+      expect(cryptographyEidasMock.generateTransientSub).toHaveBeenCalledTimes(
+        1,
+      );
+      expect(cryptographyEidasMock.generateTransientSub).toHaveBeenCalledWith();
+      expect(result).toBe(transientSubComputedMock);
+    });
+
+    it('should return the computed sub when nameIdFormat is UNSPECIFIED', () => {
+      // When
+      const result = frIdentityToEuController['computeSamlSubject'](
+        subComputedMock,
+        EidasNameIdFormats.UNSPECIFIED,
+      );
+
+      // Then
+      expect(result).toBe(subComputedMock);
+    });
+
+    it('should return the computed sub when nameIdFormat is undefined', () => {
+      // When
+      const result = frIdentityToEuController['computeSamlSubject'](
+        subComputedMock,
+        undefined,
+      );
+
+      // Then
+      expect(result).toBe(subComputedMock);
+    });
+
+    it('should throw an error when nameIdFormat is unknown', () => {
+      // When / Then
+      expect(() =>
+        frIdentityToEuController['computeSamlSubject'](
+          subComputedMock,
+          'unknown' as EidasNameIdFormats,
+        ),
+      ).toThrow(EidasBridgeInvalidNameIdFormatException);
     });
   });
 

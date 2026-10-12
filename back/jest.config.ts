@@ -93,6 +93,7 @@ const config: Config = {
     '^@fc/data-provider-core-auth(|/.*)$':
       '<rootDir>/libs/data-provider-core-auth/src/$1',
     '^@fc/datapass(|/.*)$': '<rootDir>/libs/datapass/src/$1',
+    '^@fc/dcql(|/.*)$': '<rootDir>/libs/dcql/src/$1',
     '^@fc/device(|/.*)$': '<rootDir>/libs/device/src/$1',
     '^@fc/dto2form(|/.*)$': '<rootDir>/libs/dto2form/src/$1',
     '^@fc/eidas(|/.*)$': '<rootDir>/libs/eidas/src/$1',
@@ -198,6 +199,7 @@ const config: Config = {
       '<rootDir>/libs/async-local-storage/.mocks$1',
     '^@mocks/config(|/.*)$': '<rootDir>/libs/config/.mocks$1',
     '^@mocks/core(|/.*)$': '<rootDir>/libs/core/.mocks/$1',
+    '^@mocks/dcql(|/.*)$': '<rootDir>/libs/dcql/.mocks/$1',
     '^@mocks/i18n(|/.*)$': '<rootDir>/libs/i18n/.mocks$1',
     '^@mocks/jwt(|/.*)$': '<rootDir>/libs/jwt/.mocks/$1',
     '^@mocks/logger(|/.*)$': '<rootDir>/libs/logger/.mocks$1',
@@ -208,6 +210,7 @@ const config: Config = {
     '^@mocks/session(|/.*)$': '<rootDir>/libs/session/.mocks/$1',
     '^@mocks/openid4vp(|/.*)$': '<rootDir>/libs/openid4vp/.mocks/$1',
     '^@mocks/webhooks(|/.*)$': '<rootDir>/libs/webhooks/.mocks/$1',
+    '^dcql$': '<rootDir>/libs/dcql/.mocks',
     '^@owf/mdoc(|/.*)$': '<rootDir>/libs/mdoc/mocks/lib/$1',
     '^jose/(.*)$': '<rootDir>/node_modules/jose/dist/node/cjs/$1',
     '^jose-openid-client(|/.*)$':

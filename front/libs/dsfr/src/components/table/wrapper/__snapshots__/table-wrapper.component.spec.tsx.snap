@@ -1,0 +1,53 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`TableWrapperComponent should match the snapshot with optionnals props 1`] = `
+<div>
+  <div
+    class="fr-table--lg fr-table fr-table--bordered fr-table--multiline fr-table--no-scroll"
+    data-fr-js-table="true"
+    id="any-table-id-mock--wrapper"
+  >
+    <div
+      class="fr-table__wrapper"
+    >
+      <div
+        class="fr-table__container"
+      >
+        <div
+          class="fr-table__content"
+        >
+          <table
+            id="any-table-id-mock--table"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`TableWrapperComponent should match the snapshot with required props 1`] = `
+<div>
+  <div
+    class="fr-table--undefined fr-table"
+    data-fr-js-table="true"
+    id="any-table-id-mock--wrapper"
+  >
+    <div
+      class="fr-table__wrapper"
+    >
+      <div
+        class="fr-table__container"
+      >
+        <div
+          class="fr-table__content"
+        >
+          <table
+            id="any-table-id-mock--table"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

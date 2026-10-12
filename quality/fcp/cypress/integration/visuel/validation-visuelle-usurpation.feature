@@ -51,7 +51,7 @@ Fonctionnalité: Validation Visuelle - User Dashboard - Usurpation
       | tablet landscape |
       | desktop          |
 
-  Plan du Scénario: Usurpation connecté - Confirmation d'envoie du formulaire usurpation sur <device>
+  Plan du Scénario: Usurpation connecté - Confirmation d'envoi du formulaire usurpation sur <device>
     Etant donné que j'utilise un compte usager "par défaut"
     Et que j'utilise un navigateur web sur "<device>"
     Et que je navigue directement vers la page formulaire usurpation avec le paramètre fraudSurveyOrigin égal à "identite-inconnue"
@@ -168,7 +168,7 @@ Fonctionnalité: Validation Visuelle - User Dashboard - Usurpation
     Et la copie d'écran "udFraudNotConnected_FCHigh_success" correspond à la page actuelle sur "desktop"
     Et le mail "demande de support" est envoyé à "test@email.fr"
     Et la copie d'écran "udFraudNotConnected_FCHigh_mail" correspond à la page actuelle sur "desktop"
-  
+
   Scénario: Usurpation non connecté - cas passant FC+ sur mobile
     Etant donné que je supprime les mails envoyés à "support.test@franceconnect.gouv.fr"
     Et que j'utilise un navigateur web sur "mobile"

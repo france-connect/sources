@@ -51,7 +51,7 @@ export class PartnersServiceProviderService {
     const serviceProviders = await this.repository.find({
       where: { id: In(serviceProviderIds) },
       order: { createdAt: 'DESC' },
-      relations: ['organization'],
+      relations: { organization: true },
     });
 
     return serviceProviders;
@@ -60,13 +60,14 @@ export class PartnersServiceProviderService {
   async getById(id: string): Promise<PartnersServiceProvider> {
     const serviceProvider = await this.repository.findOne({
       where: { id },
-      relations: [
-        'instances',
-        'instances.currentVersion',
-        'instances.creator',
-        'organization',
-        'platform',
-      ],
+      relations: {
+        instances: {
+          currentVersion: true,
+          creator: true,
+        },
+        organization: true,
+        platform: true,
+      },
       order: {
         instances: { createdAt: 'DESC' },
       },
@@ -98,12 +99,13 @@ export class PartnersServiceProviderService {
       PartnersServiceProvider,
       {
         where: { id },
-        relations: [
-          'platform',
-          'instances',
-          'instances.currentVersion',
-          'instances.creator',
-        ],
+        relations: {
+          platform: true,
+          instances: {
+            currentVersion: true,
+            creator: true,
+          },
+        },
         order: {
           instances: { createdAt: 'DESC' },
         },

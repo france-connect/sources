@@ -34,6 +34,8 @@ export const enGB: I18nTranslationsMapType = {
     'A problem with your identity data is preventing the connection from succeeding. Please contact us to resolve the issue.',
   'EidasBridge.exceptions.eidasBridgeInvalidFrIdentity':
     'A problem with your identity data is preventing the connection from succeeding. Please contact us to resolve the issue.',
+  'EidasBridge.exceptions.eidasBridgeInvalidNameIdFormat':
+    'We were unable to process your login because the requested identity format is not supported by our system. Please contact the service provider (the website you are trying to access).',
 
   'OidcProvider.exceptions.InvalidClient.EA6EF': 'Please try again later.',
   'OidcProvider.exceptions.InvalidRedirectUri.C013C': 'Please try again later.',

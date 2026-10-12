@@ -108,7 +108,7 @@ describe('mdoc-node.context', () => {
         bytes,
       });
       const random = context.crypto.random(4);
-      const mac = await context.cose.mac0.sign({
+      const mac = await context.cose.mac0.authenticate({
         key: { privateKey: Buffer.from('secret') } as unknown as CoseKey,
         toBeAuthenticated: bytes,
       });
@@ -146,14 +146,36 @@ describe('mdoc-node.context', () => {
       expect(certificateData.pem).toContain('BEGIN CERTIFICATE');
     });
 
-    it('should reject calculateEphemeralMacKey with MdocNotImplementedException', async () => {
+    it('should reject hdkf with MdocNotImplementedException', async () => {
       // Given
       const context = createNodeMdocContext();
+      const hdkfInput = {
+        privateKey: new Uint8Array([1]),
+        publicKey: new Uint8Array([2]),
+        salt: new Uint8Array([3]),
+        info: new Uint8Array([4]),
+      };
 
       // When / Then
-      await expect(context.crypto.calculateEphemeralMacKey()).rejects.toThrow(
+      await expect(context.crypto.hdkf(hdkfInput)).rejects.toThrow(
         MdocNotImplementedException,
       );
+    });
+
+    it('should authenticate mac0 with a raw Uint8Array key', async () => {
+      // Given
+      const context = createNodeMdocContext();
+      const bytes = new Uint8Array([1, 2, 3]);
+      const rawKey = new Uint8Array(Buffer.from('secret'));
+
+      // When
+      const mac = await context.cose.mac0.authenticate({
+        key: rawKey,
+        toBeAuthenticated: bytes,
+      });
+
+      // Then
+      expect(mac).toBeInstanceOf(Buffer);
     });
 
     it('should reject mac0.verify with MdocNotImplementedException', async () => {

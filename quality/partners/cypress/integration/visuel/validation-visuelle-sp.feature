@@ -78,6 +78,20 @@ Fonctionnalité: Validation Visuelle - Espace Partenaires - Fournisseurs de Serv
       | device           |
       | desktop          |
 
+  Plan du Scénario: Validation Visuelle - Modale de suppression d'un contributeur sur <device>
+    Etant donné que j'utilise un navigateur web sur "<device>"
+    Et que je me connecte à l'espace partenaires avec un utilisateur "partenaire avec deux fournisseurs de service"
+    Et que je navigue sur la page fournisseurs de service de l'espace partenaires
+    Et que je clique sur le fournisseur de service "SP2 - Fournisseur de service de test avec 1 instance"
+    Et que je suis redirigé vers la page détails du fournisseur de service
+    Quand je clique sur le bouton de suppression du contributeur "nlaurent@yopmail.com"
+    Alors la copie d'écran "fournisseur-de-service-suppression-contributeur-modale" correspond à l'élément web "#delete-contributor .fr-modal__body" sur "<device>"
+    Et la copie d'écran "fournisseur-de-service-suppression-contributeur-page" correspond à la zone visible de la page actuelle sur "<device>"
+
+    Exemples:
+      | device           |
+      | desktop          |
+
   Plan du Scénario: Validation Visuelle - Page d'un fournisseur de service avec boutons créer un accès et relier les instances sur <device>
     Etant donné que j'utilise un navigateur web sur "<device>"
     Et que je me connecte à l'espace partenaires avec un utilisateur "partenaire avec au moins un fournisseur de service"

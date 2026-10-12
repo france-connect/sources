@@ -29,7 +29,10 @@ import { FSA, FSAMeta } from '@fc/common';
 import { CsrfTokenGuard } from '@fc/csrf';
 import { FormValidationPipe } from '@fc/dto2form';
 import { PartnersAccountSession } from '@fc/partners-account';
-import { PartnersServiceProviderService } from '@fc/partners-service-provider';
+import {
+  PartnersPlatformEnum,
+  PartnersServiceProviderService,
+} from '@fc/partners-service-provider';
 import { PartnersServiceProviderInstanceService } from '@fc/partners-service-provider-instance';
 import { ServiceProviderInstanceVersionStandaloneDto } from '@fc/partners-service-provider-instance-version';
 import { ISessionService, Session, SessionService } from '@fc/session';
@@ -42,7 +45,6 @@ import {
   AccessControlPermission,
   DefaultServiceProviderEnum,
   PartnersBackRoutes,
-  PartnersPlatformEnum,
 } from '../enums';
 import { PartnersInstanceNotFoundException } from '../exceptions';
 import {

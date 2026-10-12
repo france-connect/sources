@@ -15,11 +15,56 @@ Partners validation with system tests implemented using a Test Framework (based 
 
 ## Environment Variables
 
-| Environment Variable | Description         | Comment                                   |
-| -------------------- | ------------------- | ----------------------------------------- |
-| TEST_PLATFORM             | Platform under test | `partners`                                |
-| TEST_ENV             | Test environment    | `docker` or `recette`, etc.               |
-| TAGS                 | Tags expression     | Voir tableau des TAGS utilisés ci-dessous |
+### Overview
+
+Environment variables are passed from your CI/CD system (like GitLab CI) or local environment into Cypress tests. Cypress 15.17+ uses two distinct approaches: `expose` for non-sensitive public config, and `env` for sensitive secrets/keys.
+
+### Accessing Variables in Tests
+
+**`Cypress.expose()` (synchronous) - for non-sensitive configuration:**
+
+- Use this for public, non-secret values like platform names or test environments
+- Access in tests via `Cypress.expose('KEY_NAME')`
+- Recommended for most test configuration
+
+**`cy.env()` (asynchronous) - for sensitive secrets/keys:**
+
+- Use this for sensitive data like API keys, passwords, tokens
+- Access in tests via `cy.env('KEY_NAME')`
+- Easy to override from CI/CD with `CYPRESS_` prefixed environment variables
+- Better security practice for confidential information
+
+> **Note:** This project has `allowCypressEnv: false` in its Cypress configuration, which disables the deprecated `Cypress.env()` method. Only `Cypress.expose()` and `cy.env()` are available.
+
+Learn more in the [Cypress Documentation](https://docs.cypress.io/app/references/migration-guide#Choose-the-right-migration-path).
+
+### Override of expose variables
+
+The Cypress plugin file supports runtime configuration overrides for these three variables: `TEST_ENV`, `TEST_PLATFORM`, and `tags`. Here's how it works:
+
+**Process:**
+
+1. CI/CD system sets environment variables prefixed with `CYPRESS_` (e.g., `CYPRESS_TEST_ENV=docker`)
+2. The plugin code detects these specific variables at startup
+3. The plugin copies the values into `config.expose`, removing the `CYPRESS_` prefix
+4. Tests can then access the exposed values via `Cypress.expose('TEST_ENV')`
+5. No code changes needed — configuration is injected at runtime from the CI/CD environment
+
+**Example flow:**
+
+- Environment: `CYPRESS_TEST_ENV=docker`
+- Plugin copies to: `config.expose.TEST_ENV = 'docker'`
+- Test accesses via: `Cypress.expose('TEST_ENV')` → returns `'docker'`
+
+This pattern allows GitLab CI and other CI/CD systems to dynamically override test configuration without modifying code or Cypress configuration files.
+
+### Available Variables
+
+| Environment Variable  | Description         | Comment                                   |
+|-----------------------|---------------------|-------------------------------------------|
+| CYPRESS_TEST_PLATFORM | Platform under test | `partners`                                |
+| CYPRESS_TEST_ENV      | Test environment    | `docker` or `integ01`, etc.               |
+| CYPRESS_tags          | Tags expression     | Voir tableau des TAGS utilisés ci-dessous |
 
 ### TAGS utilisés
 
@@ -91,7 +136,7 @@ docker-stack bdd-partners-test-visual
 ### Update the base image files for all of your tests
 
 ```shell
-docker-stack bdd-partners-test-visual --env updateSnapshots=true
+docker-stack bdd-partners-test-visual --expose updateSnapshots=true
 ```
 
 ### Regenerate snapshots with fresh fixtures (sandboxes)
@@ -109,13 +154,13 @@ docker-stack wait "partners-front" "https://partners.docker.dev-franceconnect.fr
 docker-stack fixtures-partners-back
 
 # 4. Regenerate snapshots
-docker-stack bdd-partners-test-visual --env updateSnapshots=true
+docker-stack bdd-partners-test-visual --expose updateSnapshots=true
 ```
 
 ### Prevent test failures when an image diff does not pass
 
 ```shell
-docker-stack bdd-partners-test-visual --env failOnSnapshotDiff=false
+docker-stack bdd-partners-test-visual --expose failOnSnapshotDiff=false
 ```
 
 ## Gitlab test pipeline

@@ -48,17 +48,39 @@ describe('extractDates', () => {
   });
 
   it('should throw an error if the dates parameter is not parsable', () => {
-    // When / Then
-    expect(() => extractDates('')).toThrow(
-      'Sequences param must be a JSON array : JSON not parsable',
-    );
+    // Given
+    let caughtError: unknown;
+    // When
+    try {
+      extractDates('');
+    } catch (error) {
+      caughtError = error;
+    }
+    // Then
+    expect(caughtError).toBeInstanceOf(Error);
+    const actualError = caughtError as Error;
+    expect(actualError.message).toBe('Sequences param must be a JSON array');
+    expect(actualError.cause).toBeInstanceOf(Error);
+    const causeError = actualError.cause as Error;
+    expect(causeError.message).toBe('JSON not parsable');
   });
 
   it('should throw an error if the dates parameter is not a string containing an array', () => {
-    // When / Then
-    expect(() => extractDates('{}')).toThrow(
-      'Sequences param must be a JSON array : {} is not an array',
-    );
+    // Given
+    let caughtError: unknown;
+    // When
+    try {
+      extractDates('{}');
+    } catch (error) {
+      caughtError = error;
+    }
+    // Then
+    expect(caughtError).toBeInstanceOf(Error);
+    const actualError = caughtError as Error;
+    expect(actualError.message).toBe('Sequences param must be a JSON array');
+    expect(actualError.cause).toBeInstanceOf(Error);
+    const causeError = actualError.cause as Error;
+    expect(causeError.message).toBe('{} is not an array');
   });
 
   it("should return an array with today's date when the array is empty", () => {

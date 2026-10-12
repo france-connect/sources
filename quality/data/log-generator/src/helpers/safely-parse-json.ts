@@ -12,6 +12,6 @@ export function safelyParseJson(input: string): unknown {
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error(error);
-    throw TypeError('JSON not parsable');
+    throw TypeError('JSON not parsable', { cause: error });
   }
 }

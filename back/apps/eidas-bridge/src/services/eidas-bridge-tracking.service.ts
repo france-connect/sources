@@ -84,6 +84,8 @@ export class EidasBridgeTrackingService implements AppTrackingServiceAbstract {
       countryCodeSrc: sessionEidas?.eidasRequest?.spCountryCode,
       eidasLevelReceived: sessionEidas?.partialEidasResponse?.levelOfAssurance,
       idpSub: sessionOidc?.idpIdentity?.sub,
+      subjectNameIdFormat:
+        sessionEidas?.partialEidasResponse?.subjectNameIdFormat,
       spSub: sessionEidas?.partialEidasResponse?.subject,
     };
 

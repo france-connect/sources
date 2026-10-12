@@ -1,7 +1,4 @@
-const actualModule = jest.requireActual('react-router');
-
 module.exports = {
-  ...actualModule,
   BrowserRouter: jest.fn(({ children, element }) => {
     if (element) {
       return element;
@@ -9,6 +6,7 @@ module.exports = {
     return <div data-mockid="BrowserRouter">{children}</div>;
   }),
   Link: jest.fn(({ children }) => <span data-mockid="Link">{children}</span>),
+  MemoryRouter: jest.fn(({ children }) => <div data-mockid="MemoryRouter">{children}</div>),
   NavLink: jest.fn(({ children }) => <div data-mockid="NavLink">{children}</div>),
   Navigate: jest.fn(() => <div>ReactRouterDom Navigate Component</div>),
   Outlet: jest.fn(() => <div>ReactRouterDom Outlet Component</div>),
@@ -18,6 +16,7 @@ module.exports = {
     }
     return <div data-mockid="Route">{children}</div>;
   }),
+  RouterProvider: jest.fn(({ children }) => <div data-mockid="RouterProvider">{children}</div>),
   Routes: jest.fn(({ children }) => children),
   ScrollRestoration: jest.fn(() => <span data-mockid="ScrollRestoration" />),
   generatePath: jest.fn(),

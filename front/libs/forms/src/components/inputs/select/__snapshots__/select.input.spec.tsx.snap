@@ -9,7 +9,9 @@ exports[`SelectInput should match the snapshot, with config messages 1`] = `
       data-mockid="LabelElement"
     />
     <select
+      aria-describedby="any-name-mock-messages"
       class="fr-select fr-select--valid"
+      id="form-input-select-any-name-mock"
       name="any-name-mock"
     >
       <option
@@ -46,7 +48,9 @@ exports[`SelectInput should match the snapshot, with error messages 1`] = `
       data-mockid="LabelElement"
     />
     <select
+      aria-describedby="any-name-mock-messages"
       class="fr-select fr-select--valid"
+      id="form-input-select-any-name-mock"
       name="any-name-mock"
     >
       <option
@@ -83,7 +87,9 @@ exports[`SelectInput should match the snapshot, without messages 1`] = `
       data-mockid="LabelElement"
     />
     <select
+      aria-describedby="any-name-mock-messages"
       class="fr-select fr-select--valid"
+      id="form-input-select-any-name-mock"
       name="any-name-mock"
     >
       <option
@@ -104,6 +110,9 @@ exports[`SelectInput should match the snapshot, without messages 1`] = `
         mock-label-2
       </option>
     </select>
+    <div
+      data-mockid="MessagesElement"
+    />
   </div>
 </div>
 `;

@@ -68,9 +68,8 @@ describe('RequestObjectService', () => {
     response_uri: 'https://verifier.example/response',
     exp: nowInSeconds() + 600,
     usesHttp: false,
-    presentation_definition: {
-      id: 'def',
-      input_descriptors: [{ id: 'eu.europa.ec.eudi.pid.1', constraints: {} }],
+    dcql_query: {
+      credentials: [{ id: 'pid-fc', format: 'mso_mdoc' }],
     },
   };
 

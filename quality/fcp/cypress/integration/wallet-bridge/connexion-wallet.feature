@@ -27,6 +27,8 @@ Fonctionnalité: Connexion avec un EUDI Wallet
       | scopeType                 |
       | profile sans alias        |
 
+  # Cypress v15.21.1 ne supporte pas complètement les Server-Sent Events
+  @ignoreInteg01
   Scénario: Connexion Wallet - affichage des états d'authentification
     Etant donné que le fournisseur de service requiert l'accès aux informations des scopes "profile sans alias"
     Et que je navigue sur la page fournisseur de service

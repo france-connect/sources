@@ -98,16 +98,5 @@
     "claims": [],
     "scopes": ["eidas"],
     "explicitConsent": false
-  },
-  {
-    "name": "eidas-be",
-    "descriptions": ["eidas-be"],
-    "mocked": false,
-    "url": "https://eidas-be.docker.dev-franceconnect.fr",
-    "clientId": "",
-    "acrValue": "eidas2",
-    "claims": [],
-    "scopes": ["eidas"],
-    "explicitConsent": false
   }
 ]

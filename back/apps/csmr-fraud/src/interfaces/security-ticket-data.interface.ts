@@ -9,8 +9,11 @@ export interface TicketTracksDataInterface {
   platform: string;
   interactionAcr: string;
   city: string;
+  region?: string;
   country: string;
   ipAddress: string[];
+  port?: string;
+  organization?: string;
   accountIdMatch: boolean;
 }
 

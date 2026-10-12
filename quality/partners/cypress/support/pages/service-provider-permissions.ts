@@ -135,7 +135,7 @@ export default class ServiceProviderPermissions {
   }
 
   checkContributorInTable(email: string): void {
-    cy.get('#service-provider-permissions')
+    cy.get('#service-provider-permissions--table')
       .contains('tbody tr', email.toLowerCase())
       .should('be.visible');
   }

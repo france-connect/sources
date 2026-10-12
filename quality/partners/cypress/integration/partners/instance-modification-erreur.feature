@@ -25,7 +25,7 @@ Fonctionnalité: Instance - Modification avec erreurs
     Alors je suis sur la page modification d'instance
     Et les champs suivants sont en erreur dans le formulaire de modification d'instance
       | name                         | errorMessage                                             |
-      | name                         | Veuillez saisir le nom de votre instance                 |
+      | name                         | Veuillez saisir le nom de votre bac à sable              |
       | redirect_uris[0]             | Veuillez saisir votre url de connexion (url de callback) |
       | post_logout_redirect_uris[0] | Veuillez saisir votre url de déconnexion (url de logout) |
     Et les champs suivants ne sont pas en erreur dans le formulaire de modification d'instance
@@ -53,13 +53,13 @@ Fonctionnalité: Instance - Modification avec erreurs
     Et je valide le formulaire de modification d'instance
     Alors je suis sur la page modification d'instance
     Et les champs suivants sont en erreur dans le formulaire de modification d'instance
-      | name                         | errorMessage                                                       |
-      | name                         | Le nom de l’instance doit être de 256 caractères maximum           |
-      | signupId                     | Le numéro de la demande datapass doit être de 7 caractères maximum |
-      | site[0]                      | L’url de site doit être de 1024 caractères maximum                 |
-      | redirect_uris[0]             | L’url de connexion doit être de 1024 caractères maximum            |
-      | post_logout_redirect_uris[0] | L’url de déconnexion doit être de 1024 caractères maximum          |
-      | entityId                     | Le client id doit être compris entre 32 et 64 caractères           |
+      | name                         | errorMessage                                                             |
+      | name                         | Le nom du bac à sable doit être de 256 caractères maximum                |
+      | signupId                     | Le numéro de la demande d’habilitation doit être de 7 caractères maximum |
+      | site[0]                      | L’url de site doit être de 1024 caractères maximum                       |
+      | redirect_uris[0]             | L’url de connexion doit être de 1024 caractères maximum                  |
+      | post_logout_redirect_uris[0] | L’url de déconnexion doit être de 1024 caractères maximum                |
+      | entityId                     | Le client id doit être compris entre 32 et 64 caractères                 |
 
   @ci
   Scénario: Instance Modification - Erreur autres validations
@@ -107,7 +107,7 @@ Fonctionnalité: Instance - Modification avec erreurs
     Alors je suis sur la page modification d'instance
     Et les champs suivants sont en erreur dans le formulaire de modification d'instance
       | name     | errorMessage                                                                  |
-      | name     | Veuillez saisir le nom de votre instance                                      |
+      | name     | Veuillez saisir le nom de votre bac à sable                                   |
       | entityId | Veuillez saisir le client id de votre fournisseur de service FranceConnect v1 |
     Et le champ "name" est visible à l'écran dans le formulaire de modification d'instance
     Et le champ "entityId" n'est pas visible à l'écran dans le formulaire de modification d'instance

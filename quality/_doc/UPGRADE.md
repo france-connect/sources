@@ -70,7 +70,7 @@ export FC_DOCKER_REGISTRY_PASS=<access token>
 
 ```bash
 # docker-stack build-push cypress <version>
-docker-stack build-push cypress 15.8.2
+docker-stack build-push cypress 15.21.1
 ```
 
 ##### 4. Update the CYPRESS_IMAGE_VERSION environment variable
@@ -78,10 +78,10 @@ docker-stack build-push cypress 15.8.2
 Edit the docker-stack config [tools/config/ci.sh], in order to set the default value.
 
 ```bash
-export CYPRESS_IMAGE_VERSION=${CYPRESS_IMAGE_VERSION:-15.8.2}
+export CYPRESS_IMAGE_VERSION=${CYPRESS_IMAGE_VERSION:-15.21.1}
 ```
 
-### Known issues when upgrading to Cypress v15.8.2
+### Known issues when upgrading to Cypress v15.21.1
 
 #### 1. `oqtlib`
 
@@ -93,8 +93,8 @@ see https://github.com/yeojz/otplib/releases/tag/v13.0.0
 
 #### 2. `@types/node`
 
-We keep v22.19.7 to match current version of `node` used by the applications.
+We keep v22.20.1 to match current version of `node` used by the applications.
 
 #### 3. `mongodb`
 
-We keep v6.21.0 to match current version of `mongodb` used by the applications.
+We keep v7.5.0 to match current version of `mongodb` used by the applications.

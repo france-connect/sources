@@ -49,7 +49,7 @@ export class PartnersServiceProviderInstanceVersionService {
   ): Promise<PartnersServiceProviderInstanceVersion | null> {
     const version = await this.repository.findOne({
       where: { id: versionId },
-      relations: ['instance'],
+      relations: { instance: true },
     });
 
     return version;
@@ -63,7 +63,7 @@ export class PartnersServiceProviderInstanceVersionService {
       PartnersServiceProviderInstanceVersion,
       {
         where: { id: versionId },
-        relations: ['instance'],
+        relations: { instance: true },
       },
     );
 

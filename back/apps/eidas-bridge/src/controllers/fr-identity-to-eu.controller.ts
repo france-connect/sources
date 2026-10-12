@@ -8,7 +8,7 @@ import { validateDto } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
 import { CryptographyEidasService } from '@fc/cryptography-eidas';
-import { EidasResponse } from '@fc/eidas';
+import { EidasNameIdFormats, EidasResponse } from '@fc/eidas';
 import {
   AcrValues,
   EidasToOidcService,
@@ -30,7 +30,10 @@ import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
 
 import { AppConfig, EidasBridgeIdentityDto } from '../dto';
 import { EidasBridgeRoutes } from '../enums';
-import { EidasBridgeInvalidFRIdentityException } from '../exceptions';
+import {
+  EidasBridgeInvalidFRIdentityException,
+  EidasBridgeInvalidNameIdFormatException,
+} from '../exceptions';
 
 /**
  * @todo #412 Clean the controller (create a service, generalize code, ...)
@@ -211,7 +214,7 @@ export class FrIdentityToEuController {
       idpId,
     };
 
-    const { requestedAttributes, spCountryCode } =
+    const { requestedAttributes, spCountryCode, nameIdFormat } =
       sessionEidasProvider.get('eidasRequest');
 
     const identity = await this.oidcClient.getUserInfosFromProvider(
@@ -223,7 +226,13 @@ export class FrIdentityToEuController {
 
     await this.validateIdentity(identity);
 
-    identity.sub = this.computePairwisedSub(identity.sub, spCountryCode);
+    /**
+     * This field will be set as PersonIdentifier in the eIDAS response.
+     * It is used to compute the SAML Subject when NameID format is PERSISTENT.
+     */
+    identity.sub = this.cryptoEidas.computeSubV1(spCountryCode, identity.sub);
+
+    const samlSubject = this.computeSamlSubject(identity.sub, nameIdFormat);
 
     const partialEidasResponse = this.oidcToEidas.mapPartialResponseSuccess(
       identity,
@@ -233,6 +242,8 @@ export class FrIdentityToEuController {
        */
       acr as AcrValues,
       requestedAttributes,
+      nameIdFormat,
+      samlSubject,
     );
 
     return partialEidasResponse;
@@ -260,17 +271,33 @@ export class FrIdentityToEuController {
   }
 
   /**
-   * Adapt sub with CountryCode to make it unique by country
-   * @param {string} idpSub the original sub given by Idp
-   * @param {string} spCountryCode the country code (FR, BE, DE...)
+   * Handle sub generation depending on country and requested nameIdFormat
+   * @param {string} personIdentifier the person identifier (sub oidc pairwised with country)
+   * @param {EidasNameIdFormats} nameIdFormat the NameID format (can be undefined if not requested)
    * @returns {string} the new Sub
    */
-  private computePairwisedSub(idpSub: string, spCountryCode: string): string {
-    this.logger.debug(
-      `Format new Sub based on country "${spCountryCode}" and sub "${idpSub}"`,
-    );
-    const pairwisedSub = this.cryptoEidas.computeSubV1(spCountryCode, idpSub);
-    return pairwisedSub;
+  // This "complexity" is reasonable with switch statement
+  // eslint-disable-next-line complexity
+  private computeSamlSubject(
+    personIdentifier: string,
+    nameIdFormat?: EidasNameIdFormats,
+  ): string {
+    /**
+     * If transient -> Privacy first, use transient sub
+     * If unspecified -> Use persistent sub for compatibilty with countries that don't support transient sub
+     * If persistent -> Use persistent sub
+     * If not handled -> throw an error
+     */
+    switch (nameIdFormat) {
+      case EidasNameIdFormats.TRANSIENT:
+        return this.cryptoEidas.generateTransientSub();
+      case undefined:
+      case EidasNameIdFormats.UNSPECIFIED:
+      case EidasNameIdFormats.PERSISTENT:
+        return personIdentifier;
+      default:
+        throw new EidasBridgeInvalidNameIdFormatException(nameIdFormat);
+    }
   }
 
   private getIdpId(): string {

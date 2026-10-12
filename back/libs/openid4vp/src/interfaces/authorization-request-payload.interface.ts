@@ -1,4 +1,4 @@
-import { CreateOpenid4vpAuthorizationRequestOptions } from '@openid4vc/openid4vp';
+import { ParseOpenid4vpAuthorizationResponseOptions } from '@openid4vc/openid4vp';
 
 export type AuthorizationRequestPayload =
-  CreateOpenid4vpAuthorizationRequestOptions['authorizationRequestPayload'];
+  ParseOpenid4vpAuthorizationResponseOptions['authorizationRequestPayload'];

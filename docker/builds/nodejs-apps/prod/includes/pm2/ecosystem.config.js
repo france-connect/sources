@@ -1,5 +1,10 @@
 const os = require("os");
 
+const instances =
+  process.env.PM2_NB_INSTANCES == "max"
+    ? process.env.PM2_NB_INSTANCES
+    : parseInt(process.env.PM2_NB_INSTANCES, 10) || 1;
+
 module.exports = {
   apps: [
     {
@@ -11,7 +16,7 @@ module.exports = {
       autorestart: false,
       cwd: "/var/www/app/",
       exec_mode: "cluster",
-      instances: "max",
+      instances,
       time: false,
       env: {
         NODE_ENV: "production",

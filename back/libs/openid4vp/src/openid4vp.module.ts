@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 
 import { CryptographyModule } from '@fc/cryptography';
+import { DcqlModule } from '@fc/dcql';
 import { JwtModule } from '@fc/jwt';
 import { MdocModule } from '@fc/mdoc';
 import { RedisModule } from '@fc/redis';
@@ -18,6 +19,7 @@ import {
 @Module({
   imports: [
     CryptographyModule,
+    DcqlModule,
     JwtModule,
     MdocModule,
     RedisModule,

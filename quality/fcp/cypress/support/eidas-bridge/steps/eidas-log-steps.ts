@@ -28,7 +28,7 @@ import {
 Then(
   /^l'événement eIDAS "([^"]+)" (est|n'est pas) journalisé(?: avec )?((?:"[^"]+" "(?:[^"]*)"(?: et )?)+)?$/,
   function (event: string, text: string, info?: string) {
-    const logPath = Cypress.env('EIDAS_LOG_FILE_PATH');
+    const logPath = Cypress.expose('EIDAS_LOG_FILE_PATH');
     const { name } = this.env;
     if (name !== 'docker') {
       cy.log(
@@ -76,7 +76,7 @@ Then(
 Then(
   /^la cohérence des événements de la cinématique FS "(européen|français)" est respectée$/,
   function (spSource) {
-    const logPath = Cypress.env('EIDAS_LOG_FILE_PATH');
+    const logPath = Cypress.expose('EIDAS_LOG_FILE_PATH');
     const { name } = this.env;
     if (name !== 'docker') {
       cy.log(

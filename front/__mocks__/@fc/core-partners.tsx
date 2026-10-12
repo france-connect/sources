@@ -1,3 +1,15 @@
+export const ServiceProviderLinkInstancesActionsComponent = jest.fn(() => (
+  <div data-mockid="ServiceProviderLinkInstancesActionsComponent" />
+));
+
+export const ServiceProviderLinkInstancesPageHeaderComponent = jest.fn(() => (
+  <div data-mockid="ServiceProviderLinkInstancesPageHeaderComponent" />
+));
+
+export const ServiceProviderLinkInstancesTable = jest.fn(() => (
+  <div data-mockid="ServiceProviderLinkInstancesTable" />
+));
+
 export const CreateUnlinkedInstanceButton = jest.fn(() => (
   <div data-mockid="CreateUnlinkedInstanceButton" />
 ));
@@ -24,16 +36,12 @@ export const InstancePageFormComponent = jest.fn(() => (
   <div data-mockid="InstancePageFormComponent" />
 ));
 
-export const InstancePageNoticeComponent = jest.fn(() => (
-  <div data-mockid="InstancePageNoticeComponent" />
+export const DeleteContributorModalComponent = jest.fn(() => (
+  <div data-mockid="DeleteContributorModalComponent" />
 ));
 
 export const DeleteInstanceModalComponent = jest.fn(() => (
   <div data-mockid="DeleteInstanceModalComponent" />
-));
-
-export const DeleteInstanceModalFooterComponent = jest.fn(() => (
-  <div data-mockid="DeleteInstanceModalFooterComponent" />
 ));
 
 export const ContributorAlert = jest.fn(() => <div data-mockid="ContributorAlert" />);

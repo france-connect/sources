@@ -2,7 +2,8 @@ import type { FieldValidator } from 'final-form';
 import React, { useCallback } from 'react';
 import { useField } from 'react-final-form';
 
-import { ComponentTypes } from '../../../enums';
+import { ComponentTypes, FieldTypes } from '../../../enums';
+import { getFieldControlId } from '../../../helpers';
 import { useFieldMessages, useFieldMeta } from '../../../hooks';
 import type { FieldMessage } from '../../../interfaces';
 import type { ExtendedFieldRenderProps } from '../../../types';
@@ -31,14 +32,13 @@ export const TextWithRemoveInput = React.memo(
     const { errorsList, hasError, inputClassname, isValid } = useFieldMeta(meta);
 
     const fieldMessages = useFieldMessages({ errorsList, isValid, messages });
-    const hasMessages = fieldMessages && fieldMessages.length > 0;
 
     const removeHandler = useCallback(() => {
       onRemove(index);
     }, [index, onRemove]);
 
     const { className, disabled, name } = input as unknown as ExtendedFieldRenderProps['input'];
-    const id = `form-input-array-${name}`;
+    const id = getFieldControlId(FieldTypes.ARRAY, name);
     return (
       <GroupElement
         className={className}
@@ -54,9 +54,7 @@ export const TextWithRemoveInput = React.memo(
             onClick={removeHandler}
           />
         </div>
-        {hasMessages && (
-          <MessagesElement dataTestId={`${name}-messages`} id={id} messages={fieldMessages} />
-        )}
+        <MessagesElement id={name} messages={fieldMessages} />
       </GroupElement>
     );
   },

@@ -71,7 +71,7 @@ export const Layout: LayoutConfig = {
       },
       {
         href: '/instances',
-        label: 'Mes accès au bac à sable',
+        label: 'Mes bacs à sable',
       },
     ],
     toolsLinks: [
@@ -96,7 +96,7 @@ export const Layout: LayoutConfig = {
     },
     {
       href: '/instances',
-      label: 'Mes accès au bac à sable',
+      label: 'Mes bacs à sable',
     },
     {
       href: '/mentions-legales',

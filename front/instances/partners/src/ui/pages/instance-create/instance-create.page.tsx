@@ -1,10 +1,6 @@
 import React from 'react';
 
-import {
-  InstancePageFormComponent,
-  InstancePageHeaderComponent,
-  InstancePageNoticeComponent,
-} from '@fc/core-partners';
+import { InstancePageFormComponent, InstancePageHeaderComponent } from '@fc/core-partners';
 import { t } from '@fc/i18n';
 
 import { useInstanceCreate } from '../../../hooks';
@@ -18,7 +14,6 @@ export const InstanceCreatePage = React.memo(() => {
   return (
     <React.Fragment>
       <InstancePageHeaderComponent intro={pageIntro} title={pageTitle} />
-      <InstancePageNoticeComponent />
       <InstancePageFormComponent
         config={config}
         initialValues={initialValues}

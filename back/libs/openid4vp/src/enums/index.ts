@@ -2,6 +2,7 @@ export * from './error-code.enum';
 export * from './openid4vp-authorization-error.enum';
 export * from './openid4vp-client-id-prefix.enum';
 export * from './openid4vp-client-id-scheme.enum';
+export * from './openid4vp-flow.enum';
 export * from './openid4vp-format.enum';
 export * from './openid4vp-interaction-status.enum';
 export * from './openid4vp-log-event.enum';

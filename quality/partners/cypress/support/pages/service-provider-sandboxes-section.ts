@@ -23,7 +23,7 @@ export default class ServiceProviderSandboxesSection {
   }
 
   getSandboxesTable(): ChainableElement {
-    return cy.get('#service-provider-sandboxes-table table');
+    return cy.get('#service-provider-sandboxes-table--table');
   }
 
   getSandboxTableRow(instanceName: string): ChainableElement {

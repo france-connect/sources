@@ -2,6 +2,10 @@ export const StepperContext = jest.fn();
 
 export const useStepper = jest.fn();
 
+export const useCheckbox = jest.fn();
+
+export const formatCellValue = jest.fn();
+
 export const useStepperNavigateTo = jest.fn(() => ({
   gotoNextStep: jest.fn(),
   gotoPreviousStep: jest.fn(),
@@ -20,10 +24,6 @@ export const ButtonGroupComponent = jest.fn(({ children }) => (
   <div data-mockid="ButtonGroupComponent">{children}</div>
 ));
 
-export const CheckboxInput = jest.fn(() => <div>CheckboxInput</div>);
-
-export const CheckboxComponent = jest.fn(() => <div>CheckboxComponent</div>);
-
 export const ToggleInput = jest.fn(() => <div>ToggleInput</div>);
 
 export const LinkComponent = jest.fn(({ label }) => (
@@ -37,6 +37,8 @@ export const LinkEmailComponent = jest.fn(({ email }) => (
 export const CardComponent = jest.fn(({ children }) => (
   <div data-mockid="CardComponent">{children}</div>
 ));
+
+export const CheckboxComponent = jest.fn(() => <div data-mockid="CheckboxComponent" />);
 
 export const TileComponent = jest.fn(() => <div>TileComponent</div>);
 
@@ -131,4 +133,9 @@ export const Align = {
   CENTER: 'center',
   LEFT: 'left',
   RIGHT: 'right',
+};
+
+export const SelectionTypes = {
+  MULTIPLE: 'multiple',
+  SINGLE: 'single',
 };

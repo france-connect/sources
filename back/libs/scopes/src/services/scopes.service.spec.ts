@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { unique } from '@fc/common';
+import { PartnersPlatformEnum } from '@fc/partners-service-provider/enums';
 
 import * as PROVIDERS from '../data';
 import { ScopesService } from './scopes.service';
@@ -8,13 +9,24 @@ import { ScopesIndexService } from './scopes-index.service';
 
 jest.mock('@fc/common');
 jest.mock('../data', () => ({
-  foo: {
+  fcpLow: {
     provider: {
       slug: 'IDENTIFIER_MOCK',
     },
     scopes: {
       foo: Symbol('foo'),
       bar: Symbol('bar'),
+    },
+    datapassScopeMapping: {
+      fooDatapass: ['foo', 'fooExtra'],
+    },
+  },
+  fcpHigh: {
+    provider: {
+      slug: 'OTHER_IDENTIFIER_MOCK',
+    },
+    scopes: {
+      baz: Symbol('baz'),
     },
   },
 }));
@@ -184,7 +196,61 @@ describe('ScopesService', () => {
       // When
       const result = service.getScopesByProviderSlug(IdentifierMock);
       // Then
-      expect(result).toEqual(Object.keys(StaticProvidersMocked['foo'].scopes));
+      expect(result).toEqual(
+        Object.keys(StaticProvidersMocked['fcpLow'].scopes),
+      );
+    });
+  });
+
+  describe('getScopesFromDatapassScopes', () => {
+    const rawClaimsMock = ['fooClaim'];
+    const scopesFromClaimsMock = ['foo', 'fooExtra'];
+
+    beforeEach(() => {
+      jest
+        .spyOn(service, 'getRawClaimsFromScopes')
+        .mockReturnValue(rawClaimsMock);
+      jest
+        .spyOn(service, 'getScopesFromClaims')
+        .mockReturnValue(scopesFromClaimsMock);
+      uniqueMock.mockImplementation((values) => values);
+    });
+
+    it('should expand the datapass scopes declared in the platform provider mapping', () => {
+      // When
+      const result = service.getScopesFromDatapassScopes(
+        PartnersPlatformEnum.FRANCE_CONNECT_LOW,
+        ['fooDatapass', 'bar'],
+      );
+
+      // Then
+      expect(uniqueMock).toHaveBeenCalledExactlyOnceWith([
+        'foo',
+        'fooExtra',
+        'bar',
+      ]);
+      expect(service.getRawClaimsFromScopes).toHaveBeenCalledExactlyOnceWith([
+        'foo',
+        'fooExtra',
+        'bar',
+      ]);
+      expect(service.getScopesFromClaims).toHaveBeenCalledExactlyOnceWith(
+        rawClaimsMock,
+      );
+      expect(result).toBe(scopesFromClaimsMock);
+    });
+
+    it('should keep the datapass scopes as is when the platform provider declares no mapping', () => {
+      // When
+      service.getScopesFromDatapassScopes(
+        PartnersPlatformEnum.FRANCE_CONNECT_HIGH,
+        ['baz'],
+      );
+
+      // Then
+      expect(service.getRawClaimsFromScopes).toHaveBeenCalledExactlyOnceWith([
+        'baz',
+      ]);
     });
   });
 

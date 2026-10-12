@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { EudiPresentationId } from '@fc/eudi';
+import { EudiCredentialQueryId } from '@fc/eudi';
 import {
   OidcCtx,
   OidcProviderMiddlewareStep,
@@ -44,9 +44,19 @@ export class OidcMiddlewareService {
   }
 
   private async afterAuthorizationMiddleware(ctx: OidcCtx) {
-    const interactionId = ctx.oidc.entities.Interaction.uid;
+    const interactionId = ctx.oidc.entities.Interaction?.uid;
 
-    const request = this.openid4vp.getRequestById(EudiPresentationId.PID_FC);
+    if (!interactionId) {
+      throw new Error('No OIDC interaction found in the authorization context');
+    }
+
+    const request = this.openid4vp.getRequestById(EudiCredentialQueryId.PID_FC);
+
+    if (!request) {
+      throw new Error(
+        `No OpenID4VP request configuration matches credentialQueryId "${EudiCredentialQueryId.PID_FC}"`,
+      );
+    }
 
     await this.openid4vp.createAuthorizationRequest(interactionId, request);
   }

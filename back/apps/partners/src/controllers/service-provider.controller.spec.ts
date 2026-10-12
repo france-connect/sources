@@ -14,10 +14,12 @@ import {
   MetadataFormService,
 } from '@fc/dto2form';
 import {
+  PartnersPlatformEnum,
   PartnersServiceProviderNotFoundException,
   PartnersServiceProviderService,
 } from '@fc/partners-service-provider';
 import { ServiceProviderInstanceVersionFromSpDto } from '@fc/partners-service-provider-instance-version';
+import { ScopesService } from '@fc/scopes';
 
 import { getSessionServiceMock } from '@mocks/session';
 
@@ -41,6 +43,12 @@ describe('ServiceProviderController', () => {
     toDisplayValue: jest.fn(),
     sortPermissions: jest.fn(),
   };
+
+  const scopesServiceMock = {
+    getScopesFromDatapassScopes: jest.fn(),
+  };
+
+  const fcScopesMock = ['openid', 'profile', 'email'];
 
   const accountPermissionServiceMock = {
     getAccountsByPermissions: jest.fn(),
@@ -91,36 +99,40 @@ describe('ServiceProviderController', () => {
     datapassAuthorizationId: '12345678901234',
     datapassEidasLevel: 'eidas_1',
     datapassScopes: ['openid', 'given_name', 'family_name', 'email'],
-    platform: null,
+    platform: {
+      id: 'platform-id',
+      name: PartnersPlatformEnum.FRANCE_CONNECT_LOW,
+    },
     createdAt: new Date('2024-01-01'),
     updatedAt: new Date('2024-01-01'),
     instances: [],
   };
 
-  const serviceProviderResponseDtoMock: PartnersServiceProviderPayloadInterface =
-    {
-      id: 'service-provider-id',
-      name: 'Test Service Provider',
-      datapassRequestId: '12345',
-      organization: {
-        id: '12345',
-        name: 'Test Organization',
-        siret: '12345678901234',
-        createdAt: new Date('2024-01-01'),
-        updatedAt: new Date('2024-01-01'),
-        serviceProviders: [serviceProviderMock],
-      },
-      datapassScopes: [
-        'Identifiant technique',
-        'Prénoms',
-        'Nom de famille',
-        'Adresse électronique',
-      ],
-      fcScopes: ['openid', 'profile', 'email'],
+  const serviceProviderResponseDtoMock: Omit<
+    PartnersServiceProviderPayloadInterface,
+    'fcScopes'
+  > = {
+    id: 'service-provider-id',
+    name: 'Test Service Provider',
+    datapassRequestId: '12345',
+    organization: {
+      id: '12345',
+      name: 'Test Organization',
+      siret: '12345678901234',
       createdAt: new Date('2024-01-01'),
       updatedAt: new Date('2024-01-01'),
-      instances: [],
-    };
+      serviceProviders: [serviceProviderMock],
+    },
+    datapassScopes: [
+      'Identifiant technique',
+      'Prénoms',
+      'Nom de famille',
+      'Adresse électronique',
+    ],
+    createdAt: new Date('2024-01-01'),
+    updatedAt: new Date('2024-01-01'),
+    instances: [],
+  };
 
   const accessControlGuardMock = {
     canActivate: () => true,
@@ -143,6 +155,7 @@ describe('ServiceProviderController', () => {
       providers: [
         PartnersServiceProviderService,
         PartnersServiceProviderFormService,
+        ScopesService,
         AccountPermissionService<AccessControlEntity, AccessControlPermission>,
         PartnersInstanceService,
         MetadataFormService,
@@ -153,6 +166,8 @@ describe('ServiceProviderController', () => {
       .useValue(serviceProviderServiceMock)
       .overrideProvider(PartnersServiceProviderFormService)
       .useValue(formServiceMock)
+      .overrideProvider(ScopesService)
+      .useValue(scopesServiceMock)
       .overrideProvider(
         AccountPermissionService<AccessControlEntity, AccessControlPermission>,
       )
@@ -179,6 +194,7 @@ describe('ServiceProviderController', () => {
     formServiceMock.toDisplayValue.mockReturnValue(
       serviceProviderResponseDtoMock,
     );
+    scopesServiceMock.getScopesFromDatapassScopes.mockReturnValue(fcScopesMock);
     accountPermissionServiceMock.getAccountsByPermissions.mockResolvedValue([]);
   });
 
@@ -238,11 +254,12 @@ describe('ServiceProviderController', () => {
       const result = await controller.getServiceProviders(permissionsMock);
 
       // Then
-      const { fcScopes: _fcScopes, ...expectedPayload } =
-        serviceProviderResponseDtoMock;
+      expect(
+        scopesServiceMock.getScopesFromDatapassScopes,
+      ).not.toHaveBeenCalled();
       expect(result).toEqual({
         type: 'SERVICE_PROVIDER',
-        payload: [expectedPayload],
+        payload: [serviceProviderResponseDtoMock],
       });
     });
 
@@ -299,11 +316,43 @@ describe('ServiceProviderController', () => {
       // Then
       expect(result).toEqual({
         type: 'SERVICE_PROVIDER',
-        payload: serviceProviderResponseDtoMock,
+        payload: { ...serviceProviderResponseDtoMock, fcScopes: fcScopesMock },
         meta: {
           permissions: [],
         },
       });
+    });
+
+    it('should resolve the FC scopes from the service provider', async () => {
+      // When
+      await controller.getServiceProvider(serviceProviderIdMock);
+
+      // Then
+      expect(
+        scopesServiceMock.getScopesFromDatapassScopes,
+      ).toHaveBeenCalledExactlyOnceWith(
+        PartnersPlatformEnum.FRANCE_CONNECT_LOW,
+        serviceProviderMock.datapassScopes,
+      );
+    });
+
+    it('should default to an empty datapass scopes list', async () => {
+      // Given
+      serviceProviderServiceMock.getById.mockResolvedValue({
+        ...serviceProviderMock,
+        datapassScopes: null,
+      });
+
+      // When
+      await controller.getServiceProvider(serviceProviderIdMock);
+
+      // Then
+      expect(
+        scopesServiceMock.getScopesFromDatapassScopes,
+      ).toHaveBeenCalledExactlyOnceWith(
+        PartnersPlatformEnum.FRANCE_CONNECT_LOW,
+        [],
+      );
     });
 
     it('should not expose platform fields', async () => {

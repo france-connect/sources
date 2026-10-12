@@ -8,7 +8,7 @@ Then("l'alerte de succès de liaison des instances est affichée", function () {
   serviceProviderSandboxesSection
     .getServiceProviderSandboxesSuccessAlert()
     .should('be.visible')
-    .and('contain.text', 'Instance reliée avec succès !');
+    .and('contain.text', 'Bac à sable relié avec succès');
 });
 
 Then(
@@ -17,7 +17,7 @@ Then(
     serviceProviderSandboxesSection
       .getServiceProviderSandboxesSuccessAlert()
       .should('be.visible')
-      .and('contain.text', 'accès au bac à sable');
+      .and('contain.text', 'bac à sable');
   },
 );
 

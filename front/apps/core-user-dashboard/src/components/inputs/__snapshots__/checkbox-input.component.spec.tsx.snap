@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`CheckboxInputComponent should match the snapshot 1`] = `
+<div>
+  <form
+    data-testid="form-wrapper"
+  >
+    <div
+      class="fr-checkbox-group"
+    >
+      <input
+        data-testid="field-checkbox-input"
+        id="any-name-mock"
+        name="any-name-mock"
+        type="checkbox"
+        value="false"
+      />
+      <label
+        class="fr-label"
+        data-testid="field-checkbox-label"
+        for="any-name-mock"
+      >
+        any-label-mock
+      </label>
+    </div>
+  </form>
+</div>
+`;
+
+exports[`CheckboxInputComponent should match the snapshot, with validation error 1`] = `
+<div>
+  <form
+    data-testid="form-wrapper"
+  >
+    <div
+      class="fr-checkbox-group fr-checkbox-group--error"
+    >
+      <input
+        data-testid="field-checkbox-input"
+        id="any-name-mock"
+        name="any-name-mock"
+        type="checkbox"
+        value="false"
+      />
+      <label
+        class="fr-label"
+        data-testid="field-checkbox-label"
+        for="any-name-mock"
+      >
+        any-label-mock
+      </label>
+      <p
+        class="fr-message fr-message--error"
+        id="any-name-mock-error-desc"
+      >
+        any-error-mock
+      </p>
+    </div>
+  </form>
+</div>
+`;

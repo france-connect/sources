@@ -6,13 +6,13 @@ This library holds enums, interfaces, and related constants aligned with EUDI ru
 
 ## Contents
 
-- **Enums** — document types (`EudiDocTypes`), presentation identifiers (`EudiPresentationId`), PID attributes such as gender (`EudiGenders`).
+- **Enums** — document types (`EudiDocTypes`), DCQL credential query identifiers (`EudiCredentialQueryId`), PID attributes such as gender (`EudiGenders`).
 - **Interfaces** — typed claim shapes for EUDI credentials, e.g. the PID profile (`EudiPidInterface`).
 
 ## Usage
 
 ```typescript
-import { EudiDocTypes, EudiPidInterface, EudiPresentationId } from '@fc/eudi';
+import { EudiDocTypes, EudiPidInterface, EudiCredentialQueryId } from '@fc/eudi';
 ```
 
 ## References

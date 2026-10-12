@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { EudiPresentationId } from '@fc/eudi';
+import { EudiCredentialQueryId } from '@fc/eudi';
 import {
   OidcCtx,
   OidcProviderMiddlewareStep,
@@ -127,7 +127,7 @@ describe('OidcMiddlewareService', () => {
   describe('afterAuthorizationMiddleware()', () => {
     // Given
     const requestMock = {
-      presentationId: 'presentationIdMock',
+      credentialQueryId: 'credentialQueryIdMock',
     };
 
     beforeEach(() => {
@@ -141,7 +141,47 @@ describe('OidcMiddlewareService', () => {
       // Then
       expect(
         openid4vpServiceMock.getRequestById,
-      ).toHaveBeenCalledExactlyOnceWith(EudiPresentationId.PID_FC);
+      ).toHaveBeenCalledExactlyOnceWith(EudiCredentialQueryId.PID_FC);
+    });
+
+    it('should throw if no OIDC interaction is found in the context', async () => {
+      // Given
+      const ctxWithoutInteractionMock = {
+        ...ctxMock,
+        oidc: { entities: {} },
+      } as unknown as OidcCtx;
+
+      // When / Then
+      await expect(
+        service['afterAuthorizationMiddleware'](ctxWithoutInteractionMock),
+      ).rejects.toThrow(
+        'No OIDC interaction found in the authorization context',
+      );
+    });
+
+    it('should throw if no request configuration is found', async () => {
+      // Given
+      openid4vpServiceMock.getRequestById.mockReturnValueOnce(undefined);
+
+      // When / Then
+      await expect(
+        service['afterAuthorizationMiddleware'](ctxMock),
+      ).rejects.toThrow(
+        `No OpenID4VP request configuration matches credentialQueryId "${EudiCredentialQueryId.PID_FC}"`,
+      );
+    });
+
+    it('should not create an authorization request if no request configuration is found', async () => {
+      // Given
+      openid4vpServiceMock.getRequestById.mockReturnValueOnce(undefined);
+
+      // When
+      await service['afterAuthorizationMiddleware'](ctxMock).catch(() => {});
+
+      // Then
+      expect(
+        openid4vpServiceMock.createAuthorizationRequest,
+      ).not.toHaveBeenCalled();
     });
 
     it('should create an authorization request with the interactionId and the request', async () => {

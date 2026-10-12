@@ -10,24 +10,24 @@ import { validateDto } from '../helpers/class-validator-helper';
 Then(
   "le corps de la réponse contient un JWT d'introspection avec chiffrement {string}",
   function (encAlg: string) {
-    cy.get('@apiResponse')
-      .its('body')
-      .then((body) => {
-        expect(body).to.be.a('string');
-        expect(body.length).to.be.greaterThan(500);
-        const jwk =
-          encAlg === 'ECDH-ES'
-            ? Cypress.env('DP_EC_ENC_PRIV_KEY')
-            : Cypress.env('DP_RSA_ENC_PRIV_KEY');
-        cy.task('getJwtContent', { jwk, jwt: body })
-          .as('jwt')
-          .then((jwtContent) => {
-            const content = JSON.stringify(jwtContent, null, 2);
-            cy.document().then((document) => {
-              document.documentElement.innerHTML = content;
+    const KEY_NAME =
+      encAlg === 'ECDH-ES' ? 'DP_EC_ENC_PRIV_KEY' : 'DP_RSA_ENC_PRIV_KEY';
+    cy.env([KEY_NAME]).then(({ [KEY_NAME]: encKey }) => {
+      cy.get('@apiResponse')
+        .its('body')
+        .then((body) => {
+          expect(body).to.be.a('string');
+          expect(body.length).to.be.greaterThan(500);
+          cy.task('getJwtContent', { jwk: encKey, jwt: body })
+            .as('jwt')
+            .then((jwtContent) => {
+              const content = JSON.stringify(jwtContent, null, 2);
+              cy.document().then((document) => {
+                document.documentElement.innerHTML = content;
+              });
             });
-          });
-      });
+        });
+    });
   },
 );
 

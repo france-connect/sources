@@ -54,6 +54,7 @@ export const EIDAS_FLOW_EVENTS_FR_EU = [
       'eidasLevelRequested',
       'eidasLevelReceived',
       'idpSub',
+      'subjectNameIdFormat',
       'spSub',
       'logId',
     ],

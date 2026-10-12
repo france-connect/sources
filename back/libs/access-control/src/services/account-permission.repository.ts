@@ -86,7 +86,7 @@ export class AccountPermissionRepository<
   ): Promise<AccountPermissionInterface<A, T>[]> {
     const accountsPermissions = await this.accountPermission.find({
       where: { permissionType: In(permissions), entity, entityId },
-      relations: ['account'],
+      relations: { account: true },
     });
 
     return accountsPermissions.map((accountPermission) => ({

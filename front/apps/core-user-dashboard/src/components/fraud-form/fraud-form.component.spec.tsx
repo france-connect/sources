@@ -1,18 +1,23 @@
 import { render } from '@testing-library/react';
 import { Field, Form } from 'react-final-form';
 
-import { TextAreaInputComponent, TextInputComponent } from '@fc/core-user-dashboard';
-import { ButtonTypes, CheckboxInput, SimpleButton, Sizes } from '@fc/dsfr';
+import { ButtonTypes, SimpleButton, Sizes } from '@fc/dsfr';
 import { t } from '@fc/i18n';
 import { useStylesQuery, useStylesVariables } from '@fc/styles';
 
+import { CheckboxInputComponent, TextAreaInputComponent, TextInputComponent } from '../inputs';
 import { FraudFormComponent } from './fraud-form.component';
 import {
+  inputAcceptTransmitDataConfig,
   inputAuthenticationEventIdConfig,
   inputEmailConfig,
   inputPhoneConfig,
   inputTextAreaDescriptionConfig,
 } from './fraud-form-input.config';
+
+jest.mock('../inputs/checkbox-input.component');
+jest.mock('../inputs/text-area-input.component');
+jest.mock('../inputs/text-input.component');
 
 describe('FraudFormComponent', () => {
   const commitMock = jest.fn();
@@ -26,7 +31,6 @@ describe('FraudFormComponent', () => {
       .mocked(t)
       .mockReturnValueOnce('any-form-title-mock')
       .mockReturnValueOnce('any-form-mention-mock')
-      .mockReturnValueOnce('any-form-accept-mock')
       .mockReturnValueOnce('any-form-report-mock');
   });
 
@@ -41,11 +45,10 @@ describe('FraudFormComponent', () => {
     );
 
     // Then
-    expect(t).toHaveBeenCalledTimes(4);
+    expect(t).toHaveBeenCalledTimes(3);
     expect(t).toHaveBeenNthCalledWith(1, 'FraudForm.form.title');
     expect(t).toHaveBeenNthCalledWith(2, 'FraudForm.form.mention');
-    expect(t).toHaveBeenNthCalledWith(3, 'FraudForm.form.accept');
-    expect(t).toHaveBeenNthCalledWith(4, 'FraudForm.form.report');
+    expect(t).toHaveBeenNthCalledWith(3, 'FraudForm.form.report');
   });
 
   it('should match the snapshot on mobile layout', () => {
@@ -177,7 +180,7 @@ describe('FraudFormComponent', () => {
     expect(TextAreaInputComponent).toHaveBeenCalledWith(inputTextAreaDescriptionConfig, undefined);
   });
 
-  it('should call CheckboxInput', () => {
+  it('should call CheckboxInputComponent', () => {
     // When
     render(
       <FraudFormComponent
@@ -188,14 +191,8 @@ describe('FraudFormComponent', () => {
     );
 
     // Then
-    expect(CheckboxInput).toHaveBeenCalledOnce();
-    expect(CheckboxInput).toHaveBeenCalledWith(
-      {
-        label: 'any-form-accept-mock',
-        name: 'acceptTransmitData',
-      },
-      undefined,
-    );
+    expect(CheckboxInputComponent).toHaveBeenCalledOnce();
+    expect(CheckboxInputComponent).toHaveBeenCalledWith(inputAcceptTransmitDataConfig, undefined);
   });
 
   it('should call SimpleButton', () => {

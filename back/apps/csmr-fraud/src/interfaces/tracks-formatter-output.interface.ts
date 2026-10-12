@@ -3,6 +3,7 @@ import { TracksFormatterOutputAbstract } from '@fc/tracks-adapter-elasticsearch'
 /**
  * @example {
  *   city: 'Paris',
+ *   region: 'Île-de-France',
  *   country: 'FR',
  *   idpName: 'Ameli';
  *   idpId: 'any-id';
@@ -18,6 +19,8 @@ import { TracksFormatterOutputAbstract } from '@fc/tracks-adapter-elasticsearch'
  *   interactionId: 'any-id';
  *   browsingSessionId: 'any-id';
  *   ipAddress: ['ipAddress']
+ *   port: '45826'
+ *   organization: 'OVH SAS'
  * -}
  */
 export interface TracksFormatterOutputInterface extends TracksFormatterOutputAbstract {
@@ -37,6 +40,9 @@ export interface TracksFormatterOutputInterface extends TracksFormatterOutputAbs
   interactionId: string;
   browsingSessionId: string;
   city?: string;
+  region?: string;
   country?: string;
   ipAddress: string[];
+  port?: string;
+  organization?: string;
 }

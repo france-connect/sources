@@ -57,16 +57,13 @@ describe('TextAreaInput', () => {
 
     // Then
     expect(container).toMatchSnapshot();
-    expect(useFieldMeta).toHaveBeenCalledOnce();
-    expect(useFieldMeta).toHaveBeenCalledWith(metaMock);
-    expect(useFieldMessages).toHaveBeenCalledOnce();
-    expect(useFieldMessages).toHaveBeenCalledWith({
+    expect(useFieldMeta).toHaveBeenCalledExactlyOnceWith(metaMock);
+    expect(useFieldMessages).toHaveBeenCalledExactlyOnceWith({
       errorsList: [],
       isValid: true,
       messages: undefined,
     });
-    expect(GroupElement).toHaveBeenCalledOnce();
-    expect(GroupElement).toHaveBeenCalledWith(
+    expect(GroupElement).toHaveBeenCalledExactlyOnceWith(
       {
         children: expect.any(Object),
         className: 'any-classname-mock',
@@ -77,23 +74,26 @@ describe('TextAreaInput', () => {
       },
       undefined,
     );
-    expect(LabelElement).toHaveBeenCalledOnce();
-    expect(LabelElement).toHaveBeenCalledWith(
+    expect(LabelElement).toHaveBeenCalledExactlyOnceWith(
       {
         hint: 'any-hint-mock',
+        htmlFor: 'form-input-textarea-any-name-mock',
         label: 'any-label-mock',
-        name: 'any-name-mock',
         required: true,
       },
       undefined,
     );
     expect(inputElt).toBeInTheDocument();
     expect(inputElt).toHaveAttribute('aria-describedby', 'any-name-mock-messages');
+    expect(inputElt).toHaveAttribute('id', 'form-input-textarea-any-name-mock');
     expect(inputElt).toHaveClass('any-input-classname-mock');
     expect(inputElt).not.toHaveAttribute('disabled');
     expect(inputElt).not.toHaveAttribute('maxLength');
     expect(inputElt).toHaveAttribute('name', 'any-name-mock');
-    expect(MessagesElement).not.toHaveBeenCalled();
+    expect(MessagesElement).toHaveBeenCalledExactlyOnceWith(
+      { id: 'any-name-mock', messages: [] },
+      undefined,
+    );
     expect(TextAreaMaxlengthComponent).not.toHaveBeenCalledOnce();
   });
 
@@ -129,8 +129,7 @@ describe('TextAreaInput', () => {
 
     // Then
     expect(container).toMatchSnapshot();
-    expect(TextAreaMaxlengthComponent).toHaveBeenCalledOnce();
-    expect(TextAreaMaxlengthComponent).toHaveBeenCalledWith(
+    expect(TextAreaMaxlengthComponent).toHaveBeenCalledExactlyOnceWith(
       {
         count: 'any-value-mock'.length,
         maxLength: 255 + 1,
@@ -173,16 +172,13 @@ describe('TextAreaInput', () => {
 
     // Then
     expect(container).toMatchSnapshot();
-    expect(useFieldMeta).toHaveBeenCalledOnce();
-    expect(useFieldMeta).toHaveBeenCalledWith(metaMock);
-    expect(useFieldMessages).toHaveBeenCalledOnce();
-    expect(useFieldMessages).toHaveBeenCalledWith({
+    expect(useFieldMeta).toHaveBeenCalledExactlyOnceWith(metaMock);
+    expect(useFieldMessages).toHaveBeenCalledExactlyOnceWith({
       errorsList: ['any-error-message-mock'],
       isValid: false,
       messages: undefined,
     });
-    expect(GroupElement).toHaveBeenCalledOnce();
-    expect(GroupElement).toHaveBeenCalledWith(
+    expect(GroupElement).toHaveBeenCalledExactlyOnceWith(
       {
         children: expect.any(Object),
         className: 'any-classname-mock',
@@ -193,26 +189,24 @@ describe('TextAreaInput', () => {
       },
       undefined,
     );
-    expect(LabelElement).toHaveBeenCalledOnce();
-    expect(LabelElement).toHaveBeenCalledWith(
+    expect(LabelElement).toHaveBeenCalledExactlyOnceWith(
       {
         hint: 'any-hint-mock',
+        htmlFor: 'form-input-textarea-any-name-mock',
         label: 'any-label-mock',
-        name: 'any-name-mock',
         required: true,
       },
       undefined,
     );
     expect(inputElt).toBeInTheDocument();
     expect(inputElt).toHaveAttribute('aria-describedby', 'any-name-mock-messages');
+    expect(inputElt).toHaveAttribute('id', 'form-input-textarea-any-name-mock');
     expect(inputElt).toHaveClass('any-input-classname-mock');
     expect(inputElt).not.toHaveAttribute('disabled');
     expect(inputElt).not.toHaveAttribute('maxLength');
     expect(inputElt).toHaveAttribute('name', 'any-name-mock');
-    expect(MessagesElement).toHaveBeenCalledOnce();
-    expect(MessagesElement).toHaveBeenCalledWith(
+    expect(MessagesElement).toHaveBeenCalledExactlyOnceWith(
       {
-        dataTestId: 'any-name-mock-messages',
         id: 'any-name-mock',
         messages: [errorMessageMock],
       },
@@ -256,16 +250,13 @@ describe('TextAreaInput', () => {
 
     // Then
     expect(container).toMatchSnapshot();
-    expect(useFieldMeta).toHaveBeenCalledOnce();
-    expect(useFieldMeta).toHaveBeenCalledWith(metaMock);
-    expect(useFieldMessages).toHaveBeenCalledOnce();
-    expect(useFieldMessages).toHaveBeenCalledWith({
+    expect(useFieldMeta).toHaveBeenCalledExactlyOnceWith(metaMock);
+    expect(useFieldMessages).toHaveBeenCalledExactlyOnceWith({
       errorsList: [],
       isValid: false,
       messages: [configMessageMock],
     });
-    expect(GroupElement).toHaveBeenCalledOnce();
-    expect(GroupElement).toHaveBeenCalledWith(
+    expect(GroupElement).toHaveBeenCalledExactlyOnceWith(
       {
         children: expect.any(Object),
         className: 'any-classname-mock',
@@ -276,26 +267,24 @@ describe('TextAreaInput', () => {
       },
       undefined,
     );
-    expect(LabelElement).toHaveBeenCalledOnce();
-    expect(LabelElement).toHaveBeenCalledWith(
+    expect(LabelElement).toHaveBeenCalledExactlyOnceWith(
       {
         hint: 'any-hint-mock',
+        htmlFor: 'form-input-textarea-any-name-mock',
         label: 'any-label-mock',
-        name: 'any-name-mock',
         required: true,
       },
       undefined,
     );
     expect(inputElt).toBeInTheDocument();
     expect(inputElt).toHaveAttribute('aria-describedby', 'any-name-mock-messages');
+    expect(inputElt).toHaveAttribute('id', 'form-input-textarea-any-name-mock');
     expect(inputElt).toHaveClass('any-input-classname-mock');
     expect(inputElt).not.toHaveAttribute('disabled');
     expect(inputElt).not.toHaveAttribute('maxLength');
     expect(inputElt).toHaveAttribute('name', 'any-name-mock');
-    expect(MessagesElement).toHaveBeenCalledOnce();
-    expect(MessagesElement).toHaveBeenCalledWith(
+    expect(MessagesElement).toHaveBeenCalledExactlyOnceWith(
       {
-        dataTestId: 'any-name-mock-messages',
         id: 'any-name-mock',
         messages: [configMessageMock],
       },

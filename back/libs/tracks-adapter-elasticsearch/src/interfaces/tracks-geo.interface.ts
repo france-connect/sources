@@ -2,9 +2,17 @@ export interface SourceInterface {
   readonly geo: TracksGeoDataInterface;
   readonly address: string[];
   readonly port: string;
+  readonly as?: TracksAsDataInterface;
   // Input data
   // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly original_addresses: string;
+}
+
+export interface TracksAsDataInterface {
+  readonly number?: number;
+  readonly organization?: {
+    readonly name?: string;
+  };
 }
 
 export interface TracksGeoDataInterface {

@@ -528,6 +528,15 @@
         "tsConfigPath": "libs/datapass/tsconfig.lib.json"
       }
     },
+    "dcql": {
+      "type": "library",
+      "root": "libs/dcql",
+      "entryFile": "index",
+      "sourceRoot": "libs/dcql/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/dcql/tsconfig.lib.json"
+      }
+    },
     "device": {
       "type": "library",
       "root": "libs/device",

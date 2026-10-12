@@ -1,82 +1,75 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useLoaderData, useRevalidator } from 'react-router';
 
-import type { FSAInterface, UUIDType } from '@fc/common';
-import type { InstanceInterface } from '@fc/core-partners';
+import type { FSAInterface } from '@fc/common';
+import { useSelectable } from '@fc/common';
+import type { InstanceInterface, LinkableInstancesPayloadInterface } from '@fc/core-partners';
 import { PartnersAlertVariants, PartnersService } from '@fc/core-partners';
 import { t } from '@fc/i18n';
 import { useNavigateWithState } from '@fc/routing';
 
-// @NOTE investigate to know why we need this interface here
-// and nowhere else
-interface LinkInstancesLoaderPayloadInterface {
-  datapassRequestId: string;
-  serviceProviderId: UUIDType;
-  serviceProviderName?: string;
-  linkableInstances: InstanceInterface[];
-}
-
-// @NOTE investigate to know why we need this interface here
-// Create a generic one ?
-interface LinkInstancesFormValuesInterface {
-  instances: Record<string, boolean>;
-}
+const getItemId = (item: InstanceInterface) => item.id;
 
 export const useLinkableInstancesToServiceProvider = () => {
-  const { payload } = useLoaderData<Required<FSAInterface<LinkInstancesLoaderPayloadInterface>>>();
+  const { payload } = useLoaderData<Required<FSAInterface<LinkableInstancesPayloadInterface>>>();
   const { datapassRequestId, linkableInstances, serviceProviderId, serviceProviderName } = payload;
 
   const { revalidate } = useRevalidator();
 
   const { goBack, goBackWithSuccess } = useNavigateWithState();
 
-  // Pre-check instances whose signupId matches the target SP's datapassRequestId,
-  // so the user sees the most relevant instances already selected on page load.
-  const initialValues: LinkInstancesFormValuesInterface = {
-    instances: linkableInstances.reduce<Record<string, boolean>>((acc, { currentVersion, id }) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const initialSelection = useMemo(() => {
+    const trimmedRequestId = datapassRequestId.trim();
+
+    const selectedIds = linkableInstances.reduce<string[]>((acc, { currentVersion, id }) => {
       const signupId = currentVersion.data.signupId?.trim();
-      acc[id] = Boolean(signupId) && signupId === datapassRequestId.trim();
+      const isLinked = signupId && signupId === trimmedRequestId;
+      if (isLinked) {
+        acc.push(id);
+      }
       return acc;
-    }, {}),
-  };
+    }, []);
 
-  const validateHandler = ({ instances }: LinkInstancesFormValuesInterface) => {
-    const hasSelection = instances && Object.values(instances).some(Boolean);
-    return hasSelection ? undefined : { instances: 'error' };
-  };
+    return new Set(selectedIds);
+  }, [datapassRequestId, linkableInstances]);
 
-  const handleSubmit = useCallback(
-    async ({ instances }: LinkInstancesFormValuesInterface) => {
-      const selectedInstanceIds = Object.entries(instances)
-        .filter(([, checked]) => checked)
-        .map(([id]) => id);
+  const selectable = useSelectable({
+    getItemId,
+    initialSelection,
+    items: linkableInstances,
+  });
 
+  const handleSubmit = useCallback(async () => {
+    setIsSubmitting(true);
+
+    try {
+      // @TODO error handling when linking instances to service provider fails
       await PartnersService.linkInstancesToServiceProvider({
-        instanceIds: selectedInstanceIds,
+        instanceIds: Array.from(selectable.selection),
         serviceProviderId,
       });
 
-      // @NOTE should be done into form.postSubmit
       revalidate();
       goBackWithSuccess({
         message: t('Partners.serviceProviderPage.linkInstances.success.description'),
         title: t('Partners.instances.successLink'),
         variant: PartnersAlertVariants.INSTANCE,
       });
-    },
-    [goBackWithSuccess, revalidate, serviceProviderId],
-  );
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [goBackWithSuccess, revalidate, selectable.selection, serviceProviderId]);
 
-  const handleCancel = useCallback(() => {
-    goBack();
-  }, [goBack]);
+  const canSubmit = !isSubmitting && selectable.selection.size > 0;
 
   return {
-    handleCancel,
+    canSubmit,
+    handleCancel: goBack,
     handleSubmit,
-    initialValues,
     linkableInstances,
+    selectable,
     serviceProviderName,
-    validateHandler,
   };
 };

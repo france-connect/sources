@@ -4,11 +4,11 @@ import {
   DeviceResponse,
   DeviceSigned,
   Document,
-  Header,
   IssuerAuth,
   IssuerSigned,
   IssuerSignedItem,
   ProtectedHeaders,
+  RegisteredCwtHeaderClaimKey,
   ValidityInfo,
 } from '@owf/mdoc';
 
@@ -24,7 +24,7 @@ jest.mock('@owf/mdoc', () => ({
     decode: jest.fn(),
     fromEncodedForOid4Vp: jest.fn(),
   },
-  Header: {
+  RegisteredCwtHeaderClaimKey: {
     Algorithm: 1,
   },
   IssuerSigned: {
@@ -731,7 +731,7 @@ describe('MdocDecoderService', () => {
     it('should return algorithm when header value is a number', () => {
       // Given
       const protectedHeaders = {
-        headers: new Map([[Header.Algorithm, -7]]),
+        headers: new Map([[RegisteredCwtHeaderClaimKey.Algorithm, -7]]),
       };
 
       // When
@@ -746,7 +746,7 @@ describe('MdocDecoderService', () => {
     it('should throw MdocDecodeException when header value is not a number', () => {
       // Given
       const protectedHeaders = {
-        headers: new Map([[Header.Algorithm, 'invalid']]),
+        headers: new Map([[RegisteredCwtHeaderClaimKey.Algorithm, 'invalid']]),
       };
 
       // Then / When

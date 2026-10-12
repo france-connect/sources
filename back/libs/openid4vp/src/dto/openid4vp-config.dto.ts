@@ -1,13 +1,16 @@
 import { Type } from 'class-transformer';
 import {
+  ArrayNotEmpty,
   IsArray,
   IsBoolean,
   IsEnum,
+  IsNotEmpty,
   IsNumber,
   IsObject,
   IsOptional,
   IsString,
   IsUrl,
+  Matches,
   Min,
   ValidateIf,
   ValidateNested,
@@ -24,6 +27,10 @@ import {
   Openid4vpResponseType,
 } from '../enums';
 import { Formats } from '../interfaces';
+
+// @see https://openid.net/specs/openid-4-verifiable-presentations-1_0-final.html#section-6.1-3.2
+const DCQL_CREDENTIAL_QUERY_ID_REGEX = /^[a-zA-Z0-9_-]+$/;
+const MDOC_INPUT_FIELD_PATH_REGEX = /^\$\['[^']+'\]\['[^']+'\]$/;
 
 export class ClientMetadata {
   @IsString()
@@ -52,17 +59,23 @@ export class Openid4vpX509Config {
 
 export class Openid4vpRequestConfig {
   @IsString()
-  readonly presentationId: string;
+  @Matches(DCQL_CREDENTIAL_QUERY_ID_REGEX)
+  readonly credentialQueryId: string;
 
   @IsString()
+  @IsNotEmpty()
   readonly inputDescriptorId: string;
 
   @IsArray()
   @IsString({ each: true })
-  readonly inputFieldPaths: string[];
+  @ArrayNotEmpty()
+  @Matches(MDOC_INPUT_FIELD_PATH_REGEX, { each: true })
+  readonly inputFieldRequiredPaths: string[];
 
-  @IsString()
-  readonly inputFieldPurpose: string;
+  @IsArray()
+  @IsString({ each: true })
+  @Matches(MDOC_INPUT_FIELD_PATH_REGEX, { each: true })
+  readonly inputFieldOptionalPaths: string[];
 
   @IsBoolean()
   readonly inputFieldIntentToRetain: boolean;

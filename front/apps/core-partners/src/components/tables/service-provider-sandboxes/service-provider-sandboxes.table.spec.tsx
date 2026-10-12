@@ -6,11 +6,13 @@ import type { TableColumnActionsInterface, TableColumnInterface } from '@fc/dsfr
 import { TableComponent } from '@fc/dsfr';
 
 import { PartnersEnvironment } from '../../../enums';
+import { useServiceProviderSandboxes } from '../../../hooks';
 import type { InstanceInterface } from '../../../interfaces';
 import { DeleteInstanceButton } from '../../buttons';
 import { ServiceProviderSandboxesTable } from './service-provider-sandboxes.table';
 
 jest.mock('../../buttons/delete-instance/delete-instance.button');
+jest.mock('../../../hooks/service-provider-sandboxes/service-provider-sandboxes.hook');
 
 describe('ServiceProviderSandboxesTable', () => {
   // Given
@@ -41,7 +43,17 @@ describe('ServiceProviderSandboxesTable', () => {
     },
   ];
 
-  const onDeleteMock = jest.fn();
+  const deleteInstanceHandlerMock = jest.fn();
+
+  beforeEach(() => {
+    // Given
+    jest.mocked(useServiceProviderSandboxes).mockReturnValue({
+      confirmDeleteInstance: jest.fn(),
+      deleteInstanceHandler: deleteInstanceHandlerMock,
+      hasUnlinkedInstances: false,
+      spConfigurationDocUrl: 'any-sp-configuration-doc-url-mock',
+    });
+  });
 
   type TableProps = {
     actions?: TableColumnActionsInterface<InstanceInterface>;
@@ -57,16 +69,14 @@ describe('ServiceProviderSandboxesTable', () => {
       return <div>TableComponent</div>;
     });
 
-    render(<ServiceProviderSandboxesTable sandboxes={sandboxes} onDelete={onDeleteMock} />);
+    render(<ServiceProviderSandboxesTable sandboxes={sandboxes} />);
 
     return tableProps;
   };
 
   it('should match snapshot', () => {
     // When
-    const { container } = render(
-      <ServiceProviderSandboxesTable sandboxes={sandboxesMock} onDelete={onDeleteMock} />,
-    );
+    const { container } = render(<ServiceProviderSandboxesTable sandboxes={sandboxesMock} />);
 
     // Then
     expect(container).toMatchSnapshot();
@@ -74,7 +84,7 @@ describe('ServiceProviderSandboxesTable', () => {
 
   it('should render TableComponent with params', () => {
     // When
-    render(<ServiceProviderSandboxesTable sandboxes={sandboxesMock} onDelete={onDeleteMock} />);
+    render(<ServiceProviderSandboxesTable sandboxes={sandboxesMock} />);
 
     // Then
     expect(TableComponent).toHaveBeenCalledExactlyOnceWith(
@@ -82,9 +92,9 @@ describe('ServiceProviderSandboxesTable', () => {
         actions: expect.any(Function),
         columns: [
           {
+            className: 'fr-text--bold',
             key: 'currentVersion.data.name',
             label: 'Partners.serviceProviderPage.sandboxes.columns.instanceName',
-            styles: 'fr-text--bold',
           },
           {
             getValue: expect.any(Function),
@@ -120,7 +130,7 @@ describe('ServiceProviderSandboxesTable', () => {
     expect(DeleteInstanceButton).toHaveBeenCalledExactlyOnceWith(
       {
         instance: sandboxesMock[0],
-        onDelete: onDeleteMock,
+        onDelete: deleteInstanceHandlerMock,
       },
       undefined,
     );

@@ -10,8 +10,9 @@ import { IOidcIdentity, OidcError } from '@fc/oidc';
 
 import {
   AttributesToClaimsMap,
-  LevelOfAssurancesToAcrValueMap,
+  ObtainedLevelOfAssurancesToAcrValueMap,
   RequestedAttributesToScopesMap,
+  RequestedLevelOfAssurancesToAcrValueMap,
 } from '../mappers';
 
 @Injectable()
@@ -33,14 +34,14 @@ export class EidasToOidcService {
     const scope = Array.from(scopeSet);
 
     return {
-      acr_values: LevelOfAssurancesToAcrValueMap[levelOfAssurance],
+      acr_values: RequestedLevelOfAssurancesToAcrValueMap[levelOfAssurance],
       scope,
     };
   }
 
   mapPartialResponseSuccess({ attributes, levelOfAssurance }: EidasResponse) {
     return {
-      acr: LevelOfAssurancesToAcrValueMap[levelOfAssurance],
+      acr: ObtainedLevelOfAssurancesToAcrValueMap[levelOfAssurance],
       userinfos: this.mapAttributesToClaims(attributes),
     };
   }

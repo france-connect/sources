@@ -38,7 +38,7 @@ export default class InstancesListPage {
     if (isVisible) {
       this.getConfirmationMessageTitle()
         .should('be.visible')
-        .should('have.text', 'Votre instance de test a été créée.');
+        .should('have.text', 'Votre bac à sable a été créé.');
     } else {
       this.getConfirmationMessageTitle().should('not.exist');
     }
@@ -48,7 +48,7 @@ export default class InstancesListPage {
     if (isVisible) {
       this.getConfirmationMessageTitle()
         .should('be.visible')
-        .should('have.text', 'Votre instance de test a été mise à jour.');
+        .should('have.text', 'Votre bac à sable a été mis à jour.');
     } else {
       this.getConfirmationMessageTitle().should('not.exist');
     }

@@ -14,9 +14,6 @@ export const truncateMiddle = jest.fn();
 
 export const getFullName = jest.fn();
 
-/* ----------------------
- Hooks
----------------------- */
 export const useSafeContext = jest.fn();
 
 export const useContentHeight = jest.fn(() => ({
@@ -41,6 +38,14 @@ export const useScrollTo = jest.fn(() => ({
 
 export const useScrollToElement = jest.fn(() => ({
   scrollToElement: jest.fn(),
+}));
+
+export const useSelectable = jest.fn(() => ({
+  checkIfItemIsSelected: jest.fn(() => false),
+  isAllItemsSelected: false,
+  selection: new Set<string>(),
+  toggleAllItems: jest.fn(),
+  toggleOneItem: jest.fn(),
 }));
 
 export enum HeadingTag {

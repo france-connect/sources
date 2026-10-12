@@ -20,7 +20,7 @@ Given(
 Given(
   "je navigue sur la page liste des instances de l'espace partenaires",
   function () {
-    topMenuComponent.getNavigationLink('Mes accès au bac à sable').click();
+    topMenuComponent.getNavigationLink('Mes bacs à sable').click();
   },
 );
 

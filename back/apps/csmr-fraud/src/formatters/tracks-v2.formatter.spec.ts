@@ -8,6 +8,8 @@ import {
   CoreInstance,
   getIpAddressFromTracks,
   getLocationFromTracks,
+  getOrganizationFromTracks,
+  getPortFromTracks,
   TracksFormatterMappingFailedException,
   TracksV2FieldsInterface,
 } from '@fc/tracks-adapter-elasticsearch';
@@ -30,11 +32,17 @@ describe('TracksV2Formatter', () => {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const geoMock = { city_name: 'Paris', country_iso_code: 'FR' };
 
-  const localisationMock = { city: 'Paris', country: 'FR' };
+  const localisationMock = {
+    city: 'Paris',
+    region: 'Île-de-France',
+    country: 'FR',
+  };
 
   const platformMock = Platform.FCP_LOW;
 
   const ipAddress = ['ipAddress'];
+  const port = '45826';
+  const organization = 'OVH SAS';
 
   const timeMock = 1664661600000;
 
@@ -83,6 +91,8 @@ describe('TracksV2Formatter', () => {
 
     jest.mocked(getLocationFromTracks).mockReturnValue(localisationMock);
     jest.mocked(getIpAddressFromTracks).mockReturnValue(ipAddress);
+    jest.mocked(getPortFromTracks).mockReturnValue(port);
+    jest.mocked(getOrganizationFromTracks).mockReturnValue(organization);
     jest.mocked(getReadableDateFromTime).mockReturnValue(readableDateMock);
   });
 
@@ -109,6 +119,24 @@ describe('TracksV2Formatter', () => {
       expect(getIpAddressFromTracks).toHaveBeenCalledWith(inputMock._source);
     });
 
+    it('should call getPortFromTracks() with _source', () => {
+      // When
+      service.formatTrack(inputMock);
+
+      // Then
+      expect(getPortFromTracks).toHaveBeenCalledTimes(1);
+      expect(getPortFromTracks).toHaveBeenCalledWith(inputMock._source);
+    });
+
+    it('should call getOrganizationFromTracks() with _source', () => {
+      // When
+      service.formatTrack(inputMock);
+
+      // Then
+      expect(getOrganizationFromTracks).toHaveBeenCalledTimes(1);
+      expect(getOrganizationFromTracks).toHaveBeenCalledWith(inputMock._source);
+    });
+
     it('should call getReadableDateFromTime() with time', () => {
       // When
       service.formatTrack(inputMock);
@@ -131,6 +159,7 @@ describe('TracksV2Formatter', () => {
         id: 'mockId',
         country: localisationMock.country,
         city: localisationMock.city,
+        region: localisationMock.region,
         time: timeMock,
         date: readableDateMock,
         spName: 'spNameMock',
@@ -146,6 +175,8 @@ describe('TracksV2Formatter', () => {
         interactionAcr: 'spAcrMock',
         browsingSessionId: 'browsingSessionIdMock',
         ipAddress,
+        port,
+        organization,
       };
 
       // When
@@ -161,6 +192,7 @@ describe('TracksV2Formatter', () => {
         id: 'mockId',
         country: localisationMock.country,
         city: localisationMock.city,
+        region: localisationMock.region,
         time: timeMock,
         date: readableDateMock,
         spName: 'spNameMock',
@@ -176,6 +208,8 @@ describe('TracksV2Formatter', () => {
         interactionAcr: 'interactionAcrMock',
         browsingSessionId: 'browsingSessionIdMock',
         ipAddress,
+        port,
+        organization,
       };
 
       // When
@@ -183,6 +217,29 @@ describe('TracksV2Formatter', () => {
 
       // Then
       expect(tracks).toStrictEqual(resultMock);
+    });
+
+    it('should keep optional technical fields as empty strings when missing', () => {
+      // Given
+      jest.mocked(getLocationFromTracks).mockReturnValue({
+        city: localisationMock.city,
+        country: localisationMock.country,
+        region: undefined,
+      });
+      jest.mocked(getPortFromTracks).mockReturnValue(undefined);
+      jest.mocked(getOrganizationFromTracks).mockReturnValue(undefined);
+
+      // When
+      const tracks = service.formatTrack(inputMock);
+
+      // Then
+      expect(tracks).toEqual(
+        expect.objectContaining({
+          region: '',
+          port: '',
+          organization: '',
+        }),
+      );
     });
 
     it('should throw an error if an error occured', () => {

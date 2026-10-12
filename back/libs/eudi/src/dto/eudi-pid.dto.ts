@@ -62,7 +62,7 @@ export class EudiPidClaimsDto implements EudiPidInterface {
   @IsObject()
   @ValidateNested()
   @Type(() => EudiPidBirthPlaceDto)
-  readonly birth_place: EudiPidBirthPlaceInterface;
+  readonly place_of_birth: EudiPidBirthPlaceInterface;
 
   @IsArray()
   @IsOptional()

@@ -40,6 +40,9 @@ export async function mongoFindOne(
       .db(database)
       .collection(collection)
       .findOne(args.query);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(error);
   } finally {
     // Ensures that the client will close when you finish/error
     await client.close();
@@ -71,6 +74,9 @@ export async function mongoDeleteOne(
       .db(database)
       .collection(collection)
       .deleteOne(args.query);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(error);
   } finally {
     // Ensures that the client will close when you finish/error
     await client.close();

@@ -246,7 +246,7 @@ describe('AccountPermissionRepository', () => {
           entity: EntityType.ENTITY_VALUE,
           entityId: idMock,
         },
-        relations: ['account'],
+        relations: { account: true },
       });
     });
 

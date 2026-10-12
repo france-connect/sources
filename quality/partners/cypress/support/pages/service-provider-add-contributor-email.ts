@@ -3,11 +3,11 @@ const ADD_CONTRIBUTOR_SUBJECT_PREFIX =
 
 export default class ServiceProviderAddContributorEmailPage {
   private get maildevBaseUrl(): string {
-    let baseUrl = `${Cypress.env('MAILDEV_PROTOCOL')}://${Cypress.env(
+    let baseUrl = `${Cypress.expose('MAILDEV_PROTOCOL')}://${Cypress.expose(
       'MAILDEV_HOST',
     )}`;
-    if (Cypress.env('MAILDEV_API_PORT')) {
-      baseUrl += `:${Cypress.env('MAILDEV_API_PORT')}`;
+    if (Cypress.expose('MAILDEV_API_PORT')) {
+      baseUrl += `:${Cypress.expose('MAILDEV_API_PORT')}`;
     }
     return baseUrl;
   }

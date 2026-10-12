@@ -7,24 +7,24 @@ Fonctionnalité: Connexion eIDAS - Log
 
   Scénario: Connexion FS Européen - logs métiers
     Etant donné que j'utilise un compte usager "par défaut"
-    Et que j'utilise le fournisseur de service "eidas-be"
+    Et que j'utilise le fournisseur de service "eidas-mock"
     Et que je navigue sur la page fournisseur de service eidas
     Et que le fournisseur de service requiert l'accès aux informations des scopes "eidas"
     Et que je configure un fournisseur de service sur eidas mock
     Et que je suis redirigé vers la page sélection du fournisseur d'identité
     Et que l'événement eIDAS "INCOMING_EIDAS_REQUEST" est journalisé avec "category" "EU_REQUEST" et "pays destination" "FR"
-    Et que l'événement eIDAS "REDIRECTED_TO_FC_AUTHORIZE" est journalisé avec "niveau eIDAS demandé" "substantial" et "pays source" "BE"
+    Et que l'événement eIDAS "REDIRECTED_TO_FC_AUTHORIZE" est journalisé avec "niveau eIDAS demandé" "substantial" et "pays source" "CB"
     Et que j'utilise un fournisseur d'identité "français"
     Et que je clique sur le fournisseur d'identité
     Et que je suis redirigé vers la page login du fournisseur d'identité
     Quand je m'authentifie avec succès
     Et je suis redirigé vers la page confirmation de connexion
-    Et je continue sur le fournisseur de service
+    Et je continue sur le fournisseur de service européen
     Alors l'événement eIDAS "RECEIVED_FC_AUTH_CODE" est journalisé
     Et l'événement eIDAS "REDIRECTED_TO_EIDAS_FR_NODE" est journalisé avec "niveau eIDAS reçu" "substantial" et "sub du FI" "transmis par FC" et "sub du FS" "transmis par FC"
-    Et je suis redirigé vers la page fournisseur de service eidas mock
+    Et j'avance jusqu'à la page fournisseur de service eidas mock
     Et le fournisseur de service eidas mock a accès aux informations des scopes "eidas"
-    Et le sub transmis au fournisseur de service eidas commence par "FR/BE"
+    Et le sub transmis au fournisseur de service eidas commence par "FR/CB"
     Et la cohérence des événements de la cinématique FS "européen" est respectée
 
   Scénario: Connexion FS français - logs métiers

@@ -8,12 +8,8 @@ import { ConfigService } from '@fc/config';
 import { CustomValidationOptionsBase } from '../interfaces';
 
 const URL_VALIDATION_OPTIONS = {
-  // validatorjs naming
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   require_protocol: true,
   protocols: ['http', 'https'],
-  // validatorjs naming
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   require_tld: false,
 };
 
@@ -68,8 +64,6 @@ export class ValidatorCustomService {
 
   isWebsiteURL(value: string): boolean {
     return validatorjs.isURL(value, {
-      // validatorjs naming
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       require_protocol: true,
       protocols: ['https'],
     });

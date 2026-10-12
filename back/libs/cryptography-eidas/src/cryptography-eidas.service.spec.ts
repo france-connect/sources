@@ -1,3 +1,5 @@
+import * as uuid from 'uuid';
+
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
@@ -23,6 +25,8 @@ describe('CryptographyEidasService', () => {
     sub: 'BE/FR/123456789',
   };
 
+  const uuidMock = Symbol('uuid-v4-mock');
+
   beforeEach(async () => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
@@ -44,6 +48,10 @@ describe('CryptographyEidasService', () => {
       sessionIdLength: 42,
       subSecretKey: cryptographyKeyMock,
     }));
+
+    jest
+      .spyOn(uuid, 'v4')
+      .mockReturnValue(uuidMock as unknown as Uint8Array<ArrayBufferLike>);
   });
 
   it('should be defined', () => {
@@ -88,6 +96,16 @@ describe('CryptographyEidasService', () => {
         'providerRefMockValue' + 'identityHashValue' + 'Méfaits accomplis...',
       );
       expect(result).toEqual('totoHasASubv1');
+    });
+  });
+
+  describe('generateTransientSub', () => {
+    it('should return a uuid v4', () => {
+      // When
+      const result = service.generateTransientSub();
+
+      // Then
+      expect(result).toEqual(uuidMock);
     });
   });
 });

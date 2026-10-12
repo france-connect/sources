@@ -105,7 +105,7 @@ describe('PartnersServiceProviderInstanceVersionService', () => {
       // Then
       expect(repositoryMock.findOne).toHaveBeenCalledExactlyOnceWith({
         where: { id: idMock },
-        relations: ['instance'],
+        relations: { instance: true },
       });
     });
 
@@ -136,7 +136,7 @@ describe('PartnersServiceProviderInstanceVersionService', () => {
         PartnersServiceProviderInstanceVersion,
         {
           where: { id: idMock },
-          relations: ['instance'],
+          relations: { instance: true },
         },
       );
     });

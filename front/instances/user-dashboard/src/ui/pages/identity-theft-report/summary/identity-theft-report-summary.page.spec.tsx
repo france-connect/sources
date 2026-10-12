@@ -1,7 +1,6 @@
 import { render } from '@testing-library/react';
 
-import { TrackCardComponent } from '@fc/core-user-dashboard';
-import { TableComponent } from '@fc/dsfr';
+import { SummaryTableComponent, TrackCardComponent } from '@fc/core-user-dashboard';
 import type { BaseAttributes, Dto2FormFormConfigInterface } from '@fc/dto2form';
 import { Dto2FormComponent } from '@fc/dto2form';
 import type { FormConfigInterface } from '@fc/forms';
@@ -108,38 +107,35 @@ describe('IdentityTheftReportSummaryPage', () => {
     expect(t).toHaveBeenNthCalledWith(1, 'IdentityTheftReport.summaryPage.tracksTitle');
   });
 
-  it('should call TableComponent 5 times', () => {
+  it('should call SummaryTableComponent 5 times', () => {
     // When
     render(<IdentityTheftReportSummaryPage />);
 
     // Then
-    expect(TableComponent).toHaveBeenCalledTimes(5);
-    expect(TableComponent).toHaveBeenNthCalledWith(
+    expect(SummaryTableComponent).toHaveBeenCalledTimes(5);
+    expect(SummaryTableComponent).toHaveBeenNthCalledWith(
       1,
       {
         caption: 'Décrivez votre cas d’usurpation en quelques mots',
-        hideHeader: true,
         id: 'identity-theft-report-summary--description',
         multiline: true,
         sources: [{ label: 'any-description-mock' }],
       },
       undefined,
     );
-    expect(TableComponent).toHaveBeenNthCalledWith(
+    expect(SummaryTableComponent).toHaveBeenNthCalledWith(
       2,
       {
         caption: 'Code d’identification de la connexion frauduleuse',
-        hideHeader: true,
         id: 'identity-theft-report-summary--code-identification',
         sources: [{ label: 'any-connection-code-mock' }],
       },
       undefined,
     );
-    expect(TableComponent).toHaveBeenNthCalledWith(
+    expect(SummaryTableComponent).toHaveBeenNthCalledWith(
       3,
       {
         caption: 'Etat civil',
-        hideHeader: true,
         id: 'identity-theft-report-summary--etat-civil',
         sources: [
           { label: 'Nom de famille', value: 'any-family_name-mock' },
@@ -151,21 +147,19 @@ describe('IdentityTheftReportSummaryPage', () => {
       },
       undefined,
     );
-    expect(TableComponent).toHaveBeenNthCalledWith(
+    expect(SummaryTableComponent).toHaveBeenNthCalledWith(
       4,
       {
         caption: 'Adresse électronique',
-        hideHeader: true,
         id: 'identity-theft-report-summary--email',
         sources: [{ label: 'any-email-mock' }],
       },
       undefined,
     );
-    expect(TableComponent).toHaveBeenNthCalledWith(
+    expect(SummaryTableComponent).toHaveBeenNthCalledWith(
       5,
       {
         caption: 'Numéro de téléphone',
-        hideHeader: true,
         id: 'identity-theft-report-summary--phone',
         sources: [{ label: 'any-phone-mock' }],
       },
@@ -267,16 +261,15 @@ describe('IdentityTheftReportSummaryPage', () => {
       expect(t).toHaveBeenNthCalledWith(1, 'FC.Common.notAvailable');
     });
 
-    it('should render the 5th TableComponent with params if phone is undefined', () => {
+    it('should render the 5th SummaryTableComponent with params if phone is undefined', () => {
       // When
       render(<IdentityTheftReportSummaryPage />);
 
       // Then
-      expect(TableComponent).toHaveBeenNthCalledWith(
+      expect(SummaryTableComponent).toHaveBeenNthCalledWith(
         5,
         {
           caption: 'Numéro de téléphone',
-          hideHeader: true,
           id: 'identity-theft-report-summary--phone',
           sources: [{ label: 'any-acme-phone-translation' }],
         },

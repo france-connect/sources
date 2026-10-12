@@ -121,7 +121,7 @@ Then(
       ),
     };
 
-    const technicalLogFilePath = Cypress.env('TECHNICAL_LOG_FILE_PATH');
+    const technicalLogFilePath = Cypress.expose('TECHNICAL_LOG_FILE_PATH');
 
     getAllLogs(technicalLogFilePath).then((logs) => {
       const foundLogs = filterLogs(logs, expectedEvent);

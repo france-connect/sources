@@ -1,6 +1,7 @@
 import { EidasBridgeConfig } from '@fc/eidas-bridge';
 
-import ApacheIgnite from './apache-ignite';
+import ApacheIgniteConnector from './apache-ignite-connector';
+import ApacheIgniteProxy from './apache-ignite-proxy';
 import App from './app';
 import Cog from './cog';
 import CryptographyEidas from './cryptography-eidas';
@@ -21,11 +22,8 @@ import Session from './session';
 import Tracking from './tracking';
 
 export default {
-  /**
-   * @TODO #253 ETQ Dev, je réfléchis à une manière de gérer des parmètres spécifiques à une app
-   * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/253
-   */
-  ApacheIgnite,
+  ApacheIgniteConnector,
+  ApacheIgniteProxy,
   App,
   Cog,
   Core: {

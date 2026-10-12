@@ -34,7 +34,7 @@ Fonctionnalité: Mon Fournisseur de Service - Création d'un accès au bac à sa
     Alors je suis sur la page création d'instance depuis un fournisseur de service
     Et les champs suivants sont en erreur dans le formulaire de création d'instance
       | name                         | errorMessage                                             |
-      | name                         | Veuillez saisir le nom de votre instance                 |
+      | name                         | Veuillez saisir le nom de votre bac à sable              |
       | redirect_uris[0]             | Veuillez saisir votre url de connexion (url de callback) |
       | post_logout_redirect_uris[0] | Veuillez saisir votre url de déconnexion (url de logout) |
       | id_token_signed_response_alg | Ce champ est obligatoire                                 |

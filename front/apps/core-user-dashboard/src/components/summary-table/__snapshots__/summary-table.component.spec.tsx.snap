@@ -1,0 +1,103 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`SummaryTableComponent should match the snapshot with multiline 1`] = `
+<div>
+  <div
+    class="fr-table fr-table--multiline"
+    id="any-id-mock"
+  >
+    <div
+      class="fr-table__wrapper"
+    >
+      <div
+        class="fr-table__container"
+      >
+        <div
+          class="fr-table__content"
+        >
+          <table>
+            <caption>
+              any-caption-mock
+            </caption>
+            <tbody>
+              <tr
+                data-row-key="0"
+                id="any-id-mock-row-key-0"
+              >
+                <td>
+                  any-label-1-mock
+                </td>
+                <td>
+                  any-value-1-mock
+                </td>
+              </tr>
+              <tr
+                data-row-key="1"
+                id="any-id-mock-row-key-1"
+              >
+                <td>
+                  any-label-2-mock
+                </td>
+                <td>
+                  any-value-2-mock
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`SummaryTableComponent should match the snapshot with required props 1`] = `
+<div>
+  <div
+    class="fr-table"
+    id="any-id-mock"
+  >
+    <div
+      class="fr-table__wrapper"
+    >
+      <div
+        class="fr-table__container"
+      >
+        <div
+          class="fr-table__content"
+        >
+          <table>
+            <caption>
+              any-caption-mock
+            </caption>
+            <tbody>
+              <tr
+                data-row-key="0"
+                id="any-id-mock-row-key-0"
+              >
+                <td>
+                  any-label-1-mock
+                </td>
+                <td>
+                  any-value-1-mock
+                </td>
+              </tr>
+              <tr
+                data-row-key="1"
+                id="any-id-mock-row-key-1"
+              >
+                <td>
+                  any-label-2-mock
+                </td>
+                <td>
+                  any-value-2-mock
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

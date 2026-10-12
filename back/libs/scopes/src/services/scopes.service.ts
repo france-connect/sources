@@ -1,10 +1,14 @@
 import { Injectable } from '@nestjs/common';
 
 import { unique } from '@fc/common';
+import { PartnersPlatformEnum } from '@fc/partners-service-provider/enums';
 
+import { PlatformProviderMap } from '../constants';
 import * as PROVIDERS from '../data';
 import {
   ClaimInterface,
+  DatapassScopeMappingInterface,
+  ProviderMappingsInterface,
   RichClaimInterface,
   ScopeInterface,
 } from '../interfaces';
@@ -42,10 +46,26 @@ export class ScopesService {
   }
 
   getScopesByProviderSlug(providerSlug: string): ScopeInterface[] {
-    const provider = Object.values(PROVIDERS).find(
-      ({ provider }) => provider.slug === providerSlug,
+    const { scopes } = this.getProviderMappings(providerSlug);
+
+    return Object.keys(scopes);
+  }
+
+  getScopesFromDatapassScopes(
+    platformName: PartnersPlatformEnum,
+    datapassScopes: ScopeInterface[],
+  ): ScopeInterface[] {
+    const providerSlug = PlatformProviderMap[platformName];
+
+    const mapping = this.getDatapassScopesMapping(providerSlug);
+
+    const providerScopes = datapassScopes.flatMap(
+      (scope) => mapping[scope] || [scope],
     );
-    return Object.keys(provider.scopes);
+
+    const claims = this.getRawClaimsFromScopes(unique(providerScopes));
+
+    return this.getScopesFromClaims(claims);
   }
 
   getScopesFromClaims(claims: ClaimInterface[]): string[] {
@@ -56,5 +76,19 @@ export class ScopesService {
     return Array.from(scopes.entries())
       .filter(([, scopeClaims]) => scopeClaims.every(includesClaim))
       .map(([scope]) => scope);
+  }
+
+  private getProviderMappings(providerSlug: string): ProviderMappingsInterface {
+    return Object.values(PROVIDERS).find(
+      ({ provider }) => provider.slug === providerSlug,
+    );
+  }
+
+  private getDatapassScopesMapping(
+    providerSlug: string,
+  ): DatapassScopeMappingInterface {
+    const { datapassScopeMapping } = this.getProviderMappings(providerSlug);
+
+    return datapassScopeMapping || {};
   }
 }

@@ -40,12 +40,7 @@ describe('MockWalletCryptoService', () => {
 
   const responsePayload: WalletResponsePayload = {
     state: 'state-mock',
-    vp_token: 'vp-token-mock',
-    presentation_submission: {
-      id: 'id',
-      definition_id: 'def',
-      descriptor_map: [],
-    },
+    vp_token: { 'pid-fc': ['vp-token-mock'] },
   };
 
   const encKey = { kid: 'enc1', use: 'enc', alg: 'ECDH-ES' };
@@ -158,7 +153,10 @@ describe('MockWalletCryptoService', () => {
       // Then
       expect(result).toBe('jwe-mock');
       expect(jwtMock.encrypt).toHaveBeenCalledExactlyOnceWith(
-        expect.any(String),
+        JSON.stringify({
+          state: responsePayload.state,
+          vp_token: responsePayload.vp_token,
+        }),
         encKey,
         'A256GCM',
       );

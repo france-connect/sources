@@ -68,7 +68,6 @@ export class MockWalletCryptoService {
     const payload = JSON.stringify({
       state: responsePayload.state,
       vp_token: responsePayload.vp_token,
-      presentation_submission: responsePayload.presentation_submission,
     });
 
     try {

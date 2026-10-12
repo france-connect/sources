@@ -1,5 +1,5 @@
 import { ConfigParser } from '@fc/config';
-import { EudiPresentationId } from '@fc/eudi';
+import { EudiCredentialQueryId } from '@fc/eudi';
 import {
   CONFIG_NAMESPACE,
   Openid4vpConfig,
@@ -59,20 +59,21 @@ export default {
 
   requests: [
     {
-      presentationId: EudiPresentationId.PID_FC,
+      credentialQueryId: EudiCredentialQueryId.PID_FC,
       format: Openid4vpFormat.JWT,
       responseType: Openid4vpResponseType.VP_TOKEN,
       responseMode: Openid4vpResponseMode.DIRECT_POST_JWT,
       inputDescriptorId: 'eu.europa.ec.eudi.pid.1',
-      inputFieldPaths: [
+      inputFieldRequiredPaths: [
         "$['eu.europa.ec.eudi.pid.1']['family_name']",
         "$['eu.europa.ec.eudi.pid.1']['given_name']",
         "$['eu.europa.ec.eudi.pid.1']['birth_date']",
-        "$['eu.europa.ec.eudi.pid.1']['birth_place']",
-        "$['eu.europa.ec.eudi.pid.1']['sex']",
-        "$['eu.europa.ec.eudi.pid.1']['email_address']",
+        "$['eu.europa.ec.eudi.pid.1']['place_of_birth']",
       ],
-      inputFieldPurpose: "Récupérer les données de la carte d'identité.",
+      inputFieldOptionalPaths: [
+        "$['eu.europa.ec.eudi.pid.1']['email_address']",
+        "$['eu.europa.ec.eudi.pid.1']['sex']",
+      ],
       inputFieldIntentToRetain: false,
     },
   ],

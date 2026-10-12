@@ -4,11 +4,11 @@ import {
   DeviceResponse,
   DeviceSigned,
   Document,
-  Header,
   IssuerAuth,
   IssuerSigned,
   IssuerSignedItem,
   ProtectedHeaders,
+  RegisteredCwtHeaderClaimKey,
   ValidityInfo,
 } from '@owf/mdoc';
 
@@ -224,7 +224,9 @@ export class MdocDecoderService {
   private readProtectedAlgorithm(
     protectedHeaders: ProtectedHeaders,
   ): MdocAlgorithmsEnum {
-    const alg = protectedHeaders.headers.get(Header.Algorithm);
+    const alg = protectedHeaders.headers.get(
+      RegisteredCwtHeaderClaimKey.Algorithm,
+    );
 
     if (typeof alg !== 'number') {
       throw new MdocDecodeException(

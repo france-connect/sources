@@ -57,20 +57,17 @@ describe('TextInput', () => {
 
     // Then
     expect(container).toMatchSnapshot();
-    expect(useFieldMeta).toHaveBeenCalledOnce();
-    expect(useFieldMeta).toHaveBeenCalledWith({
+    expect(useFieldMeta).toHaveBeenCalledExactlyOnceWith({
       error: 'any-error-message-mock',
       touched: touchedMock,
       value: 'any-input-value-mock',
     });
-    expect(useFieldMessages).toHaveBeenCalledOnce();
-    expect(useFieldMessages).toHaveBeenCalledWith({
+    expect(useFieldMessages).toHaveBeenCalledExactlyOnceWith({
       errorsList: ['any-error-message-mock'],
       isValid: false,
       messages: undefined,
     });
-    expect(GroupElement).toHaveBeenCalledOnce();
-    expect(GroupElement).toHaveBeenCalledWith(
+    expect(GroupElement).toHaveBeenCalledExactlyOnceWith(
       {
         children: expect.any(Array),
         className: 'any-classname-mock',
@@ -80,18 +77,16 @@ describe('TextInput', () => {
       },
       undefined,
     );
-    expect(LabelElement).toHaveBeenCalledOnce();
-    expect(LabelElement).toHaveBeenCalledWith(
+    expect(LabelElement).toHaveBeenCalledExactlyOnceWith(
       {
         hint: 'any-hint-mock',
+        htmlFor: 'form-input-text-any-name-mock',
         label: 'any-label-mock',
-        name: 'any-name-mock',
       },
       undefined,
     );
-    expect(MessagesElement).toHaveBeenCalledOnce();
-    expect(MessagesElement).toHaveBeenCalledWith(
-      { dataTestId: 'any-name-mock-messages', id: 'any-name-mock', messages: [errorMessageMock] },
+    expect(MessagesElement).toHaveBeenCalledExactlyOnceWith(
+      { id: 'any-name-mock', messages: [errorMessageMock] },
       undefined,
     );
   });
@@ -110,7 +105,7 @@ describe('TextInput', () => {
       input: {
         className: 'any-classname-mock',
         name: 'any-name-mock',
-        type: 'text',
+        type: 'number',
         value: 'any-input-value-mock',
       },
       meta: {
@@ -134,20 +129,17 @@ describe('TextInput', () => {
 
     // Then
     expect(container).toMatchSnapshot();
-    expect(useFieldMeta).toHaveBeenCalledOnce();
-    expect(useFieldMeta).toHaveBeenCalledWith({
+    expect(useFieldMeta).toHaveBeenCalledExactlyOnceWith({
       error: undefined,
       touched: touchedMock,
       value: 'any-input-value-mock',
     });
-    expect(useFieldMessages).toHaveBeenCalledOnce();
-    expect(useFieldMessages).toHaveBeenCalledWith({
+    expect(useFieldMessages).toHaveBeenCalledExactlyOnceWith({
       errorsList: [],
       isValid: true,
       messages: [configMessageMock],
     });
-    expect(GroupElement).toHaveBeenCalledOnce();
-    expect(GroupElement).toHaveBeenCalledWith(
+    expect(GroupElement).toHaveBeenCalledExactlyOnceWith(
       {
         children: expect.any(Array),
         className: 'any-classname-mock',
@@ -157,18 +149,16 @@ describe('TextInput', () => {
       },
       undefined,
     );
-    expect(LabelElement).toHaveBeenCalledOnce();
-    expect(LabelElement).toHaveBeenCalledWith(
+    expect(LabelElement).toHaveBeenCalledExactlyOnceWith(
       {
         hint: 'any-hint-mock',
+        htmlFor: 'form-input-number-any-name-mock',
         label: 'any-label-mock',
-        name: 'any-name-mock',
       },
       undefined,
     );
-    expect(MessagesElement).toHaveBeenCalledOnce();
-    expect(MessagesElement).toHaveBeenCalledWith(
-      { dataTestId: 'any-name-mock-messages', id: 'any-name-mock', messages: [configMessageMock] },
+    expect(MessagesElement).toHaveBeenCalledExactlyOnceWith(
+      { id: 'any-name-mock', messages: [configMessageMock] },
       undefined,
     );
   });
@@ -208,8 +198,7 @@ describe('TextInput', () => {
 
     // Then
     expect(container).toMatchSnapshot();
-    expect(InputWithClipboard).toHaveBeenCalledOnce();
-    expect(InputWithClipboard).toHaveBeenCalledWith(
+    expect(InputWithClipboard).toHaveBeenCalledExactlyOnceWith(
       {
         className: 'fr-mt-1w',
         id: 'form-input-text-any-name-mock',
@@ -218,7 +207,10 @@ describe('TextInput', () => {
       },
       undefined,
     );
-    expect(MessagesElement).not.toHaveBeenCalled();
+    expect(MessagesElement).toHaveBeenCalledExactlyOnceWith(
+      { id: 'any-name-mock', messages: [] },
+      undefined,
+    );
   });
 
   it('should match snapshot, without messages and when readonly is false', () => {
@@ -256,8 +248,7 @@ describe('TextInput', () => {
 
     // Then
     expect(container).toMatchSnapshot();
-    expect(InputComponent).toHaveBeenCalledOnce();
-    expect(InputComponent).toHaveBeenCalledWith(
+    expect(InputComponent).toHaveBeenCalledExactlyOnceWith(
       {
         className: 'any-inputClassname-mock',
         id: 'form-input-text-any-name-mock',
@@ -265,6 +256,54 @@ describe('TextInput', () => {
       },
       undefined,
     );
-    expect(MessagesElement).not.toHaveBeenCalled();
+    expect(MessagesElement).toHaveBeenCalledExactlyOnceWith(
+      { id: 'any-name-mock', messages: [] },
+      undefined,
+    );
+  });
+
+  it('should build control id for type undefined', () => {
+    // Given
+    // Given
+    const propsMock = {
+      config: {
+        hint: 'any-hint-mock',
+        label: 'any-label-mock',
+        readonly: false,
+      },
+      input: {
+        className: 'any-classname-mock',
+        name: 'any-name-mock',
+        type: undefined,
+        value: 'any-input-value-mock',
+      },
+      meta: {
+        error: 'any-error-message-mock',
+        touched: touchedMock,
+        value: 'any-input-value-mock',
+      },
+    } as unknown as PropsWithInputConfigType;
+
+    jest.mocked(useFieldMeta).mockReturnValueOnce({
+      errorsList: [],
+      hasError: false,
+      inputClassname: 'any-inputClassname-mock',
+      isValid: true,
+    });
+    jest.mocked(useFieldMessages).mockReturnValueOnce([]);
+
+    // When
+    // eslint-disable-next-line react/jsx-props-no-spreading
+    render(<TextInput {...propsMock} />);
+
+    // Then
+    expect(InputComponent).toHaveBeenCalledExactlyOnceWith(
+      {
+        className: 'any-inputClassname-mock',
+        id: 'form-input-text-any-name-mock',
+        input: propsMock.input,
+      },
+      undefined,
+    );
   });
 });

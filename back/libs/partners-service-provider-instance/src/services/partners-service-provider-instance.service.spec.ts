@@ -143,7 +143,11 @@ describe('PartnersServiceProviderInstanceService', () => {
       expect(repositoryMock.findOne).toHaveBeenCalledTimes(1);
       expect(repositoryMock.findOne).toHaveBeenCalledWith({
         where: { id: idMock, markedForDeletion: false },
-        relations: ['currentVersion', 'creator', 'serviceProvider'],
+        relations: {
+          currentVersion: true,
+          creator: true,
+          serviceProvider: true,
+        },
         select: {
           creator: {
             id: true,
@@ -194,7 +198,11 @@ describe('PartnersServiceProviderInstanceService', () => {
         PartnersServiceProviderInstance,
         {
           where: { id: idMock, markedForDeletion: false },
-          relations: ['currentVersion', 'creator', 'serviceProvider'],
+          relations: {
+            currentVersion: true,
+            creator: true,
+            serviceProvider: true,
+          },
           select: {
             creator: {
               id: true,
@@ -288,7 +296,11 @@ describe('PartnersServiceProviderInstanceService', () => {
         PartnersServiceProviderInstance,
         {
           where: { id: In(instanceIdsMock), markedForDeletion: false },
-          relations: ['currentVersion', 'creator', 'serviceProvider'],
+          relations: {
+            currentVersion: true,
+            creator: true,
+            serviceProvider: true,
+          },
         },
       );
     });
@@ -321,7 +333,11 @@ describe('PartnersServiceProviderInstanceService', () => {
           markedForDeletion: false,
         },
         order: { createdAt: 'DESC' },
-        relations: ['currentVersion', 'creator', 'serviceProvider'],
+        relations: {
+          currentVersion: true,
+          creator: true,
+          serviceProvider: true,
+        },
       });
     });
 

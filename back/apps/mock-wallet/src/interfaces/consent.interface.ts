@@ -7,7 +7,7 @@ export interface ConsentViewModel {
   readonly responsePreview: string;
   readonly requestPayload: string;
   readonly responsePayload: string;
-  readonly presentationDefinition: string;
+  readonly dcqlQuery: string;
   readonly submitUrl: MockWalletRoutes;
   readonly submitErrorUrl: MockWalletRoutes;
 }

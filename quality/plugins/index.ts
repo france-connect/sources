@@ -33,6 +33,18 @@ const pluginConfig = async (
   cypressOn: Cypress.PluginEvents,
   config: Cypress.PluginConfigOptions,
 ): Promise<Cypress.PluginConfigOptions> => {
+  // Merge environment variable overrides from CYPRESS_* env vars
+  // This allows GitLab CI to override test configuration dynamically
+  if (process.env.CYPRESS_TEST_ENV) {
+    config.expose.TEST_ENV = process.env.CYPRESS_TEST_ENV;
+  }
+  if (process.env.CYPRESS_TEST_PLATFORM) {
+    config.expose.TEST_PLATFORM = process.env.CYPRESS_TEST_PLATFORM;
+  }
+  if (process.env.CYPRESS_tags) {
+    config.expose.tags = process.env.CYPRESS_tags;
+  }
+
   // Workaround to allow multiple events registration for "after:screenshot"
   const on = onProxy(cypressOn);
   await addCucumberPreprocessorPlugin(on, config);

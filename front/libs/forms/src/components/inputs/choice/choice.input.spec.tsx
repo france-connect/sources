@@ -57,12 +57,11 @@ describe('ChoiceInput', () => {
     expect(inputElt).toHaveAttribute('id', 'any_name_mock-any_choice_value_mock');
     expect(inputElt).toHaveAttribute('data-testid', 'any_name_mock-any_choice_value_mock--testid');
     expect(inputElt).not.toHaveAttribute('disabled');
-    expect(LabelElement).toHaveBeenCalledOnce();
-    expect(LabelElement).toHaveBeenCalledWith(
+    expect(LabelElement).toHaveBeenCalledExactlyOnceWith(
       {
         hint: choiceHintMock,
+        htmlFor: 'any_name_mock-any_choice_value_mock',
         label: choiceLabelMock,
-        name: 'any_name_mock-any_choice_value_mock',
       },
       undefined,
     );

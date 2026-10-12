@@ -33,4 +33,26 @@ describe('capitalizeWords', () => {
     // Then
     expect(result).toEqual('Any Word Mock');
   });
+
+  it('should not capitalize letters after special chars inside words', () => {
+    // Given
+    const words = 'françois le français';
+
+    // When
+    const result = capitalizeWords(words);
+
+    // Then
+    expect(result).toEqual('François Le Français');
+  });
+
+  it('should capitalize letters after non word characters', () => {
+    // Given
+    const words = 'any-word,mock';
+
+    // When
+    const result = capitalizeWords(words);
+
+    // Then
+    expect(result).toEqual('Any-Word,Mock');
+  });
 });

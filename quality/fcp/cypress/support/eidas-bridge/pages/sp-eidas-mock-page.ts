@@ -6,7 +6,7 @@ interface EidasMockConfigurationInterface {
   citizenCountry?: string;
   loa?: EidasAssuranceLevelEnum;
   loaCompareType?: 'minimum';
-  nameId?: 'unspecified' | 'transient' | 'persistent';
+  nameId?: 'label' | 'unspecified' | 'transient' | 'persistent';
   optionalScopes?: string[];
   scopes?: string[];
   spCountry?: string;
@@ -71,13 +71,16 @@ const scopeOptionalEidasAttributesMap = {
   },
 };
 
+const UUID_V4_REGEX =
+  /[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/;
+const FC_SUB_V1_REGEX = /[0-9a-f]{64}v1/;
+
 export default class SpEidasMockPage {
   configureEidasSpMock(params: EidasMockConfigurationInterface): void {
     const config: EidasMockConfigurationInterface = {
       citizenCountry: 'FR',
       loa: EidasAssuranceLevelEnum.D,
       loaCompareType: 'minimum',
-      nameId: 'unspecified',
       optionalScopes: ['family_name'],
       scopes: ['openid'],
       spCountry: 'CB',
@@ -129,6 +132,10 @@ export default class SpEidasMockPage {
     cy.url().should('contain', '/SP/ReturnPage');
   }
 
+  getReturnPageRawResponse(): ChainableElement {
+    return cy.get('#smsspResponseJSON');
+  }
+
   retrieveClaims(): void {
     // We need to remove the target "_parent" from the form to run cypress tests that are a frame
     cy.get('#countrySelector').invoke('removeAttr', 'target');
@@ -158,12 +165,29 @@ export default class SpEidasMockPage {
     const expectedIdentity = this.getExpectedIdentity(scopes, allClaims);
 
     expectedIdentity.forEach(({ name, value }) => {
-      this.getClaimValueLabel(name).should('contain', `[${value}]`);
+      const claimValueLabel = this.getClaimValueLabel(name);
+      claimValueLabel.should('contain', `[${value}]`);
     });
   }
 
   checkSubStartWith(text: string): void {
     this.getClaimValueLabel(EIDAS_SUB_CLAIM).should('contain', `[${text}`);
+  }
+
+  checkSubjectNameIdFormat(nameIdFormat: string): void {
+    this.getReturnPageRawResponse()
+      .invoke('text')
+      .then((responseText: string) => {
+        const { response } = JSON.parse(responseText);
+
+        expect(response.name_id).to.equal(`${nameIdFormat}`);
+
+        if (nameIdFormat === 'transient') {
+          expect(response.subject).to.match(UUID_V4_REGEX);
+        } else {
+          expect(response.subject).to.match(FC_SUB_V1_REGEX);
+        }
+      });
   }
 
   private getExpectedIdentity(

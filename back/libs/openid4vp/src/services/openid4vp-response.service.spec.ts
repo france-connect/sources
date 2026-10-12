@@ -28,6 +28,11 @@ describe('Openid4vpResponseService', () => {
   const parsedResultMock = {
     authorizationResponsePayload: { vp_token: 'vpTokenMock' },
   };
+  const requestMock = { state: 'stateMock' } as unknown as Parameters<
+    Openid4vpResponseService['parseAuthorizationResponse']
+  >[1];
+  const credentialIdMock = 'pid-fc';
+
   beforeEach(async () => {
     jest.resetAllMocks();
 
@@ -53,9 +58,6 @@ describe('Openid4vpResponseService', () => {
 
   describe('parseAuthorizationResponse', () => {
     const responseMock = { vp_token: 'vpTokenMock' } as Record<string, unknown>;
-    const requestMock = { state: 'stateMock' } as unknown as Parameters<
-      Openid4vpResponseService['parseAuthorizationResponse']
-    >[1];
 
     const documentsMock = [
       {
@@ -69,11 +71,16 @@ describe('Openid4vpResponseService', () => {
         parsedResultMock as unknown as ParsedOpenid4vpAuthorizationResponse,
       );
       mdocServiceMock.decodeDeviceResponse.mockReturnValue(documentsMock);
+      service['getVpToken'] = jest.fn().mockReturnValue('vpTokenMock');
     });
 
     it('should call parseOpenid4vpAuthorizationResponse with the request, response and callbacks', async () => {
       // When
-      await service.parseAuthorizationResponse(responseMock, requestMock);
+      await service.parseAuthorizationResponse(
+        responseMock,
+        requestMock,
+        credentialIdMock,
+      );
 
       // Then
       expect(
@@ -87,7 +94,11 @@ describe('Openid4vpResponseService', () => {
 
     it('should decode the vp_token using the mdoc service', async () => {
       // When
-      await service.parseAuthorizationResponse(responseMock, requestMock);
+      await service.parseAuthorizationResponse(
+        responseMock,
+        requestMock,
+        credentialIdMock,
+      );
 
       // Then
       expect(
@@ -102,11 +113,30 @@ describe('Openid4vpResponseService', () => {
         .mockResolvedValue(documentsMock);
 
       // When
-      await service.parseAuthorizationResponse(responseMock, requestMock);
+      await service.parseAuthorizationResponse(
+        responseMock,
+        requestMock,
+        credentialIdMock,
+      );
 
       // Then
       expect(service.checkDocumentsValidity).toHaveBeenCalledExactlyOnceWith(
         documentsMock,
+      );
+    });
+
+    it('should extract the vp_token from the parsed response', async () => {
+      // When
+      await service.parseAuthorizationResponse(
+        responseMock,
+        requestMock,
+        credentialIdMock,
+      );
+
+      // Then
+      expect(service['getVpToken']).toHaveBeenCalledExactlyOnceWith(
+        parsedResultMock,
+        credentialIdMock,
       );
     });
 
@@ -115,58 +145,11 @@ describe('Openid4vpResponseService', () => {
       const result = await service.parseAuthorizationResponse(
         responseMock,
         requestMock,
+        credentialIdMock,
       );
 
       // Then
       expect(result).toBe(documentsMock);
-    });
-
-    it('should throw Openid4vpInvalidVpTokenException when the vp_token is missing', async () => {
-      // Given
-      const missingVpTokenResponseMock = {
-        authorizationResponsePayload: {},
-      } as unknown as ParsedOpenid4vpAuthorizationResponse;
-
-      parseOpenid4vpAuthorizationResponseMock.mockResolvedValueOnce(
-        missingVpTokenResponseMock,
-      );
-
-      // When / Then
-      await expect(
-        service.parseAuthorizationResponse(responseMock, requestMock),
-      ).rejects.toThrow(Openid4vpInvalidVpTokenException);
-    });
-
-    it('should throw Openid4vpInvalidVpTokenException when the vp_token is not a string', async () => {
-      // Given
-      const notAStringVpTokenResponseMock = {
-        authorizationResponsePayload: { vp_token: { not: 'a string' } },
-      } as unknown as ParsedOpenid4vpAuthorizationResponse;
-
-      parseOpenid4vpAuthorizationResponseMock.mockResolvedValueOnce(
-        notAStringVpTokenResponseMock,
-      );
-
-      // When / Then
-      await expect(
-        service.parseAuthorizationResponse(responseMock, requestMock),
-      ).rejects.toThrow(Openid4vpInvalidVpTokenException);
-    });
-
-    it('should throw Openid4vpInvalidVpTokenException when the response payload is missing', async () => {
-      // Given
-      const missingResponsePayloadResponseMock = {
-        authorizationResponsePayload: undefined,
-      } as unknown as ParsedOpenid4vpAuthorizationResponse;
-
-      parseOpenid4vpAuthorizationResponseMock.mockResolvedValueOnce(
-        missingResponsePayloadResponseMock,
-      );
-
-      // When / Then
-      await expect(
-        service.parseAuthorizationResponse(responseMock, requestMock),
-      ).rejects.toThrow(Openid4vpInvalidVpTokenException);
     });
   });
 
@@ -216,26 +199,128 @@ describe('Openid4vpResponseService', () => {
   });
 
   describe('getVpToken', () => {
-    it('should return the vp_token', () => {
+    beforeEach(() => {
+      service['unwrapDcqlVpToken'] = jest
+        .fn()
+        .mockReturnValue('unwrappedVpToken');
+    });
+
+    it('should unwrap the vp_token from the authorization response payload', () => {
       // When
       const result = service['getVpToken'](
         parsedResultMock as unknown as ParsedOpenid4vpAuthorizationResponse,
+        credentialIdMock,
       );
 
       // Then
-      expect(result).toBe('vpTokenMock');
+      expect(service['unwrapDcqlVpToken']).toHaveBeenCalledExactlyOnceWith(
+        'vpTokenMock',
+        credentialIdMock,
+      );
+      expect(result).toBe('unwrappedVpToken');
     });
 
-    it('should throw Openid4vpInvalidVpTokenException when the vp_token is missing', () => {
+    it('should unwrap an undefined vp_token when the payload is missing', () => {
       // Given
-      const missingVpTokenParsedResultMock = {
-        authorizationResponsePayload: { not: 'a string' },
+      const missingPayloadResult = {
+        authorizationResponsePayload: undefined,
       } as unknown as ParsedOpenid4vpAuthorizationResponse;
+
+      // When
+      service['getVpToken'](missingPayloadResult, credentialIdMock);
+
+      // Then
+      expect(service['unwrapDcqlVpToken']).toHaveBeenCalledExactlyOnceWith(
+        undefined,
+        credentialIdMock,
+      );
+    });
+  });
+
+  describe('unwrapDcqlVpToken', () => {
+    it('should look up the presentation by the requested credential id', () => {
+      // Given
+      service['dcqlPresentationByCredentialId'] = jest
+        .fn()
+        .mockReturnValue('dcqlVpTokenMock');
+      const dcqlVpToken = { 'pid-fc': 'dcqlVpTokenMock' };
+
+      // When
+      const result = service['unwrapDcqlVpToken'](
+        dcqlVpToken,
+        credentialIdMock,
+      );
+
+      // Then
+      expect(
+        service['dcqlPresentationByCredentialId'],
+      ).toHaveBeenCalledExactlyOnceWith(dcqlVpToken, 'pid-fc');
+      expect(result).toBe('dcqlVpTokenMock');
+    });
+
+    it('should throw Openid4vpInvalidVpTokenException when the presentation is not a string', () => {
+      // Given
+      service['dcqlPresentationByCredentialId'] = jest
+        .fn()
+        .mockReturnValue(undefined);
 
       // When / Then
       expect(() =>
-        service['getVpToken'](missingVpTokenParsedResultMock),
+        service['unwrapDcqlVpToken']({ not: 1 }, credentialIdMock),
       ).toThrow(Openid4vpInvalidVpTokenException);
+    });
+  });
+
+  describe('dcqlPresentationByCredentialId', () => {
+    it('should return undefined when the vp_token is not a record', () => {
+      // When
+      const result = service['dcqlPresentationByCredentialId'](
+        ['not-a-record'],
+        'pid-fc',
+      );
+
+      // Then
+      expect(result).toBeUndefined();
+    });
+
+    it('should return the presentation matching the requested credential id', () => {
+      // When
+      const result = service['dcqlPresentationByCredentialId'](
+        { 'pid-fc': 'dcqlVpTokenMock', other: 'ignoredVpTokenMock' },
+        'pid-fc',
+      );
+
+      // Then
+      expect(result).toBe('dcqlVpTokenMock');
+    });
+
+    it('should return the first presentation of an array', () => {
+      // When
+      const result = service['dcqlPresentationByCredentialId'](
+        { 'pid-fc': ['firstVpToken', 'secondVpToken'] },
+        'pid-fc',
+      );
+
+      // Then
+      expect(result).toBe('firstVpToken');
+    });
+  });
+
+  describe('isRecord', () => {
+    it('should return true for a plain object', () => {
+      expect(service['isRecord']({ 'pid-fc': 'x' })).toBe(true);
+    });
+
+    it('should return false for null', () => {
+      expect(service['isRecord'](null)).toBe(false);
+    });
+
+    it('should return false for an array', () => {
+      expect(service['isRecord'](['vp'])).toBe(false);
+    });
+
+    it('should return false for a string', () => {
+      expect(service['isRecord']('vpTokenMock')).toBe(false);
     });
   });
 });

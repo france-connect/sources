@@ -16,6 +16,8 @@
 import 'cypress-axe';
 import 'cypress-maildev';
 import 'cypress-plugin-api';
+// Import needed for class-transformer to work with decorators
+import 'reflect-metadata';
 
 import { addMatchImageSnapshotCommand } from '@simonsmith/cypress-image-snapshot/command';
 

@@ -1,11 +1,6 @@
 import React from 'react';
-import {
-  createBrowserRouter,
-  createRoutesFromElements,
-  Navigate,
-  Route,
-  RouterProvider,
-} from 'react-router';
+import { createBrowserRouter, createRoutesFromElements, Navigate, Route } from 'react-router';
+import { RouterProvider } from 'react-router/dom';
 
 import { useSafeContext } from '@fc/common';
 import { authedFallback, unauthedFallback } from '@fc/core-user-dashboard';

@@ -65,6 +65,9 @@ Fonctionnalité: Formulaire Usurpation non connecté
     Et le fichier "support_connexions.csv" est joint dans le mail "demande de support"
     Et je télécharge le fichier csv "support_connexions.csv" en pièce jointe
     Et "accountId" est "test_TRACE_USER" pour la ligne 1 du fichier csv "support_connexions.csv"
+    Et "ipAddress" est "185.24.186.224" pour la ligne 1 du fichier csv "support_connexions.csv"
+    Et "port" est "45826" pour la ligne 1 du fichier csv "support_connexions.csv"
+    Et "organization" est "OVH SAS" pour la ligne 1 du fichier csv "support_connexions.csv"
 
   Scénario: Formulaire usurpation non connecté - cas passant FC v2 et changement de code
     Etant donné que je supprime les mails envoyés à "support.test@franceconnect.gouv.fr"
