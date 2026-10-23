@@ -29,6 +29,7 @@
     "build:mock-rnipp": "nest build mock-rnipp",
     "build:mock-data-provider": "nest build mock-data-provider",
     "build:mock-wallet": "nest build mock-wallet-instance",
+    "build:nexus": "nest build nexus-instance",
     "build:partners": "nest build partners-instance",
     "build:command-runner-instance": "nest build command-runner-instance",
     "build:command-support-ticket": "nest build command-support-ticket",
@@ -79,6 +80,7 @@
     "doc:env": "ts-node --dir . -r tsconfig-paths/register --project tsconfig.json libs/config/src/cli/export-env",
     "doc": "yarn doc:exceptions && yarn doc:env",
     "generate-insee:country": "ts-node --dir . -r tsconfig-paths/register --project tsconfig.json libs/cog/src/cli/generate-country",
+    "generate-insee:extended-city": "ts-node --dir . -r tsconfig-paths/register --project tsconfig.json libs/cog/src/cli/generate-extended-city",
     "generate-insee:city": "ts-node --dir . -r tsconfig-paths/register --project tsconfig.json libs/cog/src/cli/generate-city",
     "generate-oidc-provider-exceptions": "./libs/oidc-provider/src/cli/scaffold-exceptions/run.sh"
   },

@@ -30,9 +30,10 @@
 24. [mock-service-provider-fcp-legacy](#mock-service-provider-fcp-legacy)
 25. [mock-service-provider-fcp-low](#mock-service-provider-fcp-low)
 26. [mock-wallet](#mock-wallet)
-27. [partners](#partners)
-28. [user-dashboard](#user-dashboard)
-29. [wallet-bridge](#wallet-bridge)
+27. [nexus](#nexus)
+28. [partners](#partners)
+29. [user-dashboard](#user-dashboard)
+30. [wallet-bridge](#wallet-bridge)
 
 ## Variables
 
@@ -905,6 +906,15 @@
 | Mdoc_ISSUER_CERTIFICATE | file |
 | Mdoc_ISSUER_PRIVATE_KEY | file |
 
+### nexus
+
+| Var Name | Inferred type |
+|---|---|
+| App_ENVIRONMENT | string |
+| App_HTTPS_SERVER_CERT | file |
+| App_HTTPS_SERVER_KEY | file |
+| Logger_THRESHOLD | string |
+
 ### partners
 
 | Var Name | Inferred type |
@@ -1065,6 +1075,7 @@
 | Openid4vp_CLIENT_ID | string |
 | Openid4vp_CLIENT_ID_SCHEME | string |
 | Openid4vp_JWKS | json |
+| Openid4vp_OPTIONAL_PID_FIELDS | json |
 | Openid4vp_X509_ALG | string |
 | Openid4vp_X509_CERTIFICATE_CHAIN | file |
 | Openid4vp_X509_PRIVATE_KEY | file |

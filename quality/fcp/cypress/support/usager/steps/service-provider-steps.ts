@@ -1,4 +1,9 @@
-import { Given, Then, When } from '@badeball/cypress-cucumber-preprocessor';
+import {
+  Given,
+  Step,
+  Then,
+  When,
+} from '@badeball/cypress-cucumber-preprocessor';
 
 import {
   addInterceptHeaders,
@@ -150,11 +155,13 @@ Then(
 );
 
 Then(
-  'le claim {string} contient {string} dans la réponse userinfo',
-  function (claimName: string, expectedValue: string) {
-    serviceProviderPage
-      .getMockClaimText(claimName)
-      .should('be.equal', expectedValue);
+  'le fournisseur de service a accès aux informations demandées',
+  function () {
+    const { type } = this.requestedScope;
+    Step(
+      this,
+      `le fournisseur de service a accès aux informations du scope "${type}"`,
+    );
   },
 );
 
@@ -163,6 +170,15 @@ Then(
   function (claimName: string) {
     serviceProviderPage.getUserInfo().then((responseBody) => {
       expect(responseBody[claimName]).to.be.undefined;
+    });
+  },
+);
+
+Then(
+  'le claim {string} est vide dans la réponse userinfo',
+  function (claimName: string) {
+    serviceProviderPage.getUserInfo().then((responseBody) => {
+      expect(responseBody[claimName]).to.equal('');
     });
   },
 );

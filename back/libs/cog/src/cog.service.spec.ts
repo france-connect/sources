@@ -14,6 +14,7 @@ describe('CogService', () => {
   };
 
   const cityRepositoryMock = {
+    filter: jest.fn(),
     find: jest.fn(),
     parse: jest.fn(),
     createIndex: jest.fn(),
@@ -106,6 +107,16 @@ describe('CogService', () => {
       );
     });
 
+    it('should index the cities by code only', async () => {
+      // When
+      await service['onModuleInit']();
+
+      // Then
+      expect(cityRepositoryMock.createIndex).toHaveBeenCalledExactlyOnceWith(
+        'com',
+      );
+    });
+
     it('should fail to init database if parsing failed', async () => {
       // Given
       const errorMock = new Error('Unknown Error');
@@ -121,13 +132,66 @@ describe('CogService', () => {
     });
   });
 
+  describe('getCitiesByNcc()', () => {
+    it('should return every city bearing the given name', () => {
+      // Given
+      const citiesMock = [
+        { com: '11339', libelle: 'Saint-Denis', ncc: 'SAINT DENIS' },
+        { com: '93066', libelle: 'Saint-Denis', ncc: 'SAINT DENIS' },
+      ];
+      cityRepositoryMock.filter.mockReturnValueOnce(citiesMock);
+
+      // When
+      const result = service.getCitiesByNcc('SAINT DENIS');
+
+      // Then
+      expect(cityRepositoryMock.filter).toHaveBeenCalledExactlyOnceWith({
+        ncc: 'SAINT DENIS',
+      });
+      expect(result).toEqual(citiesMock);
+    });
+  });
+
+  describe('department and duplicate city lookups', () => {
+    it('should pass both the name and department to the CSV filter', () => {
+      // Given
+      cityRepositoryMock.filter.mockReturnValue([]);
+      // When
+      const result = service.getCitiesByNcc('HARGICOURT', '80');
+      // Then
+      expect(cityRepositoryMock.filter).toHaveBeenCalledExactlyOnceWith({
+        ncc: 'HARGICOURT',
+        dep: '80',
+      });
+      expect(result).toEqual([]);
+    });
+
+    it('should count a commune and its delegated chief town only once', () => {
+      // Given
+      const city = {
+        com: '08053',
+        ncc: 'BAZEILLES',
+        libelle: 'Bazeilles',
+        dep: '08',
+      };
+      cityRepositoryMock.filter.mockReturnValue([city, { ...city }]);
+      // When
+      const result = service.getCitiesByNcc('BAZEILLES');
+      // Then
+      expect(result).toEqual([city]);
+    });
+  });
+
   describe('getLabelFromCog()', () => {
-    const franceCog = '95220';
+    const cityCog = '95220';
     const foreignCog = '99135';
 
     const cityMock: CityInterface = {
-      com: franceCog,
+      com: cityCog,
+      lastComparent: cityCog,
+      dep: '95',
       libelle: 'la meilleure ville du monde',
+      ncc: 'LA MEILLEURE VILLE DU MONDE',
     };
     const countryMock: CountryInterface = {
       codeiso2: 'CB',
@@ -145,7 +209,7 @@ describe('CogService', () => {
 
     it('should transform French Cog to label with city', () => {
       // When
-      const result = service.getLabelFromCog(franceCog);
+      const result = service.getLabelFromCog(cityCog);
 
       // Then
       expect(result).toEqual(labelFrMock);
@@ -153,7 +217,7 @@ describe('CogService', () => {
       expect(cityRepositoryMock.getByIndex).toHaveBeenCalledTimes(1);
       expect(cityRepositoryMock.getByIndex).toHaveBeenCalledWith(
         'com',
-        franceCog,
+        cityCog,
       );
 
       expect(countryRepositoryMock.getByIndex).toHaveBeenCalledTimes(0);

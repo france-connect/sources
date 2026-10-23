@@ -152,7 +152,10 @@ export const getExpectedClaimsByPlatform = (
   platform: string,
 ): string[] => {
   const expectedClaims = getClaims(scope);
-  if (platform === 'fcp-low') {
+  // For the moment, given_name_array is not returned when the identity comes from an EUDI Wallet.
+  // TODO: Remove this condition when the EUDI Wallet verify handler will call the RNIPP.
+  const isWalletBridgeTest = Cypress.expose('APP_LABEL') === 'Wallet Bridge';
+  if (platform === 'fcp-low' && !isWalletBridgeTest) {
     // Force the given_name_array claim into expectedClaim
     if (expectedClaims.includes('given_name')) {
       expectedClaims.push('given_name_array');

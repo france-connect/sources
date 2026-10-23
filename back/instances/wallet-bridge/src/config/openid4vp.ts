@@ -70,10 +70,8 @@ export default {
         "$['eu.europa.ec.eudi.pid.1']['birth_date']",
         "$['eu.europa.ec.eudi.pid.1']['place_of_birth']",
       ],
-      inputFieldOptionalPaths: [
-        "$['eu.europa.ec.eudi.pid.1']['email_address']",
-        "$['eu.europa.ec.eudi.pid.1']['sex']",
-      ],
+      // The optional fields are not requested to the wallets by wallet-bridge integ01 to avoid having claim_sets
+      inputFieldOptionalPaths: env.json('OPTIONAL_PID_FIELDS'),
       inputFieldIntentToRetain: false,
     },
   ],

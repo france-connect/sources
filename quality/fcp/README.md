@@ -13,6 +13,7 @@ FCP validation with system tests implemented using a Test Framework (based on Cy
 - Steps/Pages folder (dashboard): [/cypress/support/dashboard](./cypress/support/dashboard)
 - Steps/Pages folder (eidas-bridge): [/cypress/support/eidas-bridge](./cypress/support/eidas-bridge)
 - Steps/Pages folder (exploitation): [/cypress/support/exploitation](./cypress/support/exploitation)
+- Steps/Pages folder (nexus): [/cypress/support/nexus](./cypress/support/nexus)
 - Steps/Pages folder (usager): [/cypress/support/usager](./cypress/support/usager)
 - Test Data folder: [/cypress/fixtures](./cypress/fixtures)
 
@@ -267,6 +268,34 @@ docker-stack bdd-eidas-test
 docker-stack bdd-eidas-open
 ```
 
+### Run the Cypress tests on Nexus
+
+Nexus has a single instance shared by FranceConnect and FranceConnect+. The scenarios are tagged `@nexus`, run against `https://nexus.docker.dev-franceconnect.fr` (front on `/`, back on `/api`) and use `fcp-low` as default platform, which can be overridden with `CYPRESS_TEST_PLATFORM`.
+
+#### Start the local stack for Nexus
+
+```shell
+docker-stack switch bdd-nexus
+```
+
+#### Run the tests in the terminal
+
+1. [Start the local stack of Nexus using the docker-stack command](#start-the-local-stack-for-nexus)
+1. Run Cypress tests on Nexus against docker environment
+
+```shell
+docker-stack bdd-nexus-test
+```
+
+#### Run the tests from Cypress UI
+
+1. [Start the local stack of Nexus using the docker-stack command](#start-the-local-stack-for-nexus)
+1. Open Cypress UI to run tests on Nexus against docker environment
+
+```shell
+docker-stack bdd-nexus-open
+```
+
 ### Generate the Cucumber HTML report
 
 ```shell
@@ -331,6 +360,12 @@ docker-stack bdd-eidas-test-visual
 
 ```shell
 docker-stack bdd-wallet-test-visual
+```
+
+- NEXUS
+
+```shell
+docker-stack bdd-nexus-test-visual
 ```
 ##### X Server error when running headless Cypress test
 
@@ -416,6 +451,12 @@ docker-stack bdd-eidas-test-visual --expose updateSnapshots=true
 docker-stack bdd-wallet-test-visual --expose updateSnapshots=true
 ```
 
+- NEXUS
+
+```shell
+docker-stack bdd-nexus-test-visual --expose updateSnapshots=true
+```
+
 #### As in a production environment
 
 > :warning: Don't forget to reset the database afterward, if you want to run tests against the development environment
@@ -497,6 +538,7 @@ You can create a test pipeline in Gitlab from a merge request or from the stagin
 | BDD_TAGS_EIDAS                      | tags for the eidas-bridge BDD tests                                          | by default '@ci and not @ignore'                                 |
 | BDD_TAGS_UD                         | tags for the user-dashboard BDD tests                                        | by default '@ci and not @ignore'                                 |
 | BDD_TAGS_WALLET                     | tags for the wallet-bridge BDD tests                                        | by default '@ci and not @ignore'                                 |
+| BDD_TAGS_NEXUS                      | tags for the nexus BDD tests                                                 | by default '@ci and not @ignore'                                 |
 
 ## Plugins VSCode
 

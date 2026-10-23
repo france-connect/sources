@@ -8,5 +8,7 @@
   "supportRootUrl": "https://fc-support.docker.dev-franceconnect.fr",
   "udAppId": "ud-home",
   "udRootUrl": "https://ud.docker.dev-franceconnect.fr",
-  "mockWalletUrl": "https://mock-wallet.docker.dev-franceconnect.fr"
+  "mockWalletUrl": "https://mock-wallet.docker.dev-franceconnect.fr",
+  "nexusAppId": "nexus",
+  "nexusRootUrl": "https://nexus.docker.dev-franceconnect.fr"
 }

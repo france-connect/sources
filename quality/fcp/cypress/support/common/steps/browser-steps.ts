@@ -29,6 +29,10 @@ Then('le haut de la page est affiché', function () {
   });
 });
 
+Then('la page affiche {string}', function (text: string) {
+  cy.contains(text).should('be.visible');
+});
+
 Then('la page est en {string}', function (lang: string) {
   const langMap = {
     anglais: 'en',

@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { FunctionSafe } from '@fc/common';
 import { EudiPidBirthPlaceInterface } from '@fc/eudi';
 
-import { FRANCE_COG_LIST } from '../constants';
+import { isFrenchCog } from '../helpers';
 import { ResolutionContextInterface } from '../interfaces';
 import { InseeResolver } from '../resolvers';
 
@@ -14,7 +14,10 @@ export class EudiCogService {
   constructor(private readonly inseeResolver: InseeResolver) {}
 
   onModuleInit() {
-    this.resolvers = [this.inseeResolver.getResolver('foreignCountry')];
+    this.resolvers = [
+      this.inseeResolver.getResolver('foreignCountry'),
+      this.inseeResolver.getResolver('frenchCity'),
+    ];
   }
 
   resolveCog(
@@ -22,7 +25,7 @@ export class EudiCogService {
   ): ResolutionContextInterface['result'] {
     const context: ResolutionContextInterface = {
       result: {
-        birthplace: undefined,
+        birthplace: '',
         birthcountry: undefined,
       },
     };
@@ -45,7 +48,7 @@ export class EudiCogService {
       return false;
     }
 
-    if (!this.isFrench(birthcountry)) {
+    if (!isFrenchCog(birthcountry)) {
       return true;
     }
 
@@ -54,9 +57,5 @@ export class EudiCogService {
     }
 
     return true;
-  }
-
-  private isFrench(countryCog: string): boolean {
-    return FRANCE_COG_LIST.includes(countryCog);
   }
 }

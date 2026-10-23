@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`Application should match the snapshot 1`] = `
+<div>
+  <div
+    data-mockid="ErrorBoundary"
+  >
+    <div>
+      ApplicationRoutes
+    </div>
+  </div>
+</div>
+`;

@@ -134,6 +134,45 @@ describe('CsvService', () => {
       ).rejects.toThrow(errorMock);
       expect(loggerServiceMock.warning).toHaveBeenCalledTimes(0);
     });
+
+    it('should await each validation before starting the next row', async () => {
+      // Given
+      let resolveFirst: (value: typeof filteredSuccessMock) => void;
+      const firstValidation = new Promise<typeof filteredSuccessMock>(
+        (resolve) => {
+          resolveFirst = resolve;
+        },
+      );
+      filteredByDtoMock
+        .mockReturnValueOnce(firstValidation)
+        .mockResolvedValueOnce(filteredSuccessMock);
+      // When
+      const result = service['pickData']([inputMock, inputMock]);
+      // Then
+      expect(filteredByDtoMock).toHaveBeenCalledTimes(1);
+      resolveFirst(filteredSuccessMock);
+      await expect(result).resolves.toEqual(['resultValue', 'resultValue']);
+      expect(filteredByDtoMock).toHaveBeenCalledTimes(2);
+    });
+
+    it('should preserve row order and report the original invalid row number', async () => {
+      // Given
+      filteredByDtoMock
+        .mockResolvedValueOnce({ errors: [], result: { dummy: 'first' } })
+        .mockResolvedValueOnce(filteredFailedMock)
+        .mockResolvedValueOnce({ errors: [], result: { dummy: 'last' } });
+      // When
+      const result = await service['pickData']([
+        inputMock,
+        inputMock,
+        inputMock,
+      ]);
+      // Then
+      expect(result).toEqual([{ dummy: 'first' }, { dummy: 'last' }]);
+      expect(loggerServiceMock.warning).toHaveBeenCalledExactlyOnceWith(
+        expect.stringContaining('"row n°2"'),
+      );
+    });
   });
 
   describe('headersFilter()', () => {
@@ -304,6 +343,45 @@ describe('CsvService', () => {
       const result = service.getByIndex('dummy', 'noValue');
       // Then
       expect(result).toEqual(null);
+    });
+  });
+
+  describe('filter()', () => {
+    it('should return every matching row without an index', () => {
+      // Given
+      const first = { dummy: 'same', dep: '02' };
+      const second = { dummy: 'same', dep: '80' };
+      service['collection'] = [first, { dummy: 'different' }, second];
+      // When
+      const result = service.filter({ dummy: 'same' });
+      // Then
+      expect(result).toEqual([first, second]);
+    });
+
+    it('should require all criteria and preserve leading zeros', () => {
+      // Given
+      const match = { dummy: 'same', dep: '02' };
+      const other = { ...match, dep: '2' };
+      service['collection'] = [match, other, { dummy: 'same' }];
+      // When
+      const result = service.filter({ dummy: 'same', dep: '02' });
+      // Then
+      expect(result).toEqual([match]);
+    });
+
+    it('should return no rows for an unknown column or value', () => {
+      // Given
+      service['collection'] = [{ dummy: 'same' }];
+      // When / Then
+      expect(service.filter({ unknown: 'same' })).toEqual([]);
+      expect(service.filter({ dummy: 'unknown' })).toEqual([]);
+    });
+
+    it('should return all rows for empty criteria', () => {
+      // Given
+      service['collection'] = [{ dummy: 'same' }];
+      // When / Then
+      expect(service.filter({})).toEqual(service['collection']);
     });
   });
 

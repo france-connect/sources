@@ -660,7 +660,8 @@
       "family_name": "MARTIN",
       "birthdate": "1992-03-22",
       "birthcountry": "99100",
-      "birthplace": "Lyon"
+      "birthplace": "69123",
+      "email": "alice.martin@example.com"
     }
   },
   {
@@ -681,7 +682,8 @@
       "family_name": "KOWALSKI",
       "birthdate": "1983-02-14",
       "birthcountry": "99122",
-      "birthplace": "Warszawa"
+      "birthplace": "",
+      "email": "zofia.kowalski@example.com"
     }
   },
   {
@@ -698,10 +700,10 @@
     ],
     "claims": {
       "gender": "male",
-      "given_name": "PAUL",
-      "family_name": "JACQUES",
+      "given_name": "JACQUES",
+      "family_name": "PAUL",
       "birthdate": "1973-06-15",
-      "birthplace": "Kinshasa"
+      "birthplace": ""
     }
   },
   {
@@ -721,7 +723,196 @@
       "given_name": "JEAN",
       "family_name": "DUPONT",
       "birthdate": "1985-06-15",
-      "birthplace": "Paris"
+      "birthplace": ""
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "dans une commune sans accent"
+    ],
+    "credentials": [
+      {
+        "idpId": "mock-wallet",
+        "username": "5",
+        "password": "né dans une commune sans accent"
+      }
+    ],
+    "claims": {
+      "gender": "male",
+      "given_name": "LUC",
+      "family_name": "MOREL",
+      "birthdate": "1975-04-02",
+      "birthcountry": "99100",
+      "birthplace": "54408"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "dans une commune au nom inclus dans un autre"
+    ],
+    "credentials": [
+      {
+        "idpId": "mock-wallet",
+        "username": "6",
+        "password": "né dans une commune au nom inclus dans un autre"
+      }
+    ],
+    "claims": {
+      "gender": "male",
+      "given_name": "PAUL",
+      "family_name": "BERNARD",
+      "birthdate": "1968-11-30",
+      "birthcountry": "99100",
+      "birthplace": "54395"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "dans une commune avec accent"
+    ],
+    "credentials": [
+      {
+        "idpId": "mock-wallet",
+        "username": "7",
+        "password": "né dans une commune avec accent"
+      }
+    ],
+    "claims": {
+      "gender": "female",
+      "given_name": "CLARA",
+      "family_name": "PETIT",
+      "birthdate": "1988-07-19",
+      "birthcountry": "99100",
+      "birthplace": "63331"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "dans une commune homonyme"
+    ],
+    "credentials": [
+      {
+        "idpId": "mock-wallet",
+        "username": "8",
+        "password": "né dans une commune homonyme"
+      }
+    ],
+    "claims": {
+      "gender": "male",
+      "given_name": "HUGO",
+      "family_name": "GIRARD",
+      "birthdate": "1979-05-08",
+      "birthcountry": "99100",
+      "birthplace": ""
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "dans une commune inconnue"
+    ],
+    "credentials": [
+      {
+        "idpId": "mock-wallet",
+        "username": "9",
+        "password": "né dans une commune inconnue"
+      }
+    ],
+    "claims": {
+      "gender": "female",
+      "given_name": "EMMA",
+      "family_name": "ROUX",
+      "birthdate": "1995-01-23",
+      "birthcountry": "99100",
+      "birthplace": ""
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "dans une commune fusionnée"
+    ],
+    "credentials": [
+      {
+        "idpId": "mock-wallet",
+        "username": "10",
+        "password": "dans une commune fusionnée"
+      }
+    ],
+    "claims": {
+      "gender": "female",
+      "given_name": "ALICE",
+      "family_name": "MARTIN",
+      "birthdate": "1992-03-22",
+      "birthcountry": "99100",
+      "birthplace": "85152"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "à Papeete en Polynésie française"
+    ],
+    "credentials": [
+      {
+        "idpId": "mock-wallet",
+        "username": "11",
+        "password": "à Papeete en Polynésie française"
+      }
+    ],
+    "claims": {
+      "gender": "female",
+      "given_name": "ALICE",
+      "family_name": "MARTIN",
+      "birthdate": "1992-03-22",
+      "birthcountry": "99100",
+      "birthplace": "98735"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "à Fontenay-aux-Roses avant 1968"
+    ],
+    "credentials": [
+      {
+        "idpId": "mock-wallet",
+        "username": "12",
+        "password": "à Fontenay-aux-Roses avant 1968"
+      }
+    ],
+    "claims": {
+      "gender": "female",
+      "given_name": "ALICE",
+      "family_name": "MARTIN",
+      "birthdate": "1967-12-31",
+      "birthcountry": "99100",
+      "birthplace": "92032"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "à Fontenay-aux-Roses depuis 1968"
+    ],
+    "credentials": [
+      {
+        "idpId": "mock-wallet",
+        "username": "13",
+        "password": "à Fontenay-aux-Roses depuis 1968"
+      }
+    ],
+    "claims": {
+      "gender": "female",
+      "given_name": "ALICE",
+      "family_name": "MARTIN",
+      "birthdate": "1968-01-01",
+      "birthcountry": "99100",
+      "birthplace": "92032"
     }
   }
 ]

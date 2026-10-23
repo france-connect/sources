@@ -3,4 +3,5 @@ export interface RepositoryInterface<T> {
   createIndex(column: string): void;
   getByIndex(index: string, key: string): T | null;
   find(filters: { [key: string]: string }): Promise<T>;
+  filter(filters: { [key: string]: string }): T[];
 }

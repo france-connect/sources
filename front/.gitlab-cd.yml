@@ -30,3 +30,9 @@ ud/build-front:
   variables:
     APP: user-dashboard
     MSG: "environments/pa4-integ/group_vars/all/versions.yml\nud_front_version:"
+
+nexus/build-front:
+  extends: .base-build-front
+  variables:
+    APP: nexus
+    MSG: "environments/pa4-integ/group_vars/all/versions.yml\nnexus_front_version:"

@@ -6,5 +6,7 @@
   "exploitAppId": "exploitation-high",
   "exploitRootUrl": "https://exploitation-high.docker.dev-franceconnect.fr",
   "fcRootUrl": "https://core-fcp-high.docker.dev-franceconnect.fr",
-  "mockWalletUrl": "https://mock-wallet.docker.dev-franceconnect.fr"
+  "mockWalletUrl": "https://mock-wallet.docker.dev-franceconnect.fr",
+  "nexusAppId": "nexus",
+  "nexusRootUrl": "https://nexus.docker.dev-franceconnect.fr"
 }

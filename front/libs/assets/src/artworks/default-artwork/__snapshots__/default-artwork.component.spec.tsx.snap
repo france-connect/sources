@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`DefaultArtworkComponent should match the snapshot 1`] = `
+<div>
+  <svg
+    aria-hidden="true"
+    class="fr-responsive-img fr-artwork"
+    height="200"
+    viewBox="0 0 160 200"
+    width="160"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <use
+      class="fr-artwork-motif"
+      href="/dsfr/artwork/background/ovoid.svg#artwork-motif"
+    />
+    <use
+      class="fr-artwork-background"
+      href="/dsfr/artwork/background/ovoid.svg#artwork-background"
+    />
+    <g
+      transform="translate(40, 60)"
+    >
+      <use
+        class="fr-artwork-decorative"
+        href="/dsfr/artwork/pictograms/system/technical-error.svg#artwork-decorative"
+      />
+      <use
+        class="fr-artwork-minor"
+        href="/dsfr/artwork/pictograms/system/technical-error.svg#artwork-minor"
+      />
+      <use
+        class="fr-artwork-major"
+        href="/dsfr/artwork/pictograms/system/technical-error.svg#artwork-major"
+      />
+    </g>
+  </svg>
+</div>
+`;

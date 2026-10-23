@@ -1,0 +1,119 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ApplicationLayout should match the snapshot 1`] = `
+<div>
+  <div
+    class="sticky-body"
+  >
+    <div
+      class="sticky-content"
+    >
+      <header
+        class="fr-header"
+        data-testid="HeaderComponent"
+        role="banner"
+      >
+        <div
+          class="fr-header__body"
+        >
+          <div
+            class="fr-container"
+          >
+            <div
+              class="fr-header__body-row"
+            >
+              <div
+                class="fr-header__brand fr-enlarge-link"
+              >
+                <div
+                  class="fr-header__brand-top"
+                >
+                  <div
+                    class="fr-header__logo"
+                  >
+                    <span
+                      data-mockid="Link"
+                    >
+                      <div>
+                        LogoRepubliqueFrancaiseComponent
+                      </div>
+                    </span>
+                  </div>
+                  <div
+                    class="fr-header__operator"
+                  >
+                    <img
+                      alt="FranceConnect, 10 ans de simplification de l’accès aux démarches"
+                      class="fr-responsive-img"
+                      src="function SvgLogoFranceConnect10Ans(props) {
+  return React.createElement(
+    'svg', 
+    Object.assign({}, props, {'data-file-name': SvgLogoFranceConnect10Ans.name})
+  );
+}"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="fr-header__service"
+                >
+                  <span
+                    data-mockid="Link"
+                  >
+                    <p
+                      class="fr-header__service-title"
+                      data-testid="HeaderComponent-title"
+                    >
+                      Nexus
+                    </p>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+      <div>
+        ReactRouterDom Outlet Component
+      </div>
+    </div>
+    <footer
+      class="sticky-footer fr-footer"
+      data-testid="FooterComponent"
+      id="footer"
+      role="contentinfo"
+    >
+      <div
+        class="fr-container"
+      >
+        <div
+          class="fr-footer__body"
+        >
+          <div
+            class="fr-footer__brand fr-enlarge-link"
+          >
+            <div>
+              LogoRepubliqueFrancaiseComponent
+            </div>
+            <span
+              data-mockid="Link"
+            >
+              <img
+                alt="FranceConnect, 10 ans de simplification de l’accès aux démarches"
+                class="fr-footer__logo fr-responsive-img"
+                src="function SvgLogoFranceConnect10Ans(props) {
+  return React.createElement(
+    'svg', 
+    Object.assign({}, props, {'data-file-name': SvgLogoFranceConnect10Ans.name})
+  );
+}"
+                style="height: 90px; max-height: 90px;"
+              />
+            </span>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+</div>
+`;

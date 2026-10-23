@@ -1,3 +1,5 @@
+import { uniqBy } from 'lodash';
+
 import { Inject, Injectable } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
@@ -64,6 +66,16 @@ export class CogService {
     const labels = cogs.map((cog) => this.getLabelFromCog(cog));
 
     return labels;
+  }
+
+  getCitiesByNcc(ncc: string, dep?: string): CityInterface[] {
+    const filters = dep ? { ncc, dep } : { ncc };
+    const cities = this.cityManager.filter(filters);
+
+    /**
+     * @NOTE A commune and its delegated chief town can share the same COG.
+     */
+    return uniqBy(cities, 'com');
   }
 
   getCountryCogFromIso(iso: string): string | undefined {

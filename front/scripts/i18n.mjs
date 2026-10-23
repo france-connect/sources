@@ -135,6 +135,10 @@ async function readI18nFiles(instanceName, lang, excluded = []) {
     const appsPath = path.join(workspaceRoot, 'apps');
     const instanceI18nPath = path.join(workspaceRoot, 'instances', instanceName, 'src', 'i18n');
 
+    if (!fs.existsSync(instanceI18nPath)) {
+      return;
+    }
+
     // Discover all candidate files in libs, apps, and the instance itself.
     const [libsFiles, appsFiles, instanceFiles] = await Promise.all([
       getAllI18nFolders(libsPath, lang),

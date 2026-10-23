@@ -1,6 +1,6 @@
 export interface ResolutionContextInterface {
   result: {
-    birthplace: string | undefined;
+    birthplace: string;
     birthcountry: string | undefined;
   };
   data?: {

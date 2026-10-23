@@ -1,0 +1,116 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`MagnifierArtworkComponent should match the snapshot 1`] = `
+<div>
+  <svg
+    aria-hidden="true"
+    class="fr-responsive-img artwork"
+    data-testid="MagnifierArtworkComponent"
+    viewBox="0 0 300 260"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <rect
+      class="page"
+      height="168"
+      rx="10"
+      width="216"
+      x="42"
+      y="38"
+    />
+    <rect
+      class="bar"
+      height="26"
+      rx="10"
+      width="216"
+      x="42"
+      y="38"
+    />
+    <rect
+      class="bar"
+      height="12"
+      width="216"
+      x="42"
+      y="52"
+    />
+    <circle
+      class="dot"
+      cx="58"
+      cy="51"
+      r="3.5"
+    />
+    <circle
+      class="dot"
+      cx="70"
+      cy="51"
+      r="3.5"
+    />
+    <text
+      class="code"
+      x="150"
+      y="134"
+    >
+      404
+    </text>
+    <text
+      class="note"
+      x="150"
+      y="160"
+    >
+      PAGE INTROUVABLE
+    </text>
+    <rect
+      class="line"
+      height="7"
+      rx="3.5"
+      width="148"
+      x="76"
+      y="176"
+    />
+    <rect
+      class="line"
+      height="7"
+      rx="3.5"
+      width="104"
+      x="98"
+      y="190"
+    />
+    <ellipse
+      class="shadow"
+      cx="0"
+      cy="0"
+      rx="34"
+      ry="9"
+    />
+    <g
+      class="glass"
+      data-testid="MagnifierArtworkComponent-glass"
+    >
+      <g
+        class="wobble"
+      >
+        <line
+          class="handle"
+          x1="24"
+          x2="62"
+          y1="24"
+          y2="62"
+        />
+        <circle
+          class="ring"
+          r="32"
+        />
+        <path
+          class="glint"
+          d="M-18 -10 A22 22 0 0 1 -6 -21"
+        />
+        <text
+          class="question"
+          y="12"
+        >
+          ?
+        </text>
+      </g>
+    </g>
+  </svg>
+</div>
+`;

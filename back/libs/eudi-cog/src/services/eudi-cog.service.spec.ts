@@ -35,21 +35,30 @@ describe('EudiCogService', () => {
       service.onModuleInit();
 
       // Then
-      expect(inseeResolverMock.getResolver).toHaveBeenCalledExactlyOnceWith(
+      expect(inseeResolverMock.getResolver).toHaveBeenCalledTimes(2);
+      expect(inseeResolverMock.getResolver).toHaveBeenNthCalledWith(
+        1,
         'foreignCountry',
+      );
+      expect(inseeResolverMock.getResolver).toHaveBeenNthCalledWith(
+        2,
+        'frenchCity',
       );
     });
 
-    it('should set the resolvers to the service', () => {
+    it('should set the resolvers to the service, country first', () => {
       // Given
-      const resolver = Symbol('resolver');
-      inseeResolverMock.getResolver.mockReturnValue(resolver);
+      const countryResolver = Symbol('countryResolver');
+      const cityResolver = Symbol('cityResolver');
+      inseeResolverMock.getResolver
+        .mockReturnValueOnce(countryResolver)
+        .mockReturnValueOnce(cityResolver);
 
       // When
       service.onModuleInit();
 
       // Then
-      expect(service['resolvers']).toEqual([resolver]);
+      expect(service['resolvers']).toEqual([countryResolver, cityResolver]);
     });
   });
 
@@ -195,29 +204,6 @@ describe('EudiCogService', () => {
 
       // Then
       expect(result).toBe(true);
-    });
-  });
-
-  describe('isFrench', () => {
-    it('should return true if the COG is France', () => {
-      // Given
-      const frenchCog = '99100';
-
-      // When
-      const result = service['isFrench'](frenchCog);
-
-      // Then
-      expect(result).toBe(true);
-    });
-
-    it('should return false if the COG is not France', () => {
-      // Given
-      const polishCog = '99223';
-      // When
-      const result = service['isFrench'](polishCog);
-
-      // Then
-      expect(result).toBe(false);
     });
   });
 });

@@ -1184,6 +1184,24 @@
         "tsConfigPath": "libs/mongoose-change-stream/tsconfig.lib.json"
       }
     },
+    "nexus": {
+      "type": "library",
+      "root": "apps/nexus",
+      "entryFile": "index",
+      "sourceRoot": "apps/nexus/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/nexus/tsconfig.lib.json"
+      }
+    },
+    "nexus-instance": {
+      "type": "application",
+      "root": "instances/nexus",
+      "entryFile": "main",
+      "sourceRoot": "instances/nexus/src",
+      "compilerOptions": {
+        "tsConfigPath": "instances/nexus/tsconfig.app.json"
+      }
+    },
     "notification": {
       "type": "library",
       "root": "libs/notification",

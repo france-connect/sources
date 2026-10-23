@@ -6,6 +6,7 @@ import { useSafeContext } from '@fc/common';
 import { PartnersService } from '@fc/core-partners';
 import type { Dto2FormServiceContextInterface } from '@fc/dto2form-service';
 import { Dto2FormServiceContext } from '@fc/dto2form-service';
+import { NotFoundComponent } from '@fc/exceptions';
 import { ApplicationLayout } from '@fc/layout';
 import { AuthedRoute, RouterErrorBoundaryComponent, UnauthedRoute } from '@fc/routing';
 
@@ -96,6 +97,7 @@ export const ApplicationRoutes = React.memo(() => {
         <Route element={<LegalNoticesPage />} path="mentions-legales" />
         <Route element={<SitemapPage />} path="plan-du-site" />
       </Route>
+      <Route element={<NotFoundComponent />} path="*" />
     </Route>,
   );
 

@@ -12,7 +12,7 @@ export DEBIAN_VERSION="bookworm"
 
 ## NodeJS
 
-export NODE_VERSION="v22.22.2" # "v" is legacy, will be removed in future versions
+export NODE_VERSION="v22.23.4" # "v" is legacy, will be removed in future versions
 
 export NODE_MODULE_BACK_VERSION=$(sha256sum ${FC_ROOT}/fc/back/yarn.lock | cut -c1-12)
 export NODE_MODULE_FRONT_VERSION=$(sha256sum ${FC_ROOT}/fc/front/yarn.lock | cut -c1-12)

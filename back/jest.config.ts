@@ -148,6 +148,7 @@ const config: Config = {
     '^@fc/mongoose-change-stream(|/.*)$':
       '<rootDir>/libs/mongoose-change-stream/src/$1',
     '^@fc/mongoose(|/.*)$': '<rootDir>/libs/mongoose/src$1',
+    '^@fc/nexus(|/.*)$': '<rootDir>/apps/nexus/src/$1',
     '^@fc/notification(|/.*)$': '<rootDir>/libs/notification/src$1',
     '^@fc/oidc(|/.*)$': '<rootDir>/libs/oidc/src$1',
     '^@fc/oidc-acr(|/.*)$': '<rootDir>/libs/oidc-acr/src/$1',

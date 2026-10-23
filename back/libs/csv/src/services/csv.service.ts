@@ -3,7 +3,7 @@ import { Inject, Injectable, Type } from '@nestjs/common';
 import { filteredByDto } from '@fc/common';
 import { LoggerService } from '@fc/logger';
 
-import { CsvParsingException } from '../exceptions/csv-parsing.exception';
+import { CsvParsingException } from '../exceptions';
 import { parseCsv } from '../helpers';
 import { Csv, RepositoryInterface } from '../interfaces';
 import { CSV_VALIDATOR } from '../tokens';
@@ -14,7 +14,7 @@ const VALIDATOR_OPTIONS = {
 };
 
 @Injectable()
-export class CsvService<T> implements RepositoryInterface<T> {
+export class CsvService<T extends object> implements RepositoryInterface<T> {
   private collection: T[];
   private indexes: Record<string, Record<string, T>> = {};
 
@@ -43,7 +43,14 @@ export class CsvService<T> implements RepositoryInterface<T> {
       }
       return result;
     };
-    const extracted = await Promise.all(rawRows.map(validator));
+    const extracted: T[] = [];
+    /**
+     * @NOTE Large INSEE datasets must not retain one pending DTO validation
+     * per row at the same time.
+     */
+    for (const [index, row] of rawRows.entries()) {
+      extracted.push(await validator(row, index));
+    }
     const data: T[] = extracted.filter(Boolean);
     return data;
   }
@@ -87,20 +94,22 @@ export class CsvService<T> implements RepositoryInterface<T> {
     return this.indexes[index][key] || null;
   }
 
+  filter(filters: { [key: string]: string }): T[] {
+    const criteria = Object.entries(filters);
+
+    return this.collection.filter((row) => this.matches(row, criteria));
+  }
+
   // Needed to match the interface
   // eslint-disable-next-line require-await
   async find(filters: { [key: string]: string }): Promise<T | null> {
     const criteria = Object.entries(filters);
 
-    /*
-     * @Todo #1195 [eIDAS] DTO trop strict sur le CSV COG
-     * Profiter de ce ticket pour typer correctement cette fonction et retirer le any
-     * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1195
-     */
-    const result = this.collection.find((row: any) => {
-      const search = ([key, value]) => key in row && row[key] == value;
-      return criteria.every(search);
-    });
-    return (result as T) || null;
+    const result = this.collection.find((row) => this.matches(row, criteria));
+    return result || null;
+  }
+
+  private matches(row: T, criteria: [string, string][]): boolean {
+    return criteria.every(([key, value]) => key in row && row[key] == value);
   }
 }

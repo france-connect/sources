@@ -163,5 +163,29 @@
   {
     "type": "cnous_statut_boursier",
     "scopes": ["openid", "cnous_statut_boursier"]
+  },
+  {
+    "type": "claims obligatoires pour le wallet",
+    "scopes": [
+      "openid",
+      "family_name",
+      "given_name",
+      "birthdate",
+      "birthcountry",
+      "birthplace"
+    ]
+  },
+  {
+    "type": "tous les claims pour le wallet",
+    "scopes": [
+      "openid",
+      "family_name",
+      "given_name",
+      "birthdate",
+      "birthcountry",
+      "birthplace",
+      "gender",
+      "email"
+    ]
   }
 ]

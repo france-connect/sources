@@ -87,6 +87,8 @@ services:
           - partners.docker.dev-franceconnect.fr
           - mock-proconnect.docker.dev-franceconnect.fr
           - mock-datapass.docker.dev-franceconnect.fr
+          # Nexus
+          - nexus.docker.dev-franceconnect.fr
           # Znuny
           - znuny.docker.dev-franceconnect.fr
           # Stack Legacy
@@ -148,6 +150,8 @@ services:
   haproxy:
     image: ${DOCKER_HUB_PROXY}haproxy:2.6.12
     hostname: haproxy
+    # rp-all may not be reachable yet at startup (especially in CI)
+    restart: "on-failure:10"
     ulimits:
       nofile:
         soft: 1024

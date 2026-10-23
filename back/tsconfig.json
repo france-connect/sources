@@ -196,6 +196,8 @@
       "@fc/mongoose-change-stream": ["libs/mongoose-change-stream/src"],
       "@fc/mongoose-change-stream/*": ["libs/mongoose-change-stream/src/*"],
       "@fc/mongoose/*": ["libs/mongoose/src/*"],
+      "@fc/nexus": ["apps/nexus/src"],
+      "@fc/nexus/*": ["apps/nexus/src/*"],
       "@fc/notification": ["libs/notification/src"],
       "@fc/notification/*": ["libs/notification/src/*"],
       "@fc/oidc": ["libs/oidc/src"],

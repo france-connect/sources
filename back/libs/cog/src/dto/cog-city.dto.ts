@@ -1,4 +1,4 @@
-import { Exclude, Expose } from 'class-transformer';
+import { Exclude, Expose, Transform } from 'class-transformer';
 import { IsString, Length } from 'class-validator';
 
 import { CityInterface } from '../interfaces';
@@ -17,4 +17,19 @@ export class CityDto implements CityInterface {
   @IsString()
   @Expose()
   libelle: string;
+
+  @Length(1, 200)
+  @IsString()
+  @Expose()
+  ncc: string;
+
+  @Length(2, 3)
+  @IsString()
+  @Expose()
+  dep: string;
+
+  @IsCog()
+  @Expose()
+  @Transform(({ obj }) => obj.last_comparent, { toClassOnly: true })
+  lastComparent: string;
 }

@@ -1,0 +1,11 @@
+services:
+  nexus:
+    image: ${DOCKER_HUB_PROXY}alpine
+    depends_on:
+      - "nexus-front"
+      - "nexus-back"
+
+  bdd-nexus:
+    image: ${DOCKER_HUB_PROXY}alpine
+    depends_on:
+      - "nexus"

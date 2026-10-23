@@ -61,6 +61,18 @@ _bdd_low_test_visual() {
   _cypress "fcp" "yarn test:low:snapshot $@"
 }
 
+_bdd_nexus_open() {
+  _cypress "fcp" "yarn start:nexus $@"
+}
+
+_bdd_nexus_test() {
+  _cypress "fcp" "yarn test:nexus $@"
+}
+
+_bdd_nexus_test_visual() {
+  _cypress "fcp" "yarn test:nexus:snapshot $@"
+}
+
 _bdd_support_open() {
   _cypress "support" "yarn cypress open -P fc-support --e2e $@"
 }

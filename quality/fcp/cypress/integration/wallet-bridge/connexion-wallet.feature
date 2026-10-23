@@ -5,7 +5,7 @@ Fonctionnalité: Connexion avec un EUDI Wallet
   # je veux me connecter en utilisant un EUDI Wallet
   # afin de communiquer certaines informations personnelles au fournisseur de service
 
-  Plan du Scénario: Connexion Wallet - scope <scopeType>
+  Plan du Scénario: Connexion Wallet - cinématique passante avec <scopeType>
     Etant donné que le fournisseur de service requiert l'accès aux informations des scopes "<scopeType>"
     Et que je navigue sur la page fournisseur de service
     Et que je clique sur le bouton FranceConnect
@@ -21,16 +21,24 @@ Fonctionnalité: Connexion avec un EUDI Wallet
     Et je continue sur le fournisseur de service
     Et je suis redirigé vers la page fournisseur de service
     Et je suis connecté au fournisseur de service
-    # Et le fournisseur de service a accès aux informations des scopes "<scopeType>"
+    Et le fournisseur de service a accès aux informations demandées
 
+    @ignoreInteg01
     Exemples:
-      | scopeType                 |
-      | profile sans alias        |
+      | scopeType                      |
+      | tous les claims pour le wallet |
+
+    # Les claims optionnels (sex et email_address) ne sont pas demandés aux wallets
+    # par wallet-bridge integ01 pour ne pas avoir de claim_sets
+    @ignoreDocker
+    Exemples:
+      | scopeType                          |
+      | claims obligatoires pour le wallet |
 
   # Cypress v15.21.1 ne supporte pas complètement les Server-Sent Events
   @ignoreInteg01
   Scénario: Connexion Wallet - affichage des états d'authentification
-    Etant donné que le fournisseur de service requiert l'accès aux informations des scopes "profile sans alias"
+    Etant donné que le fournisseur de service requiert l'accès aux informations des scopes "claims obligatoires pour le wallet"
     Et que je navigue sur la page fournisseur de service
     Et que je clique sur le bouton FranceConnect
     Et que je suis redirigé vers la page sélection du fournisseur d'identité
@@ -47,8 +55,7 @@ Fonctionnalité: Connexion avec un EUDI Wallet
     Et je suis redirigé vers la page confirmation de connexion
 
   Scénario: Connexion Wallet - abandon de l'authentification depuis le wallet
-    Etant donné que le fournisseur de service requiert l'accès aux informations des scopes "profile sans alias"
-    Et que je navigue sur la page fournisseur de service
+    Etant donné que je navigue sur la page fournisseur de service
     Et que je clique sur le bouton FranceConnect
     Et que je suis redirigé vers la page sélection du fournisseur d'identité
     Et que j'utilise un fournisseur d'identité "wallet-bridge"

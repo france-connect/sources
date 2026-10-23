@@ -13,6 +13,7 @@ _get_running_containers() {
 
 _reload_rp() {
   docker exec fc-rp-all service nginx reload
+  sleep 10
 }
 
 _reload_haproxy() {
